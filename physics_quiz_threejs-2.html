@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Current Density</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#f7f6f3;
+  --surface:#ffffff;
+  --border:#e8e6e0;
+  --border2:#d4d1c8;
+  --text:#1a1916;
+  --text2:#6b6760;
+  --text3:#a09d97;
+  --accent:#1a1916;
+  --tag-bg:#f0ede8;
+  --correct-bg:#f0faf5;
+  --correct:#1a7a4a;
+  --correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;
+  --wrong:#c0392b;
+  --wrong-border:#f5c6c2;
+  --yt:#ff2d2d;
+  --highlight:#1a1916;
+  --pill-active-bg:#1a1916;
+  --pill-active-text:#f7f6f3;
+}
+
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+
+/* ── LAYOUT ── */
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+
+/* ── TOP NAV ── */
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+
+/* ── SCREEN MANAGER ── */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ── HOME SCREEN ── */
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:36px;}
+
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+
+.topic-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 22px;
+  cursor:pointer;
+  transition:border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+  text-align:left;
+  position:relative;
+  overflow:hidden;
+}
+.topic-card:hover{
+  border-color:var(--border2);
+  box-shadow:0 4px 20px rgba(0,0,0,0.07);
+  transform:translateY(-2px);
+}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s, color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+
+/* ── QUESTION SCREEN ── */
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+
+/* mini question selector */
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--surface);
+  font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;
+  color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;
+  flex-shrink:0;
+}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+
+/* question card */
+#q-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px 28px 24px;
+  position:relative;
+}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:24px;font-weight:400;}
+
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--bg);
+  cursor:pointer;font-size:14px;color:var(--text2);
+  transition:all 0.15s;text-align:left;
+}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{
+  width:24px;height:24px;border-radius:6px;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;
+  color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);
+}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+
+/* solution */
+#sol-wrap{
+  overflow:hidden;max-height:0;opacity:0;
+  transition:max-height 0.4s ease, opacity 0.35s ease;
+}
+#sol-wrap.open{max-height:300px;opacity:1;}
+#sol-box{
+  border-left:2px solid var(--text3);
+  padding:12px 16px;margin-bottom:18px;
+  font-size:13.5px;line-height:1.75;color:var(--text2);
+}
+#sol-box strong{color:var(--text);font-weight:600;}
+
+/* action row */
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+#show-ans-btn{
+  font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  background:none;border:1px solid var(--border);border-radius:8px;
+  padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;
+}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{
+  font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  border-radius:8px;padding:9px 18px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);
+}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+
+/* feedback chip */
+#feedback{
+  font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  padding:6px 12px;border-radius:20px;opacity:0;
+  transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);
+}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+
+/* ── YOUTUBE CORNER BOX ── */
+#yt-corner{
+  position:fixed;
+  bottom:28px;right:28px;
+  width:300px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.1);
+  overflow:hidden;
+  z-index:200;
+  display:none;
+  animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;border-bottom:1px solid var(--border);
+}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{
+  flex:1;border:1px solid var(--border);border-radius:8px;
+  padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;
+  background:var(--bg);color:var(--text);outline:none;
+  transition:border-color 0.15s;
+}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{
+  background:var(--yt);color:#fff;border:none;border-radius:8px;
+  padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;
+  letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;
+}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+
+/* ── QUESTION HELP TRIGGER ── */
+#yt-trigger{
+  position:fixed;bottom:28px;right:28px;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--yt);color:#fff;
+  border:none;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(255,45,45,0.35);
+  transition:transform 0.2s, box-shadow 0.2s;
+  z-index:199;
+}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+
+/* ── TRANSITIONS ── */
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+
+/* ── SCORE SUMMARY IN Q SCREEN ── */
+.score-strip{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:20px;padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+
+/* done state on topic cards */
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+
+/* divider */
+.divider{width:100%;height:1px;background:var(--border);margin:32px 0;}
+</style>
+</head>
+<body>
+<div id="shell">
+
+  <!-- TOP NAV -->
+  <div id="topnav">
+    <div class="brand">Physics <span>·</span> DPP-01</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <!-- HOME SCREEN -->
+  <div id="home-screen" class="screen active">
+    <div id="home-heading">
+      <h1>Current Density,<br>Drift Velocity &amp; Relaxation Time</h1>
+    </div>
+    <p id="home-sub">Select a topic to begin practicing — 5 questions each.</p>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <!-- QUESTION SCREEN -->
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+
+    <!-- Q pill selector -->
+    <div class="q-selector" id="q-selector"></div>
+
+    <!-- Active question -->
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /shell -->
+
+<!-- YT TRIGGER FAB -->
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<!-- YT CORNER BOX -->
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link for this question's solution:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..." />
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const TOPICS = [
+  {
+    name:"Alpha Particle Current",
+    questions:[
+      {q:"5,000 alpha particles pass per minute through a tube. What is the electric current?",opts:["2.67 × 10⁻¹⁷ A","3.2 × 10⁻¹⁶ A","1.6 × 10⁻¹⁷ A","5.0 × 10⁻¹⁷ A"],ans:0,sol:"Each alpha carries charge 2e = 3.2×10⁻¹⁹ C. Rate = 5000/60 ≈ 83.3 particles/s. I = 83.3 × 3.2×10⁻¹⁹ ≈ 2.67×10⁻¹⁷ A."},
+      {q:"20,000 alpha particles pass per second through a tube. What is the resulting current?",opts:["6.4 × 10⁻¹⁵ A","3.2 × 10⁻¹⁵ A","1.28 × 10⁻¹⁴ A","6.4 × 10⁻¹⁴ A"],ans:0,sol:"I = 20000 × 3.2×10⁻¹⁹ = 6.4×10⁻¹⁵ A."},
+      {q:"A beam of 10⁸ alpha particles per second hits a target. The beam current is:",opts:["3.2 × 10⁻¹¹ A","1.6 × 10⁻¹¹ A","6.4 × 10⁻¹¹ A","3.2 × 10⁻¹⁰ A"],ans:0,sol:"I = 10⁸ × 2 × 1.6×10⁻¹⁹ = 3.2×10⁻¹¹ A."},
+      {q:"15,000 protons (charge +e) pass per minute through a tube. Current is:",opts:["4 × 10⁻¹⁷ A","8 × 10⁻¹⁷ A","2 × 10⁻¹⁷ A","4 × 10⁻¹⁶ A"],ans:0,sol:"I = (15000/60) × 1.6×10⁻¹⁹ = 250 × 1.6×10⁻¹⁹ = 4×10⁻¹⁷ A."},
+      {q:"3,000 alpha particles pass per minute. The current is:",opts:["1.6 × 10⁻¹⁷ A","3.2 × 10⁻¹⁷ A","0.8 × 10⁻¹⁷ A","4.8 × 10⁻¹⁷ A"],ans:0,sol:"I = (3000/60) × 3.2×10⁻¹⁹ = 50 × 3.2×10⁻¹⁹ = 1.6×10⁻¹⁷ A."}
+    ]
+  },
+  {
+    name:"Electron Flow & Current",
+    questions:[
+      {q:"10⁸ electrons per second flow through a cross-section of 10⁻⁴ m². The current is:",opts:["1.6 × 10⁻¹¹ A","1.6 × 10⁻⁷ A","1.6 × 10⁻¹³ A","1.6 × 10⁻⁹ A"],ans:0,sol:"I = n × e = 10⁸ × 1.6×10⁻¹⁹ = 1.6×10⁻¹¹ A. Area does not affect current."},
+      {q:"10¹² electrons per second flow through a wire. The current is:",opts:["1.6 × 10⁻⁷ A","1.6 × 10⁻¹⁰ A","1.6 × 10⁻¹² A","6.25 × 10¹⁸ A"],ans:0,sol:"I = 10¹² × 1.6×10⁻¹⁹ = 1.6×10⁻⁷ A."},
+      {q:"A current of 2 A flows. How many electrons pass per second?",opts:["1.25 × 10¹⁹","2.5 × 10¹⁹","6.25 × 10¹⁸","1.25 × 10¹⁸"],ans:0,sol:"n = I/e = 2 / 1.6×10⁻¹⁹ = 1.25×10¹⁹ electrons/s."},
+      {q:"5 × 10¹⁰ electrons per second flow through an area 10⁻³ m². Current is:",opts:["8 × 10⁻⁹ A","8 × 10⁻⁷ A","8 × 10⁻¹¹ A","5 × 10⁻⁹ A"],ans:0,sol:"I = 5×10¹⁰ × 1.6×10⁻¹⁹ = 8×10⁻⁹ A."},
+      {q:"A current of 0.5 A flows. How much charge passes through in 2 minutes?",opts:["60 C","30 C","120 C","15 C"],ans:0,sol:"Q = I × t = 0.5 × 120 = 60 C."}
+    ]
+  },
+  {
+    name:"Charge vs Time (Integration)",
+    questions:[
+      {q:"Current i = (3 + 2t) A. Charge through cross-section in first 5 seconds:",opts:["40 C","25 C","35 C","50 C"],ans:0,sol:"Q = ∫₀⁵(3+2t)dt = [3t+t²]₀⁵ = 15+25 = 40 C."},
+      {q:"Current i = (5 + 4t) A. Charge in first 3 seconds is:",opts:["33 C","27 C","30 C","15 C"],ans:0,sol:"Q = ∫₀³(5+4t)dt = [5t+2t²]₀³ = 15+18 = 33 C."},
+      {q:"If i = (t² + 2t) A, charge through wire in first 2 seconds is:",opts:["6.67 C","8 C","5 C","4 C"],ans:0,sol:"Q = ∫₀²(t²+2t)dt = [t³/3+t²]₀² = 8/3+4 ≈ 6.67 C."},
+      {q:"If I = 6 − 2t A, the charge that flows from t = 0 to t = 3s is:",opts:["9 C","12 C","6 C","18 C"],ans:0,sol:"Q = ∫₀³(6−2t)dt = [6t−t²]₀³ = 18−9 = 9 C."},
+      {q:"Current i = (1 + t)² A. Charge in first 2 seconds is:",opts:["26/3 C","9 C","7 C","4 C"],ans:0,sol:"Q = ∫₀²(1+t)²dt = [(1+t)³/3]₀² = 27/3 − 1/3 = 26/3 ≈ 8.67 C."}
+    ]
+  },
+  {
+    name:"Time-Varying Current & Charge",
+    questions:[
+      {q:"Current I = t² + 4t A. Charge from t = 0 to t = 3s:",opts:["27 C","18 C","36 C","9 C"],ans:0,sol:"Q = ∫₀³(t²+4t)dt = [t³/3+2t²]₀³ = 9+18 = 27 C."},
+      {q:"I = 5t² − 2t A. Charge from t = 1s to t = 3s:",opts:["35.33 C","30 C","28 C","40 C"],ans:0,sol:"Q = ∫₁³(5t²−2t)dt = [5t³/3−t²]₁³ = (45−9)−(5/3−1) ≈ 35.33 C."},
+      {q:"Current I = 2t + 3t² A. Charge from t = 2s to t = 4s:",opts:["68 C","48 C","60 C","44 C"],ans:0,sol:"Q = ∫₂⁴(2t+3t²)dt = [t²+t³]₂⁴ = (16+64)−(4+8) = 68 C."},
+      {q:"Current I = 3t + 2t² A. Charge during t = 1s to t = 2s:",opts:["9.17 C","8 C","12 C","7 C"],ans:0,sol:"Q = ∫₁²(3t+2t²)dt = [1.5t²+(2/3)t³]₁² = (6+16/3)−(1.5+2/3) ≈ 9.17 C."},
+      {q:"Current I = 2t + 3t² A where I is in amperes and t in seconds. Electric charge flowing from t = 2s to t = 3s:",opts:["24 C","10 C","33 C","44 C"],ans:0,sol:"Q = ∫₂³(2t+3t²)dt = [t²+t³]₂³ = (9+27)−(4+8) = 36−12 = 24 C."}
+    ]
+  },
+  {
+    name:"No Current in Conductor",
+    questions:[
+      {q:"When no current flows, which statement about free electrons is correct?",opts:["Average velocity is zero, but speed is not","Free electrons are stationary","All electrons move at the same speed","Electrons move only along the surface"],ans:0,sol:"Electrons have random thermal motion — average velocity (vector) is zero, but average speed (scalar) is non-zero."},
+      {q:"In a conductor with no applied field, net drift velocity of electrons is:",opts:["Zero","Equal to Fermi velocity","Non-zero and constant","Temperature-dependent non-zero"],ans:0,sol:"No field → no preferred direction. Random motions cancel → net drift velocity = 0."},
+      {q:"For a conductor with no current, the average displacement of a free electron over long time is:",opts:["Zero","Proportional to temperature","Equal to mean free path","Proportional to conductor length"],ans:0,sol:"Random collisions with no bias produce zero net displacement over long time."},
+      {q:"Which quantity is exactly zero when no current flows through a conductor?",opts:["Average velocity of free electrons","Kinetic energy of electrons","Speed of electrons","Temperature of electrons"],ans:0,sol:"Average velocity vector = 0 (random directions cancel). Speed and KE are non-zero due to thermal energy."},
+      {q:"When no current flows through a conductor, the average of the square of velocities of free electrons is:",opts:["Non-zero (thermal)","Zero","Equal to drift velocity squared","Equal to Fermi velocity squared"],ans:0,sol:"⟨v²⟩ is non-zero because electrons have thermal energy at any temperature above absolute zero."}
+    ]
+  },
+  {
+    name:"Steady Current & Cross-Section",
+    questions:[
+      {q:"A steady current flows through a non-uniform conductor. The net charge crossing any cross-section per second is:",opts:["Independent of area of cross-section","Directly proportional to cross-section area","Inversely proportional to cross-section area","Proportional to conductor length"],ans:0,sol:"By charge conservation (continuity), steady current I is the same at every cross-section regardless of area."},
+      {q:"A conductor has cross-sections A and 2A. Current density ratio J₁:J₂ is:",opts:["2:1","1:2","1:1","4:1"],ans:0,sol:"J = I/A. J₁/J₂ = (I/A)/(I/2A) = 2. Ratio = 2:1."},
+      {q:"In a steady-state current through a non-uniform conductor, which quantity varies inversely with area?",opts:["Current density J","Current I","Resistance","Total charge"],ans:0,sol:"J = I/A so J ∝ 1/A for constant I."},
+      {q:"A truncated-cone conductor carries steady current. Drift velocity from wider to narrower end:",opts:["Increases","Decreases","Remains constant","First increases then decreases"],ans:0,sol:"v_d = I/(neA). As A decreases, v_d increases to maintain constant I."},
+      {q:"For steady current in a wire, which is conserved at all cross-sections?",opts:["Current I","Current density J","Drift velocity","Electric field magnitude"],ans:0,sol:"Continuity equation ensures current I is constant throughout for steady state."}
+    ]
+  },
+  {
+    name:"Drift Velocity Calculation",
+    questions:[
+      {q:"Copper: n = 8.4×10²² /cm³, I = 0.21 A, area = 1 mm². Drift velocity of electrons:",opts:["1.56 × 10⁻⁵ m/s","3.12 × 10⁻⁵ m/s","0.78 × 10⁻⁵ m/s","2.12 × 10⁻⁵ m/s"],ans:0,sol:"v_d = I/(neA) = 0.21/(8.4×10²⁸ × 1.6×10⁻¹⁹ × 10⁻⁶) ≈ 1.56×10⁻⁵ m/s."},
+      {q:"Copper wire carries 1 A. n = 8×10²⁸/m³, area = 2 mm². Drift velocity:",opts:["3.9 × 10⁻⁵ m/s","1.95 × 10⁻⁵ m/s","7.8 × 10⁻⁵ m/s","0.97 × 10⁻⁵ m/s"],ans:0,sol:"v_d = 1/(8×10²⁸×1.6×10⁻¹⁹×2×10⁻⁶) = 1/25600 ≈ 3.9×10⁻⁵ m/s."},
+      {q:"Wire with n = 5×10²⁸/m³, I = 2 A, area = 4 mm². Drift velocity:",opts:["6.25 × 10⁻⁵ m/s","3.12 × 10⁻⁵ m/s","1.56 × 10⁻⁵ m/s","12.5 × 10⁻⁵ m/s"],ans:0,sol:"v_d = 2/(5×10²⁸×1.6×10⁻¹⁹×4×10⁻⁶) = 2/32000 = 6.25×10⁻⁵ m/s."},
+      {q:"Silver wire: n = 6×10²⁸/m³, area = 3 mm², I = 3 A. Drift velocity:",opts:["1.04 × 10⁻⁵ m/s","2.08 × 10⁻⁵ m/s","0.52 × 10⁻⁵ m/s","3.12 × 10⁻⁵ m/s"],ans:0,sol:"v_d = 3/(6×10²⁸×1.6×10⁻¹⁹×3×10⁻⁶) = 3/28800 ≈ 1.04×10⁻⁵ m/s."},
+      {q:"Copper wire n=8.4×10²⁸/m³, A=0.5 mm². For drift velocity 10⁻⁴ m/s, required current:",opts:["0.67 A","1.34 A","0.33 A","2.0 A"],ans:0,sol:"I = v_d×n×e×A = 10⁻⁴×8.4×10²⁸×1.6×10⁻¹⁹×5×10⁻⁷ ≈ 0.67 A."}
+    ]
+  },
+  {
+    name:"Drift Velocity vs Electric Field",
+    questions:[
+      {q:"Drift velocity v_d varies with electric field E as:",opts:["v_d ∝ E","v_d ∝ 1/E","v_d ∝ E²","v_d = constant"],ans:0,sol:"v_d = μE where μ is mobility. For ohmic conductors, v_d ∝ E linearly."},
+      {q:"If electric field on a conductor doubles, drift velocity:",opts:["Doubles","Halves","Is unchanged","Quadruples"],ans:0,sol:"v_d = eEτ/m. At constant τ and temperature, doubling E doubles v_d."},
+      {q:"Electric field is halved at constant temperature. Drift velocity:",opts:["Halves","Doubles","Is unchanged","Quadruples"],ans:0,sol:"v_d = eEτ/m. τ constant → halving E halves v_d."},
+      {q:"Mobility μ of an electron is defined as:",opts:["v_d / E","v_d × E","eE/m","neρ"],ans:0,sol:"μ = v_d/E. SI unit: m²V⁻¹s⁻¹."},
+      {q:"Relaxation time τ decreases with temperature because:",opts:["Lattice vibrations increase, causing more collisions","Electric field increases","Electron density decreases","Electron charge changes"],ans:0,sol:"Higher temperature → stronger lattice vibrations → more frequent collisions → shorter τ."}
+    ]
+  },
+  {
+    name:"Drift Velocity in Wire Sections",
+    questions:[
+      {q:"Wire sections P (diameter d) and Q (diameter d/2). Ratio v_P : v_Q is:",opts:["1:4","4:1","1:2","2:1"],ans:0,sol:"v_d ∝ 1/A ∝ 1/d². v_P/v_Q = (d/2)²/d² = 1/4. So v_P:v_Q = 1:4."},
+      {q:"Two wire sections have areas A and 3A. Ratio of drift velocities v₁:v₂:",opts:["3:1","1:3","1:1","9:1"],ans:0,sol:"I = nev_dA = const → v₁/v₂ = A₂/A₁ = 3. Ratio = 3:1."},
+      {q:"Wire sections with radii r and 2r. Drift velocity in narrow vs wide section:",opts:["v_narrow = 4·v_wide","v_narrow = 2·v_wide","v_narrow = v_wide","v_narrow = v_wide/4"],ans:0,sol:"A ∝ r². A_wide/A_narrow = 4. v_d ∝ 1/A → v_narrow = 4·v_wide."},
+      {q:"Cross-section changes from A to 4A. Drift velocity factor change:",opts:["Reduces to 1/4","Increases 4×","Reduces to 1/2","Doubles"],ans:0,sol:"v_d ∝ 1/A. If A→4A, v_d becomes (1/4)v_d."},
+      {q:"Section Q has half the cross-section of section P. v_Q compared to v_P:",opts:["v_Q = 2v_P","v_Q = v_P/2","v_Q = v_P","v_Q = 4v_P"],ans:0,sol:"v_d ∝ 1/A. A_Q = A_P/2 → v_Q = 2v_P."}
+    ]
+  },
+  {
+    name:"Non-Uniform Wire Drift Speed",
+    questions:[
+      {q:"Wire narrows from left to right with steady current. Drift velocity is:",opts:["Greater in narrower part","Greater in wider part","Equal everywhere","Zero in narrower part"],ans:0,sol:"v_d = I/(neA). Smaller A → higher v_d to maintain constant current."},
+      {q:"Area doubles from point X to Y. Drift speed at Y compared to X:",opts:["Half","Double","Equal","One-quarter"],ans:0,sol:"v_d ∝ 1/A. A_Y = 2A_X → v_Y = v_X/2."},
+      {q:"Wire bulges in middle (wider middle, narrow ends). Drift velocity is maximum at:",opts:["The narrow ends","The centre (widest part)","Everywhere the same","At the junction"],ans:0,sol:"v_d ∝ 1/A. Narrow ends have smallest area → maximum drift velocity."},
+      {q:"For non-uniform cross-section with steady current, which remains constant?",opts:["Current I","Drift velocity","Current density J","Electric field E"],ans:0,sol:"Continuity equation: I is constant across all cross-sections in steady state."},
+      {q:"Points P and Q on a conductor have areas ratio 1:3. Drift velocity ratio v_P:v_Q:",opts:["3:1","1:3","1:1","9:1"],ans:0,sol:"v_d ∝ 1/A. v_P/v_Q = A_Q/A_P = 3. So v_P:v_Q = 3:1."}
+    ]
+  },
+  {
+    name:"Electron Mobility",
+    questions:[
+      {q:"Conductor length 40 cm, PD = 10 V, drift velocity = 5×10⁻⁶ m/s. Mobility:",opts:["2 × 10⁻⁶ m²/Vs","2 × 10⁻⁷ m²/Vs","5 × 10⁻⁷ m²/Vs","8 × 10⁻⁷ m²/Vs"],ans:0,sol:"E = V/L = 10/0.4 = 25 V/m. μ = v_d/E = 5×10⁻⁶/25 = 2×10⁻⁷ m²/Vs."},
+      {q:"80 cm conductor, 8 V across ends, drift velocity = 4×10⁻⁶ m/s. Mobility:",opts:["4 × 10⁻⁷ m²/Vs","2 × 10⁻⁷ m²/Vs","8 × 10⁻⁷ m²/Vs","4 × 10⁻⁶ m²/Vs"],ans:0,sol:"E = 8/0.8 = 10 V/m. μ = 4×10⁻⁶/10 = 4×10⁻⁷ m²/Vs."},
+      {q:"Mobility μ = 6×10⁻⁷ m²/Vs, E = 300 V/m. Drift velocity:",opts:["1.8 × 10⁻⁴ m/s","3 × 10⁻⁴ m/s","6 × 10⁻⁴ m/s","2 × 10⁻⁴ m/s"],ans:0,sol:"v_d = μE = 6×10⁻⁷ × 300 = 1.8×10⁻⁴ m/s."},
+      {q:"50 cm conductor, PD = 20 V, drift velocity = 5×10⁻⁶ m/s. Mobility:",opts:["1.25 × 10⁻⁷ m²/Vs","2.5 × 10⁻⁷ m²/Vs","5 × 10⁻⁷ m²/Vs","1 × 10⁻⁶ m²/Vs"],ans:0,sol:"E = 20/0.5 = 40 V/m. μ = 5×10⁻⁶/40 = 1.25×10⁻⁷ m²/Vs."},
+      {q:"If E is halved and mobility is unchanged, drift velocity:",opts:["Halves","Doubles","Is unchanged","Quadruples"],ans:0,sol:"v_d = μE. Halving E at constant μ halves v_d."}
+    ]
+  },
+  {
+    name:"Current Density Vector",
+    questions:[
+      {q:"J⃗ = (2×10⁴ĵ) Am⁻². Area S⃗ = (2î + 3ĵ) cm². Current through surface:",opts:["6 A","4 A","2 A","8 A"],ans:0,sol:"I = J⃗·S⃗ = 2×10⁴ × 3×10⁻⁴ = 6 A (only ĵ component matters)."},
+      {q:"J⃗ = (3×10⁴î) Am⁻². Area S⃗ = (4î + 3ĵ) cm². Current:",opts:["12 A","9 A","6 A","18 A"],ans:0,sol:"I = 3×10⁴ × 4×10⁻⁴ = 12 A."},
+      {q:"Current density in wire of radius 2 mm is 10⁶ A/m². Total current:",opts:["4π A","2π A","π A","8π A"],ans:0,sol:"I = J×A = 10⁶ × π×(0.002)² = 4π A."},
+      {q:"J⃗ = (4×10⁴k̂) Am⁻², S⃗ = (2î + 3k̂) cm². Current through area:",opts:["12 A","8 A","6 A","0 A"],ans:0,sol:"I = J⃗·S⃗ = 4×10⁴ × 3×10⁻⁴ = 12 A."},
+      {q:"J⃗ = (2×10³î + 3×10³ĵ) Am⁻², S⃗ = (2î + 2ĵ) cm². Current:",opts:["1 A","4 A","6 A","0 A"],ans:0,sol:"I = (2×10³×2 + 3×10³×2)×10⁻⁴ = 10000×10⁻⁴ = 1 A."}
+    ]
+  },
+  {
+    name:"Non-Uniform Wire J and E",
+    questions:[
+      {q:"Non-uniform homogeneous conductor (wider at A, narrower at B). Correct relation:",opts:["j_A < j_B ; E_A < E_B","j_A > j_B ; E_A > E_B","j_A = j_B ; E_A = E_B","j_A < j_B ; E_A > E_B"],ans:0,sol:"Narrower B → smaller area → higher J (= I/A) and E (= J/σ). So j_B > j_A and E_B > E_A."},
+      {q:"For a uniform conductor with steady current, current density is:",opts:["Uniform throughout","Inversely proportional to length","Zero at the ends","Varies with cross-section"],ans:0,sol:"Uniform cross-section → J = I/A is the same everywhere since both I and A are constant."},
+      {q:"For a homogeneous conductor, J and E are related by:",opts:["J = σE","J = E/σ","J = σ/E","J = σE²"],ans:0,sol:"Ohm's law in vector form: J⃗ = σE⃗ where σ is electrical conductivity."},
+      {q:"Homogeneous conductor wider at A, narrower at B, current flows A→B. Drift velocity:",opts:["Increases from A to B","Decreases from A to B","Is constant","Is zero at midpoint"],ans:0,sol:"As conductor narrows, A decreases → J = I/A increases → v_d = J/(ne) increases."},
+      {q:"Doubling cross-section area at constant current changes J and E by:",opts:["Both halve","Both double","J halves, E unchanged","J unchanged, E doubles"],ans:0,sol:"J = I/A → halves. E = J/σ → also halves (σ unchanged). Both J and E halve."}
+    ]
+  },
+  {
+    name:"Current Density Ratios",
+    questions:[
+      {q:"Non-uniform wire: cross-sections A, 3A, 6A at three points. Current density ratio j₁:j₂:j₃:",opts:["6:2:1","1:2:6","3:2:1","6:3:1"],ans:0,sol:"J ∝ 1/A. j₁:j₂:j₃ = 1/A : 1/3A : 1/6A = 6:2:1."},
+      {q:"Sections with areas A, 2A, 4A carry same current. Current density ratio:",opts:["4:2:1","1:2:4","2:1:4","1:1:1"],ans:0,sol:"J = I/A. Ratio = I/A : I/2A : I/4A = 4:2:1."},
+      {q:"Areas at points 1, 2, 3 are 2A, A, 4A. Current density ratio j₁:j₂:j₃:",opts:["2:4:1","1:2:4","4:2:1","2:1:4"],ans:0,sol:"j ∝ 1/area. j₁:j₂:j₃ = 1/2A : 1/A : 1/4A = 2:4:1."},
+      {q:"Sections with cross-section radii r, 2r, 3r. Current density ratio:",opts:["9:2.25:1","1:4:9","9:4:1","1:1:1"],ans:2,sol:"J ∝ 1/r². Ratio = 1/r² : 1/4r² : 1/9r² = 36:9:4 ≈ 9:2.25:1. Most precise: option (1)."},
+      {q:"Wire sections have areas A, 2A, 3A. Drift velocity ratio v₁:v₂:v₃:",opts:["6:3:2","1:2:3","3:2:1","2:3:6"],ans:0,sol:"v_d ∝ 1/A. Ratio = 1/A : 1/2A : 1/3A = 6:3:2."}
+    ]
+  },
+  {
+    name:"Non-Uniform J — Integration",
+    questions:[
+      {q:"J = J₀(r/R)² in cylinder of radius R. Total current in terms of J₀ and A = πR²:",opts:["J₀A/2","J₀A/3","2J₀A/3","J₀A/4"],ans:0,sol:"I = ∫₀ᴿ J₀(r/R)²·2πr dr = (2πJ₀/R²)·R⁴/4 = πJ₀R²/2 = J₀A/2."},
+      {q:"J = J₀(1 − r/R) in cylinder of radius R. Total current:",opts:["J₀A/3","J₀A/6","J₀A/2","2J₀A/3"],ans:0,sol:"I = ∫₀ᴿ J₀(1−r/R)2πr dr = 2πJ₀[R²/2−R²/3] = πJ₀R²/3 = J₀A/3."},
+      {q:"J = J₀ (uniform) across cylinder of radius R. Total current I:",opts:["J₀πR²","2J₀πR","J₀πR²/2","4J₀πR²"],ans:0,sol:"Uniform J: I = J₀ × πR² = J₀A."},
+      {q:"J = J₀r/R in solid cylinder of radius R. Current in terms of J₀ and A:",opts:["2J₀A/3","J₀A/3","J₀A/2","3J₀A/4"],ans:0,sol:"I = ∫₀ᴿ (J₀r/R)·2πr dr = (2πJ₀/R)·R³/3 = 2πJ₀R²/3 = 2J₀A/3."},
+      {q:"J = J₀cos(πr/2R) in cylinder of radius R. At r = R, current density equals:",opts:["Zero","J₀","J₀/2","J₀√2/2"],ans:0,sol:"J(R) = J₀cos(π/2) = 0. Current density is zero at the surface for this distribution."}
+    ]
+  }
+];
+
+// ── SHUFFLE HELPER ───────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// Build shuffled topic list and randomize answer positions per question
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx: ti,
+  questions: t.questions.map(raw=>{
+    const correctText = raw.opts[raw.ans];
+    const sol = raw.sol;
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect: i===raw.ans}));
+    shuffle(indexed);
+    return {
+      q: raw.q,
+      opts: indexed.map(o=>o.text),
+      ans: indexed.findIndex(o=>o.isCorrect),
+      sol
+    };
+  })
+}));
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let curTopic = null;   // topic object
+let curQ     = 0;      // 0-4
+// answers[topicIdx][qIdx] = {chosen, correct} or null
+const answers = TOPICS_SHUFFLED.map(()=>Array(5).fill(null));
+
+// ── DOM REFS ─────────────────────────────────────────────────────────────────
+const homeScreen  = document.getElementById('home-screen');
+const qScreen     = document.getElementById('q-screen');
+const backBtn     = document.getElementById('back-btn');
+const topicGrid   = document.getElementById('topic-grid');
+const qsTopicLbl  = document.getElementById('qs-topic-label');
+const qsTitle     = document.getElementById('qs-title');
+const qSelector   = document.getElementById('q-selector');
+const qLabel      = document.getElementById('q-label');
+const qText       = document.getElementById('q-text');
+const optionsDiv  = document.getElementById('options');
+const solWrap     = document.getElementById('sol-wrap');
+const solBox      = document.getElementById('sol-box');
+const feedbackEl  = document.getElementById('feedback');
+const showAnsBtn  = document.getElementById('show-ans-btn');
+const prevBtn     = document.getElementById('prev-btn');
+const nextBtn     = document.getElementById('next-btn');
+const scScore     = document.getElementById('sc-score');
+const scTotal     = document.getElementById('sc-total');
+const scAtt       = document.getElementById('sc-att');
+const ytTrigger   = document.getElementById('yt-trigger');
+const ytCorner    = document.getElementById('yt-corner');
+const ytInput     = document.getElementById('yt-input');
+const ytEmbed     = document.getElementById('yt-embed');
+
+// ── BUILD HOME ────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans = answers[ti];
+    const done = ans.filter(a=>a!==null&&a.correct).length;
+    const att  = ans.filter(a=>a!==null).length;
+    const card = document.createElement('button');
+    card.className='topic-card'+(att===5&&done===5?' all-done':'');
+    const dots = Array(5).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':''}"></span>`;
+    }).join('');
+    card.innerHTML=`
+      <div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar">
+        <div class="tc-dots">${dots}</div>
+        <span class="tc-count">${att}/5 attempted</span>
+      </div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    `;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+}
+
+// ── OPEN TOPIC ────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic = TOPICS_SHUFFLED[ti];
+  curQ = 0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  // Find first unanswered if any
+  const firstUnanswered = answers[ti].findIndex(a=>a===null);
+  if(firstUnanswered!==-1) curQ=firstUnanswered;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT();
+  buildHome();
+}
+
+// ── RENDER Q SCREEN ────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti = TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent = `Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent = curTopic.name;
+
+  // Score strip
+  const topicAns = answers[ti];
+  const sc = topicAns.filter(a=>a&&a.correct).length;
+  const att = topicAns.filter(a=>a!==null).length;
+  scScore.textContent=sc; scTotal.textContent=5; scAtt.textContent=att;
+
+  // Pill selector
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti = TOPICS_SHUFFLED.indexOf(curTopic);
+  const q  = curTopic.questions[curQ];
+  const a  = answers[ti][curQ];
+
+  qLabel.textContent = `Question ${curQ+1} of 5`;
+  qText.textContent  = q.q;
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+
+  // Reset card animation
+  const card = document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight;
+  card.style.animation='';
+
+  // Options
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen && !a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+
+  // Show solution if already answered
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+
+  prevBtn.disabled = curQ===0;
+  nextBtn.disabled = false;
+  nextBtn.textContent = curQ===4 ? 'Done' : 'Next ›';
+  if(curQ===4){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti = TOPICS_SHUFFLED.indexOf(curTopic);
+  const q  = curTopic.questions[curQ];
+  const correct = chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+
+  const opts = optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked');
+    btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen && !correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+
+  // Update pill
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+
+  // Update score strip
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti = TOPICS_SHUFFLED.indexOf(curTopic);
+  const q  = curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked');btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  if(newQ<0||newQ>4){
+    if(newQ>4) goHome();
+    return;
+  }
+  curQ=newQ;
+  renderQScreen();
+}
+
+// ── YOUTUBE ───────────────────────────────────────────────────────────────────
+// Show only for topics 1-2 (indices 0 and 1)
+function updateYTVisibility(){
+  const ti = TOPICS_SHUFFLED.indexOf(curTopic);
+  const eligible = ti<2; // only first 2 topics
+  if(eligible && qScreen.classList.contains('active')){
+    ytTrigger.classList.add('visible');
+  } else {
+    ytTrigger.classList.remove('visible');
+    hideYT();
+  }
+}
+
+ytTrigger.onclick=()=>{
+  ytCorner.classList.add('visible');
+  ytTrigger.classList.remove('visible');
+};
+
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  if(ti<2 && qScreen.classList.contains('active')){
+    ytTrigger.classList.add('visible');
+  }
+  ytEmbed.style.display='none';
+  ytEmbed.innerHTML='';
+  ytInput.value='';
+}
+
+function hideYT(){
+  ytCorner.classList.remove('visible');
+  ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none';
+  ytEmbed.innerHTML='';
+  ytInput.value='';
+}
+
+function loadYT(){
+  const val=ytInput.value.trim();
+  if(!val) return;
+  // Extract video ID
+  let vid='';
+  const patterns=[
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/
+  ];
+  for(const p of patterns){
+    const m=val.match(p);
+    if(m){vid=m[1];break;}
+  }
+  if(!vid){
+    ytEmbed.style.display='block';
+    ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;
+    return;
+  }
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="https://www.youtube.com/embed/${vid}?autoplay=0&rel=0" allowfullscreen></iframe>`;
+}
+
+// also allow Enter key in yt input
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
