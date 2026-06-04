@@ -267,6 +267,14 @@ html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font
 
 /* divider */
 .divider{width:100%;height:1px;background:var(--border);margin:32px 0;}
+
+/* ── INLINE QUESTION VIDEO BOX ── */
+.q-yt-box{margin-bottom:20px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);}
+.q-yt-label{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--tag-bg);font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);border-bottom:1px solid var(--border);}
+.q-yt-label svg{color:var(--yt);}
+.q-yt-ts{margin-left:auto;font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.1em;color:var(--yt);background:rgba(255,45,45,0.08);border:1px solid rgba(255,45,45,0.2);border-radius:20px;padding:2px 8px;}
+.q-yt-frame{background:#000;}
+.q-yt-frame iframe{width:100%;height:175px;border:none;display:block;}
 </style>
 </head>
 <body>
@@ -349,7 +357,7 @@ html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font
     </button>
   </div>
   <div class="yt-body">
-    <p class="yt-hint">Paste a YouTube link for this question's solution:</p>
+    <p class="yt-hint">Paste a YouTube link — timestamps supported (e.g. youtu.be/ID?t=125):</p>
     <div class="yt-input-row">
       <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..." />
       <button id="yt-go" onclick="loadYT()">Load</button>
@@ -364,151 +372,151 @@ const TOPICS = [
   {
     name:"Alpha Particle Current",
     questions:[
-      {q:"5,000 alpha particles pass per minute through a tube. What is the electric current?",opts:["2.67 × 10⁻¹⁷ A","3.2 × 10⁻¹⁶ A","1.6 × 10⁻¹⁷ A","5.0 × 10⁻¹⁷ A"],ans:0,sol:"Each alpha carries charge 2e = 3.2×10⁻¹⁹ C. Rate = 5000/60 ≈ 83.3 particles/s. I = 83.3 × 3.2×10⁻¹⁹ ≈ 2.67×10⁻¹⁷ A."},
-      {q:"20,000 alpha particles pass per second through a tube. What is the resulting current?",opts:["6.4 × 10⁻¹⁵ A","3.2 × 10⁻¹⁵ A","1.28 × 10⁻¹⁴ A","6.4 × 10⁻¹⁴ A"],ans:0,sol:"I = 20000 × 3.2×10⁻¹⁹ = 6.4×10⁻¹⁵ A."},
-      {q:"A beam of 10⁸ alpha particles per second hits a target. The beam current is:",opts:["3.2 × 10⁻¹¹ A","1.6 × 10⁻¹¹ A","6.4 × 10⁻¹¹ A","3.2 × 10⁻¹⁰ A"],ans:0,sol:"I = 10⁸ × 2 × 1.6×10⁻¹⁹ = 3.2×10⁻¹¹ A."},
-      {q:"15,000 protons (charge +e) pass per minute through a tube. Current is:",opts:["4 × 10⁻¹⁷ A","8 × 10⁻¹⁷ A","2 × 10⁻¹⁷ A","4 × 10⁻¹⁶ A"],ans:0,sol:"I = (15000/60) × 1.6×10⁻¹⁹ = 250 × 1.6×10⁻¹⁹ = 4×10⁻¹⁷ A."},
-      {q:"3,000 alpha particles pass per minute. The current is:",opts:["1.6 × 10⁻¹⁷ A","3.2 × 10⁻¹⁷ A","0.8 × 10⁻¹⁷ A","4.8 × 10⁻¹⁷ A"],ans:0,sol:"I = (3000/60) × 3.2×10⁻¹⁹ = 50 × 3.2×10⁻¹⁹ = 1.6×10⁻¹⁷ A."}
+      {q:"5,000 alpha particles pass per minute through a tube. What is the electric current?",opts:["2.67 × 10⁻¹⁷ A","3.2 × 10⁻¹⁶ A","1.6 × 10⁻¹⁷ A","5.0 × 10⁻¹⁷ A"],ans:0,sol:"Each alpha carries charge 2e = 3.2×10⁻¹⁹ C. Rate = 5000/60 ≈ 83.3 particles/s. I = 83.3 × 3.2×10⁻¹⁹ ≈ 2.67×10⁻¹⁷ A.",yt:""},
+      {q:"20,000 alpha particles pass per second through a tube. What is the resulting current?",opts:["6.4 × 10⁻¹⁵ A","3.2 × 10⁻¹⁵ A","1.28 × 10⁻¹⁴ A","6.4 × 10⁻¹⁴ A"],ans:0,sol:"I = 20000 × 3.2×10⁻¹⁹ = 6.4×10⁻¹⁵ A.",yt:""},
+      {q:"A beam of 10⁸ alpha particles per second hits a target. The beam current is:",opts:["3.2 × 10⁻¹¹ A","1.6 × 10⁻¹¹ A","6.4 × 10⁻¹¹ A","3.2 × 10⁻¹⁰ A"],ans:0,sol:"I = 10⁸ × 2 × 1.6×10⁻¹⁹ = 3.2×10⁻¹¹ A.",yt:""},
+      {q:"15,000 protons (charge +e) pass per minute through a tube. Current is:",opts:["4 × 10⁻¹⁷ A","8 × 10⁻¹⁷ A","2 × 10⁻¹⁷ A","4 × 10⁻¹⁶ A"],ans:0,sol:"I = (15000/60) × 1.6×10⁻¹⁹ = 250 × 1.6×10⁻¹⁹ = 4×10⁻¹⁷ A.",yt:""},
+      {q:"3,000 alpha particles pass per minute. The current is:",opts:["1.6 × 10⁻¹⁷ A","3.2 × 10⁻¹⁷ A","0.8 × 10⁻¹⁷ A","4.8 × 10⁻¹⁷ A"],ans:0,sol:"I = (3000/60) × 3.2×10⁻¹⁹ = 50 × 3.2×10⁻¹⁹ = 1.6×10⁻¹⁷ A.",yt:""}
     ]
   },
   {
     name:"Electron Flow & Current",
     questions:[
-      {q:"10⁸ electrons per second flow through a cross-section of 10⁻⁴ m². The current is:",opts:["1.6 × 10⁻¹¹ A","1.6 × 10⁻⁷ A","1.6 × 10⁻¹³ A","1.6 × 10⁻⁹ A"],ans:0,sol:"I = n × e = 10⁸ × 1.6×10⁻¹⁹ = 1.6×10⁻¹¹ A. Area does not affect current."},
-      {q:"10¹² electrons per second flow through a wire. The current is:",opts:["1.6 × 10⁻⁷ A","1.6 × 10⁻¹⁰ A","1.6 × 10⁻¹² A","6.25 × 10¹⁸ A"],ans:0,sol:"I = 10¹² × 1.6×10⁻¹⁹ = 1.6×10⁻⁷ A."},
-      {q:"A current of 2 A flows. How many electrons pass per second?",opts:["1.25 × 10¹⁹","2.5 × 10¹⁹","6.25 × 10¹⁸","1.25 × 10¹⁸"],ans:0,sol:"n = I/e = 2 / 1.6×10⁻¹⁹ = 1.25×10¹⁹ electrons/s."},
-      {q:"5 × 10¹⁰ electrons per second flow through an area 10⁻³ m². Current is:",opts:["8 × 10⁻⁹ A","8 × 10⁻⁷ A","8 × 10⁻¹¹ A","5 × 10⁻⁹ A"],ans:0,sol:"I = 5×10¹⁰ × 1.6×10⁻¹⁹ = 8×10⁻⁹ A."},
-      {q:"A current of 0.5 A flows. How much charge passes through in 2 minutes?",opts:["60 C","30 C","120 C","15 C"],ans:0,sol:"Q = I × t = 0.5 × 120 = 60 C."}
+      {q:"10⁸ electrons per second flow through a cross-section of 10⁻⁴ m². The current is:",opts:["1.6 × 10⁻¹¹ A","1.6 × 10⁻⁷ A","1.6 × 10⁻¹³ A","1.6 × 10⁻⁹ A"],ans:0,sol:"I = n × e = 10⁸ × 1.6×10⁻¹⁹ = 1.6×10⁻¹¹ A. Area does not affect current.",yt:""},
+      {q:"10¹² electrons per second flow through a wire. The current is:",opts:["1.6 × 10⁻⁷ A","1.6 × 10⁻¹⁰ A","1.6 × 10⁻¹² A","6.25 × 10¹⁸ A"],ans:0,sol:"I = 10¹² × 1.6×10⁻¹⁹ = 1.6×10⁻⁷ A.",yt:""},
+      {q:"A current of 2 A flows. How many electrons pass per second?",opts:["1.25 × 10¹⁹","2.5 × 10¹⁹","6.25 × 10¹⁸","1.25 × 10¹⁸"],ans:0,sol:"n = I/e = 2 / 1.6×10⁻¹⁹ = 1.25×10¹⁹ electrons/s.",yt:""},
+      {q:"5 × 10¹⁰ electrons per second flow through an area 10⁻³ m². Current is:",opts:["8 × 10⁻⁹ A","8 × 10⁻⁷ A","8 × 10⁻¹¹ A","5 × 10⁻⁹ A"],ans:0,sol:"I = 5×10¹⁰ × 1.6×10⁻¹⁹ = 8×10⁻⁹ A.",yt:""},
+      {q:"A current of 0.5 A flows. How much charge passes through in 2 minutes?",opts:["60 C","30 C","120 C","15 C"],ans:0,sol:"Q = I × t = 0.5 × 120 = 60 C.",yt:""}
     ]
   },
   {
     name:"Charge vs Time (Integration)",
     questions:[
-      {q:"Current i = (3 + 2t) A. Charge through cross-section in first 5 seconds:",opts:["40 C","25 C","35 C","50 C"],ans:0,sol:"Q = ∫₀⁵(3+2t)dt = [3t+t²]₀⁵ = 15+25 = 40 C."},
-      {q:"Current i = (5 + 4t) A. Charge in first 3 seconds is:",opts:["33 C","27 C","30 C","15 C"],ans:0,sol:"Q = ∫₀³(5+4t)dt = [5t+2t²]₀³ = 15+18 = 33 C."},
-      {q:"If i = (t² + 2t) A, charge through wire in first 2 seconds is:",opts:["6.67 C","8 C","5 C","4 C"],ans:0,sol:"Q = ∫₀²(t²+2t)dt = [t³/3+t²]₀² = 8/3+4 ≈ 6.67 C."},
-      {q:"If I = 6 − 2t A, the charge that flows from t = 0 to t = 3s is:",opts:["9 C","12 C","6 C","18 C"],ans:0,sol:"Q = ∫₀³(6−2t)dt = [6t−t²]₀³ = 18−9 = 9 C."},
-      {q:"Current i = (1 + t)² A. Charge in first 2 seconds is:",opts:["26/3 C","9 C","7 C","4 C"],ans:0,sol:"Q = ∫₀²(1+t)²dt = [(1+t)³/3]₀² = 27/3 − 1/3 = 26/3 ≈ 8.67 C."}
+      {q:"Current i = (3 + 2t) A. Charge through cross-section in first 5 seconds:",opts:["40 C","25 C","35 C","50 C"],ans:0,sol:"Q = ∫₀⁵(3+2t)dt = [3t+t²]₀⁵ = 15+25 = 40 C.",yt:""},
+      {q:"Current i = (5 + 4t) A. Charge in first 3 seconds is:",opts:["33 C","27 C","30 C","15 C"],ans:0,sol:"Q = ∫₀³(5+4t)dt = [5t+2t²]₀³ = 15+18 = 33 C.",yt:""},
+      {q:"If i = (t² + 2t) A, charge through wire in first 2 seconds is:",opts:["6.67 C","8 C","5 C","4 C"],ans:0,sol:"Q = ∫₀²(t²+2t)dt = [t³/3+t²]₀² = 8/3+4 ≈ 6.67 C.",yt:""},
+      {q:"If I = 6 − 2t A, the charge that flows from t = 0 to t = 3s is:",opts:["9 C","12 C","6 C","18 C"],ans:0,sol:"Q = ∫₀³(6−2t)dt = [6t−t²]₀³ = 18−9 = 9 C.",yt:""},
+      {q:"Current i = (1 + t)² A. Charge in first 2 seconds is:",opts:["26/3 C","9 C","7 C","4 C"],ans:0,sol:"Q = ∫₀²(1+t)²dt = [(1+t)³/3]₀² = 27/3 − 1/3 = 26/3 ≈ 8.67 C.",yt:""}
     ]
   },
   {
     name:"Time-Varying Current & Charge",
     questions:[
-      {q:"Current I = t² + 4t A. Charge from t = 0 to t = 3s:",opts:["27 C","18 C","36 C","9 C"],ans:0,sol:"Q = ∫₀³(t²+4t)dt = [t³/3+2t²]₀³ = 9+18 = 27 C."},
-      {q:"I = 5t² − 2t A. Charge from t = 1s to t = 3s:",opts:["35.33 C","30 C","28 C","40 C"],ans:0,sol:"Q = ∫₁³(5t²−2t)dt = [5t³/3−t²]₁³ = (45−9)−(5/3−1) ≈ 35.33 C."},
-      {q:"Current I = 2t + 3t² A. Charge from t = 2s to t = 4s:",opts:["68 C","48 C","60 C","44 C"],ans:0,sol:"Q = ∫₂⁴(2t+3t²)dt = [t²+t³]₂⁴ = (16+64)−(4+8) = 68 C."},
-      {q:"Current I = 3t + 2t² A. Charge during t = 1s to t = 2s:",opts:["9.17 C","8 C","12 C","7 C"],ans:0,sol:"Q = ∫₁²(3t+2t²)dt = [1.5t²+(2/3)t³]₁² = (6+16/3)−(1.5+2/3) ≈ 9.17 C."},
-      {q:"Current I = 2t + 3t² A where I is in amperes and t in seconds. Electric charge flowing from t = 2s to t = 3s:",opts:["24 C","10 C","33 C","44 C"],ans:0,sol:"Q = ∫₂³(2t+3t²)dt = [t²+t³]₂³ = (9+27)−(4+8) = 36−12 = 24 C."}
+      {q:"Current I = t² + 4t A. Charge from t = 0 to t = 3s:",opts:["27 C","18 C","36 C","9 C"],ans:0,sol:"Q = ∫₀³(t²+4t)dt = [t³/3+2t²]₀³ = 9+18 = 27 C.",yt:""},
+      {q:"I = 5t² − 2t A. Charge from t = 1s to t = 3s:",opts:["35.33 C","30 C","28 C","40 C"],ans:0,sol:"Q = ∫₁³(5t²−2t)dt = [5t³/3−t²]₁³ = (45−9)−(5/3−1) ≈ 35.33 C.",yt:""},
+      {q:"Current I = 2t + 3t² A. Charge from t = 2s to t = 4s:",opts:["68 C","48 C","60 C","44 C"],ans:0,sol:"Q = ∫₂⁴(2t+3t²)dt = [t²+t³]₂⁴ = (16+64)−(4+8) = 68 C.",yt:""},
+      {q:"Current I = 3t + 2t² A. Charge during t = 1s to t = 2s:",opts:["9.17 C","8 C","12 C","7 C"],ans:0,sol:"Q = ∫₁²(3t+2t²)dt = [1.5t²+(2/3)t³]₁² = (6+16/3)−(1.5+2/3) ≈ 9.17 C.",yt:""},
+      {q:"Current I = 2t + 3t² A where I is in amperes and t in seconds. Electric charge flowing from t = 2s to t = 3s:",opts:["24 C","10 C","33 C","44 C"],ans:0,sol:"Q = ∫₂³(2t+3t²)dt = [t²+t³]₂³ = (9+27)−(4+8) = 36−12 = 24 C.",yt:""}
     ]
   },
   {
     name:"No Current in Conductor",
     questions:[
-      {q:"When no current flows, which statement about free electrons is correct?",opts:["Average velocity is zero, but speed is not","Free electrons are stationary","All electrons move at the same speed","Electrons move only along the surface"],ans:0,sol:"Electrons have random thermal motion — average velocity (vector) is zero, but average speed (scalar) is non-zero."},
-      {q:"In a conductor with no applied field, net drift velocity of electrons is:",opts:["Zero","Equal to Fermi velocity","Non-zero and constant","Temperature-dependent non-zero"],ans:0,sol:"No field → no preferred direction. Random motions cancel → net drift velocity = 0."},
-      {q:"For a conductor with no current, the average displacement of a free electron over long time is:",opts:["Zero","Proportional to temperature","Equal to mean free path","Proportional to conductor length"],ans:0,sol:"Random collisions with no bias produce zero net displacement over long time."},
-      {q:"Which quantity is exactly zero when no current flows through a conductor?",opts:["Average velocity of free electrons","Kinetic energy of electrons","Speed of electrons","Temperature of electrons"],ans:0,sol:"Average velocity vector = 0 (random directions cancel). Speed and KE are non-zero due to thermal energy."},
-      {q:"When no current flows through a conductor, the average of the square of velocities of free electrons is:",opts:["Non-zero (thermal)","Zero","Equal to drift velocity squared","Equal to Fermi velocity squared"],ans:0,sol:"⟨v²⟩ is non-zero because electrons have thermal energy at any temperature above absolute zero."}
+      {q:"When no current flows, which statement about free electrons is correct?",opts:["Average velocity is zero, but speed is not","Free electrons are stationary","All electrons move at the same speed","Electrons move only along the surface"],ans:0,sol:"Electrons have random thermal motion — average velocity (vector) is zero, but average speed (scalar) is non-zero.",yt:""},
+      {q:"In a conductor with no applied field, net drift velocity of electrons is:",opts:["Zero","Equal to Fermi velocity","Non-zero and constant","Temperature-dependent non-zero"],ans:0,sol:"No field → no preferred direction. Random motions cancel → net drift velocity = 0.",yt:""},
+      {q:"For a conductor with no current, the average displacement of a free electron over long time is:",opts:["Zero","Proportional to temperature","Equal to mean free path","Proportional to conductor length"],ans:0,sol:"Random collisions with no bias produce zero net displacement over long time.",yt:""},
+      {q:"Which quantity is exactly zero when no current flows through a conductor?",opts:["Average velocity of free electrons","Kinetic energy of electrons","Speed of electrons","Temperature of electrons"],ans:0,sol:"Average velocity vector = 0 (random directions cancel). Speed and KE are non-zero due to thermal energy.",yt:""},
+      {q:"When no current flows through a conductor, the average of the square of velocities of free electrons is:",opts:["Non-zero (thermal)","Zero","Equal to drift velocity squared","Equal to Fermi velocity squared"],ans:0,sol:"⟨v²⟩ is non-zero because electrons have thermal energy at any temperature above absolute zero.",yt:""}
     ]
   },
   {
     name:"Steady Current & Cross-Section",
     questions:[
-      {q:"A steady current flows through a non-uniform conductor. The net charge crossing any cross-section per second is:",opts:["Independent of area of cross-section","Directly proportional to cross-section area","Inversely proportional to cross-section area","Proportional to conductor length"],ans:0,sol:"By charge conservation (continuity), steady current I is the same at every cross-section regardless of area."},
-      {q:"A conductor has cross-sections A and 2A. Current density ratio J₁:J₂ is:",opts:["2:1","1:2","1:1","4:1"],ans:0,sol:"J = I/A. J₁/J₂ = (I/A)/(I/2A) = 2. Ratio = 2:1."},
-      {q:"In a steady-state current through a non-uniform conductor, which quantity varies inversely with area?",opts:["Current density J","Current I","Resistance","Total charge"],ans:0,sol:"J = I/A so J ∝ 1/A for constant I."},
-      {q:"A truncated-cone conductor carries steady current. Drift velocity from wider to narrower end:",opts:["Increases","Decreases","Remains constant","First increases then decreases"],ans:0,sol:"v_d = I/(neA). As A decreases, v_d increases to maintain constant I."},
-      {q:"For steady current in a wire, which is conserved at all cross-sections?",opts:["Current I","Current density J","Drift velocity","Electric field magnitude"],ans:0,sol:"Continuity equation ensures current I is constant throughout for steady state."}
+      {q:"A steady current flows through a non-uniform conductor. The net charge crossing any cross-section per second is:",opts:["Independent of area of cross-section","Directly proportional to cross-section area","Inversely proportional to cross-section area","Proportional to conductor length"],ans:0,sol:"By charge conservation (continuity), steady current I is the same at every cross-section regardless of area.",yt:""},
+      {q:"A conductor has cross-sections A and 2A. Current density ratio J₁:J₂ is:",opts:["2:1","1:2","1:1","4:1"],ans:0,sol:"J = I/A. J₁/J₂ = (I/A)/(I/2A) = 2. Ratio = 2:1.",yt:""},
+      {q:"In a steady-state current through a non-uniform conductor, which quantity varies inversely with area?",opts:["Current density J","Current I","Resistance","Total charge"],ans:0,sol:"J = I/A so J ∝ 1/A for constant I.",yt:""},
+      {q:"A truncated-cone conductor carries steady current. Drift velocity from wider to narrower end:",opts:["Increases","Decreases","Remains constant","First increases then decreases"],ans:0,sol:"v_d = I/(neA). As A decreases, v_d increases to maintain constant I.",yt:""},
+      {q:"For steady current in a wire, which is conserved at all cross-sections?",opts:["Current I","Current density J","Drift velocity","Electric field magnitude"],ans:0,sol:"Continuity equation ensures current I is constant throughout for steady state.",yt:""}
     ]
   },
   {
     name:"Drift Velocity Calculation",
     questions:[
-      {q:"Copper: n = 8.4×10²² /cm³, I = 0.21 A, area = 1 mm². Drift velocity of electrons:",opts:["1.56 × 10⁻⁵ m/s","3.12 × 10⁻⁵ m/s","0.78 × 10⁻⁵ m/s","2.12 × 10⁻⁵ m/s"],ans:0,sol:"v_d = I/(neA) = 0.21/(8.4×10²⁸ × 1.6×10⁻¹⁹ × 10⁻⁶) ≈ 1.56×10⁻⁵ m/s."},
-      {q:"Copper wire carries 1 A. n = 8×10²⁸/m³, area = 2 mm². Drift velocity:",opts:["3.9 × 10⁻⁵ m/s","1.95 × 10⁻⁵ m/s","7.8 × 10⁻⁵ m/s","0.97 × 10⁻⁵ m/s"],ans:0,sol:"v_d = 1/(8×10²⁸×1.6×10⁻¹⁹×2×10⁻⁶) = 1/25600 ≈ 3.9×10⁻⁵ m/s."},
-      {q:"Wire with n = 5×10²⁸/m³, I = 2 A, area = 4 mm². Drift velocity:",opts:["6.25 × 10⁻⁵ m/s","3.12 × 10⁻⁵ m/s","1.56 × 10⁻⁵ m/s","12.5 × 10⁻⁵ m/s"],ans:0,sol:"v_d = 2/(5×10²⁸×1.6×10⁻¹⁹×4×10⁻⁶) = 2/32000 = 6.25×10⁻⁵ m/s."},
-      {q:"Silver wire: n = 6×10²⁸/m³, area = 3 mm², I = 3 A. Drift velocity:",opts:["1.04 × 10⁻⁵ m/s","2.08 × 10⁻⁵ m/s","0.52 × 10⁻⁵ m/s","3.12 × 10⁻⁵ m/s"],ans:0,sol:"v_d = 3/(6×10²⁸×1.6×10⁻¹⁹×3×10⁻⁶) = 3/28800 ≈ 1.04×10⁻⁵ m/s."},
-      {q:"Copper wire n=8.4×10²⁸/m³, A=0.5 mm². For drift velocity 10⁻⁴ m/s, required current:",opts:["0.67 A","1.34 A","0.33 A","2.0 A"],ans:0,sol:"I = v_d×n×e×A = 10⁻⁴×8.4×10²⁸×1.6×10⁻¹⁹×5×10⁻⁷ ≈ 0.67 A."}
+      {q:"Copper: n = 8.4×10²² /cm³, I = 0.21 A, area = 1 mm². Drift velocity of electrons:",opts:["1.56 × 10⁻⁵ m/s","3.12 × 10⁻⁵ m/s","0.78 × 10⁻⁵ m/s","2.12 × 10⁻⁵ m/s"],ans:0,sol:"v_d = I/(neA) = 0.21/(8.4×10²⁸ × 1.6×10⁻¹⁹ × 10⁻⁶) ≈ 1.56×10⁻⁵ m/s.",yt:""},
+      {q:"Copper wire carries 1 A. n = 8×10²⁸/m³, area = 2 mm². Drift velocity:",opts:["3.9 × 10⁻⁵ m/s","1.95 × 10⁻⁵ m/s","7.8 × 10⁻⁵ m/s","0.97 × 10⁻⁵ m/s"],ans:0,sol:"v_d = 1/(8×10²⁸×1.6×10⁻¹⁹×2×10⁻⁶) = 1/25600 ≈ 3.9×10⁻⁵ m/s.",yt:""},
+      {q:"Wire with n = 5×10²⁸/m³, I = 2 A, area = 4 mm². Drift velocity:",opts:["6.25 × 10⁻⁵ m/s","3.12 × 10⁻⁵ m/s","1.56 × 10⁻⁵ m/s","12.5 × 10⁻⁵ m/s"],ans:0,sol:"v_d = 2/(5×10²⁸×1.6×10⁻¹⁹×4×10⁻⁶) = 2/32000 = 6.25×10⁻⁵ m/s.",yt:""},
+      {q:"Silver wire: n = 6×10²⁸/m³, area = 3 mm², I = 3 A. Drift velocity:",opts:["1.04 × 10⁻⁵ m/s","2.08 × 10⁻⁵ m/s","0.52 × 10⁻⁵ m/s","3.12 × 10⁻⁵ m/s"],ans:0,sol:"v_d = 3/(6×10²⁸×1.6×10⁻¹⁹×3×10⁻⁶) = 3/28800 ≈ 1.04×10⁻⁵ m/s.",yt:""},
+      {q:"Copper wire n=8.4×10²⁸/m³, A=0.5 mm². For drift velocity 10⁻⁴ m/s, required current:",opts:["0.67 A","1.34 A","0.33 A","2.0 A"],ans:0,sol:"I = v_d×n×e×A = 10⁻⁴×8.4×10²⁸×1.6×10⁻¹⁹×5×10⁻⁷ ≈ 0.67 A.",yt:""}
     ]
   },
   {
     name:"Drift Velocity vs Electric Field",
     questions:[
-      {q:"Drift velocity v_d varies with electric field E as:",opts:["v_d ∝ E","v_d ∝ 1/E","v_d ∝ E²","v_d = constant"],ans:0,sol:"v_d = μE where μ is mobility. For ohmic conductors, v_d ∝ E linearly."},
-      {q:"If electric field on a conductor doubles, drift velocity:",opts:["Doubles","Halves","Is unchanged","Quadruples"],ans:0,sol:"v_d = eEτ/m. At constant τ and temperature, doubling E doubles v_d."},
-      {q:"Electric field is halved at constant temperature. Drift velocity:",opts:["Halves","Doubles","Is unchanged","Quadruples"],ans:0,sol:"v_d = eEτ/m. τ constant → halving E halves v_d."},
-      {q:"Mobility μ of an electron is defined as:",opts:["v_d / E","v_d × E","eE/m","neρ"],ans:0,sol:"μ = v_d/E. SI unit: m²V⁻¹s⁻¹."},
-      {q:"Relaxation time τ decreases with temperature because:",opts:["Lattice vibrations increase, causing more collisions","Electric field increases","Electron density decreases","Electron charge changes"],ans:0,sol:"Higher temperature → stronger lattice vibrations → more frequent collisions → shorter τ."}
+      {q:"Drift velocity v_d varies with electric field E as:",opts:["v_d ∝ E","v_d ∝ 1/E","v_d ∝ E²","v_d = constant"],ans:0,sol:"v_d = μE where μ is mobility. For ohmic conductors, v_d ∝ E linearly.",yt:""},
+      {q:"If electric field on a conductor doubles, drift velocity:",opts:["Doubles","Halves","Is unchanged","Quadruples"],ans:0,sol:"v_d = eEτ/m. At constant τ and temperature, doubling E doubles v_d.",yt:""},
+      {q:"Electric field is halved at constant temperature. Drift velocity:",opts:["Halves","Doubles","Is unchanged","Quadruples"],ans:0,sol:"v_d = eEτ/m. τ constant → halving E halves v_d.",yt:""},
+      {q:"Mobility μ of an electron is defined as:",opts:["v_d / E","v_d × E","eE/m","neρ"],ans:0,sol:"μ = v_d/E. SI unit: m²V⁻¹s⁻¹.",yt:""},
+      {q:"Relaxation time τ decreases with temperature because:",opts:["Lattice vibrations increase, causing more collisions","Electric field increases","Electron density decreases","Electron charge changes"],ans:0,sol:"Higher temperature → stronger lattice vibrations → more frequent collisions → shorter τ.",yt:""}
     ]
   },
   {
     name:"Drift Velocity in Wire Sections",
     questions:[
-      {q:"Wire sections P (diameter d) and Q (diameter d/2). Ratio v_P : v_Q is:",opts:["1:4","4:1","1:2","2:1"],ans:0,sol:"v_d ∝ 1/A ∝ 1/d². v_P/v_Q = (d/2)²/d² = 1/4. So v_P:v_Q = 1:4."},
-      {q:"Two wire sections have areas A and 3A. Ratio of drift velocities v₁:v₂:",opts:["3:1","1:3","1:1","9:1"],ans:0,sol:"I = nev_dA = const → v₁/v₂ = A₂/A₁ = 3. Ratio = 3:1."},
-      {q:"Wire sections with radii r and 2r. Drift velocity in narrow vs wide section:",opts:["v_narrow = 4·v_wide","v_narrow = 2·v_wide","v_narrow = v_wide","v_narrow = v_wide/4"],ans:0,sol:"A ∝ r². A_wide/A_narrow = 4. v_d ∝ 1/A → v_narrow = 4·v_wide."},
-      {q:"Cross-section changes from A to 4A. Drift velocity factor change:",opts:["Reduces to 1/4","Increases 4×","Reduces to 1/2","Doubles"],ans:0,sol:"v_d ∝ 1/A. If A→4A, v_d becomes (1/4)v_d."},
-      {q:"Section Q has half the cross-section of section P. v_Q compared to v_P:",opts:["v_Q = 2v_P","v_Q = v_P/2","v_Q = v_P","v_Q = 4v_P"],ans:0,sol:"v_d ∝ 1/A. A_Q = A_P/2 → v_Q = 2v_P."}
+      {q:"Wire sections P (diameter d) and Q (diameter d/2). Ratio v_P : v_Q is:",opts:["1:4","4:1","1:2","2:1"],ans:0,sol:"v_d ∝ 1/A ∝ 1/d². v_P/v_Q = (d/2)²/d² = 1/4. So v_P:v_Q = 1:4.",yt:""},
+      {q:"Two wire sections have areas A and 3A. Ratio of drift velocities v₁:v₂:",opts:["3:1","1:3","1:1","9:1"],ans:0,sol:"I = nev_dA = const → v₁/v₂ = A₂/A₁ = 3. Ratio = 3:1.",yt:""},
+      {q:"Wire sections with radii r and 2r. Drift velocity in narrow vs wide section:",opts:["v_narrow = 4·v_wide","v_narrow = 2·v_wide","v_narrow = v_wide","v_narrow = v_wide/4"],ans:0,sol:"A ∝ r². A_wide/A_narrow = 4. v_d ∝ 1/A → v_narrow = 4·v_wide.",yt:""},
+      {q:"Cross-section changes from A to 4A. Drift velocity factor change:",opts:["Reduces to 1/4","Increases 4×","Reduces to 1/2","Doubles"],ans:0,sol:"v_d ∝ 1/A. If A→4A, v_d becomes (1/4)v_d.",yt:""},
+      {q:"Section Q has half the cross-section of section P. v_Q compared to v_P:",opts:["v_Q = 2v_P","v_Q = v_P/2","v_Q = v_P","v_Q = 4v_P"],ans:0,sol:"v_d ∝ 1/A. A_Q = A_P/2 → v_Q = 2v_P.",yt:""}
     ]
   },
   {
     name:"Non-Uniform Wire Drift Speed",
     questions:[
-      {q:"Wire narrows from left to right with steady current. Drift velocity is:",opts:["Greater in narrower part","Greater in wider part","Equal everywhere","Zero in narrower part"],ans:0,sol:"v_d = I/(neA). Smaller A → higher v_d to maintain constant current."},
-      {q:"Area doubles from point X to Y. Drift speed at Y compared to X:",opts:["Half","Double","Equal","One-quarter"],ans:0,sol:"v_d ∝ 1/A. A_Y = 2A_X → v_Y = v_X/2."},
-      {q:"Wire bulges in middle (wider middle, narrow ends). Drift velocity is maximum at:",opts:["The narrow ends","The centre (widest part)","Everywhere the same","At the junction"],ans:0,sol:"v_d ∝ 1/A. Narrow ends have smallest area → maximum drift velocity."},
-      {q:"For non-uniform cross-section with steady current, which remains constant?",opts:["Current I","Drift velocity","Current density J","Electric field E"],ans:0,sol:"Continuity equation: I is constant across all cross-sections in steady state."},
-      {q:"Points P and Q on a conductor have areas ratio 1:3. Drift velocity ratio v_P:v_Q:",opts:["3:1","1:3","1:1","9:1"],ans:0,sol:"v_d ∝ 1/A. v_P/v_Q = A_Q/A_P = 3. So v_P:v_Q = 3:1."}
+      {q:"Wire narrows from left to right with steady current. Drift velocity is:",opts:["Greater in narrower part","Greater in wider part","Equal everywhere","Zero in narrower part"],ans:0,sol:"v_d = I/(neA). Smaller A → higher v_d to maintain constant current.",yt:""},
+      {q:"Area doubles from point X to Y. Drift speed at Y compared to X:",opts:["Half","Double","Equal","One-quarter"],ans:0,sol:"v_d ∝ 1/A. A_Y = 2A_X → v_Y = v_X/2.",yt:""},
+      {q:"Wire bulges in middle (wider middle, narrow ends). Drift velocity is maximum at:",opts:["The narrow ends","The centre (widest part)","Everywhere the same","At the junction"],ans:0,sol:"v_d ∝ 1/A. Narrow ends have smallest area → maximum drift velocity.",yt:""},
+      {q:"For non-uniform cross-section with steady current, which remains constant?",opts:["Current I","Drift velocity","Current density J","Electric field E"],ans:0,sol:"Continuity equation: I is constant across all cross-sections in steady state.",yt:""},
+      {q:"Points P and Q on a conductor have areas ratio 1:3. Drift velocity ratio v_P:v_Q:",opts:["3:1","1:3","1:1","9:1"],ans:0,sol:"v_d ∝ 1/A. v_P/v_Q = A_Q/A_P = 3. So v_P:v_Q = 3:1.",yt:""}
     ]
   },
   {
     name:"Electron Mobility",
     questions:[
-      {q:"Conductor length 40 cm, PD = 10 V, drift velocity = 5×10⁻⁶ m/s. Mobility:",opts:["2 × 10⁻⁶ m²/Vs","2 × 10⁻⁷ m²/Vs","5 × 10⁻⁷ m²/Vs","8 × 10⁻⁷ m²/Vs"],ans:0,sol:"E = V/L = 10/0.4 = 25 V/m. μ = v_d/E = 5×10⁻⁶/25 = 2×10⁻⁷ m²/Vs."},
-      {q:"80 cm conductor, 8 V across ends, drift velocity = 4×10⁻⁶ m/s. Mobility:",opts:["4 × 10⁻⁷ m²/Vs","2 × 10⁻⁷ m²/Vs","8 × 10⁻⁷ m²/Vs","4 × 10⁻⁶ m²/Vs"],ans:0,sol:"E = 8/0.8 = 10 V/m. μ = 4×10⁻⁶/10 = 4×10⁻⁷ m²/Vs."},
-      {q:"Mobility μ = 6×10⁻⁷ m²/Vs, E = 300 V/m. Drift velocity:",opts:["1.8 × 10⁻⁴ m/s","3 × 10⁻⁴ m/s","6 × 10⁻⁴ m/s","2 × 10⁻⁴ m/s"],ans:0,sol:"v_d = μE = 6×10⁻⁷ × 300 = 1.8×10⁻⁴ m/s."},
-      {q:"50 cm conductor, PD = 20 V, drift velocity = 5×10⁻⁶ m/s. Mobility:",opts:["1.25 × 10⁻⁷ m²/Vs","2.5 × 10⁻⁷ m²/Vs","5 × 10⁻⁷ m²/Vs","1 × 10⁻⁶ m²/Vs"],ans:0,sol:"E = 20/0.5 = 40 V/m. μ = 5×10⁻⁶/40 = 1.25×10⁻⁷ m²/Vs."},
-      {q:"If E is halved and mobility is unchanged, drift velocity:",opts:["Halves","Doubles","Is unchanged","Quadruples"],ans:0,sol:"v_d = μE. Halving E at constant μ halves v_d."}
+      {q:"Conductor length 40 cm, PD = 10 V, drift velocity = 5×10⁻⁶ m/s. Mobility:",opts:["2 × 10⁻⁶ m²/Vs","2 × 10⁻⁷ m²/Vs","5 × 10⁻⁷ m²/Vs","8 × 10⁻⁷ m²/Vs"],ans:1,sol:"E = V/L = 10/0.4 = 25 V/m. μ = v_d/E = 5×10⁻⁶/25 = 2×10⁻⁷ m²/Vs.",yt:""},
+      {q:"80 cm conductor, 8 V across ends, drift velocity = 4×10⁻⁶ m/s. Mobility:",opts:["4 × 10⁻⁷ m²/Vs","2 × 10⁻⁷ m²/Vs","8 × 10⁻⁷ m²/Vs","4 × 10⁻⁶ m²/Vs"],ans:0,sol:"E = 8/0.8 = 10 V/m. μ = 4×10⁻⁶/10 = 4×10⁻⁷ m²/Vs.",yt:""},
+      {q:"Mobility μ = 6×10⁻⁷ m²/Vs, E = 300 V/m. Drift velocity:",opts:["1.8 × 10⁻⁴ m/s","3 × 10⁻⁴ m/s","6 × 10⁻⁴ m/s","2 × 10⁻⁴ m/s"],ans:0,sol:"v_d = μE = 6×10⁻⁷ × 300 = 1.8×10⁻⁴ m/s.",yt:""},
+      {q:"50 cm conductor, PD = 20 V, drift velocity = 5×10⁻⁶ m/s. Mobility:",opts:["1.25 × 10⁻⁷ m²/Vs","2.5 × 10⁻⁷ m²/Vs","5 × 10⁻⁷ m²/Vs","1 × 10⁻⁶ m²/Vs"],ans:0,sol:"E = 20/0.5 = 40 V/m. μ = 5×10⁻⁶/40 = 1.25×10⁻⁷ m²/Vs.",yt:""},
+      {q:"If E is halved and mobility is unchanged, drift velocity:",opts:["Halves","Doubles","Is unchanged","Quadruples"],ans:0,sol:"v_d = μE. Halving E at constant μ halves v_d.",yt:""}
     ]
   },
   {
     name:"Current Density Vector",
     questions:[
-      {q:"J⃗ = (2×10⁴ĵ) Am⁻². Area S⃗ = (2î + 3ĵ) cm². Current through surface:",opts:["6 A","4 A","2 A","8 A"],ans:0,sol:"I = J⃗·S⃗ = 2×10⁴ × 3×10⁻⁴ = 6 A (only ĵ component matters)."},
-      {q:"J⃗ = (3×10⁴î) Am⁻². Area S⃗ = (4î + 3ĵ) cm². Current:",opts:["12 A","9 A","6 A","18 A"],ans:0,sol:"I = 3×10⁴ × 4×10⁻⁴ = 12 A."},
-      {q:"Current density in wire of radius 2 mm is 10⁶ A/m². Total current:",opts:["4π A","2π A","π A","8π A"],ans:0,sol:"I = J×A = 10⁶ × π×(0.002)² = 4π A."},
-      {q:"J⃗ = (4×10⁴k̂) Am⁻², S⃗ = (2î + 3k̂) cm². Current through area:",opts:["12 A","8 A","6 A","0 A"],ans:0,sol:"I = J⃗·S⃗ = 4×10⁴ × 3×10⁻⁴ = 12 A."},
-      {q:"J⃗ = (2×10³î + 3×10³ĵ) Am⁻², S⃗ = (2î + 2ĵ) cm². Current:",opts:["1 A","4 A","6 A","0 A"],ans:0,sol:"I = (2×10³×2 + 3×10³×2)×10⁻⁴ = 10000×10⁻⁴ = 1 A."}
+      {q:"J⃗ = (2×10⁴ĵ) Am⁻². Area S⃗ = (2î + 3ĵ) cm². Current through surface:",opts:["6 A","4 A","2 A","8 A"],ans:0,sol:"I = J⃗·S⃗ = 2×10⁴ × 3×10⁻⁴ = 6 A (only ĵ component matters).",yt:""},
+      {q:"J⃗ = (3×10⁴î) Am⁻². Area S⃗ = (4î + 3ĵ) cm². Current:",opts:["12 A","9 A","6 A","18 A"],ans:0,sol:"I = 3×10⁴ × 4×10⁻⁴ = 12 A.",yt:""},
+      {q:"Current density in wire of radius 2 mm is 10⁶ A/m². Total current:",opts:["4π A","2π A","π A","8π A"],ans:0,sol:"I = J×A = 10⁶ × π×(0.002)² = 4π A.",yt:""},
+      {q:"J⃗ = (4×10⁴k̂) Am⁻², S⃗ = (2î + 3k̂) cm². Current through area:",opts:["12 A","8 A","6 A","0 A"],ans:0,sol:"I = J⃗·S⃗ = 4×10⁴ × 3×10⁻⁴ = 12 A.",yt:""},
+      {q:"J⃗ = (2×10³î + 3×10³ĵ) Am⁻², S⃗ = (2î + 2ĵ) cm². Current:",opts:["1 A","4 A","6 A","0 A"],ans:0,sol:"I = (2×10³×2 + 3×10³×2)×10⁻⁴ = 10000×10⁻⁴ = 1 A.",yt:""}
     ]
   },
   {
     name:"Non-Uniform Wire J and E",
     questions:[
-      {q:"Non-uniform homogeneous conductor (wider at A, narrower at B). Correct relation:",opts:["j_A < j_B ; E_A < E_B","j_A > j_B ; E_A > E_B","j_A = j_B ; E_A = E_B","j_A < j_B ; E_A > E_B"],ans:0,sol:"Narrower B → smaller area → higher J (= I/A) and E (= J/σ). So j_B > j_A and E_B > E_A."},
-      {q:"For a uniform conductor with steady current, current density is:",opts:["Uniform throughout","Inversely proportional to length","Zero at the ends","Varies with cross-section"],ans:0,sol:"Uniform cross-section → J = I/A is the same everywhere since both I and A are constant."},
-      {q:"For a homogeneous conductor, J and E are related by:",opts:["J = σE","J = E/σ","J = σ/E","J = σE²"],ans:0,sol:"Ohm's law in vector form: J⃗ = σE⃗ where σ is electrical conductivity."},
-      {q:"Homogeneous conductor wider at A, narrower at B, current flows A→B. Drift velocity:",opts:["Increases from A to B","Decreases from A to B","Is constant","Is zero at midpoint"],ans:0,sol:"As conductor narrows, A decreases → J = I/A increases → v_d = J/(ne) increases."},
-      {q:"Doubling cross-section area at constant current changes J and E by:",opts:["Both halve","Both double","J halves, E unchanged","J unchanged, E doubles"],ans:0,sol:"J = I/A → halves. E = J/σ → also halves (σ unchanged). Both J and E halve."}
+      {q:"Non-uniform homogeneous conductor (wider at A, narrower at B). Correct relation:",opts:["j_A < j_B ; E_A < E_B","j_A > j_B ; E_A > E_B","j_A = j_B ; E_A = E_B","j_A < j_B ; E_A > E_B"],ans:0,sol:"Narrower B → smaller area → higher J (= I/A) and E (= J/σ). So j_B > j_A and E_B > E_A.",yt:""},
+      {q:"For a uniform conductor with steady current, current density is:",opts:["Uniform throughout","Inversely proportional to length","Zero at the ends","Varies with cross-section"],ans:0,sol:"Uniform cross-section → J = I/A is the same everywhere since both I and A are constant.",yt:""},
+      {q:"For a homogeneous conductor, J and E are related by:",opts:["J = σE","J = E/σ","J = σ/E","J = σE²"],ans:0,sol:"Ohm's law in vector form: J⃗ = σE⃗ where σ is electrical conductivity.",yt:""},
+      {q:"Homogeneous conductor wider at A, narrower at B, current flows A→B. Drift velocity:",opts:["Increases from A to B","Decreases from A to B","Is constant","Is zero at midpoint"],ans:0,sol:"As conductor narrows, A decreases → J = I/A increases → v_d = J/(ne) increases.",yt:""},
+      {q:"Doubling cross-section area at constant current changes J and E by:",opts:["Both halve","Both double","J halves, E unchanged","J unchanged, E doubles"],ans:0,sol:"J = I/A → halves. E = J/σ → also halves (σ unchanged). Both J and E halve.",yt:""}
     ]
   },
   {
     name:"Current Density Ratios",
     questions:[
-      {q:"Non-uniform wire: cross-sections A, 3A, 6A at three points. Current density ratio j₁:j₂:j₃:",opts:["6:2:1","1:2:6","3:2:1","6:3:1"],ans:0,sol:"J ∝ 1/A. j₁:j₂:j₃ = 1/A : 1/3A : 1/6A = 6:2:1."},
-      {q:"Sections with areas A, 2A, 4A carry same current. Current density ratio:",opts:["4:2:1","1:2:4","2:1:4","1:1:1"],ans:0,sol:"J = I/A. Ratio = I/A : I/2A : I/4A = 4:2:1."},
-      {q:"Areas at points 1, 2, 3 are 2A, A, 4A. Current density ratio j₁:j₂:j₃:",opts:["2:4:1","1:2:4","4:2:1","2:1:4"],ans:0,sol:"j ∝ 1/area. j₁:j₂:j₃ = 1/2A : 1/A : 1/4A = 2:4:1."},
-      {q:"Sections with cross-section radii r, 2r, 3r. Current density ratio:",opts:["9:2.25:1","1:4:9","9:4:1","1:1:1"],ans:2,sol:"J ∝ 1/r². Ratio = 1/r² : 1/4r² : 1/9r² = 36:9:4 ≈ 9:2.25:1. Most precise: option (1)."},
-      {q:"Wire sections have areas A, 2A, 3A. Drift velocity ratio v₁:v₂:v₃:",opts:["6:3:2","1:2:3","3:2:1","2:3:6"],ans:0,sol:"v_d ∝ 1/A. Ratio = 1/A : 1/2A : 1/3A = 6:3:2."}
+      {q:"Non-uniform wire: cross-sections A, 3A, 6A at three points. Current density ratio j₁:j₂:j₃:",opts:["6:2:1","1:2:6","3:2:1","6:3:1"],ans:0,sol:"J ∝ 1/A. j₁:j₂:j₃ = 1/A : 1/3A : 1/6A = 6:2:1.",yt:""},
+      {q:"Sections with areas A, 2A, 4A carry same current. Current density ratio:",opts:["4:2:1","1:2:4","2:1:4","1:1:1"],ans:0,sol:"J = I/A. Ratio = I/A : I/2A : I/4A = 4:2:1.",yt:""},
+      {q:"Areas at points 1, 2, 3 are 2A, A, 4A. Current density ratio j₁:j₂:j₃:",opts:["2:4:1","1:2:4","4:2:1","2:1:4"],ans:0,sol:"j ∝ 1/area. j₁:j₂:j₃ = 1/2A : 1/A : 1/4A = 2:4:1.",yt:""},
+      {q:"Sections with cross-section radii r, 2r, 3r. Current density ratio:",opts:["9:2.25:1","1:4:9","9:4:1","1:1:1"],ans:0,sol:"J ∝ 1/r². j₁:j₂:j₃ = 1/r² : 1/(2r)² : 1/(3r)² = 1:¼:⅑. Multiply by 36 → 36:9:4, which simplifies to 9:2.25:1.",yt:""},
+      {q:"Wire sections have areas A, 2A, 3A. Drift velocity ratio v₁:v₂:v₃:",opts:["6:3:2","1:2:3","3:2:1","2:3:6"],ans:0,sol:"v_d ∝ 1/A. Ratio = 1/A : 1/2A : 1/3A = 6:3:2.",yt:""}
     ]
   },
   {
     name:"Non-Uniform J — Integration",
     questions:[
-      {q:"J = J₀(r/R)² in cylinder of radius R. Total current in terms of J₀ and A = πR²:",opts:["J₀A/2","J₀A/3","2J₀A/3","J₀A/4"],ans:0,sol:"I = ∫₀ᴿ J₀(r/R)²·2πr dr = (2πJ₀/R²)·R⁴/4 = πJ₀R²/2 = J₀A/2."},
-      {q:"J = J₀(1 − r/R) in cylinder of radius R. Total current:",opts:["J₀A/3","J₀A/6","J₀A/2","2J₀A/3"],ans:0,sol:"I = ∫₀ᴿ J₀(1−r/R)2πr dr = 2πJ₀[R²/2−R²/3] = πJ₀R²/3 = J₀A/3."},
-      {q:"J = J₀ (uniform) across cylinder of radius R. Total current I:",opts:["J₀πR²","2J₀πR","J₀πR²/2","4J₀πR²"],ans:0,sol:"Uniform J: I = J₀ × πR² = J₀A."},
-      {q:"J = J₀r/R in solid cylinder of radius R. Current in terms of J₀ and A:",opts:["2J₀A/3","J₀A/3","J₀A/2","3J₀A/4"],ans:0,sol:"I = ∫₀ᴿ (J₀r/R)·2πr dr = (2πJ₀/R)·R³/3 = 2πJ₀R²/3 = 2J₀A/3."},
-      {q:"J = J₀cos(πr/2R) in cylinder of radius R. At r = R, current density equals:",opts:["Zero","J₀","J₀/2","J₀√2/2"],ans:0,sol:"J(R) = J₀cos(π/2) = 0. Current density is zero at the surface for this distribution."}
+      {q:"J = J₀(r/R)² in cylinder of radius R. Total current in terms of J₀ and A = πR²:",opts:["J₀A/2","J₀A/3","2J₀A/3","J₀A/4"],ans:0,sol:"I = ∫₀ᴿ J₀(r/R)²·2πr dr = (2πJ₀/R²)·R⁴/4 = πJ₀R²/2 = J₀A/2.",yt:""},
+      {q:"J = J₀(1 − r/R) in cylinder of radius R. Total current:",opts:["J₀A/3","J₀A/6","J₀A/2","2J₀A/3"],ans:0,sol:"I = ∫₀ᴿ J₀(1−r/R)2πr dr = 2πJ₀[R²/2−R²/3] = πJ₀R²/3 = J₀A/3.",yt:""},
+      {q:"J = J₀ (uniform) across cylinder of radius R. Total current I:",opts:["J₀πR²","2J₀πR","J₀πR²/2","4J₀πR²"],ans:0,sol:"Uniform J: I = J₀ × πR² = J₀A.",yt:""},
+      {q:"J = J₀r/R in solid cylinder of radius R. Current in terms of J₀ and A:",opts:["2J₀A/3","J₀A/3","J₀A/2","3J₀A/4"],ans:0,sol:"I = ∫₀ᴿ (J₀r/R)·2πr dr = (2πJ₀/R)·R³/3 = 2πJ₀R²/3 = 2J₀A/3.",yt:""},
+      {q:"J = J₀cos(πr/2R) in cylinder of radius R. At r = R, current density equals:",opts:["Zero","J₀","J₀/2","J₀√2/2"],ans:0,sol:"J(R) = J₀cos(π/2) = 0. Current density is zero at the surface for this distribution.",yt:""}
     ]
   }
 ];
@@ -535,7 +543,8 @@ const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
       q: raw.q,
       opts: indexed.map(o=>o.text),
       ans: indexed.findIndex(o=>o.isCorrect),
-      sol
+      sol,
+      yt: raw.yt||''
     };
   })
 }));
@@ -665,6 +674,26 @@ function renderQuestion(){
 
   // Options
   optionsDiv.innerHTML='';
+  // ── Inline per-question YouTube video ──
+  const _oldBox=document.getElementById('q-yt-box');
+  if(_oldBox)_oldBox.remove();
+  if(q.yt){
+    const _ytd=extractYTData(q.yt);
+    if(_ytd){
+      const _box=document.createElement('div');
+      _box.id='q-yt-box';
+      _box.className='q-yt-box';
+      const _embedUrl='https://www.youtube.com/embed/'+_ytd.id+'?rel=0'+(_ytd.start?'&start='+_ytd.start:'');
+      const _tsLabel=_ytd.start?'<span class="q-yt-ts">from '+fmtTime(_ytd.start)+'</span>':'';
+      _box.innerHTML=
+        '<div class="q-yt-label">'+
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>'+
+        'Solution Video'+_tsLabel+'</div>'+
+        '<div class="q-yt-frame"><iframe src="'+_embedUrl+'" allowfullscreen loading="lazy"></iframe></div>';
+      optionsDiv.insertAdjacentElement('beforebegin',_box);
+    }
+  }
+
   q.opts.forEach((opt,i)=>{
     const btn=document.createElement('button');
     btn.className='opt'+(a?' locked':'');
@@ -772,12 +801,40 @@ function moveQ(dir){
   renderQScreen();
 }
 
+// Parse YT timestamp string like "125", "2m5s", "1h2m3s" → seconds
+function parseYTTime(s){
+  if(!s)return 0;
+  if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/); if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/); if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/); if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+// Extract {id, start} from any YouTube URL or bare video ID
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];
+  else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);
+  if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+// Format seconds as mm:ss or h:mm:ss
+function fmtTime(s){
+  if(!s)return'';
+  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+  if(h)return h+':'+(m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;
+  return m+':'+(sec<10?'0':'')+sec;
+}
+
 // ── YOUTUBE ───────────────────────────────────────────────────────────────────
 // Show only for topics 1-2 (indices 0 and 1)
 function updateYTVisibility(){
-  const ti = TOPICS_SHUFFLED.indexOf(curTopic);
-  const eligible = ti<2; // only first 2 topics
-  if(eligible && qScreen.classList.contains('active')){
+  if(qScreen.classList.contains('active')){
     ytTrigger.classList.add('visible');
   } else {
     ytTrigger.classList.remove('visible');
@@ -792,8 +849,7 @@ ytTrigger.onclick=()=>{
 
 function closeYT(){
   ytCorner.classList.remove('visible');
-  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
-  if(ti<2 && qScreen.classList.contains('active')){
+  if(qScreen.classList.contains('active')){
     ytTrigger.classList.add('visible');
   }
   ytEmbed.style.display='none';
@@ -812,23 +868,15 @@ function hideYT(){
 function loadYT(){
   const val=ytInput.value.trim();
   if(!val) return;
-  // Extract video ID
-  let vid='';
-  const patterns=[
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-    /^([a-zA-Z0-9_-]{11})$/
-  ];
-  for(const p of patterns){
-    const m=val.match(p);
-    if(m){vid=m[1];break;}
-  }
-  if(!vid){
+  const ytd=extractYTData(val);
+  if(!ytd){
     ytEmbed.style.display='block';
     ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;
     return;
   }
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
   ytEmbed.style.display='block';
-  ytEmbed.innerHTML=`<iframe src="https://www.youtube.com/embed/${vid}?autoplay=0&rel=0" allowfullscreen></iframe>`;
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
 }
 
 // also allow Enter key in yt input
