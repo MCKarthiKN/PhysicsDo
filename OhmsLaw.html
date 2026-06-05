@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Ohm's Law & V-I Characteristics</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#f7f6f3;
+  --surface:#ffffff;
+  --border:#e8e6e0;
+  --border2:#d4d1c8;
+  --text:#1a1916;
+  --text2:#6b6760;
+  --text3:#a09d97;
+  --accent:#1a1916;
+  --tag-bg:#f0ede8;
+  --correct-bg:#f0faf5;
+  --correct:#1a7a4a;
+  --correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;
+  --wrong:#c0392b;
+  --wrong-border:#f5c6c2;
+  --yt:#ff2d2d;
+  --highlight:#1a1916;
+  --pill-active-bg:#1a1916;
+  --pill-active-text:#f7f6f3;
+}
+
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+
+/* ── LAYOUT ── */
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+
+/* ── TOP NAV ── */
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+
+/* ── SCREEN MANAGER ── */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ── HOME SCREEN ── */
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:36px;}
+
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+
+.topic-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 22px;
+  cursor:pointer;
+  transition:border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+  text-align:left;
+  position:relative;
+  overflow:hidden;
+}
+.topic-card:hover{
+  border-color:var(--border2);
+  box-shadow:0 4px 20px rgba(0,0,0,0.07);
+  transform:translateY(-2px);
+}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s, color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+
+/* ── QUESTION SCREEN ── */
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+
+/* mini question selector */
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--surface);
+  font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;
+  color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;
+  flex-shrink:0;
+}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+
+/* question card */
+#q-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px 28px 24px;
+  position:relative;
+}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:24px;font-weight:400;}
+
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--bg);
+  cursor:pointer;font-size:14px;color:var(--text2);
+  transition:all 0.15s;text-align:left;
+}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{
+  width:24px;height:24px;border-radius:6px;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;
+  color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);
+}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+
+/* solution */
+#sol-wrap{
+  overflow:hidden;max-height:0;opacity:0;
+  transition:max-height 0.4s ease, opacity 0.35s ease;
+}
+#sol-wrap.open{max-height:300px;opacity:1;}
+#sol-box{
+  border-left:2px solid var(--text3);
+  padding:12px 16px;margin-bottom:18px;
+  font-size:13.5px;line-height:1.75;color:var(--text2);
+}
+#sol-box strong{color:var(--text);font-weight:600;}
+
+/* action row */
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+#show-ans-btn{
+  font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  background:none;border:1px solid var(--border);border-radius:8px;
+  padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;
+}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{
+  font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  border-radius:8px;padding:9px 18px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);
+}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+
+/* feedback chip */
+#feedback{
+  font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  padding:6px 12px;border-radius:20px;opacity:0;
+  transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);
+}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+
+/* ── YOUTUBE CORNER BOX ── */
+#yt-corner{
+  position:fixed;
+  bottom:28px;right:28px;
+  width:300px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.1);
+  overflow:hidden;
+  z-index:200;
+  display:none;
+  animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;border-bottom:1px solid var(--border);
+}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{
+  flex:1;border:1px solid var(--border);border-radius:8px;
+  padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;
+  background:var(--bg);color:var(--text);outline:none;
+  transition:border-color 0.15s;
+}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{
+  background:var(--yt);color:#fff;border:none;border-radius:8px;
+  padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;
+  letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;
+}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+
+/* ── QUESTION HELP TRIGGER ── */
+#yt-trigger{
+  position:fixed;bottom:28px;right:28px;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--yt);color:#fff;
+  border:none;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(255,45,45,0.35);
+  transition:transform 0.2s, box-shadow 0.2s;
+  z-index:199;
+}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+
+/* ── TRANSITIONS ── */
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+
+/* ── SCORE SUMMARY IN Q SCREEN ── */
+.score-strip{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:20px;padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+
+/* done state on topic cards */
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+
+/* divider */
+.divider{width:100%;height:1px;background:var(--border);margin:32px 0;}
+
+/* ── INLINE QUESTION VIDEO BOX ── */
+.q-yt-box{margin-bottom:20px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);}
+.q-yt-label{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--tag-bg);font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);border-bottom:1px solid var(--border);}
+.q-yt-label svg{color:var(--yt);}
+.q-yt-ts{margin-left:auto;font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.1em;color:var(--yt);background:rgba(255,45,45,0.08);border:1px solid rgba(255,45,45,0.2);border-radius:20px;padding:2px 8px;}
+.q-yt-frame{background:#000;}
+.q-yt-frame iframe{width:100%;height:175px;border:none;display:block;}
+</style>
+</head>
+<body>
+<div id="shell">
+
+  <!-- TOP NAV -->
+  <div id="topnav">
+    <div class="brand">Physics <span>·</span> DPP-02</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <!-- HOME SCREEN -->
+  <div id="home-screen" class="screen active">
+    <div id="home-heading">
+      <h1>Ohm's Law &amp;<br>V-I Characteristics</h1>
+    </div>
+    <p id="home-sub">Select a topic to begin practicing — 5 questions each.</p>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <!-- QUESTION SCREEN -->
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+
+    <!-- Q pill selector -->
+    <div class="q-selector" id="q-selector"></div>
+
+    <!-- Active question -->
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /shell -->
+
+<!-- YT TRIGGER FAB -->
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<!-- YT CORNER BOX -->
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported (e.g. youtu.be/ID?t=125):</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..." />
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const TOPICS = [
+  {
+    name: "Ohm's Law — Formula",
+    questions: [
+      {q:"An electric wire of resistance R is connected to a battery of EMF E. Using Ohm's law, which relation is correct?", opts:["E = I²R","E = IR","E = R/I","E = I/R"], ans:1, sol:"Ohm's law states V = IR. Here EMF E drives current I through resistance R, so E = IR.", yt:""},
+      {q:"A resistor of 5 Ω is connected to a 10 V source. The current through it is:", opts:["50 A","2 A","0.5 A","5 A"], ans:1, sol:"I = V/R = 10/5 = 2 A.", yt:""},
+      {q:"If resistance is doubled while voltage stays constant, the current becomes:", opts:["Doubled","Remains same","Halved","Four times"], ans:2, sol:"I = V/R. If R → 2R at constant V, then I → V/2R = I/2. Current is halved.", yt:""},
+      {q:"A cell of EMF 6 V drives 2 A through a circuit. The resistance is:", opts:["12 Ω","0.33 Ω","3 Ω","8 Ω"], ans:2, sol:"R = E/I = 6/2 = 3 Ω.", yt:""},
+      {q:"Which correctly expresses current I using Ohm's law?", opts:["I = V × R","I = R/V","I = V/R","I = V + R"], ans:2, sol:"Ohm's law: V = IR ⟹ I = V/R.", yt:""}
+    ]
+  },
+  {
+    name: "Ohmic Devices & Validity",
+    questions: [
+      {q:"Ohm's law is strictly obeyed by:", opts:["Diodes","Electrolytes","Pure metallic conductors at constant temperature","Transistors"], ans:2, sol:"Metallic conductors at constant temperature have a linear V-I relationship — they are ohmic. Diodes, transistors and electrolytes are non-ohmic.", yt:""},
+      {q:"Which device does NOT obey Ohm's law?", opts:["Copper wire","Silver wire","Nichrome wire","PN junction diode"], ans:3, sol:"A PN junction diode has a highly non-linear I-V characteristic and therefore does not obey Ohm's law.", yt:""},
+      {q:"Ohm's law holds best for:", opts:["Semiconductors","Metallic conductors at low temperatures","Discharge tubes","Electrolytic solutions"], ans:1, sol:"At low temperatures, lattice vibrations are minimal, collisions are fewer, and the V-I relationship of metals is most linear.", yt:""},
+      {q:"At very high temperatures, metallic conductors:", opts:["Still perfectly obey Ohm's law","Deviate from Ohm's law due to increased resistance","Have zero resistance","Show superconductivity"], ans:1, sol:"Higher temperature → more lattice vibrations → increased resistance, causing deviation from ideal ohmic behaviour.", yt:""},
+      {q:"Which of the following is an ohmic device?", opts:["LED","Nichrome wire at constant temperature","Vacuum tube diode","Silicon diode"], ans:1, sol:"Nichrome wire at constant temperature shows a linear V-I graph — it is ohmic.", yt:""}
+    ]
+  },
+  {
+    name: "Statements About Ohm's Law",
+    questions: [
+      {q:"Which statement about Ohm's law is FALSE?", opts:["It applies to metallic conductors at constant temperature","Conductance is measured in Siemens","It applies to all electrolytes","It does not apply to discharge tubes"], ans:2, sol:"Ohm's law does NOT apply to all electrolytes — electrolytes are non-ohmic due to ionic conduction involving chemical changes.", yt:""},
+      {q:"Conductance G is related to resistance R as:", opts:["G = R²","G = 1/R","G = R","G = 2R"], ans:1, sol:"Conductance is the reciprocal of resistance: G = 1/R. Its unit is Siemens (S).", yt:""},
+      {q:"Ohm's law is NOT applicable to which of the following?", opts:["Gold wire","Copper wire at room temperature","Vacuum diode tube","Iron wire at 25°C"], ans:2, sol:"A vacuum diode tube has a non-linear I-V characteristic — current depends on the thermionic emission mechanism, not linearly on voltage.", yt:""},
+      {q:"The unit of conductance is:", opts:["Ohm","Ampere","Siemens","Volt"], ans:2, sol:"Conductance G = 1/R is measured in Siemens (S), also written as mho (Ω⁻¹).", yt:""},
+      {q:"Which statement is correct about Ohm's law?", opts:["It applies to semiconductors","It fails at very high and very low temperatures for metals","It applies to electrolytes completely","It is universally applicable"], ans:1, sol:"Ohm's law fails at extreme temperatures for metals: at very high temperatures due to increased lattice vibrations, and at very low temperatures due to quantum effects.", yt:""}
+    ]
+  },
+  {
+    name: "Liquids & Ohm's Law",
+    questions: [
+      {q:"For an electrolytic solution, the I–V relationship is:", opts:["Perfectly linear (obeys Ohm's law)","Approximately linear (partial compliance)","No relationship exists","Always shows negative resistance"], ans:1, sol:"Liquids partially obey Ohm's law — the I-V relationship is approximately linear at low voltages but deviates due to ionic dissociation and electrolysis.", yt:""},
+      {q:"Which of the following partially obeys Ohm's law?", opts:["Ideal resistors","Electrolytes","Superconductors","Pure copper wire"], ans:1, sol:"Electrolytes show partial compliance with Ohm's law. Ionic conduction involves chemical changes that produce non-ohmic behaviour at higher voltages.", yt:""},
+      {q:"Which statement is INCORRECT about liquids and Ohm's law?", opts:["Liquids partially obey Ohm's law","Current through electrolyte depends on voltage","Liquids fully obey Ohm's law exactly like metals","Electrolysis involves current through liquids"], ans:2, sol:"Liquids do NOT fully obey Ohm's law like metals. Their conduction is ionic and depends on concentration, temperature, and applied voltage in a complex way.", yt:""},
+      {q:"Why do liquids not fully obey Ohm's law?", opts:["They have no free charges","Ionic conduction involves chemical changes unlike metallic conduction","Liquids have infinite resistance","Current cannot flow through liquids"], ans:1, sol:"In electrolytes, conduction occurs via ions. The movement of ions leads to chemical reactions (electrolysis) that alter the current-voltage relationship.", yt:""},
+      {q:"Electrolytes are classified as:", opts:["Perfect ohmic conductors","Non-ohmic conductors","Insulators","Superconductors"], ans:1, sol:"Electrolytes are non-ohmic because their V-I relationship is non-linear — they do not satisfy V = IR strictly.", yt:""}
+    ]
+  },
+  {
+    name: "V-I Graph & Resistance from Slope",
+    questions: [
+      {q:"In a V-I graph (V on y-axis, I on x-axis), line 1 makes 45° and line 2 makes 30° with the I-axis. The ratio R₁/R₂ is:", opts:["1:√3","√3:1","1:1","1:3"], ans:1, sol:"R = V/I = tan θ. R₁ = tan 45° = 1, R₂ = tan 30° = 1/√3. R₁/R₂ = √3. Ratio = √3:1.", yt:""},
+      {q:"A V-I graph has two lines: one at 45° and one at 60° to the I-axis. The steeper line has:", opts:["Lower resistance","Higher resistance","Same resistance","Zero resistance"], ans:1, sol:"R = tan θ. tan 60° > tan 45°, so the steeper (60°) line has higher resistance.", yt:""},
+      {q:"In a V-I characteristic curve, the slope of the line (V on y-axis, I on x-axis) represents:", opts:["Conductance","Current","Resistance","Power"], ans:2, sol:"Slope = ΔV/ΔI = R (resistance). A steeper slope means higher resistance.", yt:""},
+      {q:"If a V-I curve makes angle θ with the current axis (I on x-axis, V on y-axis), the resistance equals:", opts:["cos θ","sin θ","tan θ","cot θ"], ans:2, sol:"tan θ = V/I = R. So resistance = tan θ.", yt:""},
+      {q:"Two V-I curves make angles 30° and 45° with the I-axis (V on y-axis). Ratio R₁/R₂ (30° to 45°) is:", opts:["1:√3","√3:1","1:1","1:2"], ans:0, sol:"R₁ = tan 30° = 1/√3, R₂ = tan 45° = 1. R₁/R₂ = 1/√3 = 1:√3.", yt:""}
+    ]
+  },
+  {
+    name: "Non-Linear V-I & Resistance at a Point",
+    questions: [
+      {q:"On a non-linear V-I curve, resistance at a point is determined by:", opts:["Slope of tangent at that point","The ratio V/I at that point","The area under the curve","The intercept on V-axis"], ans:1, sol:"For non-ohmic devices, static resistance at a point = V/I (not the slope). The slope gives dynamic (differential) resistance.", yt:""},
+      {q:"If point P has a larger V/I ratio than point Q on a V-I curve, then:", opts:["Resistance at P < Resistance at Q","Resistance at P > Resistance at Q","Both have equal resistance","Cannot be determined"], ans:1, sol:"Static resistance R = V/I. Larger V/I at P means higher resistance at P.", yt:""},
+      {q:"At the saturation region of a non-ohmic V-I curve (current levels off), resistance is:", opts:["Increasing","Decreasing","Very high (approaches infinity)","Zero"], ans:2, sol:"In the saturation region, V increases but I remains nearly constant, so R = V/I → very large.", yt:""},
+      {q:"Point X is on a steep region and point Y is on a flat region of a V-I curve. Then:", opts:["R_X = R_Y","R_X < R_Y","R_X > R_Y","R_X = 0"], ans:1, sol:"Flat region (Y) means I is large for a given V → lower R. Steep region (X) means less current for given V → but in V-I terms: steep slope means high R. Wait — flat region means higher I → smaller V/I → R_Y < R_X. So R_X > R_Y.", yt:""},
+      {q:"Where the V-I curve is nearly parallel to the V-axis (almost vertical), the resistance is:", opts:["Zero","Very large","Negative","Equal to 1 Ω"], ans:1, sol:"Nearly vertical V-I curve means very large change in V for a tiny change in I → R = V/I → very large.", yt:""}
+    ]
+  },
+  {
+    name: "Negative Resistance in I-V Graphs",
+    questions: [
+      {q:"Negative resistance in an I-V graph corresponds to the region where:", opts:["Current increases with voltage","Current decreases as voltage increases","Current remains constant","Voltage is zero"], ans:1, sol:"Negative resistance occurs where dI/dV < 0 — i.e., increasing voltage causes current to decrease.", yt:""},
+      {q:"In a tunnel diode I-V characteristic, negative resistance appears in the:", opts:["Rising portion after peak current","Falling portion between peak and valley current","Flat region at high voltage","Rising portion at very low voltage"], ans:1, sol:"After the peak current, the tunnel current decreases as voltage increases — this falling region is the negative resistance region.", yt:""},
+      {q:"Negative resistance means:", opts:["Resistance has a negative sign in formula","As V increases, I decreases","Device does not conduct","Resistance is imaginary"], ans:1, sol:"Negative resistance (dV/dI < 0) means an increase in voltage leads to a decrease in current — the opposite of normal ohmic behaviour.", yt:""},
+      {q:"An I-V curve rises, then falls, then rises again (like a hump). Negative resistance is at:", opts:["Rising part before the hump","Falling part of the hump","Flat part after the hump","None of the above"], ans:1, sol:"The falling (descending) part of the hump is where current decreases as voltage increases — this is the negative resistance region.", yt:""},
+      {q:"Which device typically exhibits negative resistance in its I-V characteristic?", opts:["Copper wire","Resistor","Tunnel diode","Capacitor"], ans:2, sol:"Tunnel diodes exhibit negative resistance due to quantum mechanical tunnelling, giving a characteristic I-V hump.", yt:""}
+    ]
+  },
+  {
+    name: "I-V Slope & Wire Properties",
+    questions: [
+      {q:"For a copper wire I-V graph (I on y-axis, V on x-axis), the slope (I/V) represents:", opts:["Resistance","Resistivity","Conductance","Power factor"], ans:2, sol:"Slope = I/V = 1/R = G (conductance). Higher slope means lower resistance.", yt:""},
+      {q:"If the length of a copper wire is doubled (same area), the slope of the I-V graph:", opts:["Doubles","Halves","Remains same","Becomes zero"], ans:1, sol:"R = ρL/A. Doubling L doubles R. Slope = 1/R → halves.", yt:""},
+      {q:"If the cross-sectional area of a wire is doubled (same length), the slope of the I-V graph:", opts:["Doubles","Halves","Remains same","Becomes four times"], ans:0, sol:"R = ρL/A. Doubling A halves R. Slope = 1/R → doubles.", yt:""},
+      {q:"At higher temperature, copper's resistance increases. The slope of its I-V curve:", opts:["Increases","Decreases","Remains same","Becomes negative"], ans:1, sol:"Slope = 1/R. If R increases with temperature, slope = 1/R decreases.", yt:""},
+      {q:"A steel wire has higher resistivity than copper wire of same dimensions. The steel wire's I-V slope is:", opts:["Higher than copper","Lower than copper","Equal to copper","Zero"], ans:1, sol:"Higher resistivity → higher resistance → lower slope (1/R). Steel slope < copper slope.", yt:""}
+    ]
+  },
+  {
+    name: "log I vs log V Graph",
+    questions: [
+      {q:"For a linear ohmic resistor V = IR (R constant), the log V vs log I graph has slope:", opts:["2","0","1","−1"], ans:2, sol:"log V = log I + log R. This is of the form y = x + c, so slope = 1.", yt:""},
+      {q:"If V = IR with R constant, log V = log I + log R. The log V – log I graph is:", opts:["A curve","A straight line with slope 1","A horizontal line","A vertical line"], ans:1, sol:"This is a straight line of slope 1 with y-intercept log R. A perfect ohmic device gives slope = 1.", yt:""},
+      {q:"For a device obeying V = kI² (non-ohmic), the slope of log V vs log I graph is:", opts:["1","0","2","0.5"], ans:2, sol:"log V = log k + 2 log I. Slope of log V vs log I = 2.", yt:""},
+      {q:"If log I vs log V is a straight line with slope 1, passing through origin, the device is:", opts:["Non-ohmic","Ohmic","Semiconducting","Superconducting"], ans:1, sol:"log I = log V − log R → I = V/R. Slope 1 means linear I-V → ohmic device.", yt:""},
+      {q:"For constant R, the y-intercept of the log V vs log I graph equals:", opts:["Zero","log R","R","1/R"], ans:1, sol:"log V = log I + log R. Y-intercept (where log I = 0, i.e., I = 1 A) = log R.", yt:""}
+    ]
+  },
+  {
+    name: "Negative Resistance — Graph Points",
+    questions: [
+      {q:"Negative resistance on an I-V graph occurs where slope (dI/dV) is:", opts:["Positive","Zero","Negative","Infinite"], ans:2, sol:"Negative resistance means dV/dI < 0, equivalently dI/dV < 0. The slope of the I-V curve is negative.", yt:""},
+      {q:"At a local maximum (peak) of an I-V curve, the slope dI/dV is:", opts:["Zero","Negative","Infinite","Positive and finite"], ans:0, sol:"At a local maximum (peak), the derivative dI/dV = 0. This is the transition point into the negative resistance region.", yt:""},
+      {q:"Which portion of an I-V curve with a valley dip shows negative resistance?", opts:["Region before peak","Region between peak and valley (downward slope)","Flat region","Initial rising region"], ans:1, sol:"The region between peak and valley is where I decreases as V increases — this is negative resistance.", yt:""},
+      {q:"If dV/dI is negative for a device, it exhibits:", opts:["Positive resistance","Zero resistance","Negative resistance","Infinite resistance"], ans:2, sol:"dV/dI is the dynamic (differential) resistance. If dV/dI < 0, the device shows negative resistance.", yt:""},
+      {q:"On an arch-shaped I-V curve (rises then falls), the descending part has:", opts:["Zero resistance","Positive resistance","Negative resistance","Infinite resistance"], ans:2, sol:"On the descending part, as V increases, I decreases → dI/dV < 0 → negative resistance.", yt:""}
+    ]
+  },
+  {
+    name: "Non-Ohmic Devices — Examples",
+    questions: [
+      {q:"Which of the following is a non-ohmic device?", opts:["Metallic wire at constant temperature","Carbon resistor","Transistor","Both metallic wire and carbon resistor"], ans:2, sol:"A transistor has a highly non-linear I-V characteristic and is non-ohmic. Metallic wires and carbon resistors are approximately ohmic.", yt:""},
+      {q:"An LED (light-emitting diode) is an example of:", opts:["Ohmic conductor","Non-ohmic conductor","Superconductor","Perfect insulator"], ans:1, sol:"LEDs are semiconductor devices with a non-linear I-V characteristic — they are non-ohmic.", yt:""},
+      {q:"Which of the following has a linear V-I characteristic?", opts:["Diode","Tungsten filament lamp","Constantan wire at constant temperature","Thermistor"], ans:2, sol:"Constantan (a nickel-copper alloy) has a very low temperature coefficient of resistance, giving an almost perfectly linear V-I characteristic at constant temperature.", yt:""},
+      {q:"A thermistor is a:", opts:["Purely ohmic device","Non-ohmic device with temperature-sensitive resistance","Perfect conductor","Device with constant resistance"], ans:1, sol:"Thermistors are semiconductor devices whose resistance changes significantly with temperature — making them non-ohmic.", yt:""},
+      {q:"Which device has a non-linear I-V characteristic curve?", opts:["Copper wire","Silver wire","Nichrome wire","Zener diode"], ans:3, sol:"A Zener diode has a non-linear I-V characteristic — it is a semiconductor device and does not obey Ohm's law.", yt:""}
+    ]
+  },
+  {
+    name: "Discharge Tubes — Ohmic or Not",
+    questions: [
+      {q:"A discharge tube (gas-filled) has:", opts:["Constant resistance regardless of voltage","Non-ohmic behaviour (resistance varies with voltage/current)","Zero resistance","Negative resistance always"], ans:1, sol:"Gas discharge tubes have non-ohmic behaviour — the ionisation of gas creates a complex, non-linear V-I relationship.", yt:""},
+      {q:"Why is a discharge tube considered non-ohmic?", opts:["It has too much resistance","V-I relation is non-linear due to ionisation effects","It has no resistance","Ohm's law always applies to it"], ans:1, sol:"In a gas discharge tube, current is carried by ions produced by ionisation. The process is voltage-dependent and non-linear.", yt:""},
+      {q:"In a gas discharge tube at breakdown voltage, as voltage increases:", opts:["Current decreases","Current increases rapidly and non-linearly","Resistance remains constant","Current becomes zero"], ans:1, sol:"At and beyond breakdown voltage, rapid ionisation causes current to surge non-linearly — classic non-ohmic behaviour.", yt:""},
+      {q:"A vacuum tube diode approximates Ohm's law:", opts:["Always","Never","Only at very low voltages approximately","Only at very high voltages"], ans:2, sol:"At very low voltages, the space-charge-limited current is roughly linear with voltage. At higher voltages it follows Child's law (I ∝ V^(3/2)), which is non-ohmic.", yt:""},
+      {q:"The resistance of a neon discharge tube:", opts:["Is fixed and ohmic","Decreases as more gas ionises — non-ohmic","Is always zero","Follows R = V/I linearly"], ans:1, sol:"As voltage increases, more neon atoms ionise, creating more charge carriers — resistance decreases non-linearly.", yt:""}
+    ]
+  },
+  {
+    name: "Temperature & V-I Graph",
+    questions: [
+      {q:"For a metallic wire, when temperature increases, its resistance:", opts:["Decreases","Remains same","Increases","Becomes zero"], ans:2, sol:"Metals have positive temperature coefficient of resistance — as temperature rises, lattice vibrations increase, impeding electron flow, so resistance increases.", yt:""},
+      {q:"In a V-I graph at two temperatures T₁ > T₂ (I on y-axis, V on x-axis), the line at T₁ has:", opts:["Steeper slope (lower resistance)","Less steep slope (higher resistance)","Same slope","Negative slope"], ans:1, sol:"Higher temperature → higher resistance → slope (= 1/R) is smaller → less steep line.", yt:""},
+      {q:"Two identical metallic wires are at T₁ and T₂. Wire at T₁ has a lower slope in the I-V graph (I vs V). Then:", opts:["T₁ > T₂","T₁ < T₂","T₁ = T₂","Cannot be determined"], ans:0, sol:"Lower slope means higher resistance (slope = 1/R). Higher resistance means higher temperature for a metallic conductor. So T₁ > T₂.", yt:""},
+      {q:"Resistance of a pure metal increases with temperature because:", opts:["Free electrons increase","Lattice vibrations increase, impeding electron flow","Electron mass decreases","Cross-sectional area increases"], ans:1, sol:"Thermal energy excites lattice ions to vibrate more vigorously, increasing collisions with conduction electrons and thus increasing resistance.", yt:""},
+      {q:"In an I-V graph (I on y-axis, V on x-axis), the metallic wire at higher temperature has:", opts:["Steeper slope","Less steep slope","Same slope","Negative slope"], ans:1, sol:"Higher temperature → higher R → lower conductance → less steep I-V slope (slope = 1/R).", yt:""}
+    ]
+  },
+  {
+    name: "Two Wires — Resistivity Comparison",
+    questions: [
+      {q:"Two wires X and Y of same length and diameter are at constant temperature. In an I-V graph, wire X has a steeper slope. Which is correct?", opts:["X has higher resistance","X has lower resistivity","Y has lower resistivity than X","X has higher conductance"], ans:3, sol:"Steeper I-V slope = higher conductance (slope = 1/R). Higher conductance means lower resistance, which means lower resistivity (same dimensions). But option D says X has higher conductance — that is directly correct from the steeper slope.", yt:""},
+      {q:"Wire A has a steeper I-V slope than wire B (same dimensions). Then:", opts:["A has higher resistance","A has lower resistance","A has higher resistivity","A has lower conductance"], ans:1, sol:"Steeper I-V slope (I vs V) → higher 1/R → lower R. Wire A has lower resistance.", yt:""},
+      {q:"Two identical wires of different materials; the wire with smaller I-V slope has:", opts:["Lower resistance","Higher resistance","Same resistance","Zero resistance"], ans:1, sol:"Smaller slope = smaller 1/R = higher R. Higher resistance.", yt:""},
+      {q:"Wire P has a less steep I-V slope than wire Q (same dimensions). Then:", opts:["ρ_P > ρ_Q","ρ_P < ρ_Q","ρ_P = ρ_Q","Cannot say"], ans:0, sol:"Less steep I-V slope → lower 1/R → higher R → higher resistivity ρ (since dimensions are same, ρ = RA/L). So ρ_P > ρ_Q.", yt:""},
+      {q:"Between two conductors of same length and cross-section, higher resistivity gives an I-V graph with:", opts:["Higher slope","Lower slope","Same slope","Negative slope"], ans:1, sol:"Higher ρ → higher R → lower conductance → smaller slope (slope = 1/R). Lower slope.", yt:""}
+    ]
+  },
+  {
+    name: "Ohmic Graph Shape",
+    questions: [
+      {q:"Which V-I graph shape represents a purely ohmic conductor?", opts:["Straight line through origin","Curve bending upward","Horizontal line","Curve bending downward"], ans:0, sol:"An ohmic device satisfies V = IR with constant R. On a V-I graph this gives a straight line through the origin with slope R.", yt:""},
+      {q:"An ohmic resistor's V-I characteristic is:", opts:["A parabola","A straight line through origin with constant slope","An exponential curve","A sinusoidal curve"], ans:1, sol:"V = IR is a linear equation through the origin. The graph is a straight line with constant slope R.", yt:""},
+      {q:"The correct Ohm's law graph (V on y-axis, I on x-axis) is:", opts:["Straight line not passing through origin","Straight line through origin","U-shaped curve","Decreasing exponential"], ans:1, sol:"V = IR passes through (0,0) since when I = 0, V = 0. It is a straight line through the origin.", yt:""},
+      {q:"A V-I graph that curves upward (slope increases with I) represents a device where:", opts:["Resistance is constant","Resistance decreases with current","Resistance increases with current","Resistance is zero"], ans:2, sol:"If the V-I graph curves upward (concave up), for the same ΔI you need more ΔV as I increases → R = V/I increases with current.", yt:""},
+      {q:"Which V-I graph indicates that resistance decreases as current increases?", opts:["Straight line through origin","Concave curve (bending toward I-axis)","Convex curve (bending toward V-axis)","Vertical line"], ans:1, sol:"A concave curve bending toward the I-axis means V increases slowly as I increases → R = V/I decreases. This indicates decreasing resistance.", yt:""}
+    ]
+  }
+];
+
+// ── SHUFFLE HELPER ────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// Build shuffled topic list and randomize answer positions per question
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx: ti,
+  questions: t.questions.map(raw=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect: i===raw.ans}));
+    shuffle(indexed);
+    return {
+      q: raw.q,
+      opts: indexed.map(o=>o.text),
+      ans: indexed.findIndex(o=>o.isCorrect),
+      sol: raw.sol,
+      yt: raw.yt||''
+    };
+  })
+}));
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let curTopic = null;
+let curQ     = 0;
+const answers = TOPICS_SHUFFLED.map(()=>Array(5).fill(null));
+
+// ── DOM REFS ──────────────────────────────────────────────────────────────────
+const homeScreen  = document.getElementById('home-screen');
+const qScreen     = document.getElementById('q-screen');
+const backBtn     = document.getElementById('back-btn');
+const topicGrid   = document.getElementById('topic-grid');
+const qsTopicLbl  = document.getElementById('qs-topic-label');
+const qsTitle     = document.getElementById('qs-title');
+const qSelector   = document.getElementById('q-selector');
+const qLabel      = document.getElementById('q-label');
+const qText       = document.getElementById('q-text');
+const optionsDiv  = document.getElementById('options');
+const solWrap     = document.getElementById('sol-wrap');
+const solBox      = document.getElementById('sol-box');
+const feedbackEl  = document.getElementById('feedback');
+const showAnsBtn  = document.getElementById('show-ans-btn');
+const prevBtn     = document.getElementById('prev-btn');
+const nextBtn     = document.getElementById('next-btn');
+const scScore     = document.getElementById('sc-score');
+const scTotal     = document.getElementById('sc-total');
+const scAtt       = document.getElementById('sc-att');
+const ytTrigger   = document.getElementById('yt-trigger');
+const ytCorner    = document.getElementById('yt-corner');
+const ytInput     = document.getElementById('yt-input');
+const ytEmbed     = document.getElementById('yt-embed');
+
+// ── BUILD HOME ────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans = answers[ti];
+    const done = ans.filter(a=>a!==null&&a.correct).length;
+    const att  = ans.filter(a=>a!==null).length;
+    const card = document.createElement('button');
+    card.className='topic-card'+(att===5&&done===5?' all-done':'');
+    const dots = Array(5).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':''}"></span>`;
+    }).join('');
+    card.innerHTML=`
+      <div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar">
+        <div class="tc-dots">${dots}</div>
+        <span class="tc-count">${att}/5 attempted</span>
+      </div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    `;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+}
+
+// ── OPEN TOPIC ────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic = TOPICS_SHUFFLED[ti];
+  curQ = 0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const firstUnanswered = answers[ti].findIndex(a=>a===null);
+  if(firstUnanswered!==-1) curQ=firstUnanswered;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT();
+  buildHome();
+}
+
+// ── RENDER Q SCREEN ───────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti = TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent = `Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent = curTopic.name;
+
+  const topicAns = answers[ti];
+  const sc = topicAns.filter(a=>a&&a.correct).length;
+  const att = topicAns.filter(a=>a!==null).length;
+  scScore.textContent=sc; scTotal.textContent=5; scAtt.textContent=att;
+
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti = TOPICS_SHUFFLED.indexOf(curTopic);
+  const q  = curTopic.questions[curQ];
+  const a  = answers[ti][curQ];
+
+  qLabel.textContent = `Question ${curQ+1} of 5`;
+  qText.textContent  = q.q;
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+
+  const card = document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight;
+  card.style.animation='';
+
+  optionsDiv.innerHTML='';
+
+  // Inline YT box
+  const _oldBox=document.getElementById('q-yt-box');
+  if(_oldBox)_oldBox.remove();
+  if(q.yt){
+    const _ytd=extractYTData(q.yt);
+    if(_ytd){
+      const _box=document.createElement('div');
+      _box.id='q-yt-box';
+      _box.className='q-yt-box';
+      const _embedUrl='https://www.youtube.com/embed/'+_ytd.id+'?rel=0'+(_ytd.start?'&start='+_ytd.start:'');
+      const _tsLabel=_ytd.start?'<span class="q-yt-ts">from '+fmtTime(_ytd.start)+'</span>':'';
+      _box.innerHTML=
+        '<div class="q-yt-label">'+
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>'+
+        'Solution Video'+_tsLabel+'</div>'+
+        '<div class="q-yt-frame"><iframe src="'+_embedUrl+'" allowfullscreen loading="lazy"></iframe></div>';
+      optionsDiv.insertAdjacentElement('beforebegin',_box);
+    }
+  }
+
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen && !a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+
+  prevBtn.disabled = curQ===0;
+  nextBtn.disabled = false;
+  if(curQ===4){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti = TOPICS_SHUFFLED.indexOf(curTopic);
+  const q  = curTopic.questions[curQ];
+  const correct = chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+
+  const opts = optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked');
+    btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen && !correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti = TOPICS_SHUFFLED.indexOf(curTopic);
+  const q  = curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked');btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  if(newQ<0||newQ>4){
+    if(newQ>4) goHome();
+    return;
+  }
+  curQ=newQ;
+  renderQScreen();
+}
+
+// ── YOUTUBE HELPERS ───────────────────────────────────────────────────────────
+function parseYTTime(s){
+  if(!s)return 0;
+  if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/); if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/); if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/); if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];
+  else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);
+  if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+
+function fmtTime(s){
+  if(!s)return'';
+  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+  if(h)return h+':'+(m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;
+  return m+':'+(sec<10?'0':'')+sec;
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){
+    ytTrigger.classList.add('visible');
+  } else {
+    ytTrigger.classList.remove('visible');
+    hideYT();
+  }
+}
+
+ytTrigger.onclick=()=>{
+  ytCorner.classList.add('visible');
+  ytTrigger.classList.remove('visible');
+};
+
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')){
+    ytTrigger.classList.add('visible');
+  }
+  ytEmbed.style.display='none';
+  ytEmbed.innerHTML='';
+  ytInput.value='';
+}
+
+function hideYT(){
+  ytCorner.classList.remove('visible');
+  ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none';
+  ytEmbed.innerHTML='';
+  ytInput.value='';
+}
+
+function loadYT(){
+  const val=ytInput.value.trim();
+  if(!val) return;
+  const ytd=extractYTData(val);
+  if(!ytd){
+    ytEmbed.style.display='block';
+    ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;
+    return;
+  }
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
