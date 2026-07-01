@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST · Quantifying Reality — Measurements</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+/* Clear confirm modal */
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+/* toast */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> ICSE 9</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Quantifying Reality<br>— Measurements</h1></div>
+    <p id="home-sub">ICSE Class 9 Physics · Units, precision instruments &amp; the simple pendulum. Select a topic to begin — 5 questions each.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+// Each diagram is a function returning an SVG string
+
+const DIAGRAMS = {
+  // Ruler least-count / magnifier diagram
+  scaleZoom: (readingA='1.3', readingB='1.4') => `
+    <svg viewBox="0 0 280 160" width="280" height="160" xmlns="http://www.w3.org/2000/svg">
+      <line x1="20" y1="70" x2="260" y2="70" stroke="#374151" stroke-width="2"/>
+      ${Array.from({length:21}).map((_,i)=>{
+        const x=20+i*12; const tall=i%5===0;
+        return `<line x1="${x}" y1="70" x2="${x}" y2="${tall?58:64}" stroke="#374151" stroke-width="${tall?1.5:1}"/>`;
+      }).join('')}
+      <text x="20" y="52" font-size="10" fill="#6b7280" font-family="sans-serif">1.0</text>
+      <text x="80" y="52" font-size="10" fill="#6b7280" font-family="sans-serif">1.2</text>
+      <text x="140" y="52" font-size="10" fill="#6b7280" font-family="sans-serif">1.4</text>
+      <text x="200" y="52" font-size="10" fill="#6b7280" font-family="sans-serif">1.6</text>
+      <line x1="128" y1="66" x2="128" y2="120" stroke="#dc2626" stroke-width="2"/>
+      <circle cx="128" cy="120" r="4" fill="#dc2626"/>
+      <text x="100" y="140" font-size="11" fill="#dc2626" font-family="sans-serif">edge falls between ${readingA} and ${readingB} cm</text>
+    </svg>`,
+
+  // Vernier calliper reading diagram
+  vernierRead: (main='1.2 cm', vsd='4', lc='0.01 cm') => `
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="30" width="260" height="20" fill="#f0ede8" stroke="#374151" stroke-width="1.2"/>
+      ${Array.from({length:14}).map((_,i)=>{
+        const x=30+i*18; const tall=i%2===0;
+        return `<line x1="${x}" y1="50" x2="${x}" y2="${tall?58:55}" stroke="#374151" stroke-width="1"/>`;
+      }).join('')}
+      <text x="24" y="26" font-size="10" fill="#374151" font-family="sans-serif">MAIN SCALE (cm)</text>
+      <text x="30" y="46" font-size="9" fill="#374151" font-family="sans-serif">0</text>
+      <text x="102" y="46" font-size="9" fill="#374151" font-family="sans-serif">1</text>
+      <text x="174" y="46" font-size="9" fill="#374151" font-family="sans-serif">2</text>
+      <rect x="66" y="70" width="140" height="20" fill="#e0e7ff" stroke="#2563eb" stroke-width="1.2"/>
+      ${Array.from({length:11}).map((_,i)=>{
+        const x=70+i*13;
+        return `<line x1="${x}" y1="90" x2="${x}" y2="97" stroke="#2563eb" stroke-width="1"/>`;
+      }).join('')}
+      <text x="68" y="66" font-size="10" fill="#2563eb" font-family="sans-serif">VERNIER SCALE</text>
+      <circle cx="${70+Number(vsd)*13}" cy="93" r="4" fill="#dc2626"/>
+      <text x="${70+Number(vsd)*13-8}" y="112" font-size="10" fill="#dc2626" font-family="sans-serif" font-weight="700">match</text>
+      <text x="40" y="132" font-size="11" fill="#374151" font-family="sans-serif">Main scale reading = ${main}  ·  Matching VSD = ${vsd}  ·  L.C. = ${lc}</text>
+    </svg>`,
+
+  // Micrometer screw gauge reading diagram
+  screwGaugeRead: (main='5.5 mm', csd='27', lc='0.01 mm') => `
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <line x1="20" y1="70" x2="180" y2="70" stroke="#374151" stroke-width="2"/>
+      ${Array.from({length:12}).map((_,i)=>{
+        const x=20+i*14;
+        return `<line x1="${x}" y1="70" x2="${x}" y2="${i%2===0?60:64}" stroke="#374151" stroke-width="1"/>`;
+      }).join('')}
+      <text x="16" y="52" font-size="10" fill="#374151" font-family="sans-serif">SLEEVE (mm)</text>
+      <text x="20" y="46" font-size="9" fill="#374151" font-family="sans-serif">5</text>
+      <text x="76" y="46" font-size="9" fill="#374151" font-family="sans-serif">5.5</text>
+      <circle cx="220" cy="70" r="48" fill="#f0ede8" stroke="#374151" stroke-width="1.5"/>
+      ${Array.from({length:12}).map((_,i)=>{
+        const ang=(i/12)*2*Math.PI - Math.PI/2;
+        const x1=220+40*Math.cos(ang), y1=70+40*Math.sin(ang);
+        const x2=220+48*Math.cos(ang), y2=70+48*Math.sin(ang);
+        return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#7c3aed" stroke-width="1"/>`;
+      }).join('')}
+      <line x1="220" y1="70" x2="220" y2="22" stroke="#dc2626" stroke-width="2"/>
+      <text x="196" y="132" font-size="10" fill="#7c3aed" font-family="sans-serif">THIMBLE (circular scale)</text>
+      <text x="30" y="112" font-size="11" fill="#374151" font-family="sans-serif">Sleeve = ${main} · Thimble div on ref. line = ${csd} · L.C. = ${lc}</text>
+    </svg>`,
+
+  // Simple pendulum diagram
+  pendulumSwing: (length='l') => `
+    <svg viewBox="0 0 260 200" width="260" height="200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="90" y="10" width="80" height="12" fill="#d1d5db" stroke="#374151" stroke-width="1"/>
+      <line x1="130" y1="22" x2="130" y2="34" stroke="#374151" stroke-width="2"/>
+      <line x1="130" y1="34" x2="130" y2="150" stroke="#374151" stroke-width="1.5"/>
+      <line x1="130" y1="34" x2="70" y2="140" stroke="#93c5fd" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <line x1="130" y1="34" x2="190" y2="140" stroke="#93c5fd" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <path d="M70,140 A115,115 0 0,0 190,140" fill="none" stroke="#9ca3af" stroke-width="1" stroke-dasharray="3,3"/>
+      <circle cx="130" cy="150" r="12" fill="#374151"/>
+      <circle cx="70" cy="140" r="9" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <circle cx="190" cy="140" r="9" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <text x="60" y="168" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="700">A</text>
+      <text x="185" y="168" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">B</text>
+      <text x="122" y="185" font-size="12" fill="#374151" font-family="sans-serif" font-weight="700">O</text>
+      <text x="136" y="90" font-size="12" fill="#374151" font-family="sans-serif">${length}</text>
+      <line x1="140" y1="34" x2="140" y2="150" stroke="#6b7280" stroke-width="0.8"/>
+    </svg>`,
+
+  // T-squared vs l graph
+  tSquaredGraph: (slope='4.0 s²/m') => `
+    <svg viewBox="0 0 260 200" width="260" height="200" xmlns="http://www.w3.org/2000/svg">
+      <line x1="40" y1="170" x2="40" y2="20" stroke="#374151" stroke-width="1.5"/>
+      <line x1="40" y1="170" x2="240" y2="170" stroke="#374151" stroke-width="1.5"/>
+      <text x="8" y="24" font-size="12" fill="#374151" font-family="sans-serif">T² (s²)</text>
+      <text x="205" y="188" font-size="12" fill="#374151" font-family="sans-serif">l (m)</text>
+      <line x1="40" y1="170" x2="210" y2="35" stroke="#2563eb" stroke-width="2.5"/>
+      <line x1="130" y1="170" x2="130" y2="100" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="130" y1="100" x2="40" y2="100" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4,3"/>
+      <circle cx="130" cy="100" r="4" fill="#dc2626"/>
+      <text x="134" y="96" font-size="11" fill="#dc2626" font-family="sans-serif">P (l, T²)</text>
+      <text x="60" y="60" font-size="11" fill="#2563eb" font-family="sans-serif">slope = ${slope}</text>
+    </svg>`
+};
+
+// ── TOPIC DATA ─────────────────────────────────────────────────────────────────
+const TOPICS = [
+  // ── TOPIC 1: SI Units — Fundamental & Derived ──────────────────────────────
+  {
+    name:"SI Units — Fundamental & Derived",
+    questions:[
+      {
+        q:"Which of the following is a fundamental (base) SI unit?",
+        opts:["Newton","Joule","Kelvin","Watt"],
+        ans:2,
+        sol:"The SI system has 7 base units — metre, kilogram, second, kelvin, ampere, candela, mole. Newton, Joule and Watt are all derived units built from these."
+      },
+      {
+        q:"The SI unit of force, the Newton, expressed in fundamental units is:",
+        opts:["kg m s⁻¹","kg m² s⁻²","kg m s⁻²","kg m⁻¹ s⁻²"],
+        ans:2,
+        sol:"Force = mass × acceleration = kg × (m s⁻²) = kg m s⁻². This is a derived unit, built by combining the fundamental units of mass, length and time."
+      },
+      {
+        q:"How many fundamental (base) units are there in the S.I. system?",
+        opts:["5","6","7","8"],
+        ans:2,
+        sol:"There are 7 base units in SI (established 1960): metre, kilogram, second, kelvin, candela, ampere, and mole. Every other unit is derived from these."
+      },
+      {
+        q:"Energy, measured in Joules, is dimensionally equivalent to:",
+        opts:["kg m s⁻¹","kg m² s⁻²","kg m⁻¹ s⁻²","kg m³ s⁻²"],
+        ans:1,
+        sol:"Energy = Force × distance = (kg m s⁻²) × m = kg m² s⁻². Like force, it is a derived unit built by multiplying fundamental units."
+      },
+      {
+        q:"Which pair correctly matches a fundamental physical quantity with its SI base unit?",
+        opts:["Length — Metre","Force — Newton","Area — Square metre","Speed — Metre per second"],
+        ans:0,
+        sol:"Length is one of the 7 fundamental quantities and its base unit is the metre. Force, area and speed are all derived quantities, built by combining base units through multiplication or division."
+      }
+    ]
+  },
+
+  // ── TOPIC 2: Extremes of Scale — Powers of Ten ─────────────────────────────
+  {
+    name:"Extremes of Scale — Powers of Ten",
+    questions:[
+      {
+        q:"One Angstrom (Å), commonly used to express light wavelengths, is equal to:",
+        opts:["10⁻⁶ m","10⁻⁹ m","10⁻¹⁰ m","10⁻¹⁵ m"],
+        ans:2,
+        sol:"1 Angstrom = 10⁻¹⁰ m. It sits between the nanometre (10⁻⁹ m) and the fermi (10⁻¹⁵ m) on the microscopic scale, and is used mainly to measure wavelengths of visible light."
+      },
+      {
+        q:"The distance light travels in one year (1 light year) is approximately:",
+        opts:["1.496 × 10¹¹ m","9.46 × 10¹⁵ m","3.08 × 10¹⁶ m","6.02 × 10²³ m"],
+        ans:1,
+        sol:"1 light year = 9.46 × 10¹⁵ m — the distance light covers in one year. 1.496 × 10¹¹ m is the Astronomical Unit (Earth-Sun distance), while 3.08 × 10¹⁶ m is 1 Parsec."
+      },
+      {
+        q:"A Fermi (f), the unit used for nuclear sizes, is equal to:",
+        opts:["10⁻⁶ m","10⁻⁹ m","10⁻¹⁰ m","10⁻¹⁵ m"],
+        ans:3,
+        sol:"1 Fermi = 10⁻¹⁵ m. It is the smallest of the common microscopic units and is used to measure the size of atomic nuclei."
+      },
+      {
+        q:"One micron (μ) is equal to how many metres?",
+        opts:["10⁻³ m","10⁻⁶ m","10⁻⁹ m","10⁻¹² m"],
+        ans:1,
+        sol:"1 micron = 10⁻⁶ m. It is larger than the nanometre (10⁻⁹ m) but still far too small to see with the naked eye."
+      },
+      {
+        q:"Arranging the Fermi, Angstrom, Nanometre and Micron from smallest to largest gives:",
+        opts:["Fermi < Angstrom < Nanometre < Micron","Angstrom < Fermi < Micron < Nanometre","Micron < Nanometre < Angstrom < Fermi","Nanometre < Fermi < Angstrom < Micron"],
+        ans:0,
+        sol:"In metres: Fermi = 10⁻¹⁵, Angstrom = 10⁻¹⁰, Nanometre = 10⁻⁹, Micron = 10⁻⁶. Since a larger negative power of ten means a smaller value, the correct increasing order is Fermi < Angstrom < Nanometre < Micron."
+      }
+    ]
+  },
+
+  // ── TOPIC 3: Least Count & Threshold of Accuracy ───────────────────────────
+  {
+    name:"Least Count & Threshold of Accuracy",
+    questions:[
+      {
+        q:"The least count of a measuring instrument is defined as:",
+        diagram: DIAGRAMS.scaleZoom(),
+        opts:["The largest length the instrument can measure","The smallest measurement that can be taken accurately with the instrument","The zero error present in the instrument","The number of divisions on the main scale"],
+        ans:1,
+        sol:"Least Count (L.C.) is the smallest measurement that can be taken accurately with a given instrument — it marks the physical limit of that instrument's precision."
+      },
+      {
+        q:"The least count of an ordinary metre rule (graduated in millimetres) is:",
+        opts:["1 cm","1 mm","0.1 mm","0.01 mm"],
+        ans:1,
+        sol:"A standard metre rule's smallest division is 1 mm (0.1 cm), so its least count is 1 mm — we cannot reliably read beyond this without a magnifying instrument."
+      },
+      {
+        q:"An object's edge falls between the 1.3 cm and 1.4 cm marks on a metre rule. What is the correct way to record this measurement?",
+        opts:["Confidently write 1.35 cm as the exact reading","Record 1.3 cm, since we cannot accurately guess the next decimal place","Record 1.4 cm always, by rounding up","Measurement cannot be recorded at all"],
+        ans:1,
+        sol:"Since the smallest division is 1 mm, we have reached the physical limit of the ruler. We record the last certain mark (1.3 cm) rather than guessing the next digit — that's exactly what 'least count' means."
+      },
+      {
+        q:"Why can a Vernier calliper measure more precisely than a plain metre rule?",
+        opts:["Because it is made of steel and not wood","Because it is longer than a metre rule","Because a sliding secondary (vernier) scale lets us read fractions of a millimetre","Because it has a screw thread"],
+        ans:2,
+        sol:"Pierre Vernier's idea was a movable secondary scale where 10 vernier divisions equal 9 main scale divisions. Observing which vernier mark aligns exactly lets us capture fractions of a mm without needing microscopic hash marks."
+      },
+      {
+        q:"Arranging the metre rule, Vernier calliper, and micrometer screw gauge in order of increasing precision (i.e. decreasing least count) gives:",
+        opts:["Micrometer → Vernier calliper → Metre rule","Metre rule → Vernier calliper → Micrometer","Vernier calliper → Metre rule → Micrometer","Metre rule → Micrometer → Vernier calliper"],
+        ans:1,
+        sol:"Least counts are: Metre rule = 1 mm, Vernier calliper = 0.1 mm, Micrometer = 0.01 mm. As least count decreases, precision increases, so the correct order of increasing precision is Metre rule → Vernier calliper → Micrometer."
+      }
+    ]
+  },
+
+  // ── TOPIC 4: Vernier Callipers ──────────────────────────────────────────────
+  {
+    name:"Vernier Callipers — Reading & Zero Error",
+    questions:[
+      {
+        q:"In a Vernier calliper, 10 vernier scale divisions coincide with 9 main scale divisions (each main division = 1 mm). What is the least count?",
+        diagram: DIAGRAMS.vernierRead('1.2 cm','4','0.01 cm'),
+        opts:["1 mm","0.9 mm","0.1 mm","0.01 mm"],
+        ans:2,
+        sol:"1 Vernier Division = 9/10 mm = 0.9 mm. L.C. = 1 Main Scale Division − 1 Vernier Division = 1.0 mm − 0.9 mm = 0.1 mm."
+      },
+      {
+        q:"Which part of a Vernier calliper is used to measure the internal diameter of a hollow cylinder or pipe?",
+        opts:["Outside jaws","Inside jaws","Depth strip","Main scale"],
+        ans:1,
+        sol:"The inside jaws (the smaller, upper pair of jaws) are designed to open outward against the inner walls of a hollow object, measuring its internal diameter. Outside jaws measure external diameters instead."
+      },
+      {
+        q:"If a Vernier calliper has a positive zero error, how is the correct reading obtained?",
+        opts:["Add the zero error to the observed reading","Subtract the zero error (with its sign) from the observed reading","Ignore the zero error completely","Always double the observed reading"],
+        ans:1,
+        sol:"Correct Reading = Observed Reading − Zero Error (with sign). For a positive zero error, this subtraction reduces the observed (too-high) reading back to the true value."
+      },
+      {
+        q:"A Vernier calliper has a zero error of +0.02 cm. If the observed reading for a rod's length is 3.46 cm, the actual length is:",
+        opts:["3.48 cm","3.44 cm","3.46 cm","3.42 cm"],
+        ans:1,
+        sol:"Correct Reading = Observed − Zero Error = 3.46 cm − 0.02 cm = 3.44 cm."
+      },
+      {
+        q:"The main scale of a Vernier calliper, graduated in millimetres, reads correctly up to:",
+        opts:["0.01 mm","0.1 mm","1 mm","10 mm"],
+        ans:2,
+        sol:"The main scale alone (without the vernier) is just a regular millimetre scale, so it reads correctly only up to 1 mm. The vernier scale extends this precision to 0.1 mm."
+      }
+    ]
+  },
+
+  // ── TOPIC 5: Screw Gauge — Pitch & Least Count ─────────────────────────────
+  {
+    name:"Screw Gauge — Pitch & Least Count",
+    questions:[
+      {
+        q:"The 'pitch' of a screw gauge is defined as:",
+        diagram: DIAGRAMS.screwGaugeRead('5.5 mm','27','0.01 mm'),
+        opts:["The distance the spindle moves forward in one complete rotation of the thimble","The total number of divisions on the thimble","The least count of the instrument","The diameter of the screw thread"],
+        ans:0,
+        sol:"Pitch = Linear distance moved ÷ Number of rotations. It is the distance the spindle advances for exactly one full turn of the thimble — the screw's fundamental step size."
+      },
+      {
+        q:"A screw gauge has a pitch of 1 mm and 100 equal divisions on its circular (thimble) scale. Its least count is:",
+        opts:["0.1 mm","0.01 mm","0.001 mm","1 mm"],
+        ans:1,
+        sol:"L.C. = Pitch ÷ Total circular divisions = 1 mm ÷ 100 = 0.01 mm."
+      },
+      {
+        q:"Which part of the micrometer screw gauge prevents the user from over-tightening it on the object being measured?",
+        opts:["The sleeve","The ratchet","The thimble","The stud"],
+        ans:1,
+        sol:"The ratchet is a safety mechanism — it slips (clicks) once the object is held firmly between the stud and spindle, preventing excess force from damaging the object or the instrument."
+      },
+      {
+        q:"A micrometer screw gauge has a negative zero error of −0.03 mm. If the observed reading for a wire's thickness is 5.46 mm, the correct reading is:",
+        opts:["5.43 mm","5.46 mm","5.49 mm","5.52 mm"],
+        ans:2,
+        sol:"Correct Reading = Observed − Zero Error = 5.46 − (−0.03) = 5.46 + 0.03 = 5.49 mm. Subtracting a negative zero error effectively adds it back."
+      },
+      {
+        q:"A micrometer screw gauge is best suited for accurately measuring:",
+        opts:["The length of a classroom table","The thickness of a wire or a sheet of paper","The volume of a beaker of water","The internal diameter of a bucket"],
+        ans:1,
+        sol:"With a least count of 0.01 mm, the screw gauge is ideal for very small dimensions such as wire diameter or paper thickness — far beyond what a metre rule or even a Vernier calliper can resolve reliably."
+      }
+    ]
+  },
+
+  // ── TOPIC 6: The Simple Pendulum ────────────────────────────────────────────
+  {
+    name:"Time, Motion & the Simple Pendulum",
+    questions:[
+      {
+        q:"The effective length (l) of a simple pendulum is measured from:",
+        diagram: DIAGRAMS.pendulumSwing('l'),
+        opts:["The point of suspension to the bottom of the bob","The point of suspension to the centre of gravity of the bob","The floor to the bob","The midpoint of the string to the bob"],
+        ans:1,
+        sol:"The effective length is measured from the point of suspension to the centre of gravity of the bob — not to its bottom surface, since the bob's mass is treated as concentrated at its centre."
+      },
+      {
+        q:"A pendulum bob swings from B, through the mean position O, to A, and back through O to B. This entire to-and-fro journey is called:",
+        opts:["Half an oscillation","One complete oscillation","One frequency","One amplitude"],
+        ans:1,
+        sol:"One complete oscillation is the full to-and-fro motion: B → O → A → O → B. This full round trip is what defines the Time Period T."
+      },
+      {
+        q:"A simple pendulum completes 40 oscillations in 20 seconds. Its time period is:",
+        opts:["0.5 s","2 s","0.25 s","800 s"],
+        ans:0,
+        sol:"Time Period T = Total time ÷ Number of oscillations = 20 s ÷ 40 = 0.5 s."
+      },
+      {
+        q:"Frequency (f) of a simple pendulum is related to its time period (T) by:",
+        opts:["f = T","f = 1/T","f = 2T","f = T²"],
+        ans:1,
+        sol:"Frequency is the number of oscillations completed in one second, and is defined as the reciprocal of the time period: f = 1/T."
+      },
+      {
+        q:"If the time period of a pendulum is 0.5 s, its frequency is:",
+        opts:["0.5 Hz","1 Hz","2 Hz","4 Hz"],
+        ans:2,
+        sol:"f = 1/T = 1/0.5 = 2 Hz. The pendulum completes 2 full oscillations every second."
+      }
+    ]
+  },
+
+  // ── TOPIC 7: Graphical Determination of g ──────────────────────────────────
+  {
+    name:"Finding g from the T² vs l Graph",
+    questions:[
+      {
+        q:"The time period of a simple pendulum is completely unaffected by:",
+        opts:["The length of the string and local gravity","The mass of the bob and the amplitude of swing","Neither the mass nor the length","Only the local value of gravity"],
+        ans:1,
+        sol:"Time period depends only on the length of the string (l) and the gravitational pull (g). It is independent of the mass of the bob and the amplitude of the swing (for small oscillations)."
+      },
+      {
+        q:"For a simple pendulum, the time period T is proportional to:",
+        opts:["l","l²","1/l","√l"],
+        ans:3,
+        sol:"T ∝ √l. Since T² is therefore directly proportional to l, plotting T² against l always produces a straight line through the origin — this is the basis of the graphical method for finding g."
+      },
+      {
+        q:"A graph of T² (y-axis) plotted against l (x-axis) for a simple pendulum is:",
+        diagram: DIAGRAMS.tSquaredGraph('4.0 s²/m'),
+        opts:["A curve bending upward","A straight line passing through the origin","A horizontal straight line","A circle"],
+        ans:1,
+        sol:"Since T² ∝ l, the T² vs l graph is a straight line that passes through the origin, with slope equal to 4π²/g."
+      },
+      {
+        q:"The formula used to calculate local gravity (g) from the slope of the T² vs l graph is:",
+        opts:["g = slope / 4π²","g = 4π² / slope","g = 4π² × slope","g = 2π / slope"],
+        ans:1,
+        sol:"Since T² = (4π²/g) × l, the slope of the T² vs l graph equals 4π²/g. Rearranging gives g = 4π² ÷ slope."
+      },
+      {
+        q:"The slope of a T² vs l graph, obtained from pendulum data, is found to be 4.05 s²/m. What is the value of g (take π² ≈ 9.87)?",
+        opts:["4.05 m/s²","9.75 m/s²","39.48 m/s²","2.02 m/s²"],
+        ans:1,
+        sol:"g = 4π² / slope = (4 × 9.87) / 4.05 = 39.48 / 4.05 ≈ 9.75 m/s² — very close to the standard value of 9.8 m/s², confirming the accuracy of the graphical method."
+      }
+    ]
+  }
+];
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'padipucast_measurements_icse9_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(()=>Array(5).fill(null));
+}
+
+function saveAnswers(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+}
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===5&&done===5?' all-done':'');
+    const dots=Array(5).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/5 attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.length*5} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=5;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of 5`;
+  qText.textContent=q.q;
+  // Diagram
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===4){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  if(newQ<0||newQ>4){if(newQ>4) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(()=>Array(5).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// Close modal on backdrop click
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
