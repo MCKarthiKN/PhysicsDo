@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Vernier Callipers</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:600px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">Physics <span>·</span> DPP-02</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Vernier Callipers</h1></div>
+    <p id="home-sub">Follow the pattern: find L.C. → build the reading → correct the zero error → solve the full problem. 5 questions per topic.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+const DIAGRAMS = {
+
+  // Least-count principle: n vernier divisions span (n-1) main divisions
+  vernierLC: () => `
+    <svg viewBox="0 0 340 158" width="340" height="158" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+      ${Array.from({length:11},(_,i)=>{const x=(25+27*i).toFixed(1);return `<line x1="${x}" y1="55" x2="${x}" y2="${i%5===0?38:44}" stroke="#374151" stroke-width="1.4"/>`;}).join('')}
+      <line x1="25" y1="55" x2="295" y2="55" stroke="#374151" stroke-width="1.6"/>
+      <text x="300" y="52" font-size="10" fill="#6b7280">Main</text>
+      ${[0,5,9].map(i=>`<text x="${(25+27*i-2).toFixed(1)}" y="30" font-size="9" fill="#9ca3af">${i}</text>`).join('')}
+      ${Array.from({length:11},(_,j)=>{const x=(25+24.3*j).toFixed(1);return `<line x1="${x}" y1="100" x2="${x}" y2="${j%5===0?117:111}" stroke="#2563eb" stroke-width="1.4"/>`;}).join('')}
+      <line x1="25" y1="100" x2="268" y2="100" stroke="#2563eb" stroke-width="1.8"/>
+      <text x="272" y="103" font-size="10" fill="#2563eb">Vernier</text>
+      ${[0,5,10].map(j=>`<text x="${(25+24.3*j-2).toFixed(1)}" y="132" font-size="9" fill="#2563eb">${j}</text>`).join('')}
+      <line x1="25" y1="38" x2="25" y2="117" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="268" y1="38" x2="268" y2="117" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,3"/>
+      <circle cx="25" cy="55" r="3" fill="#16a34a"/><circle cx="268" cy="55" r="3" fill="#16a34a"/>
+      <text x="66" y="152" font-size="10.5" fill="#16a34a">10 vernier divisions span 9 main divisions</text>
+    </svg>`,
+
+  // Taking a reading: vernier zero lies between two main marks, one vernier div coincides
+  vernierReading: (lo, hi, coinc) => `
+    <svg viewBox="0 0 340 168" width="340" height="168" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+      ${Array.from({length:11},(_,i)=>{const x=20+30*i;return `<line x1="${x}" y1="55" x2="${x}" y2="41" stroke="#374151" stroke-width="1.4"/>`;}).join('')}
+      <line x1="20" y1="55" x2="320" y2="55" stroke="#374151" stroke-width="1.6"/>
+      <text x="80" y="34" font-size="10" fill="#374151" text-anchor="middle">${lo}</text>
+      <text x="110" y="34" font-size="10" fill="#374151" text-anchor="middle">${hi}</text>
+      <text x="324" y="52" font-size="9" fill="#6b7280">Main (cm)</text>
+      <polygon points="95,55 91,45 99,45" fill="#dc2626"/>
+      <line x1="95" y1="55" x2="95" y2="70" stroke="#dc2626" stroke-width="1.4"/>
+      <text x="95" y="83" font-size="9" fill="#dc2626" text-anchor="middle">0 of vernier</text>
+      ${Array.from({length:11},(_,j)=>{const x=95+21.5*j;const on=j===coinc;return `<line x1="${x.toFixed(1)}" y1="100" x2="${x.toFixed(1)}" y2="114" stroke="${on?'#16a34a':'#2563eb'}" stroke-width="${on?2.2:1.3}"/>`;}).join('')}
+      <line x1="95" y1="100" x2="${(95+21.5*10).toFixed(1)}" y2="100" stroke="#2563eb" stroke-width="1.6"/>
+      ${[0,5,10].map(j=>`<text x="${(95+21.5*j).toFixed(1)}" y="126" font-size="8.5" fill="#2563eb" text-anchor="middle">${j}</text>`).join('')}
+      <line x1="${(95+21.5*coinc).toFixed(1)}" y1="100" x2="${(95+21.5*coinc).toFixed(1)}" y2="41" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,3"/>
+      <circle cx="${(95+21.5*coinc).toFixed(1)}" cy="55" r="3" fill="#16a34a"/>
+      <text x="14" y="150" font-size="10.5" fill="#16a34a">Vernier division ${coinc} coincides with a main mark</text>
+    </svg>`,
+
+  // Zero error (jaws closed): vernier 0 offset from main 0
+  zeroError: (side, div) => {
+    const v0 = side === 'right' ? 122 : 86;
+    const sign = side === 'right' ? '+ve (positive)' : '−ve (negative)';
+    return `
+    <svg viewBox="0 0 340 160" width="340" height="160" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+      <text x="20" y="18" font-size="10" fill="#6b7280">Jaws closed — nothing held between the jaws</text>
+      ${Array.from({length:9},(_,i)=>{const x=48+28*i;return `<line x1="${x}" y1="62" x2="${x}" y2="48" stroke="#374151" stroke-width="1.4"/>`;}).join('')}
+      <line x1="48" y1="62" x2="272" y2="62" stroke="#374151" stroke-width="1.6"/>
+      <text x="104" y="42" font-size="11" fill="#374151" text-anchor="middle" font-weight="600">0</text>
+      <text x="276" y="59" font-size="9" fill="#6b7280">Main</text>
+      ${Array.from({length:11},(_,j)=>{const x=v0+20*j;const on=j===div;return `<line x1="${x}" y1="108" x2="${x}" y2="122" stroke="${on?'#16a34a':'#2563eb'}" stroke-width="${on?2.2:1.3}"/>`;}).join('')}
+      <line x1="${v0}" y1="108" x2="${v0+20*10}" y2="108" stroke="#2563eb" stroke-width="1.6"/>
+      <text x="${v0}" y="135" font-size="10" fill="#dc2626" text-anchor="middle" font-weight="600">0</text>
+      <line x1="${v0}" y1="108" x2="${v0}" y2="62" stroke="#dc2626" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="${v0+20*div}" y1="108" x2="${v0+20*div}" y2="48" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,3"/>
+      <circle cx="${v0+20*div}" cy="62" r="3" fill="#16a34a"/>
+      <text x="14" y="152" font-size="10.5" fill="${side==='right'?'#dc2626':'#c0392b'}">Vernier 0 is to the ${side} of main 0 → ${sign} zero error</text>
+    </svg>`;
+  },
+
+  // Correction reminder card (no numbers, so no answer leak)
+  correction: () => `
+    <svg viewBox="0 0 340 96" width="340" height="96" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+      <rect x="24" y="18" width="292" height="60" rx="9" fill="#f0ede8" stroke="#d4d1c8"/>
+      <text x="170" y="46" font-size="12.5" fill="#374151" text-anchor="middle" font-weight="600">Correct reading = Observed reading − Zero error</text>
+      <text x="170" y="66" font-size="10.5" fill="#6b7280" text-anchor="middle">(subtract the zero error along with its + or − sign)</text>
+    </svg>`
+};
+
+// ── TOPICS ─────────────────────────────────────────────────────────────────────
+const TOPICS = [
+
+  // ── TOPIC 1: FINDING THE LEAST COUNT ──────────────────────────────────────────
+  {
+    name:"Finding the Least Count",
+    questions:[
+      {
+        q:"In a vernier callipers, 1 main scale division = 1 mm, and 10 vernier divisions coincide with 9 main scale divisions. The least count is:",
+        diagram: DIAGRAMS.vernierLC(),
+        opts:["0.1 mm","0.2 mm","0.05 mm","1 mm"],
+        ans:0,
+        sol:"L.C. = 1 MSD − 1 VSD. Since 10 VSD = 9 MSD, 1 VSD = 9/10 MSD = 0.9 mm. L.C. = 1 − 0.9 = <strong>0.1 mm</strong> (= 0.01 cm)."
+      },
+      {
+        q:"1 main scale division = 1 mm, and 20 vernier divisions coincide with 19 main scale divisions. Find the least count.",
+        diagram: DIAGRAMS.vernierLC(),
+        opts:["0.05 mm","0.1 mm","0.02 mm","0.5 mm"],
+        ans:0,
+        sol:"20 VSD = 19 MSD → 1 VSD = 19/20 = 0.95 mm. L.C. = 1 MSD − 1 VSD = 1 − 0.95 = <strong>0.05 mm</strong>."
+      },
+      {
+        q:"1 main scale division = 1 mm, and 50 vernier divisions coincide with 49 main scale divisions. The least count is:",
+        diagram: DIAGRAMS.vernierLC(),
+        opts:["0.02 mm","0.05 mm","0.01 mm","0.2 mm"],
+        ans:0,
+        sol:"50 VSD = 49 MSD → 1 VSD = 49/50 = 0.98 mm. L.C. = 1 − 0.98 = <strong>0.02 mm</strong>. Shortcut: with n VSD = (n−1) MSD, L.C. = 1 MSD / n = 1/50 = 0.02 mm."
+      },
+      {
+        q:"Each centimetre on the main scale is divided into 20 equal parts, and 10 vernier divisions coincide with 9 main scale divisions. The least count is:",
+        diagram: DIAGRAMS.vernierLC(),
+        opts:["0.05 mm","0.1 mm","0.5 mm","0.02 mm"],
+        ans:0,
+        sol:"1 MSD = 1 cm ÷ 20 = 0.05 cm = 0.5 mm. With 10 VSD = 9 MSD, L.C. = 1 MSD / 10 = 0.5/10 = <strong>0.05 mm</strong>."
+      },
+      {
+        q:"Each centimetre on the main scale is divided into 25 equal parts, and 10 vernier divisions coincide with 9 main scale divisions. Find the least count.",
+        diagram: DIAGRAMS.vernierLC(),
+        opts:["0.04 mm","0.4 mm","0.1 mm","0.02 mm"],
+        ans:0,
+        sol:"1 MSD = 1 cm ÷ 25 = 0.04 cm = 0.4 mm. L.C. = 1 MSD / 10 = 0.4/10 = <strong>0.04 mm</strong> (= 4 × 10⁻² mm)."
+      }
+    ]
+  },
+
+  // ── TOPIC 2: BUILDING THE READING ─────────────────────────────────────────────
+  {
+    name:"Building the Reading (MSR + VSD × L.C.)",
+    questions:[
+      {
+        q:"L.C. = 0.01 cm. The main scale reading is 3.2 cm and the 4th vernier division coincides with a main scale mark. Find the total reading.",
+        diagram: DIAGRAMS.vernierReading("3.2","3.3",4),
+        opts:["3.24 cm","3.20 cm","3.4 cm","3.28 cm"],
+        ans:0,
+        sol:"Reading = MSR + (VSD × L.C.) = 3.2 + (4 × 0.01) = 3.2 + 0.04 = <strong>3.24 cm</strong>."
+      },
+      {
+        q:"L.C. = 0.01 cm. The '0' of the vernier lies between 5.6 cm and 5.7 cm, and the vernier coincidence is 8. Find the reading.",
+        diagram: DIAGRAMS.vernierReading("5.6","5.7",8),
+        opts:["5.68 cm","5.6 cm","5.78 cm","5.08 cm"],
+        ans:0,
+        sol:"‘Lies between 5.6 and 5.7’ means MSR = 5.6 cm (the lower mark). Reading = 5.6 + (8 × 0.01) = 5.6 + 0.08 = <strong>5.68 cm</strong>."
+      },
+      {
+        q:"L.C. = 0.01 cm. The vernier zero lies between 2.4 cm and 2.5 cm, and the 3rd vernier division coincides. The reading is:",
+        diagram: DIAGRAMS.vernierReading("2.4","2.5",3),
+        opts:["2.43 cm","2.4 cm","2.53 cm","2.03 cm"],
+        ans:0,
+        sol:"MSR = 2.4 cm. Reading = 2.4 + (3 × 0.01) = <strong>2.43 cm</strong>."
+      },
+      {
+        q:"L.C. = 0.05 mm (= 0.005 cm). The main scale reading is 1.5 cm and the 6th vernier division coincides. Find the reading.",
+        diagram: DIAGRAMS.vernierReading("1.50","1.55",6),
+        opts:["1.53 cm","1.56 cm","1.5 cm","1.6 cm"],
+        ans:0,
+        sol:"Reading = MSR + (VSD × L.C.) = 1.5 + (6 × 0.005) = 1.5 + 0.03 = <strong>1.53 cm</strong>."
+      },
+      {
+        q:"L.C. = 0.1 mm. The main scale reading is 42 mm and the 7th vernier division coincides. The reading is:",
+        diagram: DIAGRAMS.vernierReading("4.2","4.3",7),
+        opts:["42.7 mm","42.07 mm","49 mm","42.1 mm"],
+        ans:0,
+        sol:"Reading = 42 + (7 × 0.1) = 42 + 0.7 = <strong>42.7 mm</strong> (= 4.27 cm)."
+      }
+    ]
+  },
+
+  // ── TOPIC 3: ZERO ERROR & CORRECTION ──────────────────────────────────────────
+  {
+    name:"Zero Error & Correction",
+    questions:[
+      {
+        q:"With the jaws closed, the vernier zero lies to the right of the main scale zero and its 3rd division coincides with a main scale mark. L.C. = 0.01 cm. Find the zero error (with sign).",
+        diagram: DIAGRAMS.zeroError('right',3),
+        opts:["+0.03 cm","−0.03 cm","+0.3 cm","+0.07 cm"],
+        ans:0,
+        sol:"Vernier 0 to the right of main 0 → positive zero error. Error = (coinciding division) × L.C. = 3 × 0.01 = <strong>+0.03 cm</strong>."
+      },
+      {
+        q:"A vernier callipers has a zero error of −0.05 cm. A rod is measured and the observed reading is 2.40 cm. Find the corrected reading.",
+        diagram: DIAGRAMS.correction(),
+        opts:["2.45 cm","2.35 cm","2.40 cm","2.05 cm"],
+        ans:0,
+        sol:"Corrected = Observed − Zero error = 2.40 − (−0.05) = 2.40 + 0.05 = <strong>2.45 cm</strong>. (A negative error means the instrument reads low, so we add.)"
+      },
+      {
+        q:"A vernier callipers has a zero error of +0.3 mm. The observed reading of an object is 4.86 cm. Find the corrected reading.",
+        diagram: DIAGRAMS.correction(),
+        opts:["4.83 cm","4.89 cm","4.86 cm","4.56 cm"],
+        ans:0,
+        sol:"Convert error: +0.3 mm = +0.03 cm. Corrected = 4.86 − (+0.03) = <strong>4.83 cm</strong>. (A positive error means the instrument reads high, so we subtract.)"
+      },
+      {
+        q:"With the jaws closed, the vernier zero lies to the left of the main scale zero, and the 6th of its 10 divisions coincides with a main scale mark. L.C. = 0.01 cm. The zero error is:",
+        diagram: DIAGRAMS.zeroError('left',6),
+        opts:["−0.04 cm","−0.06 cm","+0.06 cm","−0.4 cm"],
+        ans:0,
+        sol:"Vernier 0 to the left of main 0 → negative zero error. Here error = −(N − p) × L.C., where N = 10 (total divisions) and p = 6 (coinciding). Error = −(10 − 6) × 0.01 = <strong>−0.04 cm</strong>."
+      },
+      {
+        q:"A callipers reads +0.02 cm when its jaws are fully closed (vernier 0 to the right, 2nd division coincides, L.C. = 0.01 cm). A wire measured with it gives an observed reading of 1.36 cm. The true diameter is:",
+        diagram: DIAGRAMS.zeroError('right',2),
+        opts:["1.34 cm","1.38 cm","1.36 cm","1.32 cm"],
+        ans:0,
+        sol:"Zero error = +2 × 0.01 = +0.02 cm. True diameter = Observed − Zero error = 1.36 − 0.02 = <strong>1.34 cm</strong>."
+      }
+    ]
+  },
+
+  // ── TOPIC 4: FULL PROBLEMS (L.C. GIVEN) ───────────────────────────────────────
+  {
+    name:"Full Problems — L.C. Given",
+    questions:[
+      {
+        q:"A vernier scale has a positive zero error of 0.3 mm. While measuring, the '0' of the vernier lies between 6.2 cm and 6.3 cm and the vernier coincidence is 7. The correct measurement is (L.C. = 0.01 cm):",
+        diagram: DIAGRAMS.vernierReading("6.2","6.3",7),
+        opts:["6.24 cm","6.27 cm","6.30 cm","6.21 cm"],
+        ans:0,
+        sol:"Observed reading = 6.2 + (7 × 0.01) = 6.27 cm. Zero error = +0.3 mm = +0.03 cm. Correct = 6.27 − 0.03 = <strong>6.24 cm</strong>."
+      },
+      {
+        q:"The vernier constant is 0.1 mm and the zero error is (−0.04) cm. While measuring a sphere, the main scale reading is 2.3 cm and the coinciding vernier division is 6. The corrected diameter is ____ × 10⁻² cm.",
+        diagram: DIAGRAMS.vernierReading("2.3","2.4",6),
+        opts:["240","236","232","244"],
+        ans:0,
+        sol:"L.C. = 0.1 mm = 0.01 cm. Observed = 2.3 + (6 × 0.01) = 2.36 cm. Correct = 2.36 − (−0.04) = 2.36 + 0.04 = 2.40 cm = <strong>240 × 10⁻² cm</strong>."
+      },
+      {
+        q:"The vernier constant is 0.1 mm and the zero error is (−0.06) cm. The main scale reading is 1.9 cm and the coinciding vernier division is 4. The corrected diameter is ____ × 10⁻² cm.",
+        diagram: DIAGRAMS.vernierReading("1.9","2.0",4),
+        opts:["200","194","188","206"],
+        ans:0,
+        sol:"L.C. = 0.01 cm. Observed = 1.9 + (4 × 0.01) = 1.94 cm. Correct = 1.94 − (−0.06) = 1.94 + 0.06 = 2.00 cm = <strong>200 × 10⁻² cm</strong>."
+      },
+      {
+        q:"A vernier scale has a positive zero error of 0.2 mm. The vernier zero lies between 7.3 cm and 7.4 cm and the vernier coincidence is 9. The correct value of measurement is (L.C. = 0.01 cm):",
+        diagram: DIAGRAMS.vernierReading("7.3","7.4",9),
+        opts:["7.37 cm","7.39 cm","7.41 cm","7.35 cm"],
+        ans:0,
+        sol:"Observed = 7.3 + (9 × 0.01) = 7.39 cm. Zero error = +0.2 mm = +0.02 cm. Correct = 7.39 − 0.02 = <strong>7.37 cm</strong>."
+      },
+      {
+        q:"L.C. = 0.05 mm and there is no zero error. The main scale reading is 4.0 cm and the coinciding vernier division is 7. Find the reading.",
+        diagram: DIAGRAMS.vernierReading("4.00","4.05",7),
+        opts:["4.035 cm","4.35 cm","4.07 cm","4.005 cm"],
+        ans:0,
+        sol:"L.C. = 0.05 mm = 0.005 cm. Reading = 4.0 + (7 × 0.005) = 4.0 + 0.035 = <strong>4.035 cm</strong>."
+      }
+    ]
+  },
+
+  // ── TOPIC 5: THE FULL MONSTER (ALL 4 STEPS) ───────────────────────────────────
+  {
+    name:"The Full Problem — All 4 Steps",
+    questions:[
+      {
+        q:"1 MSD = 1 mm and 10 VSD = 9 MSD. Jaws closed: vernier zero lies to the right of main zero and its 3rd division coincides. With a bob held, the vernier zero lies between 5.3 cm and 5.4 cm and the 7th vernier division coincides. The diameter of the bob is ____ × 10⁻² cm.",
+        diagram: DIAGRAMS.zeroError('right',3),
+        opts:["534","537","540","531"],
+        ans:0,
+        sol:"L.C. = 1 MSD/10 = 0.1 mm = 0.01 cm. Zero error = +3 × 0.01 = +0.03 cm. Observed = 5.3 + (7 × 0.01) = 5.37 cm. Diameter = 5.37 − 0.03 = 5.34 cm = <strong>534 × 10⁻² cm</strong>."
+      },
+      {
+        q:"1 MSD = 1 mm and 10 VSD = 9 MSD. Jaws closed: vernier zero lies to the right of main zero and its 4th division coincides. With a bob held, the vernier zero lies between 4.1 cm and 4.2 cm and the 6th vernier division coincides. The diameter of the bob is ____ × 10⁻² cm.",
+        diagram: DIAGRAMS.zeroError('right',4),
+        opts:["412","416","408","420"],
+        ans:0,
+        sol:"L.C. = 0.01 cm. Zero error = +4 × 0.01 = +0.04 cm. Observed = 4.1 + (6 × 0.01) = 4.16 cm. Diameter = 4.16 − 0.04 = 4.12 cm = <strong>412 × 10⁻² cm</strong>."
+      },
+      {
+        q:"1 MSD = 1 mm and 20 VSD = 19 MSD. Jaws closed: vernier zero lies to the right of main zero and its 2nd division coincides. With a bob held, the vernier zero lies between 3.2 cm and 3.3 cm and the 14th vernier division coincides. The diameter is ____ × 10⁻² cm.",
+        diagram: DIAGRAMS.zeroError('right',2),
+        opts:["326","327","320","331"],
+        ans:0,
+        sol:"L.C. = 1 MSD/20 = 0.05 mm = 0.005 cm. Zero error = +2 × 0.005 = +0.01 cm. Observed = 3.2 + (14 × 0.005) = 3.2 + 0.07 = 3.27 cm. Diameter = 3.27 − 0.01 = 3.26 cm = <strong>326 × 10⁻² cm</strong>."
+      },
+      {
+        q:"1 MSD = 1 mm and 10 VSD = 9 MSD. Jaws closed: vernier zero lies to the LEFT of main zero and its 8th division coincides. With a bob held, the vernier zero lies between 2.6 cm and 2.7 cm and the 5th vernier division coincides. The diameter is ____ × 10⁻² cm.",
+        diagram: DIAGRAMS.zeroError('left',8),
+        opts:["267","263","265","272"],
+        ans:0,
+        sol:"L.C. = 0.01 cm. Vernier 0 to the left → negative error = −(10 − 8) × 0.01 = −0.02 cm. Observed = 2.6 + (5 × 0.01) = 2.65 cm. Diameter = 2.65 − (−0.02) = 2.65 + 0.02 = 2.67 cm = <strong>267 × 10⁻² cm</strong>."
+      },
+      {
+        q:"1 MSD = 1 mm and 10 VSD = 9 MSD. Jaws closed: vernier zero lies to the right of main zero and its 5th division coincides. With a bob held, the vernier zero lies between 6.0 cm and 6.1 cm and the 3rd vernier division coincides. The diameter is ____ × 10⁻² cm.",
+        diagram: DIAGRAMS.zeroError('right',5),
+        opts:["598","603","608","593"],
+        ans:0,
+        sol:"L.C. = 0.01 cm. Zero error = +5 × 0.01 = +0.05 cm. Observed = 6.0 + (3 × 0.01) = 6.03 cm. Diameter = 6.03 − 0.05 = 5.98 cm = <strong>598 × 10⁻² cm</strong>."
+      }
+    ]
+  },
+
+  // ── TOPIC 6: VERNIER CONSTANT (×10⁻² mm) & CONCEPTS ────────────────────────────
+  {
+    name:"Vernier Constant (×10⁻² mm) & Concepts",
+    questions:[
+      {
+        q:"Each cm on the main scale is divided into 25 equal parts. If the 10th vernier division coincides with the 9th main scale division, the vernier constant is ____ × 10⁻² mm.",
+        diagram: DIAGRAMS.vernierLC(),
+        opts:["4","5","2","10"],
+        ans:0,
+        sol:"1 MSD = 1 cm ÷ 25 = 0.4 mm. With 10 VSD = 9 MSD, L.C. = 1 MSD/10 = 0.4/10 = 0.04 mm = <strong>4 × 10⁻² mm</strong>."
+      },
+      {
+        q:"Each cm on the main scale is divided into 10 equal parts. If 10 vernier divisions coincide with 9 main scale divisions, the vernier constant is ____ × 10⁻² mm.",
+        diagram: DIAGRAMS.vernierLC(),
+        opts:["10","1","5","9"],
+        ans:0,
+        sol:"1 MSD = 1 cm ÷ 10 = 1 mm. L.C. = 1 MSD/10 = 0.1 mm = <strong>10 × 10⁻² mm</strong>."
+      },
+      {
+        q:"Each cm on the main scale is divided into 20 equal parts. If 20 vernier divisions coincide with 19 main scale divisions, the vernier constant is ____ × 10⁻² mm.",
+        diagram: DIAGRAMS.vernierLC(),
+        opts:["2.5","5","2","25"],
+        ans:0,
+        sol:"1 MSD = 1 cm ÷ 20 = 0.5 mm. With 20 VSD = 19 MSD, L.C. = 1 MSD/20 = 0.5/20 = 0.025 mm = <strong>2.5 × 10⁻² mm</strong>."
+      },
+      {
+        q:"The least count of a vernier callipers can be made smaller (finer) by:",
+        opts:["Increasing the number of vernier divisions","Increasing the length of the main scale","Using a longer callipers","Decreasing the number of vernier divisions"],
+        ans:0,
+        sol:"L.C. = 1 MSD ÷ (number of vernier divisions). A larger number of vernier divisions makes the L.C. smaller, so the instrument becomes more precise. Answer: <strong>increasing the number of vernier divisions</strong>."
+      },
+      {
+        q:"A vernier callipers has a least count of 0.01 cm, with 10 divisions on its vernier scale (10 VSD = 9 MSD). The value of one main scale division is:",
+        diagram: DIAGRAMS.vernierLC(),
+        opts:["1 mm","0.1 mm","0.5 mm","2 mm"],
+        ans:0,
+        sol:"For 10 VSD = 9 MSD, L.C. = 1 MSD ÷ 10. So 1 MSD = 10 × L.C. = 10 × 0.01 = 0.1 cm = <strong>1 mm</strong>."
+      }
+    ]
+  }
+];
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'padipucast_vernier_dpp02_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(()=>Array(5).fill(null));
+}
+
+function saveAnswers(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+}
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===5&&done===5?' all-done':'');
+    const dots=Array(5).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/5 attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.length*5} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=5;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of 5`;
+  qText.textContent=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===4){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  if(newQ<0||newQ>4){if(newQ>4) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(()=>Array(5).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
