@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Projectile Motion (Beginner Variations)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+/* Clear confirm modal */
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+/* toast */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Projectile Motion</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Projectile Motion<br>Beginner's Box Variations</h1></div>
+    <p id="home-sub">Each card is one Beginner's Box question with 3 fresh variations — tap to practise.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+// Each diagram is a function returning an SVG string
+
+const DIAGRAMS = {
+
+  // Ground-to-ground parabola with launch velocity + angle
+  projArc: (angle='\u03b8') => `
+    <svg viewBox="0 0 250 150" width="250" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="pa" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="20" y1="128" x2="235" y2="128" stroke="#9ca3af" stroke-width="1.2"/>
+      <path d="M22,128 Q128,6 228,128" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+      <line x1="22" y1="128" x2="66" y2="90" stroke="#dc2626" stroke-width="2.5" marker-end="url(#pa)"/>
+      <text x="56" y="86" font-size="13" fill="#dc2626" font-family="sans-serif" font-weight="600">u</text>
+      <path d="M48,128 A26,26 0 0,0 56,112" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="50" y="123" font-size="11" fill="#374151" font-family="sans-serif">${angle}</text>
+      <circle cx="22" cy="128" r="4" fill="#16a34a"/>
+      <circle cx="228" cy="128" r="4" fill="#dc2626"/>
+      <text x="125" y="143" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">Range R</text>
+      <text x="128" y="20" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">H</text>
+    </svg>`,
+
+  // Velocity resolved into horizontal + vertical components
+  projComponents: (ux='u\u2093', uy='u_y') => `
+    <svg viewBox="0 0 230 165" width="230" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="cu" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker>
+        <marker id="cx" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+        <marker id="cy" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker>
+      </defs>
+      <line x1="30" y1="135" x2="215" y2="135" stroke="#9ca3af" stroke-width="1.2"/>
+      <line x1="30" y1="135" x2="160" y2="55" stroke="#dc2626" stroke-width="2.5" marker-end="url(#cu)"/>
+      <text x="95" y="82" font-size="13" fill="#dc2626" font-family="sans-serif" font-weight="600">u</text>
+      <line x1="30" y1="135" x2="160" y2="135" stroke="#2563eb" stroke-width="2" marker-end="url(#cx)"/>
+      <text x="70" y="150" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="600">u\u2093 = ${ux}</text>
+      <line x1="160" y1="135" x2="160" y2="55" stroke="#16a34a" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#cy)"/>
+      <text x="166" y="98" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="600">u_y = ${uy}</text>
+      <path d="M52,135 A22,22 0 0,0 60,122" fill="none" stroke="#374151" stroke-width="1.1"/>
+      <text x="54" y="131" font-size="10" fill="#374151" font-family="sans-serif">\u03b8</text>
+      <circle cx="30" cy="135" r="4" fill="#16a34a"/>
+    </svg>`,
+
+  // Horizontal projection from a tower / height
+  horizDrop: (h='h', u='u') => `
+    <svg viewBox="0 0 255 185" width="255" height="185" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="hd" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker>
+      <marker id="hr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker></defs>
+      <line x1="18" y1="152" x2="245" y2="152" stroke="#9ca3af" stroke-width="1.2"/>
+      <rect x="34" y="34" width="14" height="118" fill="#e0dccf" stroke="#8a857a" stroke-width="1"/>
+      <line x1="48" y1="36" x2="98" y2="36" stroke="#dc2626" stroke-width="2.5" marker-end="url(#hd)"/>
+      <text x="60" y="30" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="600">u = ${u}</text>
+      <path d="M48,36 Q120,44 178,152" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <line x1="24" y1="36" x2="24" y2="152" stroke="#374151" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="6" y="98" font-size="11" fill="#374151" font-family="sans-serif" font-weight="600">${h}</text>
+      <line x1="48" y1="167" x2="178" y2="167" stroke="#16a34a" stroke-width="1.4" marker-end="url(#hr)"/>
+      <text x="104" y="180" font-size="11" fill="#16a34a" font-family="sans-serif" text-anchor="middle">x</text>
+      <circle cx="178" cy="152" r="4" fill="#dc2626"/>
+    </svg>`,
+
+  // Projectile fired UP an incline
+  inclineUp: (ang='\u03b1') => `
+    <svg viewBox="0 0 255 175" width="255" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="iu" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <polygon points="30,152 222,152 222,55" fill="#efe9df" stroke="#c9c3b6" stroke-width="1"/>
+      <line x1="30" y1="152" x2="222" y2="55" stroke="#6b7280" stroke-width="2.2"/>
+      <line x1="30" y1="152" x2="222" y2="152" stroke="#9ca3af" stroke-width="1.2"/>
+      <path d="M64,152 A34,34 0 0,0 60,135" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="66" y="147" font-size="11" fill="#374151" font-family="sans-serif">${ang}</text>
+      <line x1="30" y1="152" x2="74" y2="112" stroke="#dc2626" stroke-width="2.5" marker-end="url(#iu)"/>
+      <text x="62" y="108" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="600">v</text>
+      <path d="M30,152 Q98,74 170,84" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <circle cx="30" cy="152" r="4" fill="#16a34a"/>
+    </svg>`,
+
+  // Horizontal projection from top of a DOWN-slope incline
+  inclineHoriz: (ang='\u03b1') => `
+    <svg viewBox="0 0 250 180" width="250" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ih" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <polygon points="42,42 42,155 215,155" fill="#efe9df" stroke="#c9c3b6" stroke-width="1"/>
+      <line x1="42" y1="42" x2="215" y2="155" stroke="#6b7280" stroke-width="2.2"/>
+      <line x1="42" y1="155" x2="230" y2="155" stroke="#9ca3af" stroke-width="1.2"/>
+      <line x1="42" y1="42" x2="98" y2="42" stroke="#dc2626" stroke-width="2.5" marker-end="url(#ih)"/>
+      <text x="60" y="36" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="600">v</text>
+      <path d="M42,42 Q98,58 132,120" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <path d="M198,155 A26,26 0 0,0 190,138" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="176" y="150" font-size="11" fill="#374151" font-family="sans-serif">${ang}</text>
+      <circle cx="42" cy="42" r="4" fill="#16a34a"/>
+    </svg>`,
+
+  // Projectile fired PERPENDICULAR to the incline
+  inclinePerp: (ang='\u03b1') => `
+    <svg viewBox="0 0 250 172" width="250" height="172" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ip" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="28" y1="150" x2="224" y2="55" stroke="#6b7280" stroke-width="2.4"/>
+      <line x1="28" y1="150" x2="224" y2="150" stroke="#9ca3af" stroke-width="1.2"/>
+      <path d="M60,150 A30,30 0 0,0 56,135" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="62" y="146" font-size="11" fill="#374151" font-family="sans-serif">${ang}</text>
+      <line x1="86" y1="122" x2="58" y2="66" stroke="#dc2626" stroke-width="2.5" marker-end="url(#ip)"/>
+      <text x="38" y="70" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="600">v \u27c2 plane</text>
+      <path d="M86,122 Q66,58 158,92" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <circle cx="86" cy="122" r="4" fill="#16a34a"/>
+    </svg>`,
+
+  // Generic incline with up/down range arrows
+  inclinePlane: (ang='\u03b1') => `
+    <svg viewBox="0 0 250 165" width="250" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="up" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker>
+      <marker id="dn" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#d97706"/></marker></defs>
+      <polygon points="32,145 222,145 222,52" fill="#efe9df" stroke="#c9c3b6" stroke-width="1"/>
+      <line x1="32" y1="145" x2="222" y2="52" stroke="#6b7280" stroke-width="2.2"/>
+      <line x1="32" y1="145" x2="222" y2="145" stroke="#9ca3af" stroke-width="1.2"/>
+      <path d="M66,145 A34,34 0 0,0 62,128" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="68" y="140" font-size="11" fill="#374151" font-family="sans-serif">${ang}</text>
+      <line x1="70" y1="126" x2="150" y2="87" stroke="#16a34a" stroke-width="2.2" marker-end="url(#up)"/>
+      <text x="98" y="100" font-size="10" fill="#16a34a" font-family="sans-serif">up</text>
+      <line x1="150" y1="87" x2="70" y2="126" stroke="#d97706" stroke-width="2.2" marker-end="url(#dn)" transform="translate(6,10)"/>
+      <text x="150" y="120" font-size="10" fill="#d97706" font-family="sans-serif">down</text>
+      <circle cx="70" cy="126" r="4" fill="#374151"/>
+    </svg>`
+};
+
+// ── TOPIC DATA ─────────────────────────────────────────────────────────────────
+const TOPICS = [
+
+  // ===== BEGINNER'S BOX 1 : Ground-to-Ground Projectile =====
+  { name:"B1\u00b7Q1 \u2014 Range from velocity components", questions:[
+    { q:"The velocity of projection of a projectile is (3\u00ee + 4\u0135) m/s (g = 10 m/s\u00b2). Its horizontal range is:",
+      diagram:DIAGRAMS.projComponents('3','4'),
+      opts:["2.4 m","1.2 m","4.8 m","0.96 m"], ans:0,
+      sol:"Range R = 2u\u2093u_y/g = 2\u00d73\u00d74/10 = 24/10 = 2.4 m." },
+    { q:"A stone is projected with velocity (10\u00ee + 5\u0135) m/s (g = 10). The horizontal range is:",
+      diagram:DIAGRAMS.projComponents('10','5'),
+      opts:["5 m","10 m","15 m","20 m"], ans:1,
+      sol:"R = 2u\u2093u_y/g = 2\u00d710\u00d75/10 = 10 m." },
+    { q:"A projectile leaves the ground with velocity (12\u00ee + 5\u0135) m/s (g = 10). Its range is:",
+      diagram:DIAGRAMS.projComponents('12','5'),
+      opts:["6 m","12 m","13 m","24 m"], ans:1,
+      sol:"R = 2u\u2093u_y/g = 2\u00d712\u00d75/10 = 12 m. (13 m is the speed \u221a(12\u00b2+5\u00b2) \u2014 a distractor, not the range.)" }
+  ]},
+
+  { name:"B1\u00b7Q2 \u2014 Change in velocity / velocity at top", questions:[
+    { q:"A projectile is fired with speed u at angle \u03b8. The magnitude of the change in its velocity from launch until it returns to the same level is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["u sin\u03b8","2u sin\u03b8","2u cos\u03b8","zero"], ans:1,
+      sol:"Launch velocity (u\u2093, u_y); on returning to the same level it is (u\u2093, \u2212u_y). \u0394v = (0, \u22122u sin\u03b8), magnitude = 2u sin\u03b8." },
+    { q:"A ball of mass m is thrown with speed u at angle \u03b8. The magnitude of the change in momentum between the launch point and the highest point is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["mu cos\u03b8","mu sin\u03b8","mu","2mu sin\u03b8"], ans:1,
+      sol:"At the top the velocity is horizontal; the vertical part drops from u sin\u03b8 to 0. |\u0394v| = u sin\u03b8, so |\u0394p| = mu sin\u03b8." },
+    { q:"A stone is projected with speed u at angle \u03b8 above the horizontal. Its velocity at the topmost point of its path is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["u","u cos\u03b8","u sin\u03b8","zero"], ans:1,
+      sol:"The vertical component vanishes at the top; only the horizontal part survives \u2192 velocity = u cos\u03b8." }
+  ]},
+
+  { name:"B1\u00b7Q3 \u2014 Same range, two angles", questions:[
+    { q:"A projectile gives the same range R for two angles of projection. If h\u2081 and h\u2082 are the two maximum heights, then:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["R = \u221a(h\u2081h\u2082)","R = 2\u221a(h\u2081h\u2082)","R = 4\u221a(h\u2081h\u2082)","R = \u221a(h\u2081+h\u2082)"], ans:2,
+      sol:"For the complementary angles, h\u2081 = u\u00b2sin\u00b2\u03b8/2g and h\u2082 = u\u00b2cos\u00b2\u03b8/2g. \u221a(h\u2081h\u2082) = u\u00b2sin\u03b8cos\u03b8/2g = R/4, so R = 4\u221a(h\u2081h\u2082)." },
+    { q:"Two projectiles with equal speed give the same range at complementary angles \u03b8 and (90\u00b0\u2212\u03b8). The ratio of their times of flight t\u2081/t\u2082 is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["tan\u03b8","cot\u03b8","1","tan\u00b2\u03b8"], ans:0,
+      sol:"t\u2081 = 2u sin\u03b8/g, t\u2082 = 2u cos\u03b8/g (complementary). t\u2081/t\u2082 = tan\u03b8." },
+    { q:"A projectile has the same range for projection angles 25\u00b0 and 65\u00b0. The product t\u2081t\u2082 of the two times of flight is proportional to:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["R","R\u00b2","1/R","\u221aR"], ans:0,
+      sol:"25\u00b0 + 65\u00b0 = 90\u00b0 (complementary). t\u2081t\u2082 = 2R/g, i.e. t\u2081t\u2082 \u221d R." }
+  ]},
+
+  { name:"B1\u00b7Q4 \u2014 Which angle gives max / min range", questions:[
+    { q:"Projectiles A, B, C, D are launched with equal speed at 25\u00b0, 40\u00b0, 55\u00b0 and 80\u00b0. Which one has the MAXIMUM horizontal range?",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["A (25\u00b0)","B (40\u00b0)","C (55\u00b0)","D (80\u00b0)"], ans:1,
+      sol:"R \u221d sin2\u03b8. sin80\u00b0 \u2248 0.985 is the largest of sin50\u00b0, sin80\u00b0, sin110\u00b0, sin160\u00b0, so B (40\u00b0) has the greatest range." },
+    { q:"Three stones are thrown with the same speed at 30\u00b0, 45\u00b0 and 60\u00b0. Which relation among the ranges is correct?",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["R\u2083\u2080 > R\u2084\u2085 > R\u2086\u2080","R\u2083\u2080 = R\u2086\u2080 < R\u2084\u2085","R\u2084\u2085 < R\u2083\u2080 = R\u2086\u2080","all equal"], ans:1,
+      sol:"R \u221d sin2\u03b8: sin60\u00b0 = sin120\u00b0 \u2248 0.866 while sin90\u00b0 = 1. Hence R\u2083\u2080 = R\u2086\u2080 < R\u2084\u2085." },
+    { q:"Bodies P, Q, R, S are projected with equal speed at 8\u00b0, 30\u00b0, 50\u00b0 and 70\u00b0. The body with the SHORTEST range is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["P (8\u00b0)","Q (30\u00b0)","R (50\u00b0)","S (70\u00b0)"], ans:0,
+      sol:"R \u221d sin2\u03b8; the angle farthest from 45\u00b0 gives least range. sin16\u00b0 \u2248 0.276 is smallest, so P (8\u00b0) has the shortest range." }
+  ]},
+
+  { name:"B1\u00b7Q5 \u2014 Trajectory equation from components", questions:[
+    { q:"A projectile is launched with velocity (2\u00ee + 4\u0135) m/s (g = 10). The equation of its path is:",
+      diagram:DIAGRAMS.projComponents('2','4'),
+      opts:["y = 2x \u2212 1.25x\u00b2","y = 2x \u2212 5x\u00b2","4y = 2x \u2212 5x\u00b2","y = 2x \u2212 2.5x\u00b2"], ans:0,
+      sol:"y = (u_y/u\u2093)x \u2212 (g/2u\u2093\u00b2)x\u00b2 = (4/2)x \u2212 (10/(2\u00b74))x\u00b2 = 2x \u2212 1.25x\u00b2." },
+    { q:"A ball is projected with velocity (3\u00ee + 3\u0135) m/s (g = 10). The cartesian equation of its path is:",
+      diagram:DIAGRAMS.projComponents('3','3'),
+      opts:["y = x \u2212 (5/9)x\u00b2","y = x \u2212 5x\u00b2","y = x \u2212 (9/5)x\u00b2","y = 3x \u2212 5x\u00b2"], ans:0,
+      sol:"y = (3/3)x \u2212 (10/(2\u00b79))x\u00b2 = x \u2212 (5/9)x\u00b2." },
+    { q:"A projectile has initial velocity (5\u00ee + 5\u0135) m/s (g = 10). Its trajectory equation is:",
+      diagram:DIAGRAMS.projComponents('5','5'),
+      opts:["y = x \u2212 x\u00b2/5","y = x \u2212 5x\u00b2","y = x \u2212 x\u00b2/10","y = 5x \u2212 x\u00b2/5"], ans:0,
+      sol:"y = (5/5)x \u2212 (10/(2\u00b725))x\u00b2 = x \u2212 x\u00b2/5." }
+  ]},
+
+  { name:"B1\u00b7Q6 \u2014 Range from the trajectory equation", questions:[
+    { q:"For a projectile with path y = 8x \u2212 2x\u00b2, the horizontal range is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["2 m","4 m","8 m","16 m"], ans:1,
+      sol:"Range is where y = 0: x(8 \u2212 2x) = 0 \u21d2 x = 4 m." },
+    { q:"For a projectile y = 10x \u2212 (5/2)x\u00b2, the horizontal range is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["2 m","4 m","5 m","10 m"], ans:1,
+      sol:"y = 0 \u21d2 x(10 \u2212 (5/2)x) = 0 \u21d2 x = 10 \u00f7 (5/2) = 4 m." },
+    { q:"For a projectile y = 12x \u2212 3x\u00b2, the range and maximum height respectively are:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["4 m, 12 m","4 m, 6 m","8 m, 12 m","4 m, 24 m"], ans:0,
+      sol:"Range: x(12 \u2212 3x) = 0 \u21d2 R = 4 m. Max height at x = R/2 = 2: y = 12(2) \u2212 3(2\u00b2) = 24 \u2212 12 = 12 m." }
+  ]},
+
+  { name:"B1\u00b7Q7 \u2014 What stays constant in flight", questions:[
+    { q:"During the projectile motion of a ball, which quantity remains UNCHANGED?",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["momentum","horizontal component of velocity","speed","kinetic energy"], ans:1,
+      sol:"Gravity acts vertically, so only the horizontal velocity component is constant. Speed, KE and momentum all change." },
+    { q:"A projectile is launched and lands at the same horizontal level. Which quantity has CHANGED between launch and landing?",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["speed","kinetic energy","direction of the vertical velocity","horizontal velocity"], ans:2,
+      sol:"Speed, KE and horizontal velocity are the same at both points; only the vertical velocity reverses direction." },
+    { q:"The acceleration of a projectile during its flight is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["zero","constant, directed downward","maximum at the top","minimum at the top"], ans:1,
+      sol:"Throughout the flight the only force is gravity, so the acceleration is constant and directed downward (g)." }
+  ]},
+
+  { name:"B1\u00b7Q8 \u2014 Time to top / time of flight", questions:[
+    { q:"A projectile is thrown with velocity (6\u00ee + 4\u0135) m/s (g = 10). The time to reach maximum height is:",
+      diagram:DIAGRAMS.projComponents('6','4'),
+      opts:["0.4 s","0.6 s","0.8 s","1.0 s"], ans:0,
+      sol:"Time to the top = u_y/g = 4/10 = 0.4 s." },
+    { q:"A ball is projected with velocity (8\u00ee + 6\u0135) m/s (g = 10). Time to reach the highest point:",
+      diagram:DIAGRAMS.projComponents('8','6'),
+      opts:["0.3 s","0.6 s","0.8 s","1.2 s"], ans:1,
+      sol:"Time to highest point = u_y/g = 6/10 = 0.6 s." },
+    { q:"A projectile is launched with velocity (5\u00ee + 10\u0135) m/s (g = 10). Its TOTAL time of flight is:",
+      diagram:DIAGRAMS.projComponents('5','10'),
+      opts:["1 s","2 s","0.5 s","4 s"], ans:1,
+      sol:"Total time of flight = 2u_y/g = 2\u00d710/10 = 2 s." }
+  ]},
+
+  { name:"B1\u00b7Q9 \u2014 Height vs time-of-flight scaling", questions:[
+    { q:"If the time of flight of a projectile is tripled (by increasing u_y), the maximum height becomes:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["3 times","6 times","9 times","unchanged"], ans:2,
+      sol:"H = u_y\u00b2/2g and T = 2u_y/g, so H \u221d T\u00b2. Tripling T makes H nine times." },
+    { q:"If the maximum height of a projectile becomes four times its original value, its time of flight becomes:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["doubled","tripled","four times","unchanged"], ans:0,
+      sol:"H \u221d T\u00b2. For H to become 4\u00d7, T must double." },
+    { q:"The time of flight of a projectile is halved (same g). Its maximum height becomes:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["one-fourth","half","doubled","unchanged"], ans:0,
+      sol:"H \u221d T\u00b2. Halving T makes H one-fourth." }
+  ]},
+
+  { name:"B1\u00b7Q10 \u2014 Height\u2013range angle condition", questions:[
+    { q:"For a projectile, the horizontal range equals TWICE the maximum height. The angle of projection is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["tan\u207b\u00b9(1)","tan\u207b\u00b9(2)","tan\u207b\u00b9(3)","45\u00b0"], ans:1,
+      sol:"R = 2H \u21d2 u\u00b2sin2\u03b8/g = 2\u00b7u\u00b2sin\u00b2\u03b8/2g \u21d2 2sin\u03b8cos\u03b8 = sin\u00b2\u03b8 \u21d2 tan\u03b8 = 2. \u03b8 = tan\u207b\u00b92." },
+    { q:"A projectile's maximum height equals ONE-FOURTH of its horizontal range. The angle of projection is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["30\u00b0","45\u00b0","60\u00b0","tan\u207b\u00b92"], ans:1,
+      sol:"H = R/4 \u21d2 u\u00b2sin\u00b2\u03b8/2g = (1/4)(u\u00b2sin2\u03b8/g) \u21d2 sin\u03b8 = cos\u03b8 \u21d2 \u03b8 = 45\u00b0." },
+    { q:"A projectile's maximum height is TWICE its horizontal range. The angle of projection is:",
+      diagram:DIAGRAMS.projArc('\u03b8'),
+      opts:["tan\u207b\u00b94","tan\u207b\u00b96","tan\u207b\u00b98","tan\u207b\u00b92"], ans:2,
+      sol:"H = 2R \u21d2 u\u00b2sin\u00b2\u03b8/2g = 2u\u00b2sin2\u03b8/g \u21d2 sin\u03b8 = 8cos\u03b8 \u21d2 tan\u03b8 = 8. \u03b8 = tan\u207b\u00b98." }
+  ]},
+
+  // ===== BEGINNER'S BOX 2 : Projection from a Height =====
+  { name:"B2\u00b7Q1 \u2014 Horizontal drop: range on ground", questions:[
+    { q:"An aeroplane flying 2000 m above ground at 200 m/s releases a package (g = 10). The horizontal distance to impact is:",
+      diagram:DIAGRAMS.horizDrop('2000 m','200'),
+      opts:["2 km","4 km","8 km","1 km"], ans:1,
+      sol:"t = \u221a(2h/g) = \u221a(2\u00b72000/10) = 20 s. x = ut = 200\u00d720 = 4000 m = 4 km." },
+    { q:"A helicopter at 125 m moving horizontally at 60 m/s drops a relief box (g = 10). It lands at horizontal distance:",
+      diagram:DIAGRAMS.horizDrop('125 m','60'),
+      opts:["150 m","300 m","600 m","500 m"], ans:1,
+      sol:"t = \u221a(2\u00b7125/10) = 5 s. x = 60\u00d75 = 300 m." },
+    { q:"A jet 180 m above ground flying at 90 m/s drops a flare (g = 10). The horizontal range of the flare is:",
+      diagram:DIAGRAMS.horizDrop('180 m','90'),
+      opts:["270 m","540 m","720 m","1080 m"], ans:1,
+      sol:"t = \u221a(2\u00b7180/10) = 6 s. x = 90\u00d76 = 540 m." }
+  ]},
+
+  { name:"B2\u00b7Q2 \u2014 Find launch speed from h and x", questions:[
+    { q:"A ball thrown horizontally from a 20 m tower lands 30 m from the base (g = 10). Its initial speed is:",
+      diagram:DIAGRAMS.horizDrop('20 m','?'),
+      opts:["10 m/s","15 m/s","20 m/s","30 m/s"], ans:1,
+      sol:"t = \u221a(2\u00b720/10) = 2 s. u = x/t = 30/2 = 15 m/s." },
+    { q:"A stone projected horizontally from a 45 m cliff hits the ground 60 m away (g = 10). Its initial velocity is:",
+      diagram:DIAGRAMS.horizDrop('45 m','?'),
+      opts:["10 m/s","15 m/s","20 m/s","25 m/s"], ans:2,
+      sol:"t = \u221a(2\u00b745/10) = 3 s. u = 60/3 = 20 m/s." },
+    { q:"A body thrown horizontally from 80 m lands 40 m from the launch point (g = 10). Its launch speed is:",
+      diagram:DIAGRAMS.horizDrop('80 m','?'),
+      opts:["5 m/s","10 m/s","20 m/s","40 m/s"], ans:1,
+      sol:"t = \u221a(2\u00b780/10) = 4 s. u = 40/4 = 10 m/s." }
+  ]},
+
+  { name:"B2\u00b7Q3 \u2014 Drop vs horizontal: same fall time", questions:[
+    { q:"From the same rooftop, one coin is dropped and another is thrown horizontally at 8 m/s. Which lands first?",
+      diagram:DIAGRAMS.horizDrop('h','8'),
+      opts:["dropped one","thrown one","both together","depends on masses"], ans:2,
+      sol:"Vertical motion is identical (both start with zero vertical velocity from the same height), so they land together." },
+    { q:"Balls A (6 m/s) and B (12 m/s) are thrown horizontally from the same height simultaneously. About landing time:",
+      diagram:DIAGRAMS.horizDrop('h','6 / 12'),
+      opts:["A lands first","B lands first","both land together","cannot say"], ans:2,
+      sol:"Fall time depends only on height, not horizontal speed. Both land together." },
+    { q:"From the same height, one ball is dropped and one projected horizontally. Comparing their times and landing speeds:",
+      diagram:DIAGRAMS.horizDrop('h','u'),
+      opts:["same time, same speed","same time, horizontal one faster","dropped one lands first","dropped one faster"], ans:1,
+      sol:"Same fall time; the horizontal ball also carries horizontal velocity, so it lands faster (\u221a(u\u00b2+2gh) vs \u221a(2gh))." }
+  ]},
+
+  { name:"B2\u00b7Q4 \u2014 Landing at 45\u00b0", questions:[
+    { q:"A body projected horizontally at 25 m/s hits the ground at 45\u00b0. Its vertical velocity component on landing is:",
+      diagram:DIAGRAMS.horizDrop('h','25'),
+      opts:["25 m/s","12.5 m/s","25\u221a2 m/s","50 m/s"], ans:0,
+      sol:"At 45\u00b0 the components are equal: v_y = v_x = u = 25 m/s." },
+    { q:"A ball thrown horizontally at 20 m/s lands at 45\u00b0 (g = 10). The height of the tower is:",
+      diagram:DIAGRAMS.horizDrop('h = ?','20'),
+      opts:["20 m","40 m","10 m","80 m"], ans:0,
+      sol:"At 45\u00b0, v_y = v_x = 20 m/s. Then t = v_y/g = 2 s and h = \u00bdgt\u00b2 = \u00bd\u00b710\u00b74 = 20 m." },
+    { q:"A stone projected horizontally at 15 m/s strikes the ground at 45\u00b0. Its speed on striking is:",
+      diagram:DIAGRAMS.horizDrop('h','15'),
+      opts:["15\u221a2 m/s","15 m/s","30 m/s","15/\u221a2 m/s"], ans:0,
+      sol:"v_x = 15 and at 45\u00b0 v_y = 15, so speed = \u221a(15\u00b2+15\u00b2) = 15\u221a2 \u2248 21.2 m/s." }
+  ]},
+
+  { name:"B2\u00b7Q5 \u2014 Equal speed \u21d2 equal landing speed", questions:[
+    { q:"From a tower of height h, one ball is thrown vertically UP with speed u and another HORIZONTALLY with speed u. The ratio of their speeds on reaching the ground is:",
+      diagram:DIAGRAMS.horizDrop('h','u'),
+      opts:["1 : 1","1 : 2","2 : 1","depends on u"], ans:0,
+      sol:"Both start with speed u from the same height, so by energy conservation both land with \u221a(u\u00b2+2gh). Ratio 1 : 1." },
+    { q:"From a building top, particle A is DROPPED and particle B is thrown HORIZONTALLY with speed u. The ratio of their speeds on hitting the ground is:",
+      diagram:DIAGRAMS.horizDrop('h','u'),
+      opts:["1 : 1","\u221a(2gh) : \u221a(u\u00b2+2gh)","u : \u221a(2gh)","\u221a(u\u00b2+2gh) : \u221a(2gh)"], ans:1,
+      sol:"A (dropped) lands with \u221a(2gh); B (horizontal) with \u221a(u\u00b2+2gh). Ratio \u221a(2gh) : \u221a(u\u00b2+2gh) \u2014 not equal, since A starts from rest." },
+    { q:"Two stones leave the same height with equal speed u \u2014 one at 30\u00b0 ABOVE horizontal, the other at 30\u00b0 BELOW. Comparing their landing speeds:",
+      diagram:DIAGRAMS.horizDrop('h','u'),
+      opts:["1 : 1","depends on angle","1 : 2","2 : 1"], ans:0,
+      sol:"Both leave with the same speed u from the same height, so energy conservation gives equal landing speeds. Ratio 1 : 1." }
+  ]},
+
+  { name:"B2\u00b7Q6 \u2014 Released object keeps carrier's velocity", questions:[
+    { q:"A bomber in level flight at constant speed drops a bomb (no air resistance). At the instant of impact, the bomb is:",
+      opts:["ahead of the plane","behind the plane","directly below the plane","directly above"], ans:2,
+      sol:"The bomb keeps the plane's horizontal velocity; both move horizontally at the same rate, so the bomb stays directly below the plane." },
+    { q:"An aircraft moving horizontally at constant velocity drops a package. In the pilot's reference frame the package appears to:",
+      opts:["move backward","fall straight down","move forward","stay still"], ans:1,
+      sol:"Sharing the plane's horizontal velocity, the package appears to drop straight down in the pilot's frame." },
+    { q:"A plane in level flight at constant speed releases two bombs one second apart. As they fall, the horizontal separation between them:",
+      opts:["increases","decreases","stays constant","becomes zero"], ans:2,
+      sol:"Each bomb retains the plane's horizontal velocity, so their horizontal separation (= v \u00d7 1 s) stays constant." }
+  ]},
+
+  { name:"B2\u00b7Q7 \u2014 Fall time depends only on height", questions:[
+    { q:"Three balls are thrown horizontally at 10, 20 and 30 m/s from the same height. The order in which they land is:",
+      diagram:DIAGRAMS.horizDrop('h','10/20/30'),
+      opts:["10 first","30 first","all together","20 first"], ans:2,
+      sol:"Fall time = \u221a(2h/g) depends only on height, which is the same for all three. They land together." },
+    { q:"A bullet is fired horizontally while another is dropped from the same height at the same instant. Which lands first?",
+      diagram:DIAGRAMS.horizDrop('h','u'),
+      opts:["fired one","dropped one","both together","fired later"], ans:2,
+      sol:"Both start with zero vertical velocity from the same height, so they take the same time to land." },
+    { q:"Two projectiles are launched horizontally from heights h and 4h with speeds 2u and u. The ratio of their times of flight is:",
+      diagram:DIAGRAMS.horizDrop('h & 4h','2u / u'),
+      opts:["1 : 1","1 : 2","2 : 1","1 : 4"], ans:1,
+      sol:"t = \u221a(2h/g). t\u2081 = \u221a(2h/g), t\u2082 = \u221a(2\u00b74h/g) = 2\u221a(2h/g). Ratio 1 : 2 (launch speeds are irrelevant)." }
+  ]},
+
+  // ===== BEGINNER'S BOX 3 : Moving Platform & Inclined Plane =====
+  { name:"B3\u00b7Q1 \u2014 Max range up / down an incline", questions:[
+    { q:"A ball is fired up a plane inclined at 30\u00b0 with speed v. The maximum range along the incline is:",
+      diagram:DIAGRAMS.inclineUp('30\u00b0'),
+      opts:["2v\u00b2/(3g)","v\u00b2/g","2v\u00b2/g","v\u00b2/(2g)"], ans:0,
+      sol:"Max range up = v\u00b2/(g(1+sin\u03b8)) = v\u00b2/(g(1+sin30\u00b0)) = v\u00b2/(1.5g) = 2v\u00b2/(3g)." },
+    { q:"For projection from the foot of an incline of angle \u03b8, the ratio (max range UP) : (max range DOWN) is:",
+      diagram:DIAGRAMS.inclineUp('\u03b8'),
+      opts:["(1\u2212sin\u03b8) : (1+sin\u03b8)","(1+sin\u03b8) : (1\u2212sin\u03b8)","1 : 1","sin\u03b8 : cos\u03b8"], ans:0,
+      sol:"R_up = v\u00b2/(g(1+sin\u03b8)), R_down = v\u00b2/(g(1\u2212sin\u03b8)). Ratio R_up : R_down = (1\u2212sin\u03b8) : (1+sin\u03b8)." },
+    { q:"A bullet is fired DOWN a plane inclined at angle \u03b8 with speed v. The maximum range down the incline is:",
+      diagram:DIAGRAMS.inclineUp('\u03b8'),
+      opts:["v\u00b2/(g(1\u2212sin\u03b8))","v\u00b2/(g(1+sin\u03b8))","v\u00b2/g","v\u00b2/(g cos\u03b8)"], ans:0,
+      sol:"Max range down = v\u00b2/(g(1\u2212sin\u03b8)) \u2014 the (1\u2212sin\u03b8) makes it larger than the up-slope range." }
+  ]},
+
+  { name:"B3\u00b7Q2 \u2014 Horizontal projection onto an incline", questions:[
+    { q:"A ball is projected horizontally with speed v from the top of a plane inclined at 30\u00b0 to the horizontal. The distance from the projection point at which it strikes the plane is:",
+      diagram:DIAGRAMS.inclineHoriz('30\u00b0'),
+      opts:["4v\u00b2/(3g)","2v\u00b2/(3g)","2\u221a2 v\u00b2/g","v\u00b2/g"], ans:0,
+      sol:"For horizontal projection onto an incline of angle \u03b1: L = 2v\u00b2sin\u03b1/(g cos\u00b2\u03b1). At \u03b1 = 30\u00b0, L = 4v\u00b2/(3g)." },
+    { q:"A stone thrown horizontally with speed v from the top of a 45\u00b0 incline strikes it after time:",
+      diagram:DIAGRAMS.inclineHoriz('45\u00b0'),
+      opts:["v/g","2v/g","\u221a2 v/g","2\u221a2 v/g"], ans:1,
+      sol:"Time to strike: t = 2v tan\u03b1/g. At 45\u00b0, tan\u03b1 = 1, so t = 2v/g." },
+    { q:"A ball projected horizontally with speed v from the top of a 45\u00b0 incline strikes the plane. The horizontal distance travelled is:",
+      diagram:DIAGRAMS.inclineHoriz('45\u00b0'),
+      opts:["v\u00b2/g","2v\u00b2/g","2\u221a2 v\u00b2/g","4v\u00b2/g"], ans:1,
+      sol:"x = vt with t = 2v tan\u03b1/g. At 45\u00b0, x = 2v\u00b2/g." }
+  ]},
+
+  { name:"B3\u00b7Q3 \u2014 Projection perpendicular to the incline", questions:[
+    { q:"A ball is projected perpendicular to a 30\u00b0 incline with speed 20 m/s (g = 10). The range along the incline is:",
+      diagram:DIAGRAMS.inclinePerp('30\u00b0'),
+      opts:["160/3 m","80/3 m","40/3 m","320/3 m"], ans:0,
+      sol:"Along the incline u = 0, a = g sin\u03b1; perpendicular u = 20, a = g cos\u03b1. t = 2u/(g cos\u03b1) = 8/\u221a3 s. Range = \u00bd(g sin\u03b1)t\u00b2 = \u00bd\u00b75\u00b7(64/3) = 160/3 m." },
+    { q:"A particle is projected perpendicular to a 45\u00b0 incline with speed 10 m/s (g = 10). Its time of flight (until it returns to the incline) is:",
+      diagram:DIAGRAMS.inclinePerp('45\u00b0'),
+      opts:["\u221a2 s","2\u221a2 s","2 s","4 s"], ans:1,
+      sol:"t = 2u/(g cos\u03b1) = 2\u00b710/(10\u00b7cos45\u00b0) = 2\u221a2 s." },
+    { q:"A ball projected perpendicular to a 60\u00b0 incline with speed 10 m/s (g = 10). The range along the incline is:",
+      diagram:DIAGRAMS.inclinePerp('60\u00b0'),
+      opts:["40\u221a3 m","20\u221a3 m","40/\u221a3 m","80 m"], ans:0,
+      sol:"t = 2u/(g cos60\u00b0) = 4 s. Range = \u00bd(g sin60\u00b0)t\u00b2 = \u00bd\u00b710\u00b7(\u221a3/2)\u00b716 = 40\u221a3 m." }
+  ]},
+
+  { name:"B3\u00b7Q4 \u2014 Range-ratio \u21d2 incline angle", questions:[
+    { q:"For a given speed, the maximum range DOWN an incline is TWICE the maximum range UP. Find the angle of inclination.",
+      diagram:DIAGRAMS.inclinePlane('\u03b1'),
+      opts:["sin\u207b\u00b9(1/3) \u2248 19.5\u00b0","30\u00b0","45\u00b0","60\u00b0"], ans:0,
+      sol:"R_down/R_up = (1+sin\u03b1)/(1\u2212sin\u03b1) = 2 \u21d2 sin\u03b1 = 1/3 \u21d2 \u03b1 = sin\u207b\u00b9(1/3) \u2248 19.5\u00b0." },
+    { q:"The maximum range DOWN a plane is FIVE times the maximum range UP. Determine the angle of inclination.",
+      diagram:DIAGRAMS.inclinePlane('\u03b1'),
+      opts:["sin\u207b\u00b9(2/3) \u2248 41.8\u00b0","30\u00b0","60\u00b0","sin\u207b\u00b9(1/3)"], ans:0,
+      sol:"(1+sin\u03b1)/(1\u2212sin\u03b1) = 5 \u21d2 6sin\u03b1 = 4 \u21d2 sin\u03b1 = 2/3 \u21d2 \u03b1 = sin\u207b\u00b9(2/3) \u2248 41.8\u00b0." },
+    { q:"For an incline of 45\u00b0, find the ratio (max range down) : (max range up).",
+      diagram:DIAGRAMS.inclinePlane('45\u00b0'),
+      opts:["(3 + 2\u221a2) : 1 \u2248 5.83","3 : 1","(\u221a2 + 1) : 1","5 : 1"], ans:0,
+      sol:"Ratio = (1+sin45\u00b0)/(1\u2212sin45\u00b0) = (\u221a2+1)/(\u221a2\u22121) = (\u221a2+1)\u00b2 = 3 + 2\u221a2 \u2248 5.83, i.e. (3+2\u221a2) : 1." }
+  ]},
+
+  { name:"B3\u00b7Q5 \u2014 Time-of-flight ratio on an incline", questions:[
+    { q:"A particle is projected up and down a plane inclined at \u03b2; the ratio of times of flight (up : down) is 1 : 3. Find tan\u03b1/tan\u03b2 (\u03b1 = projection angle to horizontal).",
+      diagram:DIAGRAMS.inclinePlane('\u03b2'),
+      opts:["2","3","4","1"], ans:0,
+      sol:"T_up/T_down = sin(\u03b1\u2212\u03b2)/sin(\u03b1+\u03b2) = 1/3 \u21d2 tan\u03b1/tan\u03b2 = (n+1)/(n\u22121) with n = 3 \u21d2 2." },
+    { q:"For projection up and down an incline, the times of flight are in ratio 2 : 3. Then tan\u03b1/tan\u03b2 equals:",
+      diagram:DIAGRAMS.inclinePlane('\u03b2'),
+      opts:["3","4","5","2"], ans:2,
+      sol:"With T_up : T_down = 2 : 3, sin(\u03b1\u2212\u03b2)/sin(\u03b1+\u03b2) = 2/3 \u21d2 tan\u03b1/tan\u03b2 = 5." },
+    { q:"A particle projected at angle \u03b1 over a plane inclined at \u03b2 has EQUAL times of flight up and down the plane. What does this imply about \u03b2?",
+      diagram:DIAGRAMS.inclinePlane('\u03b2'),
+      opts:["\u03b2 = 0 (plane is horizontal)","\u03b2 = 45\u00b0","\u03b2 = \u03b1","\u03b2 = 90\u00b0"], ans:0,
+      sol:"Equal times need sin(\u03b1\u2212\u03b2) = sin(\u03b1+\u03b2), which forces \u03b2 = 0 \u2014 the plane is horizontal (ordinary ground-to-ground projectile)." }
+  ]}
+
+];
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'dpp_projectile_beginner_var_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length && parsed.every((a,i)=>Array.isArray(a)&&a.length===TOPICS[i].questions.length)) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+
+function saveAnswers(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+}
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    const total=topic.questions.length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===total&&done===total?' all-done':'');
+    const dots=Array(total).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${total} attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.reduce((s,t)=>s+t.questions.length,0)} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=curTopic.questions.length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of ${curTopic.questions.length}`;
+  qText.textContent=q.q;
+  // Diagram
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===curTopic.questions.length-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  const last=curTopic.questions.length-1;
+  if(newQ<0||newQ>last){if(newQ>last) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// Close modal on backdrop click
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
