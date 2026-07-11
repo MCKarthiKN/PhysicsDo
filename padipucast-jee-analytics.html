@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST · JEE Performance Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --paper:#F8F9FB;
+  --sheet:#FFFFFF;
+  --ink:#141B2E;
+  --ink-soft:#465066;
+  --ink-faint:#8A92A6;
+  --grid:#E3E9F4;          /* JEE OMR blue-grey grid */
+  --grid-soft:#F0F4FA;
+  --phy:#2456D6;
+  --che:#D98A1F;
+  --mat:#8A31C4;
+  --good:#1E7F4F;
+  --bad:#C0392B;
+  --line:#E4E6EC;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;
+  background-image:linear-gradient(var(--grid-soft) 1px,transparent 1px),linear-gradient(90deg,var(--grid-soft) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+.app{display:flex;min-height:100vh}
+.sidebar{width:300px;min-width:300px;background:var(--sheet);border-right:2px solid var(--grid);display:flex;flex-direction:column;height:100vh;position:sticky;top:0}
+.brand{padding:22px 20px 16px;border-bottom:1px solid var(--line)}
+.brand-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;letter-spacing:.14em}
+.brand-name span{color:var(--mat)}
+.brand-sub{font-size:11.5px;color:var(--ink-faint);margin-top:3px;letter-spacing:.04em}
+.search-wrap{padding:14px 16px 8px}
+.search-wrap input{width:100%;padding:10px 13px;border:1.5px solid var(--line);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--paper);color:var(--ink);outline:none}
+.search-wrap input:focus{border-color:var(--mat)}
+.sort-row{display:flex;gap:6px;padding:6px 16px 10px}
+.sort-btn{flex:1;font-size:11.5px;padding:6px 4px;border:1.5px solid var(--line);background:var(--sheet);border-radius:8px;cursor:pointer;color:var(--ink-soft);font-family:'DM Sans',sans-serif;font-weight:500}
+.sort-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.student-list{flex:1;overflow-y:auto;padding:4px 10px 20px}
+.stu-item{display:flex;align-items:center;gap:11px;padding:10px 10px;border-radius:10px;cursor:pointer;border:1.5px solid transparent;margin-bottom:2px}
+.stu-item:hover{background:var(--grid-soft)}
+.stu-item.active{background:var(--grid-soft);border-color:var(--grid)}
+.stu-bubble{width:34px;height:34px;min-width:34px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;background:var(--sheet)}
+.stu-item.active .stu-bubble{background:var(--ink);color:#fff}
+.stu-meta{overflow:hidden}
+.stu-name{font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:capitalize}
+.stu-line2{font-size:11px;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace}
+.stu-trend{margin-left:auto;font-size:11px;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.up{color:var(--good)}.down{color:var(--bad)}.flat{color:var(--ink-faint)}
+.main{flex:1;padding:26px 34px 60px;max-width:1120px;margin:0 auto;width:100%}
+.topbar{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.page-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;letter-spacing:-.01em}
+.topbar .ctx{font-size:12.5px;color:var(--ink-faint)}
+.batch-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px}
+.batch-card{background:var(--sheet);border:1.5px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.batch-card .lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+.batch-card .val{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-top:3px}
+.batch-card .sub{font-size:11.5px;color:var(--ink-soft);margin-top:2px}
+.stu-header{background:var(--sheet);border:2px solid var(--grid);border-radius:var(--radius);padding:22px 24px;margin-bottom:16px;position:relative;overflow:hidden}
+.stu-header::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;border-radius:50%;border:22px solid var(--grid-soft);pointer-events:none}
+.stu-header h2{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;text-transform:capitalize;letter-spacing:-.01em}
+.stu-header .tags{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.tag{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 10px;border-radius:999px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink-soft)}
+.tag.ab{border-color:#EED4D4;background:#FBF1F1;color:var(--bad)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:var(--sheet);border:1.5px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.kpi .lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+.kpi .val{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-top:4px}
+.kpi .delta{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;margin-top:2px}
+.grid-2{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-bottom:16px}
+.panel{background:var(--sheet);border:1.5px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+.panel h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;margin-bottom:12px}
+.panel h3 span{color:var(--ink-faint);font-weight:400}
+.chart-box{position:relative;height:260px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);text-align:left;padding:6px 8px;border-bottom:1.5px solid var(--line)}
+td{padding:8px;border-bottom:1px solid var(--grid-soft);font-family:'IBM Plex Mono',monospace;font-size:12.5px}
+td.subj{font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.pct-bar{height:6px;border-radius:99px;background:var(--grid-soft);overflow:hidden;min-width:70px}
+.pct-fill{height:100%;border-radius:99px}
+.insights{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.insight-card{background:var(--sheet);border:1.5px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+.insight-card h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;margin-bottom:10px}
+.insight-card ul{list-style:none}
+.insight-card li{padding:8px 0 8px 24px;position:relative;font-size:13.5px;line-height:1.5;color:var(--ink-soft);border-bottom:1px dashed var(--grid)}
+.insight-card li:last-child{border-bottom:none}
+.insight-card li::before{content:"";position:absolute;left:2px;top:14px;width:10px;height:10px;border-radius:50%;border:2px solid var(--ink)}
+.insight-card.pos li::before{border-color:var(--good);background:var(--good)}
+.insight-card.neg li::before{border-color:var(--bad)}
+.insight-card li b{color:var(--ink)}
+.footer-note{margin-top:26px;font-size:11.5px;color:var(--ink-faint);text-align:center}
+@media (max-width:980px){.grid-2,.insights{grid-template-columns:1fr}.kpis,.batch-strip{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){.app{flex-direction:column}.sidebar{width:100%;min-width:0;height:auto;position:relative;max-height:45vh}.main{padding:20px 16px 50px}}
+@media (prefers-reduced-motion:no-preference){
+  .stu-header,.kpi,.panel,.insight-card{animation:rise .35s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-name">PADIPU<span>CAST</span></div>
+      <div class="brand-sub">IIT Enthusiast · Phase 1&2 · Centre 6251</div>
+    </div>
+    <div class="search-wrap"><input id="search" type="text" placeholder="Search student or form no…" aria-label="Search students"></div>
+    <div class="sort-row">
+      <button class="sort-btn active" data-sort="rank">By rank</button>
+      <button class="sort-btn" data-sort="name">A–Z</button>
+      <button class="sort-btn" data-sort="improve">Most improved</button>
+    </div>
+    <div class="student-list" id="studentList"></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title">JEE Performance Analytics</div>
+      <div class="ctx">Major Test-01 (27 May, /180) → Minor Test-03 (17 Jun, /300) → Minor Test-04 (08 Jul 2026, /300)</div>
+    </div>
+    <div class="batch-strip" id="batchStrip"></div>
+    <section class="stu-header" id="stuHeader"></section>
+    <div class="kpis" id="kpis"></div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Percentage across tests <span>(maxima differ, so trends compare %)</span></h3>
+        <div class="chart-box"><canvas id="trendChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Subject accuracy <span>(% of subject maximum)</span></h3>
+        <div class="chart-box"><canvas id="subjectChart"></canvas></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:16px">
+      <h3>Latest test — subject breakdown</h3>
+      <table id="subjectTable"></table>
+    </div>
+    <div class="insights">
+      <div class="insight-card pos"><h3>Strengths & gains</h3><ul id="posInsights"></ul></div>
+      <div class="insight-card neg"><h3>Focus areas</h3><ul id="negInsights"></ul></div>
+    </div>
+    <div class="footer-note">PADIPUCAST · Allen Career Institute, Tamil Nadu & Puducherry · Provisional results, for internal mentoring use.</div>
+  </main>
+</div>
+
+<script>
+/* ===== TESTS (chronological). Scores: [PHY, CHE, MATHS] ===== */
+const TESTS = [
+  {id:"MJ1", label:"Major Test-01", date:"27 May 2026", maxSub:60,  maxTotal:180},
+  {id:"MT3", label:"Minor Test-03", date:"17 Jun 2026", maxSub:100, maxTotal:300},
+  {id:"MT4", label:"Minor Test-04", date:"08 Jul 2026", maxSub:100, maxTotal:300}
+];
+const SUBJECTS = ["Physics","Chemistry","Maths"];
+const SUBJ_COLORS = ["#2456D6","#D98A1F","#8A31C4"];
+/* official batch averages from result sheets (%) */
+const batchAvgPct = [16.67, 25.30, 32.26];
+
+const MJ1 = [
+["2460658335","HIMIKA DAS","M1TE-I6-Q0C0KV",35,19,29,83,46.11,14],
+["2460333250","HARINI A","M1TE-I6-Q0C0KV",23,24,35,82,45.56,16],
+["2460081855","P RION THIRUMAL","M1TE-I6-S0C0",15,26,30,71,39.44,28],
+["2460336926","JAYASABAREES S","M1TE-I6-Q0C0KV",31,16,22,69,38.33,30],
+["2460153442","RAVI PRASATH R","M1TE-I6-R0C0",28,14,25,67,37.22,31],
+["2460308216","KABIRIEL SERWIN NESAKUMAR R","M1TE-I6-Q0C0KV",22,30,10,62,34.44,43],
+["2460282219","MUHILAN V P","M1TE-I6-Q0C0KV",18,20,23,61,33.89,47],
+["2460259774","PRANAV SASTHA PILLAI","M1TE-I6-S0C0",19,13,26,58,32.22,58],
+["2460122331","ARUSH N A","M1TE-I6-S0C0",15,14,28,57,31.67,62],
+["2460054110","S ARO PIO JERRY","M1TE-I6-S0C0",22,10,24,56,31.11,65],
+["2460867105","MADHAN S","M1TE-I6-Q0C0KV",9,5,38,52,28.89,76],
+["2460317630","SHAKTHEESWAR","M1TE-I6-Q0C0KV",4,22,21,47,26.11,94],
+["2460300953","GOKUL DEV P K","M1TE-I6-S0C0",5,13,28,46,25.56,98],
+["2460636634","DHANAVIYAN M","M1TE-I6-Q0C0KV",17,23,6,46,25.56,98],
+["2460064297","KIRTHIK ROSHAN","M1TE-I6-R0C0",17,18,10,45,25.00,103],
+["2460149902","S HARI KARTHICK","M1TE-I6-S0C0",10,13,20,43,23.89,110],
+["2460119368","B BHARATHBALA","M1TE-I6-S0C0",7,15,20,42,23.33,115],
+["2460315259","INIYAN MSS","M1TE-I6-R0C0",16,14,12,42,23.33,115],
+["2460749663","TY VARSHA","M1TE-I6-Q0C0KV",4,31,7,42,23.33,115],
+["2460296617","MOHAMED IMRAN S","M1TE-I6-Q0C0KV",2,17,21,40,22.22,125],
+["2460688694","SAI KRITTHIK S","M1TE-I6-Q0C0KV",15,14,11,40,22.22,125],
+["2460245995","Kanishka","M1TE-I6-S0C0",-1,15,16,30,16.67,186],
+["2460159275","DHIVAKAR S","M1TE-I6-S0C0",3,4,21,28,15.56,198],
+["2460693682","ARAVIND D","M1TE-I6-Q0C0KV",9,5,14,28,15.56,198],
+["2460695161","Dhanyaa R A","M1TE-I6-Q0C0KV",8,4,15,27,15.00,206],
+["2460201692","HARSSHAD L A","M1TE-I6-S0C0",4,14,7,25,13.89,216],
+["2460780036","PRIYA DARSHINI G","M1TE-I6-Q0C0KV",3,15,7,25,13.89,216],
+["2460207257","SANTHOSH BHARANII S","M1TE-I6-R0C0",-3,6,20,23,12.78,240],
+["2460757196","R JEEVARAJ","M1TE-I6-Q0C0KV",3,10,10,23,12.78,240],
+["2460580912","THARUN PRANAV S R","M1TE-I6-Q0C0KV",9,10,4,23,12.78,240],
+["2460296089","SUBHADHARUN K","M1TE-I6-S0C0",6,13,4,23,12.78,240],
+["2460441420","P NIVETHA","M1TE-I6-S0C0",7,0,11,18,10.00,288],
+["2460124649","TANISH DARSHAN R","M1TE-I6-S0C0",-4,6,13,15,8.33,314],
+["2460238684","Aanantha C K N","M1TE-I6-S0C0",-1,0,13,12,6.67,334],
+["2460324532","SHANTHINI","M1TE-I6-S0C0",-1,0,10,9,5.00,357],
+["2460390499","R N DHANUDHARA","M1TE-I6-S0C0",-5,5,9,9,5.00,357],
+["2460742013","NAGARJUN M","M1TE-I6-Q0C0KV",12,2,-5,9,5.00,357],
+["2460472099","ADITYA A","M1TE-I6-Q0C0KV",2,-2,6,6,3.33,384],
+["2460206917","SANJEEV KUMAR","M1TE-I6-S0C0",-1,3,4,6,3.33,384],
+["2460705123","ABILESH M","M1TE-I6-Q0C0KV",-1,-2,8,5,2.78,397],
+["2460313544","Anuj Muthurajan","M1TE-I6-Q0C0KV",-5,5,5,5,2.78,397]
+];
+const MJ1_AB = {
+"2460312066":["SAIPRABHA E","M1TE-I6-Q0C0KV"],
+"2460705095":["KRISHITHA R","M1TE-I6-Q0C0KV"],
+"2460121720":["DEVADARSHINI R J","M1TE-I6-S0C0"],
+"2460303856":["THANUSHA S","M1TE-I6-Q0C0KV"],
+"2460153464":["DARSHANA","M1TE-I6-S0C0"],
+"2460053663":["SUDESH U","M1TE-I6-S0C0"],
+"2460758779":["Riveka v","M1TE-I6-Q0C0KV"],
+"2460974381":["A V Sriraam","M1TE-26-S0C0"],
+"2460419044":["SAI AKASH D","M1TE-I6-Q0C0KV"],
+"2460224388":["SARVESH S","M1TE-I6-R0C0"],
+"2460780028":["EZHIL ATHI GURUNATHAN S M","M1TE-I6-Q0C0KV"],
+"2460113362":["SANCIA R","M1TE-I6-S0C0"],
+"2460111757":["SRI SUDARSAN N","M1TE-I6-R0C0"],
+"2460288868":["SURYA S","M1TE-I6-S0C0"]
+};
+
+const MT3 = [
+["2460333250","HARINI A","M1TE-I6-Q0C0KV",42,87,54,183,61.00,11],
+["2460153442","RAVI PRASATH R","M1TE-I6-R0C0",43,86,46,175,58.33,14],
+["2460658335","HIMIKA DAS","M1TE-I6-Q0C0KV",34,82,47,163,54.33,18],
+["2460336926","JAYASABAREES S","M1TE-I6-Q0C0KV",33,66,61,160,53.33,21],
+["2460695161","Dhanyaa R A","M1TE-I6-Q0C0KV",26,73,55,154,51.33,27],
+["2460282219","MUHILAN V P","M1TE-I6-Q0C0KV",55,59,31,145,48.33,39],
+["2460259774","PRANAV SASTHA PILLAI","M1TE-I6-S0C0",60,56,23,139,46.33,47],
+["2460693682","ARAVIND D","M1TE-I6-Q0C0KV",35,60,38,133,44.33,58],
+["2460296617","MOHAMED IMRAN S","M1TE-I6-Q0C0KV",36,51,38,125,41.67,73],
+["2460064297","KIRTHIK ROSHAN","M1TE-I6-R0C0",40,44,39,123,41.00,79],
+["2460308216","KABIRIEL SERWIN NESAKUMAR R","M1TE-I6-Q0C0KV",32,57,26,115,38.33,95],
+["2460419044","SAI AKASH D","M1TE-I6-Q0C0KV",22,70,23,115,38.33,95],
+["2460636634","DHANAVIYAN M","M1TE-I6-Q0C0KV",54,53,8,115,38.33,95],
+["2460315259","INIYAN MSS","M1TE-I6-R0C0",50,35,25,110,36.67,103],
+["2460580912","THARUN PRANAV S R","M1TE-I6-Q0C0KV",38,38,31,107,35.67,112],
+["2460300953","GOKUL DEV P K","M1TE-I6-S0C0",21,57,22,100,33.33,135],
+["2460159275","DHIVAKAR S","M1TE-I6-S0C0",49,30,18,97,32.33,141],
+["2460317630","SHAKTHEESWAR","M1TE-I6-Q0C0KV",12,64,16,92,30.67,155],
+["2460149902","S HARI KARTHICK","M1TE-I6-S0C0",45,13,32,90,30.00,162],
+["2460749663","TY VARSHA","M1TE-I6-Q0C0KV",12,55,22,89,29.67,165],
+["2460313544","Anuj Muthurajan","M1TE-I6-Q0C0KV",26,44,18,88,29.33,170],
+["2460867105","MADHAN S","M1TE-I6-Q0C0KV",17,30,39,86,28.67,182],
+["2460303856","THANUSHA S","M1TE-I6-Q0C0KV",19,39,26,84,28.00,187],
+["2460688694","SAI KRITTHIK S","M1TE-I6-Q0C0KV",43,31,9,83,27.67,189],
+["2460312066","SAIPRABHA E","M1TE-I6-Q0C0KV",12,38,31,81,27.00,198],
+["2460119368","B BHARATHBALA","M1TE-I6-S0C0",25,39,16,80,26.67,201],
+["2460296089","SUBHADHARUN K","M1TE-I6-S0C0",9,51,9,69,23.00,240],
+["2460207257","SANTHOSH BHARANII S","M1TE-I6-R0C0",19,14,25,58,19.33,287],
+["2460224388","SARVESH S","M1TE-I6-R0C0",41,12,5,58,19.33,287],
+["2460780036","PRIYA DARSHINI G","M1TE-I6-Q0C0KV",18,20,17,55,18.33,305],
+["2461331980","E T MRITHUL GURU CHARAN","M1TE-26-S0C0",25,9,20,54,18.00,310],
+["2460780028","EZHIL ATHI GURUNATHAN S M","M1TE-I6-Q0C0KV",24,32,-2,54,18.00,310],
+["2460441420","P NIVETHA","M1TE-I6-S0C0",17,26,9,52,17.33,320],
+["2460288868","SURYA S","M1TE-I6-S0C0",12,14,25,51,17.00,325],
+["2460974381","A V Sriraam","M1TE-26-S0C0",14,22,15,51,17.00,325],
+["2460705123","ABILESH M","M1TE-I6-Q0C0KV",18,19,7,44,14.67,364],
+["2460705095","KRISHITHA R","M1TE-I6-Q0C0KV",5,21,16,42,14.00,374],
+["2460113362","SANCIA R","M1TE-I6-S0C0",25,10,2,37,12.33,405],
+["2460124649","TANISH DARSHAN R","M1TE-I6-S0C0",11,-1,23,33,11.00,420],
+["2460757196","R JEEVARAJ","M1TE-I6-Q0C0KV",7,13,11,31,10.33,426],
+["2460245995","Kanishka","M1TE-I6-S0C0",3,11,12,26,8.67,443],
+["2460121720","DEVADARSHINI R J","M1TE-I6-S0C0",10,12,4,26,8.67,443],
+["2460472099","ADITYA A","M1TE-I6-Q0C0KV",8,11,2,21,7.00,461],
+["2460758779","Riveka v","M1TE-I6-Q0C0KV",8,14,-9,13,4.33,480],
+["2460153464","DARSHANA","M1TE-I6-S0C0",10,-1,3,12,4.00,483],
+["2460742013","NAGARJUN M","M1TE-I6-Q0C0KV",-7,4,11,8,2.67,490],
+["2461307956","MITHUN","M1TE-I6-R0C0",-5,3,5,3,1.00,495]
+];
+const MT3_AB = {};
+
+const MT4 = [
+["2460081855","P RION THIRUMAL","M1TE-I6-S0C0",84,61,66,211,70.33,13],
+["2460333250","HARINI A","M1TE-I6-Q0C0KV",66,67,68,201,67.00,21],
+["2460282219","MUHILAN V P","M1TE-I6-Q0C0KV",75,65,58,198,66.00,24],
+["2460259774","PRANAV SASTHA PILLAI","M1TE-I6-S0C0",83,59,45,187,62.33,34],
+["2460308216","KABIRIEL SERWIN NESAKUMAR R","M1TE-I6-Q0C0KV",96,60,25,181,60.33,40],
+["2460149902","S HARI KARTHICK","M1TE-I6-S0C0",65,47,65,177,59.00,46],
+["2460658335","HIMIKA DAS","M1TE-I6-Q0C0KV",68,66,42,176,58.67,47],
+["2460336926","JAYASABAREES S","M1TE-I6-Q0C0KV",75,63,34,172,57.33,56],
+["2460119368","B BHARATHBALA","M1TE-I6-S0C0",60,53,53,166,55.33,60],
+["2460122331","ARUSH N A","M1TE-I6-S0C0",45,48,51,144,48.00,91],
+["2460636634","DHANAVIYAN M","M1TE-I6-Q0C0KV",75,51,14,140,46.67,96],
+["2460695161","Dhanyaa R A","M1TE-I6-Q0C0KV",27,64,43,134,44.67,110],
+["2460749663","TY VARSHA","M1TE-I6-Q0C0KV",39,44,47,130,43.33,120],
+["2460693682","ARAVIND D","M1TE-I6-Q0C0KV",62,37,31,130,43.33,120],
+["2460300953","GOKUL DEV P K","M1TE-I6-S0C0",54,53,19,126,42.00,132],
+["2460159275","DHIVAKAR S","M1TE-I6-S0C0",67,20,35,122,40.67,145],
+["2460867105","MADHAN S","M1TE-I6-Q0C0KV",41,40,40,121,40.33,147],
+["2460580912","THARUN PRANAV S R","M1TE-I6-Q0C0KV",44,48,27,119,39.67,154],
+["2460780036","PRIYA DARSHINI G","M1TE-I6-Q0C0KV",38,59,22,119,39.67,154],
+["2460303856","THANUSHA S","M1TE-I6-Q0C0KV",36,45,34,115,38.33,172],
+["2460312066","SAIPRABHA E","M1TE-I6-Q0C0KV",35,41,35,111,37.00,184],
+["2460124649","TANISH DARSHAN R","M1TE-I6-S0C0",23,33,54,110,36.67,188],
+["2460238684","Aanantha C K N","M1TE-I6-S0C0",26,41,39,106,35.33,201],
+["2460419044","SAI AKASH D","M1TE-I6-Q0C0KV",44,40,18,102,34.00,212],
+["2460207257","SANTHOSH BHARANII S","M1TE-I6-R0C0",31,41,27,99,33.00,216],
+["2460688694","SAI KRITTHIK S","M1TE-I6-Q0C0KV",26,47,23,96,32.00,228],
+["2460296617","MOHAMED IMRAN S","M1TE-I6-Q0C0KV",40,34,22,96,32.00,228],
+["2460705095","KRISHITHA R","M1TE-I6-Q0C0KV",30,27,31,88,29.33,257],
+["2460780028","EZHIL ATHI GURUNATHAN S M","M1TE-I6-Q0C0KV",18,45,16,79,26.33,286],
+["2460153442","RAVI PRASATH R","M1TE-I6-R0C0",37,27,14,78,26.00,289],
+["2460974381","A V Sriraam","M1TE-26-S0C0",36,12,24,72,24.00,313],
+["2460317630","SHAKTHEESWAR","M1TE-I6-Q0C0KV",23,31,14,68,22.67,336],
+["2460206917","SANJEEV KUMAR","M1TE-I6-S0C0",25,0,19,44,14.67,403],
+["2460153464","DARSHANA","M1TE-I6-S0C0",7,25,11,43,14.33,404],
+["2460742013","NAGARJUN M","M1TE-I6-Q0C0KV",13,20,7,40,13.33,411],
+["2460441420","P NIVETHA","M1TE-I6-S0C0",8,8,21,37,12.33,422],
+["2460758779","Riveka v","M1TE-I6-Q0C0KV",12,18,4,34,11.33,427],
+["2460757196","R JEEVARAJ","M1TE-I6-Q0C0KV",12,5,14,31,10.33,435],
+["2460705123","ABILESH M","M1TE-I6-Q0C0KV",5,12,7,24,8.00,455],
+["2460472099","ADITYA A","M1TE-I6-Q0C0KV",7,3,4,14,4.67,468],
+["2461307956","MITHUN","M1TE-I6-R0C0",11,-2,1,10,3.33,475]
+];
+const MT4_AB = {};
+
+/* ---------- merge ---------- */
+const TEST_DATA = [MJ1, MT3, MT4];
+const AB_DATA = [MJ1_AB, MT3_AB, MT4_AB];
+const students = {};
+TEST_DATA.forEach((rows,ti)=>{
+  rows.forEach(r=>{
+    const [form,name,batch,p,c,m,total,pct,rank]=r;
+    if(!students[form]) students[form]={form,name,batch,tests:[null,null,null]};
+    students[form].name=name; students[form].batch=batch;
+    students[form].tests[ti]={scores:[p,c,m],total,pct,rank};
+  });
+});
+AB_DATA.forEach((abs,ti)=>{
+  Object.entries(abs).forEach(([form,[name,batch]])=>{
+    if(!students[form]) students[form]={form,name,batch,tests:[null,null,null]};
+    if(!students[form].tests[ti]) students[form].tests[ti]="AB";
+  });
+});
+const studentArr=Object.values(students);
+
+const valid = t => t && t!=="AB";
+const latestIdx = s=>{for(let i=2;i>=0;i--) if(valid(s.tests[i])) return i; return -1;};
+const prevIdx = (s,li)=>{for(let i=li-1;i>=0;i--) if(valid(s.tests[i])) return i; return -1;};
+function improvement(s){const li=latestIdx(s); if(li<0) return null; const pi=prevIdx(s,li); if(pi<0) return null; return s.tests[li].pct-s.tests[pi].pct;}
+function titleCase(str){return str.toLowerCase().replace(/(^|\s)\S/g,c=>c.toUpperCase());}
+const subPct=(sc,ti)=>sc/TESTS[ti].maxSub*100;
+
+/* ---------- batch strip ---------- */
+(function(){
+  const el=document.getElementById("batchStrip");
+  const attempted3=studentArr.filter(s=>s.tests.every(valid)).length;
+  const withDelta=studentArr.filter(s=>improvement(s)!==null);
+  const improvers=withDelta.filter(s=>improvement(s)>0).length;
+  el.innerHTML=`
+  <div class="batch-card"><div class="lbl">Students tracked</div><div class="val">${studentArr.length}</div><div class="sub">${attempted3} appeared in all 3 tests</div></div>
+  <div class="batch-card"><div class="lbl">Batch avg — MT-04</div><div class="val">${batchAvgPct[2]}%</div><div class="sub">MJ-01: ${batchAvgPct[0]}% · MT-03: ${batchAvgPct[1]}%</div></div>
+  <div class="batch-card"><div class="lbl">Improved last test</div><div class="val">${improvers}/${withDelta.length}</div><div class="sub">percentage up vs previous attempt</div></div>
+  <div class="batch-card"><div class="lbl">Centre topper — MT-04</div><div class="val" style="font-size:17px;margin-top:8px">P Rion Thirumal</div><div class="sub">211 / 300 · 70.33%</div></div>`;
+})();
+
+/* ---------- sidebar ---------- */
+let currentSort="rank", currentForm=null;
+function sortedStudents(){
+  const arr=[...studentArr];
+  if(currentSort==="name") arr.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(currentSort==="improve") arr.sort((a,b)=>{const da=improvement(a),db=improvement(b);return (db===null?-999:db)-(da===null?-999:da);});
+  else arr.sort((a,b)=>{
+    const ra=a.tests[latestIdx(a)]?.rank??9999, rb=b.tests[latestIdx(b)]?.rank??9999;
+    return ra-rb;
+  });
+  return arr;
+}
+function renderList(){
+  const q=document.getElementById("search").value.trim().toLowerCase();
+  const list=document.getElementById("studentList"); list.innerHTML="";
+  sortedStudents().filter(s=>!q||s.name.toLowerCase().includes(q)||s.form.includes(q)).forEach(s=>{
+    const li=latestIdx(s), t=li>=0?s.tests[li]:null, d=improvement(s);
+    const trend=d===null?`<span class="flat">·</span>`:d>0.05?`<span class="up">▲${d.toFixed(1)}</span>`:d<-0.05?`<span class="down">▼${Math.abs(d).toFixed(1)}</span>`:`<span class="flat">–</span>`;
+    const initials=titleCase(s.name).split(" ").map(w=>w[0]).slice(0,2).join("");
+    const div=document.createElement("div");
+    div.className="stu-item"+(s.form===currentForm?" active":"");
+    div.innerHTML=`<div class="stu-bubble">${initials}</div>
+      <div class="stu-meta"><div class="stu-name">${titleCase(s.name)}</div>
+      <div class="stu-line2">${t?`Rank ${t.rank} · ${t.pct.toFixed(1)}%`:"No test appeared"}</div></div>
+      <div class="stu-trend">${trend}</div>`;
+    div.onclick=()=>selectStudent(s.form);
+    list.appendChild(div);
+  });
+}
+document.getElementById("search").addEventListener("input",renderList);
+document.querySelectorAll(".sort-btn").forEach(b=>{b.onclick=()=>{document.querySelectorAll(".sort-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentSort=b.dataset.sort;renderList();};});
+
+/* ---------- per-student ---------- */
+let trendChart=null,subjectChart=null;
+Chart.defaults.font.family="'DM Sans', sans-serif";
+Chart.defaults.color="#465066";
+
+function selectStudent(form){
+  currentForm=form; renderList();
+  const s=students[form];
+  const li=latestIdx(s), pi=li>=0?prevIdx(s,li):-1;
+  const latest=li>=0?s.tests[li]:null, prev=pi>=0?s.tests[pi]:null;
+
+  const statusTags=TESTS.map((t,i)=>{
+    const st=s.tests[i];
+    if(st==="AB") return `<span class="tag ab">${t.id}: Absent</span>`;
+    if(!st) return `<span class="tag">${t.id}: —</span>`;
+    return `<span class="tag">${t.id}: ${st.total}/${t.maxTotal}</span>`;
+  }).join("");
+  document.getElementById("stuHeader").innerHTML=`
+    <h2>${titleCase(s.name)}</h2>
+    <div class="tags"><span class="tag">Form ${s.form}</span><span class="tag">${s.batch}</span>${statusTags}</div>`;
+
+  if(!latest){
+    document.getElementById("kpis").innerHTML=`<div class="kpi" style="grid-column:1/-1"><div class="lbl">No attempted test on record</div><div class="val" style="font-size:16px">Marked absent in all tracked tests — flag for counselling follow-up.</div></div>`;
+    if(trendChart)trendChart.destroy(); if(subjectChart)subjectChart.destroy();
+    document.getElementById("subjectTable").innerHTML="";
+    document.getElementById("posInsights").innerHTML="";
+    document.getElementById("negInsights").innerHTML=`<li>Student has not appeared in any of the three tracked tests.</li>`;
+    return;
+  }
+
+  const dPct=prev?latest.pct-prev.pct:null;
+  const dRank=prev?prev.rank-latest.rank:null;
+  const deltaHTML=v=>{
+    if(v===null) return `<div class="delta flat">first attempted test</div>`;
+    const cls=v===0?"flat":v>0?"up":"down", sign=v>0?"+":"";
+    return `<div class="delta ${cls}">${sign}${Math.round(v*100)/100}% vs prev</div>`;
+  };
+  document.getElementById("kpis").innerHTML=`
+    <div class="kpi"><div class="lbl">Latest total (${TESTS[li].id})</div><div class="val">${latest.total}<span style="font-size:14px;color:var(--ink-faint)"> /${TESTS[li].maxTotal}</span></div><div class="delta flat">${TESTS[li].label}</div></div>
+    <div class="kpi"><div class="lbl">Percentage</div><div class="val">${latest.pct.toFixed(2)}%</div>${deltaHTML(dPct)}</div>
+    <div class="kpi"><div class="lbl">TN & PY rank</div><div class="val">#${latest.rank}</div>${dRank===null?`<div class="delta flat">first attempted test</div>`:`<div class="delta ${dRank>0?"up":dRank<0?"down":"flat"}">${dRank>0?"↑ up "+dRank:dRank<0?"↓ down "+Math.abs(dRank):"no change"} places</div>`}</div>
+    <div class="kpi"><div class="lbl">Vs batch avg (latest)</div><div class="val">${(latest.pct-batchAvgPct[li]>=0?"+":"")+(latest.pct-batchAvgPct[li]).toFixed(1)}%</div><div class="delta flat">batch avg ${batchAvgPct[li]}%</div></div>`;
+
+  /* trend (percentages) */
+  const labels=TESTS.map(t=>t.label);
+  const pcts=s.tests.map(t=>valid(t)?t.pct:null);
+  if(trendChart)trendChart.destroy();
+  trendChart=new Chart(document.getElementById("trendChart"),{
+    type:"line",
+    data:{labels,datasets:[
+      {label:titleCase(s.name),data:pcts,borderColor:"#141B2E",backgroundColor:"#141B2E",pointRadius:5,pointBorderWidth:2,pointBackgroundColor:"#fff",tension:.25,spanGaps:true,borderWidth:2.5},
+      {label:"Batch average",data:batchAvgPct,borderColor:"#9AA7C6",borderDash:[6,5],pointRadius:3,tension:.25,borderWidth:1.8,backgroundColor:"#9AA7C6"}
+    ]},
+    options:{maintainAspectRatio:false,
+      scales:{y:{min:0,max:100,ticks:{callback:v=>v+"%"},grid:{color:"#EEF2F9"}},x:{grid:{display:false}}},
+      plugins:{legend:{labels:{usePointStyle:true,boxWidth:7}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+": "+(c.parsed.y===null?"AB":c.parsed.y.toFixed(2)+"%")}}}}
+  });
+
+  /* subject accuracy % */
+  if(subjectChart)subjectChart.destroy();
+  const dsets=s.tests.map((t,i)=>valid(t)?{
+    label:TESTS[i].label,
+    data:t.scores.map(sc=>Math.round(subPct(sc,i)*10)/10),
+    backgroundColor:["#DDE3EE","#AEB9D4","#141B2E"][i],borderRadius:5
+  }:null).filter(Boolean);
+  subjectChart=new Chart(document.getElementById("subjectChart"),{
+    type:"bar",
+    data:{labels:SUBJECTS,datasets:dsets},
+    options:{maintainAspectRatio:false,
+      scales:{y:{min:-10,max:100,ticks:{callback:v=>v+"%"},grid:{color:"#EEF2F9"}},x:{grid:{display:false}}},
+      plugins:{legend:{labels:{usePointStyle:true,boxWidth:7}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+": "+c.parsed.y+"%"}}}}
+  });
+
+  /* subject table */
+  const maxS=TESTS[li].maxSub;
+  let rows=`<tr><th>Subject</th><th>Score /${maxS}</th><th>Accuracy</th><th></th><th>Change vs prev (% pts)</th><th>Verdict</th></tr>`;
+  SUBJECTS.forEach((sub,i)=>{
+    const sc=latest.scores[i], acc=subPct(sc,li);
+    const pvAcc=prev?subPct(prev.scores[i],pi):null;
+    const d=pvAcc===null?null:acc-pvAcc;
+    const verdict=acc>=70?"Strong":acc>=50?"Steady":acc>=30?"Needs work":"Critical";
+    const vColor=acc>=70?"var(--good)":acc>=50?"var(--ink-soft)":acc>=30?"var(--che)":"var(--bad)";
+    rows+=`<tr>
+      <td class="subj"><span class="dot" style="background:${SUBJ_COLORS[i]}"></span>${sub}</td>
+      <td>${sc}</td><td>${acc.toFixed(1)}%</td>
+      <td><div class="pct-bar"><div class="pct-fill" style="width:${Math.max(0,acc)}%;background:${SUBJ_COLORS[i]}"></div></div></td>
+      <td>${d===null?"—":`<span class="${d>0?"up":d<0?"down":"flat"}">${d>0?"+":""}${d.toFixed(1)}</span>`}</td>
+      <td style="font-family:'DM Sans';font-weight:600;color:${vColor}">${verdict}</td></tr>`;
+  });
+  document.getElementById("subjectTable").innerHTML=rows;
+
+  /* insights */
+  const pos=[],neg=[];
+  const accs=latest.scores.map(sc=>subPct(sc,li));
+  const best=accs.indexOf(Math.max(...accs)), worst=accs.indexOf(Math.min(...accs));
+  pos.push(`<b>${SUBJECTS[best]}</b> is the strongest subject right now — ${latest.scores[best]}/${maxS} (${accs[best].toFixed(0)}%) in ${TESTS[li].label}.`);
+  if(prev){
+    let bg=-1,bgd=-Infinity,bd=-1,bdd=Infinity;
+    SUBJECTS.forEach((_,i)=>{const d=accs[i]-subPct(prev.scores[i],pi); if(d>bgd){bgd=d;bg=i;} if(d<bdd){bdd=d;bd=i;}});
+    if(bgd>0) pos.push(`Biggest gain: <b>${SUBJECTS[bg]}</b>, up ${bgd.toFixed(1)} percentage points since ${TESTS[pi].label}.`);
+    if(dRank>0) pos.push(`Rank moved up <b>${dRank} places</b> (#${prev.rank} → #${latest.rank}).`);
+    if(bdd<0) neg.push(`Biggest slide: <b>${SUBJECTS[bd]}</b>, down ${Math.abs(bdd).toFixed(1)} percentage points since ${TESTS[pi].label} — review that error log first.`);
+    if(dRank<0) neg.push(`Rank slipped <b>${Math.abs(dRank)} places</b> (#${prev.rank} → #${latest.rank}).`);
+  }
+  if(latest.pct>batchAvgPct[li]) pos.push(`Performing <b>${(latest.pct-batchAvgPct[li]).toFixed(1)}% above</b> the batch average in the latest test.`);
+  else neg.push(`Currently <b>${(batchAvgPct[li]-latest.pct).toFixed(1)}% below</b> the batch average — target the next minor test to close the gap.`);
+  latest.scores.forEach((sc,i)=>{ if(sc<0) neg.push(`<b>${SUBJECTS[i]}</b> went negative (${sc}) — attempts are outrunning accuracy; enforce a "sure-shot only" attempt policy next paper.`); });
+  if(accs[worst]<30 && latest.scores[worst]>=0) neg.push(`<b>${SUBJECTS[worst]}</b> is critical at ${latest.scores[worst]}/${maxS} — prioritise NCERT-level + module Level-1 revision before attempting harder sets.`);
+  const abCount=s.tests.filter(t=>t==="AB").length;
+  if(abCount) neg.push(`Missed <b>${abCount} test${abCount>1?"s":""}</b> in this cycle — every skipped paper removes a data point for rank projection.`);
+  if(accs[2]>=50) pos.push(`Maths at ${latest.scores[2]}/${maxS} stands out — the batch average in Maths is the weakest of the three subjects.`);
+  if(!pos.length) pos.push(`Appeared consistently — trend data is now reliable for planning.`);
+  if(!neg.length) neg.push(`No red flags in the latest paper — push attempt count in the strongest subject.`);
+  document.getElementById("posInsights").innerHTML=pos.map(x=>`<li>${x}</li>`).join("");
+  document.getElementById("negInsights").innerHTML=neg.map(x=>`<li>${x}</li>`).join("");
+}
+
+renderList();
+selectStudent(sortedStudents()[0].form);
+</script>
+</body>
+</html>
