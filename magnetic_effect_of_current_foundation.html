@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Magnetic Effect of Current (Foundation)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+/* Clear confirm modal */
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+/* toast */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> NEET Foundation</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Magnetic Effect<br>of Current</h1></div>
+    <p id="home-sub">Foundation level — work down topic by topic. 5 questions each, full solutions.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+// Each diagram is a function returning an SVG string
+
+const DIAGRAMS = {
+
+  // Straight wire with current, showing a field point
+  wireDir: (label='I \u2191', ptLabel='P', side='right') => `
+    <svg viewBox="0 0 240 160" width="240" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="wd" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker></defs>
+      <line x1="110" y1="146" x2="110" y2="16" stroke="#dc2626" stroke-width="3" marker-end="url(#wd)"/>
+      <text x="76" y="30" font-size="13" fill="#dc2626" font-family="sans-serif" font-weight="700">${label}</text>
+      <ellipse cx="110" cy="86" rx="46" ry="15" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <ellipse cx="110" cy="86" rx="72" ry="23" fill="none" stroke="#93c5fd" stroke-width="1.2" stroke-dasharray="4,3"/>
+      ${side==='right'
+        ? `<circle cx="182" cy="86" r="4.5" fill="#16a34a"/><text x="190" y="90" font-size="12" fill="#16a34a" font-family="sans-serif" font-weight="700">${ptLabel}</text>`
+        : `<circle cx="38" cy="86" r="4.5" fill="#16a34a"/><text x="14" y="90" font-size="12" fill="#16a34a" font-family="sans-serif" font-weight="700">${ptLabel}</text>`}
+    </svg>`,
+
+  // Charge moving toward the observer (out of page)
+  chargeOut: (q='+', dir='towards you') => `
+    <svg viewBox="0 0 220 155" width="220" height="155" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="110" cy="80" r="52" fill="none" stroke="#2563eb" stroke-width="1.6"/>
+      <circle cx="110" cy="80" r="32" fill="none" stroke="#93c5fd" stroke-width="1.4"/>
+      <circle cx="110" cy="80" r="11" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <line x1="103" y1="73" x2="117" y2="87" stroke="#dc2626" stroke-width="1.6"/>
+      <line x1="117" y1="73" x2="103" y2="87" stroke="#dc2626" stroke-width="1.6"/>
+      <circle cx="110" cy="80" r="3.2" fill="#dc2626"/>
+      <text x="110" y="150" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">charge ${q}, moving ${dir}</text>
+      <text x="166" y="36" font-size="11" fill="#2563eb" font-family="sans-serif">B lines</text>
+    </svg>`,
+
+  // Two parallel wires with a point P to the right
+  twoWires: (i1='5A', i2='2.5A', d1='5m', d2='2.5m') => `
+    <svg viewBox="0 0 250 165" width="250" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="tw" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker></defs>
+      <line x1="55" y1="132" x2="55" y2="20" stroke="#dc2626" stroke-width="2.6" marker-end="url(#tw)"/>
+      <text x="24" y="34" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">${i1}</text>
+      <line x1="150" y1="132" x2="150" y2="20" stroke="#dc2626" stroke-width="2.6" marker-end="url(#tw)"/>
+      <text x="120" y="34" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">${i2}</text>
+      <circle cx="205" cy="76" r="4.5" fill="#16a34a"/>
+      <text x="212" y="80" font-size="12" fill="#16a34a" font-family="sans-serif" font-weight="700">P</text>
+      <line x1="55" y1="150" x2="150" y2="150" stroke="#6b7280" stroke-width="1"/>
+      <text x="102" y="162" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">${d1}</text>
+      <line x1="150" y1="150" x2="205" y2="150" stroke="#6b7280" stroke-width="1"/>
+      <text x="178" y="162" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">${d2}</text>
+      <line x1="55" y1="140" x2="55" y2="154" stroke="#6b7280" stroke-width="1"/>
+      <line x1="150" y1="140" x2="150" y2="154" stroke="#6b7280" stroke-width="1"/>
+      <line x1="205" y1="140" x2="205" y2="154" stroke="#6b7280" stroke-width="1"/>
+    </svg>`,
+
+  // Null-point setup: wires A and B, dots or crosses
+  nullPoint: (ia='5I', ib='2I', sym='\u2299') => `
+    <svg viewBox="0 0 250 110" width="250" height="110" xmlns="http://www.w3.org/2000/svg">
+      <line x1="10" y1="46" x2="240" y2="46" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="5,4"/>
+      <circle cx="60" cy="46" r="9" fill="#fff" stroke="#dc2626" stroke-width="2"/>
+      <text x="60" y="51" font-size="12" fill="#dc2626" font-family="sans-serif" text-anchor="middle">${sym}</text>
+      <text x="60" y="26" font-size="12" fill="#374151" font-family="sans-serif" font-weight="700" text-anchor="middle">A</text>
+      <text x="60" y="72" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="600" text-anchor="middle">${ia}</text>
+      <circle cx="190" cy="46" r="9" fill="#fff" stroke="#dc2626" stroke-width="2"/>
+      <text x="190" y="51" font-size="12" fill="#dc2626" font-family="sans-serif" text-anchor="middle">${sym}</text>
+      <text x="190" y="26" font-size="12" fill="#374151" font-family="sans-serif" font-weight="700" text-anchor="middle">B</text>
+      <text x="190" y="72" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="600" text-anchor="middle">${ib}</text>
+      <line x1="60" y1="90" x2="190" y2="90" stroke="#6b7280" stroke-width="1"/>
+      <line x1="60" y1="84" x2="60" y2="96" stroke="#6b7280" stroke-width="1"/>
+      <line x1="190" y1="84" x2="190" y2="96" stroke="#6b7280" stroke-width="1"/>
+      <text x="125" y="105" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">6 cm</text>
+    </svg>`,
+
+  // Triangle with field point at a vertex
+  triVertex: () => `
+    <svg viewBox="0 0 230 155" width="230" height="155" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="tv" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <polygon points="115,26 40,128 190,128" fill="none" stroke="#dc2626" stroke-width="2.4"/>
+      <line x1="70" y1="88" x2="82" y2="72" stroke="#dc2626" stroke-width="2.4" marker-end="url(#tv)"/>
+      <line x1="150" y1="72" x2="162" y2="88" stroke="#dc2626" stroke-width="2.4" marker-end="url(#tv)"/>
+      <line x1="128" y1="128" x2="104" y2="128" stroke="#dc2626" stroke-width="2.4" marker-end="url(#tv)"/>
+      <circle cx="115" cy="26" r="4.5" fill="#16a34a"/>
+      <text x="115" y="18" font-size="12" fill="#16a34a" font-family="sans-serif" font-weight="700" text-anchor="middle">P</text>
+      <text x="196" y="82" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">I</text>
+      <line x1="40" y1="142" x2="190" y2="142" stroke="#6b7280" stroke-width="1"/>
+      <text x="115" y="153" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">a</text>
+    </svg>`,
+
+  // Square loop with field point at a vertex
+  sqVertex: () => `
+    <svg viewBox="0 0 210 165" width="210" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="sv" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <rect x="45" y="26" width="115" height="115" fill="none" stroke="#dc2626" stroke-width="2.4"/>
+      <line x1="118" y1="141" x2="92" y2="141" stroke="#dc2626" stroke-width="2.4" marker-end="url(#sv)"/>
+      <line x1="160" y1="100" x2="160" y2="74" stroke="#dc2626" stroke-width="2.4" marker-end="url(#sv)"/>
+      <line x1="92" y1="26" x2="118" y2="26" stroke="#dc2626" stroke-width="2.4" marker-end="url(#sv)"/>
+      <line x1="45" y1="74" x2="45" y2="100" stroke="#dc2626" stroke-width="2.4" marker-end="url(#sv)"/>
+      <circle cx="45" cy="26" r="4.5" fill="#16a34a"/>
+      <text x="34" y="20" font-size="12" fill="#16a34a" font-family="sans-serif" font-weight="700">P</text>
+      <text x="168" y="130" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">I</text>
+      <line x1="45" y1="155" x2="160" y2="155" stroke="#6b7280" stroke-width="1"/>
+      <text x="102" y="164" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">a</text>
+    </svg>`,
+
+  // Regular polygon with centre O
+  polygon: (n=4, label='Square') => {
+    const cx=105, cy=78, R=52;
+    let pts=[];
+    for(let k=0;k<n;k++){
+      const th = -Math.PI/2 + 2*Math.PI*k/n + (n===4?Math.PI/4:0);
+      pts.push([cx+R*Math.cos(th), cy+R*Math.sin(th)]);
+    }
+    const p = pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+    return `
+    <svg viewBox="0 0 210 155" width="210" height="155" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="${p}" fill="none" stroke="#dc2626" stroke-width="2.4"/>
+      <circle cx="${cx}" cy="${cy}" r="4" fill="#16a34a"/>
+      <text x="${cx+8}" y="${cy-6}" font-size="12" fill="#16a34a" font-family="sans-serif" font-weight="700">O</text>
+      <text x="${cx}" y="146" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">${label}, side a, current I</text>
+    </svg>`;
+  },
+
+  // Circular loop / coil
+  loop: (label='R', turns='N = 1') => `
+    <svg viewBox="0 0 210 150" width="210" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="lp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <circle cx="100" cy="70" r="52" fill="none" stroke="#dc2626" stroke-width="2.6"/>
+      <line x1="112" y1="18" x2="140" y2="24" stroke="#dc2626" stroke-width="2.4" marker-end="url(#lp)"/>
+      <circle cx="100" cy="70" r="4" fill="#16a34a"/>
+      <text x="106" y="66" font-size="12" fill="#16a34a" font-family="sans-serif" font-weight="700">O</text>
+      <line x1="100" y1="70" x2="152" y2="70" stroke="#374151" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <text x="124" y="84" font-size="11" fill="#374151" font-family="sans-serif">${label}</text>
+      <text x="100" y="142" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">${turns}, current I</text>
+    </svg>`,
+
+  // Arc subtending angle at centre
+  arc: (deg=180, label='semicircle') => {
+    const cx=105, cy=88, R=56;
+    const a0=Math.PI, a1=Math.PI - (deg*Math.PI/180);
+    const x0=cx+R*Math.cos(a0), y0=cy+R*Math.sin(a0);
+    const x1=cx+R*Math.cos(a1), y1=cy+R*Math.sin(a1);
+    const large = deg>180?1:0;
+    return `
+    <svg viewBox="0 0 210 150" width="210" height="150" xmlns="http://www.w3.org/2000/svg">
+      <path d="M${x0.toFixed(1)},${y0.toFixed(1)} A${R},${R} 0 ${large},1 ${x1.toFixed(1)},${y1.toFixed(1)}" fill="none" stroke="#dc2626" stroke-width="2.8"/>
+      <line x1="${cx}" y1="${cy}" x2="${x0.toFixed(1)}" y2="${y0.toFixed(1)}" stroke="#374151" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <line x1="${cx}" y1="${cy}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="#374151" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <circle cx="${cx}" cy="${cy}" r="4" fill="#16a34a"/>
+      <text x="${cx+7}" y="${cy+14}" font-size="12" fill="#16a34a" font-family="sans-serif" font-weight="700">O</text>
+      <text x="${cx-26}" y="${cy-8}" font-size="11" fill="#374151" font-family="sans-serif">R</text>
+      <text x="105" y="142" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">${label}, current I</text>
+    </svg>`;
+  },
+
+  // Loop split into two arcs of different resistance
+  splitLoop: () => `
+    <svg viewBox="0 0 240 150" width="240" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="sl" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <path d="M62,75 A54,54 0 0,1 170,75" fill="none" stroke="#2563eb" stroke-width="3"/>
+      <path d="M62,75 A54,54 0 0,0 170,75" fill="none" stroke="#d97706" stroke-width="3"/>
+      <line x1="14" y1="75" x2="62" y2="75" stroke="#dc2626" stroke-width="2.4" marker-end="url(#sl)"/>
+      <line x1="170" y1="75" x2="222" y2="75" stroke="#dc2626" stroke-width="2.4" marker-end="url(#sl)"/>
+      <text x="18" y="66" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">I</text>
+      <circle cx="116" cy="75" r="4" fill="#16a34a"/>
+      <text x="122" y="71" font-size="12" fill="#16a34a" font-family="sans-serif" font-weight="700">O</text>
+      <text x="116" y="14" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle" font-weight="600">arc ABC \u2014 5 \u03a9</text>
+      <text x="116" y="146" font-size="11" fill="#d97706" font-family="sans-serif" text-anchor="middle" font-weight="600">arc ADC \u2014 10 \u03a9</text>
+      <text x="52" y="90" font-size="11" fill="#374151" font-family="sans-serif">A</text>
+      <text x="174" y="90" font-size="11" fill="#374151" font-family="sans-serif">C</text>
+    </svg>`,
+
+  // Cross-section of a cylindrical wire, with marked radii
+  cylinder: (caption='solid wire, radius R') => `
+    <svg viewBox="0 0 230 165" width="230" height="165" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="105" cy="76" r="88" fill="none" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>
+      <circle cx="105" cy="76" r="52" fill="#fee2e2" stroke="#dc2626" stroke-width="2.2"/>
+      <circle cx="105" cy="76" r="3.5" fill="#374151"/>
+      <line x1="105" y1="76" x2="157" y2="76" stroke="#374151" stroke-width="1.3"/>
+      <text x="126" y="70" font-size="11" fill="#374151" font-family="sans-serif">R</text>
+      <circle cx="79" cy="76" r="4" fill="#2563eb"/>
+      <text x="60" y="94" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="600">R/2</text>
+      <circle cx="105" cy="76" r="88" fill="none" stroke="#93c5fd" stroke-width="1.4" stroke-dasharray="5,4"/>
+      <circle cx="193" cy="76" r="4" fill="#16a34a"/>
+      <text x="188" y="66" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="600">2R</text>
+      <text x="105" y="160" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">${caption}</text>
+    </svg>`,
+
+  // Hollow cylinder cross-section
+  hollow: () => `
+    <svg viewBox="0 0 230 165" width="230" height="165" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="105" cy="76" r="64" fill="#fee2e2" stroke="#dc2626" stroke-width="2.2"/>
+      <circle cx="105" cy="76" r="32" fill="#fdfaf3" stroke="#dc2626" stroke-width="2.2"/>
+      <circle cx="105" cy="76" r="3.5" fill="#374151"/>
+      <line x1="105" y1="76" x2="137" y2="76" stroke="#374151" stroke-width="1.3"/>
+      <text x="113" y="70" font-size="11" fill="#374151" font-family="sans-serif">R</text>
+      <line x1="105" y1="76" x2="105" y2="12" stroke="#374151" stroke-width="1.3"/>
+      <text x="110" y="30" font-size="11" fill="#374151" font-family="sans-serif">2R</text>
+      <circle cx="153" cy="76" r="4" fill="#16a34a"/>
+      <text x="146" y="100" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="600">3R/2</text>
+      <text x="105" y="160" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">hollow wire: inner R, outer 2R</text>
+    </svg>`
+};
+
+// ── TOPIC DATA ─────────────────────────────────────────────────────────────────
+const TOPICS = [
+
+  { name:"1. Straight Wire \u2014 Direction of B (Right-Hand Rule)", questions:[
+    { q:"A proton moves along a horizontal line, straight towards the observer. The concentric circular magnetic field lines produced by its motion are:",
+      diagram:DIAGRAMS.chargeOut('+','towards you'),
+      opts:["ACW, in a horizontal plane","ACW, in a vertical plane","CW, in a horizontal plane","CW, in a vertical plane"], ans:1,
+      sol:"A moving positive charge = conventional current in its direction of motion, i.e. OUT of the page towards you. Point the right thumb out of the page \u2014 the fingers curl <strong>anticlockwise</strong>. The field circles are perpendicular to the motion; since the motion is horizontal (towards you), those circles lie in a <strong>vertical plane</strong>." },
+    { q:"An electron moves vertically UPWARD. The circular magnetic field lines around its path, seen from above, are:",
+      diagram:DIAGRAMS.wireDir('I \u2193','',''),
+      opts:["ACW, in a horizontal plane","ACW, in a vertical plane","CW, in a horizontal plane","CW, in a vertical plane"], ans:2,
+      sol:"Careful \u2014 the electron is NEGATIVE, so conventional current is <strong>downward</strong>, opposite to its velocity. Right thumb pointing down, fingers curl <strong>clockwise as seen from above</strong>. The circles lie in a <strong>horizontal plane</strong> (perpendicular to the vertical wire)." },
+    { q:"A current flows in an overhead electric line towards the NORTH. The direction of the magnetic field at a point just BELOW the line is:",
+      diagram:DIAGRAMS.wireDir('I (north)','P','right'),
+      opts:["towards north","towards south","towards east","towards west"], ans:3,
+      sol:"Use B \u221d I\u0302 \u00d7 r\u0302. Let east = \u00ee, north = \u0135, up = k\u0302. Current is \u0135; the point below means r\u0302 = \u2212k\u0302. So B \u221d \u0135 \u00d7 (\u2212k\u0302) = \u2212(\u0135 \u00d7 k\u0302) = \u2212\u00ee = <strong>west</strong>." },
+    { q:"A current flows DOWNWARD in a vertical wire. The direction of the magnetic field at a point just to the RIGHT (east) of the wire is:",
+      diagram:DIAGRAMS.wireDir('I \u2193','P','right'),
+      opts:["towards north","towards south","towards east","towards west"], ans:1,
+      sol:"Current is \u2212k\u0302 (downward); the point to the east means r\u0302 = \u00ee. B \u221d (\u2212k\u0302) \u00d7 \u00ee = \u2212(k\u0302 \u00d7 \u00ee) = \u2212\u0135 = <strong>south</strong>." },
+    { q:"The magnitude of the magnetic field at a distance r from a long straight wire carrying current I is:",
+      diagram:DIAGRAMS.wireDir('I \u2191','P','right'),
+      opts:["\u03bc\u2080I/(2\u03c0r)","\u03bc\u2080I/(4\u03c0r)","\u03bc\u2080I/(2r)","\u03bc\u2080I/(2\u03c0r\u00b2)"], ans:0,
+      sol:"The standard result for an infinite straight wire: <strong>B = \u03bc\u2080I/(2\u03c0r)</strong>. Note B \u221d 1/r \u2014 double the distance, half the field. (\u03bc\u2080I/2R is the LOOP formula \u2014 do not mix them up.)" }
+  ]},
+
+  { name:"2. Two Straight Wires \u2014 Adding Fields", questions:[
+    { q:"Two long parallel wires carry currents 5 A and 2.5 A in the SAME direction (upward). Point P lies 2.5 m from the 2.5 A wire and 7.5 m from the 5 A wire. The magnetic field at P is:",
+      diagram:DIAGRAMS.twoWires('5A','2.5A','5m','2.5m'),
+      opts:["\u03bc\u2080/(2\u03c0), \u2297","5\u03bc\u2080/(6\u03c0), \u2297","5\u03bc\u2080/(6\u03c0), \u2299","\u03bc\u2080/(2\u03c0), \u2299"], ans:1,
+      sol:"P is to the RIGHT of both wires and both currents point up, so both fields go INTO the page (\u2297) \u2014 they ADD.<br>B\u2081 = \u03bc\u2080(5)/(2\u03c0 \u00d7 7.5) = \u03bc\u2080/(3\u03c0)<br>B\u2082 = \u03bc\u2080(2.5)/(2\u03c0 \u00d7 2.5) = \u03bc\u2080/(2\u03c0)<br>Total = \u03bc\u2080(1/3 + 1/2)/\u03c0 = <strong>5\u03bc\u2080/(6\u03c0), into the page</strong>." },
+    { q:"Two long parallel wires carry currents i and 2i in the SAME direction. The magnetic field at the midpoint between them is 'B'. If the 2i current is switched off, the field at that same point becomes:",
+      diagram:DIAGRAMS.twoWires('i','2i','d','d'),
+      opts:["2B","B","B/2","\u221a2 B"], ans:1,
+      sol:"At the midpoint (distance d from each), the two fields point in OPPOSITE directions because the currents are parallel. Net = \u03bc\u2080(2i)/(2\u03c0d) \u2212 \u03bc\u2080(i)/(2\u03c0d) = \u03bc\u2080i/(2\u03c0d) = B.<br>But \u03bc\u2080i/(2\u03c0d) is exactly the field due to the i wire ALONE. So switching off 2i leaves the field <strong>unchanged at B</strong>." },
+    { q:"Wires A and B are 6 cm apart and carry currents 5I and 2I in the SAME direction. The distance from wire B at which the net magnetic field is zero is:",
+      diagram:DIAGRAMS.nullPoint('5I','2I','\u2299'),
+      opts:["6/7 cm","12/7 cm","18/17 cm","16/7 cm"], ans:1,
+      sol:"For parallel (same-direction) currents, the null point lies BETWEEN the wires. Let it be x from B, so (6 \u2212 x) from A.<br>5I/(6 \u2212 x) = 2I/x \u21d2 5x = 12 \u2212 2x \u21d2 7x = 12 \u21d2 x = <strong>12/7 cm</strong>. It sits nearer the weaker wire \u2014 as expected." },
+    { q:"Same two wires, 6 cm apart, but now 5I and 2I flow in OPPOSITE directions. The distance from wire B at which the net field is zero is:",
+      diagram:DIAGRAMS.nullPoint('5I','2I','\u2297'),
+      opts:["4 cm","2 cm","8 cm","12 cm"], ans:0,
+      sol:"For antiparallel currents, the null point lies OUTSIDE the pair, beyond the WEAKER wire (B). Let it be x beyond B, so (6 + x) from A.<br>5I/(6 + x) = 2I/x \u21d2 5x = 12 + 2x \u21d2 3x = 12 \u21d2 x = <strong>4 cm</strong>, beyond B." },
+    { q:"Two long parallel wires carry EQUAL currents in the same direction. At the exact midpoint between them, the net magnetic field is:",
+      diagram:DIAGRAMS.twoWires('I','I','d','d'),
+      opts:["zero","double that of one wire","equal to that of one wire","half that of one wire"], ans:0,
+      sol:"At the midpoint both wires are the same distance away, so both fields have equal magnitude. Because the currents are parallel, their fields point in opposite directions there and cancel exactly \u21d2 <strong>zero</strong>." }
+  ]},
+
+  { name:"3. Polygons \u2014 Field at Centre and at a Vertex", questions:[
+    { q:"An equilateral triangle of side 'a' carries current I. The magnetic field at vertex P is:",
+      diagram:DIAGRAMS.triVertex(),
+      opts:["\u03bc\u2080I/(2\u221a3\u03c0a), \u2299","\u03bc\u2080I/(2\u221a3\u03c0a), \u2297","(9/2)(\u03bc\u2080I/\u03c0a), \u2299","(9/2)(\u03bc\u2080I/\u03c0a), \u2297"], ans:0,
+      sol:"Key idea: the two sides PASSING THROUGH P contribute <strong>zero</strong> at P (the point lies on their own line, so d\u2113 \u00d7 r\u0302 = 0). Only the opposite side matters.<br>Its perpendicular distance from P is the height, d = (\u221a3/2)a. Half its length is a/2, so sin\u03b8 = (a/2)/a = 1/2 at each end.<br>B = \u03bc\u2080I/(4\u03c0d) (sin\u03b8\u2081 + sin\u03b8\u2082) = \u03bc\u2080I/(4\u03c0 \u00b7 \u221a3a/2) \u00d7 1 = <strong>\u03bc\u2080I/(2\u221a3\u03c0a)</strong>, directed out of the page (\u2299)." },
+    { q:"A square loop of side 'a' carries current I. The magnetic field at its vertex P is:",
+      diagram:DIAGRAMS.sqVertex(),
+      opts:["\u03bc\u2080I/(2\u221a2\u03c0a), \u2299","\u03bc\u2080I/(2\u221a2\u03c0a), \u2297","2\u221a2 \u03bc\u2080I/(\u03c0a), \u2297","2\u221a2 \u03bc\u2080I/(\u03c0a), \u2299"], ans:0,
+      sol:"Again the two sides through P give zero. The two FAR sides each sit at perpendicular distance a from P, and each runs from the foot of the perpendicular out to a corner.<br>So sin\u03b8\u2081 = 0 and sin\u03b8\u2082 = a/\u221a(a\u00b2 + a\u00b2) = 1/\u221a2.<br>Each far side: B = \u03bc\u2080I/(4\u03c0a) \u00d7 (1/\u221a2). Two of them: B = 2 \u00d7 \u03bc\u2080I/(4\u221a2\u03c0a) = <strong>\u03bc\u2080I/(2\u221a2\u03c0a)</strong>, out of the page." },
+    { q:"An equilateral triangle of side 'a' carries current I. The magnetic field at its CENTRE is:",
+      diagram:DIAGRAMS.polygon(3,'Equilateral triangle'),
+      opts:["\u03bc\u2080I/(2\u221a3\u03c0a)","27\u03bc\u2080I/(2\u03c0a)","9\u03bc\u2080I/(2\u03c0a)","\u221a3 \u03bc\u2080I/(\u03c0a)"], ans:2,
+      sol:"Distance from centre to each side: d = a/(2\u221a3). Each side subtends 60\u00b0 either way, so sin\u03b8\u2081 = sin\u03b8\u2082 = sin60\u00b0 = \u221a3/2.<br>One side: B = \u03bc\u2080I/(4\u03c0d) \u00d7 2sin60\u00b0 = \u03bc\u2080I \u00b7 2\u221a3/(4\u03c0a) \u00d7 \u221a3 = 3\u03bc\u2080I/(2\u03c0a).<br>All three sides add (same direction at the centre): B = 3 \u00d7 3\u03bc\u2080I/(2\u03c0a) = <strong>9\u03bc\u2080I/(2\u03c0a)</strong>." },
+    { q:"A square loop of side 'a' carries current I. The magnetic field at its CENTRE is:",
+      diagram:DIAGRAMS.polygon(4,'Square'),
+      opts:["2\u221a2 \u03bc\u2080I/(\u03c0a)","\u03bc\u2080I/(2\u221a2\u03c0a)","8\u221a2 \u03bc\u2080I/(\u03c0a)","\u221a2 \u03bc\u2080I/(\u03c0a)"], ans:0,
+      sol:"Distance centre-to-side: d = a/2. Each side subtends 45\u00b0 either way, so sin\u03b8\u2081 = sin\u03b8\u2082 = 1/\u221a2.<br>One side: B = \u03bc\u2080I/(4\u03c0 \u00b7 a/2) \u00d7 (2/\u221a2) = \u221a2 \u03bc\u2080I/(2\u03c0a).<br>Four sides: B = 4 \u00d7 \u221a2\u03bc\u2080I/(2\u03c0a) = <strong>2\u221a2 \u03bc\u2080I/(\u03c0a)</strong>." },
+    { q:"A regular hexagon of side 'a' carries current I. The magnetic field at its CENTRE is:",
+      diagram:DIAGRAMS.polygon(6,'Regular hexagon'),
+      opts:["6\u03bc\u2080I/(\u03c0a)","\u221a3 \u03bc\u2080I/(\u03c0a)","6\u221a3 \u03bc\u2080I/(\u03c0a)","\u03bc\u2080I/(\u221a3\u03c0a)"], ans:1,
+      sol:"Distance centre-to-side: d = (\u221a3/2)a. Each side subtends 30\u00b0 either way \u21d2 sin\u03b8 = 1/2.<br>One side: B = \u03bc\u2080I/(4\u03c0 \u00b7 \u221a3a/2) \u00d7 (2 \u00d7 \u00bd) = \u03bc\u2080I/(2\u221a3\u03c0a).<br>Six sides: B = 6 \u00d7 \u03bc\u2080I/(2\u221a3\u03c0a) = 3\u03bc\u2080I/(\u221a3\u03c0a) = <strong>\u221a3 \u03bc\u2080I/(\u03c0a)</strong>." }
+  ]},
+
+  { name:"4. Circular Loops and Coils", questions:[
+    { q:"A circular coil of radius r carrying current I has field B\u2081 at its centre. Another coil of radius r/2 carries the same current, giving B\u2082. The ratio B\u2081 : B\u2082 is:",
+      diagram:DIAGRAMS.loop('r','N = 1'),
+      opts:["1 : 2","2 : 1","1 : 1","4 : 1"], ans:0,
+      sol:"At the centre of a loop, B = \u03bc\u2080I/(2R), so <strong>B \u221d 1/R</strong> for the same current.<br>B\u2081 : B\u2082 = (1/r) : (1/(r/2)) = (1/r) : (2/r) = <strong>1 : 2</strong>. Smaller loop \u2192 bigger field." },
+    { q:"A wire of length 6.28 m is bent into a circular coil of ONE turn and carries a current of 3.14 A. The magnetic field at the centre is:",
+      diagram:DIAGRAMS.loop('R','N = 1'),
+      opts:["1 \u00d7 10\u207b\u2076 T","4 \u00d7 10\u207b\u2076 T","0.5 \u00d7 10\u207b\u2076 T","2 \u00d7 10\u207b\u2076 T"], ans:3,
+      sol:"First find R: circumference 2\u03c0R = 6.28 \u21d2 R = 1 m.<br>B = \u03bc\u2080I/(2R) = (4\u03c0 \u00d7 10\u207b\u2077 \u00d7 3.14)/(2 \u00d7 1) = 2\u03c0 \u00d7 3.14 \u00d7 10\u207b\u2077 \u2248 19.7 \u00d7 10\u207b\u2077 \u2248 <strong>2 \u00d7 10\u207b\u2076 T</strong>." },
+    { q:"A wire of fixed length is bent into a single circular turn. It is then re-bent into THREE turns of smaller radius, carrying the same current. The magnetic field at the centre becomes:",
+      diagram:DIAGRAMS.loop('R','N = 1 \u2192 N = 3'),
+      opts:["3 times","1/3 times","9 times","unchanged"], ans:2,
+      sol:"Length is fixed: L = N(2\u03c0R) \u21d2 R = L/(2\u03c0N). So R shrinks as N grows.<br>B = \u03bc\u2080NI/(2R) = \u03bc\u2080NI \u00b7 2\u03c0N/(2L) = \u03bc\u2080\u03c0N\u00b2I/L \u21d2 <strong>B \u221d N\u00b2</strong>.<br>N: 1 \u2192 3, so B becomes <strong>9 times</strong>. (Both more turns AND a smaller radius help \u2014 that is why it is N\u00b2, not N.)" },
+    { q:"Two concentric coplanar coils of equal turns have radii 10 cm and 30 cm, carrying the SAME current in the SAME direction. The current in one coil is now reversed. The ratio of the fields at the common centre (before : after) is:",
+      diagram:DIAGRAMS.loop('10 & 30 cm','concentric'),
+      opts:["2 : 1","1 : 2","1 : 1","4 : 1"], ans:0,
+      sol:"B \u221d 1/R. Take B \u221d 1/10 = 3 units and 1/30 = 1 unit.<br>Same direction \u2192 they add: 3 + 1 = 4 units.<br>One reversed \u2192 they subtract: 3 \u2212 1 = 2 units.<br>Ratio = 4 : 2 = <strong>2 : 1</strong>." },
+    { q:"Two concentric coplanar coils have n\u2081 and n\u2082 turns with radii in ratio 2 : 1. Equal currents flow in OPPOSITE directions. If the net field at the common centre is zero, then n\u2081 : n\u2082 is:",
+      diagram:DIAGRAMS.loop('R\u2081:R\u2082 = 2:1','concentric'),
+      opts:["2 : 1","1 : 2","1 : 1","4 : 1"], ans:0,
+      sol:"B = \u03bc\u2080NI/(2R), so B \u221d N/R. For the fields to cancel, their magnitudes must be equal:<br>n\u2081/R\u2081 = n\u2082/R\u2082 \u21d2 n\u2081/2 = n\u2082/1 \u21d2 n\u2081 : n\u2082 = <strong>2 : 1</strong>. The bigger loop needs more turns to keep up." }
+  ]},
+
+  { name:"5. Circular Arcs at the Centre", questions:[
+    { q:"A wire is bent into a SEMICIRCLE of radius R carrying current I. The magnetic field at the centre O is:",
+      diagram:DIAGRAMS.arc(180,'semicircle'),
+      opts:["\u03bc\u2080I/(2R)","\u03bc\u2080I/(4R)","\u03bc\u2080I/(8R)","\u03bc\u2080I/(4\u03c0R)"], ans:1,
+      sol:"For an arc of angle \u03b1 (in radians): B = \u03bc\u2080I\u03b1/(4\u03c0R). A semicircle has \u03b1 = \u03c0:<br>B = \u03bc\u2080I\u03c0/(4\u03c0R) = <strong>\u03bc\u2080I/(4R)</strong> \u2014 exactly half the full-loop value \u03bc\u2080I/(2R), which is a good way to remember it." },
+    { q:"A wire is bent into a QUARTER circle of radius R carrying current I. The magnetic field at the centre is:",
+      diagram:DIAGRAMS.arc(90,'quarter circle'),
+      opts:["\u03bc\u2080I/(4R)","\u03bc\u2080I/(8R)","\u03bc\u2080I/(2R)","\u03bc\u2080I/(16R)"], ans:1,
+      sol:"\u03b1 = \u03c0/2 rad. B = \u03bc\u2080I\u03b1/(4\u03c0R) = \u03bc\u2080I(\u03c0/2)/(4\u03c0R) = <strong>\u03bc\u2080I/(8R)</strong> \u2014 one quarter of the full loop. The pattern: a fraction of the circle gives that same fraction of \u03bc\u2080I/(2R)." },
+    { q:"An arc of radius R subtends 60\u00b0 at the centre and carries current I. The field at the centre is:",
+      diagram:DIAGRAMS.arc(60,'60\u00b0 arc'),
+      opts:["\u03bc\u2080I/(6R)","\u03bc\u2080I/(12R)","\u03bc\u2080I/(24R)","\u03bc\u2080I/(3R)"], ans:1,
+      sol:"60\u00b0 = \u03c0/3 rad, which is 1/6 of a full circle.<br>B = (1/6) \u00d7 \u03bc\u2080I/(2R) = <strong>\u03bc\u2080I/(12R)</strong>. (Check with the formula: \u03bc\u2080I(\u03c0/3)/(4\u03c0R) = \u03bc\u2080I/(12R). \u2713)" },
+    { q:"A straight wire passes through the centre O of a circular loop, along a diameter. The contribution of that straight portion to the field AT O is:",
+      diagram:DIAGRAMS.arc(360,'straight wire through O'),
+      opts:["\u03bc\u2080I/(2\u03c0R)","\u03bc\u2080I/(4R)","zero","\u03bc\u2080I/(2R)"], ans:2,
+      sol:"Biot\u2013Savart: dB \u221d d\u2113 \u00d7 r\u0302. For any point lying ON the wire's own line, d\u2113 and r\u0302 are parallel (or antiparallel), so the cross product is <strong>zero</strong>.<br>This is a huge time-saver: any straight section pointing directly at the field point contributes <strong>nothing</strong>." },
+    { q:"A circular loop of radius r is split at A and C into two semicircular arcs: ABC of resistance 5 \u03a9 and ADC of resistance 10 \u03a9. Current I enters at A and leaves at C. The field at the centre O is:",
+      diagram:DIAGRAMS.splitLoop(),
+      opts:["\u03bc\u2080I/(6r), \u2297","\u03bc\u2080I/(12r), \u2297","\u03bc\u2080I/(12r), \u2299","\u03bc\u2080I/(6r), \u2299"], ans:1,
+      sol:"The arcs are in PARALLEL, so they share the same voltage: I\u2081(5) = I\u2082(10) \u21d2 I\u2081 = 2I\u2082. With I\u2081 + I\u2082 = I: I\u2081 = 2I/3, I\u2082 = I/3.<br>Each is a semicircle, so B = \u03bc\u2080I_arc/(4r):<br>B\u2081 = \u03bc\u2080(2I/3)/(4r) = \u03bc\u2080I/(6r); B\u2082 = \u03bc\u2080(I/3)/(4r) = \u03bc\u2080I/(12r).<br>The two currents go OPPOSITE ways round the loop, so the fields subtract:<br>B = \u03bc\u2080I/(6r) \u2212 \u03bc\u2080I/(12r) = <strong>\u03bc\u2080I/(12r)</strong>, into the page (the stronger 5 \u03a9 arc wins)." }
+  ]},
+
+  { name:"6. Amp\u00e8re's Law \u2014 Thick Wires", questions:[
+    { q:"A SOLID cylindrical wire of radius R carries current I spread uniformly over its cross-section. The ratio of the magnetic fields at distances R/2 and 2R from the axis is:",
+      diagram:DIAGRAMS.cylinder('solid wire, radius R'),
+      opts:["1 : 1","1 : 2","2 : 1","1 : 4"], ans:0,
+      sol:"Inside (r < R): B = \u03bc\u2080Ir/(2\u03c0R\u00b2), so B \u221d r.<br>At r = R/2: B = \u03bc\u2080I(R/2)/(2\u03c0R\u00b2) = \u03bc\u2080I/(4\u03c0R).<br>Outside (r > R): B = \u03bc\u2080I/(2\u03c0r).<br>At r = 2R: B = \u03bc\u2080I/(4\u03c0R).<br>They are <strong>equal \u2192 1 : 1</strong>. A neat coincidence worth remembering: half-way in matches twice the radius out." },
+    { q:"A solid cylindrical wire of radius R carries current I. The field at a distance 2R from the axis is 5 \u03bcT. The field at a point R/3 INSIDE the surface is:",
+      diagram:DIAGRAMS.cylinder('solid wire, radius R'),
+      opts:["10/3 \u03bcT","20/3 \u03bcT","5/3 \u03bcT","40/3 \u03bcT"], ans:1,
+      sol:"Step 1 \u2014 find the surface field. Outside, B \u221d 1/r, so going from 2R to R doubles it: B(surface) = 2 \u00d7 5 = 10 \u03bcT.<br>Step 2 \u2014 'R/3 inside the surface' means r = R \u2212 R/3 = <strong>2R/3</strong>.<br>Step 3 \u2014 inside, B \u221d r: B = 10 \u00d7 (2R/3)/R = <strong>20/3 \u03bcT</strong>." },
+    { q:"A HOLLOW cylindrical wire has inner radius R and outer radius 2R, carrying current I. The field at a distance 3R/2 from the axis is:",
+      diagram:DIAGRAMS.hollow(),
+      opts:["5\u03bc\u2080I/(18\u03c0R)","\u03bc\u2080I/(36\u03c0R)","5\u03bc\u2080I/(36\u03c0R)","5\u03bc\u2080I/(9\u03c0R)"], ans:2,
+      sol:"The point r = 3R/2 lies INSIDE the conducting material, so only the current within radius 3R/2 is enclosed.<br>Enclosed fraction = area(R \u2192 3R/2) / area(R \u2192 2R) = ((3R/2)\u00b2 \u2212 R\u00b2)/((2R)\u00b2 \u2212 R\u00b2) = (5/4)/3 = 5/12.<br>I_enc = 5I/12. Amp\u00e8re: B = \u03bc\u2080I_enc/(2\u03c0r) = \u03bc\u2080(5I/12)/(2\u03c0 \u00b7 3R/2) = <strong>5\u03bc\u2080I/(36\u03c0R)</strong>." },
+    { q:"A solid wire of radius 2 mm carries a uniformly distributed current. The field at 2 mm from the axis is B. The field at 1 mm from the axis is:",
+      diagram:DIAGRAMS.cylinder('solid wire, radius 2 mm'),
+      opts:["B","4B","2B","B/2"], ans:3,
+      sol:"r = 2 mm is exactly the SURFACE (r = R). r = 1 mm is inside, where B \u221d r.<br>B(1 mm)/B(2 mm) = 1/2 \u21d2 field = <strong>B/2</strong>. Inside a thick wire the field grows linearly from zero at the axis to its maximum at the surface." },
+    { q:"A long straight wire of radius 3.0 mm carries a uniform current density J = 100 A/m\u00b2. The fields at 2.0 mm and at 4.0 mm from the axis are:",
+      diagram:DIAGRAMS.cylinder('solid wire, radius 3 mm'),
+      opts:["2\u03c0\u00d710\u207b\u2078 T, (9\u03c0/2)\u00d710\u207b\u2078 T","4\u03c0\u00d710\u207b\u2078 T, (\u03c0/2)\u00d710\u207b\u2078 T","4\u03c0\u00d710\u207b\u2078 T, (9\u03c0/2)\u00d710\u207b\u2078 T","\u03c0\u00d710\u207b\u2074 T, (9\u03c0/2)\u00d710\u207b\u2078 T"], ans:2,
+      sol:"(a) At r = 2 mm (INSIDE, since R = 3 mm). Using I_enc = J\u03c0r\u00b2: B = \u03bc\u2080Jr/2 = (4\u03c0\u00d710\u207b\u2077 \u00d7 100 \u00d7 2\u00d710\u207b\u00b3)/2 = <strong>4\u03c0 \u00d7 10\u207b\u2078 T</strong>.<br>(b) At r = 4 mm (OUTSIDE). Total I = J\u03c0R\u00b2 = 100\u03c0(3\u00d710\u207b\u00b3)\u00b2 = 9\u03c0\u00d710\u207b\u2074 A.<br>B = \u03bc\u2080I/(2\u03c0r) = (4\u03c0\u00d710\u207b\u2077 \u00d7 9\u03c0\u00d710\u207b\u2074)/(2\u03c0 \u00d7 4\u00d710\u207b\u00b3) = <strong>(9\u03c0/2) \u00d7 10\u207b\u2078 T</strong>." }
+  ]}
+
+];
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'dpp_magnetic_effect_foundation_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length && parsed.every((a,i)=>Array.isArray(a)&&a.length===TOPICS[i].questions.length)) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+
+function saveAnswers(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+}
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    const total=topic.questions.length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===total&&done===total?' all-done':'');
+    const dots=Array(total).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${total} attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.reduce((s,t)=>s+t.questions.length,0)} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=curTopic.questions.length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of ${curTopic.questions.length}`;
+  qText.textContent=q.q;
+  // Diagram
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===curTopic.questions.length-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  const last=curTopic.questions.length-1;
+  if(newQ<0||newQ>last){if(newQ>last) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// Close modal on backdrop click
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
