@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST · Minor Test 03 → 04 Momentum Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --paper:#fffdf7; --cream:#f6f0e2; --cream2:#efe7d4;
+  --teal:#0e6b6b; --teal-d:#0a5050; --teal-l:#3d9a97;
+  --amber:#d98a1f; --amber-l:#e8b662;
+  --ink:#21302e; --muted:#6f807c; --line:#e3d9c4;
+  --up:#2f9e6b; --up-bg:#e4f3ea; --down:#cf4a5b; --down-bg:#fbe7e9; --flat:#8a9490;
+  --shadow:0 1px 2px rgba(33,48,46,.05),0 6px 22px rgba(33,48,46,.06);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:
+    radial-gradient(900px 500px at 88% -8%,rgba(14,107,107,.07),transparent 60%),
+    var(--cream);
+  color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.mono{font-family:"DM Mono",monospace;font-feature-settings:"tnum"}
+h1,h2,h3,.disp{font-family:"Space Grotesk",sans-serif;letter-spacing:-.01em}
+
+/* header */
+header{padding:40px 0 26px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--teal),var(--teal-d));
+  display:grid;place-items:center;color:#fff;font-family:"Space Grotesk";font-weight:700;font-size:17px;box-shadow:var(--shadow)}
+.brand b{font-family:"Space Grotesk";font-weight:700;letter-spacing:.02em;font-size:15px}
+.brand span{color:var(--muted);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase}
+.eyebrow{color:var(--amber);font-family:"DM Mono";font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
+h1{font-size:clamp(28px,4.6vw,46px);line-height:1.04;margin:0 0 14px;font-weight:600}
+h1 em{font-style:normal;color:var(--teal)}
+.lede{max-width:680px;color:#42524f;font-size:16.5px}
+.testline{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:7px 14px;font-size:13px;box-shadow:var(--shadow)}
+.chip b{font-family:"DM Mono";color:var(--teal)}
+.dot{width:8px;height:8px;border-radius:50%}
+
+/* section */
+section{padding:38px 0}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-num{font-family:"DM Mono";color:var(--amber);font-size:13px;padding-top:4px}
+h2{font-size:clamp(21px,2.7vw,28px);margin:0;font-weight:600}
+.sec-sub{color:var(--muted);margin:6px 0 24px;max-width:720px;font-size:15px}
+
+/* kpi */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.kpi{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--teal)}
+.kpi.good::before{background:var(--up)}.kpi.warn::before{background:var(--amber)}.kpi.bad::before{background:var(--down)}
+.kpi .k-lab{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.kpi .k-val{font-family:"Space Grotesk";font-weight:700;font-size:34px;margin:8px 0 2px;line-height:1}
+.kpi .k-note{font-size:12.5px;color:var(--muted)}
+.k-val .u{font-size:15px;color:var(--muted);font-weight:500}
+
+/* subject bars */
+.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:26px;align-items:start}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.card h3{margin:0 0 4px;font-size:17px;font-weight:600}
+.card .csub{color:var(--muted);font-size:13px;margin-bottom:16px}
+.subj-read li{margin-bottom:13px;list-style:none;display:flex;gap:12px;align-items:flex-start}
+.subj-read ul{padding:0;margin:0}
+.badge{font-family:"DM Mono";font-size:12px;font-weight:500;padding:3px 8px;border-radius:7px;white-space:nowrap;min-width:52px;text-align:center}
+.b-up{background:var(--up-bg);color:var(--up)} .b-down{background:var(--down-bg);color:var(--down)} .b-flat{background:#eef0ec;color:var(--flat)}
+.subj-read .st{font-weight:600;font-size:14.5px}
+.subj-read .sd{color:var(--muted);font-size:13px}
+
+/* quadrant note */
+.qnote{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.qn{border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:12.5px}
+.qn b{font-family:"Space Grotesk";display:block;font-size:13px;margin-bottom:2px}
+
+/* spotlight columns */
+.spot{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.col{background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.col-h{padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.col-h .tag{font-family:"DM Mono";font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.col.star .col-h{background:linear-gradient(180deg,rgba(217,138,31,.09),transparent)}
+.col.rise .col-h{background:linear-gradient(180deg,rgba(47,158,107,.10),transparent)}
+.col.risk .col-h{background:linear-gradient(180deg,rgba(207,74,91,.09),transparent)}
+.col.star .tag{color:var(--amber)} .col.rise .tag{color:var(--up)} .col.risk .tag{color:var(--down)}
+.col-h h3{font-family:"Space Grotesk";margin:6px 0 4px;font-size:19px;font-weight:600}
+.col-h p{margin:0;font-size:12.5px;color:var(--muted)}
+.plist{padding:8px;overflow-y:auto;flex:1}
+.prow{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px}
+.prow:hover{background:var(--cream)}
+.pv{display:flex;flex-direction:column;min-width:0;flex:1}
+.pv .pn{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv .ps{font-size:11.5px;color:var(--muted);font-family:"DM Mono"}
+.pscore{font-family:"DM Mono";font-weight:500;text-align:right}
+.pscore .big{font-size:15px}
+.arw{font-size:11px}
+
+/* table */
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;align-items:center}
+.tabs{display:flex;flex-wrap:wrap;gap:7px}
+.tab{border:1px solid var(--line);background:var(--paper);color:var(--ink);font-family:"DM Sans";font-size:13px;
+  padding:7px 13px;border-radius:999px;cursor:pointer;transition:.15s;font-weight:500}
+.tab:hover{border-color:var(--teal-l)}
+.tab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.search{margin-left:auto;position:relative}
+.search input{font-family:"DM Sans";font-size:13.5px;padding:8px 12px 8px 32px;border:1px solid var(--line);
+  border-radius:999px;background:var(--paper);width:210px;color:var(--ink)}
+.search input:focus{outline:2px solid var(--teal-l);outline-offset:0}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.5}
+.tbl-wrap{background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+thead th{font-family:"DM Sans";font-weight:600;text-align:right;padding:12px 12px;color:var(--muted);
+  font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--line);cursor:pointer;user-select:none;white-space:nowrap}
+thead th.l{text-align:left}
+thead th:hover{color:var(--teal)}
+th .car{opacity:.4;font-size:9px}
+tbody td{padding:10px 12px;text-align:right;border-bottom:1px solid #f0ead9;font-family:"DM Mono";font-size:13px}
+tbody td.l{text-align:left;font-family:"DM Sans"}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--cream)}
+.nm{font-weight:600;font-family:"DM Sans"}
+.rk{color:var(--muted);font-size:11px;font-family:"DM Mono"}
+.dcell{font-weight:500;padding:2px 7px;border-radius:6px;display:inline-block;min-width:42px}
+.pill{display:inline-block;font-size:10.5px;font-family:"DM Mono";padding:2px 7px;border-radius:6px;letter-spacing:.03em}
+.pill.star{background:rgba(217,138,31,.14);color:var(--amber)}
+.pill.rise{background:var(--up-bg);color:var(--up)}
+.pill.risk{background:var(--down-bg);color:var(--down)}
+.pill.hold{background:#eef0ec;color:var(--flat)}
+
+/* absent strip */
+.abs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.abs{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;padding:11px 13px}
+.abs .an{font-weight:600;font-size:13.5px}
+.abs .as{font-size:11.5px;color:var(--muted);font-family:"DM Mono"}
+
+footer{padding:34px 0 50px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;margin-top:20px}
+.foot-note{max-width:760px}
+
+@media(max-width:880px){
+  .grid2{grid-template-columns:1fr} .spot{grid-template-columns:1fr}
+  .search{margin-left:0;width:100%} .search input{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">
+    <div class="mark">P</div>
+    <div>
+      <b>PADIPUCAST</b> &nbsp;·&nbsp; <span>Allen · Centre 6251 · Madurai</span>
+    </div>
+  </div>
+  <div class="eyebrow">NEET Enthusiast · Phase 1&2 · Cohort Momentum</div>
+  <h1>From Test 03 to Test 04 —<br>who's <em>pulling ahead</em>, who's <em>climbing</em>,<br>and who needs a hand.</h1>
+  <p class="lede">A student-by-student comparison of Minor Test 03 and Minor Test 04, matched by form number. The story isn't in the class average — it's in the direction each student is moving.</p>
+  <div class="testline">
+    <span class="chip"><span class="dot" style="background:var(--muted)"></span> Test 03 · <b>17 Jun 2026</b></span>
+    <span class="chip"><span class="dot" style="background:var(--teal)"></span> Test 04 · <b>08 Jul 2026</b></span>
+    <span class="chip" id="chip-matched"></span>
+    <span class="chip" id="chip-split"></span>
+  </div>
+</header>
+
+<!-- 01 KPIs -->
+<section id="pulse">
+  <div class="sec-head"><span class="sec-num">01</span><h2>The pulse</h2></div>
+  <p class="sec-sub">Averages below use only the <span class="mono">54</span> students who sat <em>both</em> tests, so the change is a like-for-like read on the same room — not an artefact of who showed up.</p>
+  <div class="kpis" id="kpis"></div>
+</section>
+
+<!-- 02 subject picture -->
+<section id="subjects">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Where the marks moved</h2></div>
+  <p class="sec-sub">The overall dip is almost entirely one subject. Physics and Zoology actually strengthened — effort is up; the Botany paper simply bit harder this cycle.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Subject averages · T03 vs T04</h3>
+      <div class="csub">Mean marks across the same 54 students, out of 180 each</div>
+      <div style="height:290px"><canvas id="subjChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Read of the shift</h3>
+      <div class="csub">Change in cohort mean, per subject</div>
+      <ul class="subj-read" id="subjRead"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- 03 quadrant -->
+<section id="quadrant">
+  <div class="sec-head"><span class="sec-num">03</span><h2>The momentum map</h2></div>
+  <p class="sec-sub">Every student placed by where they stand now (Test 04 total, across) against how far they moved (change from Test 03, up). Top-right is the dream: already high and still climbing. Bottom-left needs attention. Hover any point for the name.</p>
+  <div class="card">
+    <div style="height:420px"><canvas id="quad"></canvas></div>
+    <div class="qnote">
+      <div class="qn"><b style="color:var(--amber)">↗ Top-right · Stars rising</b>High score and improving — protect and stretch them.</div>
+      <div class="qn"><b style="color:var(--up)">↖ Top-left · Building momentum</b>Lower base but climbing fast — the effort is landing.</div>
+      <div class="qn"><b style="color:var(--muted)">↘ Bottom-right · Holding high</b>Strong but slipped — a nudge stops the drift.</div>
+      <div class="qn"><b style="color:var(--down)">↙ Bottom-left · Needs support</b>Low and falling — first priority for intervention.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 spotlight -->
+<section id="spotlight">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Three lists to act on</h2></div>
+  <p class="sec-sub">Curated from the momentum map: your projected toppers, your hardest climbers, and the students whose scores are asking for help.</p>
+  <div class="spot">
+    <div class="col star">
+      <div class="col-h"><div class="tag">★ Projected toppers</div><h3>On track for a top rank</h3><p>Test 04 total ≥ 480 / 720 (≥ 66%)</p></div>
+      <div class="plist" id="listStar"></div>
+    </div>
+    <div class="col rise">
+      <div class="col-h"><div class="tag">▲ Building momentum</div><h3>Working the hardest</h3><p>Gained ≥ 30 marks since Test 03</p></div>
+      <div class="plist" id="listRise"></div>
+    </div>
+    <div class="col risk">
+      <div class="col-h"><div class="tag">▼ Needs improvement</div><h3>Regression &amp; low-band</h3><p>Sharp drop from a strong base, or stuck below 285</p></div>
+      <div class="plist" id="listRisk"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 full table -->
+<section id="all">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Every student, both tests</h2></div>
+  <p class="sec-sub">Filter, search, and sort. Δ columns show Test 04 minus Test 03 for each subject and the total. Click a heading to sort.</p>
+  <div class="controls">
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-f="all">All</button>
+      <button class="tab" data-f="improved">Improved</button>
+      <button class="tab" data-f="declined">Declined</button>
+      <button class="tab" data-f="star">Toppers</button>
+      <button class="tab" data-f="rise">Momentum</button>
+      <button class="tab" data-f="risk">At-risk</button>
+    </div>
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" type="text" placeholder="Search name…" aria-label="Search students">
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <table id="tbl">
+      <thead><tr>
+        <th class="l" data-s="name">Student <span class="car">▾</span></th>
+        <th data-s="t3">T03</th><th data-s="t4">T04</th>
+        <th data-s="d_total">Δ Total</th>
+        <th data-s="d_phy">Δ Phy</th><th data-s="d_che">Δ Che</th>
+        <th data-s="d_bot">Δ Bot</th><th data-s="d_zoo">Δ Zoo</th>
+        <th data-s="d_rank">Δ Rank</th>
+        <th class="l" data-s="tier">Signal</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 06 absent -->
+<section id="absent">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Off the radar this round</h2></div>
+  <p class="sec-sub">Sat Test 03 but missing from Test 04. The top two were solid performers — worth a quick check-in before a pattern sets in.</p>
+  <div class="abs-grid" id="absGrid"></div>
+</section>
+
+<footer>
+  <div class="foot-note">
+    <b class="disp">How the signals are drawn.</b><br>
+    <b>Projected topper</b> = Test 04 total at or above 480/720. <b>Building momentum</b> = a gain of 30+ marks over Test 03. <b>Needs improvement</b> = a fall of 45+ marks from a Test-03 base of 380+, or a Test-04 total under 285 without a strong upward move. A student can carry more than one signal — e.g. A Anbalagan is both a topper and the second-biggest climber. Averages compare the 54 students common to both papers; ranks are centre ranks. Provisional results, Centre 6251.
+  </div>
+</footer>
+
+</div>
+
+<script>
+const D = {"students": [{"form": "2460283745", "name": "ISHAAN RATHAN", "t3": {"PHY": 121, "CHE": 149, "BOT": 167, "ZOO": 175, "TOTAL": 612, "PCT": 85.0, "RANK": 7}, "t4": {"PHY": 117, "CHE": 109, "BOT": 154, "ZOO": 180, "TOTAL": 560, "PCT": 77.78, "RANK": 18}, "d_total": -52, "d_phy": -4, "d_che": -40, "d_bot": -13, "d_zoo": 5, "d_rank": -11, "status": "matched"}, {"form": "2460725291", "name": "B SABURUN NUFAILA", "t3": {"PHY": 3, "CHE": 56, "BOT": 146, "ZOO": 122, "TOTAL": 327, "PCT": 45.42, "RANK": 296}, "t4": {"PHY": 26, "CHE": 54, "BOT": 138, "ZOO": 137, "TOTAL": 355, "PCT": 49.31, "RANK": 177}, "d_total": 28, "d_phy": 23, "d_che": -2, "d_bot": -8, "d_zoo": 15, "d_rank": 119, "status": "matched"}, {"form": "2460303779", "name": "THANUSSRI S", "t3": {"PHY": 53, "CHE": 38, "BOT": 122, "ZOO": 144, "TOTAL": 357, "PCT": 49.58, "RANK": 225}, "t4": {"PHY": 37, "CHE": 46, "BOT": 150, "ZOO": 166, "TOTAL": 399, "PCT": 55.42, "RANK": 120}, "d_total": 42, "d_phy": -16, "d_che": 8, "d_bot": 28, "d_zoo": 22, "d_rank": 105, "status": "matched"}, {"form": "2460317858", "name": "Akilesh A", "t3": {"PHY": 68, "CHE": 52, "BOT": 165, "ZOO": 160, "TOTAL": 445, "PCT": 61.81, "RANK": 90}, "t4": {"PHY": 84, "CHE": 46, "BOT": 156, "ZOO": 167, "TOTAL": 453, "PCT": 62.92, "RANK": 67}, "d_total": 8, "d_phy": 16, "d_che": -6, "d_bot": -9, "d_zoo": 7, "d_rank": 23, "status": "matched"}, {"form": "2460162775", "name": "PRANAV C S", "t3": {"PHY": 7, "CHE": 31, "BOT": 140, "ZOO": 150, "TOTAL": 328, "PCT": 45.56, "RANK": 294}, "t4": {"PHY": 7, "CHE": 67, "BOT": 104, "ZOO": 113, "TOTAL": 291, "PCT": 40.42, "RANK": 277}, "d_total": -37, "d_phy": 0, "d_che": 36, "d_bot": -36, "d_zoo": -37, "d_rank": 17, "status": "matched"}, {"form": "2460124336", "name": "SHARON SRUTHI J", "t3": {"PHY": 39, "CHE": 104, "BOT": 160, "ZOO": 165, "TOTAL": 468, "PCT": 65.0, "RANK": 72}, "t4": {"PHY": 66, "CHE": 68, "BOT": 155, "ZOO": 165, "TOTAL": 454, "PCT": 63.06, "RANK": 66}, "d_total": -14, "d_phy": 27, "d_che": -36, "d_bot": -5, "d_zoo": 0, "d_rank": 6, "status": "matched"}, {"form": "2460685091", "name": "HARINI SHREE M", "t3": {"PHY": 15, "CHE": 54, "BOT": 135, "ZOO": 127, "TOTAL": 331, "PCT": 45.97, "RANK": 286}, "t4": {"PHY": 9, "CHE": 75, "BOT": 158, "ZOO": 150, "TOTAL": 392, "PCT": 54.44, "RANK": 129}, "d_total": 61, "d_phy": -6, "d_che": 21, "d_bot": 23, "d_zoo": 23, "d_rank": 157, "status": "matched"}, {"form": "2460295340", "name": "SAHANA SRI J", "t3": {"PHY": 25, "CHE": 79, "BOT": 119, "ZOO": 160, "TOTAL": 383, "PCT": 53.19, "RANK": 180}, "t4": {"PHY": 19, "CHE": 66, "BOT": 128, "ZOO": 165, "TOTAL": 378, "PCT": 52.5, "RANK": 150}, "d_total": -5, "d_phy": -6, "d_che": -13, "d_bot": 9, "d_zoo": 5, "d_rank": 30, "status": "matched"}, {"form": "2460341784", "name": "PRANIKSHA S V", "t3": {"PHY": 6, "CHE": 52, "BOT": 136, "ZOO": 152, "TOTAL": 346, "PCT": 48.06, "RANK": 252}, "t4": {"PHY": 0, "CHE": 53, "BOT": 125, "ZOO": 168, "TOTAL": 346, "PCT": 48.06, "RANK": 190}, "d_total": 0, "d_phy": -6, "d_che": 1, "d_bot": -11, "d_zoo": 16, "d_rank": 62, "status": "matched"}, {"form": "2460905182", "name": "HARSHINI S", "t3": {"PHY": -11, "CHE": 15, "BOT": 55, "ZOO": 66, "TOTAL": 125, "PCT": 17.36, "RANK": 511}, "t4": {"PHY": 2, "CHE": -15, "BOT": 51, "ZOO": 73, "TOTAL": 111, "PCT": 15.42, "RANK": 442}, "d_total": -14, "d_phy": 13, "d_che": -30, "d_bot": -4, "d_zoo": 7, "d_rank": 69, "status": "matched"}, {"form": "2460334707", "name": "NIRUPAMA S", "t3": {"PHY": 18, "CHE": 102, "BOT": 136, "ZOO": 140, "TOTAL": 396, "PCT": 55.0, "RANK": 153}, "t4": {"PHY": 52, "CHE": 79, "BOT": 147, "ZOO": 170, "TOTAL": 448, "PCT": 62.22, "RANK": 72}, "d_total": 52, "d_phy": 34, "d_che": -23, "d_bot": 11, "d_zoo": 30, "d_rank": 81, "status": "matched"}, {"form": "2460566774", "name": "R RAMA MOORTHI", "t3": {"PHY": 54, "CHE": 49, "BOT": 114, "ZOO": 129, "TOTAL": 346, "PCT": 48.06, "RANK": 252}, "t4": {"PHY": 62, "CHE": 39, "BOT": 127, "ZOO": 138, "TOTAL": 366, "PCT": 50.83, "RANK": 164}, "d_total": 20, "d_phy": 8, "d_che": -10, "d_bot": 13, "d_zoo": 9, "d_rank": 88, "status": "matched"}, {"form": "2460867067", "name": "NANDHA KUMAR N", "t3": {"PHY": 61, "CHE": 42, "BOT": 111, "ZOO": 138, "TOTAL": 352, "PCT": 48.89, "RANK": 236}, "t4": {"PHY": 65, "CHE": 45, "BOT": 146, "ZOO": 153, "TOTAL": 409, "PCT": 56.81, "RANK": 105}, "d_total": 57, "d_phy": 4, "d_che": 3, "d_bot": 35, "d_zoo": 15, "d_rank": 131, "status": "matched"}, {"form": "2460694323", "name": "SHAHITHYA SREE H", "t3": {"PHY": 30, "CHE": 65, "BOT": 142, "ZOO": 161, "TOTAL": 398, "PCT": 55.28, "RANK": 150}, "t4": {"PHY": 36, "CHE": 45, "BOT": 133, "ZOO": 170, "TOTAL": 384, "PCT": 53.33, "RANK": 142}, "d_total": -14, "d_phy": 6, "d_che": -20, "d_bot": -9, "d_zoo": 9, "d_rank": 8, "status": "matched"}, {"form": "2460633118", "name": "M MEGA HARSHA VARDHINI", "t3": {"PHY": 6, "CHE": -7, "BOT": 104, "ZOO": 136, "TOTAL": 239, "PCT": 33.19, "RANK": 429}, "t4": {"PHY": 26, "CHE": 15, "BOT": 113, "ZOO": 130, "TOTAL": 284, "PCT": 39.44, "RANK": 282}, "d_total": 45, "d_phy": 20, "d_che": 22, "d_bot": 9, "d_zoo": -6, "d_rank": 147, "status": "matched"}, {"form": "2460232984", "name": "R M DHANYA", "t3": {"PHY": 45, "CHE": 98, "BOT": 161, "ZOO": 129, "TOTAL": 433, "PCT": 60.14, "RANK": 103}, "t4": {"PHY": 51, "CHE": 55, "BOT": 143, "ZOO": 142, "TOTAL": 391, "PCT": 54.31, "RANK": 130}, "d_total": -42, "d_phy": 6, "d_che": -43, "d_bot": -18, "d_zoo": 13, "d_rank": -27, "status": "matched"}, {"form": "2460693033", "name": "SARAVANA KUMAR", "t3": {"PHY": 136, "CHE": 157, "BOT": 167, "ZOO": 166, "TOTAL": 626, "PCT": 86.94, "RANK": 4}, "t4": {"PHY": 152, "CHE": 140, "BOT": 175, "ZOO": 175, "TOTAL": 642, "PCT": 89.17, "RANK": 3}, "d_total": 16, "d_phy": 16, "d_che": -17, "d_bot": 8, "d_zoo": 9, "d_rank": 1, "status": "matched"}, {"form": "2460630351", "name": "KAMALESH", "t3": {"PHY": 135, "CHE": 165, "BOT": 155, "ZOO": 170, "TOTAL": 625, "PCT": 86.81, "RANK": 6}, "t4": {"PHY": 150, "CHE": 140, "BOT": 145, "ZOO": 172, "TOTAL": 607, "PCT": 84.31, "RANK": 4}, "d_total": -18, "d_phy": 15, "d_che": -25, "d_bot": -10, "d_zoo": 2, "d_rank": 2, "status": "matched"}, {"form": "2460357825", "name": "S S DHURGESSWAR", "t3": {"PHY": 11, "CHE": 24, "BOT": 151, "ZOO": 155, "TOTAL": 341, "PCT": 47.36, "RANK": 265}, "t4": {"PHY": 4, "CHE": 24, "BOT": 82, "ZOO": 97, "TOTAL": 207, "PCT": 28.75, "RANK": 371}, "d_total": -134, "d_phy": -7, "d_che": 0, "d_bot": -69, "d_zoo": -58, "d_rank": -106, "status": "matched"}, {"form": "2460294851", "name": "VIJAY PIRAVIN S", "t3": {"PHY": 125, "CHE": 75, "BOT": 126, "ZOO": 132, "TOTAL": 458, "PCT": 63.61, "RANK": 78}, "t4": {"PHY": 53, "CHE": 29, "BOT": 102, "ZOO": 100, "TOTAL": 284, "PCT": 39.44, "RANK": 282}, "d_total": -174, "d_phy": -72, "d_che": -46, "d_bot": -24, "d_zoo": -32, "d_rank": -204, "status": "matched"}, {"form": "2460065799", "name": "RA NITESH KUMAR", "t3": {"PHY": 3, "CHE": 58, "BOT": 122, "ZOO": 149, "TOTAL": 332, "PCT": 46.11, "RANK": 283}, "t4": {"PHY": 56, "CHE": 60, "BOT": 107, "ZOO": 153, "TOTAL": 376, "PCT": 52.22, "RANK": 153}, "d_total": 44, "d_phy": 53, "d_che": 2, "d_bot": -15, "d_zoo": 4, "d_rank": 130, "status": "matched"}, {"form": "2460850043", "name": "kapil m", "t3": {"PHY": 60, "CHE": 35, "BOT": 134, "ZOO": 114, "TOTAL": 343, "PCT": 47.64, "RANK": 259}, "t4": {"PHY": 48, "CHE": 83, "BOT": 99, "ZOO": 135, "TOTAL": 365, "PCT": 50.69, "RANK": 165}, "d_total": 22, "d_phy": -12, "d_che": 48, "d_bot": -35, "d_zoo": 21, "d_rank": 94, "status": "matched"}, {"form": "2460199346", "name": "AZEEMA HAMZA A", "t3": {"PHY": 6, "CHE": 23, "BOT": 149, "ZOO": 141, "TOTAL": 319, "PCT": 44.31, "RANK": 309}, "t4": {"PHY": 32, "CHE": 44, "BOT": 122, "ZOO": 138, "TOTAL": 336, "PCT": 46.67, "RANK": 208}, "d_total": 17, "d_phy": 26, "d_che": 21, "d_bot": -27, "d_zoo": -3, "d_rank": 101, "status": "matched"}, {"form": "2460317978", "name": "LAKSHANYAA D", "t3": {"PHY": 54, "CHE": 115, "BOT": 125, "ZOO": 135, "TOTAL": 429, "PCT": 59.58, "RANK": 104}, "t4": {"PHY": 24, "CHE": 68, "BOT": 110, "ZOO": 150, "TOTAL": 352, "PCT": 48.89, "RANK": 181}, "d_total": -77, "d_phy": -30, "d_che": -47, "d_bot": -15, "d_zoo": 15, "d_rank": -77, "status": "matched"}, {"form": "2460062696", "name": "NELOFER RILVANA K", "t3": {"PHY": 52, "CHE": 45, "BOT": 141, "ZOO": 127, "TOTAL": 365, "PCT": 50.69, "RANK": 208}, "t4": {"PHY": 59, "CHE": 87, "BOT": 138, "ZOO": 115, "TOTAL": 399, "PCT": 55.42, "RANK": 120}, "d_total": 34, "d_phy": 7, "d_che": 42, "d_bot": -3, "d_zoo": -12, "d_rank": 88, "status": "matched"}, {"form": "2460684501", "name": "GURUPRAKASH", "t3": {"PHY": 4, "CHE": 50, "BOT": 80, "ZOO": 60, "TOTAL": 194, "PCT": 26.94, "RANK": 467}, "t4": {"PHY": 11, "CHE": 22, "BOT": 76, "ZOO": 119, "TOTAL": 228, "PCT": 31.67, "RANK": 348}, "d_total": 34, "d_phy": 7, "d_che": -28, "d_bot": -4, "d_zoo": 59, "d_rank": 119, "status": "matched"}, {"form": "2460680911", "name": "SANJEEV T P", "t3": {"PHY": 75, "CHE": 118, "BOT": 157, "ZOO": 130, "TOTAL": 480, "PCT": 66.67, "RANK": 57}, "t4": {"PHY": 91, "CHE": 73, "BOT": 114, "ZOO": 152, "TOTAL": 430, "PCT": 59.72, "RANK": 86}, "d_total": -50, "d_phy": 16, "d_che": -45, "d_bot": -43, "d_zoo": 22, "d_rank": -29, "status": "matched"}, {"form": "2460115568", "name": "M PRATHAKSHINI", "t3": {"PHY": 3, "CHE": 71, "BOT": 149, "ZOO": 165, "TOTAL": 388, "PCT": 53.89, "RANK": 165}, "t4": {"PHY": 40, "CHE": 41, "BOT": 145, "ZOO": 154, "TOTAL": 380, "PCT": 52.78, "RANK": 148}, "d_total": -8, "d_phy": 37, "d_che": -30, "d_bot": -4, "d_zoo": -11, "d_rank": 17, "status": "matched"}, {"form": "2460131760", "name": "VIGNESH MADHAVAN D R", "t3": {"PHY": 44, "CHE": 66, "BOT": 156, "ZOO": 175, "TOTAL": 441, "PCT": 61.25, "RANK": 93}, "t4": {"PHY": 39, "CHE": 49, "BOT": 103, "ZOO": 154, "TOTAL": 345, "PCT": 47.92, "RANK": 191}, "d_total": -96, "d_phy": -5, "d_che": -17, "d_bot": -53, "d_zoo": -21, "d_rank": -98, "status": "matched"}, {"form": "2460167285", "name": "IHTHISHA AFRIN H", "t3": {"PHY": -8, "CHE": 32, "BOT": 105, "ZOO": 145, "TOTAL": 274, "PCT": 38.06, "RANK": 387}, "t4": {"PHY": 25, "CHE": -1, "BOT": 116, "ZOO": 130, "TOTAL": 270, "PCT": 37.5, "RANK": 301}, "d_total": -4, "d_phy": 33, "d_che": -33, "d_bot": 11, "d_zoo": -15, "d_rank": 86, "status": "matched"}, {"form": "2460403457", "name": "JHENYA GOBINATH", "t3": {"PHY": 42, "CHE": 11, "BOT": 120, "ZOO": 120, "TOTAL": 293, "PCT": 40.69, "RANK": 365}, "t4": {"PHY": 36, "CHE": 28, "BOT": 61, "ZOO": 95, "TOTAL": 220, "PCT": 30.56, "RANK": 364}, "d_total": -73, "d_phy": -6, "d_che": 17, "d_bot": -59, "d_zoo": -25, "d_rank": 1, "status": "matched"}, {"form": "2460542384", "name": "S NHAVIN KUMAR", "t3": {"PHY": 44, "CHE": 82, "BOT": 146, "ZOO": 155, "TOTAL": 427, "PCT": 59.31, "RANK": 111}, "t4": {"PHY": 87, "CHE": 83, "BOT": 114, "ZOO": 156, "TOTAL": 440, "PCT": 61.11, "RANK": 77}, "d_total": 13, "d_phy": 43, "d_che": 1, "d_bot": -32, "d_zoo": 1, "d_rank": 34, "status": "matched"}, {"form": "2460372245", "name": "karthick C", "t3": {"PHY": 0, "CHE": 0, "BOT": 129, "ZOO": 115, "TOTAL": 244, "PCT": 33.89, "RANK": 425}, "t4": {"PHY": 22, "CHE": 39, "BOT": 120, "ZOO": 170, "TOTAL": 351, "PCT": 48.75, "RANK": 182}, "d_total": 107, "d_phy": 22, "d_che": 39, "d_bot": -9, "d_zoo": 55, "d_rank": 243, "status": "matched"}, {"form": "2460867197", "name": "A ANBALAGAN", "t3": {"PHY": 29, "CHE": 64, "BOT": 145, "ZOO": 146, "TOTAL": 384, "PCT": 53.33, "RANK": 175}, "t4": {"PHY": 67, "CHE": 92, "BOT": 150, "ZOO": 175, "TOTAL": 484, "PCT": 67.22, "RANK": 44}, "d_total": 100, "d_phy": 38, "d_che": 28, "d_bot": 5, "d_zoo": 29, "d_rank": 131, "status": "matched"}, {"form": "2460787577", "name": "S VARSHANA", "t3": {"PHY": 15, "CHE": 48, "BOT": 123, "ZOO": 151, "TOTAL": 337, "PCT": 46.81, "RANK": 273}, "t4": {"PHY": 25, "CHE": 42, "BOT": 105, "ZOO": 123, "TOTAL": 295, "PCT": 40.97, "RANK": 269}, "d_total": -42, "d_phy": 10, "d_che": -6, "d_bot": -18, "d_zoo": -28, "d_rank": 4, "status": "matched"}, {"form": "2460326662", "name": "JAUNESHWAR R", "t3": {"PHY": 70, "CHE": 84, "BOT": 151, "ZOO": 165, "TOTAL": 470, "PCT": 65.28, "RANK": 67}, "t4": {"PHY": 62, "CHE": 103, "BOT": 148, "ZOO": 167, "TOTAL": 480, "PCT": 66.67, "RANK": 45}, "d_total": 10, "d_phy": -8, "d_che": 19, "d_bot": -3, "d_zoo": 2, "d_rank": 22, "status": "matched"}, {"form": "2460284347", "name": "KAVINKUMAR S", "t3": {"PHY": 134, "CHE": 103, "BOT": 160, "ZOO": 165, "TOTAL": 562, "PCT": 78.06, "RANK": 17}, "t4": {"PHY": 85, "CHE": 114, "BOT": 149, "ZOO": 170, "TOTAL": 518, "PCT": 71.94, "RANK": 30}, "d_total": -44, "d_phy": -49, "d_che": 11, "d_bot": -11, "d_zoo": 5, "d_rank": -13, "status": "matched"}, {"form": "2460072411", "name": "PRICY P", "t3": {"PHY": 29, "CHE": 34, "BOT": 152, "ZOO": 145, "TOTAL": 360, "PCT": 50.0, "RANK": 218}, "t4": {"PHY": 38, "CHE": 47, "BOT": 147, "ZOO": 153, "TOTAL": 385, "PCT": 53.47, "RANK": 140}, "d_total": 25, "d_phy": 9, "d_che": 13, "d_bot": -5, "d_zoo": 8, "d_rank": 78, "status": "matched"}, {"form": "2460284780", "name": "HRITHIK S", "t3": {"PHY": 39, "CHE": 28, "BOT": 145, "ZOO": 130, "TOTAL": 342, "PCT": 47.5, "RANK": 261}, "t4": {"PHY": 57, "CHE": 106, "BOT": 105, "ZOO": 91, "TOTAL": 359, "PCT": 49.86, "RANK": 171}, "d_total": 17, "d_phy": 18, "d_che": 78, "d_bot": -40, "d_zoo": -39, "d_rank": 90, "status": "matched"}, {"form": "2460705973", "name": "A ANVI AJITH", "t3": {"PHY": 2, "CHE": 79, "BOT": 115, "ZOO": 156, "TOTAL": 352, "PCT": 48.89, "RANK": 236}, "t4": {"PHY": 39, "CHE": 43, "BOT": 106, "ZOO": 162, "TOTAL": 350, "PCT": 48.61, "RANK": 185}, "d_total": -2, "d_phy": 37, "d_che": -36, "d_bot": -9, "d_zoo": 6, "d_rank": 51, "status": "matched"}, {"form": "2460169205", "name": "M MEGHA", "t3": {"PHY": 16, "CHE": 8, "BOT": 139, "ZOO": 137, "TOTAL": 300, "PCT": 41.67, "RANK": 346}, "t4": {"PHY": 13, "CHE": 33, "BOT": 93, "ZOO": 141, "TOTAL": 280, "PCT": 38.89, "RANK": 289}, "d_total": -20, "d_phy": -3, "d_che": 25, "d_bot": -46, "d_zoo": 4, "d_rank": 57, "status": "matched"}, {"form": "2460699277", "name": "NITHISH P", "t3": {"PHY": 67, "CHE": 85, "BOT": 130, "ZOO": 135, "TOTAL": 417, "PCT": 57.92, "RANK": 121}, "t4": {"PHY": 62, "CHE": 12, "BOT": 118, "ZOO": 107, "TOTAL": 299, "PCT": 41.53, "RANK": 263}, "d_total": -118, "d_phy": -5, "d_che": -73, "d_bot": -12, "d_zoo": -28, "d_rank": -142, "status": "matched"}, {"form": "2460259260", "name": "S VEERA MANIVANNAN", "t3": {"PHY": 34, "CHE": 10, "BOT": 131, "ZOO": 145, "TOTAL": 320, "PCT": 44.44, "RANK": 305}, "t4": {"PHY": 63, "CHE": 64, "BOT": 87, "ZOO": 131, "TOTAL": 345, "PCT": 47.92, "RANK": 191}, "d_total": 25, "d_phy": 29, "d_che": 54, "d_bot": -44, "d_zoo": -14, "d_rank": 114, "status": "matched"}, {"form": "2460154034", "name": "TEJESHWAR M", "t3": {"PHY": 16, "CHE": 39, "BOT": 142, "ZOO": 160, "TOTAL": 357, "PCT": 49.58, "RANK": 225}, "t4": {"PHY": 26, "CHE": 24, "BOT": 119, "ZOO": 129, "TOTAL": 298, "PCT": 41.39, "RANK": 264}, "d_total": -59, "d_phy": 10, "d_che": -15, "d_bot": -23, "d_zoo": -31, "d_rank": -39, "status": "matched"}, {"form": "2460694637", "name": "M POOJITHA", "t3": {"PHY": 19, "CHE": 81, "BOT": 146, "ZOO": 165, "TOTAL": 411, "PCT": 57.08, "RANK": 132}, "t4": {"PHY": 39, "CHE": 52, "BOT": 120, "ZOO": 157, "TOTAL": 368, "PCT": 51.11, "RANK": 162}, "d_total": -43, "d_phy": 20, "d_che": -29, "d_bot": -26, "d_zoo": -8, "d_rank": -30, "status": "matched"}, {"form": "2460867209", "name": "M HARISARAN", "t3": {"PHY": 102, "CHE": 122, "BOT": 150, "ZOO": 165, "TOTAL": 539, "PCT": 74.86, "RANK": 24}, "t4": {"PHY": 117, "CHE": 123, "BOT": 160, "ZOO": 175, "TOTAL": 575, "PCT": 79.86, "RANK": 12}, "d_total": 36, "d_phy": 15, "d_che": 1, "d_bot": 10, "d_zoo": 10, "d_rank": 12, "status": "matched"}, {"form": "2460109404", "name": "AJITHESH L S", "t3": {"PHY": 64, "CHE": 104, "BOT": 155, "ZOO": 165, "TOTAL": 488, "PCT": 67.78, "RANK": 47}, "t4": {"PHY": 83, "CHE": 94, "BOT": 117, "ZOO": 167, "TOTAL": 461, "PCT": 64.03, "RANK": 59}, "d_total": -27, "d_phy": 19, "d_che": -10, "d_bot": -38, "d_zoo": 2, "d_rank": -12, "status": "matched"}, {"form": "2460630390", "name": "VETRI B", "t3": {"PHY": 154, "CHE": 150, "BOT": 171, "ZOO": 170, "TOTAL": 645, "PCT": 89.58, "RANK": 2}, "t4": {"PHY": 136, "CHE": 113, "BOT": 156, "ZOO": 180, "TOTAL": 585, "PCT": 81.25, "RANK": 7}, "d_total": -60, "d_phy": -18, "d_che": -37, "d_bot": -15, "d_zoo": 10, "d_rank": -5, "status": "matched"}, {"form": "2460418378", "name": "HARISH KARTHIK R", "t3": {"PHY": 0, "CHE": 0, "BOT": 110, "ZOO": 73, "TOTAL": 183, "PCT": 25.42, "RANK": 475}, "t4": {"PHY": 12, "CHE": -1, "BOT": 110, "ZOO": 124, "TOTAL": 245, "PCT": 34.03, "RANK": 321}, "d_total": 62, "d_phy": 12, "d_che": -1, "d_bot": 0, "d_zoo": 51, "d_rank": 154, "status": "matched"}, {"form": "2460050453", "name": "SUBHA SRI K", "t3": {"PHY": 86, "CHE": 110, "BOT": 146, "ZOO": 155, "TOTAL": 497, "PCT": 69.03, "RANK": 43}, "t4": {"PHY": 80, "CHE": 78, "BOT": 171, "ZOO": 170, "TOTAL": 499, "PCT": 69.31, "RANK": 39}, "d_total": 2, "d_phy": -6, "d_che": -32, "d_bot": 25, "d_zoo": 15, "d_rank": 4, "status": "matched"}, {"form": "2460694176", "name": "A ANU", "t3": {"PHY": 40, "CHE": 60, "BOT": 150, "ZOO": 135, "TOTAL": 385, "PCT": 53.47, "RANK": 173}, "t4": {"PHY": 30, "CHE": 57, "BOT": 116, "ZOO": 160, "TOTAL": 363, "PCT": 50.42, "RANK": 168}, "d_total": -22, "d_phy": -10, "d_che": -3, "d_bot": -34, "d_zoo": 25, "d_rank": 5, "status": "matched"}, {"form": "2460226770", "name": "MUTHU NITHISHA S", "t3": {"PHY": 28, "CHE": 20, "BOT": 116, "ZOO": 106, "TOTAL": 270, "PCT": 37.5, "RANK": 392}, "t4": {"PHY": 16, "CHE": 33, "BOT": 86, "ZOO": 119, "TOTAL": 254, "PCT": 35.28, "RANK": 315}, "d_total": -16, "d_phy": -12, "d_che": 13, "d_bot": -30, "d_zoo": 13, "d_rank": 77, "status": "matched"}, {"form": "2460302946", "name": "KANCHANA DEVI P", "t3": {"PHY": 81, "CHE": 122, "BOT": 170, "ZOO": 160, "TOTAL": 533, "PCT": 74.03, "RANK": 28}, "t4": {"PHY": 46, "CHE": 44, "BOT": 133, "ZOO": 170, "TOTAL": 393, "PCT": 54.58, "RANK": 125}, "d_total": -140, "d_phy": -35, "d_che": -78, "d_bot": -37, "d_zoo": 10, "d_rank": -97, "status": "matched"}, {"form": "2460658710", "name": "SHUNMUGA PRIYA J J", "t3": {"PHY": 20, "CHE": 84, "BOT": 147, "ZOO": 151, "TOTAL": 402, "PCT": 55.83, "RANK": 142}, "t4": {"PHY": 71, "CHE": 74, "BOT": 115, "ZOO": 163, "TOTAL": 423, "PCT": 58.75, "RANK": 93}, "d_total": 21, "d_phy": 51, "d_che": -10, "d_bot": -32, "d_zoo": 12, "d_rank": 49, "status": "matched"}], "cohort": {"PHY": {"t3": 43.9, "t4": 51.0, "delta": 7.1}, "CHE": {"t3": 65.6, "t4": 59.3, "delta": -6.3}, "BOT": {"t3": 137.4, "t4": 123.5, "delta": -13.9}, "ZOO": {"t3": 142.4, "t4": 146.0, "delta": 3.6}, "TOTAL": {"t3": 389.2, "t4": 379.9, "delta": -9.3}}, "counts": {"matched": 54, "absent": 8, "new": 1, "improved": 25, "declined": 28, "same": 1, "t3_total": 62, "t4_total": 55}, "toppers": ["2460693033", "2460630351", "2460630390", "2460867209", "2460283745", "2460284347", "2460050453", "2460867197", "2460326662"], "momentum": ["2460372245", "2460867197", "2460418378", "2460685091", "2460867067", "2460334707", "2460633118", "2460065799", "2460303779", "2460867209", "2460062696", "2460684501"], "regression": ["2460294851", "2460302946", "2460699277", "2460131760", "2460317978", "2460630390", "2460283745", "2460680911"], "chronic": ["2460905182", "2460357825", "2460403457", "2460226770", "2460167285", "2460169205", "2460294851"], "absent_list": [{"form": "2460349104", "name": "VANJINATHAN T V", "t3_total": 437, "t3_rank": 97}, {"form": "2460111161", "name": "TEJAS M", "t3_total": 406, "t3_rank": 140}, {"form": "2460548204", "name": "AAZIFSHAH A", "t3_total": 342, "t3_rank": 261}, {"form": "2460299149", "name": "HANSIKA SIVANANTHAM", "t3_total": 302, "t3_rank": 343}, {"form": "2460312887", "name": "DARSHANA SRI", "t3_total": 294, "t3_rank": 363}, {"form": "2460390309", "name": "K PRADEEPA", "t3_total": 165, "t3_rank": 488}, {"form": "2460670583", "name": "SANTHOSH M", "t3_total": 153, "t3_rank": 496}, {"form": "2460894939", "name": "S JUJITHRA", "t3_total": 152, "t3_rank": 498}], "new_list": [{"form": "2460122354", "name": "RAKSHAN JAI DHEEP J", "t4_total": 124}]};
+const byForm = Object.fromEntries(D.students.map(s=>[s.form,s]));
+const setF = arr => new Set(arr);
+const STAR=setF(D.toppers), RISE=setF(D.momentum), REG=setF(D.regression), CHR=setF(D.chronic);
+const RISK=setF([...D.regression,...D.chronic]);
+
+/* chips */
+document.getElementById('chip-matched').innerHTML =
+  '<span class="dot" style="background:var(--amber)"></span> <b>'+D.counts.matched+'</b>&nbsp;took both';
+document.getElementById('chip-split').innerHTML =
+  '<span class="dot" style="background:var(--up)"></span> <b>'+D.counts.improved+' up</b> · '+
+  '<span style="color:var(--down);font-family:DM Mono;font-weight:500">'+D.counts.declined+' down</span>';
+
+/* KPIs */
+const c=D.cohort;
+const kpis=[
+  {lab:'Physics average',val:c.PHY.t4,u:'/180',d:c.PHY.delta,note:'up from '+c.PHY.t3+' — the strongest subject swing',cls:'good'},
+  {lab:'Class total average',val:c.TOTAL.t4,u:'/720',d:c.TOTAL.delta,note:'from '+c.TOTAL.t3+', all of it the Botany paper',cls:'warn'},
+  {lab:'Students improved',val:D.counts.improved,u:'of '+D.counts.matched,d:null,note:D.counts.declined+' declined, '+D.counts.same+' held steady',cls:'good'},
+  {lab:'Biggest single jump',val:'+107',u:'',d:null,note:'karthick C · 244 → 351',cls:'good'},
+  {lab:'Biggest drop',val:'−174',u:'',d:null,note:'Vijay Piravin S · 458 → 284',cls:'bad'},
+  {lab:'Absent this test',val:D.counts.absent,u:'students',d:null,note:'incl. 2 who scored 400+ last time',cls:'warn'},
+];
+document.getElementById('kpis').innerHTML=kpis.map(k=>{
+  let dh = k.d===null?'':`<span class="mono" style="font-size:14px;color:${k.d>=0?'var(--up)':'var(--down)'}"> ${k.d>=0?'▲':'▼'} ${Math.abs(k.d)}</span>`;
+  return `<div class="kpi ${k.cls}"><div class="k-lab">${k.lab}</div>
+    <div class="k-val">${k.val}<span class="u">${k.u}</span>${dh}</div>
+    <div class="k-note">${k.note}</div></div>`;
+}).join('');
+
+/* subject read list */
+const subjMeta=[['PHY','Physics'],['CHE','Chemistry'],['BOT','Botany'],['ZOO','Zoology'],['TOTAL','Total']];
+document.getElementById('subjRead').innerHTML=subjMeta.map(([k,label])=>{
+  const o=c[k], up=o.delta>0, flat=o.delta===0;
+  const cls=flat?'b-flat':(up?'b-up':'b-down');
+  const sign=o.delta>0?'+':'';
+  const notes={
+    PHY:'Your subject — clearest gain of the paper.',
+    CHE:'Softened a little; watch the middle band.',
+    BOT:'The whole cohort dip lives here.',
+    ZOO:'Quietly improved — a reliable scorer.',
+    TOTAL:'Net effect, dragged down only by Botany.'
+  };
+  return `<li><span class="badge ${cls}">${sign}${o.delta}</span>
+    <span><span class="st">${label}</span> &nbsp;<span class="sd">${o.t3} → ${o.t4}</span><br>
+    <span class="sd">${notes[k]}</span></span></li>`;
+}).join('');
+
+/* subject chart */
+new Chart(document.getElementById('subjChart'),{
+  type:'bar',
+  data:{labels:['Physics','Chemistry','Botany','Zoology'],
+    datasets:[
+      {label:'Test 03',data:['PHY','CHE','BOT','ZOO'].map(k=>c[k].t3),backgroundColor:'#d9cfb6',borderRadius:5,barPercentage:.72,categoryPercentage:.66},
+      {label:'Test 04',data:['PHY','CHE','BOT','ZOO'].map(k=>c[k].t4),backgroundColor:'#0e6b6b',borderRadius:5,barPercentage:.72,categoryPercentage:.66},
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{family:'DM Sans',size:12},boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'rectRounded'}},
+      tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.parsed.y+' / 180'}}},
+    scales:{y:{beginAtZero:true,max:180,ticks:{font:{family:'DM Mono',size:11},color:'#6f807c'},grid:{color:'#ece3ce'}},
+      x:{ticks:{font:{family:'DM Sans',size:12},color:'#21302e'},grid:{display:false}}}}
+});
+
+/* quadrant scatter */
+function catOf(s){
+  if(STAR.has(s.form)) return 'star';
+  if(RISK.has(s.form)) return 'risk';
+  if(RISE.has(s.form)) return 'rise';
+  return 'hold';
+}
+const catColor={star:'#d98a1f',rise:'#2f9e6b',risk:'#cf4a5b',hold:'#9aa6a2'};
+const groups={star:[],rise:[],risk:[],hold:[]};
+D.students.forEach(s=>groups[catOf(s)].push({x:s.t4.TOTAL,y:s.d_total,name:s.name,t3:s.t3.TOTAL,t4:s.t4.TOTAL}));
+const gLabel={star:'Projected topper',rise:'Building momentum',risk:'Needs improvement',hold:'Holding'};
+new Chart(document.getElementById('quad'),{
+  type:'scatter',
+  data:{datasets:Object.keys(groups).map(k=>({
+    label:gLabel[k],data:groups[k],backgroundColor:catColor[k]+'cc',borderColor:catColor[k],
+    borderWidth:1,pointRadius:6,pointHoverRadius:9}))},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{family:'DM Sans',size:12},usePointStyle:true,boxWidth:8}},
+      tooltip:{callbacks:{
+        title:i=>i[0].raw.name,
+        label:r=>[' '+r.raw.t3+' → '+r.raw.t4+' total',' change '+(r.raw.y>=0?'+':'')+r.raw.y]
+      }}},
+    scales:{
+      x:{title:{display:true,text:'Test 04 total  (out of 720)  →  where they stand now',font:{family:'DM Sans',size:12},color:'#6f807c'},
+        min:80,max:680,ticks:{font:{family:'DM Mono',size:10},color:'#6f807c'},grid:{color:'#ece3ce'}},
+      y:{title:{display:true,text:'change vs Test 03  ↑  how far they moved',font:{family:'DM Sans',size:12},color:'#6f807c'},
+        ticks:{font:{family:'DM Mono',size:10},color:'#6f807c'},grid:{color:'#ece3ce'},
+        afterBuildTicks:a=>{a.ticks=a.ticks;}}}}
+  ,plugins:[{id:'zero',afterDraw(ch){const{ctx,scales:{x,y}}=ch;const yz=y.getPixelForValue(0);
+    ctx.save();ctx.strokeStyle='#c9bfa6';ctx.setLineDash([4,4]);ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x.left,yz);ctx.lineTo(x.right,yz);ctx.stroke();ctx.restore();}}]
+});
+
+/* spotlight lists */
+function scoreRow(s,mode){
+  const up=s.d_total>=0;
+  const col=up?'var(--up)':'var(--down)';
+  const arw=up?'▲':'▼';
+  const rk=s.t4.RANK;
+  return `<div class="prow">
+    <div class="pv"><span class="pn">${s.name}</span>
+      <span class="ps">rank ${rk} · ${s.t3.TOTAL} → ${s.t4.TOTAL}</span></div>
+    <div class="pscore"><span class="big" style="color:${col}">${up?'+':''}${s.d_total}</span>
+      <span class="arw" style="color:${col}"> ${arw}</span></div></div>`;
+}
+document.getElementById('listStar').innerHTML =
+  D.toppers.map(f=>byForm[f]).sort((a,b)=>b.t4.TOTAL-a.t4.TOTAL)
+    .map(s=>{const up=s.d_total>=0;const col=up?'var(--up)':'var(--down)';
+      return `<div class="prow"><div class="pv"><span class="pn">${s.name}</span>
+        <span class="ps">rank ${s.t4.RANK} · ${s.t4.PCT}%</span></div>
+        <div class="pscore"><span class="big">${s.t4.TOTAL}</span>
+        <span class="ps" style="color:${col}">${up?'+':''}${s.d_total}</span></div></div>`;}).join('');
+document.getElementById('listRise').innerHTML =
+  D.momentum.map(f=>byForm[f]).sort((a,b)=>b.d_total-a.d_total).map(s=>scoreRow(s,'rise')).join('');
+const riskForms=[...new Set([...D.regression,...D.chronic])].map(f=>byForm[f])
+  .sort((a,b)=>a.d_total-b.d_total);
+document.getElementById('listRisk').innerHTML = riskForms.map(s=>{
+  const chronic=CHR.has(s.form), reg=REG.has(s.form);
+  const tagtxt = reg&&chronic?'drop + low':(reg?'sharp drop':'low band');
+  const up=s.d_total>=0;const col=up?'var(--up)':'var(--down)';
+  return `<div class="prow"><div class="pv"><span class="pn">${s.name}</span>
+    <span class="ps">${tagtxt} · ${s.t3.TOTAL} → ${s.t4.TOTAL}</span></div>
+    <div class="pscore"><span class="big" style="color:${col}">${up?'+':''}${s.d_total}</span></div></div>`;
+}).join('');
+
+/* absent grid */
+document.getElementById('absGrid').innerHTML = D.absent_list.map(a=>
+  `<div class="abs"><div class="an">${a.name}</div>
+   <div class="as">T03 · ${a.t3_total} pts · rank ${a.t3_rank}</div></div>`).join('');
+
+/* ---- table ---- */
+function tierOf(s){
+  const t=[];
+  if(STAR.has(s.form))t.push('star');
+  if(RISE.has(s.form))t.push('rise');
+  if(RISK.has(s.form))t.push('risk');
+  if(!t.length)t.push('hold');
+  return t;
+}
+const tierLabel={star:'Topper',rise:'Momentum',risk:'At-risk',hold:'Steady'};
+let rows = D.students.map(s=>({
+  ...s, t3:s.t3.TOTAL, t4:s.t4.TOTAL, tiers:tierOf(s),
+}));
+let sortKey='d_total', sortDir=-1, filter='all', query='';
+
+function dcell(v){
+  const cls=v>0?'b-up':(v<0?'b-down':'b-flat');
+  return `<span class="dcell ${cls}">${v>0?'+':''}${v}</span>`;
+}
+function passFilter(r){
+  if(query && !r.name.toLowerCase().includes(query)) return false;
+  if(filter==='all') return true;
+  if(filter==='improved') return r.d_total>0;
+  if(filter==='declined') return r.d_total<0;
+  return r.tiers.includes(filter);
+}
+function render(){
+  const out = rows.filter(passFilter).sort((a,b)=>{
+    let va=a[sortKey], vb=b[sortKey];
+    if(sortKey==='name') return sortDir*va.localeCompare(vb);
+    return sortDir*(va-vb);
+  });
+  document.getElementById('tbody').innerHTML = out.map(r=>{
+    const pills=r.tiers.map(t=>`<span class="pill ${t}">${tierLabel[t]}</span>`).join(' ');
+    const rk = r.d_rank>0?`<span class="b-up dcell">▲${r.d_rank}</span>`:(r.d_rank<0?`<span class="b-down dcell">▼${-r.d_rank}</span>`:`<span class="b-flat dcell">0</span>`);
+    return `<tr>
+      <td class="l"><span class="nm">${r.name}</span></td>
+      <td>${r.t3}</td><td><b>${r.t4}</b></td>
+      <td>${dcell(r.d_total)}</td>
+      <td>${dcell(r.d_phy)}</td><td>${dcell(r.d_che)}</td>
+      <td>${dcell(r.d_bot)}</td><td>${dcell(r.d_zoo)}</td>
+      <td>${rk}</td>
+      <td class="l">${pills}</td>
+    </tr>`;
+  }).join('');
+  if(!out.length) document.getElementById('tbody').innerHTML='<tr><td class="l" colspan="10" style="color:var(--muted);padding:22px">No students match.</td></tr>';
+}
+document.querySelectorAll('#tbl thead th').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const k=th.dataset.s; if(!k) return;
+    if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=(k==='name')?1:-1;}
+    document.querySelectorAll('#tbl thead th .car').forEach(c=>c.textContent='');
+    let car=th.querySelector('.car'); if(!car){car=document.createElement('span');car.className='car';th.appendChild(car);}
+    car.textContent=sortDir<0?'▾':'▴';
+    render();
+  });
+});
+document.querySelectorAll('#tabs .tab').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#tabs .tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); filter=b.dataset.f; render();
+}));
+document.getElementById('q').addEventListener('input',e=>{query=e.target.value.toLowerCase().trim();render();});
+render();
+</script>
+</body>
+</html>
