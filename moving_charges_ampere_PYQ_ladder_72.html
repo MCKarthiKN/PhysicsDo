@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Moving Charges & Ampère’s Law — PYQ Ladder (72 Q)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+#q-badges{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 14px;}
+.badge-step,.badge-year{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 10px;border-radius:6px;border:1px solid var(--border);}
+.badge-step{background:var(--tag-bg);color:var(--text3);}
+.badge-year{background:#fff8e6;border-color:#e8d9a8;color:#8a6d1f;font-weight:700;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+/* Clear confirm modal */
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+/* toast */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> PYQ Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Moving Charges<br>&amp; Ampère’s Law</h1></div>
+    <p id="home-sub">6 topics × 12 questions. Warm-up → build-up → the original exam question, verbatim, with its year. AIEEE 2012 – JEE Main 2022.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div id="q-badges"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+// Each diagram is a function returning an SVG string
+
+const DIAGRAMS = {
+
+  circPath: (label='r = mv/qB') => `
+    <svg viewBox="0 0 240 165" width="240" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="cp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      ${[0,1,2,3].map(i=>[0,1,2].map(j=>`<text x="${34+i*52}" y="${28+j*52}" font-size="12" fill="#93c5fd" font-family="sans-serif">\u2297</text>`).join('')).join('')}
+      <circle cx="120" cy="80" r="50" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-dasharray="6,4"/>
+      <circle cx="120" cy="80" r="3.5" fill="#374151"/>
+      <line x1="120" y1="80" x2="170" y2="80" stroke="#374151" stroke-width="1.3"/>
+      <text x="138" y="74" font-size="11" fill="#374151" font-family="sans-serif" font-weight="600">r</text>
+      <circle cx="120" cy="30" r="6" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <line x1="126" y1="30" x2="168" y2="30" stroke="#dc2626" stroke-width="2.4" marker-end="url(#cp)"/>
+      <text x="146" y="22" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">v</text>
+      <text x="120" y="158" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">${label} \u00b7 B into page</text>
+    </svg>`,
+
+  // Three particles on different radii
+  threeParticles: () => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      ${[0,1,2,3].map(i=>[0,1,2].map(j=>`<text x="${28+i*58}" y="${26+j*48}" font-size="11" fill="#dbeafe" font-family="sans-serif">\u2297</text>`).join('')).join('')}
+      <circle cx="70" cy="80" r="26" fill="none" stroke="#dc2626" stroke-width="2"/>
+      <text x="70" y="84" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700" text-anchor="middle">p</text>
+      <circle cx="140" cy="80" r="38" fill="none" stroke="#16a34a" stroke-width="2"/>
+      <text x="140" y="84" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="700" text-anchor="middle">d</text>
+      <circle cx="212" cy="80" r="26" fill="none" stroke="#7c3aed" stroke-width="2"/>
+      <text x="212" y="84" font-size="11" fill="#7c3aed" font-family="sans-serif" font-weight="700" text-anchor="middle">\u03b1</text>
+      <text x="125" y="152" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">same KE \u00b7 r \u221d \u221am / q</text>
+    </svg>`,
+
+  helix: (ang='\u03b8') => `
+    <svg viewBox="0 0 255 165" width="255" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="hx" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker>
+      <marker id="hb" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker></defs>
+      ${[0,1,2,3].map(i=>`<line x1="20" y1="${34+i*30}" x2="238" y2="${34+i*30}" stroke="#dbeafe" stroke-width="1.2"/>`).join('')}
+      <line x1="20" y1="152" x2="222" y2="152" stroke="#2563eb" stroke-width="2" marker-end="url(#hb)"/>
+      <text x="226" y="156" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="700">B</text>
+      <path d="M30,94 C46,58 74,58 90,94 C106,130 134,130 150,94 C166,58 194,58 210,94" fill="none" stroke="#dc2626" stroke-width="2.4"/>
+      <line x1="30" y1="94" x2="70" y2="66" stroke="#dc2626" stroke-width="2.4" marker-end="url(#hx)"/>
+      <text x="58" y="60" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">v</text>
+      <path d="M62,94 A32,32 0 0,0 58,80" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="64" y="90" font-size="11" fill="#374151" font-family="sans-serif">${ang}</text>
+      <line x1="30" y1="94" x2="90" y2="94" stroke="#16a34a" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <text x="128" y="20" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">pitch = (v cos${ang}) \u00d7 T</text>
+    </svg>`,
+
+  // Proton entering a field region of length l at an angle
+  helixRegion: () => `
+    <svg viewBox="0 0 250 155" width="250" height="155" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="hr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <rect x="70" y="20" width="120" height="100" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+      ${[0,1,2,3].map(i=>`<line x1="78" y1="${34+i*24}" x2="182" y2="${34+i*24}" stroke="#2563eb" stroke-width="1.3" marker-end="url(#hr)" opacity="0.45"/>`).join('')}
+      <text x="196" y="30" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="700">B</text>
+      <line x1="24" y1="98" x2="72" y2="70" stroke="#dc2626" stroke-width="2.4" marker-end="url(#hr)"/>
+      <text x="26" y="66" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">v</text>
+      <path d="M58,86 A22,22 0 0,0 54,72" fill="none" stroke="#374151" stroke-width="1.1"/>
+      <text x="42" y="88" font-size="10" fill="#374151" font-family="sans-serif">60\u00b0</text>
+      <line x1="70" y1="134" x2="190" y2="134" stroke="#374151" stroke-width="1.2"/>
+      <line x1="70" y1="128" x2="70" y2="140" stroke="#374151" stroke-width="1.2"/>
+      <line x1="190" y1="128" x2="190" y2="140" stroke="#374151" stroke-width="1.2"/>
+      <text x="130" y="150" font-size="11" fill="#374151" font-family="sans-serif" text-anchor="middle" font-style="italic">l</text>
+    </svg>`,
+
+  cyclotron: () => `
+    <svg viewBox="0 0 240 155" width="240" height="155" xmlns="http://www.w3.org/2000/svg">
+      <path d="M112,20 A58,58 0 0,0 112,136 Z" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+      <path d="M128,20 A58,58 0 0,1 128,136 Z" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <text x="82" y="82" font-size="13" fill="#2563eb" font-family="sans-serif" font-weight="700">D\u2081</text>
+      <text x="150" y="82" font-size="13" fill="#dc2626" font-family="sans-serif" font-weight="700">D\u2082</text>
+      <path d="M120,78 m0,-6 a6,6 0 1,1 0,12 a14,14 0 1,1 0,-28 a22,22 0 1,1 0,44 a30,30 0 1,1 0,-60" fill="none" stroke="#374151" stroke-width="1.4"/>
+      <line x1="182" y1="78" x2="182" y2="42" stroke="#374151" stroke-width="1.2"/>
+      <text x="186" y="60" font-size="11" fill="#374151" font-family="sans-serif">R</text>
+      <text x="120" y="150" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">cyclotron dees, radius R</text>
+    </svg>`,
+
+  // Particle heading toward a screen in the Y-Z plane
+  screen: () => `
+    <svg viewBox="0 0 250 155" width="250" height="155" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="sc" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      ${[0,1,2,3].map(i=>[0,1,2].map(j=>`<text x="${58+i*40}" y="${34+j*40}" font-size="11" fill="#93c5fd" font-family="sans-serif">\u2299</text>`).join('')).join('')}
+      <rect x="26" y="16" width="12" height="118" fill="#e5e7eb" stroke="#6b7280" stroke-width="1.4"/>
+      <text x="14" y="146" font-size="10" fill="#6b7280" font-family="sans-serif">screen (Y\u2013Z)</text>
+      <circle cx="214" cy="76" r="6" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <line x1="206" y1="76" x2="160" y2="76" stroke="#dc2626" stroke-width="2.4" marker-end="url(#sc)"/>
+      <text x="196" y="64" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">\u2212v\u00ee</text>
+      <path d="M206,76 A34,34 0 0,1 172,42" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <line x1="38" y1="140" x2="214" y2="140" stroke="#374151" stroke-width="1.2"/>
+      <text x="126" y="152" font-size="11" fill="#374151" font-family="sans-serif" text-anchor="middle" font-style="italic">d</text>
+      <text x="150" y="26" font-size="11" fill="#2563eb" font-family="sans-serif">B = B\u2080k\u0302 (out)</text>
+    </svg>`,
+
+  graphSolid: () => `
+    <svg viewBox="0 0 240 160" width="240" height="160" xmlns="http://www.w3.org/2000/svg">
+      <line x1="34" y1="130" x2="228" y2="130" stroke="#374151" stroke-width="1.4"/>
+      <line x1="34" y1="130" x2="34" y2="16" stroke="#374151" stroke-width="1.4"/>
+      <text x="232" y="134" font-size="12" fill="#374151" font-family="sans-serif" font-style="italic">r</text>
+      <text x="24" y="14" font-size="12" fill="#374151" font-family="sans-serif" font-style="italic">B</text>
+      <line x1="34" y1="130" x2="104" y2="44" stroke="#dc2626" stroke-width="2.6"/>
+      <path d="M104,44 C130,66 160,92 226,116" fill="none" stroke="#2563eb" stroke-width="2.6"/>
+      <line x1="104" y1="44" x2="104" y2="130" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="100" y="144" font-size="11" fill="#6b7280" font-family="sans-serif">R</text>
+      <text x="50" y="80" font-size="10" fill="#dc2626" font-family="sans-serif">B \u221d r</text>
+      <text x="158" y="86" font-size="10" fill="#2563eb" font-family="sans-serif">B \u221d 1/r</text>
+      <text x="132" y="156" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">solid wire</text>
+    </svg>`,
+
+  graphHollow: () => `
+    <svg viewBox="0 0 240 160" width="240" height="160" xmlns="http://www.w3.org/2000/svg">
+      <line x1="34" y1="130" x2="228" y2="130" stroke="#374151" stroke-width="1.4"/>
+      <line x1="34" y1="130" x2="34" y2="16" stroke="#374151" stroke-width="1.4"/>
+      <text x="232" y="134" font-size="12" fill="#374151" font-family="sans-serif" font-style="italic">r</text>
+      <text x="24" y="14" font-size="12" fill="#374151" font-family="sans-serif" font-style="italic">B</text>
+      <line x1="34" y1="130" x2="104" y2="130" stroke="#dc2626" stroke-width="2.6"/>
+      <line x1="104" y1="130" x2="104" y2="44" stroke="#dc2626" stroke-width="2.6" stroke-dasharray="5,3"/>
+      <path d="M104,44 C130,66 160,92 226,116" fill="none" stroke="#2563eb" stroke-width="2.6"/>
+      <text x="100" y="144" font-size="11" fill="#6b7280" font-family="sans-serif">R</text>
+      <text x="52" y="122" font-size="10" fill="#dc2626" font-family="sans-serif">B = 0</text>
+      <text x="158" y="86" font-size="10" fill="#2563eb" font-family="sans-serif">B \u221d 1/r</text>
+      <text x="132" y="156" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">hollow \u00b7 surface current</text>
+    </svg>`,
+
+  cylPts: (inner='a/3', outer='2a') => `
+    <svg viewBox="0 0 230 165" width="230" height="165" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="105" cy="76" r="88" fill="none" stroke="#93c5fd" stroke-width="1.4" stroke-dasharray="5,4"/>
+      <circle cx="105" cy="76" r="44" fill="#fee2e2" stroke="#dc2626" stroke-width="2.2"/>
+      <circle cx="105" cy="76" r="3.5" fill="#374151"/>
+      <line x1="105" y1="76" x2="149" y2="76" stroke="#374151" stroke-width="1.3"/>
+      <text x="122" y="70" font-size="11" fill="#374151" font-family="sans-serif">a</text>
+      <circle cx="90" cy="76" r="4" fill="#2563eb"/>
+      <text x="64" y="96" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="600">${inner}</text>
+      <circle cx="193" cy="76" r="4" fill="#16a34a"/>
+      <text x="180" y="64" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="600">${outer}</text>
+      <text x="105" y="160" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">solid wire, radius a, uniform J</text>
+    </svg>`,
+
+  // Hollow conducting cylinder, current on the surface
+  hollowCyl: () => `
+    <svg viewBox="0 0 230 165" width="230" height="165" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="105" cy="78" r="88" fill="none" stroke="#93c5fd" stroke-width="1.3" stroke-dasharray="5,4"/>
+      <circle cx="105" cy="78" r="50" fill="#fdfaf3" stroke="#dc2626" stroke-width="4"/>
+      <circle cx="105" cy="78" r="3.5" fill="#374151"/>
+      <line x1="105" y1="78" x2="155" y2="78" stroke="#374151" stroke-width="1.3"/>
+      <text x="124" y="72" font-size="11" fill="#374151" font-family="sans-serif">R</text>
+      <text x="80" y="46" font-size="10" fill="#9ca3af" font-family="sans-serif">B = 0</text>
+      <circle cx="193" cy="78" r="4" fill="#16a34a"/>
+      <text x="178" y="66" font-size="10" fill="#16a34a" font-family="sans-serif" font-weight="600">r > R</text>
+      <text x="105" y="160" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">current flows on the surface only</text>
+    </svg>`,
+
+  solenoid: (caption='long solenoid, n turns/m') => `
+    <svg viewBox="0 0 250 140" width="250" height="140" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="sn" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker></defs>
+      <rect x="34" y="42" width="184" height="46" fill="#fdfaf3" stroke="#e5e7eb" stroke-width="1"/>
+      ${[...Array(9)].map((_,i)=>`<ellipse cx="${44+i*21}" cy="65" rx="7" ry="23" fill="none" stroke="#dc2626" stroke-width="2"/>`).join('')}
+      <line x1="46" y1="65" x2="206" y2="65" stroke="#2563eb" stroke-width="2.2" marker-end="url(#sn)"/>
+      <text x="128" y="58" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="700" text-anchor="middle">B</text>
+      <text x="125" y="126" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">${caption}</text>
+    </svg>`,
+
+  // Electron gun on the solenoid axis firing along a radius
+  electronGun: () => `
+    <svg viewBox="0 0 250 150" width="250" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="eg" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <ellipse cx="46" cy="72" rx="14" ry="52" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+      <ellipse cx="206" cy="72" rx="14" ry="52" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+      <line x1="46" y1="20" x2="206" y2="20" stroke="#9ca3af" stroke-width="1.6"/>
+      <line x1="46" y1="124" x2="206" y2="124" stroke="#9ca3af" stroke-width="1.6"/>
+      <line x1="46" y1="72" x2="220" y2="72" stroke="#2563eb" stroke-width="1.6" stroke-dasharray="6,4"/>
+      <text x="224" y="76" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="700">axis</text>
+      <circle cx="120" cy="72" r="5" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <line x1="120" y1="66" x2="120" y2="30" stroke="#dc2626" stroke-width="2.2" marker-end="url(#eg)"/>
+      <text x="126" y="44" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">v (along radius)</text>
+      <path d="M120,72 A26,26 0 0,1 146,46" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="120" y1="124" x2="120" y2="140" stroke="#374151" stroke-width="1"/>
+      <text x="86" y="136" font-size="10" fill="#374151" font-family="sans-serif">R</text>
+      <line x1="120" y1="132" x2="46" y2="132" stroke="#374151" stroke-width="1"/>
+      <text x="125" y="146" font-size="10" fill="#6b7280" font-family="sans-serif">solenoid: n turns/length, current I</text>
+    </svg>`
+};
+
+const DIAG2 = {
+  toroid: () => `
+    <svg viewBox="0 0 230 160" width="230" height="160" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="112" cy="76" r="60" fill="none" stroke="#9ca3af" stroke-width="1.4"/>
+      <circle cx="112" cy="76" r="30" fill="none" stroke="#9ca3af" stroke-width="1.4"/>
+      ${[...Array(16)].map((_,k)=>{const a=k*2*Math.PI/16;
+        const x1=112+30*Math.cos(a), y1=76+30*Math.sin(a), x2=112+60*Math.cos(a), y2=76+60*Math.sin(a);
+        return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#dc2626" stroke-width="2"/>`;}).join('')}
+      <circle cx="112" cy="76" r="45" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="5,4"/>
+      <text x="112" y="80" font-size="10" fill="#2563eb" font-family="sans-serif" text-anchor="middle" font-weight="700">B</text>
+      <text x="112" y="152" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">toroid \u00b7 N turns \u00b7 field trapped inside</text>
+    </svg>`,
+  coaxSolenoid: () => `
+    <svg viewBox="0 0 250 150" width="250" height="150" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="42" cy="70" rx="12" ry="54" fill="none" stroke="#9ca3af" stroke-width="1.5"/>
+      <ellipse cx="208" cy="70" rx="12" ry="54" fill="none" stroke="#9ca3af" stroke-width="1.5"/>
+      <line x1="42" y1="16" x2="208" y2="16" stroke="#9ca3af" stroke-width="1.5"/>
+      <line x1="42" y1="124" x2="208" y2="124" stroke="#9ca3af" stroke-width="1.5"/>
+      <ellipse cx="60" cy="70" rx="7" ry="28" fill="none" stroke="#dc2626" stroke-width="1.8"/>
+      <ellipse cx="190" cy="70" rx="7" ry="28" fill="none" stroke="#dc2626" stroke-width="1.8"/>
+      <line x1="60" y1="42" x2="190" y2="42" stroke="#dc2626" stroke-width="1.8"/>
+      <line x1="60" y1="98" x2="190" y2="98" stroke="#dc2626" stroke-width="1.8"/>
+      <text x="125" y="34" font-size="10" fill="#dc2626" font-family="sans-serif" text-anchor="middle" font-weight="700">inner (I)</text>
+      <text x="125" y="118" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle" font-weight="700">outer (I)</text>
+      <text x="125" y="144" font-size="11" fill="#6b7280" font-family="sans-serif" text-anchor="middle">two coaxial solenoids, same current direction</text>
+    </svg>`
+};
+
+// ── TOPIC DATA ─────────────────────────────────────────────────────────────────
+// Every topic is a 12-rung LADDER: warm-ups -> build-ups -> the ORIGINAL past-year
+// questions, reproduced word-for-word with their year and original option order.
+// Questions tagged "Practice" are exam-style drills written for this deck (no year
+// badge) -- they are never passed off as real past-year questions.
+const TOPICS = [
+
+  { name:"1. Radius of the Circular Path", questions:[
+    { step:"1 \u00b7 Warm-up", q:"A charge q of mass m enters a uniform magnetic field B perpendicular to the field with speed v. The radius of its circular path is:",
+      diagram:DIAGRAMS.circPath('r = mv/qB'), opts:["mv/(qB)","qB/(mv)","mv\u00b2/(qB)","qvB/m"], ans:0,
+      sol:"Magnetic force = centripetal force: qvB = mv\u00b2/r \u21d2 <strong>r = mv/(qB)</strong>." },
+    { step:"2 \u00b7 Warm-up", q:"A particle of kinetic energy K enters a field B perpendicularly. Which expression gives its radius?",
+      diagram:DIAGRAMS.circPath('r = \u221a(2mK)/qB'), opts:["\u221a(2mK)/(qB)","2mK/(qB)","\u221a(mK)/(qB)","mK/(qB)"], ans:0,
+      sol:"K = \u00bdmv\u00b2 \u21d2 v = \u221a(2K/m). Substituting into r = mv/(qB):<br>r = m\u221a(2K/m)/(qB) = <strong>\u221a(2mK)/(qB)</strong>.<br><br>The three forms you must know:<br>\u2022 given v: r = mv/(qB)<br>\u2022 given K: r = \u221a(2mK)/(qB)<br>\u2022 given p.d. V: r = \u221a(2mV/q)/B" },
+    { step:"3 \u00b7 Build-up", q:"A charged particle moves in a circle of radius r. If its kinetic energy is made 9 times (same particle, same field), the new radius is:",
+      diagram:DIAGRAMS.circPath('r \u221d \u221aK'), opts:["3r","9r","81r","r/3"], ans:0,
+      sol:"r \u221d \u221aK \u21d2 K \u2192 9K gives r \u2192 \u221a9 r = <strong>3r</strong>. Never forget the square root." },
+    { step:"4 \u00b7 Build-up", q:"A proton's speed is doubled AND the magnetic field is doubled at the same time. Its radius becomes:",
+      diagram:DIAGRAMS.circPath('r \u221d v/B'), opts:["unchanged","doubled","halved","four times"], ans:0,
+      sol:"r = mv/(qB) \u21d2 <strong>r \u221d v/B</strong>. Doubling both v and B leaves the ratio v/B unchanged, so <strong>r is unchanged</strong>." },
+    { step:"5 \u00b7 Build-up", q:"A proton is accelerated through 1 kV and then enters a 0.1 T field perpendicularly. Its radius is closest to:",
+      diagram:DIAGRAMS.circPath('r = \u221a(2mV/q)/B'), opts:["0.46 cm","4.6 cm","46 cm","4.6 m"], ans:1,
+      sol:"Accelerated through a p.d. \u21d2 r = \u221a(2mV/q)/B.<br>2mV/q = 2 \u00d7 1.67\u00d710\u207b\u00b2\u2077 \u00d7 1000 / 1.6\u00d710\u207b\u00b9\u2079 \u2248 2.09\u00d710\u207b\u2075<br>\u221a(...) \u2248 4.57\u00d710\u207b\u00b3, \u00f7 B = 0.1 \u21d2 r \u2248 0.046 m = <strong>4.6 cm</strong>." },
+    { step:"6 \u00b7 Practice", q:"An alpha particle of kinetic energy 2 MeV enters a 0.2 T field perpendicularly. Its radius is closest to: (m\u209a = 1.67\u00d710\u207b\u00b2\u2077 kg, e = 1.6\u00d710\u207b\u00b9\u2079 C)",
+      diagram:DIAGRAMS.circPath('r = \u221a(2mK)/qB'), opts:["0.1 m","0.5 m","1.0 m","2.0 m"], ans:2,
+      sol:"Alpha: m = 4m\u209a = 6.68\u00d710\u207b\u00b2\u2077 kg, q = 2e = 3.2\u00d710\u207b\u00b9\u2079 C, K = 2\u00d710\u2076 \u00d7 1.6\u00d710\u207b\u00b9\u2079 = 3.2\u00d710\u207b\u00b9\u00b3 J.<br>r = \u221a(2 \u00d7 6.68\u00d710\u207b\u00b2\u2077 \u00d7 3.2\u00d710\u207b\u00b9\u00b3)/(3.2\u00d710\u207b\u00b9\u2079 \u00d7 0.2) \u2248 6.54\u00d710\u207b\u00b2\u2070/6.4\u00d710\u207b\u00b2\u2070 \u2248 <strong>1.0 m</strong>." },
+    { step:"7 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"A charge particle moves along circular path in a uniform magnetic field in a cyclotron. The kinetic energy of the charge particle increases to 4 times its initial value. What will be the ratio of new radius to the original radius of circular path of the charge particle",
+      diagram:DIAGRAMS.circPath('r \u221d \u221aK'), opts:["1 : 1","1 : 2","2 : 1","1 : 4"], ans:2,
+      sol:"Exactly rung 3, with K \u2192 4K. r \u221d \u221aK \u21d2 new r = \u221a4 \u00d7 old = 2 \u00d7 old.<br><strong>2 : 1</strong>, option (3). Option (4) is the trap for anyone who drops the square root." },
+    { step:"8 \u00b7 The real thing", tag:"JEE Main 2019",
+      q:"In an experiment, electrons are accelerated, from rest, by applying a voltage of 500 V. Calculate the radius of the path if a magnetic field 100 mT is then applied. [Charge of the electron = 1.6 \u00d7 10\u207b\u00b9\u2079 C, Mass of the electron = 9.1 \u00d7 10\u207b\u00b3\u00b9 kg]",
+      diagram:DIAGRAMS.circPath('r = ?'), opts:["7.5 \u00d7 10\u207b\u00b3 m","7.5 m","7.5 \u00d7 10\u207b\u00b2 m","7.5 \u00d7 10\u207b\u2074 m"], ans:3,
+      sol:"Same as rung 5, different numbers. r = \u221a(2mqV)/(qB).<br>Numerator \u221a(2 \u00d7 9.1\u00d710\u207b\u00b3\u00b9 \u00d7 1.6\u00d710\u207b\u00b9\u2079 \u00d7 500) \u2248 1.21\u00d710\u207b\u00b2\u00b3<br>Denominator 1.6\u00d710\u207b\u00b9\u2079 \u00d7 0.1 = 1.6\u00d710\u207b\u00b2\u2070<br>r \u2248 <strong>7.5 \u00d7 10\u207b\u2074 m</strong>, option (4)." },
+    { step:"9 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"A singly ionized magnesium atom (A = 24) ion is accelerated to kinetic energy 5 keV, and is projected perpendicularly into a magnetic field B of the magnitude 0.5 T. The radius of path formed will be ________ cm.  [Integer-type in the original \u2014 options added here]",
+      diagram:DIAGRAMS.circPath('r = \u221a(2mK)/qB'), opts:["1","5","10","20"], ans:2,
+      sol:"r = \u221a(2mK)/(qB) with m = 24 \u00d7 1.67\u00d710\u207b\u00b2\u2077 kg, q = e (SINGLY ionised \u2014 not 2e), K = 5\u00d710\u00b3 \u00d7 1.6\u00d710\u207b\u00b9\u2079 = 8\u00d710\u207b\u00b9\u2076 J.<br>r \u2248 0.100 m = <strong>10 cm</strong>." },
+    { step:"10 \u00b7 The real thing", tag:"JEE Main 2021",
+      q:"Two ions having same mass have charges in the ratio 1 : 2. They are projected normally in a uniform magnetic field with their speeds in the ratio 2 : 3. The ratio of the radii of their circular trajectories is",
+      diagram:DIAGRAMS.circPath('r \u221d v/q'), opts:["2 : 3","3 : 1","1 : 4","4 : 3"], ans:3,
+      sol:"Speeds given \u21d2 r = mv/(qB); same m and B \u21d2 <strong>r \u221d v/q</strong>.<br>r\u2081 : r\u2082 = (2/1) : (3/2) = 2 : 1.5 = <strong>4 : 3</strong>, option (4)." },
+    { step:"11 \u00b7 The real thing", tag:"JEE Main 2019",
+      q:"A particle having the same charge as of electron moves in a circular path of radius 0.5 cm under the influence of a magnetic field of 0.5 T. If an electric field of 100 V/m makes it to move in a straight path, then the mass of the particle is (Given charge of electron = 1.6 \u00d7 10\u207b\u00b9\u2079 C)",
+      diagram:DIAGRAMS.circPath('velocity selector + radius'),
+      opts:["9.1 \u00d7 10\u207b\u00b3\u00b9 kg","1.6 \u00d7 10\u207b\u00b2\u2077 kg","1.6 \u00d7 10\u207b\u00b9\u2079 kg","2.0 \u00d7 10\u207b\u00b2\u2074 kg"], ans:3,
+      sol:"Two ideas in one question.<br><strong>Step 1 \u2014 velocity selector.</strong> It travels straight, so the electric and magnetic forces balance:<br>eE = evB \u21d2 v = E/B = 100/0.5 = <strong>200 m/s</strong>.<br><br><strong>Step 2 \u2014 radius.</strong> r = mv/(eB) \u21d2 m = reB/v<br>= (0.5\u00d710\u207b\u00b2 \u00d7 1.6\u00d710\u207b\u00b9\u2079 \u00d7 0.5)/200 = <strong>2.0 \u00d7 10\u207b\u00b2\u2074 kg</strong>, option (4)." },
+    { step:"12 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"A proton and an alpha particle of the same velocity enter in a uniform magnetic field which is acting perpendicular to their direction of motion. The ratio of the radii of the circular paths described by the alpha particle and proton is :",
+      diagram:DIAGRAMS.circPath('r \u221d m/q'), opts:["1 : 4","4 : 1","2 : 1","1 : 2"], ans:2,
+      sol:"Same VELOCITY (not energy) \u21d2 r = mv/(qB) \u21d2 <strong>r \u221d m/q</strong>.<br>alpha: 4/2 = 2 \u00b7 proton: 1/1 = 1 \u21d2 <strong>2 : 1</strong>, option (3)." }
+  ]},
+
+  { name:"2. Proton vs Deuteron vs Alpha vs Electron", questions:[
+    { step:"1 \u00b7 Warm-up", q:"For particles with the SAME kinetic energy in the same field, the radius depends on mass and charge as:",
+      diagram:DIAGRAMS.threeParticles(), opts:["r \u221d \u221am / q","r \u221d m / q","r \u221d \u221a(m/q)","r \u221d q / \u221am"], ans:0,
+      sol:"r = \u221a(2mK)/(qB); K and B common \u21d2 <strong>r \u221d \u221am/q</strong>.<br><br>Tabulate once and reuse forever (proton = m, q):<br>\u2022 proton (m, q): \u221a1/1 = <strong>1</strong><br>\u2022 deuteron (2m, q): \u221a2/1 = <strong>\u221a2</strong><br>\u2022 alpha (4m, 2q): \u221a4/2 = <strong>1</strong>" },
+    { step:"2 \u00b7 Warm-up", q:"For the SAME VELOCITY, the radius depends on mass and charge as:",
+      diagram:DIAGRAMS.threeParticles(), opts:["r \u221d \u221am / q","r \u221d m / q","r \u221d \u221a(m/q)","r is the same for all"], ans:1,
+      sol:"r = mv/(qB) \u21d2 <strong>r \u221d m/q</strong>." },
+    { step:"3 \u00b7 Build-up", q:"For particles accelerated from rest through the SAME potential difference V, the radius depends on mass and charge as:",
+      diagram:DIAGRAMS.threeParticles(), opts:["r \u221d \u221am / q","r \u221d m / q","r \u221d \u221a(m/q)","r \u221d q/m"], ans:2,
+      sol:"KE = qV, so heavier-charge particles gain MORE energy \u2014 the energies are not equal.<br>r = \u221a(2m\u00b7qV)/(qB) = \u221a(2mV/q)/B \u21d2 <strong>r \u221d \u221a(m/q)</strong>.<br><br><strong>The three cases \u2014 memorise this block, it is the whole topic:</strong><br>\u2022 same KE \u2192 r \u221d \u221am/q<br>\u2022 same velocity \u2192 r \u221d m/q<br>\u2022 same p.d. \u2192 r \u221d \u221a(m/q)" },
+    { step:"4 \u00b7 Build-up", q:"For particles with the same MOMENTUM p in a field B, the radius depends on:",
+      diagram:DIAGRAMS.threeParticles(), opts:["1/q only","m/q","\u221am/q","q only"], ans:0,
+      sol:"r = mv/(qB) = p/(qB). With p and B common, mass drops out entirely \u21d2 <strong>r \u221d 1/q</strong>.<br>A fourth case \u2014 and it is the easiest of the lot, once you spot that mv IS the momentum." },
+    { step:"5 \u00b7 The real thing", tag:"AIEEE 2012",
+      q:"Proton, deuteron and alpha particle of the same kinetic energy are moving in circular trajectories in a constant magnetic field. The radii of proton, deuteron and alpha particle are respectively r\u209a, r_d and r_\u03b1. Which one of the following relations is correct?",
+      diagram:DIAGRAMS.threeParticles(), opts:["r_\u03b1 = r\u209a < r_d","r_\u03b1 > r_d > r\u209a","r_\u03b1 = r_d > r\u209a","r_\u03b1 = r\u209a = r_d"], ans:0,
+      sol:"Same KE \u21d2 r \u221d \u221am/q: proton 1, deuteron \u221a2, alpha 1.<br>Proton and alpha are EQUAL; deuteron is \u221a2 larger \u21d2 <strong>r_\u03b1 = r\u209a < r_d</strong>, option (1)." },
+    { step:"6 \u00b7 The real thing", tag:"JEE Main 2018",
+      q:"An electron, a proton and an alpha particle having the same kinetic energy are moving in circular orbits of radii r_e, r\u209a, r_\u03b1 respectively in a uniform magnetic field B. The relation between r_e, r\u209a, r_\u03b1 is",
+      diagram:DIAGRAMS.threeParticles(), opts:["r_e > r\u209a = r_\u03b1","r_e < r\u209a = r_\u03b1","r_e < r\u209a < r_\u03b1","r_e < r_\u03b1 < r\u209a"], ans:1,
+      sol:"Same KE \u21d2 r \u221d \u221am/q. We know r\u209a = r_\u03b1 from 2012. The electron has ~1/1836 the proton mass with the same |q|, so its \u221am/q is far smaller.<br><strong>r_e < r\u209a = r_\u03b1</strong>, option (2)." },
+    { step:"7 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"A proton, a deuteron and an \u03b1-particle with same kinetic energy enter into a uniform magnetic field at right angle to magnetic field. The ratio of the radii of their respective circular paths is :",
+      diagram:DIAGRAMS.threeParticles(), opts:["1 : \u221a2 : \u221a2","1 : 1 : \u221a2","\u221a2 : 1 : 1","1 : \u221a2 : 1"], ans:3,
+      sol:"The 2012 question again, ten years later, now as an explicit ratio.<br>r \u221d \u221am/q \u21d2 <strong>1 : \u221a2 : 1</strong>, option (4)." },
+    { step:"8 \u00b7 The real thing", tag:"JEE Main 2019",
+      q:"A proton and an \u03b1-particle (with their masses in the ratio of 1 : 4 and charges in the ratio of 1 : 2) are accelerated from rest through a potential difference V. If a uniform magnetic field (B) is set up perpendicular to their velocities, the ratio of the radii r\u209a : r_\u03b1 of the circular paths described by them will be",
+      diagram:DIAGRAMS.threeParticles(), opts:["1 : 3","1 : 2","1 : \u221a3","1 : \u221a2"], ans:3,
+      sol:"Same p.d. \u21d2 r \u221d \u221a(m/q) (rung 3).<br>proton \u221a(1/1) = 1 \u00b7 alpha \u221a(4/2) = \u221a2 \u21d2 <strong>1 : \u221a2</strong>, option (4)." },
+    { step:"9 \u00b7 The real thing", tag:"JEE Main 2021",
+      q:"A deuteron and an alpha particle having equal kinetic energy enter perpendicularly into a magnetic field. Let r_d and r_\u03b1 be their respective radii of circular path. The value of r_d/r_\u03b1 is",
+      diagram:DIAGRAMS.threeParticles(), opts:["1/\u221a2","1","2","\u221a2"], ans:3,
+      sol:"Same KE \u21d2 r \u221d \u221am/q: deuteron \u221a2/1 = \u221a2, alpha \u221a4/2 = 1.<br>r_d/r_\u03b1 = <strong>\u221a2</strong>, option (4)." },
+    { step:"10 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"A deuteron and a proton moving with equal kinetic energy enter into a uniform magnetic field at right angle to the field. If r_d and r\u209a are the radii of their circular paths respectively, then the ratio r_d/r\u209a will be \u221ax : 1 where x is __________.  [Integer-type in the original \u2014 options added here]",
+      diagram:DIAGRAMS.threeParticles(), opts:["1","2","3","4"], ans:1,
+      sol:"Same KE \u21d2 r \u221d \u221am/q: deuteron (2m, q) gives \u221a2; proton (m, q) gives 1.<br>r_d/r\u209a = \u221a2 = \u221ax : 1 \u21d2 <strong>x = 2</strong>." },
+    { step:"11 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"Two charged particles, having same kinetic energy, are allowed to pass through a uniform magnetic field perpendicular to the direction of motion. If the ratio of radii of their circular path is 6 : 5 and their respective masses ratio is 9 : 4. Then, the ratio of their charges will be :",
+      diagram:DIAGRAMS.circPath('q \u221d \u221am / r'), opts:["8 : 5","5 : 4","5 : 3","8 : 7"], ans:1,
+      sol:"Same relation, rearranged: r \u221d \u221am/q \u21d2 <strong>q \u221d \u221am/r</strong>.<br>q\u2081 : q\u2082 = (\u221a9/6) : (\u221a4/5) = (3/6) : (2/5) = 0.5 : 0.4 = <strong>5 : 4</strong>, option (2)." },
+    { step:"12 \u00b7 The real thing", tag:"JEE Main 2021",
+      q:"Two ions of masses 4 amu and 16 amu have charges +2e and +3e respectively. These ions pass through the region of constant perpendicular magnetic field. The kinetic energy of both ions is same. Then:",
+      diagram:DIAGRAMS.threeParticles(),
+      opts:["No ion will be deflected","Both ions will be deflected equally","Lighter ion will be deflected more than heavier ion","Lighter ion will be deflected less than heavier ion"], ans:2,
+      sol:"Same KE \u21d2 r \u221d \u221am/q.<br>\u2022 lighter ion: \u221a4/2 = 1<br>\u2022 heavier ion: \u221a16/3 = 4/3<br><br>The lighter ion has the SMALLER radius. A smaller radius means a tighter turn \u2014 i.e. <strong>more deflection</strong>.<br><strong>Option (3).</strong> Watch the logic flip: smaller r = more bending, not less." }
+  ]},
+
+  { name:"3. Time Period, Frequency & the Cyclotron", questions:[
+    { step:"1 \u00b7 Warm-up", q:"A charged particle moves in a circle in a uniform field. If its speed is doubled (same particle, same field), its time period becomes:",
+      diagram:DIAGRAMS.circPath('T = 2\u03c0m/qB'), opts:["doubled","halved","unchanged","four times"], ans:2,
+      sol:"T = 2\u03c0r/v with r = mv/(qB). The v cancels:<br><strong>T = 2\u03c0m/(qB)</strong>, <strong>f = qB/(2\u03c0m)</strong>.<br>T is <strong>independent of speed and radius</strong> \u2014 the fact that makes the cyclotron work." },
+    { step:"2 \u00b7 Warm-up", q:"The work done by the magnetic force on a charged particle over one complete revolution is:",
+      diagram:DIAGRAMS.circPath('F \u27c2 v always'), opts:["qvB \u00d7 2\u03c0r","zero","\u00bdmv\u00b2","qvB"], ans:1,
+      sol:"F = qv \u00d7 B is always \u27c2 to v, so there is no force component along the displacement \u21d2 <strong>W = 0</strong> at every instant.<br>A magnetic field bends the path but <strong>never changes speed or KE</strong>." },
+    { step:"3 \u00b7 Build-up", q:"A proton and a deuteron (twice the mass, same charge) move in the same field B. The ratio of their cyclotron frequencies f\u209a : f_d is:",
+      diagram:DIAGRAMS.cyclotron(), opts:["1 : 1","2 : 1","1 : 2","\u221a2 : 1"], ans:1,
+      sol:"f = qB/(2\u03c0m) \u21d2 <strong>f \u221d q/m</strong>.<br>proton: q/m = 1. deuteron: q/2m = \u00bd.<br>f\u209a : f_d = 1 : \u00bd = <strong>2 : 1</strong>. The heavier deuteron circles half as often." },
+    { step:"4 \u00b7 Build-up", q:"In a cyclotron, what actually increases the particle's kinetic energy?",
+      diagram:DIAGRAMS.cyclotron(),
+      opts:["the magnetic field inside the dees","the alternating electric field in the gap between the dees","both equally","neither \u2014 the energy is constant"], ans:1,
+      sol:"From rung 2, the magnetic force does <strong>zero work</strong> \u2014 it can only steer the particle in circles inside the dees.<br>All the speeding up happens in the <strong>gap</strong>, where the alternating electric field pushes the particle across. Because T does not depend on speed, the gap voltage can flip at a fixed frequency and always catch the particle at the right moment." },
+    { step:"5 \u00b7 The real thing", tag:"JEE Main 2021",
+      q:"A charge Q is moving d\u2113 distance in the magnetic field B. Find the value of work done by B.",
+      diagram:DIAGRAMS.circPath('F \u27c2 v'), opts:["\u22121","Zero","1","Infinite"], ans:1,
+      sol:"Rung 2, straight from the paper. The magnetic force is perpendicular to the displacement at every instant, so dW = F\u00b7d\u2113 = 0.<br><strong>Zero</strong>, option (2)." },
+    { step:"6 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"Assertion (A): In a uniform magnetic field, speed and energy remains the same for a moving charged particle.  Reason (R): Moving charged particle experiences magnetic force perpendicular to its direction of motion.",
+      diagram:DIAGRAMS.circPath('F \u27c2 v'),
+      opts:["Both (A) and (R) true and (R) is the correct explanation of (A).","Both (A) and (R) are true but (R) is NOT the correct explanation of (A).","(A) is true but (R) is false.","(A) is false but (R) is true."], ans:0,
+      sol:"(A) is true: speed and KE are unchanged in a uniform magnetic field.<br>(R) is true: F = qv \u00d7 B is always \u27c2 to v.<br>And (R) is precisely WHY (A) holds \u2014 perpendicular force \u21d2 zero work \u21d2 constant speed.<br><strong>Option (1).</strong>" },
+    { step:"7 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"Statement I: The electric force changes the speed of the charged particle and hence changes its kinetic energy; whereas the magnetic force does not change the kinetic energy of the charged particle.  Statement II: The electric force accelerates the positively charged particle perpendicular to the direction of electric field. The magnetic force accelerates the moving charged particle along the direction of magnetic field.",
+      opts:["Both statement I and statement II are correct","Both statement I and statement II are incorrect","Statement I is correct but statement II is incorrect","Statement I is incorrect but statement II is correct"], ans:2,
+      sol:"<strong>Statement I is CORRECT</strong> \u2014 electric force does work (changes KE); magnetic force does not.<br><br><strong>Statement II is INCORRECT</strong>, twice over:<br>\u2022 the electric force acts <em>along</em> E (not perpendicular to it)<br>\u2022 the magnetic force acts <em>perpendicular</em> to B (not along it)<br><br><strong>Option (3).</strong>" },
+    { step:"8 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"An electron with energy 0.1 keV moves at right angle to the earth's magnetic field of 1 \u00d7 10\u207b\u2074 Wbm\u207b\u00b2. The frequency of revolution of the electron will be (Take mass of electron = 9.0 \u00d7 10\u207b\u00b3\u00b9 kg)",
+      diagram:DIAGRAMS.circPath('f = qB/2\u03c0m'), opts:["1.6 \u00d7 10\u2075 Hz","5.6 \u00d7 10\u2075 Hz","2.8 \u00d7 10\u2076 Hz","1.8 \u00d7 10\u2076 Hz"], ans:2,
+      sol:"f = qB/(2\u03c0m). The <strong>0.1 keV is a red herring</strong> \u2014 by rung 1, frequency has nothing to do with energy.<br>f = (1.6\u00d710\u207b\u00b9\u2079 \u00d7 10\u207b\u2074)/(2\u03c0 \u00d7 9.0\u00d710\u207b\u00b3\u00b9) \u2248 <strong>2.8 \u00d7 10\u2076 Hz</strong>, option (3)." },
+    { step:"9 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"A cyclotron is used to accelerate protons. If the operating magnetic field is 1.0 T and the radius of the cyclotron 'dees' is 60 cm, the kinetic energy of the accelerated protons in MeV will be [Use m\u209a = 1.6 \u00d7 10\u207b\u00b2\u2077 kg, e = 1.6 \u00d7 10\u207b\u00b9\u2079 C]",
+      diagram:DIAGRAMS.cyclotron(), opts:["12","18","16","32"], ans:1,
+      sol:"The proton exits when its circle just fills the dees: r = R \u21d2 v = qBR/m.<br>K = \u00bdmv\u00b2 = <strong>q\u00b2B\u00b2R\u00b2/(2m)</strong> = (1.6\u00d710\u207b\u00b9\u2079)\u00b2(1)\u00b2(0.6)\u00b2/(2 \u00d7 1.6\u00d710\u207b\u00b2\u2077)<br>= 2.88\u00d710\u207b\u00b9\u00b2 J \u00f7 1.6\u00d710\u207b\u00b9\u00b3 = <strong>18 MeV</strong>, option (2)." },
+    { step:"10 \u00b7 The real thing", tag:"JEE Main 2020",
+      q:"Proton with kinetic energy of 1 MeV moves from south to north. It gets an acceleration of 10\u00b9\u00b2 m/s\u00b2 by an applied magnetic field (west to east). The value of magnetic field (Rest mass of proton is 1.6 \u00d7 10\u207b\u00b2\u2077 kg)",
+      opts:["0.071 mT","0.71 mT","71 mT","7.1 mT"], ans:1,
+      sol:"Speed from KE: v = \u221a(2K/m) = \u221a(2 \u00d7 1.6\u00d710\u207b\u00b9\u00b3 / 1.6\u00d710\u207b\u00b2\u2077) \u2248 1.4\u00d710\u2077 m/s.<br>v (S\u2192N) \u27c2 B (W\u2192E), so F = qvB = ma:<br>B = ma/(qv) = (1.6\u00d710\u207b\u00b2\u2077 \u00d7 10\u00b9\u00b2)/(1.6\u00d710\u207b\u00b9\u2079 \u00d7 1.4\u00d710\u2077) \u2248 7.5\u00d710\u207b\u2074 T \u2248 <strong>0.71 mT</strong>, option (2)." },
+    { step:"11 \u00b7 The real thing", tag:"JEE Main 2021",
+      q:"A proton, a deuteron and an \u03b1 particle are moving with same momentum in a uniform magnetic field. The ratio of magnetic forces acting on them is ____ and their speed is ____ in the ratio",
+      diagram:DIAGRAMS.threeParticles(),
+      opts:["1 : 2 : 4 and 1 : 1 : 2","1 : 2 : 4 and 2 : 1 : 1","4 : 2 : 1 and 2 : 1 : 1","2 : 1 : 1 and 4 : 2 : 1"], ans:3,
+      sol:"Same momentum p. Then v = p/m \u21d2 <strong>v \u221d 1/m</strong>, and F = qvB = qpB/m \u21d2 <strong>F \u221d q/m</strong>.<br><br>Forces (q/m): proton 1/1 = 1 \u00b7 deuteron 1/2 \u00b7 alpha 2/4 = 1/2 \u21d2 1 : \u00bd : \u00bd = <strong>2 : 1 : 1</strong><br>Speeds (1/m): 1 : \u00bd : \u00bc = <strong>4 : 2 : 1</strong><br><br><strong>Option (4).</strong>" },
+    { step:"12 \u00b7 Practice", q:"A cyclotron accelerates protons at frequency f. To accelerate deuterons (twice the mass, same charge) in the SAME magnetic field, the oscillator frequency must be:",
+      diagram:DIAGRAMS.cyclotron(), opts:["2f","f","f/2","f/4"], ans:2,
+      sol:"The oscillator must match the particle's own cyclotron frequency, f = qB/(2\u03c0m).<br>The deuteron has the same q but twice the m \u21d2 its frequency is <strong>f/2</strong>.<br>This is a real design constraint: change the particle, and you must retune the oscillator (or the magnetic field)." }
+  ]},
+
+  { name:"4. The Helical Path \u2014 Pitch", questions:[
+    { step:"1 \u00b7 Warm-up", q:"A charge enters a uniform field B with speed v at an angle \u03b8 to the field. Which component makes it circle, and which carries it forward along B?",
+      diagram:DIAGRAMS.helix('\u03b8'),
+      opts:["v sin\u03b8 circles; v cos\u03b8 moves forward","v cos\u03b8 circles; v sin\u03b8 moves forward","both components circle","both components move forward"], ans:0,
+      sol:"\u2022 <strong>v sin\u03b8 (\u27c2 B)</strong> \u2014 feels the force \u2192 circular motion<br>\u2022 <strong>v cos\u03b8 (\u2225 B)</strong> \u2014 here v \u00d7 B = 0, no force \u2192 steady drift<br>Circle + drift = <strong>helix</strong>." },
+    { step:"2 \u00b7 Warm-up", q:"The RADIUS of that helix is:",
+      diagram:DIAGRAMS.helix('\u03b8'), opts:["mv/(qB)","m(v sin\u03b8)/(qB)","m(v cos\u03b8)/(qB)","2\u03c0m/(qB)"], ans:1,
+      sol:"Only the perpendicular component goes round the circle, so it alone sets the radius:<br><strong>r = m(v sin\u03b8)/(qB)</strong>.<br>The parallel component v cos\u03b8 does not curve at all \u2014 it just slides the circle forward." },
+    { step:"3 \u00b7 Warm-up", q:"The PITCH of the helix (forward distance in one complete revolution) is:",
+      diagram:DIAGRAMS.helix('\u03b8'),
+      opts:["(v sin\u03b8) \u00d7 2\u03c0m/(qB)","(v cos\u03b8) \u00d7 2\u03c0m/(qB)","v \u00d7 2\u03c0m/(qB)","2\u03c0m/(qB)"], ans:1,
+      sol:"Pitch = (forward speed) \u00d7 (time for one revolution) = (v cos\u03b8) \u00d7 T, with T = 2\u03c0m/(qB) \u2014 note the FULL m and q, not components.<br>Pitch = <strong>(v cos\u03b8) \u00d7 2\u03c0m/(qB)</strong>.<br>Classic error: using v sin\u03b8 here. That component is busy circling \u2014 it never advances the particle." },
+    { step:"4 \u00b7 Build-up", q:"A charged particle is fired EXACTLY PARALLEL to a uniform magnetic field. Its path is:",
+      diagram:DIAGRAMS.helix('\u03b8 = 0'), opts:["a circle","a helix","a straight line","a parabola"], ans:2,
+      sol:"\u03b8 = 0 \u21d2 v \u00d7 B = 0 \u21d2 zero force \u21d2 <strong>straight line</strong> at constant speed.<br>Check with the helix picture: v sin0\u00b0 = 0 kills the circle, leaving only the forward drift." },
+    { step:"5 \u00b7 Build-up", q:"A charged particle enters a field at \u03b8 = 90\u00b0 (perpendicular). Its pitch is:",
+      diagram:DIAGRAMS.helix('\u03b8 = 90\u00b0'), opts:["maximum","zero","equal to 2\u03c0r","undefined"], ans:1,
+      sol:"Pitch = (v cos90\u00b0) \u00d7 T = 0.<br>With no forward component, the helix collapses into a flat <strong>circle</strong> \u2014 the particle never advances along B. This is the case in every 'radius' question in Topic 1." },
+    { step:"6 \u00b7 Build-up", q:"For a helical path, the ratio (pitch / radius) equals:",
+      diagram:DIAGRAMS.helix('\u03b8'), opts:["2\u03c0 tan\u03b8","2\u03c0 cot\u03b8","2\u03c0 sin\u03b8","2\u03c0"], ans:1,
+      sol:"pitch = (v cos\u03b8)(2\u03c0m/qB) and r = m(v sin\u03b8)/(qB).<br>Dividing, everything cancels except the trig:<br>pitch/r = 2\u03c0 (cos\u03b8/sin\u03b8) = <strong>2\u03c0 cot\u03b8</strong>.<br>At \u03b8 = 45\u00b0 this gives exactly 2\u03c0 \u2014 a handy check." },
+    { step:"7 \u00b7 Practice", q:"A proton enters a 0.3 T field with speed 4 \u00d7 10\u2075 m/s at 60\u00b0 to the field. The RADIUS of its helical path is closest to: (m\u209a = 1.67\u00d710\u207b\u00b2\u2077 kg, q = 1.6\u00d710\u207b\u00b9\u2079 C)",
+      diagram:DIAGRAMS.helix('60\u00b0'), opts:["0.6 cm","1.2 cm","2.4 cm","4.0 cm"], ans:1,
+      sol:"Use ONLY the perpendicular component: v sin60\u00b0 = 4\u00d710\u2075 \u00d7 0.866 = 3.46\u00d710\u2075 m/s.<br>r = m(v sin\u03b8)/(qB) = (1.67\u00d710\u207b\u00b2\u2077 \u00d7 3.46\u00d710\u2075)/(1.6\u00d710\u207b\u00b9\u2079 \u00d7 0.3)<br>\u2248 5.78\u00d710\u207b\u00b2\u00b2 / 4.8\u00d710\u207b\u00b2\u2070 \u2248 0.012 m = <strong>1.2 cm</strong>." },
+    { step:"8 \u00b7 The real thing", tag:"JEE Main 2020",
+      q:"A beam of protons with speed 4 \u00d7 10\u2075 ms\u207b\u00b9 enters a uniform magnetic field of 0.3 T at an angle of 60\u00b0 to the magnetic field. The pitch of the resulting helical path of protons is close to (Mass of the proton = 1.67 \u00d7 10\u207b\u00b2\u2077 kg, charge of the proton = 1.69 \u00d7 10\u207b\u00b9\u2079 C)",
+      diagram:DIAGRAMS.helix('60\u00b0'), opts:["2 cm","12 cm","5 cm","4 cm"], ans:3,
+      sol:"Straight substitution into rung 3 \u2014 and note it is the SAME setup as rung 7, but asking for pitch instead of radius.<br>T = 2\u03c0m/(qB) = 2\u03c0 \u00d7 1.67\u00d710\u207b\u00b2\u2077/(1.69\u00d710\u207b\u00b9\u2079 \u00d7 0.3) \u2248 2.07\u00d710\u207b\u2077 s<br>Forward speed = v cos60\u00b0 = 2\u00d710\u2075 m/s<br>Pitch = 2\u00d710\u2075 \u00d7 2.07\u00d710\u207b\u2077 \u2248 0.041 m \u2248 <strong>4 cm</strong>, option (4)." },
+    { step:"9 \u00b7 The real thing", tag:"JEE Main 2020",
+      q:"The figure shows a region of length 'l' with a uniform magnetic field of 0.3 T in it and a proton entering the region with velocity 4 \u00d7 10\u2075 ms\u207b\u00b9 making an angle 60\u00b0 with the field. If the proton completes 10 revolution by the time it cross the region shown, 'l' is close to (mass of proton = 1.67 \u00d7 10\u207b\u00b2\u2077 kg, charge of the proton = 1.6 \u00d7 10\u207b\u00b9\u2079 C)",
+      diagram:DIAGRAMS.helixRegion(), opts:["0.22 m","0.11 m","0.88 m","0.44 m"], ans:3,
+      sol:"One line: <strong>l = 10 \u00d7 pitch</strong>, since each revolution advances the proton by exactly one pitch.<br>T = 2\u03c0 \u00d7 1.67\u00d710\u207b\u00b2\u2077/(1.6\u00d710\u207b\u00b9\u2079 \u00d7 0.3) \u2248 2.19\u00d710\u207b\u2077 s<br>Pitch = (v cos60\u00b0)T = 2\u00d710\u2075 \u00d7 2.19\u00d710\u207b\u2077 \u2248 0.0437 m<br>l = 10 \u00d7 0.0437 \u2248 <strong>0.44 m</strong>, option (4)." },
+    { step:"10 \u00b7 The real thing", tag:"JEE Main 2020",
+      q:"A particle of charge q and mass m is moving with a velocity \u2212v\u00ee (v \u2260 0) towards a large screen placed in the Y-Z plane at a distance d. If there is a magnetic field B\u20d7 = B\u2080k\u0302, the minimum value of v for which the particle will not hit the screen is",
+      diagram:DIAGRAMS.screen(), opts:["2qdB\u2080/m","qdB\u2080/(3m)","qdB\u2080/(2m)","qdB\u2080/m"], ans:3,
+      sol:"v (\u2212\u00ee) \u27c2 B (k\u0302), so the particle turns in a circle of radius r = mv/(qB\u2080). Heading straight at the screen from distance d, it misses provided <strong>r < d</strong>.<br>mv/(qB\u2080) < d \u21d2 v < qdB\u2080/m \u21d2 critical value <strong>qdB\u2080/m</strong>, option (4).<br><br><em>Note on wording:</em> this is really the MAXIMUM speed for a miss (go faster, the circle grows, and it hits). Aakash's own solution flags it: \"It should be maximum instead of minimum.\" The printed answer is still (4)." },
+    { step:"11 \u00b7 Practice", q:"A proton enters a field region at 45\u00b0 to B. If the region is long enough for exactly 5 revolutions, the ratio (length of region) / (radius of helix) is:",
+      diagram:DIAGRAMS.helix('45\u00b0'), opts:["5\u03c0","10\u03c0","2\u03c0","20\u03c0"], ans:1,
+      sol:"Length = 5 \u00d7 pitch. From rung 6, pitch/r = 2\u03c0 cot\u03b8, and cot45\u00b0 = 1 \u21d2 pitch = 2\u03c0r.<br>Length/r = 5 \u00d7 2\u03c0 = <strong>10\u03c0</strong>.<br>Notice the mass, charge and field never appeared \u2014 the ratio is pure geometry." },
+    { step:"12 \u00b7 Practice", q:"Two protons enter the same field B with the same speed v, one at 30\u00b0 and one at 60\u00b0 to the field. Which has the greater pitch, and which the greater radius?",
+      diagram:DIAGRAMS.helix('30\u00b0 vs 60\u00b0'),
+      opts:["30\u00b0 has greater pitch; 60\u00b0 has greater radius","60\u00b0 has greater pitch; 30\u00b0 has greater radius","both have the same pitch","both have the same radius"], ans:0,
+      sol:"Pitch \u221d cos\u03b8, radius \u221d sin\u03b8. Both protons have the same T (it does not depend on \u03b8 at all).<br>\u2022 cos30\u00b0 (0.87) > cos60\u00b0 (0.50) \u21d2 the <strong>30\u00b0 proton has the greater pitch</strong> \u2014 it is aimed more along B, so it advances faster.<br>\u2022 sin60\u00b0 (0.87) > sin30\u00b0 (0.50) \u21d2 the <strong>60\u00b0 proton has the greater radius</strong> \u2014 more of its speed goes into circling.<br><strong>Option (1).</strong>" }
+  ]},
+
+  { name:"5. Amp\u00e8re's Law \u2014 Thick Wires & Cylinders", questions:[
+    { step:"1 \u00b7 Warm-up", q:"An Amperian loop of radius r is drawn inside a solid wire of radius R carrying current I spread uniformly. The current enclosed is:",
+      diagram:DIAGRAMS.graphSolid(), opts:["I","I \u00b7 r\u00b2/R\u00b2","I \u00b7 r/R","zero"], ans:1,
+      sol:"Uniform current \u21d2 enclosed current is the same FRACTION as the enclosed area:<br>I_enc = I(\u03c0r\u00b2)/(\u03c0R\u00b2) = <strong>I r\u00b2/R\u00b2</strong>." },
+    { step:"2 \u00b7 Warm-up", q:"Using that, the field INSIDE a solid wire (r < R) is:",
+      diagram:DIAGRAMS.graphSolid(), opts:["\u03bc\u2080I/(2\u03c0r)","\u03bc\u2080Ir/(2\u03c0R\u00b2)","\u03bc\u2080I/(2R)","zero"], ans:1,
+      sol:"B(2\u03c0r) = \u03bc\u2080 I_enc = \u03bc\u2080 I r\u00b2/R\u00b2 \u21d2 <strong>B = \u03bc\u2080Ir/(2\u03c0R\u00b2), so B \u221d r</strong>.<br>Outside, the loop encloses ALL of I \u21d2 B = \u03bc\u2080I/(2\u03c0r), so B \u221d 1/r." },
+    { step:"3 \u00b7 Build-up", q:"For that solid wire, the magnetic field is MAXIMUM at:",
+      diagram:DIAGRAMS.graphSolid(), opts:["the axis (r = 0)","the surface (r = R)","r = R/2","very far away"], ans:1,
+      sol:"Inside B rises \u221d r; outside it falls \u221d 1/r. They meet at <strong>r = R</strong>, where B = \u03bc\u2080I/(2\u03c0R) \u2014 the peak.<br>Burn this shape in: <strong>straight line up, then a 1/r tail down</strong>." },
+    { step:"4 \u00b7 Build-up", q:"For a solid wire of radius R, the ratio of the fields at R/2 and at 2R is:",
+      diagram:DIAGRAMS.cylPts('R/2','2R'), opts:["1 : 1","1 : 2","2 : 1","1 : 4"], ans:0,
+      sol:"At R/2 (inside): B = \u03bc\u2080I(R/2)/(2\u03c0R\u00b2) = \u03bc\u2080I/(4\u03c0R).<br>At 2R (outside): B = \u03bc\u2080I/(2\u03c0 \u00b7 2R) = \u03bc\u2080I/(4\u03c0R).<br><strong>Equal \u2014 1 : 1.</strong> A pleasing coincidence: half-way in matches twice the radius out." },
+    { step:"5 \u00b7 Practice", q:"A HOLLOW cylindrical conductor has inner radius R and outer radius 2R, carrying current I uniformly through the metal. The field at r = 3R/2 is:",
+      diagram:DIAGRAMS.hollowCyl(), opts:["5\u03bc\u2080I/(18\u03c0R)","\u03bc\u2080I/(36\u03c0R)","5\u03bc\u2080I/(36\u03c0R)","5\u03bc\u2080I/(9\u03c0R)"], ans:2,
+      sol:"r = 3R/2 lies INSIDE the metal, so only part of the current is enclosed.<br>Enclosed fraction = [(3R/2)\u00b2 \u2212 R\u00b2] / [(2R)\u00b2 \u2212 R\u00b2] = (5/4)/3 = 5/12 \u21d2 I_enc = 5I/12.<br>B = \u03bc\u2080I_enc/(2\u03c0r) = \u03bc\u2080(5I/12)/(2\u03c0 \u00b7 3R/2) = <strong>5\u03bc\u2080I/(36\u03c0R)</strong>." },
+    { step:"6 \u00b7 Practice", q:"A long wire of radius 3.0 mm carries uniform current density J = 100 A/m\u00b2. The fields at 2.0 mm and 4.0 mm from the axis are:",
+      diagram:DIAGRAMS.cylPts('2 mm','4 mm'),
+      opts:["2\u03c0\u00d710\u207b\u2078 T, (9\u03c0/2)\u00d710\u207b\u2078 T","4\u03c0\u00d710\u207b\u2078 T, (\u03c0/2)\u00d710\u207b\u2078 T","4\u03c0\u00d710\u207b\u2078 T, (9\u03c0/2)\u00d710\u207b\u2078 T","\u03c0\u00d710\u207b\u2074 T, (9\u03c0/2)\u00d710\u207b\u2078 T"], ans:2,
+      sol:"(a) r = 2 mm is INSIDE (R = 3 mm). Using I_enc = J\u03c0r\u00b2 in Amp\u00e8re's law: B = \u03bc\u2080Jr/2 = (4\u03c0\u00d710\u207b\u2077 \u00d7 100 \u00d7 2\u00d710\u207b\u00b3)/2 = <strong>4\u03c0 \u00d7 10\u207b\u2078 T</strong>.<br><br>(b) r = 4 mm is OUTSIDE. Total I = J\u03c0R\u00b2 = 100\u03c0(3\u00d710\u207b\u00b3)\u00b2 = 9\u03c0\u00d710\u207b\u2074 A.<br>B = \u03bc\u2080I/(2\u03c0r) = <strong>(9\u03c0/2) \u00d7 10\u207b\u2078 T</strong>. Option (3)." },
+    { step:"7 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"A long straight wire with a circular cross-section having radius R, is carrying a steady current I. The current I is uniformly distributed across this cross-section. Then the variation of magnetic field due to current I with distance r (r < R) from its centre will be",
+      diagram:DIAGRAMS.graphSolid(), opts:["B \u221d r\u00b2","B \u221d r","B \u221d 1/r\u00b2","B \u221d 1/r"], ans:1,
+      sol:"r < R means <strong>inside</strong> \u21d2 rung 2 \u21d2 <strong>B \u221d r</strong>, option (2).<br>Options (3) and (4) are the OUTSIDE behaviours \u2014 there to catch anyone who missed the r < R condition." },
+    { step:"8 \u00b7 The real thing", tag:"JEE Main 2020",
+      q:"A long straight wire of radius a carries a current distributed uniformly over its cross-section. The ratio of the magnetic fields due to the wire at distance a/3 and 2a, respectively from the axis of the wire is",
+      diagram:DIAGRAMS.cylPts('a/3','2a'), opts:["1/2","3/2","2","2/3"], ans:3,
+      sol:"The two points straddle the surface, so they need DIFFERENT formulas.<br>r = a/3 (inside): B\u2081 = \u03bc\u2080I(a/3)/(2\u03c0a\u00b2) = \u03bc\u2080I/(6\u03c0a)<br>r = 2a (outside): B\u2082 = \u03bc\u2080I/(4\u03c0a)<br>B\u2081/B\u2082 = (1/6)/(1/4) = <strong>2/3</strong>, option (4)." },
+    { step:"9 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"An infinitely long hollow conducting cylinder with radius R carries a uniform current along its surface. Choose the correct representation of magnetic field (B) as a function of radial distance (r) from the axis of cylinder.  [Original options were four graphs \u2014 described here in words]",
+      diagram:DIAGRAMS.graphHollow(),
+      opts:["rises linearly up to R, then stays constant","rises linearly up to R, then falls as 1/r","constant from 0 to R, then falls as 1/r","zero from 0 to R, then falls as 1/r"], ans:3,
+      sol:"All the current sits on the SURFACE, so for r < R the Amperian loop encloses <strong>no current at all</strong>:<br>B(2\u03c0r) = \u03bc\u2080(0) \u21d2 <strong>B = 0 everywhere inside</strong>.<br>For r > R it encloses the full I \u21d2 B = \u03bc\u2080I/(2\u03c0r).<br>Flat at zero, jump at R, then a 1/r decay \u2014 <strong>option (4)</strong>.<br><br>Contrast with the solid wire, which rises linearly inside. Same law; the whole difference is WHERE the current sits." },
+    { step:"10 \u00b7 The real thing", tag:"JEE Main 2021",
+      q:"Figure A and B show two long straight wires of circular cross-section (a and b with a < b), carrying current I which is uniformly distributed across the cross-section. The magnitude of magnetic field B varies with radius r and can be represented as:  [Original options were four graphs \u2014 described here in words]",
+      diagram:DIAGRAMS.graphSolid(),
+      opts:["curve a peaks higher and earlier (at r = a); both then merge onto the same 1/r tail","curve b peaks higher and earlier; both then merge onto the same 1/r tail","both peak at the same height","curve a is zero inside, curve b rises linearly"], ans:0,
+      sol:"Each wire peaks at its own surface, where B_max = \u03bc\u2080I/(2\u03c0R). Since <strong>B_max \u221d 1/R</strong> and a < b:<br>\u2022 the THINNER wire (a) peaks HIGHER, and sooner (at r = a)<br>\u2022 the thicker wire (b) peaks lower and later<br><br>Beyond both surfaces both are \u03bc\u2080I/(2\u03c0r) \u2014 the curves <strong>merge onto one tail</strong>, because from outside any wire looks like a thin line of current. <strong>Option (1).</strong>" },
+    { step:"11 \u00b7 Practice", q:"Inside a solid wire, the field is \u03bc\u2080Ir/(2\u03c0R\u00b2). If the wire's radius R is doubled while the current I stays the same, the field at a FIXED point deep inside (at the same r) becomes:",
+      diagram:DIAGRAMS.graphSolid(), opts:["doubled","halved","one quarter","unchanged"], ans:2,
+      sol:"At fixed r and I, B \u221d 1/R\u00b2. Doubling R gives B \u2192 B/4 \u21d2 <strong>one quarter</strong>.<br>Physically: the same current is now spread over 4\u00d7 the area, so the fraction enclosed at radius r drops by 4." },
+    { step:"12 \u00b7 Practice", q:"At the exact AXIS of a solid current-carrying wire (r = 0), the magnetic field is:",
+      diagram:DIAGRAMS.graphSolid(), opts:["maximum","zero","\u03bc\u2080I/(2\u03c0R)","infinite"], ans:1,
+      sol:"An Amperian loop of radius r \u2192 0 encloses essentially <strong>no current</strong> (I_enc = I r\u00b2/R\u00b2 \u2192 0), so B \u2192 0.<br><strong>Zero.</strong><br><br>Beware the idealised 'infinitely thin wire' formula B = \u03bc\u2080I/(2\u03c0r), which blows up as r \u2192 0. Real wires have thickness, and the field at their centre is exactly zero." }
+  ]},
+
+  { name:"6. Amp\u00e8re's Law \u2014 Solenoid & Toroid", questions:[
+    { step:"1 \u00b7 Warm-up", q:"The magnetic field deep inside a long solenoid with n turns per unit length carrying current i is:",
+      diagram:DIAGRAMS.solenoid('long solenoid, n turns/m'), opts:["\u03bc\u2080ni","\u03bc\u2080ni/2","\u03bc\u2080i/(2\u03c0n)","\u03bc\u2080Ni/(2R)"], ans:0,
+      sol:"Rectangular Amperian loop, length a, one side inside and one outside:<br>\u2022 outside side: B \u2248 0, contributes nothing<br>\u2022 the two short sides: \u27c2 B, contribute nothing<br>\u2022 inside side: \u222eB\u00b7d\u2113 = Ba<br>Enclosed current = (na)i \u21d2 Ba = \u03bc\u2080nai \u21d2 <strong>B = \u03bc\u2080ni</strong>.<br>It depends only on the product <strong>ni</strong> \u2014 not on the radius, not on where inside you stand." },
+    { step:"2 \u00b7 Warm-up", q:"The magnetic field OUTSIDE a long ideal solenoid is:",
+      diagram:DIAGRAMS.solenoid('field outside \u2248 0'), opts:["\u03bc\u2080ni","approximately zero","\u03bc\u2080ni/2","\u03bc\u2080I/(2\u03c0r)"], ans:1,
+      sol:"The return field spreads over a huge area outside, so it is <strong>approximately zero</strong> for a long solenoid \u2014 which is exactly the assumption used in the Amperian-loop derivation above." },
+    { step:"3 \u00b7 Build-up", q:"A long solenoid produces field B. If its current is TRIPLED and its turns per unit length are reduced to one third, the new field is:",
+      diagram:DIAGRAMS.solenoid('n \u2192 n/3, i \u2192 3i'), opts:["B","3B","9B","B/3"], ans:0,
+      sol:"B = \u03bc\u2080ni depends only on the PRODUCT ni. New product = (n/3)(3i) = ni \u2014 unchanged \u21d2 field stays at <strong>B</strong>." },
+    { step:"4 \u00b7 Build-up", q:"A solenoid is wound on a core of relative permeability \u03bc_r. The field inside becomes:",
+      diagram:DIAGRAMS.solenoid('with core \u03bc_r'), opts:["\u03bc\u2080ni","\u03bc\u2080\u03bc_r ni","\u03bc_r ni","\u03bc\u2080ni/\u03bc_r"], ans:1,
+      sol:"The core magnetises and adds its own field, multiplying the result:<br><strong>B = \u03bc\u2080 \u03bc_r n i</strong>.<br>With \u03bc_r in the hundreds, this is why every real electromagnet is wound on iron." },
+    { step:"5 \u00b7 Practice", q:"A toroid has N total turns, mean radius r, and carries current I. The field inside is:",
+      diagram:DIAG2.toroid(), opts:["\u03bc\u2080NI","\u03bc\u2080NI/(2\u03c0r)","\u03bc\u2080NI/(2r)","zero"], ans:1,
+      sol:"Take a circular Amperian loop of radius r along the toroid's core. By symmetry B is constant along it:<br>B(2\u03c0r) = \u03bc\u2080 (NI) \u21d2 <strong>B = \u03bc\u2080NI/(2\u03c0r)</strong>.<br><br>Since n = N/(2\u03c0r) is just the turns per unit length, this is the SAME formula as the solenoid, B = \u03bc\u2080ni \u2014 a solenoid bent into a ring." },
+    { step:"6 \u00b7 Practice", q:"A long solenoid has 500 turns/m and carries 2 A (no core). The field inside is closest to:",
+      diagram:DIAGRAMS.solenoid('n = 500/m, i = 2 A'), opts:["1.26 mT","12.6 mT","0.126 mT","1.26 T"], ans:0,
+      sol:"B = \u03bc\u2080ni = (4\u03c0 \u00d7 10\u207b\u2077)(500)(2) = 4\u03c0 \u00d7 10\u207b\u2074 \u2248 <strong>1.26 \u00d7 10\u207b\u00b3 T = 1.26 mT</strong>.<br>Modest \u2014 which is precisely why the next question puts a core in." },
+    { step:"7 \u00b7 The real thing", tag:"JEE Main 2022",
+      q:"A long solenoid carrying a current produces a magnetic field B along its axis. If the current is doubled and the number of turns per cm is halved, the new value of magnetic field will be equal to",
+      diagram:DIAGRAMS.solenoid('n \u2192 n/2, i \u2192 2i'), opts:["B","2B","4B","B/2"], ans:0,
+      sol:"Rung 3 with different numbers. New product ni = (n/2)(2i) = ni \u2014 identical \u21d2 field <strong>unchanged: B</strong>, option (1).<br>'Per cm' rather than 'per m' changes nothing \u2014 it is still turns per unit length." },
+    { step:"8 \u00b7 The real thing", tag:"JEE Main 2021",
+      q:"A solenoid of 1000 turns per metre has a core with relative permeability 500. Insulated windings of the solenoid carry an electric current of 5 A. The magnetic flux density produced by the solenoid is: (permeability of free space = 4\u03c0 \u00d7 10\u207b\u2077 H/m)",
+      diagram:DIAGRAMS.solenoid('with core, \u03bc_r = 500'), opts:["2 \u00d7 10\u207b\u00b3\u03c0 T","10\u207b\u2074\u03c0 T","\u03c0 T","(\u03c0/5) T"], ans:2,
+      sol:"B = \u03bc\u2080 \u03bc_r n i = (4\u03c0 \u00d7 10\u207b\u2077)(500)(1000)(5) = 4\u03c0 \u00d7 10\u207b\u2077 \u00d7 2.5\u00d710\u2076 = <strong>\u03c0 T</strong>, option (3).<br>Compare rung 6: the core has turned millitesla into tesla." },
+    { step:"9 \u00b7 The real thing", tag:"JEE Main 2021",
+      q:"Which of the following statements are correct?  (B) Magnetic field lines due to a solenoid at its ends and outside cannot be completely straight and confined.  (C) Magnetic field lines are completely confined within a toroid.",
+      diagram:DIAG2.toroid(), opts:["(C) only","(B) and (C) only","(B) and (D) only","(A) and (B) only"], ans:1,
+      sol:"<strong>(B) TRUE.</strong> A solenoid has two open ends \u2014 the lines must emerge, loop round outside and re-enter, so near the ends they splay and curve. The tidy 'straight and confined' picture only holds deep inside a long solenoid.<br><br><strong>(C) TRUE.</strong> A toroid is a solenoid bent into a closed ring, with no ends. An Amperian loop outside a toroid encloses zero net current \u21d2 B = 0 outside. The field is entirely trapped inside.<br><br><strong>Option (2).</strong>" },
+    { step:"10 \u00b7 The real thing", tag:"JEE Main 2015",
+      q:"Two coaxial solenoids of different radii carry current I in the same direction. Let F\u20d7\u2081 be the magnetic force on the inner solenoid due to the outer one and F\u20d7\u2082 be the magnetic force on the outer solenoid due to the inner one. Then",
+      diagram:DIAG2.coaxSolenoid(),
+      opts:["F\u20d7\u2081 = F\u20d7\u2082 = 0","F\u20d7\u2081 is radially inwards and F\u20d7\u2082 is radially outwards","F\u20d7\u2081 is radially inwards and F\u20d7\u2082 = 0","F\u20d7\u2081 is radially outwards and F\u20d7\u2082 = 0"], ans:0,
+      sol:"The outer solenoid's field inside it is <strong>uniform and along the axis</strong>. The inner solenoid's windings carry current in the \u03b8 direction (circumferentially).<br>Force on a winding element: dF = I d\u2113 \u00d7 B. With d\u2113 circumferential and B axial, dF points <strong>radially</strong> \u2014 but by symmetry it points outward at every point around the ring, so the forces cancel all the way round and the <strong>net force is zero</strong>.<br>The same argument applies to the outer solenoid (which sits in the inner one's field, or in zero field outside it).<br><strong>F\u20d7\u2081 = F\u20d7\u2082 = 0</strong>, option (1). Newton's third law also demands F\u2081 = \u2212F\u2082, which rules out options (3) and (4) immediately." },
+    { step:"11 \u00b7 The real thing", tag:"JEE Main 2020",
+      q:"An electron gun is placed inside a long solenoid of radius R on its axis. The solenoid has n turns/length and carries a current I. The electron gun shoots an electron along the radius of the solenoid with speed v. If the electron does not hit the surface of the solenoid, maximum possible value of v is (all symbols have their standard meaning)",
+      diagram:DIAGRAMS.electronGun(),
+      opts:["2e\u03bc\u2080nIR/m","e\u03bc\u2080nIR/m","e\u03bc\u2080nIR/(2m)","e\u03bc\u2080nIR/(4m)"], ans:2,
+      sol:"The finale \u2014 it needs BOTH halves of this deck.<br><br>Amp\u00e8re's law gives the field: <strong>B = \u03bc\u2080nI</strong>, along the axis.<br>The electron is fired along a radius, i.e. \u27c2 B, so it circles with r = mv/(eB).<br><br><strong>The key geometric step:</strong> it starts ON the axis. Going round its circle, the farthest it ever gets from the axis is a full <strong>diameter, 2r</strong> \u2014 not r.<br>To miss the wall: 2r \u2264 R \u21d2 r \u2264 R/2<br>mv/(e\u03bc\u2080nI) = R/2 \u21d2 v = <strong>e\u03bc\u2080nIR/(2m)</strong>, option (3).<br><br>Option (2) is exactly what you get if you forget the factor of 2 \u2014 the commonest error in this question." },
+    { step:"12 \u00b7 Practice", q:"A long solenoid and a toroid are both wound with the same turns per unit length and carry the same current. Comparing the field OUTSIDE each:",
+      diagram:DIAG2.toroid(),
+      opts:["both have exactly zero field outside","the solenoid has exactly zero outside; the toroid does not","the toroid has zero outside; the solenoid has a small stray field","both have a large field outside"], ans:2,
+      sol:"<strong>Toroid:</strong> an Amperian loop drawn outside encloses zero net current (every turn's current crosses it twice, in opposite directions) \u21d2 <strong>B = 0 outside, exactly</strong>.<br><br><strong>Solenoid:</strong> it has open ends, so flux must return through the outside space. The field there is small (and we neglect it in the derivation), but it is <strong>not exactly zero</strong>.<br><br><strong>Option (3).</strong> This is precisely why toroids are used where stray fields must not leak \u2014 transformer cores, tokamaks." }
+  ]}
+
+];
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'dpp_moving_charges_pyq_ladder_72_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length && parsed.every((a,i)=>Array.isArray(a)&&a.length===TOPICS[i].questions.length)) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+
+function saveAnswers(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+}
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    // Option order PRESERVED — past-year questions keep their printed (1)(2)(3)(4).
+    return{q:raw.q, diagram:raw.diagram||null, opts:raw.opts.slice(), ans:raw.ans,
+           sol:raw.sol, yt:raw.yt||'', tag:raw.tag||'', step:raw.step||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qBadges=document.getElementById('q-badges');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    const total=topic.questions.length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===total&&done===total?' all-done':'');
+    const dots=Array(total).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${total} attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.reduce((s,t)=>s+t.questions.length,0)} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=curTopic.questions.length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of ${curTopic.questions.length}`;
+  qText.textContent=q.q;
+  qBadges.innerHTML =
+    (q.step ? `<span class="badge-step">${q.step}</span>` : '') +
+    (q.tag  ? `<span class="badge-year">${q.tag}</span>` : '');
+  // Diagram
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['1','2','3','4'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===curTopic.questions.length-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  const last=curTopic.questions.length-1;
+  if(newQ<0||newQ>last){if(newQ>last) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// Close modal on backdrop click
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
