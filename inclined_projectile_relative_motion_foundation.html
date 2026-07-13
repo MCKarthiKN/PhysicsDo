@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Inclined Projectile & Relative Motion (Foundation)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+/* Clear confirm modal */
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+/* toast */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Foundation DPP</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Inclined Projectile<br>&amp; Relative Motion</h1></div>
+    <p id="home-sub">Foundation level — start at topic 1 and work down. 5 questions each, full solutions.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+// Each diagram is a function returning an SVG string
+
+const DIAGRAMS = {
+
+  // Two bodies on a straight line (1D relative velocity)
+  rel1D: (a='60', b='40', sameDir=true) => `
+    <svg viewBox="0 0 250 120" width="250" height="120" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="r1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="r2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="15" y1="98" x2="238" y2="98" stroke="#9ca3af" stroke-width="1.2"/>
+      <rect x="28" y="60" width="42" height="24" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="49" y="77" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="700" text-anchor="middle">A</text>
+      <line x1="74" y1="50" x2="120" y2="50" stroke="#2563eb" stroke-width="2.2" marker-end="url(#r1)"/>
+      <text x="96" y="44" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="600" text-anchor="middle">${a}</text>
+      <rect x="160" y="60" width="42" height="24" rx="5" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="181" y="77" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700" text-anchor="middle">B</text>
+      ${sameDir
+        ? `<line x1="206" y1="50" x2="238" y2="50" stroke="#dc2626" stroke-width="2.2" marker-end="url(#r2)"/><text x="222" y="44" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="600" text-anchor="middle">${b}</text>`
+        : `<line x1="206" y1="50" x2="160" y2="50" stroke="#dc2626" stroke-width="2.2" marker-end="url(#r2)"/><text x="183" y="44" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="600" text-anchor="middle">${b}</text>`}
+    </svg>`,
+
+  // Two perpendicular velocities
+  rel2D: (a='3 (E)', b='4 (N)') => `
+    <svg viewBox="0 0 230 160" width="230" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="p1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="p2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker>
+      <marker id="p3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="40" y1="130" x2="215" y2="130" stroke="#e5e7eb" stroke-width="1"/>
+      <line x1="40" y1="130" x2="40" y2="18" stroke="#e5e7eb" stroke-width="1"/>
+      <text x="212" y="145" font-size="10" fill="#9ca3af" font-family="sans-serif">E</text>
+      <text x="30" y="16" font-size="10" fill="#9ca3af" font-family="sans-serif">N</text>
+      <line x1="40" y1="130" x2="130" y2="130" stroke="#2563eb" stroke-width="2.4" marker-end="url(#p1)"/>
+      <text x="82" y="146" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="600" text-anchor="middle">${a}</text>
+      <line x1="40" y1="130" x2="40" y2="52" stroke="#16a34a" stroke-width="2.4" marker-end="url(#p2)"/>
+      <text x="8" y="92" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="600">${b}</text>
+      <line x1="40" y1="130" x2="130" y2="52" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#p3)"/>
+      <text x="96" y="92" font-size="11" fill="#dc2626" font-family="sans-serif">resultant</text>
+    </svg>`,
+
+  // Rain falling on a moving person
+  rainMan: (vr='10', vm='8') => `
+    <svg viewBox="0 0 240 165" width="240" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="rm1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="rm2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker></defs>
+      <line x1="14" y1="142" x2="228" y2="142" stroke="#9ca3af" stroke-width="1.2"/>
+      <line x1="60" y1="12" x2="60" y2="40" stroke="#93c5fd" stroke-width="1.6"/>
+      <line x1="100" y1="8" x2="100" y2="36" stroke="#93c5fd" stroke-width="1.6"/>
+      <line x1="180" y1="12" x2="180" y2="40" stroke="#93c5fd" stroke-width="1.6"/>
+      <line x1="145" y1="20" x2="145" y2="48" stroke="#93c5fd" stroke-width="1.6"/>
+      <circle cx="120" cy="96" r="9" fill="none" stroke="#374151" stroke-width="1.6"/>
+      <line x1="120" y1="105" x2="120" y2="128" stroke="#374151" stroke-width="1.6"/>
+      <line x1="120" y1="128" x2="112" y2="142" stroke="#374151" stroke-width="1.6"/>
+      <line x1="120" y1="128" x2="128" y2="142" stroke="#374151" stroke-width="1.6"/>
+      <line x1="150" y1="42" x2="150" y2="84" stroke="#2563eb" stroke-width="2.4" marker-end="url(#rm1)"/>
+      <text x="156" y="66" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="600">rain ${vr}</text>
+      <line x1="120" y1="120" x2="176" y2="120" stroke="#16a34a" stroke-width="2.4" marker-end="url(#rm2)"/>
+      <text x="150" y="136" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="600" text-anchor="middle">${vm}</text>
+    </svg>`,
+
+  // Boat crossing a flowing river
+  riverBoat: (vb='8', vr='6') => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="rb1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker>
+      <marker id="rb2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="rb3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <rect x="14" y="34" width="222" height="86" fill="#e0f2fe" stroke="#bae6fd" stroke-width="1"/>
+      <line x1="14" y1="34" x2="236" y2="34" stroke="#94a3b8" stroke-width="1.6"/>
+      <line x1="14" y1="120" x2="236" y2="120" stroke="#94a3b8" stroke-width="1.6"/>
+      <text x="20" y="28" font-size="10" fill="#6b7280" font-family="sans-serif">far bank</text>
+      <text x="20" y="136" font-size="10" fill="#6b7280" font-family="sans-serif">near bank</text>
+      <line x1="150" y1="78" x2="206" y2="78" stroke="#2563eb" stroke-width="2" marker-end="url(#rb2)"/>
+      <text x="178" y="72" font-size="10" fill="#2563eb" font-family="sans-serif" font-weight="600" text-anchor="middle">river ${vr}</text>
+      <polygon points="60,116 76,116 72,106 64,106" fill="#fde68a" stroke="#d97706" stroke-width="1.2"/>
+      <line x1="68" y1="106" x2="68" y2="50" stroke="#16a34a" stroke-width="2.4" marker-end="url(#rb1)"/>
+      <text x="38" y="80" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="600">${vb}</text>
+      <line x1="68" y1="116" x2="126" y2="44" stroke="#dc2626" stroke-width="1.7" stroke-dasharray="5,3" marker-end="url(#rb3)"/>
+      <text x="106" y="96" font-size="10" fill="#dc2626" font-family="sans-serif">actual</text>
+    </svg>`,
+
+  // Projectile fired UP an incline
+  inclineUp: (ang='\u03b8') => `
+    <svg viewBox="0 0 255 175" width="255" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="iu" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <polygon points="30,152 222,152 222,55" fill="#efe9df" stroke="#c9c3b6" stroke-width="1"/>
+      <line x1="30" y1="152" x2="222" y2="55" stroke="#6b7280" stroke-width="2.2"/>
+      <line x1="30" y1="152" x2="222" y2="152" stroke="#9ca3af" stroke-width="1.2"/>
+      <path d="M64,152 A34,34 0 0,0 60,135" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="66" y="147" font-size="11" fill="#374151" font-family="sans-serif">${ang}</text>
+      <line x1="30" y1="152" x2="74" y2="112" stroke="#dc2626" stroke-width="2.5" marker-end="url(#iu)"/>
+      <text x="62" y="108" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="600">v</text>
+      <path d="M30,152 Q98,74 170,84" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <circle cx="30" cy="152" r="4" fill="#16a34a"/>
+    </svg>`,
+
+  // Horizontal projection from top of a down-slope
+  inclineHoriz: (ang='45\u00b0') => `
+    <svg viewBox="0 0 250 180" width="250" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ih" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <polygon points="42,42 42,155 215,155" fill="#efe9df" stroke="#c9c3b6" stroke-width="1"/>
+      <line x1="42" y1="42" x2="215" y2="155" stroke="#6b7280" stroke-width="2.2"/>
+      <line x1="42" y1="155" x2="232" y2="155" stroke="#9ca3af" stroke-width="1.2"/>
+      <line x1="42" y1="42" x2="98" y2="42" stroke="#dc2626" stroke-width="2.5" marker-end="url(#ih)"/>
+      <text x="62" y="36" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="600">v</text>
+      <path d="M42,42 Q98,58 132,120" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <path d="M198,155 A26,26 0 0,0 190,138" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="174" y="150" font-size="11" fill="#374151" font-family="sans-serif">${ang}</text>
+      <circle cx="42" cy="42" r="4" fill="#16a34a"/>
+    </svg>`,
+
+  // Projectile fired perpendicular to the incline
+  inclinePerp: (ang='30\u00b0') => `
+    <svg viewBox="0 0 250 172" width="250" height="172" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ip" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="28" y1="150" x2="224" y2="55" stroke="#6b7280" stroke-width="2.4"/>
+      <line x1="28" y1="150" x2="224" y2="150" stroke="#9ca3af" stroke-width="1.2"/>
+      <path d="M60,150 A30,30 0 0,0 56,135" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="62" y="146" font-size="11" fill="#374151" font-family="sans-serif">${ang}</text>
+      <line x1="86" y1="122" x2="58" y2="66" stroke="#dc2626" stroke-width="2.5" marker-end="url(#ip)"/>
+      <text x="30" y="60" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="600">v \u27c2 plane</text>
+      <path d="M86,122 Q66,58 158,92" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <circle cx="86" cy="122" r="4" fill="#16a34a"/>
+    </svg>`,
+
+  // Incline showing g resolved into components
+  inclineG: (ang='\u03b1') => `
+    <svg viewBox="0 0 250 170" width="250" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="g1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker>
+      <marker id="g2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="g3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker></defs>
+      <polygon points="30,146 224,146 224,52" fill="#efe9df" stroke="#c9c3b6" stroke-width="1"/>
+      <line x1="30" y1="146" x2="224" y2="52" stroke="#6b7280" stroke-width="2.2"/>
+      <line x1="30" y1="146" x2="224" y2="146" stroke="#9ca3af" stroke-width="1.2"/>
+      <path d="M64,146 A34,34 0 0,0 60,129" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="66" y="141" font-size="11" fill="#374151" font-family="sans-serif">${ang}</text>
+      <circle cx="122" cy="101" r="4" fill="#374151"/>
+      <line x1="122" y1="101" x2="122" y2="152" stroke="#dc2626" stroke-width="2.4" marker-end="url(#g1)"/>
+      <text x="128" y="140" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="600">g</text>
+      <line x1="122" y1="101" x2="156" y2="84" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#g2)"/>
+      <text x="150" y="78" font-size="10" fill="#2563eb" font-family="sans-serif">g sin${ang}</text>
+      <line x1="122" y1="101" x2="146" y2="150" stroke="#16a34a" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#g3)"/>
+      <text x="150" y="122" font-size="10" fill="#16a34a" font-family="sans-serif">g cos${ang}</text>
+    </svg>`
+};
+
+// ── TOPIC DATA ─────────────────────────────────────────────────────────────────
+const TOPICS = [
+
+  { name:"1. Relative Velocity \u2014 Straight Line (Warm-up)", questions:[
+    { q:"Two cars move along the SAME direction on a straight road with speeds 60 km/h and 40 km/h. The velocity of the first car relative to the second is:",
+      diagram:DIAGRAMS.rel1D('60 km/h','40 km/h',true),
+      opts:["20 km/h","100 km/h","50 km/h","2400 km/h"], ans:0,
+      sol:"Rule: v(A relative to B) = v\u2090 \u2212 v_b. Same direction \u2192 subtract. 60 \u2212 40 = <strong>20 km/h</strong>." },
+    { q:"Two cars approach each other on a straight road with speeds 60 km/h and 40 km/h (OPPOSITE directions). Their relative velocity is:",
+      diagram:DIAGRAMS.rel1D('60 km/h','40 km/h',false),
+      opts:["20 km/h","100 km/h","50 km/h","zero"], ans:1,
+      sol:"Take right as positive: v\u2090 = +60, v_b = \u221240. v(A rel B) = 60 \u2212 (\u221240) = <strong>100 km/h</strong>. Opposite directions \u2192 add." },
+    { q:"Two trains run side by side in the same direction, both at exactly 50 km/h. To a passenger in one train, the other train appears to:",
+      diagram:DIAGRAMS.rel1D('50 km/h','50 km/h',true),
+      opts:["move forward at 100 km/h","move backward at 50 km/h","stay at rest","move forward at 50 km/h"], ans:2,
+      sol:"v(A rel B) = 50 \u2212 50 = 0. Equal velocities \u2192 zero relative velocity, so the other train appears <strong>at rest</strong>." },
+    { q:"Two particles move with speeds v\u2081 and v\u2082. Their relative velocity is MAXIMUM when the angle between their velocities is:",
+      opts:["zero","\u03c0/4","\u03c0/2","\u03c0"], ans:3,
+      sol:"|v_rel| = \u221a(v\u2081\u00b2 + v\u2082\u00b2 \u2212 2v\u2081v\u2082cos\u03b8). This is largest when cos\u03b8 is most negative, i.e. \u03b8 = <strong>\u03c0</strong> (opposite directions), giving v\u2081 + v\u2082." },
+    { q:"Two particles move with speeds v\u2081 and v\u2082. Their relative velocity is MINIMUM when the angle between their velocities is:",
+      opts:["zero","\u03c0/4","\u03c0/2","\u03c0"], ans:0,
+      sol:"Same formula. |v_rel| is smallest when cos\u03b8 = +1, i.e. \u03b8 = <strong>0</strong> (same direction), giving |v\u2081 \u2212 v\u2082|." }
+  ]},
+
+  { name:"2. Relative Velocity \u2014 Perpendicular (2D)", questions:[
+    { q:"Particle A moves east at 3 m/s and particle B moves north at 4 m/s. The magnitude of the velocity of A relative to B is:",
+      diagram:DIAGRAMS.rel2D('3 (E)','4 (N)'),
+      opts:["1 m/s","5 m/s","7 m/s","12 m/s"], ans:1,
+      sol:"v(A rel B) = v\u2090 \u2212 v_b = 3\u00ee \u2212 4\u0135. Magnitude = \u221a(3\u00b2 + 4\u00b2) = <strong>5 m/s</strong>. (Perpendicular \u2192 use Pythagoras.)" },
+    { q:"Two particles move perpendicular to each other with speeds 6 m/s and 8 m/s. Their relative speed is:",
+      diagram:DIAGRAMS.rel2D('6','8'),
+      opts:["2 m/s","10 m/s","14 m/s","48 m/s"], ans:1,
+      sol:"\u03b8 = 90\u00b0 \u21d2 cos\u03b8 = 0, so v_rel = \u221a(6\u00b2 + 8\u00b2) = \u221a100 = <strong>10 m/s</strong>." },
+    { q:"A bird flies south at 40 km/h. A train moves east at 40 km/h. The velocity of the bird relative to an observer in the train is:",
+      diagram:DIAGRAMS.rel2D('train 40 (E)','bird 40 (S)'),
+      opts:["40\u221a2 km/h, North-East","40\u221a2 km/h, South-East","40\u221a2 km/h, South-West","40\u221a2 km/h, North-West"], ans:2,
+      sol:"Take east = \u00ee, north = \u0135. v_bird = \u221240\u0135, v_train = +40\u00ee. v(bird rel train) = \u221240\u0135 \u2212 40\u00ee = \u221240\u00ee \u2212 40\u0135, i.e. pointing west and south. Magnitude = 40\u221a2 km/h, direction <strong>South-West</strong>." },
+    { q:"A ship travels due east at 10 km/h. A second ship, heading 30\u00b0 east of north, always stays due north of the first ship. The speed of the second ship is:",
+      opts:["20\u221a2 km/h","20\u221a(3/2) km/h","20 km/h","20/\u221a2 km/h"], ans:2,
+      sol:"To stay due north, the second ship's EAST component must match the first ship's 10 km/h. Its east component is v sin30\u00b0 = v/2. So v/2 = 10 \u21d2 v = <strong>20 km/h</strong>." },
+    { q:"A man walks 30 m north, then 20 m east, and finally 30\u221a2 m towards south-west. His displacement from the starting point is:",
+      opts:["10 m towards west","10 m towards east","60\u221a2 m towards north-west","60\u221a2 m towards north-east"], ans:0,
+      sol:"East = \u00ee, north = \u0135. Leg 1: 30\u0135. Leg 2: 20\u00ee. Leg 3: 30\u221a2 south-west = 30\u221a2(\u2212\u00ee/\u221a2 \u2212 \u0135/\u221a2) = \u221230\u00ee \u2212 30\u0135. Sum = (20 \u2212 30)\u00ee + (30 \u2212 30)\u0135 = \u221210\u00ee. That is <strong>10 m towards west</strong>." }
+  ]},
+
+  { name:"3. Rain \u2014 Man Problems", questions:[
+    { q:"Rain falls vertically at 3 m/s. A man runs horizontally at 4 m/s. The speed of the rain relative to the man is:",
+      diagram:DIAGRAMS.rainMan('3','4'),
+      opts:["1 m/s","5 m/s","7 m/s","12 m/s"], ans:1,
+      sol:"v(rain rel man) = v_rain \u2212 v_man. The two are perpendicular, so magnitude = \u221a(3\u00b2 + 4\u00b2) = <strong>5 m/s</strong>." },
+    { q:"A girl walks on a road at 8 km/h. Rain falls vertically downward at 10 km/h. The velocity of the rain relative to the girl is:",
+      diagram:DIAGRAMS.rainMan('10','8'),
+      opts:["\u221a7 km/h","\u221a13 km/h","\u221a6 km/h","\u221a164 km/h"], ans:3,
+      sol:"Rain (vertical, 10) and girl (horizontal, 8) are perpendicular. Relative speed = \u221a(10\u00b2 + 8\u00b2) = \u221a(100 + 64) = <strong>\u221a164 km/h</strong>." },
+    { q:"Rain falls vertically at 10 m/s. To a cyclist, the raindrops appear to come at 20 m/s. The speed of the cyclist is:",
+      diagram:DIAGRAMS.rainMan('10','v = ?'),
+      opts:["10 m/s","10\u221a3 m/s","20 m/s","20\u221a3 m/s"], ans:1,
+      sol:"The apparent (relative) velocity has a vertical part 10 and a horizontal part equal to the cyclist's speed v. So 10\u00b2 + v\u00b2 = 20\u00b2 \u21d2 v\u00b2 = 300 \u21d2 v = <strong>10\u221a3 m/s</strong>." },
+    { q:"Rain falls vertically at 30 m/s. A woman cycles at 10 m/s. To stay dry, she should tilt her umbrella from the vertical by an angle:",
+      diagram:DIAGRAMS.rainMan('30','10'),
+      opts:["tan\u207b\u00b9(1/3) \u2248 18.4\u00b0, towards her direction of motion","tan\u207b\u00b9(3) \u2248 71.6\u00b0, towards her direction of motion","45\u00b0, backwards","0\u00b0 \u2014 straight up"], ans:0,
+      sol:"Relative rain has horizontal part 10 (backwards) and vertical part 30. tan\u03b1 = horizontal/vertical = 10/30 = 1/3 \u21d2 \u03b1 = <strong>tan\u207b\u00b9(1/3) \u2248 18.4\u00b0 from the vertical</strong>, tilted forward (into her motion)." },
+    { q:"A man is walking east. Rain appears to him to fall vertically downward. This means the actual rain is:",
+      opts:["falling vertically downward","falling with a westward horizontal component","falling with an eastward horizontal component","falling at 45\u00b0"], ans:2,
+      sol:"Apparent = actual \u2212 v_man. If apparent is purely vertical, the actual rain must have a horizontal part exactly equal to the man's velocity \u2014 i.e. <strong>eastward</strong>, in the same direction he walks." }
+  ]},
+
+  { name:"4. River \u2014 Boat Problems", questions:[
+    { q:"A boat is sent straight across (perpendicular to) a river with speed 8 km/h. The resultant speed of the boat is 10 km/h. The speed of the river current is:",
+      diagram:DIAGRAMS.riverBoat('8','?'),
+      opts:["6 km/h","\u221a13 km/h","\u221a6 km/h","\u221a109 km/h"], ans:0,
+      sol:"Boat (across) and river (along) are perpendicular. 8\u00b2 + v_r\u00b2 = 10\u00b2 \u21d2 v_r\u00b2 = 100 \u2212 64 = 36 \u21d2 v_r = <strong>6 km/h</strong>. (A neat 6-8-10 triangle.)" },
+    { q:"A river flows at 3 m/s. A boat heads straight across at 5 m/s. The river is 100 m wide. The time taken to cross is:",
+      diagram:DIAGRAMS.riverBoat('5','3'),
+      opts:["12.5 s","20 s","25 s","33.3 s"], ans:1,
+      sol:"Crossing time depends ONLY on the component across the river. t = width / v_across = 100/5 = <strong>20 s</strong>. The current does not change the crossing time \u2014 it only pushes the boat downstream." },
+    { q:"Same boat as above (river 3 m/s, boat 5 m/s straight across, width 100 m). How far downstream does it land?",
+      diagram:DIAGRAMS.riverBoat('5','3'),
+      opts:["30 m","60 m","100 m","20 m"], ans:1,
+      sol:"Crossing takes t = 100/5 = 20 s. In that time the current carries the boat downstream by drift = v_r \u00d7 t = 3 \u00d7 20 = <strong>60 m</strong>." },
+    { q:"A man crosses a river flowing at 5 m/s and reaches the point directly opposite, 60 m away, in 5 s. His speed in still water is:",
+      diagram:DIAGRAMS.riverBoat('?','5'),
+      opts:["12 m/s","13 m/s","5 m/s","10 m/s"], ans:1,
+      sol:"He lands directly across, so his ACROSS component = 60/5 = 12 m/s. To cancel the current he must also aim 5 m/s upstream. Still-water speed = \u221a(12\u00b2 + 5\u00b2) = <strong>13 m/s</strong>." },
+    { q:"A boat moves at 5 km/h in still water and crosses a 1 km wide river along the SHORTEST PATH in 15 minutes. The speed of the river is:",
+      diagram:DIAGRAMS.riverBoat('5','?'),
+      opts:["3 km/h","4 km/h","2 km/h","1 km/h"], ans:0,
+      sol:"Shortest path = straight across. Time = 15 min = 1/4 h, so the effective across-speed = 1 \u00f7 (1/4) = 4 km/h. This is the component left after cancelling the current: 4 = \u221a(5\u00b2 \u2212 v_r\u00b2) \u21d2 25 \u2212 v_r\u00b2 = 16 \u21d2 v_r = <strong>3 km/h</strong>." }
+  ]},
+
+  { name:"5. Projectile on an Inclined Plane (Basics)", questions:[
+    { q:"For a projectile on an incline, gravity g is resolved along and perpendicular to the plane (angle \u03b1). The two components are:",
+      diagram:DIAGRAMS.inclineG('\u03b1'),
+      opts:["g sin\u03b1 along the plane, g cos\u03b1 perpendicular to it","g cos\u03b1 along the plane, g sin\u03b1 perpendicular to it","g along the plane, zero perpendicular","g/2 each"], ans:0,
+      sol:"Tilt the axes to lie along the incline. Gravity then splits into <strong>g sin\u03b1 along the plane</strong> (down-slope) and <strong>g cos\u03b1 perpendicular</strong> to it. Every incline projectile problem starts here." },
+    { q:"A plane surface is inclined at angle \u03b8 to the horizontal. From the bottom, a bullet is fired with velocity v. The maximum possible range of the bullet UP the inclined plane is:",
+      diagram:DIAGRAMS.inclineUp('\u03b8'),
+      opts:["v\u00b2/g","v\u00b2/(g(1 + sin\u03b8))","v\u00b2/(g(1 \u2212 sin\u03b8))","v\u00b2/(g(1 + cos\u03b8))"], ans:1,
+      sol:"Standard result: max range up an incline = <strong>v\u00b2/(g(1 + sin\u03b8))</strong>. Sanity check: put \u03b8 = 0 (flat ground) and it reduces to v\u00b2/g, the familiar maximum range. The (1 + sin\u03b8) makes the up-slope range SMALLER \u2014 as it should be." },
+    { q:"A bullet is fired with velocity v DOWN the same plane inclined at \u03b8. The maximum possible range down the plane is:",
+      diagram:DIAGRAMS.inclineUp('\u03b8'),
+      opts:["v\u00b2/(g(1 \u2212 sin\u03b8))","v\u00b2/(g(1 + sin\u03b8))","v\u00b2/g","v\u00b2/(g cos\u03b8)"], ans:0,
+      sol:"Same formula but with the sign of the slope flipped: max range down = <strong>v\u00b2/(g(1 \u2212 sin\u03b8))</strong>. Since (1 \u2212 sin\u03b8) < 1, this is LARGER than the up-slope range \u2014 which matches intuition: it is easier to throw downhill." },
+    { q:"A ball is projected horizontally with speed v from the top of a plane inclined at 45\u00b0. How far from the point of projection does the ball strike the plane?",
+      diagram:DIAGRAMS.inclineHoriz('45\u00b0'),
+      opts:["v\u00b2/g","\u221a2 \u00b7 v\u00b2/g","2v\u00b2/g","\u221a2 \u00b7 (2v\u00b2/g)"], ans:3,
+      sol:"Horizontal: x = vt. Vertical: y = \u00bdgt\u00b2. It hits the 45\u00b0 plane when y/x = tan45\u00b0 = 1 \u21d2 \u00bdgt\u00b2 = vt \u21d2 t = 2v/g. Then x = 2v\u00b2/g and y = 2v\u00b2/g. Distance = \u221a(x\u00b2 + y\u00b2) = <strong>\u221a2 (2v\u00b2/g)</strong>." },
+    { q:"A ball is projected from point A with velocity 10 m/s PERPENDICULAR to a plane inclined at 30\u00b0 (g = 10). The range of the ball on the inclined plane is:",
+      diagram:DIAGRAMS.inclinePerp('30\u00b0'),
+      opts:["40/3 m","20/13 m","13/20 m","13/40 m"], ans:0,
+      sol:"Use axes along the incline. Perpendicular to plane: u = 10, a = \u2212g cos30\u00b0. It returns to the plane when the perpendicular displacement is zero \u21d2 t = 2u/(g cos30\u00b0) = 20/(10 \u00b7 \u221a3/2) = 4/\u221a3 s. Along the plane: u = 0, a = g sin30\u00b0 = 5. Range = \u00bd(5)(4/\u221a3)\u00b2 = \u00bd \u00b7 5 \u00b7 16/3 = <strong>40/3 m</strong>." }
+  ]}
+
+];
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'dpp_incline_relmotion_foundation_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length && parsed.every((a,i)=>Array.isArray(a)&&a.length===TOPICS[i].questions.length)) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+
+function saveAnswers(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+}
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    const total=topic.questions.length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===total&&done===total?' all-done':'');
+    const dots=Array(total).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${total} attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.reduce((s,t)=>s+t.questions.length,0)} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=curTopic.questions.length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of ${curTopic.questions.length}`;
+  qText.textContent=q.q;
+  // Diagram
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===curTopic.questions.length-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  const last=curTopic.questions.length-1;
+  if(newQ<0||newQ>last){if(newQ>last) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// Close modal on backdrop click
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
