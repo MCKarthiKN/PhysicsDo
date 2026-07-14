@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Magnetic Force, Torque & Galvanometer — PYQ Ladder</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+#q-badges{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 14px;}
+.badge-step,.badge-year{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 10px;border-radius:6px;border:1px solid var(--border);}
+.badge-step{background:var(--tag-bg);color:var(--text3);}
+.badge-year{background:#fff8e6;border-color:#e8d9a8;color:#8a6d1f;font-weight:700;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+/* Clear confirm modal */
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+/* toast */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> PYQ Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Magnetic Force, Torque<br>&amp; the Galvanometer</h1></div>
+    <p id="home-sub">7 topics × 12 questions. Easy–medium → medium → the original exam question, verbatim, with its year. AIEEE 2011 – JEE Main 2022.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div id="q-badges"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+// Each diagram is a function returning an SVG string
+
+const DIAGRAMS = {
+
+  cyclotron: () => `
+    <svg viewBox="0 0 240 155" width="240" height="155" xmlns="http://www.w3.org/2000/svg">
+      <path d="M112,20 A58,58 0 0,0 112,136 Z" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+      <path d="M128,20 A58,58 0 0,1 128,136 Z" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <text x="82" y="82" font-size="13" fill="#2563eb" font-family="sans-serif" font-weight="700">D\u2081</text>
+      <text x="150" y="82" font-size="13" fill="#dc2626" font-family="sans-serif" font-weight="700">D\u2082</text>
+      <path d="M120,78 m0,-6 a6,6 0 1,1 0,12 a14,14 0 1,1 0,-28 a22,22 0 1,1 0,44 a30,30 0 1,1 0,-60" fill="none" stroke="#374151" stroke-width="1.4"/>
+      <line x1="182" y1="78" x2="182" y2="42" stroke="#374151" stroke-width="1.2"/>
+      <text x="186" y="60" font-size="11" fill="#374151" font-family="sans-serif">R</text>
+      <text x="120" y="150" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">gap = electric field \u00b7 dees = magnetic field</text>
+    </svg>`,
+
+  wireForce: (cur='I', ang='\u03b8') => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="wf" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker>
+      <marker id="wb" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="wF" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker></defs>
+      ${[0,1,2,3,4].map(i=>`<line x1="30" y1="${30+i*22}" x2="215" y2="${30+i*22}" stroke="#dbeafe" stroke-width="1.3" marker-end="url(#wb)"/>`).join('')}
+      <text x="222" y="34" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="700">B</text>
+      <line x1="60" y1="130" x2="180" y2="52" stroke="#dc2626" stroke-width="3" marker-end="url(#wf)"/>
+      <text x="150" y="66" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">${cur}</text>
+      <path d="M92,110 A38,38 0 0,0 98,96" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="96" y="112" font-size="11" fill="#374151" font-family="sans-serif">${ang}</text>
+      <line x1="112" y1="96" x2="112" y2="146" stroke="#16a34a" stroke-width="2.2" marker-end="url(#wF)"/>
+      <text x="118" y="140" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="700">F = BIL sin${ang}</text>
+    </svg>`,
+
+  triangleWire: () => `
+    <svg viewBox="0 0 250 150" width="250" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="tw2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="tw3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      ${[0,1,2,3].map(i=>`<line x1="14" y1="${24+i*20}" x2="90" y2="${24+i*20}" stroke="#93c5fd" stroke-width="1.3" marker-end="url(#tw2)"/>`).join('')}
+      <text x="14" y="18" font-size="10" fill="#2563eb" font-family="sans-serif" font-weight="700">Magnetic field</text>
+      <line x1="60" y1="118" x2="235" y2="118" stroke="#dc2626" stroke-width="2.2" marker-end="url(#tw3)"/>
+      <polygon points="120,118 172,118 146,72" fill="none" stroke="#dc2626" stroke-width="2.4"/>
+      <text x="114" y="132" font-size="11" fill="#374151" font-family="sans-serif">B</text>
+      <text x="172" y="132" font-size="11" fill="#374151" font-family="sans-serif">D</text>
+      <text x="144" y="66" font-size="11" fill="#374151" font-family="sans-serif">C</text>
+      <text x="118" y="90" font-size="10" fill="#6b7280" font-family="sans-serif">5 cm</text>
+      <text x="164" y="90" font-size="10" fill="#6b7280" font-family="sans-serif">5 cm</text>
+      <text x="138" y="132" font-size="10" fill="#6b7280" font-family="sans-serif">5 cm</text>
+      <text x="66" y="112" font-size="11" fill="#dc2626" font-family="sans-serif">A</text>
+      <text x="222" y="112" font-size="11" fill="#dc2626" font-family="sans-serif">E</text>
+    </svg>`,
+
+  rodIncline: () => `
+    <svg viewBox="0 0 250 155" width="250" height="155" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ri" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker></defs>
+      <polygon points="34,132 206,132 206,46" fill="#efe9df" stroke="#c9c3b6" stroke-width="1.2"/>
+      <line x1="34" y1="132" x2="206" y2="46" stroke="#6b7280" stroke-width="2.2"/>
+      <path d="M70,132 A36,36 0 0,0 64,114" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="72" y="127" font-size="11" fill="#374151" font-family="sans-serif">45\u00b0</text>
+      <ellipse cx="120" cy="89" rx="9" ry="5" fill="#fde68a" stroke="#d97706" stroke-width="2" transform="rotate(-26 120 89)"/>
+      <text x="126" y="100" font-size="11" fill="#d97706" font-family="sans-serif" font-weight="700">I</text>
+      ${[0,1,2].map(i=>`<line x1="${86+i*34}" y1="34" x2="${86+i*34}" y2="16" stroke="#2563eb" stroke-width="2" marker-end="url(#ri)"/>`).join('')}
+      <text x="150" y="26" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="700">B (vertically up)</text>
+      <text x="125" y="150" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">smooth incline \u00b7 rod lies horizontally</text>
+    </svg>`,
+
+  parallelWires: (i1='I\u2081', i2='I\u2082', same=true) => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="pw" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker>
+      <marker id="pf" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker></defs>
+      <line x1="72" y1="136" x2="72" y2="18" stroke="#dc2626" stroke-width="2.8" marker-end="url(#pw)"/>
+      <text x="44" y="30" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">${i1}</text>
+      ${same
+        ? `<line x1="178" y1="136" x2="178" y2="18" stroke="#dc2626" stroke-width="2.8" marker-end="url(#pw)"/>`
+        : `<line x1="178" y1="18" x2="178" y2="136" stroke="#dc2626" stroke-width="2.8" marker-end="url(#pw)"/>`}
+      <text x="186" y="30" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">${i2}</text>
+      ${same
+        ? `<line x1="88" y1="80" x2="124" y2="80" stroke="#16a34a" stroke-width="2.2" marker-end="url(#pf)"/>
+           <line x1="162" y1="80" x2="126" y2="80" stroke="#16a34a" stroke-width="2.2" marker-end="url(#pf)"/>
+           <text x="125" y="70" font-size="10" fill="#16a34a" font-family="sans-serif" text-anchor="middle" font-weight="700">attract</text>`
+        : `<line x1="66" y1="80" x2="30" y2="80" stroke="#16a34a" stroke-width="2.2" marker-end="url(#pf)"/>
+           <line x1="184" y1="80" x2="220" y2="80" stroke="#16a34a" stroke-width="2.2" marker-end="url(#pf)"/>
+           <text x="125" y="70" font-size="10" fill="#16a34a" font-family="sans-serif" text-anchor="middle" font-weight="700">repel</text>`}
+      <line x1="72" y1="148" x2="178" y2="148" stroke="#6b7280" stroke-width="1"/>
+      <line x1="72" y1="142" x2="72" y2="154" stroke="#6b7280" stroke-width="1"/>
+      <line x1="178" y1="142" x2="178" y2="154" stroke="#6b7280" stroke-width="1"/>
+      <text x="125" y="159" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">d</text>
+    </svg>`,
+
+  wireAndLoop: () => `
+    <svg viewBox="0 0 250 155" width="250" height="155" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="wl" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="46" y1="140" x2="46" y2="14" stroke="#dc2626" stroke-width="2.8" marker-end="url(#wl)"/>
+      <text x="20" y="28" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="700">I\u2081</text>
+      <rect x="106" y="46" width="72" height="72" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+      <line x1="132" y1="118" x2="152" y2="118" stroke="#2563eb" stroke-width="2.4" marker-end="url(#wl)" opacity="0.9"/>
+      <text x="136" y="86" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="700">I\u2082</text>
+      <line x1="46" y1="132" x2="106" y2="132" stroke="#6b7280" stroke-width="1"/>
+      <text x="76" y="146" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">a</text>
+      <line x1="106" y1="34" x2="178" y2="34" stroke="#6b7280" stroke-width="1"/>
+      <text x="142" y="28" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">a</text>
+    </svg>`,
+
+  threadWires: () => `
+    <svg viewBox="0 0 240 160" width="240" height="160" xmlns="http://www.w3.org/2000/svg">
+      <line x1="120" y1="16" x2="120" y2="60" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="120" y1="16" x2="84" y2="124" stroke="#374151" stroke-width="1.6"/>
+      <line x1="120" y1="16" x2="156" y2="124" stroke="#374151" stroke-width="1.6"/>
+      <path d="M120,52 A38,38 0 0,0 108,58" fill="none" stroke="#374151" stroke-width="1.1"/>
+      <text x="106" y="48" font-size="11" fill="#374151" font-family="sans-serif">\u03b8</text>
+      <text x="140" y="76" font-size="11" fill="#374151" font-family="sans-serif" font-style="italic">L</text>
+      <circle cx="84" cy="130" r="9" fill="#d1d5db" stroke="#6b7280" stroke-width="1.4"/>
+      <circle cx="156" cy="130" r="9" fill="#d1d5db" stroke="#6b7280" stroke-width="1.4"/>
+      <text x="66" y="134" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">I</text>
+      <text x="168" y="134" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">I</text>
+      <text x="120" y="152" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">mass \u03bb per unit length \u00b7 in equilibrium</text>
+    </svg>`,
+
+  crossedFields: () => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="cf1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker>
+      <marker id="cf2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      ${[0,1,2,3,4].map(i=>[0,1,2].map(j=>`<text x="${52+i*36}" y="${34+j*40}" font-size="11" fill="#93c5fd" font-family="sans-serif">\u2299</text>`).join('')).join('')}
+      <text x="196" y="24" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="700">B (out of page)</text>
+      ${[0,1,2].map(i=>`<line x1="${70+i*50}" y1="44" x2="${70+i*50}" y2="112" stroke="#16a34a" stroke-width="1.8" marker-end="url(#cf1)"/>`).join('')}
+      <text x="16" y="82" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="700">E</text>
+      <circle cx="42" cy="132" r="6" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <line x1="50" y1="132" x2="214" y2="132" stroke="#dc2626" stroke-width="2.4" marker-end="url(#cf2)"/>
+      <text x="130" y="150" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700" text-anchor="middle">v \u2014 undeflected when qE = qvB</text>
+    </svg>`,
+
+  loopTorque: () => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="lt1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="lt2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#7c3aed"/></marker></defs>
+      ${[0,1,2,3].map(i=>`<line x1="20" y1="${34+i*30}" x2="230" y2="${34+i*30}" stroke="#dbeafe" stroke-width="1.3" marker-end="url(#lt1)"/>`).join('')}
+      <text x="204" y="26" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="700">B</text>
+      <polygon points="94,52 158,68 158,124 94,108" fill="#fee2e2" fill-opacity="0.6" stroke="#dc2626" stroke-width="2.4"/>
+      <text x="100" y="120" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">I</text>
+      <line x1="126" y1="88" x2="176" y2="52" stroke="#7c3aed" stroke-width="2.4" marker-end="url(#lt2)"/>
+      <text x="176" y="46" font-size="12" fill="#7c3aed" font-family="sans-serif" font-weight="700">M</text>
+      <path d="M150,74 A30,30 0 0,0 152,88" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="156" y="86" font-size="11" fill="#374151" font-family="sans-serif">\u03b8</text>
+      <text x="125" y="152" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">\u03c4 = M \u00d7 B = NIAB sin\u03b8 (\u03b8 between M and B)</text>
+    </svg>`,
+
+  galvanometer: () => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="gv" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker></defs>
+      <path d="M28,36 L74,36 A48,48 0 0,0 74,124 L28,124 Z" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+      <path d="M222,36 L176,36 A48,48 0 0,1 176,124 L222,124 Z" fill="#fee2e2" stroke="#dc2626" stroke-width="1.6"/>
+      <text x="44" y="86" font-size="13" fill="#2563eb" font-family="sans-serif" font-weight="700">N</text>
+      <text x="200" y="86" font-size="13" fill="#dc2626" font-family="sans-serif" font-weight="700">S</text>
+      <circle cx="125" cy="80" r="26" fill="#e5e7eb" stroke="#6b7280" stroke-width="1.4"/>
+      <text x="125" y="84" font-size="9" fill="#6b7280" font-family="sans-serif" text-anchor="middle">core</text>
+      <rect x="108" y="48" width="34" height="64" fill="none" stroke="#d97706" stroke-width="2.4"/>
+      ${[0,1].map(i=>`<line x1="${88+i*74}" y1="80" x2="${104+i*42}" y2="80" stroke="#2563eb" stroke-width="1.6" marker-end="url(#gv)"/>`).join('')}
+      <line x1="125" y1="14" x2="125" y2="42" stroke="#374151" stroke-width="1.6"/>
+      <text x="130" y="24" font-size="10" fill="#374151" font-family="sans-serif">torsion band (k)</text>
+      <text x="125" y="152" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">radial field \u2192 plane always parallel to B \u2192 \u03b8 \u221d I</text>
+    </svg>`,
+
+  shunt: () => `
+    <svg viewBox="0 0 250 130" width="250" height="130" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="sh" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="14" y1="64" x2="66" y2="64" stroke="#dc2626" stroke-width="2" marker-end="url(#sh)"/>
+      <text x="24" y="56" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">I</text>
+      <line x1="66" y1="64" x2="66" y2="34" stroke="#374151" stroke-width="1.6"/>
+      <line x1="66" y1="34" x2="96" y2="34" stroke="#374151" stroke-width="1.6"/>
+      <circle cx="118" cy="34" r="16" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+      <text x="118" y="39" font-size="12" fill="#2563eb" font-family="sans-serif" text-anchor="middle" font-weight="700">G</text>
+      <line x1="140" y1="34" x2="170" y2="34" stroke="#374151" stroke-width="1.6"/>
+      <line x1="170" y1="34" x2="170" y2="64" stroke="#374151" stroke-width="1.6"/>
+      <line x1="66" y1="64" x2="66" y2="96" stroke="#374151" stroke-width="1.6"/>
+      <line x1="66" y1="96" x2="98" y2="96" stroke="#374151" stroke-width="1.6"/>
+      <rect x="98" y="86" width="42" height="20" fill="#fff8e6" stroke="#d97706" stroke-width="2"/>
+      <text x="119" y="100" font-size="11" fill="#d97706" font-family="sans-serif" text-anchor="middle" font-weight="700">S</text>
+      <line x1="140" y1="96" x2="170" y2="96" stroke="#374151" stroke-width="1.6"/>
+      <line x1="170" y1="96" x2="170" y2="64" stroke="#374151" stroke-width="1.6"/>
+      <line x1="170" y1="64" x2="228" y2="64" stroke="#dc2626" stroke-width="2" marker-end="url(#sh)"/>
+      <text x="94" y="24" font-size="10" fill="#6b7280" font-family="sans-serif">I_g</text>
+      <text x="94" y="120" font-size="10" fill="#6b7280" font-family="sans-serif">I \u2212 I_g</text>
+      <text x="125" y="12" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">galvanometer + shunt = ammeter</text>
+    </svg>`
+};
+
+// ── TOPIC DATA ─────────────────────────────────────────────────────────────────
+// LADDER, recalibrated after student feedback: no pure "state the formula" rungs.
+// Every entry question requires a DECISION (a direction, a sign, which-formula-applies,
+// a two-step chain) — easy-to-medium, not advanced. Then the real past-year questions,
+// word-for-word, with their year and original option order.
+const TOPICS = [
+
+  { name:"1. The Cyclotron", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"A cyclotron is set up to accelerate protons. If a NEUTRON of the same mass is injected instead, what happens?",
+      diagram:DIAGRAMS.cyclotron(),
+      opts:["it accelerates the same way","it circles but never speeds up","it is not accelerated or bent at all \u2014 it flies straight out","it circles but at half the frequency"], ans:2,
+      sol:"Both the magnetic force (qv \u00d7 B) and the electric force (qE) are proportional to <strong>q</strong>. A neutron has q = 0, so <strong>both are zero</strong>.<br>It is neither bent nor accelerated \u2014 it simply travels straight through and out.<br><br>This is the whole reason cyclotrons accelerate protons, deuterons and alphas, but never neutrons." },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"Inside a cyclotron the proton's circle keeps getting bigger as it speeds up. Why can a FIXED-frequency oscillator still keep pushing it at the right moment every time?",
+      diagram:DIAGRAMS.cyclotron(),
+      opts:["because the speed stays constant","because the time per half-circle, T/2 = \u03c0m/(qB), does not depend on speed","because the magnetic field is increased each turn","because the radius stays constant"], ans:1,
+      sol:"T = 2\u03c0m/(qB) \u2014 <strong>speed and radius cancel out</strong>.<br>A faster proton travels a bigger circle, but at a proportionally higher speed, so it takes exactly the same time. It arrives at the gap in step with the oscillator, turn after turn.<br><br>That single fact is what makes the cyclotron possible at all." },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"A cyclotron tuned for protons is now used for alpha particles (mass 4m, charge 2q) in the SAME magnetic field. The oscillator frequency must be:",
+      diagram:DIAGRAMS.cyclotron(), opts:["doubled","halved","kept the same","made four times"], ans:1,
+      sol:"f = qB/(2\u03c0m) \u21d2 <strong>f \u221d q/m</strong>.<br>\u2022 proton: q/m = 1<br>\u2022 alpha: 2q/4m = 1/2<br>The alpha's frequency is <strong>half</strong> the proton's, so the oscillator must be halved.<br><br>Note it is NOT unchanged \u2014 the doubled charge does not fully compensate the quadrupled mass." },
+    { step:"Level 2 \u00b7 Medium", q:"The dees of a cyclotron are held at a peak potential difference V. How much kinetic energy does a proton gain in ONE full revolution?",
+      diagram:DIAGRAMS.cyclotron(), opts:["qV","2qV","qV/2","zero \u2014 the magnetic field does no work"], ans:1,
+      sol:"Careful \u2014 there are <strong>two gap crossings per revolution</strong> (once into D\u2081, once back into D\u2082). The polarity flips each time, so the proton is pushed both times.<br>Energy per crossing = qV \u21d2 per revolution = <strong>2qV</strong>.<br><br>Option (4) is a half-truth: the magnetic field indeed does no work, but the ELECTRIC field in the gap does. Missing the factor of 2 is the classic slip \u2014 and it doubles your answer in the revolution-counting questions below." },
+    { step:"Level 2 \u00b7 Medium", q:"In a cyclotron, the maximum kinetic energy attainable is K = q\u00b2B\u00b2R\u00b2/(2m). If the magnetic field B is doubled (same dees, same particle), the maximum energy becomes:",
+      diagram:DIAGRAMS.cyclotron(), opts:["2K","4K","K/2","unchanged"], ans:1,
+      sol:"K \u221d B\u00b2 \u21d2 doubling B gives <strong>4K</strong>.<br><br>Worth pausing on what this formula does NOT contain: the <strong>dee voltage V</strong>. A bigger V gets the proton to full energy in fewer turns, but it does not raise the ceiling. The ceiling is set purely by how big your magnet is (R) and how strong it is (B)." },
+    { step:"Level 2 \u00b7 Medium", q:"A cyclotron with dee voltage 20 kV accelerates protons to a final energy of 10 MeV. Roughly how many revolutions does each proton make?",
+      diagram:DIAGRAMS.cyclotron(), opts:["125","250","500","1000"], ans:1,
+      sol:"Energy gained per revolution = 2qV = 2 \u00d7 e \u00d7 20 kV = <strong>40 keV</strong> per turn (the factor 2 from Level-2 rung 1).<br><br>Number of turns = total energy / energy per turn<br>= 10 MeV / 40 keV = 10,000 keV / 40 keV = <strong>250</strong>." },
+    { step:"The real thing", tag:"JEE Main 2022",
+      q:"A cyclotron is used to accelerate protons. If the operating magnetic field is 1.0 T and the radius of the cyclotron 'dees' is 60 cm, the kinetic energy of the accelerated protons in MeV will be [Use m\u209a = 1.6 \u00d7 10\u207b\u00b2\u2077 kg, e = 1.6 \u00d7 10\u207b\u00b9\u2079 C]",
+      diagram:DIAGRAMS.cyclotron(), opts:["12","18","16","32"], ans:1,
+      sol:"The proton exits when its circle just fills the dees: r = R \u21d2 v = qBR/m.<br>K = \u00bdmv\u00b2 = <strong>q\u00b2B\u00b2R\u00b2/(2m)</strong> = (1.6\u00d710\u207b\u00b9\u2079)\u00b2(1.0)\u00b2(0.6)\u00b2/(2 \u00d7 1.6\u00d710\u207b\u00b2\u2077)<br>= 2.88\u00d710\u207b\u00b9\u00b2 J \u00f7 1.6\u00d710\u207b\u00b9\u00b3 J/MeV = <strong>18 MeV</strong>, option (2)." },
+    { step:"The real thing", tag:"JEE Main 2022",
+      q:"An electron with energy 0.1 keV moves at right angle to the earth's magnetic field of 1 \u00d7 10\u207b\u2074 Wbm\u207b\u00b2. The frequency of revolution of the electron will be (Take mass of electron = 9.0 \u00d7 10\u207b\u00b3\u00b9 kg)",
+      diagram:DIAGRAMS.cyclotron(), opts:["1.6 \u00d7 10\u2075 Hz","5.6 \u00d7 10\u2075 Hz","2.8 \u00d7 10\u2076 Hz","1.8 \u00d7 10\u2076 Hz"], ans:2,
+      sol:"f = qB/(2\u03c0m). The <strong>0.1 keV is a deliberate red herring</strong> \u2014 the cyclotron frequency does not depend on energy (Level-1 rung 2).<br>f = (1.6\u00d710\u207b\u00b9\u2079 \u00d7 10\u207b\u2074)/(2\u03c0 \u00d7 9.0\u00d710\u207b\u00b3\u00b9) \u2248 <strong>2.8 \u00d7 10\u2076 Hz</strong>, option (3)." },
+    { step:"The real thing", tag:"JEE Main 2022",
+      q:"A charge particle moves along circular path in a uniform magnetic field in a cyclotron. The kinetic energy of the charge particle increases to 4 times its initial value. What will be the ratio of new radius to the original radius of circular path of the charge particle",
+      diagram:DIAGRAMS.cyclotron(), opts:["1 : 1","1 : 2","2 : 1","1 : 4"], ans:2,
+      sol:"r = \u221a(2mK)/(qB) \u21d2 <strong>r \u221d \u221aK</strong>. K \u2192 4K gives r \u2192 2r.<br><strong>2 : 1</strong>, option (3). Option (4) is the trap for anyone who drops the square root." },
+    { step:"The real thing", tag:"JEE Main 2021",
+      q:"If the maximum value of accelerating potential provided by a radio frequency oscillator is 12 kV. The number of revolution made by a proton in a cyclotron to achieve one sixth of the speed of light is _____.  [m\u209a = 1.67 \u00d7 10\u207b\u00b2\u2077 kg, e = 1.6 \u00d7 10\u207b\u00b9\u2079 C, Speed of light = 3 \u00d7 10\u2078 m/s]  [Integer-type in the original \u2014 options added here]",
+      diagram:DIAGRAMS.cyclotron(), opts:["272","543","1087","1630"], ans:1,
+      sol:"This is Level-2 rung 3 with real numbers \u2014 and the factor of 2 is exactly what it tests.<br><br>Final speed v = c/6 = 5\u00d710\u2077 m/s.<br>Final KE = \u00bdm\u209av\u00b2 = \u00bd \u00d7 1.67\u00d710\u207b\u00b2\u2077 \u00d7 (5\u00d710\u2077)\u00b2 \u2248 2.09\u00d710\u207b\u00b9\u00b2 J.<br><br>Energy gained per revolution = <strong>2</strong>qV = 2 \u00d7 1.6\u00d710\u207b\u00b9\u2079 \u00d7 12\u00d710\u00b3 = 3.84\u00d710\u207b\u00b9\u2075 J.<br><br>n = 2.09\u00d710\u207b\u00b9\u00b2 / 3.84\u00d710\u207b\u00b9\u2075 \u2248 <strong>543</strong>.<br><br>Forget the 2 and you get 1087 \u2014 which is sitting right there as option (3)." },
+    { step:"Level 2 \u00b7 Medium", q:"Why does a conventional cyclotron STOP working once the particle gets very fast (close to the speed of light)?",
+      diagram:DIAGRAMS.cyclotron(),
+      opts:["the magnetic field weakens","the relativistic mass increases, so T = 2\u03c0m/qB rises and the particle falls out of step with the oscillator","the particle's charge decreases","the radius stops growing"], ans:1,
+      sol:"At relativistic speeds the effective mass m grows. Since T = 2\u03c0m/(qB), the period <strong>increases</strong> \u2014 the particle arrives at the gap <em>late</em>, and gradually slips out of phase with the fixed-frequency oscillator. Eventually it arrives when the field is decelerating.<br><br>The fix is the <strong>synchrocyclotron</strong> (slowly lower the oscillator frequency to match) or the <strong>synchrotron</strong> (ramp B instead). Notice this is the flip side of Level-1 rung 2: the cyclotron works only for as long as T stays constant." },
+    { step:"Level 2 \u00b7 Medium", q:"Two protons are in the same cyclotron at the same moment \u2014 one just injected (slow, small circle), one nearly at the rim (fast, big circle). Comparing them:",
+      diagram:DIAGRAMS.cyclotron(),
+      opts:["the fast one completes a revolution sooner","the slow one completes a revolution sooner","they take exactly the same time per revolution","the fast one has a higher frequency"], ans:2,
+      sol:"T = 2\u03c0m/(qB) contains neither v nor r \u21d2 <strong>identical periods</strong>.<br><br>The fast proton has further to travel (bigger circle) but travels proportionally faster, and the two effects cancel exactly. Every proton in the machine, whatever its energy, circles in lockstep \u2014 which is precisely why one fixed-frequency oscillator can serve them all." }
+  ]},
+
+  { name:"2. Force on a Current-Carrying Wire", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"A straight wire carries current towards the EAST. A magnetic field points towards the NORTH (both horizontal). The force on the wire is directed:",
+      diagram:DIAGRAMS.wireForce('I','\u03b8'),
+      opts:["vertically upward","vertically downward","towards the west","zero"], ans:0,
+      sol:"F = I L \u00d7 B. Take east = \u00ee, north = \u0135, up = k\u0302.<br>L \u00d7 B \u221d \u00ee \u00d7 \u0135 = <strong>k\u0302</strong> \u21d2 the force is <strong>vertically upward</strong>.<br><br>Use the right hand: fingers point east (current), curl toward north (field), thumb points up." },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"A wire of length L carrying current I is placed PARALLEL to a uniform field B. The force on it is:",
+      diagram:DIAGRAMS.wireForce('I','0\u00b0'), opts:["BIL","BIL/2","zero","maximum"], ans:2,
+      sol:"F = BIL sin\u03b8 with \u03b8 = 0 \u21d2 sin0\u00b0 = 0 \u21d2 <strong>F = 0</strong>.<br>A current flowing straight along the field lines feels nothing at all. The force is maximum only when the wire is <strong>perpendicular</strong> to B." },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"A 2 m wire carries 5 A at 30\u00b0 to a 0.4 T field. The force on it is:",
+      diagram:DIAGRAMS.wireForce('5 A','30\u00b0'), opts:["1 N","2 N","4 N","3.5 N"], ans:1,
+      sol:"F = BIL sin\u03b8 = 0.4 \u00d7 5 \u00d7 2 \u00d7 sin30\u00b0 = 0.4 \u00d7 5 \u00d7 2 \u00d7 0.5 = <strong>2 N</strong>.<br><br>Option (3) 4 N is what you get if you forget the sin\u03b8 entirely \u2014 the single most common error in this formula." },
+    { step:"Level 2 \u00b7 Medium", q:"A wire is bent into a SEMICIRCLE of radius R and placed in a uniform field B perpendicular to its plane, carrying current I. The net force on it is:",
+      diagram:DIAGRAMS.wireForce('I','90\u00b0'), opts:["zero","BI\u03c0R","2BIR","BIR"], ans:2,
+      sol:"You do NOT have to integrate. For a wire of any shape in a <strong>uniform</strong> field, the force depends only on the <strong>straight line joining its two endpoints</strong> \u2014 the 'effective length' L_eff.<br><br>For a semicircle of radius R, the endpoints are a diameter apart: L_eff = <strong>2R</strong>.<br>F = BI(2R) = <strong>2BIR</strong>.<br><br>Option (2) uses the arc length \u03c0R \u2014 the trap. The curved path does not matter; only where you start and end." },
+    { step:"Level 2 \u00b7 Medium", q:"A CLOSED current loop of any shape sits in a UNIFORM magnetic field. The net force on it is:",
+      diagram:DIAGRAMS.loopTorque(), opts:["always zero","BIL","depends on the shape","maximum when the plane is parallel to B"], ans:0,
+      sol:"Apply the effective-length idea from the previous rung: for a <strong>closed</strong> loop the start and end points are the SAME point, so L_eff = 0 \u21d2 <strong>net force = 0</strong>.<br><br>But be careful \u2014 zero net FORCE does not mean zero TORQUE. The loop will not drift anywhere, yet it will happily rotate. That torque is the entire subject of Topic 5.<br><br>(This holds only in a uniform field. In a non-uniform field the loop CAN feel a net force \u2014 which is what pulls a current loop toward a magnet.)" },
+    { step:"Level 2 \u00b7 Medium", q:"A horizontal rod of mass m and length L carries current I. It is placed in a horizontal field B perpendicular to the rod. What current makes it just FLOAT (magnetic force balances gravity)?",
+      diagram:DIAGRAMS.wireForce('I','90\u00b0'), opts:["I = mg/(BL)","I = BL/(mg)","I = mgL/B","I = mgB/L"], ans:0,
+      sol:"For floating, the upward magnetic force must balance the weight:<br>BIL = mg \u21d2 <strong>I = mg/(BL)</strong>.<br><br>Hold on to this \u2014 the JEE 2022 incline question two rungs below is exactly this idea, tilted through 45\u00b0." },
+    { step:"The real thing", tag:"JEE Main 2022",
+      q:"A triangular shaped wire carrying 10 A current is placed in a uniform magnetic field of 0.5 T, as shown in figure. The magnetic force on segment CD is (Given BC = CD = BD = 5 cm).",
+      diagram:DIAGRAMS.triangleWire(), opts:["0.126 N","0.312 N","0.216 N","0.245 N"], ans:2,
+      sol:"BCD is equilateral, so CD makes <strong>60\u00b0</strong> with the horizontal field.<br><br>F = BIL sin\u03b8 = 0.5 \u00d7 10 \u00d7 0.05 \u00d7 sin60\u00b0<br>= 0.5 \u00d7 10 \u00d7 0.05 \u00d7 (\u221a3/2) = 0.25 \u00d7 0.866 \u2248 <strong>0.216 N</strong>, option (3).<br><br>Note the question asks only about segment CD \u2014 you do not need the rest of the triangle." },
+    { step:"The real thing", tag:"JEE Main 2022",
+      q:"As shown in the figure, a metallic rod of linear density 0.45 kg m\u207b\u00b9 is lying horizontally on a smooth inclined plane which makes an angle of 45\u00b0 with the horizontal. The minimum current flowing in the rod required to keep it stationary, when 0.15 T magnetic field is acting on it in the vertical upward direction, will be : {Use g = 10 m/s\u00b2}",
+      diagram:DIAGRAMS.rodIncline(), opts:["30 A","15 A","10 A","3 A"], ans:0,
+      sol:"B is VERTICAL and the rod is horizontal, so F = BIL is <strong>horizontal</strong> (pushing into the slope).<br><br>Resolve along the smooth incline (no friction to help):<br>\u2022 component of weight down the slope: mg sin45\u00b0<br>\u2022 component of magnetic force up the slope: BIL cos45\u00b0<br><br>Balance: mg sin45\u00b0 = BIL cos45\u00b0 \u21d2 <strong>BIL = mg</strong> (the 45\u00b0 makes tan45\u00b0 = 1, so the angle cancels!).<br><br>Per unit length, with m/L = \u03bb = 0.45:<br>I = \u03bbg/B = (0.45 \u00d7 10)/0.15 = <strong>30 A</strong>, option (1)." },
+    { step:"The real thing", tag:"JEE Main 2014",
+      q:"A conductor lies along the z-axis at \u22121.5 \u2264 z < 1.5 m and carries a fixed current of 10.0 A in \u2212\u00e2_z direction. For a field B\u20d7 = 3.0 \u00d7 10\u207b\u2074 e\u207b\u2070\u00b7\u00b2\u02e3 \u00e2_y T, find the power required to move the conductor at constant speed to x = 2.0 m, y = 0 m in 5 \u00d7 10\u207b\u00b3 s. Assume parallel motion along the x-axis",
+      opts:["1.57 W","2.97 W","14.85 W","29.7 W"], ans:1,
+      sol:"The conductor has length \u2113 = 3 m, and the field varies with x, so the force varies as it moves \u2014 hence the integral.<br><br>F(x) = BI\u2113 = (3.0\u00d710\u207b\u2074 e\u207b\u2070\u00b7\u00b2\u02e3)(10)(3) = 9\u00d710\u207b\u00b3 e\u207b\u2070\u00b7\u00b2\u02e3 N<br><br>W = \u222b\u2080\u00b2 F dx = 9\u00d710\u207b\u00b3 \u222b\u2080\u00b2 e\u207b\u2070\u00b7\u00b2\u02e3 dx = (9\u00d710\u207b\u00b3/0.2)[1 \u2212 e\u207b\u2070\u00b7\u2074]<br>= 4.5\u00d710\u207b\u00b2 \u00d7 0.33 \u2248 2.97\u00d710\u207b\u00b3 J<br><br>P = W/t = 2.97\u00d710\u207b\u00b3 / 5\u00d710\u207b\u00b3 \u2248 <strong>2.97 W</strong>, option (2)." },
+    { step:"Level 2 \u00b7 Medium", q:"A current loop is placed in a NON-uniform magnetic field (stronger on one side). The net force on it is:",
+      diagram:DIAGRAMS.loopTorque(),
+      opts:["still zero, always","generally non-zero, because the forces on opposite sides no longer cancel","zero only if the loop is circular","always maximum"], ans:1,
+      sol:"In a UNIFORM field the forces on opposite sides are equal and opposite \u2192 they cancel \u2192 zero net force.<br><br>In a NON-uniform field the side sitting in the stronger region feels a bigger force than the side in the weaker region, so the cancellation fails \u21d2 <strong>a net force survives</strong>.<br><br>This is exactly why a current loop (or a magnet) is <em>pulled</em> toward the pole of another magnet \u2014 and why the loop-in-uniform-field result (Level-2 rung 2) must always be quoted with its condition attached." },
+    { step:"Level 2 \u00b7 Medium", q:"Two wires of the same length carry the same current in the same uniform field. Wire A is straight; wire B is bent into a zig-zag but has the same two endpoints as A. Comparing the net magnetic forces:",
+      diagram:DIAGRAMS.wireForce('I','\u03b8'),
+      opts:["A feels more force (it is longer along the field)","B feels more force (it has more wire)","both feel exactly the same force","B feels zero force"], ans:2,
+      sol:"Effective length again: in a uniform field only the <strong>straight line joining the endpoints</strong> counts.<br>Same endpoints \u21d2 same L_eff \u21d2 <strong>same force</strong>, exactly.<br><br>All the extra zig-zag wire in B contributes nothing to the NET force \u2014 its bits cancel pairwise. A genuinely useful shortcut, and one that turns several ugly-looking exam questions into one line." },
+    { step:"Level 2 \u00b7 Medium", q:"A 50 cm rod carrying 4 A rests on two horizontal rails in a vertical field of 0.2 T. If the rod has mass 40 g and friction is negligible, its acceleration is:",
+      diagram:DIAGRAMS.wireForce('4 A','90\u00b0'), opts:["1 m/s\u00b2","5 m/s\u00b2","10 m/s\u00b2","20 m/s\u00b2"], ans:2,
+      sol:"The rod is horizontal, B is vertical, so they are perpendicular \u21d2 F = BIL (horizontal, along the rails).<br>F = 0.2 \u00d7 4 \u00d7 0.5 = 0.4 N<br><br>a = F/m = 0.4 / 0.040 kg = <strong>10 m/s\u00b2</strong>.<br><br>(Gravity acts downward and is balanced by the rails \u2014 it does not oppose this horizontal motion.)" }
+  ]},
+
+  { name:"3. Force Between Two Parallel Wires", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"Two long parallel wires carry currents in the SAME direction. They:",
+      diagram:DIAGRAMS.parallelWires('I\u2081','I\u2082',true),
+      opts:["attract each other","repel each other","exert no force on each other","attract only if the currents are equal"], ans:0,
+      sol:"<strong>Parallel currents attract; antiparallel currents repel.</strong> (The opposite of the rule for electric charges \u2014 which is exactly why it gets misremembered.)<br><br>Why: wire 1's field at wire 2 points into the page; wire 2's current is up; F = IL \u00d7 B then points back towards wire 1.<br><br>Memory hook: two currents flowing together are 'friendly'." },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"Two parallel wires attract with force per unit length F. If the distance between them is DOUBLED (currents unchanged), the new force per unit length is:",
+      diagram:DIAGRAMS.parallelWires('I\u2081','I\u2082',true), opts:["F/2","F/4","2F","F"], ans:0,
+      sol:"F/\u2113 = \u03bc\u2080I\u2081I\u2082/(2\u03c0d) \u21d2 <strong>F \u221d 1/d</strong> \u2014 an inverse FIRST power, not inverse square.<br>Doubling d halves the force \u21d2 <strong>F/2</strong>.<br><br>Option (2) F/4 is the trap: this is not Coulomb's law. Two long wires fall off as 1/d, not 1/d\u00b2." },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"Two parallel wires attract with force per unit length F. If BOTH currents are doubled AND the separation is doubled, the new force per unit length is:",
+      diagram:DIAGRAMS.parallelWires('2I\u2081','2I\u2082',true), opts:["F","2F","4F","F/2"], ans:1,
+      sol:"F/\u2113 \u221d I\u2081I\u2082/d.<br>Currents doubled \u21d2 numerator \u00d7 4. Separation doubled \u21d2 denominator \u00d7 2.<br>Net: 4/2 = <strong>2F</strong>.<br><br>A two-step change \u2014 do not stop after the first one." },
+    { step:"Level 2 \u00b7 Medium", q:"Three long parallel wires, equally spaced d apart, each carry current I in the SAME direction. The net force on the MIDDLE wire is:",
+      diagram:DIAGRAMS.parallelWires('I','I',true), opts:["zero","\u03bc\u2080I\u00b2/(2\u03c0d) per unit length","\u03bc\u2080I\u00b2/(\u03c0d) per unit length","2\u03bc\u2080I\u00b2/(\u03c0d) per unit length"], ans:0,
+      sol:"The middle wire is attracted by the left wire (pull left) and equally attracted by the right wire (pull right). Both neighbours are at the same distance d and carry the same current.<br><br>Equal and opposite \u21d2 <strong>net force zero</strong>.<br><br>(The outer wires, by contrast, each feel a net inward pull \u2014 they are not symmetrically placed.)" },
+    { step:"Level 2 \u00b7 Medium", q:"Two long parallel wires 10 cm apart carry 3 A and 4 A in the same direction. The force per metre between them is:",
+      diagram:DIAGRAMS.parallelWires('3 A','4 A',true),
+      opts:["2.4 \u00d7 10\u207b\u2075 N/m, attractive","2.4 \u00d7 10\u207b\u2075 N/m, repulsive","2.4 \u00d7 10\u207b\u2076 N/m, attractive","1.2 \u00d7 10\u207b\u2075 N/m, attractive"], ans:0,
+      sol:"F/\u2113 = \u03bc\u2080I\u2081I\u2082/(2\u03c0d). Use the shortcut \u03bc\u2080/(2\u03c0) = <strong>2 \u00d7 10\u207b\u2077</strong>:<br>F/\u2113 = 2\u00d710\u207b\u2077 \u00d7 (3 \u00d7 4) / 0.1 = 2\u00d710\u207b\u2077 \u00d7 120 = <strong>2.4 \u00d7 10\u207b\u2075 N/m</strong><br>Same direction \u21d2 <strong>attractive</strong>. Option (1)." },
+    { step:"Level 2 \u00b7 Medium", q:"The AMPERE is defined using exactly this effect. Two infinite parallel wires 1 m apart each carrying 1 A experience a force per metre of:",
+      diagram:DIAGRAMS.parallelWires('1 A','1 A',true), opts:["2 \u00d7 10\u207b\u2077 N/m","1 \u00d7 10\u207b\u2077 N/m","4\u03c0 \u00d7 10\u207b\u2077 N/m","1 N/m"], ans:0,
+      sol:"F/\u2113 = \u03bc\u2080(1)(1)/(2\u03c0 \u00d7 1) = \u03bc\u2080/(2\u03c0) = (4\u03c0\u00d710\u207b\u2077)/(2\u03c0) = <strong>2 \u00d7 10\u207b\u2077 N/m</strong>.<br><br>That number is not a coincidence \u2014 the ampere was <em>defined</em> so that it comes out exactly like this. And \u03bc\u2080/(2\u03c0) = 2\u00d710\u207b\u2077 is the single most useful constant to have memorised for this whole topic." },
+    { step:"The real thing", tag:"JEE Main 2022",
+      q:"Two parallel, long wires are kept 0.20 m apart in vacuum, each carrying current of x A in the same direction. If the force of attraction per meter of each wire is 2 \u00d7 10\u207b\u2076 N, then the value of x is approximately:",
+      diagram:DIAGRAMS.parallelWires('x A','x A',true), opts:["1","2.4","1.4","2"], ans:2,
+      sol:"Both currents are the same (x), so I\u2081I\u2082 = x\u00b2.<br>F/\u2113 = \u03bc\u2080x\u00b2/(2\u03c0d) \u21d2 2\u00d710\u207b\u2076 = (2\u00d710\u207b\u2077)x\u00b2/0.2<br>\u21d2 2\u00d710\u207b\u2076 = 10\u207b\u2076 x\u00b2 \u21d2 x\u00b2 = 2 \u21d2 x = \u221a2 \u2248 <strong>1.4</strong>, option (3).<br><br>Option (4) '2' is the trap for anyone who forgets to take the square root." },
+    { step:"The real thing", tag:"JEE Main 2022",
+      q:"A wire X of length 50 cm carrying a current of 2 A is placed parallel to a long wire Y of length 5 m. The wire Y carries a current of 3 A. The distance between two wires is 5 cm and currents flow in the same direction. The force acting on the wire Y is",
+      diagram:DIAGRAMS.parallelWires('2 A','3 A',true),
+      opts:["1.2 \u00d7 10\u207b\u2075 N directed towards wire X","1.2 \u00d7 10\u207b\u2074 N directed away from wire X","1.2 \u00d7 10\u207b\u2074 N directed towards wire X","2.4 \u00d7 10\u207b\u2075 N directed towards wire X"], ans:0,
+      sol:"<strong>The subtlety:</strong> the two wires have different lengths (0.5 m and 5 m). Only the <strong>overlapping</strong> length interacts \u2014 so use \u2113 = 0.5 m, not 5 m. (By Newton's third law, the force on Y equals the force on X anyway.)<br><br>F = \u03bc\u2080I\u2081I\u2082\u2113/(2\u03c0d) = 2\u00d710\u207b\u2077 \u00d7 (2 \u00d7 3) \u00d7 0.5 / 0.05<br>= 2\u00d710\u207b\u2077 \u00d7 6 \u00d7 10 = <strong>1.2 \u00d7 10\u207b\u2075 N</strong><br><br>Same direction \u21d2 attractive \u21d2 <strong>towards wire X</strong>. Option (1).<br><br>Use \u2113 = 5 m and you land on 1.2\u00d710\u207b\u2074 \u2014 options (2) and (3), both waiting for you." },
+    { step:"The real thing", tag:"JEE Main 2022",
+      q:"Two 10 cm long, straight wires, each carrying a current of 5 A are kept parallel to each other. If each wire experienced a force of 10\u207b\u2075 N, then separation between the wires is _____ cm.  [Integer-type in the original \u2014 options added here]",
+      diagram:DIAGRAMS.parallelWires('5 A','5 A',true), opts:["2","5","10","25"], ans:1,
+      sol:"F = \u03bc\u2080I\u2081I\u2082\u2113/(2\u03c0d) \u21d2 rearrange for d:<br>d = \u03bc\u2080I\u2081I\u2082\u2113/(2\u03c0F) = 2\u00d710\u207b\u2077 \u00d7 (5 \u00d7 5) \u00d7 0.1 / 10\u207b\u2075<br>= 2\u00d710\u207b\u2077 \u00d7 25 \u00d7 0.1 / 10\u207b\u2075 = 5\u00d710\u207b\u2077 / 10\u207b\u2075 = 0.05 m = <strong>5 cm</strong>." },
+    { step:"The real thing", tag:"JEE Main 2019",
+      q:"Two wires A and B are carrying currents I\u2081 and I\u2082 as shown in the figure. The separation between them is d. A third wire C carrying a current I is to be kept parallel to them at a distance x from A such that the net force acting on it is zero. The possible values of x are :",
+      diagram:DIAGRAMS.parallelWires('I\u2081','I\u2082',false),
+      opts:["x = \u00b1 I\u2081d/(I\u2081 \u2212 I\u2082)","x = (I\u2081/(I\u2081+I\u2082))d and x = (I\u2082/(I\u2081\u2212I\u2082))d","x = (I\u2082/(I\u2081+I\u2082))d and x = (I\u2082/(I\u2081\u2212I\u2082))d","x = (I\u2081/(I\u2081\u2212I\u2082))d and x = (I\u2082/(I\u2081+I\u2082))d"], ans:0,
+      sol:"In the figure the currents in A and B are <strong>antiparallel</strong> (I\u2081 up, I\u2082 down). For wire C to feel zero net force, the two attractions/repulsions must cancel:<br><br>\u03bc\u2080I\u2081I/(2\u03c0x) = \u03bc\u2080I\u2082I/(2\u03c0(x \u2212 d))<br>\u21d2 I\u2081(x \u2212 d) = I\u2082x<br>\u21d2 I\u2081x \u2212 I\u2081d = I\u2082x<br>\u21d2 x(I\u2081 \u2212 I\u2082) = I\u2081d<br>\u21d2 <strong>x = I\u2081d/(I\u2081 \u2212 I\u2082)</strong>, option (1).<br><br>Because the currents oppose, the null point lies <em>outside</em> the pair \u2014 hence the \u00b1 and the (I\u2081 \u2212 I\u2082) in the denominator." },
+    { step:"The real thing", tag:"JEE Main 2019",
+      q:"A rigid square loop of side a and carrying current I\u2082 is lying on a horizontal surface near a long current I\u2081 carrying wire in the same plane as shown in figure. The net force on the loop due to the wire will be",
+      diagram:DIAGRAMS.wireAndLoop(),
+      opts:["Repulsive and equal to \u03bc\u2080I\u2081I\u2082/4\u03c0","Repulsive and equal to \u03bc\u2080I\u2081I\u2082/2\u03c0","Zero","Attractive and equal to \u03bc\u2080I\u2081I\u2082/3\u03c0"], ans:0,
+      sol:"The field of the wire is NOT uniform (it falls as 1/r), so the loop's forces do <strong>not</strong> cancel \u2014 exactly the situation from Topic 2.<br><br>The two sides parallel to the wire are the ones that matter:<br>\u2022 near side, at distance a: F\u2081 = \u03bc\u2080I\u2081I\u2082a/(2\u03c0a) = \u03bc\u2080I\u2081I\u2082/(2\u03c0)<br>\u2022 far side, at distance 2a: F\u2082 = \u03bc\u2080I\u2081I\u2082a/(2\u03c0\u00b72a) = \u03bc\u2080I\u2081I\u2082/(4\u03c0)<br><br>(The two perpendicular sides carry equal and opposite forces \u2014 they cancel.)<br><br>Net = F\u2081 \u2212 F\u2082 = \u03bc\u2080I\u2081I\u2082/(2\u03c0) \u2212 \u03bc\u2080I\u2081I\u2082/(4\u03c0) = <strong>\u03bc\u2080I\u2081I\u2082/(4\u03c0)</strong>, and it is <strong>repulsive</strong> \u2014 option (1).<br><br>The near side always dominates, because it sits in the stronger field." },
+    { step:"The real thing", tag:"JEE Main 2015",
+      q:"Two long current carrying thin wires, both with current I, are held by insulating threads of length L and are in equilibrium as shown in the figure, with threads making an angle \u03b8 with the vertical. If wires have mass \u03bb per unit length then the value of I is  (g = gravitational acceleration)",
+      diagram:DIAGRAMS.threadWires(),
+      opts:["sin\u03b8 \u221a(\u03c0\u03bbgL/(\u03bc\u2080 cos\u03b8))","2 sin\u03b8 \u221a(\u03c0\u03bbgL/(\u03bc\u2080 cos\u03b8))","2 \u221a((\u03c0gL/\u03bc\u2080) tan\u03b8)","\u221a((\u03c0\u03bbgL/\u03bc\u2080) tan\u03b8)"], ans:1,
+      sol:"The wires hang apart, so the currents must be <strong>antiparallel</strong> (repelling).<br><br>Separation between them: d = <strong>2L sin\u03b8</strong> (each swings out by L sin\u03b8 \u2014 this factor of 2 is the crux).<br><br>Per unit length, equilibrium of one wire gives:<br>T cos\u03b8 = \u03bbg \u2003 and \u2003 T sin\u03b8 = F = \u03bc\u2080I\u00b2/(2\u03c0d)<br><br>Dividing: tan\u03b8 = \u03bc\u2080I\u00b2/(2\u03c0d\u03bbg) = \u03bc\u2080I\u00b2/(2\u03c0 \u00b7 2L sin\u03b8 \u00b7 \u03bbg)<br><br>Rearranging for I:<br>I\u00b2 = 4\u03c0\u03bbgL sin\u00b2\u03b8 / (\u03bc\u2080 cos\u03b8) \u21d2 I = <strong>2 sin\u03b8 \u221a(\u03c0\u03bbgL/(\u03bc\u2080 cos\u03b8))</strong>, option (2).<br><br>Miss the 2 in d = 2L sin\u03b8 and you land on option (1)." }
+  ]},
+
+  { name:"4. Charged Particle in Combined E and B Fields", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"A charged particle moves through a region containing both E and B. Which force can change its SPEED?",
+      diagram:DIAGRAMS.crossedFields(),
+      opts:["the electric force only","the magnetic force only","both","neither"], ans:0,
+      sol:"Lorentz force: F = q(E + v \u00d7 B).<br>\u2022 The <strong>magnetic</strong> part is always \u27c2 to v \u21d2 does zero work \u21d2 changes direction only.<br>\u2022 The <strong>electric</strong> part has a component along v \u21d2 does work \u21d2 changes speed and KE.<br><br>So a magnetic field steers; only an electric field can speed a particle up or slow it down. (This is precisely why a cyclotron needs BOTH.)" },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"A charged particle is at REST in a region containing both an electric field E and a magnetic field B. The force on it is:",
+      diagram:DIAGRAMS.crossedFields(), opts:["qE only","qvB only","q(E + vB)","zero"], ans:0,
+      sol:"F = q(E + v \u00d7 B). With v = 0, the magnetic term <strong>vanishes</strong> \u21d2 only <strong>qE</strong> remains.<br><br>A magnetic field cannot start a stationary charge moving \u2014 it only acts on charges already in motion. (Once qE gets it moving, the magnetic force switches on and begins to curve it.)" },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"In a velocity selector, E and B are perpendicular to each other and to v. A particle passes UNDEFLECTED. Its speed must be:",
+      diagram:DIAGRAMS.crossedFields(), opts:["E/B","B/E","EB","\u221a(E/B)"], ans:0,
+      sol:"Undeflected \u21d2 the electric and magnetic forces balance exactly:<br>qE = qvB \u21d2 <strong>v = E/B</strong>.<br><br>Notice q cancels: the selector picks out one SPEED, regardless of charge or mass. That is what makes it a 'velocity' selector \u2014 and it is the front end of every mass spectrometer." },
+    { step:"Level 2 \u00b7 Medium", q:"An electron travels along +x. An electric field points along +y. Which magnetic field direction will keep the electron moving in a STRAIGHT line?",
+      diagram:DIAGRAMS.crossedFields(), opts:["along +z","along \u2212z","along +y","along \u2212x"], ans:0,
+      sol:"Work in steps \u2014 and mind the negative charge.<br><br><strong>Electric force:</strong> F = (\u2212e)(E \u0135) = along <strong>\u2212y</strong>.<br>To cancel it we need a magnetic force along <strong>+y</strong>.<br><br><strong>Try B along +z (k\u0302):</strong><br>F = (\u2212e)(v \u00ee \u00d7 B k\u0302) = (\u2212e)(vB)(\u00ee \u00d7 k\u0302) = (\u2212e)(vB)(\u2212\u0135) = <strong>+evB \u0135</strong> \u2014 along +y. \u2713<br><br>So <strong>B along +z</strong>. The electron's negative charge flips things twice, so it is worth writing the vectors out rather than guessing." },
+    { step:"Level 2 \u00b7 Medium", q:"A velocity selector uses E = 1000 V/m and B = 0.02 T. Protons and alpha particles both enter along the axis. Which pass through undeflected?",
+      diagram:DIAGRAMS.crossedFields(),
+      opts:["only protons with v = 5 \u00d7 10\u2074 m/s","only alphas with v = 5 \u00d7 10\u2074 m/s","both, provided each has v = 5 \u00d7 10\u2074 m/s","neither"], ans:2,
+      sol:"v = E/B = 1000/0.02 = <strong>5 \u00d7 10\u2074 m/s</strong>.<br><br>Because q cancels in qE = qvB, the condition depends on <strong>speed alone</strong> \u2014 not on charge, not on mass.<br>So <strong>any</strong> particle moving at 5\u00d710\u2074 m/s sails through: protons, alphas, electrons alike. Option (3)." },
+    { step:"Level 2 \u00b7 Medium", q:"A charged particle is fired with velocity v PARALLEL to both a uniform E and a uniform B (E \u2225 B \u2225 v). Its path is:",
+      diagram:DIAGRAMS.crossedFields(),
+      opts:["a circle","a helix","a straight line, with changing speed","a straight line, at constant speed"], ans:2,
+      sol:"v \u2225 B \u21d2 v \u00d7 B = 0 \u21d2 <strong>no magnetic force at all</strong>.<br>Only qE remains, and it acts along the direction of motion.<br><br>Result: the particle moves in a <strong>straight line but accelerates</strong> \u2014 speeding up steadily. Option (4) is the trap: the path is straight, but the speed certainly is not constant." },
+    { step:"The real thing", tag:"AIEEE 2011",
+      q:"An electric charge +q moves with velocity V\u20d7 = 3\u00ee + 4\u0135 + k\u0302, in an electromagnetic field given by E\u20d7 = 3\u00ee + \u0135 + 2k\u0302 and B\u20d7 = \u00ee + \u0135 \u2212 3k\u0302. The y-component of the force experienced by +q is",
+      opts:["3q","2q","11q","5q"], ans:2,
+      sol:"F = q(E + v \u00d7 B). We only need the <strong>y</strong> (\u0135) component \u2014 so compute just that.<br><br>v \u00d7 B, y-component = v_z B_x \u2212 v_x B_z<br>= (1)(1) \u2212 (3)(\u22123) = 1 + 9 = <strong>10</strong><br><br>E_y = <strong>1</strong><br><br>F_y = q(E_y + [v \u00d7 B]_y) = q(1 + 10) = <strong>11q</strong>, option (3).<br><br>No need to evaluate the whole cross product \u2014 a big time saver in the exam." },
+    { step:"The real thing", tag:"JEE Main 2022",
+      q:"A velocity selector consists of electric field E\u20d7 = Ek\u0302 and magnetic field B\u20d7 = B\u0135 with B = 12 mT. The value of E required for an electron of energy 728 eV moving along the positive x-axis to pass undeflected is  (Given, mass of electron = 9.1 \u00d7 10\u207b\u00b3\u00b9 kg)",
+      diagram:DIAGRAMS.crossedFields(),
+      opts:["192 kVm\u207b\u00b9","192 mVm\u207b\u00b9","9600 kVm\u207b\u00b9","16 kVm\u207b\u00b9"], ans:0,
+      sol:"Two steps.<br><br><strong>Step 1 \u2014 speed from the energy:</strong><br>v = \u221a(2K/m) = \u221a(2 \u00d7 728 \u00d7 1.6\u00d710\u207b\u00b9\u2079 / 9.1\u00d710\u207b\u00b3\u00b9)<br>= \u221a(2.56 \u00d7 10\u00b9\u2074) = <strong>1.6 \u00d7 10\u2077 m/s</strong><br><br><strong>Step 2 \u2014 selector condition:</strong><br>E = vB = 1.6\u00d710\u2077 \u00d7 12\u00d710\u207b\u00b3 = 1.92\u00d710\u2075 V/m = <strong>192 kV/m</strong>, option (1)." },
+    { step:"The real thing", tag:"JEE Main 2020",
+      q:"An electron is moving along +x direction with a velocity of 6 \u00d7 10\u2076 ms\u207b\u00b9. It enters a region of uniform electric field of 300 V/cm pointing along +y direction. The magnitude and direction of the magnetic field set up in this region such that the electron keeps moving along the x direction will be",
+      diagram:DIAGRAMS.crossedFields(),
+      opts:["5 \u00d7 10\u207b\u00b3 T, along + z direction","5 \u00d7 10\u207b\u00b3 T, along \u2212 z direction","3 \u00d7 10\u207b\u2074 T, along + z direction","3 \u00d7 10\u207b\u2074 T, along \u2212 z direction"], ans:0,
+      sol:"This is Level-2 rung 1 with numbers on it.<br><br><strong>Magnitude:</strong> unit conversion first \u2014 300 V/cm = <strong>3 \u00d7 10\u2074 V/m</strong> (not 300!).<br>B = E/v = 3\u00d710\u2074 / 6\u00d710\u2076 = <strong>5 \u00d7 10\u207b\u00b3 T</strong>.<br><br><strong>Direction:</strong> from Level-2 rung 1, for an electron along +x with E along +y, the balancing field is along <strong>+z</strong>.<br><br>Option (1). Miss the V/cm \u2192 V/m conversion and you land on 3\u00d710\u207b\u2074 \u2014 options (3) and (4), planted for exactly that." },
+    { step:"The real thing", tag:"JEE Main 2019",
+      q:"A particle of mass m and charge q is in an electric and magnetic field given by E\u20d7 = 2\u00ee + 3\u0135 ; B\u20d7 = 4\u0135 + 6k\u0302.  The charged particle is shifted from the origin to the point P(x = 1 ; y = 1) along a straight path. The magnitude of the total work done is",
+      opts:["(0.15)q","5q","(0.35)q","(2.5)q"], ans:1,
+      sol:"The key insight (Level-1 rung 1): the <strong>magnetic field does NO work, ever</strong>. So B is entirely irrelevant here \u2014 ignore it completely.<br><br>Only the electric force does work:<br>W = qE\u20d7 \u00b7 d\u20d7, with displacement d\u20d7 = \u00ee + \u0135<br>= q(2\u00ee + 3\u0135) \u00b7 (\u00ee + \u0135)<br>= q(2 + 3) = <strong>5q</strong>, option (2).<br><br>The whole question is testing one idea, and dressing it up with a magnetic field to see whether you know that idea." },
+    { step:"The real thing", tag:"JEE Main 2020",
+      q:"A particle of mass m and charge q has an initial velocity v\u20d7 = v\u2080\u0135. If an electric field E\u20d7 = E\u2080\u00ee and magnetic field B\u20d7 = B\u2080\u00ee act on the particle, its speed will double after a time",
+      diagram:DIAGRAMS.crossedFields(),
+      opts:["3mv\u2080/(qE\u2080)","\u221a3 mv\u2080/(qE\u2080)","2mv\u2080/(qE\u2080)","\u221a2 mv\u2080/(qE\u2080)"], ans:1,
+      sol:"E and B are BOTH along \u00ee. Split the motion:<br><br>\u2022 <strong>Along x:</strong> only the electric force acts (the magnetic force can never be along B). So v\u2093 = a\u2093t with a\u2093 = qE\u2080/m \u2014 it grows steadily.<br><br>\u2022 <strong>Perpendicular to x:</strong> the magnetic force just rotates this component in the y\u2013z plane. Its <strong>magnitude stays v\u2080</strong> forever (magnetic force does no work).<br><br>So at time t: speed\u00b2 = v\u2093\u00b2 + v\u2080\u00b2.<br>Speed doubles \u21d2 (2v\u2080)\u00b2 = v\u2093\u00b2 + v\u2080\u00b2 \u21d2 v\u2093 = \u221a3 v\u2080.<br><br>\u221a3 v\u2080 = (qE\u2080/m)t \u21d2 t = <strong>\u221a3 mv\u2080/(qE\u2080)</strong>, option (2)." },
+    { step:"Level 2 \u00b7 Medium", q:"A charge is released from REST in a region where E and B are perpendicular to each other (crossed fields). Its subsequent path is:",
+      diagram:DIAGRAMS.crossedFields(),
+      opts:["a straight line along E","a circle","a cycloid \u2014 it loops forward, repeatedly returning to rest","a parabola"], ans:2,
+      sol:"Trace it through:<br>1. At rest, only qE acts \u2192 it starts moving along E.<br>2. Now that v \u2260 0, the magnetic force switches on and curves it sideways.<br>3. The curving brings it back around, decelerating it, until it momentarily <strong>stops</strong>.<br>4. And then the whole cycle repeats.<br><br>The result is a <strong>cycloid</strong> \u2014 the curve traced by a point on the rim of a rolling wheel. The particle drifts steadily in the E \u00d7 B direction while looping.<br><br>You will not be asked to derive it \u2014 but knowing the shape (and WHY it loops back to rest) is exactly the kind of reasoning JEE likes to test in a statement question." }
+  ]},
+
+  { name:"5. Torque on a Current Loop", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"A current loop is placed in a uniform field B. The torque on it is MAXIMUM when the plane of the loop is:",
+      diagram:DIAGRAMS.loopTorque(),
+      opts:["perpendicular to B","parallel to B","at 45\u00b0 to B","the torque is the same in all orientations"], ans:1,
+      sol:"\u03c4 = MB sin\u03b8, where \u03b8 is between the <strong>magnetic moment M</strong> (which is \u27c2 to the loop's plane) and B.<br><br>Torque is maximum when sin\u03b8 = 1, i.e. <strong>M \u27c2 B</strong>. But M \u27c2 B means the loop's <strong>plane is PARALLEL to B</strong>.<br><br>This plane-vs-normal flip is the number-one error in this topic. Always convert the question's statement about the PLANE into a statement about M before using sin\u03b8." },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"For that same loop, the torque is ZERO when:",
+      diagram:DIAGRAMS.loopTorque(),
+      opts:["the plane of the loop is parallel to B","the plane of the loop is perpendicular to B (M is along B)","the current is reversed","never \u2014 there is always a torque"], ans:1,
+      sol:"\u03c4 = MB sin\u03b8 = 0 when \u03b8 = 0, i.e. <strong>M parallel to B</strong> \u2014 which means the loop's <strong>plane is perpendicular to B</strong>.<br><br>This is the <strong>stable equilibrium</strong> position: the loop turns until its magnetic moment lines up with the field, then sits there. (With M antiparallel to B the torque is also zero, but that is <em>unstable</em> \u2014 nudge it and it flips right round.)" },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"Two loops carry the same current in the same field: one is a circle, the other a square, but they have the SAME AREA. Their maximum torques compare as:",
+      diagram:DIAGRAMS.loopTorque(),
+      opts:["the circle has more torque","the square has more torque","they are equal","it depends on the perimeter"], ans:2,
+      sol:"\u03c4_max = NIAB. The formula contains the <strong>area</strong> \u2014 and nothing about the shape.<br>Same N, I, A, B \u21d2 <strong>equal torques</strong>, exactly.<br><br>Shape is irrelevant to the torque; only the enclosed area matters. (Careful \u2014 this is NOT the same as the next rung, where the wire LENGTH is fixed instead of the area.)" },
+    { step:"Level 2 \u00b7 Medium", q:"A wire of FIXED length is bent first into a square, then into a circle, carrying the same current in the same field. Which shape gives the greater maximum torque?",
+      diagram:DIAGRAMS.loopTorque(),
+      opts:["the square","the circle","both the same","depends on the field strength"], ans:1,
+      sol:"Now the <strong>perimeter</strong> is fixed, not the area \u2014 so shape suddenly matters.<br><br>For a fixed perimeter P:<br>\u2022 square: side P/4, area = P\u00b2/16 = <strong>0.0625 P\u00b2</strong><br>\u2022 circle: 2\u03c0r = P \u21d2 r = P/2\u03c0, area = \u03c0r\u00b2 = P\u00b2/4\u03c0 \u2248 <strong>0.0796 P\u00b2</strong><br><br>The <strong>circle encloses more area</strong> (it always does \u2014 that is the isoperimetric property), so \u03c4 = NIAB is larger for the <strong>circle</strong>.<br><br>Compare with the previous rung: fixing the area makes shape irrelevant; fixing the length makes it decisive. Read which one the question fixes." },
+    { step:"Level 2 \u00b7 Medium", q:"A coil of 50 turns and area 100 cm\u00b2 carries 2 A in a 0.5 T field, with its PLANE PARALLEL to the field. The torque on it is:",
+      diagram:DIAGRAMS.loopTorque(), opts:["0.5 N\u00b7m","0.25 N\u00b7m","5 N\u00b7m","zero"], ans:0,
+      sol:"Plane parallel to B \u21d2 M \u27c2 B \u21d2 sin\u03b8 = 1 \u21d2 <strong>maximum torque</strong> (rung 1).<br><br>Convert the area: 100 cm\u00b2 = 100 \u00d7 10\u207b\u2074 = <strong>10\u207b\u00b2 m\u00b2</strong>.<br>\u03c4 = NIAB = 50 \u00d7 2 \u00d7 10\u207b\u00b2 \u00d7 0.5 = <strong>0.5 N\u00b7m</strong>.<br><br>Two traps here: reading 'plane parallel' as sin\u03b8 = 0, and forgetting the cm\u00b2 \u2192 m\u00b2 conversion (a factor of 10\u2074)." },
+    { step:"Level 2 \u00b7 Medium", q:"A current loop sits in a uniform field. Which statement is correct?",
+      diagram:DIAGRAMS.loopTorque(),
+      opts:["net force is zero, and net torque is zero","net force is zero, but net torque may be non-zero","net force may be non-zero, but net torque is zero","both may be non-zero"], ans:1,
+      sol:"Pull the two results together:<br>\u2022 <strong>Net force = 0</strong> always, in a uniform field (from Topic 2: the effective length of a closed loop is zero).<br>\u2022 <strong>Net torque = NIAB sin\u03b8</strong> \u2014 generally NOT zero.<br><br>So the loop does not drift anywhere, but it does <strong>rotate</strong>. That combination \u2014 no translation, pure rotation \u2014 is precisely what a motor and a galvanometer are built on. Option (2)." },
+    { step:"The real thing", tag:"JEE Main 2019",
+      q:"A circular coil having N turns and radius r carries a current I. It is held in the XZ plane in a magnetic field B\u00ee. The torque on the coil due to the magnetic field is",
+      diagram:DIAGRAMS.loopTorque(), opts:["B\u03c0r\u00b2I/N","Br\u00b2I/(\u03c0N)","B\u03c0r\u00b2I N","Zero"], ans:2,
+      sol:"The coil lies in the <strong>XZ plane</strong>, so its normal (and hence M) points along <strong>\u0135</strong>.<br>The field is along <strong>\u00ee</strong>.<br><br>M \u27c2 B \u21d2 \u03b8 = 90\u00b0 \u21d2 sin\u03b8 = 1 \u21d2 maximum torque:<br>\u03c4 = NIAB = NI(\u03c0r\u00b2)B = <strong>B\u03c0r\u00b2IN</strong>, option (3).<br><br>Note N is in the NUMERATOR \u2014 options (1) and (2) put it in the denominator, hoping you will not check." },
+    { step:"The real thing", tag:"JEE Main 2019",
+      q:"A rectangular coil (Dimension 5 cm \u00d7 2.5 cm) with 100 turns, carrying a current of 3 A in the clock-wise direction, is kept centered at the origin and in the X-Z plane. A magnetic field of 1 T is applied along X-axis. If the coil is tilted through 45\u00b0 about Z-axis, then the torque on the coil is",
+      diagram:DIAGRAMS.loopTorque(), opts:["0.55 Nm","0.27 Nm","0.42 Nm","0.38 Nm"], ans:1,
+      sol:"Start in the XZ plane \u21d2 M along \u0135, and B along \u00ee \u21d2 M \u27c2 B, so \u03b8 = 90\u00b0.<br>Tilt the coil by 45\u00b0 \u21d2 the angle between M and B becomes <strong>45\u00b0</strong>.<br><br>Area A = 5 cm \u00d7 2.5 cm = 12.5 cm\u00b2 = <strong>12.5 \u00d7 10\u207b\u2074 m\u00b2</strong><br><br>\u03c4 = NIAB sin45\u00b0 = 100 \u00d7 3 \u00d7 12.5\u00d710\u207b\u2074 \u00d7 1 \u00d7 0.707<br>= 0.375 \u00d7 0.707 \u2248 <strong>0.27 Nm</strong>, option (2)." },
+    { step:"The real thing", tag:"JEE Main 2021",
+      q:"A coil in the shape of an equilateral triangle of side 10 cm lies in a vertical plane between the pole pieces of permanent magnet producing a horizontal magnetic field 20 mT. The torque acting on the coil when a current of 0.2 A is passed through it and its plane becomes parallel to the magnetic field will be \u221ax \u00d7 10\u207b\u2075 Nm. The value of x is _______.  [Integer-type in the original \u2014 options added here]",
+      diagram:DIAGRAMS.loopTorque(), opts:["2","3","4","5"], ans:1,
+      sol:"'Plane parallel to B' \u21d2 M \u27c2 B \u21d2 sin\u03b8 = 1 \u21d2 maximum torque (rung 1 again).<br><br>Area of an equilateral triangle: A = (\u221a3/4)a\u00b2 = (\u221a3/4)(0.1)\u00b2 = <strong>4.33 \u00d7 10\u207b\u00b3 m\u00b2</strong><br><br>\u03c4 = NIAB = 1 \u00d7 0.2 \u00d7 4.33\u00d710\u207b\u00b3 \u00d7 20\u00d710\u207b\u00b3<br>= 1.732 \u00d7 10\u207b\u2075 = <strong>\u221a3 \u00d7 10\u207b\u2075 Nm</strong><br><br>So <strong>x = 3</strong>." },
+    { step:"The real thing", tag:"JEE Main 2019",
+      q:"A square loop is carrying a steady current I and the magnitude of its magnetic dipole moment is m. If this square loop is changed to a circular loop and it carries the same current, the magnitude of the magnetic dipole moment of circular loop will be:",
+      diagram:DIAGRAMS.loopTorque(), opts:["2m/\u03c0","4m/\u03c0","m/\u03c0","3m/\u03c0"], ans:1,
+      sol:"This is Level-2 rung 1 made quantitative \u2014 same wire, so the <strong>perimeter is fixed</strong>.<br><br>Square of side a: perimeter 4a, m = I\u00b7a\u00b2<br>Reshaped into a circle: 2\u03c0r = 4a \u21d2 r = 2a/\u03c0<br><br>m' = I\u03c0r\u00b2 = I\u03c0(4a\u00b2/\u03c0\u00b2) = <strong>4Ia\u00b2/\u03c0 = 4m/\u03c0</strong>, option (2).<br><br>Since 4/\u03c0 \u2248 1.27 > 1, the moment <strong>increases</strong> \u2014 confirming that the circle encloses more area for the same wire." },
+    { step:"The real thing", tag:"JEE Main 2021",
+      q:"A loop of flexible wire of irregular shape carrying current is placed in an external magnetic field. Identify the effect of the field on the wire",
+      diagram:DIAGRAMS.loopTorque(),
+      opts:["Wire gets stretched to become straight","Loop assumes circular shape with its plane normal to the field","Loop assumes circular shape with its plane parallel to the field","Shape of the loop remains unchanged"], ans:1,
+      sol:"Two things happen at once, and you need both rungs to get it:<br><br><strong>1. It becomes a CIRCLE.</strong> The loop tries to maximise its enclosed area (from Level-2 rung 1: for fixed wire length, the circle wins). Maximum area \u21d2 maximum magnetic moment \u21d2 lowest potential energy U = \u2212M\u00b7B.<br><br><strong>2. Its plane turns NORMAL to B.</strong> The loop rotates until M lines up with B \u2014 the stable equilibrium from Level-1 rung 2. M \u2225 B means the plane is <strong>perpendicular</strong> to B.<br><br>Option (2). Option (3) is the plane-vs-normal trap yet again." },
+    { step:"The real thing", tag:"JEE Main 2020",
+      q:"A small circular loop of conducting wire has radius a and carries current I. It is placed in a uniform magnetic field B perpendicular to its plane such that when rotated slightly about its diameter and released, it starts performing simple harmonic motion of time period T. If the mass of the loop is m then",
+      diagram:DIAGRAMS.loopTorque(),
+      opts:["T = \u221a(2\u03c0m/(IB))","T = \u221a(\u03c0m/(IB))","T = \u221a(2m/(IB))","T = \u221a(\u03c0m/(2IB))"], ans:0,
+      sol:"Standard angular-SHM setup: restoring torque \u03c4 = \u2212MB sin\u03b8 \u2248 \u2212MB\u03b8 for small \u03b8.<br><br>\u2022 M = I\u03c0a\u00b2<br>\u2022 Moment of inertia of a ring about a <strong>diameter</strong>: I_moment = ma\u00b2/2<br><br>\u2212MB\u03b8 = I_moment \u00b7 \u03b1 \u21d2 \u03c9\u00b2 = MB/I_moment = (I\u03c0a\u00b2B)/(ma\u00b2/2) = <strong>2\u03c0IB/m</strong><br><br>T = 2\u03c0/\u03c9 = 2\u03c0/\u221a(2\u03c0IB/m) = <strong>\u221a(2\u03c0m/(IB))</strong>, option (1).<br><br>The a\u00b2 cancels \u2014 the radius drops out entirely, which is a nice check on your algebra." }
+  ]},
+
+  { name:"6. The Moving Coil Galvanometer", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"A moving coil galvanometer uses a RADIAL magnetic field (produced by curved pole pieces and a soft-iron core). What is the main purpose of making it radial?",
+      diagram:DIAGRAMS.galvanometer(),
+      opts:["to make the field stronger","to keep the coil's plane always parallel to B, so sin\u03b8 = 1 and the scale is LINEAR","to reduce the coil's resistance","to stop the coil from overheating"], ans:1,
+      sol:"In a uniform field, \u03c4 = NIAB sin\u03b8 \u2014 and \u03b8 changes as the coil turns, so the deflection would NOT be proportional to I. The scale would be cramped and non-linear.<br><br>A <strong>radial</strong> field always presents itself parallel to the coil's plane, whatever the deflection. So sin\u03b8 = 1 <em>at every angle</em>, giving:<br>NIAB = k\u03b8 \u21d2 <strong>\u03b8 \u221d I</strong><br><br>That is the whole trick: a <strong>uniform, linear scale</strong>. (The soft-iron core does also strengthen the field \u2014 a genuine bonus \u2014 but linearity is the point.)" },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"At equilibrium in a galvanometer, the deflecting torque is balanced by the restoring torque of the spring. This gives:",
+      diagram:DIAGRAMS.galvanometer(),
+      opts:["NIAB = k\u03b8, so \u03b8 \u221d I","NIAB = k\u03b8\u00b2, so \u03b8 \u221d \u221aI","NIAB = k/\u03b8, so \u03b8 \u221d 1/I","NIAB = k, so \u03b8 is independent of I"], ans:0,
+      sol:"\u2022 Deflecting torque (magnetic, with sin\u03b8 = 1 thanks to the radial field): <strong>NIAB</strong><br>\u2022 Restoring torque (torsion spring, Hooke's law for twist): <strong>k\u03b8</strong><br><br>At rest they balance: <strong>NIAB = k\u03b8</strong> \u21d2 <strong>\u03b8 = (NAB/k) I</strong>.<br><br>Deflection is directly proportional to current \u2014 which is what lets you read current straight off a linear scale." },
+    { step:"Level 2 \u00b7 Medium", q:"In a galvanometer, if the torsional constant k of the suspension is DOUBLED (everything else unchanged), the deflection for a given current:",
+      diagram:DIAGRAMS.galvanometer(), opts:["doubles","halves","is unchanged","becomes four times"], ans:1,
+      sol:"\u03b8 = NIAB/k \u21d2 <strong>\u03b8 \u221d 1/k</strong>. Doubling k <strong>halves</strong> \u03b8.<br><br>Physically: a stiffer spring fights back harder, so the coil twists less for the same push.<br><br>This is why sensitive galvanometers use a very fine <strong>phosphor-bronze suspension strip</strong> \u2014 tiny k, big deflection." },
+    { step:"Level 2 \u00b7 Medium", q:"Why can a galvanometer NOT be used directly as an ammeter to measure a large current?",
+      diagram:DIAGRAMS.shunt(),
+      opts:["it has too high a resistance and too small a range \u2014 a large current would damage it","it has too low a resistance","its scale is non-linear","it can only measure voltage"], ans:0,
+      sol:"Two problems, both fatal:<br>\u2022 A galvanometer gives full-scale deflection for a <strong>tiny</strong> current (mA or \u03bcA). Anything bigger burns out the coil.<br>\u2022 It has a <strong>significant resistance</strong> (tens of ohms). An ammeter goes in SERIES, so it would change the very current you are trying to measure.<br><br>The fix, next rung: a <strong>low-resistance shunt in parallel</strong>. It diverts most of the current AND drags the combination's resistance down near zero." },
+    { step:"Level 2 \u00b7 Medium", q:"A galvanometer of resistance G gives full-scale deflection at current I_g. To convert it into an ammeter of range I, the shunt resistance S needed is:",
+      diagram:DIAGRAMS.shunt(), opts:["S = I_g G/(I \u2212 I_g)","S = (I \u2212 I_g)G/I_g","S = G/I","S = I G/I_g"], ans:0,
+      sol:"The shunt sits in <strong>parallel</strong> with the galvanometer, so both have the same voltage across them:<br>\u2022 through the galvanometer: I_g, so V = I_g G<br>\u2022 through the shunt: the rest, (I \u2212 I_g), so V = (I \u2212 I_g)S<br><br>Equating: I_g G = (I \u2212 I_g)S \u21d2 <strong>S = I_g G/(I \u2212 I_g)</strong>.<br><br>Since I \u226b I_g, S comes out very SMALL \u2014 exactly what an ammeter needs." },
+    { step:"Level 2 \u00b7 Medium", q:"A galvanometer has G = 20 \u03a9 and gives full-scale deflection at 5 mA. To convert it into an ammeter reading up to 5 A, the shunt required is about:",
+      diagram:DIAGRAMS.shunt(), opts:["0.02 \u03a9","0.2 \u03a9","2 \u03a9","20 \u03a9"], ans:0,
+      sol:"S = I_g G/(I \u2212 I_g)<br>= (5\u00d710\u207b\u00b3 \u00d7 20)/(5 \u2212 0.005)<br>= 0.1 / 4.995 \u2248 <strong>0.02 \u03a9</strong>.<br><br>Note how tiny it is \u2014 a thick strip of metal. That is what makes the finished ammeter nearly resistanceless, so inserting it barely disturbs the circuit." },
+    { step:"Level 2 \u00b7 Medium", q:"To convert the same galvanometer (G, full-scale I_g) into a VOLTMETER of range V, you connect:",
+      diagram:DIAGRAMS.galvanometer(),
+      opts:["a small resistance in parallel","a large resistance R = V/I_g \u2212 G in series","a large resistance in parallel","a small resistance R = V/I_g in series"], ans:1,
+      sol:"A voltmeter goes <strong>across</strong> a component, so it must draw as little current as possible \u21d2 it needs a <strong>huge</strong> resistance, added in <strong>series</strong>.<br><br>At full scale the whole range V must drive exactly I_g through (R + G):<br>V = I_g(R + G) \u21d2 <strong>R = V/I_g \u2212 G</strong><br><br>Contrast with the ammeter: <strong>small resistance in PARALLEL</strong> (shunt) vs <strong>large resistance in SERIES</strong> (multiplier). Mixing these two up is the single most common error in this topic." },
+    { step:"The real thing", tag:"JEE Main 2019",
+      q:"A moving coil galvanometer has a coil with 175 turns and area 1 cm\u00b2. It uses a torsion band of torsion constant 10\u207b\u2076 N-m/rad. The coil is placed in a magnetic field B parallel to its plane. The coil deflects by 1\u00b0 for a current of 1 mA. The value of B (in Tesla) is approximately",
+      diagram:DIAGRAMS.galvanometer(), opts:["10\u207b\u2074","10\u207b\u00b2","10\u207b\u00b9","10\u207b\u00b3"], ans:3,
+      sol:"Use NIAB = k\u03b8 \u2014 but watch the two unit traps.<br><br>\u2022 \u03b8 must be in <strong>radians</strong>: 1\u00b0 = \u03c0/180 \u2248 <strong>0.0175 rad</strong><br>\u2022 A = 1 cm\u00b2 = <strong>10\u207b\u2074 m\u00b2</strong><br><br>B = k\u03b8/(NIA)<br>= (10\u207b\u2076 \u00d7 0.0175)/(175 \u00d7 10\u207b\u00b3 \u00d7 10\u207b\u2074)<br>= 1.75\u00d710\u207b\u2078 / 1.75\u00d710\u207b\u2075 = <strong>10\u207b\u00b3 T</strong>, option (4).<br><br>Leave \u03b8 in degrees and your answer is off by a factor of ~57." },
+    { step:"The real thing", tag:"JEE Main 2020",
+      q:"A galvanometer coil has 500 turns and each turn has an average area of 3 \u00d7 10\u207b\u2074 m\u00b2. If a torque of 1.5 Nm is required to keep this coil parallel to a magnetic field when a current of 0.5 A is flowing through it, the strength of the field (in T) is __________.  [Integer-type in the original \u2014 options added here]",
+      diagram:DIAGRAMS.galvanometer(), opts:["10","15","20","25"], ans:2,
+      sol:"'Parallel to the field' \u21d2 the plane is parallel to B \u21d2 M \u27c2 B \u21d2 sin\u03b8 = 1 \u21d2 maximum torque.<br><br>\u03c4 = NIAB \u21d2 B = \u03c4/(NIA)<br>= 1.5 / (500 \u00d7 0.5 \u00d7 3\u00d710\u207b\u2074)<br>= 1.5 / 0.075 = <strong>20 T</strong>.<br><br>(A colossal field in practice \u2014 but the algebra is what is being tested.)" },
+    { step:"Level 2 \u00b7 Medium", q:"An IDEAL ammeter and an IDEAL voltmeter would have, respectively:",
+      diagram:DIAGRAMS.shunt(),
+      opts:["zero resistance and infinite resistance","infinite resistance and zero resistance","zero resistance and zero resistance","infinite resistance and infinite resistance"], ans:0,
+      sol:"\u2022 <strong>Ammeter</strong> \u2014 goes in SERIES. Any resistance it adds would reduce the current it is trying to measure \u21d2 ideally <strong>zero resistance</strong>.<br>\u2022 <strong>Voltmeter</strong> \u2014 goes in PARALLEL. Any current it draws would disturb the circuit \u21d2 ideally <strong>infinite resistance</strong>.<br><br>This is exactly why we add a small shunt (pulls R down) to make an ammeter, and a large series resistance (pushes R up) to make a voltmeter." },
+    { step:"Level 2 \u00b7 Medium", q:"A galvanometer shows a deflection of 30 divisions for a current of 1.5 mA. Its figure of merit (current per division) is:",
+      diagram:DIAGRAMS.galvanometer(), opts:["5 \u00d7 10\u207b\u2075 A/div","2 \u00d7 10\u207b\u2074 A/div","4.5 \u00d7 10\u207b\u00b2 A/div","20 A/div"], ans:0,
+      sol:"Figure of merit k = I/\u03b8 = current needed per division of deflection.<br>k = 1.5\u00d710\u207b\u00b3 A / 30 div = <strong>5 \u00d7 10\u207b\u2075 A/div</strong>.<br><br>Note it is the <strong>reciprocal</strong> of current sensitivity: a LOW figure of merit means a HIGHLY sensitive galvanometer (a tiny current already moves the needle a full division)." },
+    { step:"Level 2 \u00b7 Medium", q:"In a galvanometer, what is the role of the soft-iron CORE placed inside the coil?",
+      diagram:DIAGRAMS.galvanometer(),
+      opts:["it increases the coil's resistance","it makes the field radial AND concentrates the field lines, strengthening B","it supports the weight of the coil only","it prevents the coil from rotating"], ans:1,
+      sol:"The soft-iron cylinder does two jobs at once:<br>1. Being highly permeable, it <strong>draws the field lines in</strong>, strengthening B in the gap \u21d2 bigger torque \u21d2 more sensitive.<br>2. Together with the concave pole pieces it makes the field <strong>radial</strong>, so sin\u03b8 = 1 at every deflection \u21d2 a linear scale (Level-1 rung 1).<br><br>Soft iron is chosen because it magnetises and demagnetises easily \u2014 it will not retain magnetism and skew later readings." }
+  ]},
+
+  { name:"7. Current Sensitivity & Voltage Sensitivity", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"The CURRENT SENSITIVITY of a galvanometer (deflection per unit current) is:",
+      diagram:DIAGRAMS.galvanometer(), opts:["NAB/k","k/(NAB)","NAB/(kR)","NABk"], ans:0,
+      sol:"From NIAB = k\u03b8 \u21d2 \u03b8 = (NAB/k) I.<br>Current sensitivity <strong>S_I = \u03b8/I = NAB/k</strong>.<br><br>To make a galvanometer more current-sensitive: raise <strong>N</strong>, <strong>A</strong> or <strong>B</strong>, or lower <strong>k</strong> (a finer suspension). Nothing else in the instrument matters." },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"The VOLTAGE SENSITIVITY (deflection per unit voltage) of a galvanometer of resistance R is:",
+      diagram:DIAGRAMS.galvanometer(), opts:["NAB/k","NAB/(kR)","NABR/k","k/(NABR)"], ans:1,
+      sol:"V = IR \u21d2 I = V/R. Substituting into \u03b8 = (NAB/k)I:<br>\u03b8 = (NAB/k)(V/R)<br><strong>S_V = \u03b8/V = NAB/(kR)</strong><br><br>Note the crucial extra ingredient: <strong>R</strong>. Voltage sensitivity depends on the coil's resistance; current sensitivity does not. That one difference drives every question in this topic." },
+    { step:"Level 1 \u00b7 Easy\u2013Medium", q:"The relationship between current sensitivity S_I and voltage sensitivity S_V is:",
+      diagram:DIAGRAMS.galvanometer(), opts:["S_I = S_V \u00d7 R","S_I = S_V / R","S_I = S_V","S_I = S_V \u00d7 R\u00b2"], ans:0,
+      sol:"S_I = NAB/k and S_V = NAB/(kR).<br>Dividing: S_I/S_V = R \u21d2 <strong>S_I = S_V \u00d7 R</strong>.<br><br>Equivalently <strong>S_V = S_I / R</strong> \u2014 which is exactly why raising S_I does not automatically raise S_V. If R climbs at the same time, the gain is cancelled. That is the next rung." },
+    { step:"Level 2 \u00b7 Medium", q:"The number of turns N of a galvanometer coil is DOUBLED, keeping everything else the same (the coil resistance R stays fixed). What happens to S_I and S_V?",
+      diagram:DIAGRAMS.galvanometer(),
+      opts:["both double","S_I doubles, S_V is unchanged","S_I doubles, S_V doubles","both are unchanged"], ans:2,
+      sol:"S_I = NAB/k \u221d N \u21d2 <strong>S_I doubles</strong>.<br>S_V = NAB/(kR) \u221d N/R. Here we are TOLD R stays fixed, so <strong>S_V doubles too</strong>.<br><br>Note the condition carefully. It is only because R is held constant that both go up. In a real coil, doubling the turns also doubles the length of wire \u2014 and that changes everything. See the next rung." },
+    { step:"Level 2 \u00b7 Medium", q:"Now the realistic case: the turns N are doubled by winding twice as much of the SAME wire, so the coil resistance R also doubles. What happens to S_I and S_V?",
+      diagram:DIAGRAMS.galvanometer(),
+      opts:["S_I doubles; S_V is unchanged","both double","S_I is unchanged; S_V doubles","both are unchanged"], ans:0,
+      sol:"<strong>This is the single most important idea in the topic.</strong><br><br>S_I = NAB/k \u221d N \u21d2 N doubles \u21d2 <strong>S_I DOUBLES</strong>.<br><br>S_V = NAB/(kR) \u221d N/R. Both N and R double \u21d2 the ratio N/R is <strong>unchanged</strong> \u21d2 <strong>S_V STAYS THE SAME</strong>.<br><br><strong>Conclusion: increasing current sensitivity does NOT necessarily increase voltage sensitivity.</strong> The extra wire that gives you more turns also gives you more resistance, and the two effects cancel exactly.<br><br>This is a favourite JEE/NEET statement question \u2014 and now you know exactly why it is true, rather than just having memorised it." },
+    { step:"Level 2 \u00b7 Medium", q:"Which change would increase current sensitivity WITHOUT the side effect of increasing the coil's resistance?",
+      diagram:DIAGRAMS.galvanometer(),
+      opts:["adding more turns of the same wire","using a stronger magnet (bigger B)","using a thinner wire","adding a shunt"], ans:1,
+      sol:"Test each against S_I = NAB/k:<br>\u2022 <strong>More turns</strong> \u2192 raises S_I, but also raises R (the trap from the last rung).<br>\u2022 <strong>Stronger magnet (bigger B)</strong> \u2192 raises S_I, and touches R not at all. \u2713<br>\u2022 <strong>Thinner wire</strong> \u2192 raises R badly, for no gain in S_I.<br>\u2022 <strong>Shunt</strong> \u2192 that converts it into an ammeter; it REDUCES sensitivity.<br><br>So: <strong>a stronger field</strong> (or a weaker suspension, smaller k, or a larger coil area A) buys you sensitivity for free. Option (2)." },
+    { step:"Level 2 \u00b7 Medium", q:"A galvanometer has N = 200 turns, A = 2 \u00d7 10\u207b\u2074 m\u00b2, B = 0.5 T and k = 4 \u00d7 10\u207b\u2075 N\u00b7m/rad. Its current sensitivity is:",
+      diagram:DIAGRAMS.galvanometer(), opts:["500 rad/A","250 rad/A","1000 rad/A","50 rad/A"], ans:0,
+      sol:"S_I = NAB/k<br>= (200 \u00d7 2\u00d710\u207b\u2074 \u00d7 0.5) / (4\u00d710\u207b\u2075)<br>= 0.02 / 4\u00d710\u207b\u2075 = <strong>500 rad/A</strong>.<br><br>Sanity check: a 1 mA current would then give 0.5 rad \u2014 about 29\u00b0. A perfectly sensible galvanometer deflection." },
+    { step:"Level 2 \u00b7 Medium", q:"The same galvanometer (S_I = 500 rad/A) has a coil resistance of 50 \u03a9. Its voltage sensitivity is:",
+      diagram:DIAGRAMS.galvanometer(), opts:["10 rad/V","25 rad/V","500 rad/V","25000 rad/V"], ans:0,
+      sol:"Use the relation from Level-1 rung 3: <strong>S_V = S_I / R</strong><br>= 500 / 50 = <strong>10 rad/V</strong>.<br><br>No need to go back to NAB/(kR) \u2014 once you have S_I, just divide by R." },
+    { step:"Level 2 \u00b7 Medium", q:"Two galvanometers A and B are identical except that A has twice the coil resistance of B. They have the SAME current sensitivity. Comparing voltage sensitivities:",
+      diagram:DIAGRAMS.galvanometer(),
+      opts:["A has twice the voltage sensitivity of B","B has twice the voltage sensitivity of A","they are equal","cannot be determined"], ans:1,
+      sol:"S_V = S_I / R. Same S_I, but R_A = 2R_B:<br>S_V(A) = S_I/(2R_B) and S_V(B) = S_I/R_B<br>\u21d2 <strong>S_V(B) = 2 \u00d7 S_V(A)</strong>.<br><br>The <strong>lower-resistance</strong> galvanometer is the more voltage-sensitive one \u2014 for the same current sensitivity, extra resistance is pure loss." },
+    { step:"Level 2 \u00b7 Medium", q:"Statement I: Increasing the number of turns always increases the current sensitivity.  Statement II: Increasing the number of turns always increases the voltage sensitivity.",
+      diagram:DIAGRAMS.galvanometer(),
+      opts:["Both statements are correct","Statement I is correct, Statement II is not necessarily correct","Statement II is correct, Statement I is not","Both statements are incorrect"], ans:1,
+      sol:"<strong>Statement I \u2014 CORRECT.</strong> S_I = NAB/k \u221d N, with no hidden dependence. More turns always means more current sensitivity.<br><br><strong>Statement II \u2014 NOT necessarily.</strong> S_V \u221d N/R. Adding turns with the same wire also raises R proportionally, so N/R is unchanged and S_V does not improve at all.<br><br><strong>Option (2)</strong> \u2014 the same physics as Level-2 rung 2, now dressed as a statement question. This is precisely how the exam asks it." },
+    { step:"Level 2 \u00b7 Medium", q:"Why is a galvanometer with HIGH current sensitivity not automatically a good VOLTMETER?",
+      diagram:DIAGRAMS.galvanometer(),
+      opts:["because a good voltmeter needs high voltage sensitivity, which also demands low coil resistance","because it would be too cheap","because current sensitivity has nothing to do with voltmeters","because a voltmeter must have zero resistance"], ans:0,
+      sol:"A voltmeter reads voltage, so what matters is <strong>voltage sensitivity</strong>, S_V = S_I/R.<br><br>You can have a huge S_I and still have a poor S_V, if R is large \u2014 and high-sensitivity coils, with all their many turns, tend to have exactly that.<br><br>So a good voltmeter needs high S_I <em>and</em> a coil resistance that has not blown up along with it. Option (1).<br><br>(Careful: the finished voltmeter as a whole must have HIGH resistance \u2014 that comes from the large series multiplier. Option (4) confuses the coil with the instrument.)" },
+    { step:"Level 2 \u00b7 Medium", q:"A galvanometer's suspension is replaced by one with HALF the torsional constant k, and the magnet is replaced by one with DOUBLE the field B. The current sensitivity becomes:",
+      diagram:DIAGRAMS.galvanometer(), opts:["unchanged","2 times","4 times","1/4 times"], ans:2,
+      sol:"S_I = NAB/k.<br>\u2022 B doubles \u21d2 numerator \u00d7 2<br>\u2022 k halves \u21d2 denominator \u00d7 \u00bd \u21d2 another \u00d7 2<br><br>Total: 2 \u00d7 2 = <strong>4 times</strong>.<br><br>And note: neither change touches the coil's resistance R, so the <strong>voltage sensitivity goes up 4\u00d7 as well</strong> (S_V = S_I/R). That is the right way to build a better instrument \u2014 unlike simply piling on more turns." }
+  ]}
+
+];
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'dpp_force_torque_galvanometer_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length && parsed.every((a,i)=>Array.isArray(a)&&a.length===TOPICS[i].questions.length)) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+
+function saveAnswers(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+}
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    // Option order PRESERVED — past-year questions keep their printed (1)(2)(3)(4).
+    return{q:raw.q, diagram:raw.diagram||null, opts:raw.opts.slice(), ans:raw.ans,
+           sol:raw.sol, yt:raw.yt||'', tag:raw.tag||'', step:raw.step||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qBadges=document.getElementById('q-badges');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    const total=topic.questions.length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===total&&done===total?' all-done':'');
+    const dots=Array(total).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${total} attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.reduce((s,t)=>s+t.questions.length,0)} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=curTopic.questions.length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of ${curTopic.questions.length}`;
+  qText.textContent=q.q;
+  qBadges.innerHTML =
+    (q.step ? `<span class="badge-step">${q.step}</span>` : '') +
+    (q.tag  ? `<span class="badge-year">${q.tag}</span>` : '');
+  // Diagram
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['1','2','3','4'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===curTopic.questions.length-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  const last=curTopic.questions.length-1;
+  if(newQ<0||newQ>last){if(newQ>last) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// Close modal on backdrop click
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
