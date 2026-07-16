@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Screw Gauge (Micrometer)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+/* Clear confirm modal */
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+/* toast */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">Physics <span>·</span> DPP-02</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Screw Gauge<br>(Micrometer)</h1></div>
+    <p id="home-sub">Select a topic to begin practicing — 5 questions each.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── DIAGRAMS ───────────────────────────────────────────────────────────────────
+// Each diagram is a function returning an SVG string.
+// Realistic micrometer sleeve + thimble close-ups, drawn to the ICSE convention:
+// circular-scale numbers increase upward; zero BELOW the reference line = +ve error,
+// zero ABOVE the reference line = −ve error.
+
+const METAL_DEFS = (p)=>`
+  <defs>
+    <linearGradient id="${p}sl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eceef0"/><stop offset="0.45" stop-color="#c3c8ce"/><stop offset="1" stop-color="#8f959c"/>
+    </linearGradient>
+    <linearGradient id="${p}th" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dfe3e7"/><stop offset="0.5" stop-color="#adb3ba"/><stop offset="1" stop-color="#7c828a"/>
+    </linearGradient>
+    <linearGradient id="${p}sp" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2f3f4"/><stop offset="0.5" stop-color="#c9cdd2"/><stop offset="1" stop-color="#9aa0a7"/>
+    </linearGradient>
+  </defs>`;
+
+// Vertical circular-scale strip on the thimble. yZero = y of division 0; every 5th tick long + numbered (mod 50).
+function thimbleTicks(x, yZero, step, yMin, yMax){
+  let s='';
+  const dMin=Math.ceil((yZero-yMax)/step), dMax=Math.floor((yZero-yMin)/step);
+  for(let d=dMin; d<=dMax; d++){
+    const y=yZero-d*step;
+    const five=((d%5)+5)%5===0;
+    const len=five?24:14;
+    s+=`<line x1="${x}" y1="${y}" x2="${x+len}" y2="${y}" stroke="#2b2f33" stroke-width="${five?1.6:1}"/>`;
+    if(five){
+      const lab=((d%50)+50)%50;
+      s+=`<text x="${x+len+7}" y="${y+4}" font-size="12" font-family="DM Sans" fill="#2b2f33">${lab}</text>`;
+    }
+  }
+  return s;
+}
+function knurl(x,y,w,h){
+  let s='';
+  for(let k=x;k<=x+w;k+=6) s+=`<line x1="${k}" y1="${y}" x2="${k}" y2="${y+h}" stroke="#6f757c" stroke-width="1.4" opacity="0.55"/>`;
+  return s;
+}
+
+const DIAGRAMS = {
+
+  // ── Zero-error close-up. offset = divisions the circular-scale zero sits BELOW (+) or ABOVE (−) the reference line.
+  zeroError(offset, caption){
+    const p='z'+(offset<0?'m':'p')+Math.abs(offset);
+    const yD=108, step=9, yZero=yD+offset*step;
+    return `
+    <svg viewBox="0 0 380 216" width="360" xmlns="http://www.w3.org/2000/svg" role="img">
+      ${METAL_DEFS(p)}
+      <!-- sleeve (barrel with main scale) -->
+      <rect x="14" y="82" width="158" height="52" rx="4" fill="url(#${p}sl)" stroke="#7c828a"/>
+      <line x1="20" y1="${yD}" x2="172" y2="${yD}" stroke="#1a1916" stroke-width="1.8"/>
+      <line x1="160" y1="${yD}" x2="160" y2="${yD-16}" stroke="#1a1916" stroke-width="1.6"/>
+      <text x="160" y="${yD-21}" text-anchor="middle" font-size="12" font-family="DM Sans" fill="#1a1916">0</text>
+      <text x="24" y="96" font-size="10.5" font-family="DM Sans" fill="#4b5058">main scale</text>
+      <!-- thimble -->
+      <rect x="172" y="50" width="176" height="118" rx="8" fill="url(#${p}th)" stroke="#6f757c"/>
+      ${knurl(286,54,58,110)}
+      <line x1="172" y1="50" x2="172" y2="168" stroke="#5c6269" stroke-width="2"/>
+      ${thimbleTicks(176, yZero, step, 56, 162)}
+      <!-- reference line annotation -->
+      <line x1="172" y1="${yD}" x2="352" y2="${yD}" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="5 4"/>
+      <text x="356" y="${yD+4}" font-size="10.5" font-family="DM Sans" fill="#c0392b">ref</text>
+      <!-- zero pointer -->
+      ${(yZero>=56&&yZero<=162)?`<circle cx="168" cy="${yZero}" r="3.4" fill="#c0392b"/>
+      <text x="150" y="${yZero+(offset===0?-10:4)}" text-anchor="end" font-size="10.5" font-family="DM Sans" fill="#c0392b">zero →</text>`:''}
+      <text x="190" y="202" font-size="12" font-family="DM Sans" fill="#4b5058" text-anchor="middle">${caption}</text>
+    </svg>`;
+  },
+
+  // ── Reading close-up: main scale reads msr mm, circular division csd on the reference line.
+  reading(msr, csd){
+    const p='r'+msr+'_'+csd;
+    const yD=108, step=9, mm=24, x0=34;
+    const xE=x0+msr*mm+12;                    // thimble edge just past the msr mark
+    const yZero=yD+csd*step;                  // so that division csd falls on the line
+    let mainTicks='';
+    for(let m=0;m<=msr;m++){
+      const x=x0+m*mm;
+      mainTicks+=`<line x1="${x}" y1="${yD}" x2="${x}" y2="${yD-16}" stroke="#1a1916" stroke-width="1.5"/>
+      <text x="${x}" y="${yD-21}" text-anchor="middle" font-size="12" font-family="DM Sans" fill="#1a1916">${m}</text>`;
+    }
+    return `
+    <svg viewBox="0 0 380 216" width="360" xmlns="http://www.w3.org/2000/svg" role="img">
+      ${METAL_DEFS(p)}
+      <rect x="14" y="82" width="${xE-14}" height="52" rx="4" fill="url(#${p}sl)" stroke="#7c828a"/>
+      <line x1="20" y1="${yD}" x2="${xE}" y2="${yD}" stroke="#1a1916" stroke-width="1.8"/>
+      ${mainTicks}
+      <rect x="${xE}" y="50" width="${358-xE}" height="118" rx="8" fill="url(#${p}th)" stroke="#6f757c"/>
+      ${knurl(Math.max(xE+112,290),54,54,110)}
+      <line x1="${xE}" y1="50" x2="${xE}" y2="168" stroke="#5c6269" stroke-width="2"/>
+      ${thimbleTicks(xE+4, yZero, step, 56, 162)}
+      <line x1="${xE}" y1="${yD}" x2="362" y2="${yD}" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="5 4"/>
+      <polygon points="${xE-2},${yD} ${xE-10},${yD-5} ${xE-10},${yD+5}" fill="#c0392b"/>
+      <text x="${x0+msr*mm/2}" y="152" text-anchor="middle" font-size="11.5" font-family="DM Sans" fill="#4b5058">main scale edge at ${msr} mm</text>
+      <text x="190" y="202" font-size="12" font-family="DM Sans" fill="#4b5058" text-anchor="middle">least count = 0.01 mm · reference line shown dashed</text>
+    </svg>`;
+  },
+
+  // ── Screw thread advancing along the axis
+  pitchThread(dist,turns){
+    let threads='';
+    for(let x=56;x<=272;x+=16) threads+=`<line x1="${x}" y1="86" x2="${x-12}" y2="126" stroke="#5c6269" stroke-width="2"/>`;
+    return `
+    <svg viewBox="0 0 380 190" width="340" xmlns="http://www.w3.org/2000/svg" role="img">
+      ${METAL_DEFS('pt')}
+      <rect x="40" y="86" width="244" height="40" rx="6" fill="url(#ptsp)" stroke="#7c828a"/>
+      ${threads}
+      <!-- rotation arrow -->
+      <path d="M 306 84 a 26 26 0 1 1 -20 44" fill="none" stroke="#1a7a4a" stroke-width="2.4"/>
+      <polygon points="286,132 296,126 297,137" fill="#1a7a4a"/>
+      <text x="312" y="72" font-size="12" font-family="DM Sans" fill="#1a7a4a" text-anchor="middle">${turns} rotations</text>
+      <!-- advance dimension -->
+      <line x1="60" y1="152" x2="140" y2="152" stroke="#c0392b" stroke-width="1.8"/>
+      <polygon points="60,152 68,148 68,156" fill="#c0392b"/>
+      <polygon points="140,152 132,148 132,156" fill="#c0392b"/>
+      <text x="100" y="172" text-anchor="middle" font-size="12.5" font-family="DM Sans" fill="#c0392b">advance = ${dist}</text>
+    </svg>`;
+  },
+
+  // ── Full labelled micrometer
+  fullInstrument(){
+    return `
+    <svg viewBox="0 0 470 250" width="440" xmlns="http://www.w3.org/2000/svg" role="img">
+      ${METAL_DEFS('fi')}
+      <!-- U frame -->
+      <path d="M118 108 C 40 150 60 226 170 218 C 210 215 228 190 232 138" fill="none" stroke="#6b7178" stroke-width="20" stroke-linecap="round"/>
+      <!-- anvil -->
+      <rect x="106" y="86" width="22" height="24" rx="2" fill="url(#fisp)" stroke="#7c828a"/>
+      <!-- wire being measured -->
+      <circle cx="140" cy="98" r="7" fill="#c9822b" stroke="#8a5a1d"/>
+      <!-- spindle -->
+      <rect x="152" y="92" width="88" height="12" rx="3" fill="url(#fisp)" stroke="#7c828a"/>
+      <!-- sleeve with main scale -->
+      <rect x="240" y="80" width="96" height="36" rx="4" fill="url(#fisl)" stroke="#7c828a"/>
+      <line x1="246" y1="98" x2="336" y2="98" stroke="#1a1916" stroke-width="1.6"/>
+      <line x1="258" y1="98" x2="258" y2="88" stroke="#1a1916"/><line x1="282" y1="98" x2="282" y2="88" stroke="#1a1916"/><line x1="306" y1="98" x2="306" y2="88" stroke="#1a1916"/><line x1="330" y1="98" x2="330" y2="88" stroke="#1a1916"/>
+      <!-- thimble -->
+      <rect x="336" y="68" width="66" height="60" rx="7" fill="url(#fith)" stroke="#6f757c"/>
+      <line x1="340" y1="82" x2="352" y2="82" stroke="#2b2f33"/><line x1="340" y1="92" x2="352" y2="92" stroke="#2b2f33"/><line x1="340" y1="102" x2="352" y2="102" stroke="#2b2f33"/><line x1="340" y1="112" x2="352" y2="112" stroke="#2b2f33"/>
+      ${knurl(366,72,32,52)}
+      <!-- ratchet -->
+      <rect x="402" y="78" width="26" height="40" rx="5" fill="url(#fith)" stroke="#6f757c"/>
+      ${knurl(405,82,20,32)}
+      <!-- labels -->
+      <g font-size="11.5" font-family="DM Sans" fill="#1a1916">
+        <line x1="117" y1="82" x2="96" y2="52" stroke="#a09d97"/><text x="92" y="46" text-anchor="end">anvil</text>
+        <line x1="140" y1="90" x2="150" y2="40" stroke="#a09d97"/><text x="152" y="34">wire</text>
+        <line x1="196" y1="92" x2="206" y2="54" stroke="#a09d97"/><text x="208" y="48">spindle</text>
+        <line x1="288" y1="80" x2="288" y2="46" stroke="#a09d97"/><text x="288" y="40" text-anchor="middle">sleeve (main scale)</text>
+        <line x1="369" y1="128" x2="369" y2="160" stroke="#a09d97"/><text x="369" y="176" text-anchor="middle">thimble</text>
+        <text x="369" y="190" text-anchor="middle">(circular scale)</text>
+        <line x1="415" y1="118" x2="432" y2="146" stroke="#a09d97"/><text x="434" y="160" text-anchor="end">ratchet</text>
+        <line x1="110" y1="190" x2="86" y2="206" stroke="#a09d97"/><text x="84" y="222" text-anchor="start">U-shaped frame</text>
+      </g>
+    </svg>`;
+  }
+};
+
+// ── QUESTION BANK ──────────────────────────────────────────────────────────────
+const TOPICS = [
+
+  // ── TOPIC 1: Pitch & Least Count ─────────────────────────────────────────────
+  {
+    name:"Pitch & Least Count",
+    questions:[
+      {
+        q:"The pitch of a screw gauge is defined as the linear distance moved by the screw along the main scale when the circular scale is given…",
+        diagram:null,
+        opts:["one complete rotation","one circular scale division","half a rotation","the full length of the main scale"],
+        ans:0,
+        sol:"Pitch = distance advanced ÷ number of rotations. For exactly one complete rotation, the distance advanced IS the pitch. It is a property of the screw thread."
+      },
+      {
+        q:"On rotating the circular scale through 2 complete rotations, the screw advances by 0.4 mm along the main scale. The pitch of the screw gauge is:",
+        diagram:DIAGRAMS.pitchThread('0.4 mm','2'),
+        opts:["0.2 mm","0.4 mm","0.8 mm","0.1 mm"],
+        ans:0,
+        sol:"Pitch = distance advanced ÷ number of rotations = 0.4 mm ÷ 2 = 0.2 mm."
+      },
+      {
+        q:"The least count (L.C.) of a screw gauge is given by:",
+        diagram:null,
+        opts:["Pitch ÷ number of circular scale divisions","Pitch × number of circular scale divisions","Number of circular scale divisions ÷ Pitch","Main scale reading ÷ Pitch"],
+        ans:0,
+        sol:"One rotation moves the screw through one pitch and sweeps all the circular divisions past the reference line. So each division corresponds to L.C. = Pitch ÷ C.S.D."
+      },
+      {
+        q:"A screw gauge has a pitch of 1 mm and 100 divisions on its circular scale. Its least count is:",
+        diagram:null,
+        opts:["0.01 mm","0.001 mm","0.1 mm","1 mm"],
+        ans:0,
+        sol:"L.C. = Pitch ÷ C.S.D = 1 mm ÷ 100 = 0.01 mm."
+      },
+      {
+        q:"Keeping the pitch the same, if the number of divisions on the circular scale is increased, then:",
+        diagram:null,
+        opts:["least count decreases, so accuracy increases","least count increases, so accuracy decreases","least count stays the same","the instrument can no longer be used"],
+        ans:0,
+        sol:"L.C. = Pitch ÷ C.S.D. Increasing C.S.D makes L.C. smaller — the gauge can now read smaller lengths, i.e., its accuracy increases. (C.S.D ↑ → accuracy ↑)"
+      }
+    ]
+  },
+
+  // ── TOPIC 2: Reading the Screw Gauge ─────────────────────────────────────────
+  {
+    name:"Reading the Screw Gauge",
+    questions:[
+      {
+        q:"The correct expression for the measurement taken with a screw gauge (with no zero error) is:",
+        diagram:null,
+        opts:["Reading = MSR + (C.S.D on line × L.C.)","Reading = MSR × (C.S.D on line × L.C.)","Reading = MSR − (C.S.D on line + L.C.)","Reading = (MSR × C.S.D) + L.C."],
+        ans:0,
+        sol:"The main scale gives the whole millimetres (MSR); the circular scale division coinciding with the reference line, multiplied by L.C., gives the fraction. Add the two."
+      },
+      {
+        q:"In the position shown, the main scale reads 4 mm and the 35th circular division coincides with the reference line. L.C. = 0.01 mm and there is no zero error. The measured length is:",
+        diagram:DIAGRAMS.reading(4,35),
+        opts:["4.35 mm","4.035 mm","4.53 mm","39 mm"],
+        ans:0,
+        sol:"Reading = MSR + (C.S.D × L.C.) = 4 + (35 × 0.01) = 4 + 0.35 = 4.35 mm."
+      },
+      {
+        q:"From the diagram, the main scale edge is at 6 mm and division 20 of the circular scale lies on the reference line (L.C. = 0.01 mm, no zero error). The reading is:",
+        diagram:DIAGRAMS.reading(6,20),
+        opts:["6.20 mm","6.02 mm","8.00 mm","6.25 mm"],
+        ans:0,
+        sol:"Reading = 6 + (20 × 0.01) = 6 + 0.20 = 6.20 mm."
+      },
+      {
+        q:"In the figure, the sleeve shows 3 mm and the 45th division is on the reference line (L.C. = 0.01 mm, no zero error). The diameter of the wire is:",
+        diagram:DIAGRAMS.reading(3,45),
+        opts:["3.45 mm","3.54 mm","3.045 mm","7.50 mm"],
+        ans:0,
+        sol:"Reading = 3 + (45 × 0.01) = 3.45 mm."
+      },
+      {
+        q:"A screw gauge has pitch 1 mm and 100 circular divisions. While measuring a rod, the main scale reads 2 mm and the 65th division coincides with the reference line. The diameter of the rod is:",
+        diagram:null,
+        opts:["2.65 mm","2.065 mm","6.70 mm","2.56 mm"],
+        ans:0,
+        sol:"First find L.C. = 1 ÷ 100 = 0.01 mm. Then Reading = 2 + (65 × 0.01) = 2.65 mm."
+      }
+    ]
+  },
+
+  // ── TOPIC 3: Zero Error from the Diagram ─────────────────────────────────────
+  {
+    name:"Zero Error from the Diagram",
+    questions:[
+      {
+        q:"The flat ends of the screw gauge are brought into contact with nothing between them, and the scales appear as shown. What do you conclude?",
+        diagram:DIAGRAMS.zeroError(0,'Jaws in contact — nothing between the studs'),
+        opts:["The screw gauge has no zero error","It has a positive zero error","It has a negative zero error","Its least count is zero"],
+        ans:0,
+        sol:"On closing the gap, the zero of the circular scale coincides exactly with the reference line — so the instrument reads 0 when it should read 0. No zero error."
+      },
+      {
+        q:"With the studs in contact, the zero of the circular scale is seen BELOW the reference line, as shown. The zero error is:",
+        diagram:DIAGRAMS.zeroError(3,'Jaws in contact — note where the zero sits'),
+        opts:["positive","negative","zero","impossible to determine"],
+        ans:0,
+        sol:"Zero below the reference line ⇒ the gauge already shows a small reading at contact ⇒ POSITIVE zero error. (Zero above the line would be negative.)"
+      },
+      {
+        q:"When the jaws are closed, the zero of the circular scale is below the reference line and the 4th division coincides with it. If L.C. = 0.01 mm, the zero error is:",
+        diagram:DIAGRAMS.zeroError(4,'Jaws in contact — 4th division on the reference line'),
+        opts:["+0.04 mm","−0.04 mm","+0.40 mm","+4 mm"],
+        ans:0,
+        sol:"Positive error (zero below the line). Zero error = +(coinciding division × L.C.) = +(4 × 0.01) = +0.04 mm."
+      },
+      {
+        q:"A screw gauge has 50 divisions on its circular scale. On closing the jaws, the zero of the circular scale is ABOVE the reference line and the 48th division coincides with it. If L.C. = 0.01 mm, the zero error is:",
+        diagram:DIAGRAMS.zeroError(-2,'Jaws in contact — zero has crossed above the line'),
+        opts:["−0.02 mm","+0.48 mm","−0.48 mm","+0.02 mm"],
+        ans:0,
+        sol:"Zero above the line ⇒ negative error. It is short of a full turn by (50 − 48) = 2 divisions. Zero error = −(2 × 0.01) = −0.02 mm."
+      },
+      {
+        q:"If a screw gauge has a NEGATIVE zero error, then to get the correct measurement the zero error must be:",
+        diagram:null,
+        opts:["added to the observed reading","subtracted from the observed reading","ignored, since it is small","multiplied with the least count"],
+        ans:0,
+        sol:"Correct reading = observed reading − zero error. A negative error, when subtracted, gets ADDED: correct = reading − (−error) = reading + error. (+ve error → subtract; −ve error → add.)"
+      }
+    ]
+  },
+
+  // ── TOPIC 4: Corrections & the Instrument ────────────────────────────────────
+  {
+    name:"Corrections & the Instrument",
+    questions:[
+      {
+        q:"A screw gauge with a zero error of +0.04 mm gives an observed reading of 2.68 mm for the diameter of a wire. The correct diameter is:",
+        diagram:null,
+        opts:["2.64 mm","2.72 mm","2.68 mm","0.04 mm"],
+        ans:0,
+        sol:"Positive zero error is subtracted: correct reading = 2.68 − 0.04 = 2.64 mm."
+      },
+      {
+        q:"The observed reading of a wire's diameter is 3.45 mm on a screw gauge whose zero error is −0.05 mm. The true diameter is:",
+        diagram:null,
+        opts:["3.50 mm","3.40 mm","3.45 mm","3.55 mm"],
+        ans:0,
+        sol:"Correct reading = observed − zero error = 3.45 − (−0.05) = 3.45 + 0.05 = 3.50 mm. A negative error is effectively added."
+      },
+      {
+        q:"In the labelled diagram of a screw gauge, the wire whose diameter is to be measured is gripped between the:",
+        diagram:DIAGRAMS.fullInstrument(),
+        opts:["anvil and the spindle","sleeve and the thimble","thimble and the ratchet","frame and the sleeve"],
+        ans:0,
+        sol:"The wire is placed between the fixed stud (anvil, on the frame) and the movable stud (end of the spindle). The ratchet is turned until the wire is gently gripped."
+      },
+      {
+        q:"A screw gauge is preferred over a vernier calliper for measuring the diameter of a thin wire because:",
+        diagram:null,
+        opts:["its least count (≈ 0.01 mm) is much smaller","it is longer than a vernier calliper","it has two separate jaws","it is made of harder steel"],
+        ans:0,
+        sol:"A vernier calliper typically reads up to 0.1 mm, while a screw gauge reads up to 0.01 mm — ten times finer. Smaller least count ⇒ more accurate. (Screw gauge → more accurate → vernier calliper.)"
+      },
+      {
+        q:"Which of the following is BEST measured using a screw gauge?",
+        diagram:null,
+        opts:["diameter of a thin wire","length of a classroom","internal diameter of a beaker","depth of a small bottle"],
+        ans:0,
+        sol:"The screw gauge suits very small thicknesses — a thin wire's diameter or a paper sheet's thickness. Internal diameters and depths are vernier-calliper jobs; large lengths need a tape."
+      }
+    ]
+  }
+];
+
+// ── STORAGE ────────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'dpp02_screw_gauge_answers_v1';
+function loadAnswers(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const p=JSON.parse(raw);
+      if(Array.isArray(p)&&p.length===TOPICS.length&&p.every(a=>Array.isArray(a)&&a.length===5)) return p;
+    }
+  }catch(e){}
+  return TOPICS.map(()=>Array(5).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+// Seeded shuffle so option order is random-looking but STABLE across reloads
+// (keeps saved chosen-option indices pointing at the right option).
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,rng){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    const rng=mulberry32(ti*997+qi*101+13);
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed,rng);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===5&&done===5?' all-done':'');
+    const dots=Array(5).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/5 attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.length*5} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=5;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of 5`;
+  qText.textContent=q.q;
+  // Diagram
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===4){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  if(newQ<0||newQ>4){if(newQ>4) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(()=>Array(5).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// Close modal on backdrop click
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
