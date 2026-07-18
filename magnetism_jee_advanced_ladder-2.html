@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Magnetism — JEE Advanced Ladder</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+#q-badges{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 14px;}
+.badge-step,.badge-year{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 10px;border-radius:6px;border:1px solid var(--border);}
+.badge-step{background:var(--tag-bg);color:var(--text3);}
+.badge-year{background:#fff8e6;border-color:#e8d9a8;color:#8a6d1f;font-weight:700;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+/* Clear confirm modal */
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+/* toast */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> JEE Advanced</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Magnetism<br>&amp; JEE Advanced PYQs</h1></div>
+    <p id="home-sub">7 JEE Advanced problems, each built up from an easy decision to the original question, verbatim. JEE Adv 2014–2020.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div id="q-badges"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+// Each diagram is a function returning an SVG string
+
+const DIAGRAMS = {
+
+  // Q4 — coil hanging from leads to a capacitor, in a horizontal field
+  coilCap: () => `
+    <svg viewBox="0 0 250 165" width="250" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="q4b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker></defs>
+      <line x1="150" y1="18" x2="150" y2="30" stroke="#374151" stroke-width="1.6"/>
+      <line x1="130" y1="30" x2="170" y2="30" stroke="#374151" stroke-width="2.4"/>
+      <line x1="136" y1="38" x2="164" y2="38" stroke="#374151" stroke-width="2.4"/>
+      <text x="178" y="37" font-size="10" fill="#374151" font-family="sans-serif">Q</text>
+      <line x1="150" y1="38" x2="150" y2="52" stroke="#374151" stroke-width="1.6"/>
+      <line x1="150" y1="52" x2="196" y2="52" stroke="#374151" stroke-width="1.6"/>
+      <circle cx="196" cy="52" r="2.5" fill="#374151"/><line x1="196" y1="52" x2="210" y2="44" stroke="#374151" stroke-width="1.6"/>
+      <text x="196" y="40" font-size="9" fill="#6b7280" font-family="sans-serif">switch</text>
+      <line x1="210" y1="44" x2="210" y2="70" stroke="#374151" stroke-width="1.6"/>
+      <line x1="90" y1="52" x2="90" y2="96" stroke="#d97706" stroke-width="1.6"/>
+      <line x1="90" y1="52" x2="150" y2="52" stroke="#d97706" stroke-width="1.6"/>
+      <line x1="210" y1="70" x2="150" y2="70" stroke="#d97706" stroke-width="1.6"/>
+      <line x1="150" y1="70" x2="150" y2="96" stroke="#d97706" stroke-width="1.6"/>
+      <ellipse cx="120" cy="112" rx="34" ry="30" fill="none" stroke="#dc2626" stroke-width="2.6"/>
+      <text x="120" y="116" font-size="10" fill="#dc2626" font-family="sans-serif" text-anchor="middle" font-weight="700">coil, N turns</text>
+      ${[0,1,2].map(i=>`<line x1="30" y1="${98+i*14}" x2="212" y2="${98+i*14}" stroke="#2563eb" stroke-width="1.4" marker-end="url(#q4b)" opacity="0.6"/>`).join('')}
+      <text x="216" y="102" font-size="12" fill="#2563eb" font-family="sans-serif" font-weight="700">B\u2080</text>
+      <text x="120" y="160" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">field B\u2080 parallel to the plane of the coil</text>
+    </svg>`,
+
+  // Q6 — two field regions split by the x-axis, looping path
+  twoRegion: () => `
+    <svg viewBox="0 0 250 172" width="250" height="172" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="q6v" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <rect x="20" y="14" width="215" height="71" fill="#eff6ff"/>
+      <rect x="20" y="85" width="215" height="71" fill="#e5e7eb"/>
+      ${[0,1,2,3,4].map(i=>[0,1].map(j=>`<text x="${150+i*18}" y="${34+j*30}" font-size="10" fill="#93c5fd" font-family="sans-serif">\u2299</text>`).join('')).join('')}
+      ${[0,1,2,3,4].map(i=>`<text x="${150+i*18}" y="128" font-size="10" fill="#9ca3af" font-family="sans-serif">\u2299</text>`).join('')}
+      <line x1="20" y1="85" x2="235" y2="85" stroke="#374151" stroke-width="1.4"/>
+      <text x="238" y="89" font-size="11" fill="#374151" font-family="sans-serif" font-style="italic">x</text>
+      <text x="196" y="26" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="700">B\u2081</text>
+      <text x="196" y="150" font-size="11" fill="#6b7280" font-family="sans-serif" font-weight="700">B\u2082 = 4B\u2081</text>
+      <path d="M60,85 A35,35 0 0,1 130,85" fill="none" stroke="#dc2626" stroke-width="2.4"/>
+      <path d="M130,85 A9,9 0 0,1 112,85" fill="none" stroke="#dc2626" stroke-width="2.4"/>
+      <line x1="60" y1="85" x2="60" y2="49" stroke="#dc2626" stroke-width="2.4" marker-end="url(#q6v)"/>
+      <text x="40" y="60" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">v\u2080</text>
+      <text x="86" y="46" font-size="9" fill="#6b7280" font-family="sans-serif">r\u2081</text>
+      <text x="120" y="104" font-size="9" fill="#6b7280" font-family="sans-serif">r\u2082</text>
+    </svg>`,
+
+  // galvanometer
+  galvanometer: () => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="gv" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker></defs>
+      <path d="M28,36 L74,36 A48,48 0 0,0 74,124 L28,124 Z" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+      <path d="M222,36 L176,36 A48,48 0 0,1 176,124 L222,124 Z" fill="#fee2e2" stroke="#dc2626" stroke-width="1.6"/>
+      <text x="44" y="86" font-size="13" fill="#2563eb" font-family="sans-serif" font-weight="700">N</text>
+      <text x="200" y="86" font-size="13" fill="#dc2626" font-family="sans-serif" font-weight="700">S</text>
+      <rect x="108" y="48" width="34" height="64" fill="none" stroke="#d97706" stroke-width="2.4"/>
+      <line x1="125" y1="14" x2="125" y2="42" stroke="#374151" stroke-width="1.6"/>
+      <text x="130" y="24" font-size="10" fill="#374151" font-family="sans-serif">torsion band (k)</text>
+      <text x="125" y="152" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">radial field \u2192 \u03b8 \u221d I \u00b7 full-scale at BINA = k\u03b8</text>
+    </svg>`,
+
+  // galvanometer + shunt
+  shunt: () => `
+    <svg viewBox="0 0 250 140" width="250" height="140" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="sh" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="14" y1="70" x2="66" y2="70" stroke="#dc2626" stroke-width="2" marker-end="url(#sh)"/>
+      <text x="26" y="62" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">I</text>
+      <line x1="66" y1="70" x2="66" y2="38" stroke="#374151" stroke-width="1.6"/><line x1="66" y1="38" x2="96" y2="38" stroke="#374151" stroke-width="1.6"/>
+      <circle cx="118" cy="38" r="16" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="118" y="43" font-size="12" fill="#2563eb" text-anchor="middle" font-weight="700" font-family="sans-serif">G</text>
+      <line x1="140" y1="38" x2="170" y2="38" stroke="#374151" stroke-width="1.6"/><line x1="170" y1="38" x2="170" y2="70" stroke="#374151" stroke-width="1.6"/>
+      <line x1="66" y1="70" x2="66" y2="102" stroke="#374151" stroke-width="1.6"/><line x1="66" y1="102" x2="98" y2="102" stroke="#374151" stroke-width="1.6"/>
+      <rect x="98" y="92" width="42" height="20" fill="#fff8e6" stroke="#d97706" stroke-width="2"/><text x="119" y="106" font-size="11" fill="#d97706" text-anchor="middle" font-weight="700" font-family="sans-serif">S</text>
+      <line x1="140" y1="102" x2="170" y2="102" stroke="#374151" stroke-width="1.6"/><line x1="170" y1="102" x2="170" y2="70" stroke="#374151" stroke-width="1.6"/>
+      <line x1="170" y1="70" x2="228" y2="70" stroke="#dc2626" stroke-width="2" marker-end="url(#sh)"/>
+      <text x="92" y="28" font-size="10" fill="#6b7280" font-family="sans-serif">I_g \u00b7 R_g</text>
+      <text x="90" y="126" font-size="10" fill="#6b7280" font-family="sans-serif">(I \u2212 I_g) \u00b7 S</text>
+    </svg>`,
+
+  // combined E & B with a 3D triad
+  crossedEB: () => `
+    <svg viewBox="0 0 250 165" width="250" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ax" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#374151"/></marker>
+        <marker id="ev" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker>
+        <marker id="bv" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker></defs>
+      <line x1="60" y1="118" x2="150" y2="118" stroke="#374151" stroke-width="1.6" marker-end="url(#ax)"/><text x="154" y="122" font-size="12" fill="#374151" font-style="italic" font-family="sans-serif">x</text>
+      <line x1="60" y1="118" x2="60" y2="34" stroke="#374151" stroke-width="1.6" marker-end="url(#ax)"/><text x="52" y="32" font-size="12" fill="#374151" font-style="italic" font-family="sans-serif">y</text>
+      <line x1="60" y1="118" x2="26" y2="150" stroke="#374151" stroke-width="1.6" marker-end="url(#ax)"/><text x="16" y="152" font-size="12" fill="#374151" font-style="italic" font-family="sans-serif">z</text>
+      <line x1="150" y1="70" x2="210" y2="70" stroke="#16a34a" stroke-width="2.2" marker-end="url(#ev)"/><text x="214" y="74" font-size="12" fill="#16a34a" font-weight="700" font-family="sans-serif">E</text>
+      <line x1="150" y1="96" x2="210" y2="96" stroke="#2563eb" stroke-width="2.2" marker-end="url(#bv)"/><text x="214" y="100" font-size="12" fill="#2563eb" font-weight="700" font-family="sans-serif">B</text>
+      <text x="125" y="160" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">Lorentz force F = q(E + v \u00d7 B)</text>
+    </svg>`,
+
+  // helix along +z
+  helixZ: () => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="hz" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#374151"/></marker>
+      <marker id="hp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="40" y1="140" x2="210" y2="30" stroke="#374151" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#hz)"/>
+      <text x="212" y="28" font-size="12" fill="#374151" font-family="sans-serif" font-weight="700">+z (axis, B)</text>
+      <path d="M52,132 C40,120 70,112 78,124 C86,136 116,128 104,110 C96,98 122,90 132,102 C140,114 168,104 158,86 C150,74 178,66 188,76" fill="none" stroke="#dc2626" stroke-width="2.4" marker-end="url(#hp)"/>
+      <text x="120" y="152" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">circle in a plane + drift along B = helix (pitch grows if pushed along B)</text>
+    </svg>`,
+
+  // Q16 — circular loop with two parallel wires
+  loopWires: () => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="lw" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="60" y1="140" x2="60" y2="18" stroke="#dc2626" stroke-width="2.6" marker-end="url(#lw)"/><text x="42" y="30" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">I</text>
+      <line x1="190" y1="18" x2="190" y2="140" stroke="#dc2626" stroke-width="2.6" marker-end="url(#lw)"/><text x="196" y="30" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">I</text>
+      <ellipse cx="125" cy="80" rx="34" ry="46" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+      <text x="125" y="84" font-size="10" fill="#2563eb" font-family="sans-serif" text-anchor="middle" font-weight="700">loop, radius a</text>
+      <circle cx="125" cy="80" r="2.5" fill="#374151"/>
+      <line x1="125" y1="80" x2="60" y2="80" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="125" y1="80" x2="190" y2="80" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="90" y="74" font-size="10" fill="#6b7280" font-family="sans-serif">d</text>
+      <text x="155" y="74" font-size="10" fill="#6b7280" font-family="sans-serif">d</text>
+      <text x="125" y="152" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">wires distance d from centre, all carry current I</text>
+    </svg>`,
+
+  // generic charge-in-circle
+  circPath: (label='r = mv/qB') => `
+    <svg viewBox="0 0 230 160" width="230" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="cp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      ${[0,1,2,3].map(i=>[0,1,2].map(j=>`<text x="${30+i*50}" y="${28+j*48}" font-size="11" fill="#93c5fd" font-family="sans-serif">\u2297</text>`).join('')).join('')}
+      <circle cx="115" cy="78" r="46" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-dasharray="6,4"/>
+      <circle cx="115" cy="78" r="3.5" fill="#374151"/><line x1="115" y1="78" x2="161" y2="78" stroke="#374151" stroke-width="1.2"/>
+      <text x="132" y="72" font-size="11" fill="#374151" font-family="sans-serif">r</text>
+      <circle cx="115" cy="32" r="6" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <line x1="121" y1="32" x2="160" y2="32" stroke="#dc2626" stroke-width="2.2" marker-end="url(#cp)"/>
+      <text x="140" y="24" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">v</text>
+      <text x="115" y="152" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">${label} \u00b7 B into page</text>
+    </svg>`
+};
+
+const TBL = "  [Table \u2014 Column-1: (I) electron, v = 2(E\u2080/B\u2080)x\u0302; (II) electron, v = (E\u2080/B\u2080)y\u0302; (III) proton, v = 0; (IV) proton, v = 2(E\u2080/B\u2080)x\u0302.  Column-2: (i) E = E\u2080z\u0302; (ii) E = \u2212E\u2080y\u0302; (iii) E = \u2212E\u2080x\u0302; (iv) E = E\u2080x\u0302.  Column-3: (P) B = \u2212B\u2080x\u0302; (Q) B = B\u2080x\u0302; (R) B = B\u2080y\u0302; (S) B = B\u2080z\u0302.]";
+
+// ── TOPIC DATA ─────────────────────────────────────────────────────────────────
+// Each topic is a 5-rung ladder for ONE JEE Advanced problem:
+// easy-to-medium decisions build the method, then the ORIGINAL question appears
+// verbatim with its year and original lettered options.
+const TOPICS = [
+
+  { name:"Q4 \u00b7 Angular Impulse on a Coil (JEE Adv 2020)", questions:[
+    { step:"Step 1 \u00b7 Easy\u2013Medium", q:"A flat coil carrying current sits in a uniform field with its PLANE PARALLEL to the field. Is the torque on it maximum or zero?",
+      opts:["maximum","zero","half of maximum","impossible to say"], ans:0,
+      sol:"Torque \u03c4 = MB sin\u03b8, where \u03b8 is the angle between the magnetic moment M (which points \u27c2 to the coil's plane) and B.<br>Plane parallel to B \u21d2 M \u27c2 B \u21d2 \u03b8 = 90\u00b0 \u21d2 sin\u03b8 = 1 \u21d2 <strong>maximum torque</strong>.<br>For an N-turn coil of area A carrying current i: <strong>\u03c4 = NiAB</strong>." },
+    { step:"Step 2 \u00b7 Easy\u2013Medium", q:"A short-lived current i(t) flows while a capacitor discharges. What does the integral \u222bi\u2009dt over the whole discharge equal?",
+      opts:["the total charge Q that flowed","the peak current","zero","the capacitance"], ans:0,
+      sol:"Current is the rate of flow of charge, i = dq/dt. Integrating over the whole pulse:<br>\u222bi\u2009dt = \u222bdq = <strong>Q</strong>, the total charge delivered.<br>This is the trick the whole problem turns on \u2014 we never need to know how i(t) actually varies in time, only its integral." },
+    { step:"Step 3 \u00b7 Medium", q:"A torque \u03c4 acts on a coil that starts from rest. Over the pulse, the ANGULAR IMPULSE \u222b\u03c4\u2009dt equals:",
+      opts:["the change in angular momentum, \u0394L","the change in kinetic energy","the moment of inertia","zero, always"], ans:0,
+      sol:"This is the rotational version of impulse = change in momentum:<br><strong>\u222b\u03c4\u2009dt = \u0394L</strong>.<br>The coil starts at rest (L\u1d62 = 0), so the angular impulse equals the FINAL angular momentum L gained \u2014 exactly what the question asks for." },
+    { step:"Step 4 \u00b7 Medium", q:"Combine the pieces: for an N-turn coil of area A in field B\u2080, plane parallel to the field, the angular momentum gained during the discharge is:",
+      opts:["NAB\u2080Q","NAB\u2080Q\u00b2","NAB\u2080/Q","NB\u2080Q"], ans:0,
+      sol:"L = \u222b\u03c4\u2009dt = \u222b(NiAB\u2080)\u2009dt = NAB\u2080\u222bi\u2009dt = <strong>NAB\u2080Q</strong>.<br>All that's left for the exam question is to put in the area of the specific shape. For a circle, A = \u03c0R\u00b2." },
+    { step:"The real thing", tag:"JEE Adv 2020",
+      q:"A circular coil of radius R and N turns has negligible resistance. As shown in the schematic figure, its two ends are connected to two wires and it is hanging by those wires with its plane being vertical. The wires are connected to a capacitor with charge Q through a switch. The coil is in a horizontal uniform magnetic field B\u2080 parallel to the plane of the coil. When the switch is closed, the capacitor gets discharged through the coil in a very short time. By the time the capacitor is discharged fully, magnitude of the angular momentum gained by the coil will be (assume that the discharge time is so short that the coil has hardly rotated during this time)-",
+      diagram:DIAGRAMS.coilCap(),
+      opts:["(\u03c0/2)NQB\u2080R\u00b2","\u03c0NQB\u2080R\u00b2","2\u03c0NQB\u2080R\u00b2","4\u03c0NQB\u2080R\u00b2"], ans:1,
+      sol:"Straight from Step 4 with A = \u03c0R\u00b2:<br>L = NAB\u2080Q = N(\u03c0R\u00b2)B\u2080Q = <strong>\u03c0NQB\u2080R\u00b2</strong>, option (B).<br><br>The 'plane vertical, field horizontal and parallel to the plane' setup is exactly the M \u27c2 B case from Step 1, so sin\u03b8 = 1 throughout. And because the coil 'has hardly rotated', \u03b8 stays 90\u00b0 during the whole pulse \u2014 that's why the constant-torque formula is valid." }
+  ]},
+
+  { name:"Q6 \u00b7 Two-Region Field: Average Speed (JEE Adv 2018)", questions:[
+    { step:"Step 1 \u00b7 Easy\u2013Medium", q:"A charged particle enters a uniform field perpendicular to it and traces a semicircle. In the region with the STRONGER field, the semicircle is:",
+      opts:["larger","smaller","the same size","a straight line"], ans:1,
+      sol:"r = mv/(qB) \u21d2 <strong>r \u221d 1/B</strong>. A stronger field bends the particle harder, so it makes a <strong>tighter (smaller) semicircle</strong>." },
+    { step:"Step 2 \u00b7 Easy\u2013Medium", q:"The time to complete a half-circle is \u03c0m/(qB). Compared with the weaker-field region, the half-circle in the STRONGER field takes:",
+      opts:["longer","less time","the same time","zero time"], ans:1,
+      sol:"t_half = \u03c0m/(qB) \u21d2 <strong>t \u221d 1/B</strong>, and notice it does NOT depend on speed.<br>Stronger field \u21d2 <strong>quicker half-loop</strong>. (Both the circle and the clock shrink by the same factor \u2014 keep that in mind for the next step.)" },
+    { step:"Step 3 \u00b7 Medium", q:"Here the lower region has B\u2082 = 4B\u2081. So compared with the upper semicircle, the lower one has:",
+      diagram:DIAGRAMS.twoRegion(),
+      opts:["r\u2082 = r\u2081/4 and t\u2082 = t\u2081/4","r\u2082 = 4r\u2081 and t\u2082 = 4t\u2081","r\u2082 = r\u2081/4 and t\u2082 = t\u2081","r\u2082 = r\u2081/2 and t\u2082 = t\u2081/2"], ans:0,
+      sol:"Both r and t go as 1/B, and B quadruples, so <strong>both shrink by 4</strong>:<br>r\u2082 = r\u2081/4 and t\u2082 = t\u2081/4.<br>Equivalently r\u2081 = 4r\u2082 and t\u2081 = 4t\u2082 \u2014 the form we'll use next." },
+    { step:"Step 4 \u00b7 Medium", q:"Each semicircle moves the particle along x by one diameter (2r). Writing the average speed along x as 2(r\u2081+r\u2082)/(t\u2081+t\u2082), this simplifies to:",
+      diagram:DIAGRAMS.twoRegion(),
+      opts:["2r\u2082/t\u2082","r\u2082/t\u2082","2r\u2081/t\u2081","4r\u2082/t\u2082"], ans:0,
+      sol:"Substitute r\u2081 = 4r\u2082 and t\u2081 = 4t\u2082:<br>2(r\u2081+r\u2082)/(t\u2081+t\u2082) = 2(4r\u2082+r\u2082)/(4t\u2082+t\u2082) = 2(5r\u2082)/(5t\u2082) = <strong>2r\u2082/t\u2082</strong>.<br>And 2r\u2082/t\u2082 = 2\u00b7(mv/qB\u2082)/(\u03c0m/qB\u2082) = <strong>2v/\u03c0</strong> \u2014 the masses, charges and fields all cancel, leaving just the speed." },
+    { step:"The real thing", tag:"JEE Adv 2018",
+      q:"In the x-y-plane, the region y > 0 has a uniform magnetic field B\u2081k\u0302 and the region y < 0 has another uniform magnetic field B\u2082k\u0302. A positively charged particle is projected from the origin along the positive y-axis with speed v\u2080 = \u03c0 ms\u207b\u00b9 at t = 0. Neglect gravity in this problem. Let t = T be the time when the particle crosses the x-axis from below for the first time. If B\u2082 = 4B\u2081, the average speed of the particle, in ms\u207b\u00b9, along the x-axis in the time interval T is _____.  [Numeric answer in the original \u2014 options added here]",
+      diagram:DIAGRAMS.twoRegion(),
+      opts:["1.00","2.00","4.00","0.50"], ans:1,
+      sol:"From Step 4, average speed along x = 2v\u2080/\u03c0.<br>With v\u2080 = \u03c0 ms\u207b\u00b9: 2\u03c0/\u03c0 = <strong>2.00</strong>.<br><br>One subtlety worth noting: the lower semicircle actually carries the particle BACK in the \u2212x direction, so the net displacement is small \u2014 but 'average speed' counts total distance travelled along x, so both diameters add as magnitudes. That's why the answer is a clean 2, not something tiny." }
+  ]},
+
+  { name:"Q7 \u00b7 Galvanometer \u2192 Ammeter (JEE Adv 2018)", questions:[
+    { step:"Step 1 \u00b7 Easy\u2013Medium", q:"To turn a galvanometer into an ammeter, you add a resistance. Where does it go, and is it large or small?",
+      diagram:DIAGRAMS.shunt(),
+      opts:["a large resistance in series","a small resistance in parallel (a shunt)","a large resistance in parallel","a small resistance in series"], ans:1,
+      sol:"An ammeter carries a large current but the delicate coil can only take a tiny one. So we divert most of the current through a <strong>small parallel resistance \u2014 the shunt</strong>. It also keeps the meter's overall resistance near zero, so inserting it barely disturbs the circuit." },
+    { step:"Step 2 \u00b7 Easy\u2013Medium", q:"At full-scale deflection the coil's own current I_g is fixed by BINA = k\u03b8. To find I_g you solve for it as:",
+      opts:["I_g = k\u03b8/(NBA)","I_g = NBA/(k\u03b8)","I_g = kNBA\u03b8","I_g = k\u03b8NBA"], ans:0,
+      sol:"The deflecting torque NBIA balances the spring's restoring torque k\u03b8:<br>B\u00b7I_g\u00b7N\u00b7A = k\u03b8 \u21d2 <strong>I_g = k\u03b8/(NBA)</strong>.<br>This is the small current that gives a full-scale reading \u2014 the meter's natural range before any shunt is added." },
+    { step:"Step 3 \u00b7 Medium", q:"With the shunt S in parallel, the galvanometer (resistance R_g) takes I_g and the shunt takes the rest, (I \u2212 I_g). What equation links them?",
+      diagram:DIAGRAMS.shunt(),
+      opts:["I_g R_g = (I \u2212 I_g) S","I_g S = (I \u2212 I_g) R_g","I_g R_g = I S","R_g = S"], ans:0,
+      sol:"Parallel branches share the SAME voltage across them:<br>voltage across galvanometer = I_g R_g<br>voltage across shunt = (I \u2212 I_g) S<br>Setting them equal: <strong>I_g R_g = (I \u2212 I_g) S</strong>. Rearranged, S = I_g R_g /(I \u2212 I_g)." },
+    { step:"Step 4 \u00b7 Medium", q:"Quick practice with the shunt formula: a galvanometer with I_g = 1 mA and R_g = 100 \u03a9 is to read up to 1 A. The shunt needed is about:",
+      opts:["\u2248 0.1 \u03a9","\u2248 1 \u03a9","\u2248 10 \u03a9","\u2248 100 \u03a9"], ans:0,
+      sol:"S = I_g R_g/(I \u2212 I_g) = (0.001 \u00d7 100)/(1 \u2212 0.001) = 0.1/0.999 \u2248 <strong>0.1 \u03a9</strong>.<br>Tiny, as expected for an ammeter. Now you have the full method \u2014 apply it to the real question, which just carries an extra step to find I_g first." },
+    { step:"The real thing", tag:"JEE Adv 2018",
+      q:"A moving coil galvanometer has 50 turns and each turn has an area 2 \u00d7 10\u207b\u2074 m\u00b2. The magnetic field produced by the magnet inside the galvanometer is 0.02 T. The torsional constant of the suspension wire is 10\u207b\u2074 N m rad\u207b\u00b9. When a current flows through the galvanometer, a full scale deflection occurs if the coil rotates by 0.2 rad. The resistance of the coil of the galvanometer is 50 \u03a9. This galvanometer is to be converted into an ammeter capable of measuring current in the range 0 \u2013 1.0 A. For this purpose, a shunt resistance is to be added in parallel to the galvanometer. The value of this shunt resistance, in ohms, is________.  [Numeric answer in the original \u2014 options added here]",
+      diagram:DIAGRAMS.shunt(),
+      opts:["5.55","9.00","0.55","55.5"], ans:0,
+      sol:"<strong>First find I_g</strong> (Step 2): I_g = k\u03b8/(NBA) = (10\u207b\u2074 \u00d7 0.2)/(50 \u00d7 0.02 \u00d7 2\u00d710\u207b\u2074) = 2\u00d710\u207b\u2075 / 2\u00d710\u207b\u2074 = <strong>0.1 A</strong>.<br><br><strong>Then the shunt</strong> (Step 3): I_g R_g = (I \u2212 I_g)S \u21d2 0.1 \u00d7 50 = (1 \u2212 0.1)S \u21d2 5 = 0.9 S \u21d2 S = 50/9 \u2248 <strong>5.55 \u03a9</strong>, option (1)." }
+  ]},
+
+  { name:"Q8 \u00b7 Straight Line in E & B (JEE Adv 2017)", questions:[
+    { step:"Step 1 \u00b7 Easy\u2013Medium", q:"A charged particle travels in a straight line at CONSTANT velocity through a region containing both E and B. What must the net force be?",
+      opts:["zero","along E","along B","perpendicular to v"], ans:0,
+      sol:"Constant velocity \u21d2 zero acceleration \u21d2 <strong>net force = 0</strong>.<br>So qE + qv\u00d7B = 0 \u21d2 the electric and magnetic forces must exactly cancel. This is the <strong>velocity-selector</strong> condition." },
+    { step:"Step 2 \u00b7 Easy\u2013Medium", q:"An ELECTRON moves along +y in a field B along +z. Which way does the magnetic force qv\u00d7B push it? (remember the electron's charge is negative)",
+      diagram:DIAGRAMS.crossedEB(),
+      opts:["along +x","along \u2212x","along +z","along \u2212y"], ans:1,
+      sol:"First v\u00d7B = (v\u0135)\u00d7(B k\u0302) = vB(\u0135\u00d7k\u0302) = vB\u00ee (along +x).<br>Now multiply by the charge \u2212e: F = (\u2212e)(vB\u00ee) = <strong>along \u2212x</strong>.<br>The negative sign flips it \u2014 always apply the sign of the charge LAST." },
+    { step:"Step 3 \u00b7 Medium", q:"To keep that electron going straight, the electric force must cancel the \u2212x magnetic force, i.e. point along +x. For an electron, which way must E point to give a +x force?",
+      diagram:DIAGRAMS.crossedEB(),
+      opts:["along +x","along \u2212x","along +z","along \u2212z"], ans:1,
+      sol:"Electric force on an electron is F = (\u2212e)E \u2014 opposite to E.<br>We need F along +x, so E must point along <strong>\u2212x</strong>.<br>In the table that's option (iii): E = \u2212E\u2080x\u0302. And the field that gave the \u2212x magnetic force was B = B\u2080z\u0302, option (S)." },
+    { step:"Step 4 \u00b7 Medium", q:"For the forces to cancel in MAGNITUDE as well, the speed must be tuned so that eE = evB, i.e. v = E/B. In case (II) the electron's speed is (E\u2080/B\u2080). Does it satisfy v = E/B here?",
+      opts:["yes \u2014 v = E\u2080/B\u2080 exactly matches","no \u2014 it is twice too fast","no \u2014 it is half as fast","cannot tell"], ans:0,
+      sol:"With E = E\u2080 and B = B\u2080, the selector speed is E/B = E\u2080/B\u2080 \u2014 exactly the speed given in case (II).<br>So both the DIRECTION (Step 3) and the MAGNITUDE match \u21d2 the forces cancel completely \u21d2 straight line at constant velocity. The winning combination is <strong>(II)(iii)(S)</strong>." },
+    { step:"The real thing", tag:"JEE Adv 2017",
+      q:"A charged particle (electron or proton) is introduced at the origin with initial velocity v, in uniform fields E and B defined by the table. In which case will the particle move in a straight line with constant velocity?"+TBL,
+      diagram:DIAGRAMS.crossedEB(),
+      opts:["(II) (iii) (S)","(IV) (i) (S)","(III) (ii) (R)","(III) (iii) (P)"], ans:0,
+      sol:"Straight line at constant velocity \u21d2 qE + qv\u00d7B = 0.<br>Test (II)(iii)(S): electron, v = (E\u2080/B\u2080)\u0135, E = \u2212E\u2080x\u0302, B = B\u2080z\u0302.<br>\u2022 electric force = (\u2212e)(\u2212E\u2080x\u0302) = +eE\u2080x\u0302<br>\u2022 magnetic force = (\u2212e)[(E\u2080/B\u2080)\u0135 \u00d7 B\u2080z\u0302] = (\u2212e)(E\u2080x\u0302) = \u2212eE\u2080x\u0302<br>Sum = 0 \u2714 \u2014 they cancel exactly. <strong>Option (A).</strong>" }
+  ]},
+
+  { name:"Q9 \u00b7 Helical Path in E & B (JEE Adv 2017)", questions:[
+    { step:"Step 1 \u00b7 Easy\u2013Medium", q:"A helix is circular motion in a plane PLUS a steady drift along an axis. For the axis of the helix to lie along +z, the circular part must happen in which plane \u2014 and so B must lie along which direction?",
+      diagram:DIAGRAMS.helixZ(),
+      opts:["circle in the xy-plane; B along z","circle in the xz-plane; B along y","circle in the yz-plane; B along x","circle in the xy-plane; B along x"], ans:0,
+      sol:"A magnetic field makes a charge circle in the plane <strong>perpendicular</strong> to B. For the helix axis (and the circling plane's normal) to be +z, the field must be along <strong>z</strong>, and the circle lies in the <strong>xy-plane</strong>." },
+    { step:"Step 2 \u00b7 Easy\u2013Medium", q:"For the helix to have an INCREASING pitch (turns spreading out along the axis), what is needed along the z-axis?",
+      diagram:DIAGRAMS.helixZ(),
+      opts:["a force accelerating the particle along z","nothing \u2014 pitch is always constant","a stronger magnetic field","a second magnetic field"], ans:0,
+      sol:"Constant pitch comes from a constant axial speed. To make the pitch GROW, the particle must speed up along the axis \u2014 which needs a <strong>force along z</strong>, i.e. an electric field E along z. (A magnetic field alone can never change the speed.)" },
+    { step:"Step 3 \u00b7 Medium", q:"A PROTON moves along +x in a field B along +z. The magnetic force qv\u00d7B points along:",
+      diagram:DIAGRAMS.crossedEB(),
+      opts:["+y","\u2212y","+z","\u2212z"], ans:1,
+      sol:"v\u00d7B = (v\u00ee)\u00d7(B k\u0302) = vB(\u00ee\u00d7k\u0302) = vB(\u2212\u0135) = \u2212vB\u0135.<br>For a proton (charge +e), F = +e(\u2212vB\u0135) = <strong>along \u2212y</strong>.<br>This force lies in the xy-plane \u21d2 it drives circular motion in the xy-plane, exactly as Step 1 requires." },
+    { step:"Step 4 \u00b7 Medium", q:"Now add an electric field E along +z (case i) to that proton. What is the complete motion?",
+      diagram:DIAGRAMS.helixZ(),
+      opts:["a circle in the xy-plane, plus acceleration along +z \u2014 a helix with growing pitch","a straight line along z","a circle only","a parabola"], ans:0,
+      sol:"Two independent pieces:<br>\u2022 magnetic force \u2192 circular motion in the xy-plane (Step 3)<br>\u2022 electric force eE\u2080z\u0302 \u2192 steady acceleration along +z (Step 2)<br>Together: a <strong>helix about the +z axis with increasing pitch</strong>. The winning combination is proton (IV), E = E\u2080z\u0302 (i), B = B\u2080z\u0302 (S) \u2192 <strong>(IV)(i)(S)</strong>." },
+    { step:"The real thing", tag:"JEE Adv 2017",
+      q:"A charged particle (electron or proton) is introduced at the origin with initial velocity v, in uniform fields E and B defined by the table. In which case will the particle describe a helical path with axis along the positive z-direction?"+TBL,
+      diagram:DIAGRAMS.helixZ(),
+      opts:["(II) (ii) (R)","(IV) (ii) (R)","(IV) (i) (S)","(III) (iii) (P)"], ans:2,
+      sol:"Need: B along z (so the axis is z) AND an E along z (so the pitch grows).<br>Test (IV)(i)(S): proton, v = 2(E\u2080/B\u2080)x\u0302, E = E\u2080z\u0302, B = B\u2080z\u0302.<br>\u2022 magnetic force = e[2(E\u2080/B\u2080)x\u0302 \u00d7 B\u2080z\u0302] = \u22122eE\u2080\u0135 \u2192 circle in the xy-plane<br>\u2022 electric force = eE\u2080z\u0302 \u2192 acceleration along +z<br>\u21d2 helix with axis along +z and increasing pitch. <strong>Option (C).</strong>" }
+  ]},
+
+  { name:"Q10 \u00b7 Motion from Rest in E & B (JEE Adv 2017)", questions:[
+    { step:"Step 1 \u00b7 Easy\u2013Medium", q:"A charge starts at REST in a region with both E and B. Which field can get it moving?",
+      opts:["only the electric field","only the magnetic field","both equally","neither"], ans:0,
+      sol:"The magnetic force is qv\u00d7B \u2014 and with v = 0 it is <strong>zero</strong>. Only the electric force qE can act on a particle at rest.<br>So the particle first accelerates along the direction of the electric force, and only THEN can a magnetic force appear." },
+    { step:"Step 2 \u00b7 Easy\u2013Medium", q:"Once it is moving, when does the magnetic force STAY zero \u2014 so the motion continues in a straight line?",
+      opts:["when the velocity is parallel (or antiparallel) to B","when v is perpendicular to B","only when it stops again","never"], ans:0,
+      sol:"v\u00d7B = 0 exactly when <strong>v is parallel or antiparallel to B</strong> (the vectors are collinear).<br>So if the particle happens to move ALONG the B direction, the magnetic force never switches on, and it keeps going straight." },
+    { step:"Step 3 \u00b7 Medium", q:"A proton starts from rest in an electric field E = \u2212E\u2080y\u0302. Which way does it start to move?",
+      diagram:DIAGRAMS.crossedEB(),
+      opts:["along +y","along \u2212y","along +x","along \u2212x"], ans:1,
+      sol:"Electric force on a proton is F = +eE = e(\u2212E\u2080y\u0302) = \u2212eE\u2080y\u0302 \u21d2 <strong>along \u2212y</strong>.<br>So from rest the proton accelerates in the \u2212y direction." },
+    { step:"Step 4 \u00b7 Medium", q:"For that proton to keep moving in a straight line along \u2212y, the magnetic field must be aligned so v\u00d7B stays zero. Which B works?",
+      diagram:DIAGRAMS.crossedEB(),
+      opts:["B along y (parallel to the motion)","B along x","B along z","any B works"], ans:0,
+      sol:"The velocity develops along \u2212y, so we need B collinear with y for v\u00d7B = 0. Field (R) is B = B\u2080y\u0302 \u2014 parallel to the motion \u21d2 no magnetic force ever appears.<br>So the proton simply accelerates straight along \u2212y. The combination is proton at rest (III), E = \u2212E\u2080y\u0302 (ii), B = B\u2080y\u0302 (R) \u2192 <strong>(III)(ii)(R)</strong>." },
+    { step:"The real thing", tag:"JEE Adv 2017",
+      q:"A charged particle (electron or proton) is introduced at the origin with initial velocity v, in uniform fields E and B defined by the table. In which case would the particle move in a straight line along the negative direction of the y-axis (i.e., move along \u2212y\u0302)?"+TBL,
+      diagram:DIAGRAMS.crossedEB(),
+      opts:["(IV) (ii) (S)","(III) (ii) (P)","(II) (iii) (Q)","(III) (ii) (R)"], ans:3,
+      sol:"Test (III)(ii)(R): proton starting from rest, E = \u2212E\u2080y\u0302, B = B\u2080y\u0302.<br>\u2022 at rest, only the electric force acts: F = e(\u2212E\u2080y\u0302) \u2192 accelerates along \u2212y<br>\u2022 as it moves along \u2212y, v is antiparallel to B (which is along +y), so v\u00d7B = 0 \u2014 the magnetic force never appears<br>\u21d2 a straight line along \u2212y. <strong>Option (D).</strong>" }
+  ]},
+
+  { name:"Q16 \u00b7 Torque on a Loop Between Wires (JEE Adv 2014)", questions:[
+    { step:"Step 1 \u00b7 Easy\u2013Medium", q:"Two long parallel wires carry currents in OPPOSITE directions. At the midpoint exactly between them, do their magnetic fields add or cancel?",
+      diagram:DIAGRAMS.loopWires(),
+      opts:["they add (reinforce)","they cancel","one is zero there","they are perpendicular"], ans:0,
+      sol:"At the midpoint, each wire's field is perpendicular to the line joining them. With the currents OPPOSITE, both fields point the SAME way there, so they <strong>add</strong>.<br>(For SAME-direction currents they would cancel at the midpoint \u2014 the exact opposite.)" },
+    { step:"Step 2 \u00b7 Easy\u2013Medium", q:"Each wire is a distance d from the centre, carrying current I. With the fields adding, the net field at the centre is:",
+      opts:["\u03bc\u2080I/(\u03c0d)","\u03bc\u2080I/(2\u03c0d)","\u03bc\u2080I/(4\u03c0d)","zero"], ans:0,
+      sol:"One long wire gives B = \u03bc\u2080I/(2\u03c0d) at distance d. Two of them adding:<br>B = 2 \u00d7 \u03bc\u2080I/(2\u03c0d) = <strong>\u03bc\u2080I/(\u03c0d)</strong>." },
+    { step:"Step 3 \u00b7 Medium", q:"Initially the loop lies in the plane of the paper, and the wires' field at the centre is also perpendicular to the paper \u2014 so the loop's moment M is PARALLEL to B (torque zero). If the loop is now turned by 30\u00b0, the angle between M and B becomes:",
+      diagram:DIAGRAMS.loopWires(),
+      opts:["30\u00b0","60\u00b0","90\u00b0","0\u00b0"], ans:0,
+      sol:"M points \u27c2 to the loop's plane. Initially M \u2225 B, so \u03b8 = 0 and the torque is zero.<br>Rotating the loop by 30\u00b0 tips M by 30\u00b0 away from B, so now <strong>\u03b8 = 30\u00b0</strong> \u2014 and \u03c4 = MB sin30\u00b0." },
+    { step:"Step 4 \u00b7 Medium", q:"The circular loop of radius a carries current I. Its magnetic moment M is:",
+      opts:["\u03c0a\u00b2I","2\u03c0aI","\u03c0aI","a\u00b2I/\u03c0"], ans:0,
+      sol:"Magnetic moment = (current)(area) = I \u00d7 \u03c0a\u00b2 = <strong>\u03c0a\u00b2I</strong> (single turn).<br>Now every piece is in hand: M = \u03c0a\u00b2I, B = \u03bc\u2080I/(\u03c0d), angle = 30\u00b0. The exam question just asks you to multiply them." },
+    { step:"The real thing", tag:"JEE Adv 2014",
+      q:"A circular loop of radius a has two long parallel wires (numbered 1 and 2) in the plane of the paper; the distance of each wire from the centre of the loop is d, and the loop and both wires carry the same current I. Consider d >> a, and the loop is rotated about its diameter parallel to the wires by 30\u00b0 from the position shown. If the currents in the wires are in the opposite directions, the torque on the loop at its new position will be (assume that the net field due to the wires is constant over the loop):",
+      diagram:DIAGRAMS.loopWires(),
+      opts:["\u03bc\u2080I\u00b2a\u00b2/d","\u03bc\u2080I\u00b2a\u00b2/2d","\u221a3\u2009\u03bc\u2080I\u00b2a\u00b2/d","\u221a3\u2009\u03bc\u2080I\u00b2a\u00b2/2d"], ans:1,
+      sol:"Assemble Steps 2\u20134:<br>\u03c4 = MB sin30\u00b0 = (\u03c0a\u00b2I) \u00d7 (\u03bc\u2080I/\u03c0d) \u00d7 (1/2)<br>The \u03c0's cancel: \u03c4 = <strong>\u03bc\u2080I\u00b2a\u00b2/(2d)</strong>, option (B).<br><br>The 'opposite currents' detail was essential \u2014 it made the two wire-fields ADD (Step 1). Same-direction currents would have cancelled at the centre, giving zero torque." }
+  ]}
+
+];
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'dpp_magnetism_jee_adv_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length && parsed.every((a,i)=>Array.isArray(a)&&a.length===TOPICS[i].questions.length)) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+
+function saveAnswers(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+}
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    return{q:raw.q, diagram:raw.diagram||null, opts:raw.opts.slice(), ans:raw.ans,
+           sol:raw.sol, yt:raw.yt||'', tag:raw.tag||'', step:raw.step||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qBadges=document.getElementById('q-badges');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    const total=topic.questions.length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===total&&done===total?' all-done':'');
+    const dots=Array(total).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${total} attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.reduce((s,t)=>s+t.questions.length,0)} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=curTopic.questions.length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of ${curTopic.questions.length}`;
+  qText.textContent=q.q;
+  qBadges.innerHTML =
+    (q.step ? `<span class="badge-step">${q.step}</span>` : '') +
+    (q.tag  ? `<span class="badge-year">${q.tag}</span>` : '');
+  // Diagram
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===curTopic.questions.length-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  const last=curTopic.questions.length-1;
+  if(newQ<0||newQ>last){if(newQ>last) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// Close modal on backdrop click
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
