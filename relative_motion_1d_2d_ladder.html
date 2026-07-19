@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Relative Motion 1D & 2D — JEE Ladder</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+#q-badges{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 14px;}
+.badge-step,.badge-year{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 10px;border-radius:6px;border:1px solid var(--border);}
+.badge-step{background:var(--tag-bg);color:var(--text3);}
+.badge-year{background:#fff8e6;border-color:#e8d9a8;color:#8a6d1f;font-weight:700;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+/* Clear confirm modal */
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+/* toast */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> JEE Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Relative Motion<br>in 1D &amp; 2D</h1></div>
+    <p id="home-sub">Chase · rain–man · river crossing · collision & closest approach. Easy–medium decisions → the original Allen exercise questions, verbatim.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div id="q-badges"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+// Each diagram is a function returning an SVG string
+
+const DIAGRAMS = {
+
+  // Q14 — v-t graph: car A constant 10 m/s, car B line at 45 deg through origin
+  vtGraph: () => `
+    <svg viewBox="0 0 250 165" width="250" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="vg" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#374151"/></marker></defs>
+      <line x1="40" y1="135" x2="230" y2="135" stroke="#374151" stroke-width="1.4" marker-end="url(#vg)"/>
+      <line x1="40" y1="135" x2="40" y2="18" stroke="#374151" stroke-width="1.4" marker-end="url(#vg)"/>
+      <text x="234" y="139" font-size="11" fill="#374151" font-family="sans-serif" font-style="italic">t</text>
+      <text x="30" y="16" font-size="11" fill="#374151" font-family="sans-serif" font-style="italic">v</text>
+      <line x1="40" y1="75" x2="210" y2="75" stroke="#dc2626" stroke-width="2.4"/>
+      <text x="214" y="79" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">car A</text>
+      <text x="24" y="79" font-size="10" fill="#374151" font-family="sans-serif">10</text>
+      <line x1="40" y1="135" x2="170" y2="26" stroke="#2563eb" stroke-width="2.4"/>
+      <text x="174" y="26" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="700">car B</text>
+      <path d="M74,135 A34,34 0 0,0 66,113" fill="none" stroke="#6b7280" stroke-width="1.1"/>
+      <text x="78" y="128" font-size="10" fill="#6b7280" font-family="sans-serif">45\u00b0</text>
+      <text x="125" y="160" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">A starts 10.5 m ahead \u00b7 both start at t = 0</text>
+    </svg>`,
+
+  // Rain-man vector triangle
+  rainTri: () => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="r1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="r2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker>
+      <marker id="r3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="70" y1="30" x2="70" y2="120" stroke="#2563eb" stroke-width="2.4" marker-end="url(#r1)"/>
+      <text x="34" y="80" font-size="11" fill="#2563eb" font-family="sans-serif" font-weight="700">v\u20d7 rain</text>
+      <line x1="70" y1="30" x2="160" y2="30" stroke="#16a34a" stroke-width="2.4" marker-end="url(#r2)"/>
+      <text x="104" y="22" font-size="11" fill="#16a34a" font-family="sans-serif" font-weight="700">v\u20d7 man</text>
+      <line x1="160" y1="30" x2="70" y2="120" stroke="#dc2626" stroke-width="2.4" marker-end="url(#r3)"/>
+      <text x="140" y="86" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="700">v\u20d7 rain,man</text>
+      <text x="125" y="152" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">v\u20d7(rain w.r.t. man) = v\u20d7(rain) \u2212 v\u20d7(man)</text>
+    </svg>`,
+
+  // River: aim straight across (minimum time), drift shown
+  riverTime: () => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="w1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="w2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="20" y1="34" x2="235" y2="34" stroke="#6b7280" stroke-width="2"/>
+      <line x1="20" y1="126" x2="235" y2="126" stroke="#6b7280" stroke-width="2"/>
+      ${[0,1,2].map(i=>`<line x1="${44+i*66}" y1="80" x2="${76+i*66}" y2="80" stroke="#93c5fd" stroke-width="1.6" marker-end="url(#w1)"/>`).join('')}
+      <line x1="60" y1="126" x2="60" y2="44" stroke="#16a34a" stroke-width="2.4" marker-end="url(#w1)"/>
+      <text x="30" y="86" font-size="10" fill="#16a34a" font-family="sans-serif" font-weight="700">aim \u27c2</text>
+      <line x1="60" y1="126" x2="150" y2="44" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#w2)"/>
+      <text x="128" y="110" font-size="10" fill="#dc2626" font-family="sans-serif">actual path (drifts)</text>
+      <text x="125" y="152" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">minimum TIME: aim straight across, accept the drift</text>
+    </svg>`,
+
+  // River: aim upstream (shortest path straight across)
+  riverPath: () => `
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="p1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2563eb"/></marker>
+      <marker id="p2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker>
+      <marker id="p3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker></defs>
+      <line x1="20" y1="34" x2="235" y2="34" stroke="#6b7280" stroke-width="2"/>
+      <line x1="20" y1="126" x2="235" y2="126" stroke="#6b7280" stroke-width="2"/>
+      ${[0,1,2].map(i=>`<line x1="${44+i*66}" y1="80" x2="${76+i*66}" y2="80" stroke="#93c5fd" stroke-width="1.6" marker-end="url(#p1)"/>`).join('')}
+      <line x1="125" y1="126" x2="72" y2="48" stroke="#16a34a" stroke-width="2.2" marker-end="url(#p3)"/>
+      <text x="46" y="66" font-size="10" fill="#16a34a" font-family="sans-serif" font-weight="700">aim upstream</text>
+      <line x1="125" y1="126" x2="125" y2="44" stroke="#dc2626" stroke-width="2.4" marker-end="url(#p2)"/>
+      <text x="132" y="86" font-size="10" fill="#dc2626" font-family="sans-serif" font-weight="700">resultant: straight across</text>
+      <text x="125" y="152" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">shortest PATH: tilt so the drift cancels \u00b7 sin\u03b8 = v_r/v_b</text>
+    </svg>`,
+
+  // Ex-02 Q10 — truck and pedestrian layout
+  truck: () => `
+    <svg viewBox="0 0 250 150" width="250" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="tk" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#dc2626"/></marker></defs>
+      <line x1="16" y1="40" x2="236" y2="40" stroke="#9ca3af" stroke-width="1.4"/>
+      <line x1="16" y1="104" x2="236" y2="104" stroke="#9ca3af" stroke-width="1.4"/>
+      <rect x="34" y="48" width="70" height="48" fill="#e5e7eb" stroke="#374151" stroke-width="1.6"/>
+      <text x="69" y="76" font-size="11" fill="#374151" font-family="sans-serif" text-anchor="middle" font-weight="700">Truck</text>
+      <line x1="104" y1="72" x2="140" y2="72" stroke="#dc2626" stroke-width="2.2" marker-end="url(#tk)"/>
+      <text x="112" y="64" font-size="10" fill="#dc2626" font-family="sans-serif" font-weight="700">8 m/s</text>
+      <line x1="24" y1="48" x2="24" y2="96" stroke="#6b7280" stroke-width="1"/>
+      <text x="6" y="76" font-size="10" fill="#6b7280" font-family="sans-serif">2 m</text>
+      <circle cx="180" cy="112" r="6" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <text x="190" y="118" font-size="10" fill="#374151" font-family="sans-serif">man</text>
+      <line x1="104" y1="120" x2="180" y2="120" stroke="#6b7280" stroke-width="1"/>
+      <text x="138" y="134" font-size="10" fill="#6b7280" font-family="sans-serif">4 m</text>
+      <text x="125" y="16" font-size="10" fill="#6b7280" font-family="sans-serif" text-anchor="middle">man must cross the 2 m wide lane before the truck arrives</text>
+    </svg>`
+};
+
+// ── TOPIC DATA ─────────────────────────────────────────────────────────────────
+// Relative motion 1D & 2D ladder built from the Allen Kinematics exercise set.
+// Each topic climbs from easy-medium decisions to the original exercise questions,
+// reproduced word-for-word with their source and original (A)(B)(C)(D) order.
+const TOPICS = [
+
+  { name:"1. Relative Velocity in 1D \u2014 Chase & Closing Speed", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium",
+      q:"Train P moves at 20 m/s and train Q at 15 m/s. In which situation do they close the gap between them FASTER \u2014 moving toward each other, or P chasing Q in the same direction?",
+      opts:["toward each other (closing speed 35 m/s)","P chasing Q (closing speed 35 m/s)","both close at the same rate","they never close in the same direction"], ans:0,
+      sol:"Relative velocity: v\u20d7_PQ = v\u20d7_P \u2212 v\u20d7_Q.<br>\u2022 Toward each other: speeds ADD \u21d2 closing speed = 20 + 15 = <strong>35 m/s</strong>.<br>\u2022 Same direction (chase): they SUBTRACT \u21d2 closing speed = 20 \u2212 15 = 5 m/s.<br>Opposite directions close 7\u00d7 faster here. Every 1D chase problem is just this one subtraction \u2014 the whole topic is choosing the sign correctly." },
+    { step:"Level 1 \u00b7 Easy\u2013Medium",
+      q:"A packet is dropped from a balloon that is RISING at 5 m/s. As seen from the ground, immediately after release the packet moves:",
+      opts:["downward immediately","upward first, then downward","stays at rest momentarily, then falls","horizontally"], ans:1,
+      sol:"'Dropped' means released \u2014 the packet keeps the velocity it already had: <strong>5 m/s upward</strong>. Gravity then decelerates it, stops it momentarily, and brings it down.<br>So from the ground it goes <strong>up first, then down</strong> \u2014 exactly the True/False fact in this exercise (Ex-03 T/F Q4). From the balloon's frame, though, it appears to simply fall from rest \u2014 the same event, two frames, two descriptions." },
+    { step:"Level 2 \u00b7 Medium",
+      q:"Two stones are released from rest from the same tower, one 1 s after the other. While both are falling, the ACCELERATION of the second stone relative to the first is:",
+      opts:["g downward","g upward","zero","depends on their masses"], ans:2,
+      sol:"Both accelerate at exactly g downward, so a\u20d7_rel = g\u20d7 \u2212 g\u20d7 = <strong>zero</strong>.<br>Consequence: their relative velocity (g \u00d7 1 s = 10 m/s, set in the first second) stays <strong>constant</strong> forever after \u2014 which means the gap between them grows linearly. Hold that thought: the next question is the exam's version of exactly this." },
+    { step:"The real thing", tag:"Allen Ex-03 AR-6",
+      q:"Statement\u2013I : Two balls are dropped one after the other from a tall tower. The distance between them increases linearly with time (elapsed after the second ball is dropped and before the first hits ground).  because  Statement\u2013II : Relative acceleration is zero, whereas relative velocity is non\u2013zero in the above situation.",
+      opts:["Statement\u2013I is true, Statement\u2013II is true ; Statement\u2013II is correct explanation for Statement\u2013I.","Statement\u2013I is true, Statement\u2013II is true ; Statement\u2013II is NOT a correct explanation for statement\u2013I.","Statement\u2013I is true, Statement\u2013II is false.","Statement\u2013I is false, Statement\u2013II is true."], ans:0,
+      sol:"From the previous rung: relative acceleration = 0, and the relative velocity g\u0394t built up before the second release is non-zero and constant.<br>Constant relative velocity \u21d2 separation grows <strong>linearly</strong> with time.<br>Both statements are true, and II is precisely WHY I holds \u21d2 <strong>option (A)</strong>." },
+    { step:"The real thing", tag:"Allen Ex-01 Q14", diagram:DIAGRAMS.vtGraph(),
+      q:"Initially car A is 10.5 m ahead of car B. Both start moving at time t = 0 in the same direction along a straight line. The velocity time graph of two cars is shown in figure. The time when the car B will catch the car A, will be :-  [figure: car A moves at constant 10 m/s; car B starts from rest, its v-t line rising at 45\u00b0, i.e. 1 m/s\u00b2]",
+      opts:["t = 21 sec","t = 2\u221a5 sec","20 sec","None of these"], ans:0,
+      sol:"Read the graph: A has constant v = 10 m/s; B has a = tan45\u00b0 = 1 m/s\u00b2 from rest.<br>Catch-up condition \u2014 equal positions:<br>10.5 + 10t = \u00bdt\u00b2<br>t\u00b2 \u2212 20t \u2212 21 = 0 \u21d2 (t \u2212 21)(t + 1) = 0 \u21d2 <strong>t = 21 s</strong>, option (A).<br><br>Faster route via relative motion: in B's chase, initial gap 10.5 m, relative velocity \u221210 m/s, relative acceleration +1 m/s\u00b2 \u2014 the same quadratic in one line." },
+    { step:"The real thing", tag:"Allen Ex-04A Q13",
+      q:"Two cars travelling towards each other on a straight road at velocity 10 m/s and 12 m/s respectively. When they are 150 metre apart, both drivers apply their brakes and each car decelerates at 2 m/s\u00b2 until it stops. How far apart will they be when they have both come to a stop ?  [Subjective in the original \u2014 options added here]",
+      opts:["25 m","61 m","89 m","111 m"], ans:2,
+      sol:"Each car stops in its own stopping distance v\u00b2/2a:<br>\u2022 car 1: 10\u00b2/(2\u00d72) = 25 m<br>\u2022 car 2: 12\u00b2/(2\u00d72) = 36 m<br>Together they eat up 61 m of the 150 m gap.<br>Remaining separation = 150 \u2212 61 = <strong>89 m</strong>, option (C).<br><br>Option (B) 61 m is the trap \u2014 that is the distance COVERED, not the distance LEFT. One sanity check saves the mark: they were 150 m apart and moved toward each other, so the answer must be less than 150 but nonzero." }
+  ]},
+
+  { name:"2. Rain & Wind \u2014 Vector Subtraction", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium", diagram:DIAGRAMS.rainTri(),
+      q:"Rain falls VERTICALLY as seen from the ground. To a man walking forward, the rain appears to come:",
+      opts:["still vertically","from the front, tilted toward him","from behind him","horizontally"], ans:1,
+      sol:"Rain w.r.t. man = v\u20d7_rain \u2212 v\u20d7_man. Subtracting his forward velocity adds a BACKWARD horizontal component to the rain he perceives \u2014 so it slants <strong>into his face, from the front</strong>.<br>This is why you tilt an umbrella forward while walking. The whole rain-man topic is this one triangle (see figure): ground rain, man's velocity, and their vector difference." },
+    { step:"Level 2 \u00b7 Medium",
+      q:"Rain falls vertically at speed v_r (ground frame). A man walks at speed v_m. At what angle from the vertical should he tilt his umbrella?",
+      opts:["tan\u03b8 = v_r/v_m, tilted backward","tan\u03b8 = v_m/v_r, tilted forward","tan\u03b8 = v_m/v_r, tilted backward","no tilt needed"], ans:1,
+      sol:"Relative rain velocity = (\u2212v_m horizontal, \u2212v_r vertical) in his frame \u2014 the horizontal part points opposite to his motion, i.e. at him.<br>Angle from vertical: <strong>tan\u03b8 = v_m/v_r</strong>, umbrella tilted <strong>forward</strong> (into the apparent rain).<br>Watch the ratio \u2014 man's speed on top. tan\u03b8 = v_r/v_m (option A/C form) is the classic inversion error." },
+    { step:"The real thing", tag:"Allen Ex-01 Q24",
+      q:"A boat moving towards east with velocity 4 m/s with respect to still water and river is flowing towards north with velocity 2 m/s and the wind is blowing towards north with velocity 6 m/s. The direction of the flag blown over by the wind hoisted on the boat is :-",
+      opts:["North\u2013west","South\u2013east","tan\u207b\u00b9(1/2) with east","North"], ans:0,
+      sol:"The flag points along the wind AS SEEN FROM THE BOAT.<br>First, the boat's velocity w.r.t. the GROUND (the sneaky step \u2014 add the river drift):<br>v\u20d7_boat = 4\u00ee (through water) + 2\u0135 (river) = 4\u00ee + 2\u0135.<br>Wind w.r.t. ground = 6\u0135.<br>Wind w.r.t. boat = 6\u0135 \u2212 (4\u00ee + 2\u0135) = <strong>\u22124\u00ee + 4\u0135</strong> \u2014 equal west and north parts \u21d2 <strong>North\u2013west</strong>, option (A).<br><br>Forget the river's 2\u0135 and you get \u22124\u00ee + 6\u0135 \u2014 not north-west, and not an option that fits cleanly. The river drift is the whole question." },
+    { step:"The real thing", tag:"Allen Ex-01 Q25",
+      q:"Raindrops are falling vertically with a velocity 10 m/s. To a cyclist moving on a straight road the rain drops appear to be coming with a velocity of 20 m/s. The velocity of cyclist is :-",
+      opts:["10 m/s","10\u221a3 m/s","20 m/s","20\u221a3 m/s"], ans:1,
+      sol:"The three velocities form a RIGHT triangle: vertical rain (10), horizontal cyclist (v_c), and their vector difference \u2014 the apparent rain \u2014 as hypotenuse (20).<br>Pythagoras: v_c = \u221a(20\u00b2 \u2212 10\u00b2) = \u221a300 = <strong>10\u221a3 m/s</strong>, option (B).<br><br>Note the apparent rain is the HYPOTENUSE \u2014 it is always the longest of the three. Adding instead of subtracting the squares gives \u221a500, which is not an option: a built-in check." },
+    { step:"The real thing", tag:"Allen Ex-01 Q22",
+      q:"A man starts running along a straight road with uniform velocity u\u20d7 = u\u00ee feels that the rain is falling vertically down along \u2212\u0135. If he doubles his speed he finds that the rain is coming at an angle \u03b8 to the vertical. The velocity of rain with respect to the ground is :-",
+      opts:["u\u00ee \u2212 u tan\u03b8 \u0135","u\u00ee \u2212 (u/tan\u03b8) \u0135","u tan\u03b8 \u00ee \u2212 u \u0135","(u/tan\u03b8) \u00ee \u2212 u \u0135"], ans:1,
+      sol:"Let rain (ground) = v\u2093\u00ee + v_y\u0135.<br><strong>At speed u:</strong> relative rain = (v\u2093 \u2212 u)\u00ee + v_y\u0135 is vertical \u21d2 <strong>v\u2093 = u</strong>.<br><strong>At speed 2u:</strong> relative rain = (u \u2212 2u)\u00ee + v_y\u0135 = \u2212u\u00ee + v_y\u0135. Angle to the VERTICAL:<br>tan\u03b8 = horizontal/vertical = u/|v_y| \u21d2 |v_y| = u/tan\u03b8.<br>Rain falls downward \u21d2 v\u20d7_rain = <strong>u\u00ee \u2212 (u/tan\u03b8)\u0135</strong>, option (B).<br><br>\u26a0\ufe0f <em>Erratum:</em> Allen's printed key gives (A). But (A) follows only if \u03b8 is measured from the <strong>horizontal</strong>; as worded \u2014 \"angle \u03b8 to the vertical\" \u2014 the answer is <strong>(B)</strong> (this is the classic HC Verma result). A good reminder to trust the vector work over the key." },
+    { step:"Level 2 \u00b7 Medium",
+      q:"Rain appears vertical to a man walking east at 3 m/s. It appears tilted at 45\u00b0 to the vertical when he walks east at 6 m/s. The actual speed of the vertical component of the rain is:",
+      opts:["3 m/s","6 m/s","3\u221a2 m/s","4.5 m/s"], ans:0,
+      sol:"Same machinery as the exam question, with numbers.<br>Vertical at 3 m/s \u21d2 rain's horizontal component v\u2093 = 3 m/s.<br>At 6 m/s: relative horizontal = 3 \u2212 6 = \u22123; tilt 45\u00b0 \u21d2 tan45\u00b0 = 3/|v_y| = 1 \u21d2 |v_y| = <strong>3 m/s</strong>, option (A).<br>So the full rain velocity is 3\u00ee \u2212 3\u0135 \u2014 falling at 45\u00b0 in the ground frame all along, even though the walking man saw it 'vertical'." }
+  ]},
+
+  { name:"3. River Crossing \u2014 Shortest TIME", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium", diagram:DIAGRAMS.riverTime(),
+      q:"A swimmer wants to cross a river in the LEAST possible time. The river current is strong. Does the current change his crossing time?",
+      opts:["yes \u2014 a faster current means a longer crossing","yes \u2014 a faster current means a shorter crossing","no \u2014 crossing time depends only on his velocity component ACROSS the river","only if he swims against it"], ans:2,
+      sol:"The two directions are INDEPENDENT. The current acts entirely ALONG the river; the crossing is governed only by the component ACROSS it:<br><strong>t = width / v_across</strong>.<br>The current changes WHERE he lands (the drift), never WHEN. So for minimum time: point straight across, use the full swimming speed as v_across, and accept the drift." },
+    { step:"Level 2 \u00b7 Medium",
+      q:"A swimmer (2 m/s in still water) crosses a 100 m wide river flowing at 1.5 m/s, aiming straight across. His crossing time and downstream drift are:",
+      opts:["50 s, 75 m","50 s, 100 m","66.7 s, 75 m","40 s, 60 m"], ans:0,
+      sol:"Independent components:<br>\u2022 Across: t = 100/2 = <strong>50 s</strong> (the current is irrelevant here)<br>\u2022 Along: drift = v_river \u00d7 t = 1.5 \u00d7 50 = <strong>75 m</strong><br>Option (A). Notice the drift calculation USES the time from the across-direction \u2014 the two directions are independent, but they share the clock." },
+    { step:"The real thing", tag:"Allen Ex-01 Q23",
+      q:"A river is flowing from west to east at a speed of 5 meters per minute. A man on the south bank of the river, capable of swimming at 10 meters per minute in still water, wants to swim across the river in the shortest time. He should swim in a direction :-",
+      opts:["Due north","30\u00b0 east of north","30\u00b0 north of west","60\u00b0 east of north"], ans:0,
+      sol:"Shortest TIME \u21d2 maximise the across component \u21d2 point the FULL swimming velocity straight across \u21d2 <strong>due north</strong>, option (A).<br>Any tilt \u2014 upstream or downstream \u2014 wastes part of his 10 m/min on the along-river direction and lengthens the crossing. He will drift east, but the question didn't ask him to land opposite; it asked for speed." },
+    { step:"The real thing", tag:"Allen Ex-01 Q28",
+      q:"A river is flowing from east to west at a speed of 5 m/min. A man on south bank of river, capable of swimming 10 m/min in still water, wants to swim across the river in shorter time; he should swim :\u2013",
+      opts:["Due north","Due north\u2013east","Due north\u2013east with double the speed of river","None of the above"], ans:0,
+      sol:"The mirror of the previous question \u2014 the river now flows the OTHER way \u2014 and the answer is <strong>identical: due north</strong>, option (A).<br>That is exactly the point: minimum crossing time never depends on the river's direction (or speed). The exercise places both versions deliberately, to catch anyone pattern-matching 'river reversed, so tilt the other way'. The physics says: don't tilt at all." },
+    { step:"The real thing", tag:"Allen Ex-03 AR-7",
+      q:"Statement\u2013I : A man can cross river of width d in minimum time t. On increasing river velocity, minimum time to cross the river by man will remain unchanged.  because  Statement\u2013II : Velocity of river is perpendicular to width of river. So time to cross the river is independent of velocity of river.",
+      opts:["Statement\u2013I is true, Statement\u2013II is true ; Statement\u2013II is correct explanation for Statement\u2013I.","Statement\u2013I is true, Statement\u2013II is true ; Statement\u2013II is NOT a correct explanation for statement\u2013I.","Statement\u2013I is true, Statement\u2013II is false.","Statement\u2013I is false, Statement\u2013II is true."], ans:0,
+      sol:"Statement I: true \u2014 t_min = d / v_swim, no river velocity in it (rung 1).<br>Statement II: true \u2014 the current runs along the banks, perpendicular to the width direction, so it has zero component across and cannot affect the crossing.<br>And II is exactly the REASON for I \u21d2 <strong>option (A)</strong>." },
+    { step:"Level 2 \u00b7 Medium",
+      q:"In the minimum-time crossing, the river speed is increased from 3 m/s to 6 m/s (swimmer unchanged, width unchanged). What changes?",
+      opts:["time doubles, drift unchanged","time unchanged, drift doubles","both double","nothing changes"], ans:1,
+      sol:"Time = width/v_swim \u2014 untouched by the river \u21d2 <strong>unchanged</strong>.<br>Drift = v_river \u00d7 t \u2014 the time is fixed and v_river doubled \u21d2 <strong>drift doubles</strong>.<br>Option (B). The current controls the landing point, never the clock \u2014 the one-line summary of this whole topic." }
+  ]},
+
+  { name:"4. River Crossing \u2014 Shortest PATH", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium", diagram:DIAGRAMS.riverPath(),
+      q:"Now the swimmer wants to land EXACTLY opposite his starting point (shortest path). How should he aim?",
+      opts:["straight across \u2014 same as before","tilted UPSTREAM, so the current's push cancels","tilted downstream, to help the current","it is impossible in a flowing river"], ans:1,
+      sol:"To travel straight across, his RESULTANT velocity must have zero along-river component. The current pushes him downstream, so he must aim <strong>upstream</strong> by just enough to cancel it: v_b sin\u03b8 = v_r, i.e. <strong>sin\u03b8 = v_r/v_b</strong>.<br>The cost: only the component v_b cos\u03b8 = \u221a(v_b\u00b2 \u2212 v_r\u00b2) carries him across, so this crossing is SLOWER than the minimum-time one. Shortest path and shortest time are different strategies \u2014 read which one the question wants." },
+    { step:"Level 2 \u00b7 Medium",
+      q:"For the straight-across (zero drift) crossing to be POSSIBLE at all, what must be true?",
+      opts:["v_boat > v_river","v_river > v_boat","v_boat = v_river exactly","it is always possible"], ans:0,
+      sol:"The upstream tilt needs sin\u03b8 = v_r/v_b \u2264 1 \u21d2 <strong>v_b > v_r</strong> (option A).<br>If the river is faster than the boat, no aim can cancel the drift \u2014 sin\u03b8 would have to exceed 1. In that case the best one can do is minimise the drift (a different optimisation, with the boat aimed partly upstream at cos\u03b8 = v_b/v_r) \u2014 a favourite JEE Advanced twist worth knowing exists." },
+    { step:"The real thing", tag:"Allen Ex-01 Q26",
+      q:"A man is crossing a river flowing with velocity of 5 m/s. He reaches a point directly across at a distance of 60 m in 5 s. His velocity in still water should be :\u2013",
+      opts:["12 m/s","13 m/s","5 m/s","10 m/s"], ans:1,
+      sol:"'Directly across' \u21d2 zero drift \u21d2 his still-water velocity has two jobs at once:<br>\u2022 across component: 60 m in 5 s \u21d2 <strong>12 m/s</strong><br>\u2022 upstream component: must cancel the river \u21d2 <strong>5 m/s</strong><br>Still-water speed = the vector sum = \u221a(12\u00b2 + 5\u00b2) = \u221a169 = <strong>13 m/s</strong>, option (B).<br>A 5-12-13 triangle \u2014 option (A) 12 m/s is the trap for forgetting the upstream job entirely." },
+    { step:"The real thing", tag:"Allen Ex-01 Q27",
+      q:"A boat which has a speed of 5 km per hour in still water crosses a river of width 1 km along the shortest possible path in fifteen minutes. The velocity of the river water in km per hour is :-",
+      opts:["1","2","3","\u221a41"], ans:2,
+      sol:"Shortest path \u21d2 straight across \u21d2 the across component did the whole 1 km in 0.25 h:<br>v_across = 1/0.25 = 4 km/h.<br>But his full still-water speed is 5, and the missing part went into cancelling the river:<br>v_r = \u221a(5\u00b2 \u2212 4\u00b2) = <strong>3 km/h</strong>, option (C).<br>A 3-4-5 triangle. Option (D) \u221a41 = \u221a(25+16) is the ADDING trap \u2014 the components must satisfy 5\u00b2 = 4\u00b2 + v_r\u00b2, not 5\u00b2 + 4\u00b2 = v_r\u00b2." },
+    { step:"Level 2 \u00b7 Medium",
+      q:"A boat (5 km/h still water) crosses a river flowing at 3 km/h. The ratio (time for shortest-path crossing) : (minimum crossing time) is:",
+      opts:["5 : 4","4 : 5","3 : 5","1 : 1"], ans:0,
+      sol:"\u2022 Minimum time uses the full speed across: t_min \u221d 1/5.<br>\u2022 Shortest path uses only \u221a(5\u00b2 \u2212 3\u00b2) = 4 across: t_path \u221d 1/4.<br>Ratio t_path : t_min = 5 : 4, option (A).<br>General result: <strong>t_path/t_min = v_b/\u221a(v_b\u00b2 \u2212 v_r\u00b2)</strong> \u2014 always \u2265 1. Landing exactly opposite always costs time; the two 'best' crossings optimise different things." },
+    { step:"Level 2 \u00b7 Medium",
+      q:"A swimmer aims upstream at 30\u00b0 to the straight-across direction and lands exactly opposite. The ratio v_river : v_swimmer is:",
+      opts:["1 : 2","2 : 1","1 : \u221a3","\u221a3 : 2"], ans:0,
+      sol:"Zero drift \u21d2 v_s sin30\u00b0 = v_r \u21d2 v_r/v_s = sin30\u00b0 = 1/2 \u21d2 <strong>1 : 2</strong>, option (A).<br>The tilt angle is a direct meter of the speed ratio: sin\u03b8 = v_r/v_s. A 90\u00b0 tilt (sin\u03b8 = 1) is the breakdown case from rung 2 \u2014 the river as fast as the swimmer, all effort spent holding position." }
+  ]},
+
+  { name:"5. Collision & Closest Approach in 2D", questions:[
+    { step:"Level 1 \u00b7 Easy\u2013Medium",
+      q:"Two ships move with constant velocities. In the frame of ship A, ship B moves in a straight line. They will COLLIDE only if that relative velocity points:",
+      opts:["north","along the line joining B to A","perpendicular to the line joining them","in any direction, eventually"], ans:1,
+      sol:"Sit on ship A. Ship B travels in a straight line at the constant relative velocity v\u20d7_BA. It hits you only if that straight line passes THROUGH you \u2014 i.e. <strong>v\u20d7_BA points along the line joining B to A</strong>.<br>If it points even slightly off, B slides past at some minimum distance instead. This single geometric picture powers every question in this topic \u2014 collision is the special case, closest approach is the general one." },
+    { step:"The real thing", tag:"Allen Ex-03 AR-5",
+      q:"Statement\u2013I : If two particles, moving with constant velocities are to meet, the relative velocity must be along the line joining the two particles.  because  Statement\u2013II : Relative velocity means motion of one particle as viewed from the other.",
+      opts:["Statement\u2013I is true, Statement\u2013II is true ; Statement\u2013II is correct explanation for Statement\u2013I.","Statement\u2013I is true, Statement\u2013II is true ; Statement\u2013II is NOT a correct explanation for statement\u2013I.","Statement\u2013I is true, Statement\u2013II is false.","Statement\u2013I is false, Statement\u2013II is true."], ans:1,
+      sol:"Statement I: true \u2014 rung 1.<br>Statement II: true \u2014 it is the correct DEFINITION of relative velocity.<br>But a definition is not an explanation. The reason for I is the straight-line-through-the-target geometry, not merely what 'relative velocity' means.<br>\u21d2 both true, II NOT the explanation \u2014 <strong>option (B)</strong>. Assertion-reason questions live on exactly this distinction." },
+    { step:"The real thing", tag:"Allen Ex-02 Q19",
+      q:"Two boats A and B are moving along perpendicular paths in a still lake at night. Boat A move with a speed of 3 m/s and boat B moves with a speed of 4 m/s in the direction such that they collide after sometime. At t = 0, the boats are 300 m apart. The ratio of distance of distance travelled by boat A to the distance travelled by boat B at the instant of collision is :-",
+      opts:["1","1/2","3/4","4/3"], ans:2,
+      sol:"They start together on the clock and end together at the collision \u2014 so both travel for the SAME time t.<br>distance_A / distance_B = (3t)/(4t) = <strong>3/4</strong>, option (C).<br>All the scenery \u2014 perpendicular paths, night, 300 m \u2014 is decoration. Once 'they collide' fixes a common flight time, the ratio of distances is just the ratio of speeds." },
+    { step:"The real thing", tag:"Allen Ex-01 Q29",
+      q:"Two particles P and Q are moving with velocities of (\u00ee + \u0135) and (\u2212\u00ee + 2\u0135) respectively. At time t = 0, P is at origin and Q is at a point with position vector (2\u00ee + \u0135). Then the shortest distance between P & Q is :-",
+      opts:["2\u221a5/5","4\u221a5/5","\u221a5","3\u221a5/5"], ans:1,
+      sol:"Work in P's frame.<br>Relative position of Q: r\u20d7 = 2\u00ee + \u0135. Relative velocity: v\u20d7 = (\u2212\u00ee + 2\u0135) \u2212 (\u00ee + \u0135) = \u22122\u00ee + \u0135.<br>Q moves along the straight line r\u20d7 + v\u20d7t; the shortest distance is the perpendicular from P to that line:<br>d = |r\u20d7 \u00d7 v\u20d7|/|v\u20d7| = |2(1) \u2212 1(\u22122)|/\u221a5 = 4/\u221a5 = <strong>4\u221a5/5</strong>, option (B).<br>(Equivalently: minimise |r\u20d7 + v\u20d7t|\u00b2 \u2014 t* = 3/5 s gives the same 4/\u221a5.) The relative-frame trick turns a two-body problem into one straight line and one perpendicular." },
+    { step:"The real thing", tag:"Allen Ex-02 Q10", diagram:DIAGRAMS.truck(),
+      q:"A 2m wide truck is moving with a uniform speed of 8 m/s along a straight horizontal road. A pedestrian starts crossing the road at an instant when the truck is 4 m away from him. The minimum constant velocity with which he should run to avoid an accident is :-",
+      opts:["1.6\u221a5 m/s","1.2\u221a5 m/s","1.2\u221a7 m/s","1.6\u221a7 m/s"], ans:0,
+      sol:"Let him run at speed v at angle \u03b8 forward of straight-across. To just escape, in the TRUCK's frame his velocity must graze the truck's near corner.<br>He clears if his across-progress beats the truck: crossing 2 m of width while the truck closes 4 m minus his forward help.<br>Just-grazing condition: 2/(v cos\u03b8)\u00b7... \u2014 optimising over \u03b8, the minimum speed comes out as<br>v_min = (truck speed \u00d7 width)/\u221a(gap\u00b2 + width\u00b2) = (8 \u00d7 2)/\u221a(4\u00b2 + 2\u00b2) = 16/\u221a20 = 8/\u221a5 = <strong>1.6\u221a5 m/s</strong>, option (A).<br>Geometric meaning: he runs PERPENDICULAR to the line joining him to the truck's near corner \u2014 the direction that makes his velocity most effective at rotating that danger line away. \u2248 3.58 m/s: fast, but humanly possible \u2014 a good sanity check." },
+    { step:"Level 2 \u00b7 Medium",
+      q:"Two cars approach an unmarked intersection at right angles, car X at 20 m/s and car Y at 20 m/s, currently equal distances from it. In car X's frame, car Y moves:",
+      opts:["straight toward X at 20\u221a2 m/s \u2014 collision course","at 45\u00b0 away from the intersection","in a circle around X","straight toward the intersection only"], ans:0,
+      sol:"v\u20d7_YX = v\u20d7_Y \u2212 v\u20d7_X. With equal speeds at right angles, this has magnitude 20\u221a2 m/s \u2014 and by the symmetry of the setup (equal distances, equal speeds) it points exactly along the line joining Y to X.<br>By rung 1, that is the <strong>collision condition</strong>: option (A). They will meet at the intersection.<br>This is also how sailors judge danger at sea: if another vessel stays at a CONSTANT BEARING while getting closer, the relative velocity is along the joining line \u2014 you are on a collision course. The physics of this topic, used every night on the water." }
+  ]}
+
+];
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'dpp_relative_motion_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length && parsed.every((a,i)=>Array.isArray(a)&&a.length===TOPICS[i].questions.length)) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+
+function saveAnswers(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+}
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    // Option order PRESERVED — source questions keep their printed (A)(B)(C)(D).
+    return{q:raw.q, diagram:raw.diagram||null, opts:raw.opts.slice(), ans:raw.ans,
+           sol:raw.sol, yt:raw.yt||'', tag:raw.tag||'', step:raw.step||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qBadges=document.getElementById('q-badges');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    const total=topic.questions.length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===total&&done===total?' all-done':'');
+    const dots=Array(total).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${total} attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.reduce((s,t)=>s+t.questions.length,0)} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=curTopic.questions.length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of ${curTopic.questions.length}`;
+  qText.textContent=q.q;
+  qBadges.innerHTML =
+    (q.step ? `<span class="badge-step">${q.step}</span>` : '') +
+    (q.tag  ? `<span class="badge-year">${q.tag}</span>` : '');
+  // Diagram
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===curTopic.questions.length-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  const last=curTopic.questions.length-1;
+  if(newQ<0||newQ>last){if(newQ>last) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+// Close modal on backdrop click
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
