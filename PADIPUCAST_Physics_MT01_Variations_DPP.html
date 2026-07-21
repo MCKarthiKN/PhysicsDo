@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · MT-01 Variations · Kinematics, Projectile & Vectors</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:600px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Physics MT-01</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Problems
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Kinematics, Projectile<br>&amp; Vectors — Variations</h1></div>
+    <p id="home-sub">Each card is one problem from Major Test-01 with 3 fresh variations. Tap to practise.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">3</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Variation 1 of 3</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every problem. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY  — each returns an SVG string
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+
+const DIAGRAMS = {
+  // ── Q2 group: projectile velocity vector at a point (v = a i + b j) ──────────
+  projVelVector: (vx='6', vy='2') => `
+    <svg viewBox="0 0 260 190" width="260" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('p2x','#2563eb')}${AR('p2y','#16a34a')}${AR('p2v','#dc2626')}</defs>
+      <line x1="30" y1="160" x2="240" y2="160" stroke="#cbd5e1" stroke-width="1"/>
+      <line x1="30" y1="160" x2="30" y2="25" stroke="#cbd5e1" stroke-width="1"/>
+      <text x="235" y="176" font-size="10" fill="#9ca3af" font-family="sans-serif">x</text>
+      <text x="14" y="32" font-size="10" fill="#9ca3af" font-family="sans-serif">y</text>
+      <path d="M30,160 Q120,60 220,150" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <text x="70" y="86" font-size="10" fill="#f59e0b" font-family="sans-serif">trajectory</text>
+      <circle cx="150" cy="112" r="4" fill="#374151"/>
+      <text x="156" y="108" font-size="10" fill="#374151" font-family="sans-serif" font-weight="600">P</text>
+      <line x1="150" y1="112" x2="215" y2="112" stroke="#2563eb" stroke-width="2.5" marker-end="url(#p2x)"/>
+      <text x="176" y="126" font-size="11" fill="#2563eb" font-family="sans-serif">v&#8339;=${vx}</text>
+      <line x1="150" y1="112" x2="150" y2="66" stroke="#16a34a" stroke-width="2.5" marker-end="url(#p2y)"/>
+      <text x="122" y="90" font-size="11" fill="#16a34a" font-family="sans-serif">v&#8340;=${vy}</text>
+      <line x1="150" y1="112" x2="215" y2="66" stroke="#dc2626" stroke-width="2.5" marker-end="url(#p2v)"/>
+      <text x="188" y="60" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="600">v&#8407;</text>
+      <path d="M178,112 A28,28 0 0,0 172,92" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="182" y="104" font-size="10" fill="#6b7280" font-family="sans-serif">&#952;</text>
+    </svg>`,
+
+  // ── Q9 group: catch-the-ball, thrower + runner ──────────────────────────────
+  catchBall: (speed='v&#8320;', frac='v&#8320;/2') => `
+    <svg viewBox="0 0 300 180" width="300" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('c9b','#dc2626')}${AR('c9r','#2563eb')}</defs>
+      <line x1="20" y1="150" x2="285" y2="150" stroke="#9ca3af" stroke-width="1.5"/>
+      <path d="M40,150 Q150,40 260,150" fill="none" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="5,3"/>
+      <text x="128" y="58" font-size="10" fill="#dc2626" font-family="sans-serif">ball, speed ${speed}</text>
+      <line x1="40" y1="150" x2="78" y2="112" stroke="#dc2626" stroke-width="2.5" marker-end="url(#c9b)"/>
+      <path d="M62,150 A22,22 0 0,0 55,134" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="64" y="142" font-size="10" fill="#6b7280" font-family="sans-serif">&#952;</text>
+      <circle cx="40" cy="150" r="5" fill="#374151"/>
+      <text x="26" y="168" font-size="10" fill="#374151" font-family="sans-serif" font-weight="600">thrower</text>
+      <line x1="46" y1="163" x2="120" y2="163" stroke="#2563eb" stroke-width="2.5" marker-end="url(#c9r)"/>
+      <text x="60" y="177" font-size="10" fill="#2563eb" font-family="sans-serif">runner ${frac}</text>
+      <circle cx="260" cy="150" r="4" fill="#16a34a"/>
+      <text x="246" y="143" font-size="10" fill="#16a34a" font-family="sans-serif">landing</text>
+    </svg>`,
+
+  // ── Q11 group: horizontal projection, velocity turns by angle ───────────────
+  horizProj: (u='u', ang='60&#176;') => `
+    <svg viewBox="0 0 250 210" width="250" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('h11u','#2563eb')}${AR('h11g','#7c3aed')}${AR('h11v','#dc2626')}</defs>
+      <rect x="24" y="20" width="14" height="150" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+      <circle cx="44" cy="40" r="5" fill="#374151"/>
+      <line x1="44" y1="40" x2="120" y2="40" stroke="#2563eb" stroke-width="2.5" marker-end="url(#h11u)"/>
+      <text x="66" y="32" font-size="11" fill="#2563eb" font-family="sans-serif">${u} (horizontal)</text>
+      <path d="M44,40 Q120,80 190,175" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <line x1="150" y1="128" x2="150" y2="178" stroke="#7c3aed" stroke-width="2.2" marker-end="url(#h11g)"/>
+      <text x="154" y="160" font-size="10" fill="#7c3aed" font-family="sans-serif">gt</text>
+      <line x1="150" y1="128" x2="205" y2="128" stroke="#2563eb" stroke-width="1.6" stroke-dasharray="3,2"/>
+      <text x="176" y="122" font-size="10" fill="#2563eb" font-family="sans-serif">${u}</text>
+      <line x1="150" y1="128" x2="205" y2="178" stroke="#dc2626" stroke-width="2.5" marker-end="url(#h11v)"/>
+      <text x="196" y="150" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="600">v&#8407;</text>
+      <path d="M178,128 A28,28 0 0,0 172,150" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="182" y="152" font-size="10" fill="#6b7280" font-family="sans-serif">${ang}</text>
+    </svg>`,
+
+  // ── Q14 group: two projectiles from A and B collide mid-air ─────────────────
+  collideAB: (uA='uA', uB='uB', angA='&#952;', angB='45&#176;', sep='D') => `
+    <svg viewBox="0 0 300 180" width="300" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('cabA','#2563eb')}${AR('cabB','#dc2626')}</defs>
+      <line x1="20" y1="150" x2="285" y2="150" stroke="#9ca3af" stroke-width="1.5"/>
+      <path d="M40,150 Q150,58 260,150" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4,3"/>
+      <circle cx="40" cy="150" r="5" fill="#374151"/>
+      <text x="30" y="168" font-size="11" fill="#374151" font-family="sans-serif" font-weight="700">A</text>
+      <line x1="40" y1="150" x2="92" y2="106" stroke="#2563eb" stroke-width="2.5" marker-end="url(#cabA)"/>
+      <text x="60" y="112" font-size="10" fill="#2563eb" font-family="sans-serif">${uA}</text>
+      <path d="M64,150 A24,24 0 0,0 56,132" fill="none" stroke="#6b7280" stroke-width="1.1"/>
+      <text x="66" y="142" font-size="10" fill="#6b7280" font-family="sans-serif">${angA}</text>
+      <circle cx="260" cy="150" r="5" fill="#374151"/>
+      <text x="256" y="168" font-size="11" fill="#374151" font-family="sans-serif" font-weight="700">B</text>
+      <line x1="260" y1="150" x2="208" y2="106" stroke="#dc2626" stroke-width="2.5" marker-end="url(#cabB)"/>
+      <text x="214" y="112" font-size="10" fill="#dc2626" font-family="sans-serif">${uB}</text>
+      <path d="M236,150 A24,24 0 0,1 244,132" fill="none" stroke="#6b7280" stroke-width="1.1"/>
+      <text x="228" y="142" font-size="10" fill="#6b7280" font-family="sans-serif">${angB}</text>
+      <line x1="40" y1="166" x2="260" y2="166" stroke="#6b7280" stroke-width="0.8" stroke-dasharray="3,2"/>
+      <text x="145" y="179" font-size="10" fill="#6b7280" font-family="sans-serif">${sep}</text>
+    </svg>`,
+
+  // ── Q16 group: overtaking — uniform velocity vs starting-from-rest accel ────
+  overtake: (v='u', a='a') => `
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ov1','#2563eb')}${AR('ov2','#dc2626')}</defs>
+      <line x1="20" y1="120" x2="285" y2="120" stroke="#9ca3af" stroke-width="1.5"/>
+      <rect x="34" y="60" width="30" height="18" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+      <text x="40" y="53" font-size="9" fill="#2563eb" font-family="sans-serif">body 1</text>
+      <line x1="66" y1="69" x2="120" y2="69" stroke="#2563eb" stroke-width="2.2" marker-end="url(#ov1)"/>
+      <text x="78" y="63" font-size="10" fill="#2563eb" font-family="sans-serif">${v} (uniform)</text>
+      <rect x="34" y="92" width="30" height="18" rx="3" fill="#fee2e2" stroke="#dc2626" stroke-width="1.4"/>
+      <text x="40" y="132" font-size="9" fill="#dc2626" font-family="sans-serif">body 2</text>
+      <line x1="66" y1="101" x2="104" y2="101" stroke="#dc2626" stroke-width="2.2" marker-end="url(#ov2)"/>
+      <text x="76" y="95" font-size="10" fill="#dc2626" font-family="sans-serif">rest, a=${a}</text>
+      <text x="150" y="40" font-size="10" fill="#374151" font-family="sans-serif">Both start together at same point</text>
+      <text x="150" y="56" font-size="10" fill="#374151" font-family="sans-serif">&#8594; when do they meet again?</text>
+    </svg>`,
+
+  // ── Q19 group: relative motion chase, A after B ─────────────────────────────
+  chase: (v='v', ang='37&#176;', vB='vB', sep='d') => `
+    <svg viewBox="0 0 300 160" width="300" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ch1','#2563eb')}${AR('ch2','#dc2626')}</defs>
+      <circle cx="45" cy="110" r="5" fill="#374151"/>
+      <text x="30" y="126" font-size="11" fill="#374151" font-family="sans-serif" font-weight="700">A</text>
+      <line x1="45" y1="110" x2="125" y2="66" stroke="#2563eb" stroke-width="2.6" marker-end="url(#ch1)"/>
+      <text x="72" y="76" font-size="11" fill="#2563eb" font-family="sans-serif">${v}</text>
+      <path d="M78,110 A34,34 0 0,0 68,88" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="80" y="100" font-size="10" fill="#6b7280" font-family="sans-serif">${ang}</text>
+      <circle cx="245" cy="110" r="5" fill="#374151"/>
+      <text x="250" y="126" font-size="11" fill="#374151" font-family="sans-serif" font-weight="700">B</text>
+      <line x1="245" y1="110" x2="245" y2="52" stroke="#dc2626" stroke-width="2.6" marker-end="url(#ch2)"/>
+      <text x="250" y="80" font-size="11" fill="#dc2626" font-family="sans-serif">${vB}</text>
+      <line x1="45" y1="128" x2="245" y2="128" stroke="#6b7280" stroke-width="0.9" stroke-dasharray="3,2"/>
+      <text x="138" y="141" font-size="10" fill="#6b7280" font-family="sans-serif">${sep}</text>
+    </svg>`,
+
+  // ── Q21 group: rain-man relative velocity (rain appears vertical) ───────────
+  rainMan: (vm='4', vr='3') => `
+    <svg viewBox="0 0 260 190" width="260" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rm1','#2563eb')}${AR('rm2','#16a34a')}${AR('rm3','#dc2626')}</defs>
+      <line x1="30" y1="150" x2="235" y2="150" stroke="#9ca3af" stroke-width="1.4"/>
+      <line x1="130" y1="150" x2="60" y2="150" stroke="#2563eb" stroke-width="2.6" marker-end="url(#rm1)"/>
+      <text x="70" y="166" font-size="10" fill="#2563eb" font-family="sans-serif">man ${vm} (west)</text>
+      <line x1="130" y1="40" x2="130" y2="150" stroke="#16a34a" stroke-width="2.6" marker-end="url(#rm2)"/>
+      <text x="134" y="96" font-size="10" fill="#16a34a" font-family="sans-serif">rain rel. man</text>
+      <text x="134" y="110" font-size="10" fill="#16a34a" font-family="sans-serif">(vertical)</text>
+      <line x1="130" y1="40" x2="200" y2="150" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="5,3" marker-end="url(#rm3)"/>
+      <text x="170" y="90" font-size="10" fill="#dc2626" font-family="sans-serif">true rain v&#8407;</text>
+      <circle cx="130" cy="150" r="4" fill="#374151"/>
+      <text x="108" y="182" font-size="9" fill="#6b7280" font-family="sans-serif">appears to hit vertically</text>
+    </svg>`,
+
+  // ── Q35 group: v-t graph trapezoid ──────────────────────────────────────────
+  vtGraph: (vmax='10', pts='1,3,4', from='2', to='4', mode='fall') => {
+    // build a trapezoid: 0->t1 rise to vmax, t1->t2 flat, t2->t3 fall to 0
+    const p=pts.split(',').map(Number); const t1=p[0],t2=p[1],t3=p[2];
+    const ox=44, oy=160, sx=34, sy=11;
+    const X=t=>ox+t*sx, Y=v=>oy-v*sy;
+    const vm=Number(vmax);
+    return `
+    <svg viewBox="0 0 280 200" width="280" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('vtx','#374151')}${AR('vty','#374151')}</defs>
+      <line x1="${ox}" y1="${oy}" x2="252" y2="${oy}" stroke="#374151" stroke-width="1.5" marker-end="url(#vtx)"/>
+      <line x1="${ox}" y1="${oy}" x2="${ox}" y2="24" stroke="#374151" stroke-width="1.5" marker-end="url(#vty)"/>
+      <text x="246" y="176" font-size="10" fill="#374151" font-family="sans-serif">t (s)</text>
+      <text x="10" y="30" font-size="10" fill="#374151" font-family="sans-serif">v (m/s)</text>
+      <polyline points="${ox},${oy} ${X(t1)},${Y(vm)} ${X(t2)},${Y(vm)} ${X(t3)},${oy}" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+      <line x1="${ox}" y1="${Y(vm)}" x2="${X(t1)}" y2="${Y(vm)}" stroke="#cbd5e1" stroke-width="0.8" stroke-dasharray="3,2"/>
+      <text x="${ox-20}" y="${Y(vm)+4}" font-size="10" fill="#6b7280" font-family="sans-serif">${vmax}</text>
+      ${[t1,t2,t3].map(t=>`<line x1="${X(t)}" y1="${oy}" x2="${X(t)}" y2="${oy+4}" stroke="#374151" stroke-width="1"/><text x="${X(t)-3}" y="${oy+16}" font-size="10" fill="#6b7280" font-family="sans-serif">${t}</text>`).join('')}
+      <rect x="${X(Number(from))}" y="24" width="${X(Number(to))-X(Number(from))}" height="${oy-24}" fill="#dc2626" opacity="0.08"/>
+      <line x1="${X(Number(from))}" y1="${oy}" x2="${X(Number(from))}" y2="24" stroke="#dc2626" stroke-width="0.8" stroke-dasharray="3,2"/>
+      <line x1="${X(Number(to))}" y1="${oy}" x2="${X(Number(to))}" y2="24" stroke="#dc2626" stroke-width="0.8" stroke-dasharray="3,2"/>
+      <text x="${(X(Number(from))+X(Number(to)))/2-24}" y="40" font-size="10" fill="#dc2626" font-family="sans-serif">find a&#772; here</text>
+    </svg>`;
+  },
+
+  // ── Q36 group: unit vectors i^ + j^ etc, angle question ─────────────────────
+  vecSum: (ax=1, ay=1, lbl='i&#770;+j&#770;') => {
+    const ox=40, oy=150, s=70;
+    const ex=ox+ax*s, ey=oy-ay*s;
+    return `
+    <svg viewBox="0 0 240 190" width="240" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('vs1','#2563eb')}${AR('vs2','#16a34a')}${AR('vs3','#dc2626')}</defs>
+      <line x1="${ox}" y1="${oy}" x2="220" y2="${oy}" stroke="#cbd5e1" stroke-width="1"/>
+      <line x1="${ox}" y1="${oy}" x2="${ox}" y2="20" stroke="#cbd5e1" stroke-width="1"/>
+      <line x1="${ox}" y1="${oy}" x2="${ox+s}" y2="${oy}" stroke="#2563eb" stroke-width="2.5" marker-end="url(#vs1)"/>
+      <text x="${ox+s-6}" y="${oy+16}" font-size="11" fill="#2563eb" font-family="sans-serif">i&#770;</text>
+      <line x1="${ox}" y1="${oy}" x2="${ox}" y2="${oy-s}" stroke="#16a34a" stroke-width="2.5" marker-end="url(#vs2)"/>
+      <text x="${ox-18}" y="${oy-s+6}" font-size="11" fill="#16a34a" font-family="sans-serif">j&#770;</text>
+      <line x1="${ox}" y1="${oy}" x2="${ex}" y2="${ey}" stroke="#dc2626" stroke-width="2.6" marker-end="url(#vs3)"/>
+      <text x="${ex-4}" y="${ey-6}" font-size="11" fill="#dc2626" font-family="sans-serif" font-weight="600">${lbl}</text>
+      <path d="M${ox+30},${oy} A30,30 0 0,0 ${ox+30*Math.cos(Math.atan2(ay,ax))},${oy-30*Math.sin(Math.atan2(ay,ax))}" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="${ox+34}" y="${oy-14}" font-size="10" fill="#6b7280" font-family="sans-serif">&#952;</text>
+    </svg>`;
+  },
+
+  // ── Q45 group: two unit vectors with given resultant magnitude (angle) ──────
+  twoUnit: (mag='&#8730;3', label="a&#770;, b&#770;") => `
+    <svg viewBox="0 0 240 180" width="240" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('tu1','#2563eb')}${AR('tu2','#16a34a')}${AR('tur','#dc2626')}</defs>
+      <circle cx="60" cy="130" r="4" fill="#374151"/>
+      <line x1="60" y1="130" x2="150" y2="130" stroke="#2563eb" stroke-width="2.6" marker-end="url(#tu1)"/>
+      <text x="100" y="146" font-size="12" fill="#2563eb" font-family="sans-serif">a&#770;</text>
+      <line x1="60" y1="130" x2="105" y2="52" stroke="#16a34a" stroke-width="2.6" marker-end="url(#tu2)"/>
+      <text x="76" y="80" font-size="12" fill="#16a34a" font-family="sans-serif">b&#770;</text>
+      <line x1="60" y1="130" x2="195" y2="52" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="5,3" marker-end="url(#tur)"/>
+      <text x="150" y="78" font-size="11" fill="#dc2626" font-family="sans-serif">|a&#770;+b&#770;| = ${mag}</text>
+      <line x1="150" y1="130" x2="195" y2="52" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3,2"/>
+      <path d="M90,130 A30,30 0 0,0 82,108" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="92" y="120" font-size="10" fill="#6b7280" font-family="sans-serif">&#952;</text>
+    </svg>`
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  PROBLEM DATA — 10 problems, each with 3 variations
+//  q/opts/sol may contain HTML (sup/sub/entities). ans = 0-based index.
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  // ══ PROBLEM 2 — angle of projection from velocity at a height ══════════════
+  {
+    name:"Q2 · Angle of Projection from Velocity",
+    questions:[
+      {
+        q:"At the topmost point of its path a projectile has velocity v&#8407; = 6i&#770; m/s, and at the launch point its velocity was v&#8407; = (6i&#770; + 8j&#770;) m/s. Find its angle of projection (from the horizontal).",
+        diagram:DIAGRAMS.projVelVector('6','8'),
+        opts:["tan&#8315;&#185;(4/3)","tan&#8315;&#185;(3/4)","45&#176;","tan&#8315;&#185;(1/3)"],
+        ans:0,
+        sol:"At launch, u&#8339; = 6 m/s and u&#8340; = 8 m/s (the horizontal part is unchanged at the top, confirming u&#8339; = 6). Angle of projection: tan&#952; = u&#8340;/u&#8339; = 8/6 = 4/3 &#8658; &#952; = tan&#8315;&#185;(4/3). Answer: tan&#8315;&#185;(4/3)."
+      },
+      {
+        q:"A ball is launched from the ground with initial velocity v&#8407; = (8i&#770; + 8j&#770;) m/s. What is its angle of projection?",
+        diagram:DIAGRAMS.projVelVector('8','8'),
+        opts:["30&#176;","tan&#8315;&#185;(3/4)","45&#176;","60&#176;"],
+        ans:2,
+        sol:"Angle of projection: tan&#952; = u&#8340;/u&#8339; = 8/8 = 1 &#8658; &#952; = 45&#176;. Answer: 45&#176;."
+      },
+      {
+        q:"For a projectile, the velocity at a certain instant is v&#8407; = (5i&#770; + 5j&#770;) m/s. What is the angle that the velocity vector makes with the horizontal at that instant?",
+        diagram:DIAGRAMS.projVelVector('5','5'),
+        opts:["30&#176;","60&#176;","45&#176;","tan&#8315;&#185;(2)"],
+        ans:2,
+        sol:"The angle of the velocity vector with the horizontal is tan&#952; = v&#8340;/v&#8339; = 5/5 = 1 &#8658; &#952; = 45&#176;. Answer: 45&#176;."
+      }
+    ]
+  },
+
+  // ══ PROBLEM 9 — can a runner catch the thrown ball? ════════════════════════
+  {
+    name:"Q9 · Runner Catching a Projectile",
+    questions:[
+      {
+        q:"A ball is thrown from a point with speed v&#8320; at an angle &#952;. At the same instant, from the same point, a person starts running with constant speed v&#8320;/2 to catch it. Can they catch the ball, and if so at what launch angle?",
+        diagram:DIAGRAMS.catchBall('v&#8320;','v&#8320;/2'),
+        opts:["Yes, 60&#176;","Yes, 30&#176;","No","Yes, 45&#176;"],
+        ans:0,
+        sol:"The ball lands at the same height it left, so the runner must cover the horizontal range in the time of flight, moving at v&#8320;/2. Average horizontal position of ball matches runner if the ball's horizontal velocity v&#8320;cos&#952; equals v&#8320;/2 &#8658; cos&#952; = 1/2 &#8658; &#952; = 60&#176;. Answer: Yes, 60&#176;."
+      },
+      {
+        q:"A ball is thrown with speed v&#8320; at angle &#952;. A person runs from the launch point at v&#8320;/&#8730;2 to catch it as it lands. At what angle should the ball be thrown so the catch is possible?",
+        diagram:DIAGRAMS.catchBall('v&#8320;','v&#8320;/&#8730;2'),
+        opts:["30&#176;","45&#176;","60&#176;","Not possible"],
+        ans:1,
+        sol:"To catch the ball at landing, the runner's speed must equal the ball's horizontal velocity: v&#8320;cos&#952; = v&#8320;/&#8730;2 &#8658; cos&#952; = 1/&#8730;2 &#8658; &#952; = 45&#176;. Answer: 45&#176;."
+      },
+      {
+        q:"A boy throws a ball at speed v&#8320; and angle &#952;, then immediately sprints at (&#8730;3/2)·v&#8320; from the launch point to catch it on landing. The required angle of projection is:",
+        diagram:DIAGRAMS.catchBall('v&#8320;','(&#8730;3/2)v&#8320;'),
+        opts:["30&#176;","45&#176;","60&#176;","Cannot catch"],
+        ans:0,
+        sol:"Runner speed must match horizontal velocity of the ball: v&#8320;cos&#952; = (&#8730;3/2)v&#8320; &#8658; cos&#952; = &#8730;3/2 &#8658; &#952; = 30&#176;. Answer: 30&#176;."
+      }
+    ]
+  },
+
+  // ══ PROBLEM 11 — horizontal projection, velocity at angle to initial ═══════
+  {
+    name:"Q11 · Horizontal Projectile: Velocity Turns",
+    questions:[
+      {
+        q:"A particle is projected horizontally with speed u = 20/&#8730;3 m/s from a height at t = 0. After what time does its velocity make a 60&#176; angle with the initial (horizontal) velocity? (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.horizProj('20/&#8730;3','60&#176;'),
+        opts:["1 s","2 s","1.5 s","2.5 s"],
+        ans:1,
+        sol:"Horizontal velocity stays u = 20/&#8730;3. The velocity makes angle &#966; with horizontal where tan&#966; = (gt)/u. For &#966; = 60&#176;: tan60&#176; = &#8730;3 = gt/u &#8658; gt = u&#8730;3 = (20/&#8730;3)(&#8730;3) = 20 &#8658; t = 20/10 = 2 s. Answer: 2 s."
+      },
+      {
+        q:"A ball is thrown horizontally at u = 10 m/s from a tower. After what time will its velocity be directed at 45&#176; below the horizontal? (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.horizProj('10','45&#176;'),
+        opts:["0.5 s","1 s","1.5 s","2 s"],
+        ans:1,
+        sol:"tan45&#176; = 1 = (gt)/u &#8658; gt = u = 10 &#8658; t = 10/10 = 1 s. Answer: 1 s."
+      },
+      {
+        q:"A stone is projected horizontally with u = 10&#8730;3 m/s. At what instant does the velocity vector make 30&#176; with the horizontal? (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.horizProj('10&#8730;3','30&#176;'),
+        opts:["1 s","&#8730;3 s","0.5 s","2&#8730;3 s"],
+        ans:0,
+        sol:"tan30&#176; = 1/&#8730;3 = (gt)/u &#8658; gt = u/&#8730;3 = 10&#8730;3/&#8730;3 = 10 &#8658; t = 10/10 = 1 s. Answer: 1 s."
+      }
+    ]
+  },
+
+  // ══ PROBLEM 14 — two projectiles from A and B collide mid-air ══════════════
+  {
+    name:"Q14 · Two Projectiles Colliding Mid-air",
+    questions:[
+      {
+        q:"Two particles are projected simultaneously from points A and B, 80 m apart on level ground. A is launched at 50 m/s at angle &#952;, and B at 40&#8730;2 m/s at 45&#176; (toward A). If they collide in mid-air, which statement is correct?",
+        diagram:DIAGRAMS.collideAB('50','40&#8730;2','&#952;','45&#176;','80 m'),
+        opts:["They collide if A's angle is 37&#176;","They collide if A's angle is 53&#176;","They collide after 1 s","None of these"],
+        ans:1,
+        sol:"For collision the vertical velocity components must be equal (so they stay at the same height), and horizontal components must close the 80 m gap. B's vertical component = 40&#8730;2·sin45&#176; = 40 m/s, so A needs 50·sin&#952; = 40 &#8658; sin&#952; = 0.8 &#8658; &#952; = 53&#176;. Answer: They collide if A's angle is 53&#176;."
+      },
+      {
+        q:"From A and B (60 m apart) two balls are thrown simultaneously. Ball from A: 40 m/s at angle &#945;. Ball from B: 20&#8730;2 m/s at 45&#176; toward A. For a mid-air collision, ball A's angle &#945; must be:",
+        diagram:DIAGRAMS.collideAB('40','20&#8730;2','&#945;','45&#176;','60 m'),
+        opts:["30&#176;","45&#176;","60&#176;","37&#176;"],
+        ans:0,
+        sol:"For the balls to stay at equal heights (needed for collision), their vertical velocity components must be equal. B's vertical component = 20&#8730;2·sin45&#176; = 20&#8730;2·(1/&#8730;2) = 20 m/s. So 40·sin&#945; = 20 &#8658; sin&#945; = 1/2 &#8658; &#945; = 30&#176;. Answer: 30&#176;."
+      },
+      {
+        q:"Two projectiles launched simultaneously from A and B (100 m apart) collide in mid-air. Which condition must always hold for such a collision of two simultaneously-projected particles?",
+        diagram:DIAGRAMS.collideAB('u&#8321;','u&#8322;','&#952;&#8321;','&#952;&#8322;','100 m'),
+        opts:["Their horizontal velocities must be equal","Their vertical velocity components must be equal","Their speeds must be equal","Their ranges must be equal"],
+        ans:1,
+        sol:"Both particles feel the same downward g, so their relative vertical acceleration is zero. To meet in the air their vertical velocity components must be equal (equal heights at all times), while the horizontal components close the initial separation. Answer: Their vertical velocity components must be equal."
+      }
+    ]
+  },
+
+  // ══ PROBLEM 16 — overtaking: uniform velocity vs accelerating from rest ════
+  {
+    name:"Q16 · Two Bodies Meeting (uniform vs accel.)",
+    questions:[
+      {
+        q:"A body moves with uniform velocity 8 m/s. Just as it crosses a second body, the second one starts from rest with uniform acceleration 4 m/s&#178;. After what time do the two bodies meet again?",
+        diagram:DIAGRAMS.overtake('8 m/s','4 m/s&#178;'),
+        opts:["2 s","4 s","6 s","8 s"],
+        ans:1,
+        sol:"They meet when displacements are equal: 8t = &#189;·4·t&#178; = 2t&#178; &#8658; 8t = 2t&#178; &#8658; t = 4 s (t &#8800; 0). Answer: 4 s."
+      },
+      {
+        q:"A car moves at a constant 12 m/s. As it passes a bike at rest, the bike accelerates from rest at 3 m/s&#178;. When does the bike catch up with the car?",
+        diagram:DIAGRAMS.overtake('12 m/s','3 m/s&#178;'),
+        opts:["4 s","6 s","8 s","12 s"],
+        ans:2,
+        sol:"Equal displacements: 12t = &#189;·3·t&#178; = 1.5t&#178; &#8658; 12 = 1.5t &#8658; t = 8 s. Answer: 8 s."
+      },
+      {
+        q:"A body moves with uniform velocity 10 m/s. At the moment it crosses another body at rest, the second starts with acceleration 5 m/s&#178;. The time after which they meet is:",
+        diagram:DIAGRAMS.overtake('10 m/s','5 m/s&#178;'),
+        opts:["2 s","3 s","4 s","5 s"],
+        ans:2,
+        sol:"10t = &#189;·5·t&#178; = 2.5t&#178; &#8658; 10 = 2.5t &#8658; t = 4 s. Answer: 4 s."
+      }
+    ]
+  },
+
+  // ══ PROBLEM 19 — relative motion, A catches B ═════════════════════════════
+  {
+    name:"Q19 · Relative Motion: A Catches B",
+    questions:[
+      {
+        q:"At t = 0, A and B are 200 m apart in a horizontal plane. B moves at 30 m/s perpendicular to line AB. A moves at speed v at 37&#176; to AB so that it catches B. Find the time to catch (sin37&#176; = 0.6, cos37&#176; = 0.8):",
+        diagram:DIAGRAMS.chase('v','37&#176;','30 m/s','200 m'),
+        opts:["4 s","5 s","2 s","8 s"],
+        ans:1,
+        sol:"For A to catch B, A's velocity component perpendicular to AB must cancel B's motion: v·sin37&#176; = 30 &#8658; v(0.6) = 30 &#8658; v = 50 m/s. The closing speed along AB is v·cos37&#176; = 50(0.8) = 40 m/s. Time to cover 200 m = 200/40 = 5 s. Answer: 5 s."
+      },
+      {
+        q:"Two particles A and B are 150 m apart. B moves at 20 m/s perpendicular to line AB. A moves at speed v at 53&#176; to AB so that it catches B. Find the time to catch (sin53&#176; = 0.8, cos53&#176; = 0.6):",
+        diagram:DIAGRAMS.chase('v','53&#176;','20 m/s','150 m'),
+        opts:["10 s","5 s","7.5 s","15 s"],
+        ans:0,
+        sol:"Perpendicular match: v·sin53&#176; = 20 &#8658; v(0.8) = 20 &#8658; v = 25 m/s. Closing speed along AB = v·cos53&#176; = 25(0.6) = 15 m/s. Time = 150/15 = 10 s. Answer: 10 s."
+      },
+      {
+        q:"A is 100 m behind B. B travels at 15 m/s perpendicular to line AB, while A moves at v at 37&#176; to AB to intercept B. The interception time is (sin37&#176; = 0.6, cos37&#176; = 0.8):",
+        diagram:DIAGRAMS.chase('v','37&#176;','15 m/s','100 m'),
+        opts:["5 s","4 s","2.5 s","10 s"],
+        ans:0,
+        sol:"v·sin37&#176; = 15 &#8658; v(0.6) = 15 &#8658; v = 25 m/s. Closing speed = v·cos37&#176; = 25(0.8) = 20 m/s. Time = 100/20 = 5 s. Answer: 5 s."
+      }
+    ]
+  },
+
+  // ══ PROBLEM 21 — rain-man relative velocity ═══════════════════════════════
+  {
+    name:"Q21 · Rain–Man Relative Velocity",
+    questions:[
+      {
+        q:"A man runs west at 4 m/s and feels rain hitting him vertically downward at 3 m/s (i.e. relative to him the rain is along &#8722;j&#770;). What is the true velocity of the rain? (Take west as &#8722;i&#770;.)",
+        diagram:DIAGRAMS.rainMan('4','3'),
+        opts:["3i&#770; &#8722; 4j&#770;","4i&#770; + 3j&#770;","&#8722;3i&#770; &#8722; 4j&#770;","&#8722;4i&#770; &#8722; 3j&#770;"],
+        ans:3,
+        sol:"v&#8407;<sub>rain,man</sub> = v&#8407;<sub>rain</sub> &#8722; v&#8407;<sub>man</sub>. Man's velocity = &#8722;4i&#770;. Rain relative to man = &#8722;3j&#770; (vertical). So v&#8407;<sub>rain</sub> = v&#8407;<sub>rain,man</sub> + v&#8407;<sub>man</sub> = (&#8722;3j&#770;) + (&#8722;4i&#770;) = &#8722;4i&#770; &#8722; 3j&#770;. Answer: &#8722;4i&#770; &#8722; 3j&#770;."
+      },
+      {
+        q:"A cyclist rides east at 6 m/s (east = +i&#770;) and the rain appears to fall vertically down at 8 m/s relative to her. The actual rain velocity is:",
+        diagram:DIAGRAMS.rainMan('6','8'),
+        opts:["6i&#770; &#8722; 8j&#770;","&#8722;6i&#770; &#8722; 8j&#770;","6i&#770; + 8j&#770;","8i&#770; &#8722; 6j&#770;"],
+        ans:0,
+        sol:"v&#8407;<sub>rain</sub> = v&#8407;<sub>rain,cyclist</sub> + v&#8407;<sub>cyclist</sub> = (&#8722;8j&#770;) + (6i&#770;) = 6i&#770; &#8722; 8j&#770;. Answer: 6i&#770; &#8722; 8j&#770;."
+      },
+      {
+        q:"A stationary observer sees rain falling vertically at 5 m/s. A man then walks north at 5 m/s (north = +j&#770;, up = +k&#770;) — sorry, take north = +i&#770;. Relative to the walking man, at what angle to the vertical does the rain appear to fall?",
+        diagram:DIAGRAMS.rainMan('5','5'),
+        opts:["30&#176;","45&#176;","60&#176;","0&#176; (still vertical)"],
+        ans:1,
+        sol:"True rain = &#8722;5j&#770; (downward). Man = +5i&#770;. Rain relative to man = v&#8407;<sub>rain</sub> &#8722; v&#8407;<sub>man</sub> = &#8722;5i&#770; &#8722; 5j&#770;. Its angle from the vertical: tan&#966; = horizontal/vertical = 5/5 = 1 &#8658; &#966; = 45&#176;. Answer: 45&#176;."
+      }
+    ]
+  },
+
+  // ══ PROBLEM 35 — average acceleration from v-t graph ══════════════════════
+  {
+    name:"Q35 · Average Acceleration from v–t Graph",
+    questions:[
+      {
+        q:"For the v–t graph shown (rise 0&#8594;10 m/s by t=1 s, constant to t=3 s, then fall to 0 by t=4 s), find the average acceleration between t = 2 s and t = 4 s.",
+        diagram:DIAGRAMS.vtGraph('10','1,3,4','2','4'),
+        opts:["5 m/s&#178;","10 m/s&#178;","&#8722;5 m/s&#178;","&#8722;10 m/s&#178;"],
+        ans:2,
+        sol:"Average acceleration = &#916;v/&#916;t. At t = 2 s, v = 10 m/s (still on the flat top). At t = 4 s, v = 0. So a&#772; = (0 &#8722; 10)/(4 &#8722; 2) = &#8722;10/2 = &#8722;5 m/s&#178;. Answer: &#8722;5 m/s&#178;."
+      },
+      {
+        q:"A block's v–t graph rises from 0 to 12 m/s in 2 s, stays constant to 5 s, then drops to 0 at 6 s. Find the average acceleration between t = 0 and t = 2 s.",
+        diagram:DIAGRAMS.vtGraph('12','2,5,6','0','2'),
+        opts:["6 m/s&#178;","12 m/s&#178;","&#8722;6 m/s&#178;","3 m/s&#178;"],
+        ans:0,
+        sol:"Between t = 0 and t = 2 s velocity rises 0 &#8594; 12 m/s. a&#772; = (12 &#8722; 0)/(2 &#8722; 0) = 6 m/s&#178;. Answer: 6 m/s&#178;."
+      },
+      {
+        q:"In the v–t graph (0&#8594;20 m/s by t=2 s, flat to t=4 s, then 20&#8594;0 by t=6 s), find the average acceleration over the whole interval t = 0 to t = 6 s.",
+        diagram:DIAGRAMS.vtGraph('20','2,4,6','0','6'),
+        opts:["0","10/3 m/s&#178;","&#8722;10/3 m/s&#178;","20/6 m/s&#178;"],
+        ans:0,
+        sol:"Average acceleration over the full trip = (v<sub>final</sub> &#8722; v<sub>initial</sub>)/&#916;t = (0 &#8722; 0)/6 = 0. (The body returns to rest, so net change in velocity is zero.) Answer: 0."
+      }
+    ]
+  },
+
+  // ══ PROBLEM 36 — angle between unit vectors (assertion-reason style) ═══════
+  {
+    name:"Q36 · Angle Between i&#770; + j&#770; and Axes",
+    questions:[
+      {
+        q:"Assertion (A): The angle between (i&#770; + j&#770;) and i&#770; is 45&#176;. Reason (R): (i&#770; + j&#770;) is equally inclined to both i&#770; and j&#770;, and the angle between i&#770; and j&#770; is 90&#176;. Choose the correct option.",
+        diagram:DIAGRAMS.vecSum(1,1,'i&#770;+j&#770;'),
+        opts:["Both A and R true, and R is the correct explanation of A","Both A and R true, but R is not the correct explanation of A","A true, R false","A false, R true"],
+        ans:0,
+        sol:"cos&#952; = (i&#770;+j&#770;)&#183;i&#770; / (|i&#770;+j&#770;||i&#770;|) = 1/&#8730;2 &#8658; &#952; = 45&#176;, so A is true. By symmetry i&#770;+j&#770; is equally inclined to i&#770; and j&#770;, which are 90&#176; apart, splitting into 45&#176; each — this correctly explains A. Answer: Both true and R explains A."
+      },
+      {
+        q:"What is the angle between the vector (i&#770; + j&#770; + k&#770;) and the x-axis (i&#770;)?",
+        diagram:DIAGRAMS.vecSum(1,1,'i&#770;+j&#770;+k&#770;'),
+        opts:["cos&#8315;&#185;(1/&#8730;3)","45&#176;","60&#176;","cos&#8315;&#185;(1/&#8730;2)"],
+        ans:0,
+        sol:"cos&#952; = (i&#770;+j&#770;+k&#770;)&#183;i&#770; / (|i&#770;+j&#770;+k&#770;||i&#770;|) = 1/&#8730;3 &#8658; &#952; = cos&#8315;&#185;(1/&#8730;3) &#8776; 54.7&#176;. Answer: cos&#8315;&#185;(1/&#8730;3)."
+      },
+      {
+        q:"The angle between the vector (&#8730;3 i&#770; + j&#770;) and the x-axis is:",
+        diagram:DIAGRAMS.vecSum(1.732,1,'&#8730;3i&#770;+j&#770;'),
+        opts:["30&#176;","45&#176;","60&#176;","90&#176;"],
+        ans:0,
+        sol:"tan&#952; = (y-component)/(x-component) = 1/&#8730;3 &#8658; &#952; = 30&#176;. Answer: 30&#176;."
+      }
+    ]
+  },
+
+  // ══ PROBLEM 45 — dot product of expressions in unit vectors ═══════════════
+  {
+    name:"Q45 · Dot Product of Non-collinear Unit Vectors",
+    questions:[
+      {
+        q:"a&#770; and b&#770; are non-collinear unit vectors with |a&#770; + b&#770;| = &#8730;3. Find the value of (2a&#770; &#8722; 5b&#770;)&#183;(3a&#770; + b&#770;).",
+        diagram:DIAGRAMS.twoUnit('&#8730;3'),
+        opts:["41/2","11/2","&#8722;11/2","&#8722;41/2"],
+        ans:2,
+        sol:"|a&#770;+b&#770;|&#178; = 1 + 1 + 2(a&#770;&#183;b&#770;) = 3 &#8658; a&#770;&#183;b&#770; = 1/2. Now (2a&#770;&#8722;5b&#770;)&#183;(3a&#770;+b&#770;) = 6(a&#770;&#183;a&#770;) + 2(a&#770;&#183;b&#770;) &#8722; 15(b&#770;&#183;a&#770;) &#8722; 5(b&#770;&#183;b&#770;) = 6(1) + 2(&#189;) &#8722; 15(&#189;) &#8722; 5(1) = 6 + 1 &#8722; 7.5 &#8722; 5 = &#8722;11/2. Answer: &#8722;11/2."
+      },
+      {
+        q:"For non-collinear unit vectors a&#770; and b&#770; with |a&#770; + b&#770;| = 1, evaluate a&#770;&#183;b&#770;.",
+        diagram:DIAGRAMS.twoUnit('1'),
+        opts:["&#8722;1/2","1/2","0","&#8722;1"],
+        ans:0,
+        sol:"|a&#770;+b&#770;|&#178; = 1 + 1 + 2(a&#770;&#183;b&#770;) = 1 &#8658; 2(a&#770;&#183;b&#770;) = &#8722;1 &#8658; a&#770;&#183;b&#770; = &#8722;1/2. Answer: &#8722;1/2."
+      },
+      {
+        q:"a&#770; and b&#770; are unit vectors with |a&#770; + b&#770;| = &#8730;2. Find (a&#770; + 2b&#770;)&#183;(2a&#770; &#8722; b&#770;).",
+        diagram:DIAGRAMS.twoUnit('&#8730;2'),
+        opts:["0","1","3/2","&#8722;1/2"],
+        ans:0,
+        sol:"|a&#770;+b&#770;|&#178; = 2 + 2(a&#770;&#183;b&#770;) = 2 &#8658; a&#770;&#183;b&#770; = 0 (they are perpendicular). Then (a&#770;+2b&#770;)&#183;(2a&#770;&#8722;b&#770;) = 2(a&#770;&#183;a&#770;) &#8722; (a&#770;&#183;b&#770;) + 4(b&#770;&#183;a&#770;) &#8722; 2(b&#770;&#183;b&#770;) = 2(1) &#8722; 0 + 0 &#8722; 2(1) = 0. Answer: 0."
+      }
+    ]
+  }
+
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  ENGINE  (adapted to a variable number of questions per topic)
+// ═══════════════════════════════════════════════════════════════════════════════
+const STORAGE_KEY = 'padipucast_mt01_variations_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Shuffle option order per question, preserving correctness
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function nQ(ti){ return TOPICS_SHUFFLED[ti].questions.length; }
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Problem ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} done</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Problem ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Variation ${curQ+1} of ${n}`;
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
