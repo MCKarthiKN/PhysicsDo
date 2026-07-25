@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder · Projectile on an Inclined Plane</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:600px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Incline Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Models
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Projectile on an<br>Inclined Plane — Ladders</h1></div>
+    <p id="home-sub">Six models, easy to difficult. Each model is a ladder: 3 build-up rungs, then the original module question. Climb the rungs in order.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every model. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — inclined plane set
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+
+const DIAGRAMS = {
+
+  // g split into components on incline axes
+  inclineAxes: (al='30&#176;') => `
+    <svg viewBox="0 0 280 210" width="280" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ia1','#2563eb')}${AR('ia2','#16a34a')}${AR('ia3','#374151')}${AR('ia4','#dc2626')}${AR('ia5','#7c3aed')}</defs>
+      <polygon points="30,180 240,180 240,70" fill="#f1f5f9" stroke="#9ca3af" stroke-width="1.5"/>
+      <path d="M60,180 A30,30 0 0 0 56.6,166.1" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="64" y="175" font-size="11" fill="#6b7280" ${FS}>&#945; = ${al}</text>
+      <line x1="135" y1="125" x2="179" y2="102" stroke="#2563eb" stroke-width="2.4" marker-end="url(#ia1)"/>
+      <text x="183" y="101" font-size="11" fill="#2563eb" ${FS}>x (along)</text>
+      <line x1="135" y1="125" x2="112" y2="81" stroke="#16a34a" stroke-width="2.4" marker-end="url(#ia2)"/>
+      <text x="82" y="76" font-size="11" fill="#16a34a" ${FS}>y (perp.)</text>
+      <line x1="135" y1="125" x2="135" y2="170" stroke="#374151" stroke-width="2.4" marker-end="url(#ia3)"/>
+      <text x="139" y="152" font-size="11" fill="#374151" ${FS} font-weight="600">g</text>
+      <line x1="135" y1="125" x2="95" y2="146" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#ia4)"/>
+      <text x="44" y="150" font-size="10" fill="#dc2626" ${FS}>g sin&#945;</text>
+      <line x1="135" y1="125" x2="156" y2="165" stroke="#7c3aed" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#ia5)"/>
+      <text x="160" y="176" font-size="10" fill="#7c3aed" ${FS}>g cos&#945;</text>
+      <circle cx="135" cy="125" r="3.5" fill="#374151"/>
+    </svg>`,
+
+  // u split into components along/perpendicular to incline
+  uComponents: (uLbl='u = 20 m/s', th='30&#176;') => `
+    <svg viewBox="0 0 280 210" width="280" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('uc1','#2563eb')}${AR('uc2','#16a34a')}${AR('uc3','#dc2626')}</defs>
+      <polygon points="30,180 240,180 240,70" fill="#f1f5f9" stroke="#9ca3af" stroke-width="1.5"/>
+      <path d="M60,180 A30,30 0 0 0 56.6,166.1" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="64" y="175" font-size="11" fill="#6b7280" ${FS}>&#945;</text>
+      <circle cx="90" cy="149" r="3.5" fill="#374151"/>
+      <line x1="90" y1="149" x2="122" y2="98" stroke="#2563eb" stroke-width="2.6" marker-end="url(#uc1)"/>
+      <text x="118" y="90" font-size="11" fill="#2563eb" ${FS} font-weight="600">${uLbl}</text>
+      <line x1="90" y1="149" x2="136" y2="125" stroke="#16a34a" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#uc2)"/>
+      <text x="140" y="130" font-size="10" fill="#16a34a" ${FS}>u cos${th}</text>
+      <line x1="90" y1="149" x2="76" y2="122" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#uc3)"/>
+      <text x="24" y="118" font-size="10" fill="#dc2626" ${FS}>u sin${th}</text>
+      <path d="M109.5,138.8 A22,22 0 0 0 101.8,130.4" fill="none" stroke="#6b7280" stroke-width="1.1"/>
+      <text x="109" y="128" font-size="10" fill="#6b7280" ${FS}>${th}</text>
+    </svg>`,
+
+  // launch at angle with incline, trajectory lands back on the incline
+  tofIncline: (uLbl='u', th='&#952;', al='&#945;', rLbl='') => `
+    <svg viewBox="0 0 260 210" width="260" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('tf1','#2563eb')}${AR('tf2','#dc2626')}</defs>
+      <polygon points="40,185 200,185 200,55" fill="#f1f5f9" stroke="#9ca3af" stroke-width="1.5"/>
+      <path d="M70,185 A30,30 0 0 0 63.3,166.1" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="74" y="179" font-size="11" fill="#6b7280" ${FS}>${al}</text>
+      <circle cx="80" cy="153" r="3.5" fill="#374151"/>
+      <line x1="80" y1="153" x2="100" y2="101" stroke="#2563eb" stroke-width="2.6" marker-end="url(#tf1)"/>
+      <text x="102" y="96" font-size="11" fill="#2563eb" ${FS} font-weight="600">${uLbl}</text>
+      <path d="M95.5,140.4 A20,20 0 0 0 87.1,134.3" fill="none" stroke="#6b7280" stroke-width="1.1"/>
+      <text x="99" y="132" font-size="10" fill="#6b7280" ${FS}>${th}</text>
+      <path d="M80,153 Q120,60 139,104" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="5,3"/>
+      <circle cx="139" cy="104" r="3.5" fill="#dc2626"/>
+      ${rLbl?`<line x1="80" y1="153" x2="139" y2="104" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2" marker-end="url(#tf2)"/><text x="112" y="144" font-size="11" fill="#dc2626" ${FS} font-weight="600">${rLbl}</text>`:''}
+    </svg>`,
+
+  // launch angle measured from the horizontal, up the incline, range marked
+  horizAngleIncline: (uLbl='u', th='&#952;', al='&#945;', rLbl='R') => `
+    <svg viewBox="0 0 280 210" width="280" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ha1','#2563eb')}${AR('ha2','#dc2626')}</defs>
+      <polygon points="30,185 245,185 245,85" fill="#f1f5f9" stroke="#9ca3af" stroke-width="1.5"/>
+      <circle cx="30" cy="185" r="3.5" fill="#374151"/>
+      <text x="16" y="200" font-size="11" fill="#374151" ${FS} font-weight="600">O</text>
+      <line x1="30" y1="185" x2="57.5" y2="137.4" stroke="#2563eb" stroke-width="2.6" marker-end="url(#ha1)"/>
+      <text x="60" y="131" font-size="11" fill="#2563eb" ${FS} font-weight="600">${uLbl}</text>
+      <path d="M54,185 A24,24 0 0 0 42,164.2" fill="none" stroke="#6b7280" stroke-width="1.1"/>
+      <text x="52" y="172" font-size="10" fill="#6b7280" ${FS}>${th}</text>
+      <path d="M76,185 A46,46 0 0 0 71.7,165.6" fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="3,2"/>
+      <text x="80" y="178" font-size="10" fill="#6b7280" ${FS}>${al}</text>
+      <path d="M30,185 Q100,38 184.8,113" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="5,3"/>
+      <circle cx="184.8" cy="113" r="3.5" fill="#dc2626"/>
+      <line x1="30" y1="185" x2="184.8" y2="113" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2" marker-end="url(#ha2)"/>
+      <text x="106" y="166" font-size="11" fill="#dc2626" ${FS} font-weight="600">${rLbl}</text>
+    </svg>`,
+
+  // level-ground maximum range
+  flatRange: () => `
+    <svg viewBox="0 0 260 165" width="260" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('fr1','#2563eb')}${AR('fr2','#dc2626')}</defs>
+      <line x1="20" y1="135" x2="245" y2="135" stroke="#9ca3af" stroke-width="1.5"/>
+      <path d="M40,135 Q130,20 220,135" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="5,3"/>
+      <line x1="40" y1="135" x2="72" y2="103" stroke="#2563eb" stroke-width="2.6" marker-end="url(#fr1)"/>
+      <text x="72" y="96" font-size="11" fill="#2563eb" ${FS} font-weight="600">v</text>
+      <path d="M62,135 A22,22 0 0 0 55.5,119.5" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="64" y="128" font-size="10" fill="#6b7280" ${FS}>45&#176;</text>
+      <line x1="40" y1="147" x2="220" y2="147" stroke="#dc2626" stroke-width="1.5" marker-end="url(#fr2)"/>
+      <text x="104" y="161" font-size="11" fill="#dc2626" ${FS} font-weight="600">R max = ?</text>
+    </svg>`,
+
+  // two throws from a point on the slope: one up, one down
+  upDown: (upL='R up', downL='R down') => `
+    <svg viewBox="0 0 280 210" width="280" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ud1','#2563eb')}${AR('ud2','#ea580c')}</defs>
+      <polygon points="20,185 250,185 250,65" fill="#f1f5f9" stroke="#9ca3af" stroke-width="1.5"/>
+      <circle cx="135" cy="125" r="4" fill="#374151"/>
+      <text x="128" y="141" font-size="11" fill="#374151" ${FS} font-weight="600">O</text>
+      <path d="M135,125 Q185,72 199.4,91.4" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="5,3"/>
+      <circle cx="199.4" cy="91.4" r="3" fill="#2563eb"/>
+      <text x="186" y="76" font-size="10" fill="#2563eb" ${FS} font-weight="600">${upL}</text>
+      <path d="M135,125 Q75,50 43,173" fill="none" stroke="#ea580c" stroke-width="1.8" stroke-dasharray="5,3"/>
+      <circle cx="43" cy="173" r="3" fill="#ea580c"/>
+      <text x="30" y="192" font-size="10" fill="#ea580c" ${FS} font-weight="600">${downL}</text>
+      <text x="150" y="200" font-size="10" fill="#6b7280" ${FS}>same speed u both ways</text>
+    </svg>`,
+
+  // horizontal throw from a tower (basic)
+  horizTower: (v='v') => `
+    <svg viewBox="0 0 260 200" width="260" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ht1','#2563eb')}${AR('ht2','#dc2626')}</defs>
+      <line x1="20" y1="180" x2="245" y2="180" stroke="#9ca3af" stroke-width="1.5"/>
+      <rect x="35" y="45" width="26" height="135" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+      <circle cx="61" cy="50" r="3.5" fill="#374151"/>
+      <line x1="61" y1="50" x2="125" y2="50" stroke="#2563eb" stroke-width="2.5" marker-end="url(#ht1)"/>
+      <text x="78" y="42" font-size="11" fill="#2563eb" ${FS} font-weight="600">${v}</text>
+      <path d="M61,50 Q140,66 190,178" fill="none" stroke="#f59e0b" stroke-width="1.7" stroke-dasharray="4,3"/>
+      <line x1="61" y1="34" x2="145" y2="34" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="3,2"/>
+      <text x="84" y="28" font-size="10" fill="#6b7280" ${FS}>x = ${v}t</text>
+      <line x1="145" y1="50" x2="145" y2="102" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4,3" marker-end="url(#ht2)"/>
+      <text x="150" y="82" font-size="10" fill="#dc2626" ${FS}>drop = ?</text>
+    </svg>`,
+
+  // horizontal throw from the top of a 45° incline
+  horizIncline45: (v='v') => `
+    <svg viewBox="0 0 260 235" width="260" height="235" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('h41','#2563eb')}${AR('h42','#dc2626')}${AR('h43','#16a34a')}</defs>
+      <polygon points="50,40 230,220 50,220" fill="#f1f5f9" stroke="#9ca3af" stroke-width="1.5"/>
+      <circle cx="50" cy="40" r="3.5" fill="#374151"/>
+      <text x="34" y="38" font-size="11" fill="#374151" ${FS} font-weight="600">O</text>
+      <line x1="50" y1="40" x2="112" y2="40" stroke="#2563eb" stroke-width="2.6" marker-end="url(#h41)"/>
+      <text x="70" y="33" font-size="11" fill="#2563eb" ${FS} font-weight="600">${v}</text>
+      <path d="M76,40 A26,26 0 0 1 68.4,58.4" fill="none" stroke="#6b7280" stroke-width="1.1"/>
+      <text x="80" y="60" font-size="10" fill="#6b7280" ${FS}>45&#176;</text>
+      <path d="M50,40 Q118,52 170,160" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="5,3"/>
+      <circle cx="170" cy="160" r="3.5" fill="#dc2626"/>
+      <text x="176" y="160" font-size="11" fill="#dc2626" ${FS} font-weight="600">P</text>
+      <line x1="50" y1="22" x2="170" y2="22" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="3,2"/>
+      <text x="86" y="16" font-size="10" fill="#6b7280" ${FS}>x = ${v}t</text>
+      <line x1="170" y1="40" x2="170" y2="156" stroke="#16a34a" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#h43)"/>
+      <text x="176" y="100" font-size="10" fill="#16a34a" ${FS}>y = &#189;gt&#178;</text>
+      <line x1="50" y1="40" x2="166" y2="156" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2"/>
+      <text x="72" y="102" font-size="11" fill="#dc2626" ${FS} font-weight="600">s = ?</text>
+    </svg>`,
+
+  // throw perpendicular to the incline surface
+  perpProj: (uLbl='u', al='&#945;') => `
+    <svg viewBox="0 0 260 210" width="260" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('pp1','#2563eb')}${AR('pp2','#dc2626')}</defs>
+      <polygon points="40,185 230,185 230,90" fill="#f1f5f9" stroke="#9ca3af" stroke-width="1.5"/>
+      <path d="M72,185 A32,32 0 0 0 68.6,170.7" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="76" y="179" font-size="11" fill="#6b7280" ${FS}>${al}</text>
+      <circle cx="144.5" cy="132.7" r="3.5" fill="#374151"/>
+      <text x="151" y="146" font-size="11" fill="#374151" ${FS} font-weight="600">A</text>
+      <line x1="144.5" y1="132.7" x2="123" y2="89.8" stroke="#2563eb" stroke-width="2.6" marker-end="url(#pp1)"/>
+      <text x="94" y="84" font-size="11" fill="#2563eb" ${FS} font-weight="600">${uLbl}</text>
+      <polyline points="151.7,129.1 148.1,121.9 140.9,125.5" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <path d="M144.5,132.7 Q110,72 74.2,167.9" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="5,3"/>
+      <circle cx="74.2" cy="167.9" r="3.5" fill="#dc2626"/>
+      <text x="60" y="182" font-size="11" fill="#dc2626" ${FS} font-weight="600">B</text>
+      <line x1="144.5" y1="132.7" x2="74.2" y2="167.9" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2" marker-end="url(#pp2)"/>
+      <text x="98" y="163" font-size="11" fill="#dc2626" ${FS} font-weight="600">R</text>
+    </svg>`,
+
+  // trajectory that lands perpendicular to the incline
+  perpLand: (th='&#952;', al='&#945;') => `
+    <svg viewBox="0 0 280 210" width="280" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('pl1','#2563eb')}${AR('pl2','#dc2626')}</defs>
+      <line x1="15" y1="185" x2="95" y2="185" stroke="#9ca3af" stroke-width="1.5"/>
+      <polygon points="95,185 250,185 250,90" fill="#f1f5f9" stroke="#9ca3af" stroke-width="1.5"/>
+      <circle cx="35" cy="185" r="3.5" fill="#374151"/>
+      <text x="22" y="200" font-size="11" fill="#374151" ${FS} font-weight="600">O</text>
+      <line x1="35" y1="185" x2="56" y2="140" stroke="#2563eb" stroke-width="2.6" marker-end="url(#pl1)"/>
+      <text x="58" y="134" font-size="11" fill="#2563eb" ${FS} font-weight="600">u</text>
+      <path d="M57,185 A22,22 0 0 0 44.3,165.1" fill="none" stroke="#6b7280" stroke-width="1.1"/>
+      <text x="58" y="176" font-size="10" fill="#6b7280" ${FS}>${th}</text>
+      <path d="M125,185 A30,30 0 0 0 120.6,169.3" fill="none" stroke="#6b7280" stroke-width="1.1"/>
+      <text x="129" y="179" font-size="10" fill="#6b7280" ${FS}>${al}</text>
+      <path d="M35,185 Q100,30 174.4,105.8" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="5,3"/>
+      <line x1="174.4" y1="105.8" x2="188" y2="128" stroke="#dc2626" stroke-width="2.4" marker-end="url(#pl2)"/>
+      <circle cx="188" cy="128" r="3.5" fill="#dc2626"/>
+      <text x="196" y="140" font-size="11" fill="#dc2626" ${FS} font-weight="600">P</text>
+      <polyline points="196.5,122.8 191.3,114.2 182.8,119.5" fill="none" stroke="#374151" stroke-width="1.3"/>
+      <text x="200" y="112" font-size="10" fill="#374151" ${FS}>90&#176;</text>
+    </svg>`
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  LADDER DATA — 6 models, each: 3 build-up rungs + the original module question
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  // ══ MODEL 1 — incline axes: splitting g and u, first time of flight ═════════
+  {
+    name:"Model 1 &#183; Incline Axes: Splitting g and u",
+    questions:[
+      {
+        q:"A smooth plane is inclined at 30&#176; to the horizontal. We take the x-axis along the incline and the y-axis perpendicular to it. What is the size of the component of g <em>perpendicular</em> to the incline? (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.inclineAxes('30&#176;'),
+        opts:["5&#8730;3 m/s&#178;","5 m/s&#178;","10 m/s&#178;","10&#8730;3 m/s&#178;"],
+        ans:0,
+        sol:"On an incline of angle &#945;, gravity splits into two parts: g sin&#945; along the slope (pulling down the slope) and g cos&#945; perpendicular to the slope. Here &#945; = 30&#176;, so the perpendicular part = g cos30&#176; = 10 &#215; (&#8730;3/2) = 5&#8730;3 m/s&#178;. Remember this split — every question in this chapter uses it."
+      },
+      {
+        q:"A ball is thrown with speed u = 20 m/s at an angle of 30&#176; with the <em>surface</em> of an incline. Find the components of u along the incline and perpendicular to the incline.",
+        diagram:DIAGRAMS.uComponents('u = 20 m/s','30&#176;'),
+        opts:["10&#8730;3 m/s and 10 m/s","10 m/s and 10&#8730;3 m/s","20 m/s and 0","10 m/s and 10 m/s"],
+        ans:0,
+        sol:"The 30&#176; angle is measured from the incline surface. Along the incline: u cos30&#176; = 20 &#215; (&#8730;3/2) = 10&#8730;3 m/s. Perpendicular to the incline: u sin30&#176; = 20 &#215; (1/2) = 10 m/s. Simple rule: the side touching the angle takes cos, the opposite side takes sin."
+      },
+      {
+        q:"A particle is projected from the foot of a 60&#176; incline, at 30&#176; with the incline surface, with speed 10 m/s. Find the time of flight. (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.tofIncline('u = 10 m/s','30&#176;','60&#176;'),
+        opts:["2 s","1 s","&#8730;2 s","4 s"],
+        ans:0,
+        sol:"Look only at the motion perpendicular to the incline. Starting speed = u sin30&#176; = 5 m/s (away from the plane). Acceleration = g cos60&#176; = 5 m/s&#178; (towards the plane). The particle lands when the perpendicular displacement becomes zero again: T = 2u sin&#952;/(g cos&#945;) = 2(5)/5 = 2 s."
+      },
+      {
+        q:"&#9733; Original (module): A particle is projected onto an inclined plane with speed 10 m/s, at 30&#176; with the incline. The incline makes 45&#176; with the horizontal. The time of flight is: (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.tofIncline('u = 10 m/s','30&#176;','45&#176;'),
+        opts:["&#8730;2 s","1/&#8730;2 s","1 s","None of these"],
+        ans:0,
+        sol:"Same steps as Rung 3, only the numbers change. T = 2u sin&#952;/(g cos&#945;), where &#952; = angle with the incline and &#945; = incline angle. T = 2(10)(sin30&#176;)/(10 cos45&#176;) = 10/(10/&#8730;2) = &#8730;2 s."
+      }
+    ]
+  },
+
+  // ══ MODEL 2 — range along the incline ══════════════════════════════════════
+  {
+    name:"Model 2 &#183; Range Along the Incline",
+    questions:[
+      {
+        q:"Using incline axes on a plane of angle 30&#176; (x up the slope, y perpendicular to it), a projectile in flight has acceleration components: (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.inclineAxes('30&#176;'),
+        opts:["a<sub>x</sub> = &#8722;5 m/s&#178;, a<sub>y</sub> = &#8722;5&#8730;3 m/s&#178;","a<sub>x</sub> = &#8722;5&#8730;3 m/s&#178;, a<sub>y</sub> = &#8722;5 m/s&#178;","a<sub>x</sub> = &#8722;10 m/s&#178;, a<sub>y</sub> = 0","a<sub>x</sub> = 0, a<sub>y</sub> = &#8722;10 m/s&#178;"],
+        ans:0,
+        sol:"Gravity points straight down, so in incline axes it has two parts: along the slope a<sub>x</sub> = &#8722;g sin30&#176; = &#8722;5 m/s&#178; (slows the up-slope motion) and perpendicular a<sub>y</sub> = &#8722;g cos30&#176; = &#8722;5&#8730;3 m/s&#178;. This is the big difference from flat ground — on an incline, there is acceleration along x too."
+      },
+      {
+        q:"A projectile is fired with u = 30 m/s at 60&#176; from the <em>horizontal</em>, up a 30&#176; incline. Its initial velocity component <em>along the incline</em> is:",
+        diagram:DIAGRAMS.horizAngleIncline('u = 30 m/s','60&#176;','30&#176;','R'),
+        opts:["15&#8730;3 m/s","15 m/s","30 m/s","10&#8730;3 m/s"],
+        ans:0,
+        sol:"The angle between the velocity and the incline surface is (&#952; &#8722; &#945;) = 60&#176; &#8722; 30&#176; = 30&#176;. Along the incline: u cos(&#952; &#8722; &#945;) = 30 cos30&#176; = 15&#8730;3 m/s. Perpendicular: u sin(&#952; &#8722; &#945;) = 30 sin30&#176; = 15 m/s."
+      },
+      {
+        q:"On an incline, a projectile starts with along-incline velocity 10 m/s. The along-incline acceleration is &#8722;5 m/s&#178; (this is g sin&#945;). The time of flight is 2 s. Find the range along the incline.",
+        diagram:DIAGRAMS.tofIncline('u&#8339; = 10 m/s','','&#945;','R = ?'),
+        opts:["10 m","20 m","30 m","5 m"],
+        ans:0,
+        sol:"Range along the incline is just 1-D motion along x: R = u<sub>x</sub>T + &#189;a<sub>x</sub>T&#178; = 10(2) &#8722; &#189;(5)(2&#178;) = 20 &#8722; 10 = 10 m. The only new thing compared to flat ground: the &#189;a<sub>x</sub>T&#178; term."
+      },
+      {
+        q:"&#9733; Original (module, Illustration 10): A particle is projected with a velocity of 30 m/s at an angle 60&#176; above the horizontal on a slope of inclination 30&#176;. Find its range along the incline. (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.horizAngleIncline('u = 30 m/s','60&#176;','30&#176;','R = ?'),
+        opts:["60 m","30 m","90 m","45 m"],
+        ans:0,
+        sol:"Step 1 — components (Rung 2): u<sub>x</sub> = 30 cos30&#176; = 15&#8730;3 m/s, u<sub>y</sub> = 30 sin30&#176; = 15 m/s; a<sub>x</sub> = &#8722;g sin30&#176; = &#8722;5, a<sub>y</sub> = &#8722;g cos30&#176; = &#8722;5&#8730;3. Step 2 — time of flight (Model 1): T = 2u<sub>y</sub>/(g cos&#945;) = 2(15)/(5&#8730;3) = 2&#8730;3 s. Step 3 — range (Rung 3): R = u<sub>x</sub>T + &#189;a<sub>x</sub>T&#178; = 15&#8730;3(2&#8730;3) &#8722; &#189;(5)(2&#8730;3)&#178; = 90 &#8722; 30 = 60 m."
+      }
+    ]
+  },
+
+  // ══ MODEL 3 — maximum range up and down ════════════════════════════════════
+  {
+    name:"Model 3 &#183; Maximum Range Up &amp; Down the Incline",
+    questions:[
+      {
+        q:"On level ground, a ball is thrown with speed v. What is the maximum horizontal range, and at what angle does it happen?",
+        diagram:DIAGRAMS.flatRange(),
+        opts:["v&#178;/g at 45&#176;","v&#178;/2g at 45&#176;","2v&#178;/g at 60&#176;","v&#178;/g at 30&#176;"],
+        ans:0,
+        sol:"R = v&#178; sin2&#952;/g. This is biggest when sin2&#952; = 1, i.e. &#952; = 45&#176;. So R<sub>max</sub> = v&#178;/g. Keep this answer in mind — the incline formulas must come back to it when the incline angle becomes zero."
+      },
+      {
+        q:"For maximum range <em>up</em> an incline of angle &#945;, the throw direction should exactly bisect the angle between the incline surface and the vertical. This gives &#952; = 45&#176; + &#945;/2 from the horizontal. For a 30&#176; incline, this angle is:",
+        diagram:DIAGRAMS.horizAngleIncline('u','&#952; = ?','&#945; = 30&#176;','R max'),
+        opts:["60&#176;","45&#176;","75&#176;","30&#176;"],
+        ans:0,
+        sol:"&#952; = 45&#176; + &#945;/2 = 45&#176; + 15&#176; = 60&#176;. Check the bisector idea: the incline is at 30&#176; and the vertical is at 90&#176;; halfway between them is (30&#176; + 90&#176;)/2 = 60&#176;. Also check &#945; = 0: it gives 45&#176;, the flat-ground answer from Rung 1."
+      },
+      {
+        q:"A bullet is fired with speed v from the bottom of a 30&#176; incline. Using R<sub>max</sub> (up the plane) = v&#178;/[g(1 + sin&#945;)], the maximum possible range up this incline is:",
+        diagram:DIAGRAMS.horizAngleIncline('v','60&#176;','30&#176;','R max = ?'),
+        opts:["2v&#178;/3g","v&#178;/g","v&#178;/2g","3v&#178;/2g"],
+        ans:0,
+        sol:"R<sub>max</sub> = v&#178;/[g(1 + sin30&#176;)] = v&#178;/[g(1 + 0.5)] = 2v&#178;/3g. Check: put &#945; = 0 and you get v&#178;/g — the flat-ground answer. Companion formula: down the plane, R<sub>max</sub> = v&#178;/[g(1 &#8722; sin&#945;)], which is larger. Both are needed in the final rung."
+      },
+      {
+        q:"&#9733; Original (module): For a given velocity of projection from a point on an inclined plane, the maximum range down the plane is three times the maximum range up the incline. Find the angle of inclination of the inclined plane.",
+        diagram:DIAGRAMS.upDown('R up','R down = 3 &#215; R up'),
+        opts:["30&#176;","45&#176;","60&#176;","37&#176;"],
+        ans:0,
+        sol:"Take the ratio of the two formulas from Rung 3: R<sub>down</sub>/R<sub>up</sub> = (1 + sin&#945;)/(1 &#8722; sin&#945;) = 3. So 1 + sin&#945; = 3 &#8722; 3 sin&#945; &#8658; 4 sin&#945; = 2 &#8658; sin&#945; = 1/2 &#8658; &#945; = 30&#176;."
+      }
+    ]
+  },
+
+  // ══ MODEL 4 — horizontal throw onto a 45° incline ══════════════════════════
+  {
+    name:"Model 4 &#183; Horizontal Throw onto a 45&#176; Incline",
+    questions:[
+      {
+        q:"A ball is thrown horizontally with speed v from the top of a tower. After time t, how far has it fallen vertically?",
+        diagram:DIAGRAMS.horizTower('v'),
+        opts:["&#189;gt&#178;","gt&#178;","gt","vt"],
+        ans:0,
+        sol:"Horizontal and vertical motions are independent. Vertically the ball starts from rest, so the drop is y = &#189;gt&#178;. Horizontally it keeps moving at constant speed: x = vt. These two lines are the whole model."
+      },
+      {
+        q:"The same ball is thrown horizontally with speed v from the top edge of a 45&#176; incline. On a 45&#176; slope, the vertical drop equals the horizontal distance (y = x). Find the time when the ball meets the slope.",
+        diagram:DIAGRAMS.horizIncline45('v'),
+        opts:["2v/g","v/g","v/2g","&#8730;2 v/g"],
+        ans:0,
+        sol:"Put y = x: &#189;gt&#178; = vt &#8658; t = 2v/g. This works because a 45&#176; slope goes down exactly 1 m for every 1 m it goes across."
+      },
+      {
+        q:"In the same setup, find the horizontal distance x covered when the ball strikes the 45&#176; incline.",
+        diagram:DIAGRAMS.horizIncline45('v'),
+        opts:["2v&#178;/g","v&#178;/g","v&#178;/2g","4v&#178;/g"],
+        ans:0,
+        sol:"x = vt = v &#215; (2v/g) = 2v&#178;/g. And since y = x on this slope, the vertical drop is also 2v&#178;/g. Now only one small step is left for the original question."
+      },
+      {
+        q:"&#9733; Original (module): A ball is projected horizontally with a speed v from the top of a plane inclined at 45&#176; with the horizontal. How far from the point of projection will the ball strike the plane?",
+        diagram:DIAGRAMS.horizIncline45('v'),
+        opts:["&#8730;2 &#215; (2v&#178;/g)","v&#178;/g","&#8730;2 v&#178;/g","2v&#178;/g"],
+        ans:0,
+        sol:"From the last two rungs: x = 2v&#178;/g and y = 2v&#178;/g. The question asks the distance from the point of projection, which is along the slope — the diagonal of the x-y triangle: s = &#8730;(x&#178; + y&#178;) = &#8730;2 &#215; (2v&#178;/g). Common mistake: stopping at 2v&#178;/g, which is only the horizontal part."
+      }
+    ]
+  },
+
+  // ══ MODEL 5 — throw perpendicular to the incline ═══════════════════════════
+  {
+    name:"Model 5 &#183; Throw Perpendicular to the Incline",
+    questions:[
+      {
+        q:"A ball is projected with speed u <em>perpendicular</em> to a 30&#176; incline. In incline axes (x along the slope, y perpendicular), its initial velocity components are:",
+        diagram:DIAGRAMS.perpProj('u','30&#176;'),
+        opts:["u<sub>x</sub> = 0, u<sub>y</sub> = u","u<sub>x</sub> = u, u<sub>y</sub> = 0","u<sub>x</sub> = u cos30&#176;, u<sub>y</sub> = u sin30&#176;","u<sub>x</sub> = u sin30&#176;, u<sub>y</sub> = u cos30&#176;"],
+        ans:0,
+        sol:"Perpendicular means the throw is along the y-axis itself. So all of u is perpendicular (u<sub>y</sub> = u) and nothing is along the slope (u<sub>x</sub> = 0). But gravity still has a part along the slope (g sin&#945;), so the ball drifts down the slope while it is in the air. That drift is the range."
+      },
+      {
+        q:"For this perpendicular throw (u = 10 m/s, incline 30&#176;), find the time of flight. (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.perpProj('u = 10 m/s','30&#176;'),
+        opts:["4/&#8730;3 s","2/&#8730;3 s","&#8730;3 s","2&#8730;3 s"],
+        ans:0,
+        sol:"Perpendicular motion: starts at u, acceleration g cos&#945; towards the plane. The ball returns to the plane when its perpendicular displacement is zero: T = 2u/(g cos&#945;) = 2(10)/(10 &#215; &#8730;3/2) = 20/(5&#8730;3) = 4/&#8730;3 s."
+      },
+      {
+        q:"A ball is projected at 5 m/s perpendicular to a 45&#176; incline. While in the air, it slides along the slope direction, starting from rest, with acceleration g sin45&#176;. How far along the incline does it move before landing? (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.perpProj('u = 5 m/s','45&#176;'),
+        opts:["5&#8730;2 m","5 m","10 m","&#8730;2 m"],
+        ans:0,
+        sol:"First the time: T = 2u/(g cos45&#176;) = 10/(10/&#8730;2) = &#8730;2 s. Then the along-slope motion: starts from rest, so distance = &#189;(g sin45&#176;)T&#178; = &#189;(10/&#8730;2)(2) = 10/&#8730;2 = 5&#8730;2 m."
+      },
+      {
+        q:"&#9733; Original (module): A ball is projected from point A with a velocity of 10 m/s perpendicular to a 30&#176; inclined plane, as shown in the figure. The range of the ball on the inclined plane is:",
+        diagram:DIAGRAMS.perpProj('u = 10 m/s','30&#176;'),
+        opts:["40/3 m","20/13 m","13/20 m","13/40 m"],
+        ans:0,
+        sol:"Same two steps as Rung 3. Time: T = 2u/(g cos30&#176;) = 20/(5&#8730;3) = 4/&#8730;3 s. Along the slope: starts from rest, acceleration g sin30&#176; = 5 m/s&#178;. Range = &#189;(5)(4/&#8730;3)&#178; = &#189;(5)(16/3) = 40/3 m."
+      }
+    ]
+  },
+
+  // ══ MODEL 6 — landing perpendicular to the incline ═════════════════════════
+  {
+    name:"Model 6 &#183; Landing Perpendicular to the Incline",
+    questions:[
+      {
+        q:"A projectile lands <em>perpendicular</em> to an inclined plane. At the moment it hits, which part of its velocity is zero?",
+        diagram:DIAGRAMS.perpLand('&#952;','&#945;'),
+        opts:["The component along the incline","The component perpendicular to the incline","The horizontal component","The vertical component"],
+        ans:0,
+        sol:"If the final velocity is exactly perpendicular to the surface, it has no part parallel to the surface. So at impact, the along-incline velocity is zero. This one idea unlocks the whole model."
+      },
+      {
+        q:"A projectile is launched at angle (&#952; &#8722; &#945;) with an incline of angle &#945;. Its along-incline velocity is u cos(&#952; &#8722; &#945;), and the along-incline retardation is g sin&#945;. At what time does the along-incline velocity become zero?",
+        diagram:DIAGRAMS.perpLand('&#952;','&#945;'),
+        opts:["u cos(&#952; &#8722; &#945;)/(g sin&#945;)","u sin(&#952; &#8722; &#945;)/(g cos&#945;)","2u sin(&#952; &#8722; &#945;)/(g cos&#945;)","u/(g sin&#945;)"],
+        ans:0,
+        sol:"v<sub>x</sub> = u cos(&#952; &#8722; &#945;) &#8722; (g sin&#945;)t = 0 &#8658; t = u cos(&#952; &#8722; &#945;)/(g sin&#945;). Also recall the time of flight: T = 2u sin(&#952; &#8722; &#945;)/(g cos&#945;). For a perpendicular landing, these two times must be equal — that is the final rung."
+      },
+      {
+        q:"A projectile launched at 30&#176; with an incline lands perpendicular to it. The condition for this is cot(&#952; &#8722; &#945;) = 2 tan&#945;. With (&#952; &#8722; &#945;) = 30&#176;, find tan&#945;.",
+        diagram:DIAGRAMS.perpLand('30&#176; with incline','&#945; = ?'),
+        opts:["&#8730;3/2","&#8730;3","1/&#8730;3","2/&#8730;3"],
+        ans:0,
+        sol:"cot30&#176; = &#8730;3 = 2 tan&#945; &#8658; tan&#945; = &#8730;3/2. (You will prove the condition itself in the final rung — here just practise using it.)"
+      },
+      {
+        q:"&#9733; Original (module): A projectile is fired at an angle &#952; with the horizontal. Find the condition under which it lands perpendicular on an inclined plane of inclination &#945;, as shown in the figure.",
+        diagram:DIAGRAMS.perpLand('&#952;','&#945;'),
+        opts:["cot(&#952; &#8722; &#945;) = 2 tan&#945;","sin &#945; = cos(&#952; &#8722; &#945;)","cos &#945; = sin(&#952; &#8722; &#945;)","tan &#952; = cot(&#952; &#8722; &#945;)"],
+        ans:0,
+        sol:"Perpendicular landing means the along-incline velocity is zero exactly at landing (Rung 1). So the time from Rung 2 must equal the time of flight: u cos(&#952; &#8722; &#945;)/(g sin&#945;) = 2u sin(&#952; &#8722; &#945;)/(g cos&#945;). Cross-multiply: cos(&#952; &#8722; &#945;) cos&#945; = 2 sin(&#952; &#8722; &#945;) sin&#945; &#8658; cot(&#952; &#8722; &#945;) = 2 tan&#945;."
+      }
+    ]
+  }
+
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  ENGINE (variable question count per topic)
+// ═══════════════════════════════════════════════════════════════════════════════
+const STORAGE_KEY = 'padipucast_incline_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Shuffle option order per question, keep the correct answer tracked
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=(i===n-1)?'&#9733;'.replace('&#9733;','★'):(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
