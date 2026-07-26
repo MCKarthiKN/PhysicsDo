@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder · Electromagnetic Induction</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> EMI Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Models
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Electromagnetic Induction<br>— Question Ladders</h1></div>
+    <p id="home-sub">Four models, easy to difficult. Each is a ladder: 3 build-up rungs, then the original archive question (★). Climb the rungs in order.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every model. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — EMI set
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+// a field of dots (out of page) or crosses (into page)
+function fieldDots(x,y,w,h,cols,rows,sym,color){
+  let s=''; const dx=w/cols, dy=h/rows;
+  for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){
+    const cx=x+dx*(i+0.5), cy=y+dy*(j+0.5);
+    if(sym==='dot') s+=`<circle cx="${cx}" cy="${cy}" r="1.6" fill="${color}"/>`;
+    else s+=`<g stroke="${color}" stroke-width="1"><line x1="${cx-2.4}" y1="${cy-2.4}" x2="${cx+2.4}" y2="${cy+2.4}"/><line x1="${cx-2.4}" y1="${cy+2.4}" x2="${cx+2.4}" y2="${cy-2.4}"/></g>`;
+  }
+  return s;
+}
+
+const DIAGRAMS = {
+
+  // bar magnet approaching a coil
+  magnetCoil: (dir='approaching', poleLabel='N') => `
+    <svg viewBox="0 0 300 170" width="300" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('mc1','#dc2626')}${AR('mc2','#2563eb')}</defs>
+      <!-- coil -->
+      <g stroke="#b45309" stroke-width="2" fill="none">
+        ${[0,1,2,3,4,5].map(i=>`<ellipse cx="${196+i*11}" cy="95" rx="7" ry="30"/>`).join('')}
+      </g>
+      <line x1="196" y1="65" x2="196" y2="30" stroke="#374151" stroke-width="1.4"/>
+      <line x1="251" y1="65" x2="251" y2="30" stroke="#374151" stroke-width="1.4"/>
+      <circle cx="215" cy="20" r="14" fill="#f3f4f6" stroke="#374151" stroke-width="1.4"/>
+      <text x="210" y="24" font-size="11" fill="#374151" ${FS}>G</text>
+      <line x1="196" y1="30" x2="205" y2="24" stroke="#374151" stroke-width="1.4"/>
+      <line x1="251" y1="30" x2="226" y2="24" stroke="#374151" stroke-width="1.4"/>
+      <!-- magnet -->
+      <rect x="40" y="80" width="70" height="30" fill="#fecaca" stroke="#dc2626" stroke-width="1.4"/>
+      <rect x="75" y="80" width="35" height="30" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.4"/>
+      <text x="52" y="100" font-size="13" fill="#dc2626" ${FS} font-weight="700">S</text>
+      <text x="88" y="100" font-size="13" fill="#2563eb" ${FS} font-weight="700">${poleLabel}</text>
+      <line x1="120" y1="95" x2="175" y2="95" stroke="#16a34a" stroke-width="2.6" marker-end="url(#mc1)"/>
+      <text x="128" y="86" font-size="11" fill="#16a34a" ${FS}>${dir==='approaching'?'moving in &#8594;':'moving out'}</text>
+    </svg>`,
+
+  // coil in a changing field — dot version (out of page)
+  coilField: (label='B outward, increasing', sym='dot', showInduced=true) => `
+    <svg viewBox="0 0 260 190" width="260" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('cf1','#dc2626')}</defs>
+      ${fieldDots(40,30,180,130,7,5,sym,'#93c5fd')}
+      <circle cx="130" cy="95" r="52" fill="none" stroke="#b45309" stroke-width="3"/>
+      <text x="150" y="30" font-size="10" fill="#2563eb" ${FS}>${label}</text>
+      ${showInduced?`<path d="M130,43 A52,52 0 0 1 178,79" fill="none" stroke="#dc2626" stroke-width="2.4" marker-end="url(#cf1)"/><text x="150" y="150" font-size="10" fill="#dc2626" ${FS}>I induced</text>`:''}
+    </svg>`,
+
+  // conducting rod moving in a field (motional emf) — into page
+  motionalRod: (v='v', l='l', sym='cross') => `
+    <svg viewBox="0 0 280 180" width="280" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('mr1','#2563eb')}${AR('mr2','#dc2626')}${AR('mr3','#16a34a')}</defs>
+      ${fieldDots(30,25,230,130,8,5,sym,'#cbd5e1')}
+      <!-- rails -->
+      <line x1="40" y1="40" x2="230" y2="40" stroke="#374151" stroke-width="2"/>
+      <line x1="40" y1="140" x2="230" y2="140" stroke="#374151" stroke-width="2"/>
+      <line x1="40" y1="40" x2="40" y2="140" stroke="#374151" stroke-width="2"/>
+      <!-- moving rod -->
+      <line x1="150" y1="40" x2="150" y2="140" stroke="#2563eb" stroke-width="3.5"/>
+      <line x1="150" y1="90" x2="205" y2="90" stroke="#2563eb" stroke-width="2.4" marker-end="url(#mr1)"/>
+      <text x="168" y="82" font-size="12" fill="#2563eb" ${FS} font-weight="700">${v}</text>
+      <line x1="150" y1="150" x2="150" y2="150"/>
+      <text x="120" y="90" font-size="11" fill="#16a34a" ${FS}>${l}</text>
+      <line x1="143" y1="42" x2="143" y2="138" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="150" y="165" font-size="10" fill="#6b7280" ${FS}>rod slides on rails</text>
+    </svg>`,
+
+  // simple horizontal wire falling in earth's field
+  fallingWire: (l='20 m', v='v') => `
+    <svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('fw1','#dc2626')}${AR('fw2','#2563eb')}</defs>
+      ${fieldDots(30,25,200,120,7,4,'cross','#cbd5e1')}
+      <line x1="55" y1="55" x2="205" y2="55" stroke="#2563eb" stroke-width="3.5"/>
+      <text x="95" y="46" font-size="11" fill="#2563eb" ${FS}>wire, length ${l}</text>
+      <text x="52" y="52" font-size="9" fill="#6b7280" ${FS}>W</text>
+      <text x="208" y="52" font-size="9" fill="#6b7280" ${FS}>E</text>
+      <line x1="130" y1="60" x2="130" y2="120" stroke="#dc2626" stroke-width="2.6" marker-end="url(#fw1)"/>
+      <text x="136" y="100" font-size="11" fill="#dc2626" ${FS}>${v} (falling)</text>
+      <text x="150" y="160" font-size="10" fill="#6b7280" ${FS}>B into page (horizontal component)</text>
+    </svg>`,
+
+  // rod rotating about one end (spoke)
+  rotatingRod: (l='l', showB=true) => `
+    <svg viewBox="0 0 240 200" width="240" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rr1','#2563eb')}${AR('rr2','#7c3aed')}</defs>
+      ${showB?fieldDots(30,20,180,160,6,5,'dot','#dbeafe'):''}
+      <circle cx="120" cy="100" r="5" fill="#374151"/>
+      <text x="104" y="96" font-size="11" fill="#374151" ${FS}>O</text>
+      <line x1="120" y1="100" x2="205" y2="100" stroke="#2563eb" stroke-width="3.5"/>
+      <circle cx="205" cy="100" r="4" fill="#2563eb"/>
+      <text x="150" y="115" font-size="11" fill="#2563eb" ${FS}>${l}</text>
+      <path d="M120,55 A45,45 0 0 1 158,72" fill="none" stroke="#7c3aed" stroke-width="2.2" marker-end="url(#rr2)"/>
+      <text x="128" y="48" font-size="11" fill="#7c3aed" ${FS}>&#969;</text>
+      <text x="150" y="185" font-size="10" fill="#6b7280" ${FS}>B out of page, rod pivots at O</text>
+    </svg>`,
+
+  // rod on a string, rotating about a fixed point (original Q6)
+  stringRod: (str='2l', rod='l') => `
+    <svg viewBox="0 0 260 200" width="260" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('sr1','#374151')}${AR('sr2','#2563eb')}${AR('sr3','#7c3aed')}</defs>
+      ${fieldDots(30,20,200,160,6,5,'dot','#dbeafe')}
+      <circle cx="55" cy="100" r="5" fill="#374151"/>
+      <text x="40" y="96" font-size="11" fill="#374151" ${FS}>P</text>
+      <line x1="55" y1="100" x2="150" y2="100" stroke="#374151" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <text x="88" y="94" font-size="11" fill="#374151" ${FS}>string ${str}</text>
+      <circle cx="150" cy="100" r="3.5" fill="#6b7280"/>
+      <line x1="150" y1="100" x2="205" y2="100" stroke="#2563eb" stroke-width="3.5"/>
+      <circle cx="205" cy="100" r="4" fill="#2563eb"/>
+      <text x="168" y="94" font-size="11" fill="#2563eb" ${FS}>rod ${rod}</text>
+      <path d="M55,60 A40,40 0 0 1 88,74" fill="none" stroke="#7c3aed" stroke-width="2.2" marker-end="url(#sr3)"/>
+      <text x="60" y="52" font-size="11" fill="#7c3aed" ${FS}>&#969;</text>
+      <text x="150" y="188" font-size="10" fill="#6b7280" ${FS}>vertical B (out of page), whole thing spins about P</text>
+    </svg>`,
+
+  // aeroplane wings (motional emf variant)
+  plane: (span='10 m') => `
+    <svg viewBox="0 0 280 160" width="280" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('pl1','#2563eb')}${AR('pl2','#16a34a')}</defs>
+      <ellipse cx="140" cy="80" rx="18" ry="42" fill="#e5e7eb" stroke="#374151" stroke-width="1.4"/>
+      <rect x="45" y="73" width="190" height="14" rx="6" fill="#cbd5e1" stroke="#374151" stroke-width="1.2"/>
+      <text x="60" y="65" font-size="10" fill="#374151" ${FS}>wing tip</text>
+      <text x="200" y="65" font-size="10" fill="#374151" ${FS}>wing tip</text>
+      <line x1="45" y1="103" x2="235" y2="103" stroke="#16a34a" stroke-width="1.4" marker-end="url(#pl2)"/>
+      <line x1="235" y1="103" x2="45" y2="103" stroke="#16a34a" stroke-width="1.4" marker-start="url(#pl2)"/>
+      <text x="120" y="118" font-size="11" fill="#16a34a" ${FS}>span ${span}</text>
+      <line x1="140" y1="126" x2="205" y2="126" stroke="#2563eb" stroke-width="2.4" marker-end="url(#pl1)"/>
+      <text x="150" y="142" font-size="10" fill="#2563eb" ${FS}>flying &#8594;, B has vertical part</text>
+    </svg>`,
+
+  // eddy-current damping: metal plate swinging near coil
+  eddyPlate: () => `
+    <svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ep1','#7c3aed')}${AR('ep2','#dc2626')}</defs>
+      <g stroke="#b45309" stroke-width="2.2" fill="none">
+        ${[0,1,2,3].map(i=>`<ellipse cx="${70}" cy="${60+i*18}" rx="26" ry="7"/>`).join('')}
+      </g>
+      <text x="46" y="42" font-size="10" fill="#b45309" ${FS}>coil</text>
+      <rect x="150" y="45" width="46" height="90" rx="4" fill="#e2e8f0" stroke="#475569" stroke-width="1.6"/>
+      <text x="150" y="40" font-size="10" fill="#475569" ${FS}>Al plate</text>
+      <path d="M196,90 A34,34 0 0 1 196,50" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#ep2)"/>
+      <path d="M196,90 A34,34 0 0 0 196,130" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#ep2)"/>
+      <text x="204" y="94" font-size="10" fill="#dc2626" ${FS}>swings</text>
+      <ellipse cx="173" cy="90" rx="9" ry="16" fill="none" stroke="#7c3aed" stroke-width="1.6" marker-end="url(#ep1)"/>
+      <text x="150" y="160" font-size="10" fill="#7c3aed" ${FS}>eddy currents oppose the motion</text>
+    </svg>`,
+
+  // flat coil rotating in a field (AC generator)
+  rotatingCoil: () => `
+    <svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rc1','#2563eb')}${AR('rc2','#7c3aed')}</defs>
+      <line x1="30" y1="40" x2="30" y2="150" stroke="#2563eb" stroke-width="1.4" marker-end="url(#rc1)"/>
+      <line x1="30" y1="40" x2="230" y2="40" stroke="#2563eb" stroke-width="1.2"/>
+      ${[60,110,160,210].map(x=>`<line x1="${x}" y1="45" x2="${x}" y2="150" stroke="#93c5fd" stroke-width="1.2" marker-start="url(#rc1)"/>`).join('')}
+      <text x="200" y="36" font-size="10" fill="#2563eb" ${FS}>B</text>
+      <ellipse cx="135" cy="100" rx="46" ry="18" fill="none" stroke="#b45309" stroke-width="2.6" transform="rotate(-25 135 100)"/>
+      <path d="M135,58 A50,50 0 0 1 168,74" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#rc2)"/>
+      <text x="140" y="52" font-size="11" fill="#7c3aed" ${FS}>&#969;</text>
+      <text x="150" y="168" font-size="10" fill="#6b7280" ${FS}>coil spins about an in-plane axis</text>
+    </svg>`,
+
+  // ring entering a field region (moving loop, emf only while entering)
+  ringEnter: () => `
+    <svg viewBox="0 0 280 170" width="280" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('re1','#2563eb')}</defs>
+      <line x1="150" y1="20" x2="150" y2="150" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4,3"/>
+      <text x="118" y="162" font-size="10" fill="#6b7280" ${FS}>x = 0 (field starts here)</text>
+      ${fieldDots(150,25,110,120,4,5,'cross','#cbd5e1')}
+      <circle cx="110" cy="85" r="40" fill="none" stroke="#b45309" stroke-width="3"/>
+      <text x="92" y="42" font-size="10" fill="#374151" ${FS}>O</text>
+      <circle cx="110" cy="85" r="3" fill="#374151"/>
+      <line x1="110" y1="85" x2="175" y2="85" stroke="#2563eb" stroke-width="2.4" marker-end="url(#re1)"/>
+      <text x="126" y="78" font-size="11" fill="#2563eb" ${FS}>v (1 m/s)</text>
+      <text x="60" y="150" font-size="10" fill="#6b7280" ${FS}>ring of radius 1 m</text>
+    </svg>`
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  LADDER DATA — 4 models × (3 build-up rungs + 1 original archive question)
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  // ══ MODEL 1 — LENZ'S LAW (direction of induced current / opposition) ═══════
+  {
+    name:"Model 1 &#183; Lenz's Law &amp; Direction",
+    questions:[
+      {
+        q:"The north pole of a bar magnet is pushed <em>towards</em> a coil. By Lenz's law, the induced current in the coil must:",
+        diagram:DIAGRAMS.magnetCoil('approaching','N'),
+        opts:["Oppose the magnet — the coil face acts as a north pole to repel it","Attract the magnet in","Do nothing until the magnet stops","Always flow clockwise regardless of motion"],
+        ans:0,
+        sol:"Lenz's law: the induced current opposes the change causing it. As the N-pole approaches, flux through the coil increases, so the induced current flows to make the near face a <strong>north pole</strong>, pushing the magnet back. Induced effects always fight the change — that is why you must do work to move the magnet."
+      },
+      {
+        q:"A coil sits in a magnetic field pointing <em>out of the page</em>, and this field is <em>increasing</em> with time. What is the direction of the induced current in the coil?",
+        diagram:DIAGRAMS.coilField('B out of page, increasing','dot',true),
+        opts:["Clockwise (to create field into the page inside the coil)","Anticlockwise (to add to the outward field)","No current, since the coil is not moving","Depends on the coil's resistance"],
+        ans:0,
+        sol:"Outward flux is increasing, so by Lenz's law the induced current opposes the increase by trying to make flux <strong>into</strong> the page inside the coil. By the right-hand rule, a field into the page inside the loop needs a <strong>clockwise</strong> current. (If the field were decreasing, the current would reverse to anticlockwise.)"
+      },
+      {
+        q:"A coil oscillating in a magnetic field is hard to stop. But when an aluminium plate is brought near, it stops quickly. This happens because:",
+        diagram:DIAGRAMS.eddyPlate(),
+        opts:["Eddy currents induced in the plate oppose the motion (electromagnetic damping)","Aluminium shields the magnetic field","Electric charge builds up on the plate","Air currents slow the coil"],
+        ans:0,
+        sol:"The changing flux near the moving coil induces circulating <strong>eddy currents</strong> in the aluminium plate. By Lenz's law these currents oppose the motion that produced them, draining the kinetic energy as heat — this is electromagnetic (eddy-current) damping. It is not shielding, not static charge, and not air."
+      },
+      {
+        q:"&#9733; Original (Archive Q60): A circular coil is in a magnetic field B&#8407; directed as shown, and an induced current flows in the coil in the marked direction. This tells us that B&#8407; is:",
+        diagram:DIAGRAMS.coilField('B out of page','dot',true),
+        opts:["Outward and decreasing with time","Outward and increasing with time","Parallel to the plane of the coil and increasing","Parallel to the plane of the coil and decreasing"],
+        ans:0,
+        sol:"Work backwards from the induced current using Lenz's law. The marked induced current would create flux <strong>out of the page</strong> inside the coil (right-hand rule). Induced current always opposes the <em>change</em>, so it is trying to restore outward flux — meaning the outward flux is <strong>decreasing</strong>. Hence B&#8407; is outward and decreasing. (A field parallel to the coil's plane gives zero flux and cannot induce anything.)"
+      }
+    ]
+  },
+
+  // ══ MODEL 2 — METHODS OF PRODUCING EMF (Faraday: what makes flux change) ═══
+  {
+    name:"Model 2 &#183; Methods of Producing EMF",
+    questions:[
+      {
+        q:"Faraday's law says the induced emf equals the rate of change of magnetic flux, &#949; = &#8722;d&#934;/dt, where &#934; = B&#183;A&#183;cos&#952;. Which of these will <em>not</em> produce an emf in a stationary coil?",
+        diagram:DIAGRAMS.coilField('steady B, coil at rest','dot',false),
+        opts:["A steady, unchanging magnetic field through the coil","A magnetic field that grows stronger with time","A magnetic field that weakens with time","Rotating the coil in the field"],
+        ans:0,
+        sol:"Emf appears only when flux <strong>changes</strong>. Flux &#934; = BA cos&#952; can change three ways: changing B, changing area A, or changing the angle &#952;. A steady field through a still coil changes none of these, so d&#934;/dt = 0 and the emf is zero. The other three all change flux and do induce an emf."
+      },
+      {
+        q:"A coil of resistance 100 &#937; has the flux through it changed. The induced charge that flows is q = &#916;&#934;/R (this comes from &#949; = &#8722;d&#934;/dt and q = &#8747;i dt). If the flux changes by 25 Wb, how much charge flows?",
+        diagram:DIAGRAMS.coilField('flux changing','dot',true),
+        opts:["0.25 C","2.5 C","25 C","0.025 C"],
+        ans:0,
+        sol:"Charge is independent of how fast the change happens: q = &#916;&#934;/R = 25/100 = 0.25 C. Notice the emf depends on the <em>rate</em> d&#934;/dt, but the total charge depends only on the <em>total</em> flux change &#916;&#934; and the resistance."
+      },
+      {
+        q:"In a coil of resistance 100 &#937;, the current falls steadily from 10 A to 0 in 0.5 s. The induced charge is the area under the current-time graph. What total charge flows, and hence what is the flux change (&#916;&#934; = q&#215;R)?",
+        diagram:DIAGRAMS.coilField('current ramps down','dot',true),
+        opts:["2.5 C, so &#916;&#934; = 250 Wb","5 C, so &#916;&#934; = 500 Wb","1.25 C, so &#916;&#934; = 125 Wb","10 C, so &#916;&#934; = 1000 Wb"],
+        ans:0,
+        sol:"Charge = area under the i-t triangle = &#189; &#215; base &#215; height = &#189; &#215; 0.5 &#215; 10 = 2.5 C. Then &#916;&#934; = q &#215; R = 2.5 &#215; 100 = 250 Wb. (This is exactly the method the original question uses.)"
+      },
+      {
+        q:"&#9733; Original (Archive Q10): In a coil of resistance 100 &#937;, a current is induced by changing the magnetic flux. The current-time graph is a straight line falling from 10 A to 0 over 0.5 s. The magnitude of the change in flux through the coil is:",
+        diagram:DIAGRAMS.coilField('current: 10 A &#8594; 0 in 0.5 s','dot',true),
+        opts:["250 Wb","200 Wb","225 Wb","275 Wb"],
+        ans:0,
+        sol:"&#916;&#934; = R &#215; (charge) = R &#215; (area under the i-t graph). Area = &#189; &#215; 0.5 &#215; 10 = 2.5 C. So &#916;&#934; = 100 &#215; 2.5 = <strong>250 Wb</strong>. Exactly Rung 3 with the archive's numbers."
+      }
+    ]
+  },
+
+  // ══ MODEL 3 — MOTIONAL EMF (a conductor moving through a field) ════════════
+  {
+    name:"Model 3 &#183; Motional EMF (&#949; = Blv)",
+    questions:[
+      {
+        q:"A straight conductor of length l moves with speed v, perpendicular to a magnetic field B (and perpendicular to its own length). The emf induced across its ends is:",
+        diagram:DIAGRAMS.motionalRod('v','l','cross'),
+        opts:["&#949; = Blv","&#949; = Bl/v","&#949; = Bv/l","&#949; = B/(lv)"],
+        ans:0,
+        sol:"A conductor sweeping through a field acts like a battery. The motional emf is &#949; = Blv when B, l and v are mutually perpendicular. Physically, the magnetic force pushes free charges along the rod (F = qvB) until an electric field builds up to balance it, giving a potential difference Blv across the ends."
+      },
+      {
+        q:"A rod of length 0.2 m moves at 20 m/s perpendicular to a field of 4 &#215; 10&#8722;&#179; T (field &#8869; to both rod and velocity). What emf is induced across the rod?",
+        diagram:DIAGRAMS.motionalRod('20 m/s','0.2 m','cross'),
+        opts:["16 mV","8 mV","32 mV","4 mV"],
+        ans:0,
+        sol:"&#949; = Blv = (4 &#215; 10&#8722;&#179;)(0.2)(20) = 16 &#215; 10&#8722;&#179; V = 16 mV. Just plug into Blv once you have confirmed all three are mutually perpendicular."
+      },
+      {
+        q:"A rod moves through the Earth's field. Only the <em>component of B perpendicular to the plane swept by the rod</em> produces emf. If B = 4 &#215; 10&#8722;&#179; T at a dip angle of 45&#176;, and the rod (horizontal, N-S) moves horizontally at 20 m/s, which component of B matters, and what is the emf for l = 0.2 m?",
+        diagram:DIAGRAMS.motionalRod('20 m/s (horizontal)','0.2 m','cross'),
+        opts:["The vertical component B sin45&#176; matters &#8594; &#8776; 11.3 mV","The horizontal component B cos45&#176; &#8594; 11.3 mV","The full B &#8594; 16 mV","Zero, because the rod is horizontal"],
+        ans:0,
+        sol:"A horizontal rod moving horizontally sweeps a horizontal area; the flux through it is set by the <strong>vertical</strong> component of B, which is B&#8407;<sub>V</sub> = B sin(dip) = 4&#215;10&#8722;&#179; &#215; sin45&#176; &#8776; 2.83&#215;10&#8722;&#179; T. Then &#949; = B&#8407;<sub>V</sub>&#183;l&#183;v = 2.83&#215;10&#8722;&#179; &#215; 0.2 &#215; 20 &#8776; 11.3 mV. Choosing the right component of B is the whole skill here."
+      },
+      {
+        q:"&#9733; Original (Archive Q4): A horizontal straight wire 20 m long, extending east-west, falls at 5.0 m/s at right angles to the horizontal component of the Earth's field, 0.30 &#215; 10&#8722;&#8308; Wb/m&#178;. The instantaneous emf induced in the wire is:",
+        diagram:DIAGRAMS.fallingWire('20 m','5 m/s'),
+        opts:["3 mV","1.5 mV","6 mV","4.5 mV"],
+        ans:0,
+        sol:"The wire falls perpendicular to the horizontal component of B, so use &#949; = B<sub>H</sub>&#183;l&#183;v directly: &#949; = (0.30 &#215; 10&#8722;&#8308;)(20)(5.0) = 30 &#215; 10&#8722;&#8308; V = <strong>3 mV</strong>. Same Blv skill as Rung 2, with the correct field component already handed to you."
+      }
+    ]
+  },
+
+  // ══ MODEL 4 — EMF FROM A ROTATING ROD (spoke emf) ══════════════════════════
+  {
+    name:"Model 4 &#183; EMF of a Rotating Rod",
+    questions:[
+      {
+        q:"A rod of length l rotates about one end with angular speed &#969;, in a field B perpendicular to its plane of rotation. Different parts of the rod move at different speeds — the far end moves fastest. The emf induced between the ends is:",
+        diagram:DIAGRAMS.rotatingRod('l',true),
+        opts:["&#189; B&#969;l&#178;","B&#969;l&#178;","B&#969;l","2B&#969;l&#178;"],
+        ans:0,
+        sol:"Because speed varies along the rod (v = &#969;x at distance x from the pivot), you integrate: &#949; = &#8747;&#8320;&#8321; B(&#969;x)dx = B&#969; &#215; [x&#178;/2] from 0 to l = <strong>&#189;B&#969;l&#178;</strong>. This &#189;B&#969;l&#178; is the master result for a rod pivoted at one end — memorise it, every rotating-rod problem builds on it."
+      },
+      {
+        q:"A rod rotating about one end sweeps out a circle of radius l each revolution. Using &#949; = &#189;B&#969;l&#178;, a rod of length 0.5 m spins at &#969; = 20 rad/s in a field B = 0.4 T (perpendicular to its plane). The emf between its ends is:",
+        diagram:DIAGRAMS.rotatingRod('0.5 m',true),
+        opts:["1.0 V","0.5 V","2.0 V","0.25 V"],
+        ans:0,
+        sol:"&#949; = &#189;B&#969;l&#178; = &#189; &#215; 0.4 &#215; 20 &#215; (0.5)&#178; = &#189; &#215; 0.4 &#215; 20 &#215; 0.25 = 1.0 V. Straight substitution into the master formula from Rung 1."
+      },
+      {
+        q:"Now the rod does <em>not</em> start at the pivot. A rod of length l is tied to the end of a string of length a, and the whole thing rotates about the fixed far end of the string (so the rod's near end is at radius a, its far end at radius a+l). The emf across the rod is &#189;B&#969;[(a+l)&#178; &#8722; a&#178;]. For a rod of length l on a string of length l (a = l), this gives:",
+        diagram:DIAGRAMS.stringRod('a','l'),
+        opts:["(3/2) B&#969;l&#178;","&#189; B&#969;l&#178;","B&#969;l&#178;","2 B&#969;l&#178;"],
+        ans:0,
+        sol:"The emf is the difference of two &#189;B&#969;r&#178; terms, using the outer and inner radii: &#949; = &#189;B&#969;[(a+l)&#178; &#8722; a&#178;]. With a = l: &#949; = &#189;B&#969;[(2l)&#178; &#8722; l&#178;] = &#189;B&#969;[4l&#178; &#8722; l&#178;] = &#189;B&#969;(3l&#178;) = <strong>(3/2)B&#969;l&#178;</strong>. Treat it as (whole spoke of radius a+l) minus (missing inner spoke of radius a)."
+      },
+      {
+        q:"&#9733; Original (Archive Q6): A metallic rod of length l is tied to a string of length 2l and made to rotate with angular speed &#969; on a horizontal table, one end of the string fixed. A vertical magnetic field B is present. The emf induced across the ends of the rod is:",
+        diagram:DIAGRAMS.stringRod('2l','l'),
+        opts:["5B&#969;l&#178;/2","2B&#969;l&#178;/2","3B&#969;l&#178;/2","4B&#969;l&#178;/2"],
+        ans:0,
+        sol:"The rod's near end is at radius a = 2l (the string length), its far end at a + l = 3l. Use the difference of spokes: &#949; = &#189;B&#969;[(3l)&#178; &#8722; (2l)&#178;] = &#189;B&#969;[9l&#178; &#8722; 4l&#178;] = &#189;B&#969;(5l&#178;) = <strong>5B&#969;l&#178;/2</strong>. Exactly Rung 3 with a = 2l."
+      }
+    ]
+  }
+
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  ENGINE (variable question count per topic)
+// ═══════════════════════════════════════════════════════════════════════════════
+const STORAGE_KEY = 'padipucast_emi_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
