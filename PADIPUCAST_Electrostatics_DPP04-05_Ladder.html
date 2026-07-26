@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder · Electromagnetic Induction</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Electrostatics Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Models
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Electrostatics<br>— Question Ladders</h1></div>
+    <p id="home-sub">Every source question gets its own ladder: 3 build-up rungs, easy to hard, leading smoothly to the original DPP question (&#9733;). Batch D of the Electrostatics set — DPP-04 (vector form) + DPP-05 (superposition).</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every model. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — ELECTROSTATICS set (PADIPUCAST)
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+function node(cx,cy,txt,sub,color){
+  return `<circle cx="${cx}" cy="${cy}" r="16" fill="#fff" stroke="${color}" stroke-width="2"/>`+
+         `<text x="${cx}" y="${cy+5}" font-size="13" fill="${color}" text-anchor="middle" ${FS} font-weight="700">${txt}</text>`+
+         (sub?`<text x="${cx}" y="${cy-22}" font-size="11" fill="#374151" text-anchor="middle" ${FS}>${sub}</text>`:'');
+}
+const DIAGRAMS = {
+  // right triangle: B at right angle (bottom-left), A above B, C to the right of B
+  rightTri:(la='A',lb='B',lc='C',qa='',qb='',qc='',ab='3 cm',bc='4 cm')=>`
+    <svg viewBox="0 0 260 210" width="260" height="210" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="55,40 55,160 210,160" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+      <rect x="55" y="146" width="14" height="14" fill="none" stroke="#9ca3af" stroke-width="1"/>
+      <text x="30" y="100" font-size="10" fill="#6b7280" ${FS}>${ab}</text>
+      <text x="120" y="178" font-size="10" fill="#6b7280" ${FS}>${bc}</text>
+      ${node(55,40,la,qa,'#dc2626')}
+      ${node(55,160,lb,qb,'#2563eb')}
+      ${node(210,160,lc,qc,'#7c3aed')}
+    </svg>`,
+  // square ABCD (A top-left, B top-right, C bottom-right, D bottom-left) with charge labels + optional centre
+  squareLabeled:(qa='+q',qb='+q',qc='+q',qd='+q',centre='')=>`
+    <svg viewBox="0 0 230 220" width="230" height="220" xmlns="http://www.w3.org/2000/svg">
+      <rect x="50" y="45" width="130" height="130" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+      <line x1="50" y1="45" x2="180" y2="175" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="180" y1="45" x2="50" y2="175" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>
+      ${node(50,45,'A',qa,'#dc2626')}
+      ${node(180,45,'B',qb,'#dc2626')}
+      ${node(180,175,'C',qc,'#dc2626')}
+      ${node(50,175,'D',qd,'#2563eb')}
+      ${centre?`<circle cx="115" cy="110" r="13" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/><text x="115" y="114" font-size="11" fill="#16a34a" text-anchor="middle" ${FS} font-weight="700">O</text>`:''}
+      <text x="108" y="40" font-size="10" fill="#6b7280" ${FS}>side a</text>
+    </svg>`,
+  // equilateral triangle with charge labels + optional centre charge
+  triLabeled:(qa='+q',qb='+q',qc='+q',centre='')=>`
+    <svg viewBox="0 0 230 210" width="230" height="210" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="115,35 45,165 185,165" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+      ${node(115,35,'A',qa,'#dc2626')}
+      ${node(45,165,'B',qb,'#2563eb')}
+      ${node(185,165,'C',qc,'#dc2626')}
+      ${centre?`<circle cx="115" cy="122" r="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/><text x="115" y="126" font-size="10" fill="#16a34a" text-anchor="middle" ${FS} font-weight="700">${centre}</text>`:''}
+      <text x="150" y="120" font-size="10" fill="#6b7280" ${FS}>side a</text>
+    </svg>`
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  QUESTION LADDERS — one ladder per SOURCE QUESTION (4 rungs, easy \u2192 original \u2605)
+//  Batch D: DPP-04 (Q1\u2013Q2, vector form) + DPP-05 (Q1\u2013Q6, superposition)
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  // ═════════════ DPP-04 \u00b7 COULOMB'S LAW IN VECTOR FORM ═════════════
+
+  { name:"DPP-04 &#183; Q1 &#183; Force in Vector Form (numeric)",
+    questions:[
+      { q:"Charge A is at (2, 4, 6) and charge B at (1, 2, 2). The separation vector r&#8407;<sub>A</sub> &#8722; r&#8407;<sub>B</sub> (from B to A) is:",
+        opts:["&#238; + 2&#309; + 4k&#770;","3&#238; + 6&#309; + 8k&#770;","&#8722;&#238; &#8722; 2&#309; &#8722; 4k&#770;","&#238; + &#309; + k&#770;"],
+        ans:0,
+        sol:"Subtract component-by-component: (2&#8722;1, 4&#8722;2, 6&#8722;2) = <strong>(1, 2, 4)</strong> = &#238; + 2&#309; + 4k&#770;. This points from B toward A." },
+      { q:"The magnitude of that separation vector, |r&#8407;<sub>A</sub> &#8722; r&#8407;<sub>B</sub>|, is:",
+        opts:["&#8730;21","21","&#8730;13","&#8730;29"],
+        ans:0,
+        sol:"|r&#8407;| = &#8730;(1&#178; + 2&#178; + 4&#178;) = &#8730;(1 + 4 + 16) = <strong>&#8730;21</strong>." },
+      { q:"For A = 2 &#956;C and B = 3 &#956;C, the scalar coefficient kq<sub>A</sub>q<sub>B</sub>/|r&#8407;|&#179; equals:",
+        opts:["54&#215;10<sup>&#8722;3</sup>/(21)<sup>3/2</sup>","54&#215;10<sup>&#8722;2</sup>/(21)<sup>3/2</sup>","54&#215;10<sup>&#8722;3</sup>/21","6&#215;10<sup>&#8722;3</sup>/(21)<sup>3/2</sup>"],
+        ans:0,
+        sol:"kq<sub>A</sub>q<sub>B</sub> = (9&#215;10<sup>9</sup>)(2&#215;10<sup>&#8722;6</sup>)(3&#215;10<sup>&#8722;6</sup>) = 54&#215;10<sup>&#8722;3</sup>. Dividing by |r&#8407;|&#179; = (&#8730;21)&#179; = (21)<sup>3/2</sup> gives <strong>54&#215;10<sup>&#8722;3</sup>/(21)<sup>3/2</sup></strong>." },
+      { q:"&#9733; Original (DPP-04 Q1): Q<sub>A</sub> = 2 &#956;C at (2, 4, 6) and B = 3 &#956;C at (1, 2, 2). The force on A due to B is:",
+        opts:["(54&#215;10<sup>&#8722;3</sup>/(21)<sup>3/2</sup>)(&#238; + 2&#309; + 4k&#770;)","(54&#215;10<sup>&#8722;3</sup>/(21)<sup>3/2</sup>)(&#8722;&#238; &#8722; 2&#309; &#8722; 4k&#770;)","(54&#215;10<sup>&#8722;3</sup>/21)(&#238; + 2&#309; + 4k&#770;)","None of the above"],
+        ans:0,
+        sol:"F&#8407;<sub>AB</sub> = [kq<sub>A</sub>q<sub>B</sub>/|r&#8407;<sub>A</sub> &#8722; r&#8407;<sub>B</sub>|&#179;](r&#8407;<sub>A</sub> &#8722; r&#8407;<sub>B</sub>) = <strong>(54&#215;10<sup>&#8722;3</sup>/(21)<sup>3/2</sup>)(&#238; + 2&#309; + 4k&#770;)</strong>. Both charges positive &#8658; repulsion, so the force points along (+&#238;, +&#309;, +k&#770;), away from B.<br><br><strong>Note:</strong> the printed option 1 shows '54&#215;10<sup>&#8722;2</sup>' \u2014 that exponent is a typo; the worked solution itself uses 54&#215;10<sup>&#8722;3</sup>. Direction and method are the point here. (Answer key: option 1.)" }
+    ] },
+
+  { name:"DPP-04 &#183; Q2 &#183; The Vector Coulomb Formula",
+    questions:[
+      { q:"F&#8407;<sub>12</sub> means the force <em>on</em> charge 1 <em>due to</em> charge 2. For two like charges, this force points:",
+        opts:["From 2 toward 1 (along r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>)","From 1 toward 2 (along r&#8407;<sub>2</sub> &#8722; r&#8407;<sub>1</sub>)","Perpendicular to the line","Toward the origin"],
+        ans:0,
+        sol:"Like charges repel, so charge 1 is pushed <em>away</em> from 2 \u2014 in the direction of <strong>r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub></strong> (the vector pointing from 2 to 1)." },
+      { q:"To turn the separation vector (r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>) into a <em>unit</em> vector, you divide it by:",
+        opts:["|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|","|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|&#178;","|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|&#179;","2"],
+        ans:0,
+        sol:"A vector becomes a unit vector when divided by its own magnitude <strong>|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|</strong>." },
+      { q:"The force magnitude carries 1/|r&#8407;|&#178;, and the unit vector carries one more 1/|r&#8407;|. Together the denominator becomes:",
+        opts:["|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|&#179;","|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|&#178;","|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|","|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|<sup>4</sup>"],
+        ans:0,
+        sol:"1/|r&#8407;|&#178; (magnitude) &#215; 1/|r&#8407;| (from the unit vector) = 1/|r&#8407;|&#179;. That is why the vector form has a <strong>cube</strong> in the denominator, not a square." },
+      { q:"&#9733; Original (DPP-04 Q2): Choose the correct vector form of Coulomb's law for F&#8407;<sub>12</sub>:",
+        opts:["F&#8407;<sub>12</sub> = [kq&#8321;q&#8322;/|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|&#179;](r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>)","F&#8407;<sub>12</sub> = [kq&#8321;q&#8322;/|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|&#179;](r&#8407;<sub>2</sub> &#8722; r&#8407;<sub>1</sub>)","F&#8407;<sub>12</sub> = [kq&#8321;q&#8322;/|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|&#179;](r&#8407;<sub>1</sub> + r&#8407;<sub>2</sub>)","None of these"],
+        ans:0,
+        sol:"The correct form is <strong>F&#8407;<sub>12</sub> = [kq&#8321;q&#8322;/|r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>|&#179;](r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>)</strong> \u2014 cube in the denominator, and the vector (r&#8407;<sub>1</sub> &#8722; r&#8407;<sub>2</sub>) giving the correct repulsive direction. (Answer key: option 1 \u2014 correct.)" }
+    ] },
+
+  // ═════════════ DPP-05 \u00b7 SUPERPOSITION PRINCIPLE ═════════════
+
+  { name:"DPP-05 &#183; Q1 &#183; Force on B (right triangle)",
+    questions:[
+      { q:"In CGS/esu units, F = q&#8321;q&#8322;/r&#178; (charges in esu, r in cm, force in dynes). The force on B due to A (+15 esu at A, +12 esu at B, AB = 3 cm) is:",
+        diagram:DIAGRAMS.rightTri('A','B','C','+15','+12','&#8722;20','3 cm','4 cm'),
+        opts:["20 dynes","45 dynes","5 dynes","180 dynes"],
+        ans:0,
+        sol:"F<sub>A</sub> = (15&#215;12)/3&#178; = 180/9 = <strong>20 dynes</strong>, directed along BA (repulsion, both positive)." },
+      { q:"The force on B due to C (+12 esu at B, &#8722;20 esu at C, BC = 4 cm) is:",
+        opts:["15 dynes","60 dynes","240 dynes","30 dynes"],
+        ans:0,
+        sol:"F<sub>C</sub> = (12&#215;20)/4&#178; = 240/16 = <strong>15 dynes</strong>, directed along BC (attraction toward C)." },
+      { q:"Since &#8737;ABC = 90&#176;, the two forces on B are at right angles, so they combine by:",
+        opts:["Pythagoras: &#8730;(F<sub>A</sub>&#178; + F<sub>C</sub>&#178;)","Simple addition: F<sub>A</sub> + F<sub>C</sub>","Subtraction: F<sub>A</sub> &#8722; F<sub>C</sub>","Averaging"],
+        ans:0,
+        sol:"Perpendicular forces add by <strong>Pythagoras</strong>: F<sub>net</sub> = &#8730;(F<sub>A</sub>&#178; + F<sub>C</sub>&#178;)." },
+      { q:"&#9733; Original (DPP-05 Q1): For the right triangle (AB = 3, BC = 4, &#8737;B = 90&#176;) with +15, +12, &#8722;20 esu at A, B, C, the net force on B is:",
+        diagram:DIAGRAMS.rightTri('A','B','C','+15','+12','&#8722;20','3 cm','4 cm'),
+        opts:["25 dynes","35 dynes","125 dynes","Zero"],
+        ans:0,
+        sol:"F<sub>net</sub> = &#8730;(20&#178; + 15&#178;) = &#8730;(400 + 225) = &#8730;625 = <strong>25 dynes</strong> \u2014 a 3-4-5 style result. (Answer key: option 3 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-05 &#183; Q2 &#183; Force on Charge at Square's Centre",
+    questions:[
+      { q:"Two equal <em>like</em> charges sit at opposite corners of a square. On a charge at the centre O, their two forces are:",
+        opts:["Equal and opposite \u2014 they cancel","Equal and in the same direction","At right angles","Both zero"],
+        ans:0,
+        sol:"The centre is equidistant from the two opposite corners, so the forces are equal in size but point in <strong>opposite</strong> directions along that diagonal \u2014 they cancel." },
+      { q:"With A = +q and C = +q at opposite corners, their combined force on a charge at O is:",
+        diagram:DIAGRAMS.squareLabeled('+q','+2q','+q','&#8722;2q','O'),
+        opts:["Zero","Along AC","Along BD","Twice each"],
+        ans:0,
+        sol:"A and C are equal and opposite about O, so their forces on O <strong>cancel</strong> \u2014 the AC diagonal contributes nothing." },
+      { q:"Now B = +2q and D = &#8722;2q (the other diagonal). B repels a positive charge at O toward D, and D attracts it toward D. These two forces:",
+        opts:["Add, both pointing toward D","Cancel","Point toward B","Are perpendicular"],
+        ans:0,
+        sol:"Both forces point the <strong>same way (toward D)</strong>, so they reinforce along diagonal BD." },
+      { q:"&#9733; Original (DPP-05 Q2): Square ABCD with A = +q, B = +2q, C = +q, D = &#8722;2q. The force on a charge at the centre O is:",
+        diagram:DIAGRAMS.squareLabeled('+q','+2q','+q','&#8722;2q','O'),
+        opts:["Along the diagonal BD","Zero","Along the diagonal AC","Perpendicular to a side"],
+        ans:0,
+        sol:"The AC pair cancels; the BD pair (+2q and &#8722;2q) both push/pull toward D. Net force is <strong>along the diagonal BD</strong>. (Answer key: option 3 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-05 &#183; Q3 &#183; Resultant Force on C (equilateral)",
+    questions:[
+      { q:"For an equilateral triangle of side 10 cm, the force on C (2 &#956;C) due to A (1 &#956;C) is:",
+        diagram:DIAGRAMS.triLabeled('1 &#956;C','&#8722;1 &#956;C','2 &#956;C'),
+        opts:["1.8 N","0.9 N","3.6 N","0.18 N"],
+        ans:0,
+        sol:"F<sub>A</sub> = (9&#215;10<sup>9</sup>)(10<sup>&#8722;6</sup>)(2&#215;10<sup>&#8722;6</sup>)/(0.1)&#178; = (9&#215;10<sup>9</sup>)(2&#215;10<sup>&#8722;12</sup>)/0.01 = <strong>1.8 N</strong>, repulsive (away from A)." },
+      { q:"The force on C (2 &#956;C) due to B (&#8722;1 &#956;C), also 10 cm away, is:",
+        opts:["1.8 N (attractive, toward B)","0.9 N","3.6 N","Zero"],
+        ans:0,
+        sol:"Same magnitudes and distance give F<sub>B</sub> = <strong>1.8 N</strong>; opposite signs make it <strong>attractive</strong> (toward B)." },
+      { q:"The angle between these two 1.8 N forces (one pointing away from A, one toward B) works out to:",
+        opts:["120&#176;","60&#176;","90&#176;","180&#176;"],
+        ans:0,
+        sol:"Working out the two directions from C, the forces are separated by <strong>120&#176;</strong> \u2014 the value you plug into the resultant formula." },
+      { q:"&#9733; Original (DPP-05 Q3): 1 &#956;C, &#8722;1 &#956;C, 2 &#956;C at corners A, B, C of an equilateral triangle (side 10 cm). The resultant force on C is:",
+        diagram:DIAGRAMS.triLabeled('1 &#956;C','&#8722;1 &#956;C','2 &#956;C'),
+        opts:["1.8 N","0.9 N","2.7 N","3.6 N"],
+        ans:0,
+        sol:"F<sub>net</sub> = &#8730;(F<sub>A</sub>&#178; + F<sub>B</sub>&#178; + 2F<sub>A</sub>F<sub>B</sub>cos120&#176;) = &#8730;(1.8&#178; + 1.8&#178; + 2&#183;1.8&#183;1.8&#183;(&#8722;&#189;)) = &#8730;(1.8&#178;) = <strong>1.8 N</strong>. Two equal forces at 120&#176; give a resultant of the same size. (Answer key: option 2 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-05 &#183; Q4 &#183; Charge at Centre of Triangle",
+    questions:[
+      { q:"Three equal charges q sit at the corners of an equilateral triangle. A charge at the centre is, from each corner:",
+        diagram:DIAGRAMS.triLabeled('q','q','q','Q'),
+        opts:["The same distance","Different distances","Zero distance","Distance L each (the side)"],
+        ans:0,
+        sol:"The centroid is <strong>equidistant</strong> from all three corners, so all three forces on the central charge have equal magnitude." },
+      { q:"Those three equal forces are directed:",
+        opts:["At 120&#176; to one another","All in the same direction","At 90&#176; to one another","Randomly"],
+        ans:0,
+        sol:"By the triangle's symmetry the three forces are equally spaced, <strong>120&#176; apart</strong>." },
+      { q:"Three equal vectors spaced 120&#176; apart add up to:",
+        opts:["Zero","Three times one of them","&#8730;3 times one","Twice one"],
+        ans:0,
+        sol:"Equal vectors at 120&#176; form a closed triangle \u2014 their vector sum is <strong>zero</strong>." },
+      { q:"&#9733; Original (DPP-05 Q4): Three charges each q at the corners of an equilateral triangle (side L). The electrostatic force on a charge placed at the centre is:",
+        diagram:DIAGRAMS.triLabeled('q','q','q','Q'),
+        opts:["Zero","q&#178;/(4&#960;&#949;<sub>0</sub>L&#178;)","3q&#178;/(4&#960;&#949;<sub>0</sub>L&#178;)","q&#178;/(12&#960;&#949;<sub>0</sub>L&#178;)"],
+        ans:0,
+        sol:"Three equal forces, equally inclined at 120&#176;, cancel exactly &#8658; net force <strong>zero</strong>, regardless of L. (Answer key: option 1 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-05 &#183; Q5 &#183; Force Normal to BC",
+    questions:[
+      { q:"Triangle with +Q at A, &#8722;Q at B, +Q at C (side a). The force on A due to B (&#8722;Q) is:",
+        diagram:DIAGRAMS.triLabeled('+Q','&#8722;Q','+Q'),
+        opts:["kQ&#178;/a&#178;, attractive (A pulled toward B)","kQ&#178;/a&#178;, repulsive","2kQ&#178;/a&#178;","Zero"],
+        ans:0,
+        sol:"Opposite charges &#8658; attraction: A is pulled toward B with magnitude <strong>kQ&#178;/a&#178;</strong>." },
+      { q:"The force on A due to C (+Q) is:",
+        opts:["kQ&#178;/a&#178;, repulsive (A pushed away from C)","kQ&#178;/a&#178;, attractive","Zero","2kQ&#178;/a&#178;"],
+        ans:0,
+        sol:"Like charges &#8658; repulsion: A is pushed away from C, also of magnitude <strong>kQ&#178;/a&#178;</strong>." },
+      { q:"Resolving both forces into components along BC and normal (perpendicular) to BC, the two <em>normal</em> components are:",
+        opts:["Equal and opposite \u2014 they cancel","Equal and add up","Both zero individually","Unequal"],
+        ans:0,
+        sol:"By the symmetry of the +Q/&#8722;Q pair about A, the components perpendicular to BC are equal and opposite &#8658; they <strong>cancel</strong>. (The along-BC components add, giving a net force parallel to BC.)" },
+      { q:"&#9733; Original (DPP-05 Q5): For +Q, &#8722;Q, +Q at A, B, C of an equilateral triangle (side a), the force on A <em>in the direction normal to BC</em> is:",
+        diagram:DIAGRAMS.triLabeled('+Q','&#8722;Q','+Q'),
+        opts:["Zero","Q&#178;/(4&#960;&#949;<sub>0</sub>a&#178;)","&#8722;Q&#178;/(4&#960;&#949;<sub>0</sub>a&#178;)","Q&#178;/(2&#960;&#949;<sub>0</sub>a&#178;)"],
+        ans:0,
+        sol:"The two forces on A have equal and opposite components perpendicular to BC, so the net force <strong>normal to BC is zero</strong> (the resultant lies along BC). (Answer key: option 3 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-05 &#183; Q6 &#183; Force on a Square's Corner",
+    questions:[
+      { q:"Equal charges q sit at the four corners of a square (side a). The charge at B feels forces from three others: two adjacent corners at distance a and one diagonal corner at distance:",
+        diagram:DIAGRAMS.squareLabeled('q','q','q','q'),
+        opts:["a&#8730;2","a","2a","a/2"],
+        ans:0,
+        sol:"The diagonal of the square has length <strong>a&#8730;2</strong>, so the far corner (D) is that far from B." },
+      { q:"The two forces from the adjacent corners (each kq&#178;/a&#178;) act along the two sides at B, i.e. at 90&#176; to each other. Their resultant is:",
+        opts:["&#8730;2 &#183; kq&#178;/a&#178;, along the diagonal","2 &#183; kq&#178;/a&#178;","kq&#178;/a&#178;","Zero"],
+        ans:0,
+        sol:"Two equal perpendicular forces combine to <strong>&#8730;2&#183;kq&#178;/a&#178;</strong>, directed along the diagonal (the same line as the far corner)." },
+      { q:"The force from the diagonal corner (distance a&#8730;2) has magnitude kq&#178;/(a&#8730;2)&#178; and points along that same diagonal. It equals:",
+        opts:["kq&#178;/2a&#178;","kq&#178;/a&#178;","2kq&#178;/a&#178;","&#8730;2 kq&#178;/a&#178;"],
+        ans:0,
+        sol:"kq&#178;/(a&#8730;2)&#178; = kq&#178;/(2a&#178;) = <strong>kq&#178;/2a&#178;</strong>, along the diagonal \u2014 so it simply adds to the resultant of the other two." },
+      { q:"&#9733; Original (DPP-05 Q6): Equal charges q at the four corners of a square (side a). The magnitude of the net force on the charge at B is:",
+        diagram:DIAGRAMS.squareLabeled('q','q','q','q'),
+        opts:["[(1 + 2&#8730;2)/2] &#183; q&#178;/(4&#960;&#949;<sub>0</sub>a&#178;)","3q&#178;/(4&#960;&#949;<sub>0</sub>a&#178;)","4q&#178;/(4&#960;&#949;<sub>0</sub>a&#178;)","(2 + 1/&#8730;2) &#183; q&#178;/(4&#960;&#949;<sub>0</sub>a&#178;)"],
+        ans:0,
+        sol:"Total along the diagonal = &#8730;2&#183;kq&#178;/a&#178; (from the two sides) + kq&#178;/2a&#178; (from the diagonal charge) = (&#8730;2 + &#189;)kq&#178;/a&#178; = <strong>[(1 + 2&#8730;2)/2]&#183;q&#178;/(4&#960;&#949;<sub>0</sub>a&#178;)</strong> &#8776; 1.91&#183;kq&#178;/a&#178;. (Answer key: option 3 \u2014 correct.)" }
+    ] }
+
+];
+const STORAGE_KEY = 'padipucast_electrostatics_dpp0405_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
