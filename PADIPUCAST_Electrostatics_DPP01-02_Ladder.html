@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder · Electromagnetic Induction</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Electrostatics Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Models
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Electrostatics<br>— Question Ladders</h1></div>
+    <p id="home-sub">Every source question gets its own ladder: 3 build-up rungs, easy to hard, leading smoothly to the original DPP question (&#9733;). Batch A of the Electrostatics set — DPP-01 (Q1–Q6) and DPP-02 (Q1–Q3).</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every model. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — ELECTROSTATICS set (PADIPUCAST)
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+function chg(cx,cy,sign,label,color){
+  const s = sign==='+'?'+':(sign==='-'?'\u2212':'');
+  return `<circle cx="${cx}" cy="${cy}" r="15" fill="#fff" stroke="${color}" stroke-width="2"/>`+
+         `<text x="${cx}" y="${cy+5}" font-size="15" fill="${color}" text-anchor="middle" ${FS} font-weight="700">${s}</text>`+
+         (label?`<text x="${cx}" y="${cy-22}" font-size="12" fill="#374151" text-anchor="middle" ${FS}>${label}</text>`:'');
+}
+function distLine(x1,x2,y,txt){
+  return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4,3"/>`+
+         `<text x="${(x1+x2)/2}" y="${y+16}" font-size="11" fill="#6b7280" text-anchor="middle" ${FS}>${txt}</text>`;
+}
+const DIAGRAMS = {
+  // two point charges / two spheres on a line
+  twoCharges:(s1='+',s2='+',l1='q\u2081',l2='q\u2082',dist='r')=>`
+    <svg viewBox="0 0 300 120" width="300" height="120" xmlns="http://www.w3.org/2000/svg">
+      ${chg(60,55,s1,l1,s1==='+'?'#dc2626':'#2563eb')}
+      ${chg(240,55,s2,l2,s2==='+'?'#dc2626':'#2563eb')}
+      ${distLine(60,240,90,dist)}
+    </svg>`,
+  // charged rod inducing charge on a neutral metal sphere
+  induction:(rodSign='+')=>`
+    <svg viewBox="0 0 300 140" width="300" height="140" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="55" width="90" height="20" rx="4" fill="${rodSign==='+'?'#fecaca':'#bfdbfe'}" stroke="${rodSign==='+'?'#dc2626':'#2563eb'}" stroke-width="1.6"/>
+      <text x="35" y="69" font-size="12" fill="${rodSign==='+'?'#dc2626':'#2563eb'}" ${FS} font-weight="700">${rodSign} ${rodSign} ${rodSign}</text>
+      <text x="30" y="45" font-size="10" fill="#6b7280" ${FS}>charged rod</text>
+      <circle cx="210" cy="65" r="42" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.6"/>
+      <text x="178" y="70" font-size="14" fill="#2563eb" ${FS} font-weight="700">\u2212\u2212</text>
+      <text x="232" y="70" font-size="14" fill="#dc2626" ${FS} font-weight="700">++</text>
+      <text x="185" y="122" font-size="10" fill="#6b7280" ${FS}>neutral metal sphere</text>
+    </svg>`,
+  // two identical metal spheres, one solid one hollow
+  twoSpheres:(l1='solid',l2='hollow')=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="80" cy="75" r="42" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.8"/>
+      <text x="80" y="80" font-size="11" fill="#374151" text-anchor="middle" ${FS}>${l1}</text>
+      <circle cx="220" cy="75" r="42" fill="none" stroke="#6b7280" stroke-width="1.8"/>
+      <circle cx="220" cy="75" r="26" fill="#fff" stroke="#d1d5db" stroke-width="1.2" stroke-dasharray="3,3"/>
+      <text x="220" y="80" font-size="11" fill="#374151" text-anchor="middle" ${FS}>${l2}</text>
+      <text x="150" y="140" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>same outer radius</text>
+    </svg>`,
+  // gold-leaf electroscope, leaves diverging
+  electroscope:(sign='+')=>`
+    <svg viewBox="0 0 200 210" width="200" height="210" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="30" r="16" fill="#fde68a" stroke="#b45309" stroke-width="1.6"/>
+      <text x="100" y="35" font-size="12" fill="#b45309" text-anchor="middle" ${FS} font-weight="700">${sign==='+'?'+':'\u2212'}</text>
+      <line x1="100" y1="46" x2="100" y2="120" stroke="#6b7280" stroke-width="3"/>
+      <rect x="45" y="70" width="110" height="130" rx="6" fill="none" stroke="#9ca3af" stroke-width="1.6"/>
+      <line x1="100" y1="120" x2="72" y2="185" stroke="#b45309" stroke-width="2.2"/>
+      <line x1="100" y1="120" x2="128" y2="185" stroke="#b45309" stroke-width="2.2"/>
+      <text x="100" y="70" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>leaves diverge</text>
+    </svg>`
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  QUESTION LADDERS — one ladder per SOURCE QUESTION (4 rungs, easy \u2192 original \u2605)
+//  Batch A: DPP-01 (Q1\u2013Q6) + DPP-02 (Q1\u2013Q3)
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  // ═══════════════════ DPP-01 \u00b7 ELECTRIC CHARGES & THEIR PROPERTIES ═══════════════════
+
+  { name:"DPP-01 &#183; Q1 &#183; Moving Charge &amp; Fields",
+    questions:[
+      { q:"A charge sitting completely <em>at rest</em> sets up, in the space around it:",
+        opts:["An electric field only","A magnetic field only","Both an electric and a magnetic field","No field at all"],
+        ans:0,
+        sol:"A stationary charge is the source of an <strong>electric field only</strong>. Magnetism needs <em>motion</em> of charge \u2014 a charge at rest produces no magnetic field." },
+      { q:"A single charge moving with uniform velocity produces, <em>in addition to</em> its electric field:",
+        opts:["A magnetic field","A second electric field","A gravitational field","Nothing extra"],
+        ans:0,
+        sol:"A moving charge is a tiny current, and any current is wrapped by a <strong>magnetic field</strong>. So a moving charge carries its electric field with it <em>and</em> generates a magnetic field around its line of motion." },
+      { q:"A <em>neutral</em> wire carrying a steady current produces in its surroundings:",
+        opts:["A magnetic field only","An electric field only","Both fields","No field"],
+        ans:0,
+        sol:"The wire's electrons move (giving a <strong>magnetic field</strong>), but the wire's net charge is zero, so there is no net electric field. Contrast this with a <em>single</em> moving charge, which is not neutral \u2014 that produces both." },
+      { q:"&#9733; Original (DPP-01 Q1): The electric charge in uniform motion produces:",
+        opts:["Both an electric and a magnetic field","An electric field only","A magnetic field only","Neither an electric nor a magnetic field"],
+        ans:0,
+        sol:"A moving charge is <em>not</em> neutral, so it keeps its <strong>electric field</strong>; and because it is moving, it also creates a <strong>magnetic field</strong>. Hence a charge in uniform motion produces <strong>both</strong>. (Answer key: option with 'both' \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-01 &#183; Q2 &#183; Charged Soap Bubble",
+    questions:[
+      { q:"Two like charges placed near each other exert a force that is:",
+        opts:["Repulsive","Attractive","Zero","Always sideways"],
+        ans:0,
+        sol:"Like charges <strong>repel</strong>. This simple fact drives everything about how charge distributes itself on a surface." },
+      { q:"Charge given to a conductor spreads itself over its:",
+        opts:["Outer surface","Central core","Volume, uniformly","Bottom half only"],
+        ans:0,
+        sol:"Mutual repulsion pushes the charges as far apart as possible, so they settle on the <strong>outer surface</strong> of the conductor \u2014 none stays inside." },
+      { q:"The mutual repulsion of surface charges creates on the surface an outward push called:",
+        opts:["Electrostatic pressure","Surface tension","Atmospheric pressure","Magnetic pressure"],
+        ans:0,
+        sol:"Charges on a surface push each other outward, giving an <strong>electrostatic (outward) pressure</strong> of &#963;&#178;/2&#949;<sub>0</sub> per unit area, directed normally outward." },
+      { q:"&#9733; Original (DPP-01 Q2): A soap bubble is given a negative charge. Its radius will:",
+        opts:["Increase","Decrease","Remain unchanged","Cannot be predicted"],
+        ans:0,
+        sol:"The surface charges repel one another, adding an outward electrostatic pressure that inflates the bubble, so the radius <strong>increases</strong>. The sign of the charge is irrelevant \u2014 like charges repel either way. (Answer key: Increase \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-01 &#183; Q3 &#183; How to Charge a Body",
+    questions:[
+      { q:"In ordinary charging, the only particle that actually moves from one body to another is the:",
+        opts:["Electron","Proton","Neutron","Nucleus"],
+        ans:0,
+        sol:"Protons and neutrons are locked in the nucleus. Only the loosely-held <strong>electrons</strong> transfer, so all everyday charging is electron transfer." },
+      { q:"Adding electrons to a neutral body makes it:",
+        opts:["Negative","Positive","Stay neutral","Magnetic"],
+        ans:0,
+        sol:"Extra electrons mean extra negative charge, so the body becomes <strong>negative</strong>." },
+      { q:"Removing electrons from a neutral body makes it:",
+        opts:["Positive","Negative","Stay neutral","Heavier"],
+        ans:0,
+        sol:"Losing electrons leaves an excess of protons, so the body becomes <strong>positive</strong>." },
+      { q:"&#9733; Original (DPP-01 Q3): A body can be negatively charged by:",
+        opts:["Giving excess of electrons to it","Removing some electrons from it","Giving some protons to it","Removing some neutrons from it"],
+        ans:0,
+        sol:"Negative means extra electrons, so we charge a body negatively by <strong>giving it excess electrons</strong>. Protons and neutrons never transfer in ordinary charging. (Answer key: option 1 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-01 &#183; Q4 &#183; Counting Electrons (Q = ne)",
+    questions:[
+      { q:"Using Q = ne with e = 1.6&#215;10<sup>&#8722;19</sup> C, how many electrons make up a charge of 3.2&#215;10<sup>&#8722;19</sup> C?",
+        opts:["2","3","16","32"],
+        ans:0,
+        sol:"n = Q/e = 3.2&#215;10<sup>&#8722;19</sup> &#247; 1.6&#215;10<sup>&#8722;19</sup> = <strong>2</strong>." },
+      { q:"A body has 5 excess electrons. Its charge is:",
+        opts:["&#8722;8&#215;10<sup>&#8722;19</sup> C","+8&#215;10<sup>&#8722;19</sup> C","&#8722;5&#215;10<sup>&#8722;19</sup> C","&#8722;1.6&#215;10<sup>&#8722;19</sup> C"],
+        ans:0,
+        sol:"Q = ne = 5 &#215; 1.6&#215;10<sup>&#8722;19</sup> = 8&#215;10<sup>&#8722;19</sup> C, and excess electrons make it <strong>negative</strong>: &#8722;8&#215;10<sup>&#8722;19</sup> C." },
+      { q:"A body carries +4.8&#215;10<sup>&#8722;19</sup> C. How many electrons were removed from it?",
+        opts:["3","4.8","48","30"],
+        ans:0,
+        sol:"Positive charge means electrons removed: n = 4.8&#215;10<sup>&#8722;19</sup> &#247; 1.6&#215;10<sup>&#8722;19</sup> = <strong>3</strong> electrons removed." },
+      { q:"&#9733; Original (DPP-01 Q4): A conductor has 14.4&#215;10<sup>&#8722;19</sup> C of positive charge (e = 1.6&#215;10<sup>&#8722;19</sup> C). The conductor has:",
+        opts:["9 electrons in deficit","9 electrons in excess","27 electrons in deficit","27 electrons in excess"],
+        ans:0,
+        sol:"n = 14.4&#215;10<sup>&#8722;19</sup> &#247; 1.6&#215;10<sup>&#8722;19</sup> = 9. Positive charge = electrons <strong>removed</strong>, so the body is 9 electrons in <strong>deficit (short)</strong>. (Answer key: '9 electrons in short' \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-01 &#183; Q5 &#183; Quantisation of Charge",
+    questions:[
+      { q:"Charge is quantised: Q = ne with n a whole number. Which of these is a <em>valid</em> charge?",
+        opts:["3.2&#215;10<sup>&#8722;19</sup> C","2.4&#215;10<sup>&#8722;19</sup> C","0.8&#215;10<sup>&#8722;19</sup> C","2.0&#215;10<sup>&#8722;19</sup> C"],
+        ans:0,
+        sol:"Divide by e and look for a whole number: 3.2/1.6 = <strong>2</strong> \u2713. The others give 1.5, 0.5, 1.25 \u2014 not allowed." },
+      { q:"Is 1.6&#215;10<sup>&#8722;18</sup> C a possible charge? (e = 1.6&#215;10<sup>&#8722;19</sup> C)",
+        opts:["Yes \u2014 it equals 10e","No \u2014 it is a fraction of e","Yes \u2014 it equals &#189;e","No \u2014 charge cannot be that large"],
+        ans:0,
+        sol:"n = 1.6&#215;10<sup>&#8722;18</sup> &#247; 1.6&#215;10<sup>&#8722;19</sup> = <strong>10</strong>, a whole number, so it is a perfectly valid charge (10e)." },
+      { q:"For which value is n a <em>fraction</em>, making the charge impossible? (e = 1.6&#215;10<sup>&#8722;19</sup> C)",
+        opts:["2.4&#215;10<sup>&#8722;19</sup> C","3.2&#215;10<sup>&#8722;19</sup> C","1.6&#215;10<sup>&#8722;18</sup> C","4.8&#215;10<sup>&#8722;19</sup> C"],
+        ans:0,
+        sol:"2.4/1.6 = <strong>1.5</strong> \u2014 a fraction of an electron, impossible. The others give 2, 10 and 3 (all whole)." },
+      { q:"&#9733; Original (DPP-01 Q5): Which of the following charges is NOT possible? (1) &#8730;2&#183;e&nbsp; (2) 1.6&#215;10<sup>&#8722;18</sup> C&nbsp; (3) 3.2&#215;10<sup>&#8722;17</sup> C&nbsp; (4) 1 C",
+        opts:["&#8730;2&#183;e","1.6&#215;10<sup>&#8722;18</sup> C","3.2&#215;10<sup>&#8722;17</sup> C","1 C"],
+        ans:0,
+        sol:"For Q = ne, n must be a whole number. &#8730;2 = 1.414 is <strong>not</strong> a whole number, so &#8730;2&#183;e is impossible. The rest give n = 10, 200 and 6.25&#215;10<sup>18</sup> \u2014 all whole. (Answer key: &#8730;2&#183;e \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-01 &#183; Q6 &#183; Charging Changes the Mass",
+    questions:[
+      { q:"Electrons have mass. Adding electrons to a body therefore makes its mass:",
+        opts:["Increase slightly","Decrease slightly","Stay exactly the same","Double"],
+        ans:0,
+        sol:"Each electron adds its tiny mass (9.1&#215;10<sup>&#8722;31</sup> kg), so gaining electrons makes the body <strong>slightly heavier</strong>." },
+      { q:"Removing electrons from a body makes its mass:",
+        opts:["Decrease slightly","Increase slightly","Stay the same","Become zero"],
+        ans:0,
+        sol:"Losing electrons removes a little mass, so the body becomes <strong>slightly lighter</strong>." },
+      { q:"A sphere is given a <em>negative</em> charge. Compared with before, its mass is now:",
+        opts:["Slightly greater","Slightly smaller","Unchanged","Halved"],
+        ans:0,
+        sol:"Negative charge means the sphere <strong>gained electrons</strong>, so its mass is <strong>slightly greater</strong> than before." },
+      { q:"&#9733; Original (DPP-01 Q6): Sphere A is given a positive charge; an identical sphere B (same initial mass) is given an equal <em>negative</em> charge. Then:",
+        diagram:DIAGRAMS.twoCharges('+','-','A','B','equal charge'),
+        opts:["Mass of B increases","Mass of A and B remain equal","Mass of A increases","Mass of B decreases"],
+        ans:0,
+        sol:"B gains electrons (negative) &#8594; B's mass <strong>increases</strong>. A loses electrons (positive) &#8594; A's mass slightly decreases. So the only correct statement is that the <strong>mass of B increases</strong>. (Answer key: option 4 \u2014 correct.)" }
+    ] },
+
+  // ═══════════════════ DPP-02 \u00b7 METHODS OF CHARGING ═══════════════════
+
+  { name:"DPP-02 &#183; Q1 &#183; Solid vs Hollow Sphere",
+    questions:[
+      { q:"Charge given to a metal conductor resides:",
+        opts:["Entirely on its outer surface","Uniformly through its volume","At its geometric centre","Only at the bottom"],
+        ans:0,
+        sol:"Mutual repulsion drives the charge to the <strong>outer surface</strong>; the interior of a charged conductor holds no net charge." },
+      { q:"The maximum charge a conductor can hold is decided by its:",
+        opts:["Outer surface (size and shape)","Inner material only","Colour","Temperature only"],
+        ans:0,
+        sol:"Since charge lives on the surface, the limit is set by the <strong>outer surface</strong> \u2014 what's inside (solid or hollow) does not matter." },
+      { q:"Two conductors with the <em>same outer radius</em> necessarily have the same:",
+        opts:["Outer surface area","Mass","Density","Inner volume"],
+        ans:0,
+        sol:"Equal outer radius &#8658; equal <strong>outer surface area</strong> (4&#960;r&#178;). Mass and inner volume can differ (one may be hollow)." },
+      { q:"&#9733; Original (DPP-02 Q1): Two metallic spheres have the same radius, but one is solid and the other hollow. Then:",
+        diagram:DIAGRAMS.twoSpheres('solid','hollow'),
+        opts:["They can be charged equally (same maximum)","The solid sphere can hold more charge","The hollow sphere can hold more charge","None of the above"],
+        ans:0,
+        sol:"Charge sits on the surface, and both spheres have the <strong>same outer surface area</strong>, so they hold the <strong>same maximum charge</strong>. Solid vs hollow is irrelevant. (Answer key: option 3, 'charged equally' \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-02 &#183; Q2 &#183; Attraction Is Not Proof",
+    questions:[
+      { q:"Two bodies that <em>repel</em> each other must carry:",
+        opts:["The same sign of charge","Opposite signs of charge","No charge at all","Only positive charge"],
+        ans:0,
+        sol:"Only like charges repel, so <strong>repulsion is the sure test</strong> of charge: both bodies are charged and carry the same sign." },
+      { q:"A charged rod brought near a light <em>neutral</em> conductor will:",
+        diagram:DIAGRAMS.induction('+'),
+        opts:["Attract it (by induction)","Repel it","Do nothing","Explode it"],
+        ans:0,
+        sol:"The rod induces opposite charge on the near face of the neutral body and pulls it in. So <strong>attraction can happen even with an uncharged body</strong> \u2014 attraction is not proof of an opposite charge." },
+      { q:"A positively charged body attracts another body. That other body is definitely <em>NOT</em>:",
+        opts:["Positively charged","Negatively charged","Neutral","Made of metal"],
+        ans:0,
+        sol:"Two positive bodies would <em>repel</em>. Since they attract, the second body cannot be <strong>positive</strong> \u2014 it must be negative or neutral." },
+      { q:"&#9733; Original (DPP-02 Q2): A positively charged body A attracts body B. The charge on B may be:",
+        opts:["Negative (it may also be neutral, but never positive)","Positive","Positive or negative \u2014 both possible","Cannot say anything at all"],
+        ans:0,
+        sol:"Attraction means B is either oppositely charged or neutral \u2014 it can <strong>never be positive</strong>, because two positives repel. So among charged options, B is <strong>negative</strong> (with 'neutral' also allowed).<br><br><strong>Note on the source key:</strong> the printed answer marks 'both' (positive or negative). That is not rigorous \u2014 a positive body cannot attract another positive body. The physically sound answer is negative-or-neutral, never positive." }
+    ] },
+
+  { name:"DPP-02 &#183; Q3 &#183; Electroscope &amp; X-rays",
+    questions:[
+      { q:"A gold-leaf electroscope is charged positively. Its two leaves:",
+        diagram:DIAGRAMS.electroscope('+'),
+        opts:["Diverge (repel each other)","Come together","Stay vertical","Swing sideways together"],
+        ans:0,
+        sol:"Both leaves carry the same (positive) charge, so they <strong>repel and diverge</strong>. The amount of divergence tracks the amount of charge." },
+      { q:"X-rays striking a metal can knock electrons out of it (ionisation / photoemission). This tends to make the metal:",
+        opts:["More positive","More negative","Neutral instantly","Magnetic"],
+        ans:0,
+        sol:"Ejecting electrons removes negative charge, leaving the metal <strong>more positive</strong> (or less negative than before)." },
+      { q:"If an already-<em>positive</em> conductor loses even more electrons, its positive charge:",
+        opts:["Increases","Decreases","Becomes negative","Stays fixed"],
+        ans:0,
+        sol:"Losing more electrons deepens the electron deficit, so the positive charge <strong>increases</strong>." },
+      { q:"&#9733; Original (DPP-02 Q3): A glass rod rubbed with silk charges a gold-leaf electroscope, and the leaves diverge. The charged electroscope is then briefly exposed to X-rays. The leaves will:",
+        diagram:DIAGRAMS.electroscope('+'),
+        opts:["Diverge further","Collapse","Be unaffected","Melt"],
+        ans:0,
+        sol:"A glass rod rubbed with silk is <strong>positive</strong>, so the electroscope and its leaves are positive. X-rays eject more electrons from the already-positive leaves, making them <strong>even more positive</strong> &#8594; they <strong>diverge further</strong>. (A <em>negatively</em> charged electroscope would instead collapse.) (Answer key: 'diverge further' \u2014 correct.)" }
+    ] }
+
+];
+const STORAGE_KEY = 'padipucast_electrostatics_perq_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
