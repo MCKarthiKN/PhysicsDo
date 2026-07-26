@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder · Electromagnetic Induction</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Electrostatics Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Models
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Electrostatics<br>— Question Ladders</h1></div>
+    <p id="home-sub">Every source question gets its own ladder: 3 build-up rungs, easy to hard, leading smoothly to the original DPP question (&#9733;). Batch H of the Electrostatics set — DPP-10, Field due to a system of charges.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every model. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — ELECTROSTATICS set (PADIPUCAST)
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+function dot(cx,cy,label,color){
+  return `<circle cx="${cx}" cy="${cy}" r="15" fill="#fff" stroke="${color}" stroke-width="1.8"/>`+
+         `<text x="${cx}" y="${cy+4}" font-size="11" fill="${color}" text-anchor="middle" ${FS} font-weight="700">${label}</text>`;
+}
+function centreO(cx,cy){return `<circle cx="${cx}" cy="${cy}" r="11" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/><text x="${cx}" y="${cy+4}" font-size="10" fill="#16a34a" text-anchor="middle" ${FS} font-weight="700">O</text>`;}
+const col=q=>/&#8722;|^-/.test(q)?'#2563eb':'#dc2626';
+const DIAGRAMS = {
+  triCentre:(a='+q',b='+q',c='+q')=>`
+    <svg viewBox="0 0 220 200" width="220" height="200" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="110,30 40,160 180,160" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+      ${centreO(110,117)}
+      ${dot(110,30,a,col(a))}${dot(40,160,b,col(b))}${dot(180,160,c,col(c))}
+    </svg>`,
+  // square: labels for top-left, top-right, bottom-left, bottom-right
+  squareGrid:(tl='4q',tr='3q',bl='q',br='2q',lblTL='D',lblTR='C',lblBL='A',lblBR='B')=>`
+    <svg viewBox="0 0 230 220" width="230" height="220" xmlns="http://www.w3.org/2000/svg">
+      <rect x="50" y="45" width="130" height="130" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+      <line x1="50" y1="45" x2="180" y2="175" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="180" y1="45" x2="50" y2="175" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>
+      ${centreO(115,110)}
+      ${dot(50,45,tl,col(tl))}<text x="34" y="42" font-size="9" fill="#9ca3af" ${FS}>${lblTL}</text>
+      ${dot(180,45,tr,col(tr))}<text x="192" y="42" font-size="9" fill="#9ca3af" ${FS}>${lblTR}</text>
+      ${dot(50,175,bl,col(bl))}<text x="34" y="196" font-size="9" fill="#9ca3af" ${FS}>${lblBL}</text>
+      ${dot(180,175,br,col(br))}<text x="192" y="196" font-size="9" fill="#9ca3af" ${FS}>${lblBR}</text>
+    </svg>`,
+  // regular hexagon with 6 vertex labels (clockwise from top)
+  hexagon:(v=['q','q','q','q','q','q'])=>{
+    const cx=110,cy=100,R=70; let pts='',lab='';
+    for(let i=0;i<6;i++){const a=(-90+i*60)*Math.PI/180;const x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);pts+=`${x},${y} `;lab+=dot(x,y,v[i],col(v[i]));}
+    return `<svg viewBox="0 0 220 200" width="220" height="200" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="${pts}" fill="none" stroke="#d1d5db" stroke-width="1.4"/>${centreO(cx,cy)}${lab}</svg>`;
+  },
+  // cube with charges at 8 vertices
+  cube:()=>`
+    <svg viewBox="0 0 210 190" width="210" height="190" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="55" width="90" height="90" fill="none" stroke="#9ca3af" stroke-width="1.3"/>
+      <rect x="80" y="30" width="90" height="90" fill="none" stroke="#9ca3af" stroke-width="1.3" stroke-dasharray="3,2"/>
+      <line x1="40" y1="55" x2="80" y2="30" stroke="#9ca3af" stroke-width="1.3"/>
+      <line x1="130" y1="55" x2="170" y2="30" stroke="#9ca3af" stroke-width="1.3"/>
+      <line x1="40" y1="145" x2="80" y2="120" stroke="#9ca3af" stroke-width="1.3"/>
+      <line x1="130" y1="145" x2="170" y2="120" stroke="#9ca3af" stroke-width="1.3"/>
+      ${[[40,55],[130,55],[40,145],[130,145],[80,30],[170,30],[80,120],[170,120]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="#dc2626"/>`).join('')}
+      ${centreO(105,88)}
+      <text x="105" y="182" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>charge q at all 8 vertices</text>
+    </svg>`,
+  twoCharges:(s1='+',s2='+',l1='q\u2081',l2='q\u2082',dist='r',midMark=true)=>`
+    <svg viewBox="0 0 320 120" width="320" height="120" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="55" r="15" fill="#fff" stroke="${s1==='+'?'#dc2626':'#2563eb'}" stroke-width="2"/>
+      <text x="50" y="60" font-size="14" fill="${s1==='+'?'#dc2626':'#2563eb'}" text-anchor="middle" ${FS} font-weight="700">${s1==='+'?'+':'\u2212'}</text>
+      <text x="50" y="30" font-size="11" fill="#374151" text-anchor="middle" ${FS}>${l1}</text>
+      <circle cx="270" cy="55" r="15" fill="#fff" stroke="${s2==='+'?'#dc2626':'#2563eb'}" stroke-width="2"/>
+      <text x="270" y="60" font-size="14" fill="${s2==='+'?'#dc2626':'#2563eb'}" text-anchor="middle" ${FS} font-weight="700">${s2==='+'?'+':'\u2212'}</text>
+      <text x="270" y="30" font-size="11" fill="#374151" text-anchor="middle" ${FS}>${l2}</text>
+      <line x1="50" y1="55" x2="270" y2="55" stroke="#d1d5db" stroke-width="1.2"/>
+      ${midMark?`<circle cx="160" cy="55" r="4" fill="#16a34a"/><text x="160" y="40" font-size="11" fill="#16a34a" text-anchor="middle" ${FS} font-weight="700">M</text>`:''}
+      <text x="160" y="98" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>${dist}</text>
+    </svg>`
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  QUESTION LADDERS — one ladder per SOURCE QUESTION (4 rungs, easy \u2192 original \u2605)
+//  Batch H: DPP-10 (Q1\u2013Q6) \u00b7 Electric field due to a system of charges
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  { name:"DPP-10 &#183; Q1 &#183; Field at Centre of a Triangle",
+    questions:[
+      { q:"The electric field at the centre O due to a single +q at a corner points:",
+        diagram:DIAGRAMS.triCentre('+q','+q','+q'),
+        opts:["Radially away from that charge, through O","Toward the charge","Along a side","Perpendicular to the page"],
+        ans:0,
+        sol:"A positive charge's field points <strong>away</strong> from it, so at O the field points along the line from the charge through O, directed outward." },
+      { q:"The three +q charges are all the same distance from O, so their three fields have:",
+        opts:["Equal magnitudes","Different magnitudes","Zero magnitude","Random magnitudes"],
+        ans:0,
+        sol:"O is equidistant from all three corners, so each field has the <strong>same magnitude</strong> kq/r&#178;." },
+      { q:"These three equal fields are directed at what angle to one another?",
+        opts:["120&#176;","60&#176;","90&#176;","180&#176;"],
+        ans:0,
+        sol:"By the triangle's symmetry, the three fields are spaced <strong>120&#176;</strong> apart." },
+      { q:"&#9733; Original (DPP-10 Q1): +q at each corner of an equilateral triangle. The field intensity at the centre O is:",
+        diagram:DIAGRAMS.triCentre('+q','+q','+q'),
+        opts:["Zero","q/(4&#960;&#949;<sub>0</sub>r&#178;)","3q/(4&#960;&#949;<sub>0</sub>r&#178;)","q/(4&#960;&#949;<sub>0</sub>r)"],
+        ans:0,
+        sol:"Three equal fields at 120&#176; sum to <strong>zero</strong> \u2014 a clean symmetry result. (Answer key: option 3 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-10 &#183; Q2 &#183; Field Direction (q, 2q, 3q, 4q)",
+    questions:[
+      { q:"Charges q, 2q, 3q, 4q sit at A, B, C, D of a square. At the centre, the field from each positive charge points:",
+        diagram:DIAGRAMS.squareGrid('4q','3q','q','2q','D','C','A','B'),
+        opts:["Away from that charge (through O to the opposite corner)","Toward that charge","Along a side","In a circle"],
+        ans:0,
+        sol:"Each positive charge pushes the field <strong>away</strong> from itself, i.e. from that corner through O toward the opposite corner." },
+      { q:"Along diagonal AC: q is at A and 3q at C. The net field on this diagonal is:",
+        opts:["2E toward A (the larger 3q wins)","2E toward C","4E toward A","Zero"],
+        ans:0,
+        sol:"3q's field (toward A) beats q's field (toward C): net = 3E &#8722; E = <strong>2E toward A</strong>." },
+      { q:"Along diagonal BD: 2q at B and 4q at D. The net field is:",
+        opts:["2E toward B (the larger 4q wins)","2E toward D","6E toward B","Zero"],
+        ans:0,
+        sol:"4q's field (toward B) beats 2q's field (toward D): net = 4E &#8722; 2E = <strong>2E toward B</strong>." },
+      { q:"&#9733; Original (DPP-10 Q2): The direction of the net field at the centre is along:",
+        diagram:DIAGRAMS.squareGrid('4q','3q','q','2q','D','C','A','B'),
+        opts:["CB","AB","BD","AC"],
+        ans:0,
+        sol:"The two nets (2E toward A and 2E toward B) are equal and perpendicular; their resultant points straight down, away from the larger top charges \u2014 parallel to <strong>CB</strong>. (Answer key: option 2 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-10 &#183; Q3 &#183; Hexagon: When Is E Not Zero?",
+    questions:[
+      { q:"Identical charges at all six vertices of a regular hexagon give a field at the centre of:",
+        diagram:DIAGRAMS.hexagon(['q','q','q','q','q','q']),
+        opts:["Zero (perfect symmetry)","Maximum","6E toward one vertex","Undefined"],
+        ans:0,
+        sol:"Every charge is balanced by an identical one diametrically opposite, so all fields cancel: <strong>zero</strong>." },
+      { q:"Two charges directly opposite each other across the centre contribute fields that:",
+        opts:["Cancel if equal, but add if one is flipped in sign","Always cancel","Always add","Are perpendicular"],
+        ans:0,
+        sol:"Equal opposite charges cancel. But if one of a diametric pair is changed to &#8722;q, the pair no longer cancels \u2014 it leaves a <strong>net field</strong>." },
+      { q:"Replacing a symmetric pair of like charges with a +q / &#8722;q pair (across the centre) produces:",
+        opts:["A non-zero field (2E along that diameter)","Still zero","A weaker but symmetric field","No change"],
+        ans:0,
+        sol:"+q pushes away and &#8722;q pulls toward \u2014 both along the same diameter \u2014 so their fields <strong>add</strong> to 2E instead of cancelling." },
+      { q:"&#9733; Original (DPP-10 Q3): Among the hexagon arrangements, the field at the centre is NOT zero for the case with two &#8722;q charges on opposite vertices (figure 2):",
+        diagram:DIAGRAMS.hexagon(['q','&#8722;q','q','q','&#8722;q','q']),
+        opts:["Figure 2","Figure 1","Figure 3","Figure 4"],
+        ans:0,
+        sol:"Figure 2 breaks the symmetry: the &#8722;q vertices don't cancel their opposite +q, leaving a net field of 2E. The fully symmetric cases (all q, or symmetric 2q/q patterns) give zero.<br><br><strong>Note:</strong> this relies on the exact vertex charges in the printed figures \u2014 please confirm against the PDF. (Answer key: option 2, Figure 2.)" }
+    ] },
+
+  { name:"DPP-10 &#183; Q4 &#183; Field at the Midpoint",
+    questions:[
+      { q:"+5 &#956;C and +10 &#956;C are 20 cm apart. The midpoint M is how far from each?",
+        diagram:DIAGRAMS.twoCharges('+','+','+5 &#956;C','+10 &#956;C','20 cm'),
+        opts:["0.1 m","0.2 m","0.05 m","0.4 m"],
+        ans:0,
+        sol:"Half of 20 cm is 10 cm = <strong>0.1 m</strong> from each charge." },
+      { q:"The field at M due to +5 &#956;C is:",
+        opts:["4.5&#215;10<sup>6</sup> N/C","9&#215;10<sup>6</sup> N/C","4.5&#215;10<sup>5</sup> N/C","2.25&#215;10<sup>6</sup> N/C"],
+        ans:0,
+        sol:"E&#8325; = (9&#215;10<sup>9</sup>)(5&#215;10<sup>&#8722;6</sup>)/(0.1)&#178; = 45000/0.01 = <strong>4.5&#215;10<sup>6</sup> N/C</strong>, pointing toward the +10 &#956;C side." },
+      { q:"The field at M due to +10 &#956;C is:",
+        opts:["9&#215;10<sup>6</sup> N/C","4.5&#215;10<sup>6</sup> N/C","18&#215;10<sup>6</sup> N/C","9&#215;10<sup>5</sup> N/C"],
+        ans:0,
+        sol:"E&#8321;&#8320; = (9&#215;10<sup>9</sup>)(10&#215;10<sup>&#8722;6</sup>)/(0.1)&#178; = 90000/0.01 = <strong>9&#215;10<sup>6</sup> N/C</strong>, pointing toward the +5 &#956;C side." },
+      { q:"&#9733; Original (DPP-10 Q4): The net field at the midpoint between +5 &#956;C and +10 &#956;C (20 cm apart) is:",
+        diagram:DIAGRAMS.twoCharges('+','+','+5 &#956;C','+10 &#956;C','20 cm'),
+        opts:["4.5&#215;10<sup>6</sup> N/C, toward +5 &#956;C","4.5&#215;10<sup>6</sup> N/C, toward +10 &#956;C","13.5&#215;10<sup>6</sup> N/C, toward +5 &#956;C","13.5&#215;10<sup>6</sup> N/C, toward +10 &#956;C"],
+        ans:0,
+        sol:"The two fields point in opposite directions, so subtract: 9&#215;10<sup>6</sup> &#8722; 4.5&#215;10<sup>6</sup> = <strong>4.5&#215;10<sup>6</sup> N/C</strong>, in the direction of the stronger field (from +10 &#956;C) \u2014 i.e. <strong>toward +5 &#956;C</strong>. (Answer key: option 1 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-10 &#183; Q5 &#183; Field at Centre of a Cube",
+    questions:[
+      { q:"A cube has a charge q at each of its 8 vertices. Each vertex has, straight across the centre:",
+        diagram:DIAGRAMS.cube(),
+        opts:["A diametrically opposite vertex with an identical charge","No opposite vertex","A vertex with opposite charge","Nothing"],
+        ans:0,
+        sol:"Every corner of a cube is paired with the <strong>opposite corner</strong> through the body centre, carrying the same charge q." },
+      { q:"The fields at the centre from a diametrically opposite pair of equal charges:",
+        opts:["Are equal and opposite \u2014 they cancel","Add up","Are perpendicular","Are both zero"],
+        ans:0,
+        sol:"Same distance, same charge, opposite directions &#8658; the pair's fields <strong>cancel</strong>." },
+      { q:"With 8 vertices forming 4 such opposite pairs, the total field is:",
+        opts:["Zero (all four pairs cancel)","4 times one field","8 times one field","kq/b&#178;"],
+        ans:0,
+        sol:"All <strong>four pairs cancel</strong> independently, so the net field at the centre is zero." },
+      { q:"&#9733; Original (DPP-10 Q5): A cube of side b carries charge q at each vertex. The field at the centre is:",
+        diagram:DIAGRAMS.cube(),
+        opts:["Zero","q/b&#178;","q/2b&#178;","32q/b&#178;"],
+        ans:0,
+        sol:"By the cube's symmetry (four diametric pairs), the net field at the centre is <strong>zero</strong>. (Answer key: option 4 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-10 &#183; Q6 &#183; Field at Centre (Q, &#8722;2Q, &#8722;Q, +2Q)",
+    questions:[
+      { q:"For a square of side a, the distance from a corner to the centre (half the diagonal) is:",
+        diagram:DIAGRAMS.squareGrid('Q','&#8722;2Q','&#8722;Q','+2Q','','','',''),
+        opts:["a/&#8730;2","a&#8730;2","a/2","a"],
+        ans:0,
+        sol:"The full diagonal is a&#8730;2, so half of it is <strong>a/&#8730;2</strong> \u2014 the distance r used in E = kQ/r&#178;." },
+      { q:"So the field magnitude at the centre due to a charge Q is E = kQ/(a/&#8730;2)&#178; = :",
+        opts:["2kQ/a&#178;","kQ/a&#178;","kQ/2a&#178;","4kQ/a&#178;"],
+        ans:0,
+        sol:"(a/&#8730;2)&#178; = a&#178;/2, so E = kQ/(a&#178;/2) = <strong>2kQ/a&#178;</strong>. A 2Q charge gives 2E." },
+      { q:"Resolving all four fields (Q, &#8722;2Q, &#8722;Q, +2Q at the corners), the horizontal components cancel and the vertical components:",
+        opts:["Add up to give a net upward field","Also cancel","Give a net downward field","Give a horizontal field"],
+        ans:0,
+        sol:"By the sign pattern, the left-right parts cancel while the up-down parts <strong>reinforce upward</strong>, giving a net field of magnitude E&#8730;2 (with E from a Q-charge counted appropriately)." },
+      { q:"&#9733; Original (DPP-10 Q6): Q, &#8722;2Q, &#8722;Q, +2Q at the corners of a square of side 5 cm (Q = 1 &#956;C). The field at the centre is:",
+        diagram:DIAGRAMS.squareGrid('Q','&#8722;2Q','&#8722;Q','+2Q','','','',''),
+        opts:["1.02&#215;10<sup>7</sup> N/C, upward","2.04&#215;10<sup>7</sup> N/C, downward","2.04&#215;10<sup>7</sup> N/C, upward","1.02&#215;10<sup>7</sup> N/C, downward"],
+        ans:0,
+        sol:"Net = 2&#8730;2&#183;kQ/a&#178; = 2&#8730;2&#215;(9&#215;10<sup>9</sup>)(10<sup>&#8722;6</sup>)/(0.05)&#178; &#8776; <strong>1.02&#215;10<sup>7</sup> N/C, upward</strong>. (Answer key: option 1 \u2014 correct.)" }
+    ] }
+
+];
+const STORAGE_KEY = 'padipucast_electrostatics_dpp10_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
