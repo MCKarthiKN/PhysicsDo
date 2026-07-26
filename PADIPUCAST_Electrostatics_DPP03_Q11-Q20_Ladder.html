@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder · Electromagnetic Induction</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Electrostatics Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Models
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Electrostatics<br>— Question Ladders</h1></div>
+    <p id="home-sub">Every source question gets its own ladder: 3 build-up rungs, easy to hard, leading smoothly to the original DPP question (&#9733;). Batch C of the Electrostatics set — DPP-03 (Q11–Q20), Coulomb’s Law.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every model. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — ELECTROSTATICS set (PADIPUCAST)
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+function chg(cx,cy,sign,label,color){
+  const s = sign==='+'?'+':(sign==='-'?'\u2212':'');
+  return `<circle cx="${cx}" cy="${cy}" r="15" fill="#fff" stroke="${color}" stroke-width="2"/>`+
+         `<text x="${cx}" y="${cy+5}" font-size="15" fill="${color}" text-anchor="middle" ${FS} font-weight="700">${s}</text>`+
+         (label?`<text x="${cx}" y="${cy-22}" font-size="12" fill="#374151" text-anchor="middle" ${FS}>${label}</text>`:'');
+}
+function distLine(x1,x2,y,txt){
+  return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4,3"/>`+
+         `<text x="${(x1+x2)/2}" y="${y+16}" font-size="11" fill="#6b7280" text-anchor="middle" ${FS}>${txt}</text>`;
+}
+const DIAGRAMS = {
+  twoCharges:(s1='+',s2='+',l1='q\u2081',l2='q\u2082',dist='r')=>`
+    <svg viewBox="0 0 300 120" width="300" height="120" xmlns="http://www.w3.org/2000/svg">
+      ${chg(60,55,s1,l1,s1==='+'?'#dc2626':'#2563eb')}
+      ${chg(240,55,s2,l2,s2==='+'?'#dc2626':'#2563eb')}
+      ${distLine(60,240,90,dist)}
+    </svg>`,
+  chargedSpheres:(s1='+',s2='+',l1='q\u2081',l2='q\u2082')=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="75" cy="75" r="38" fill="#f3f4f6" stroke="${s1==='+'?'#dc2626':'#2563eb'}" stroke-width="1.8"/>
+      <text x="75" y="80" font-size="14" fill="${s1==='+'?'#dc2626':'#2563eb'}" text-anchor="middle" ${FS} font-weight="700">${l1}</text>
+      <circle cx="225" cy="75" r="38" fill="#f3f4f6" stroke="${s2==='+'?'#dc2626':'#2563eb'}" stroke-width="1.8"/>
+      <text x="225" y="80" font-size="14" fill="${s2==='+'?'#dc2626':'#2563eb'}" text-anchor="middle" ${FS} font-weight="700">${l2}</text>
+      ${distLine(75,225,128,'r (centre to centre)')}
+    </svg>`,
+  // three equal charges on three corners of a square (one corner empty)
+  squareThree:()=>`
+    <svg viewBox="0 0 210 210" width="210" height="210" xmlns="http://www.w3.org/2000/svg">
+      <rect x="45" y="45" width="120" height="120" fill="none" stroke="#d1d5db" stroke-width="1.4"/>
+      <line x1="45" y1="45" x2="165" y2="165" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>
+      ${chg(45,45,'+','q\u2081','#dc2626')}
+      ${chg(165,45,'+','q\u2082','#dc2626')}
+      ${chg(45,165,'+','q\u2083','#dc2626')}
+      <circle cx="165" cy="165" r="15" fill="#fff" stroke="#e5e7eb" stroke-width="1.4" stroke-dasharray="3,2"/>
+      <text x="98" y="40" font-size="10" fill="#6b7280" ${FS}>side a</text>
+      <text x="108" y="120" font-size="10" fill="#6b7280" ${FS}>diag a&#8730;2</text>
+    </svg>`,
+  // three spheres A(top), B(bottom-left), C(bottom-right)
+  triadABC:()=>`
+    <svg viewBox="0 0 220 190" width="220" height="190" xmlns="http://www.w3.org/2000/svg">
+      <line x1="110" y1="40" x2="45" y2="150" stroke="#e5e7eb" stroke-width="1.2"/>
+      <line x1="110" y1="40" x2="175" y2="150" stroke="#e5e7eb" stroke-width="1.2"/>
+      <line x1="45" y1="150" x2="175" y2="150" stroke="#e5e7eb" stroke-width="1.2"/>
+      <circle cx="110" cy="40" r="16" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.6"/>
+      <text x="110" y="45" font-size="13" fill="#374151" text-anchor="middle" ${FS} font-weight="700">A</text>
+      <circle cx="45" cy="150" r="16" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.6"/>
+      <text x="45" y="155" font-size="13" fill="#374151" text-anchor="middle" ${FS} font-weight="700">B</text>
+      <circle cx="175" cy="150" r="16" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.6"/>
+      <text x="175" y="155" font-size="13" fill="#374151" text-anchor="middle" ${FS} font-weight="700">C</text>
+      <text x="110" y="180" font-size="9" fill="#9ca3af" text-anchor="middle" ${FS}>see original figure for force arrows</text>
+    </svg>`
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  QUESTION LADDERS — one ladder per SOURCE QUESTION (4 rungs, easy \u2192 original \u2605)
+//  Batch C: DPP-03 (Q11\u2013Q20) \u00b7 Coulomb's Law, force between two point charges
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  { name:"DPP-03 &#183; Q11 &#183; Dielectric Constant from Forces",
+    questions:[
+      { q:"Putting a medium of dielectric constant K between two charges (same distance) changes the force from F<sub>air</sub> to:",
+        opts:["F<sub>air</sub>/K","K&#183;F<sub>air</sub>","F<sub>air</sub>","K&#178;&#183;F<sub>air</sub>"],
+        ans:0,
+        sol:"A dielectric weakens the force by the factor K: F<sub>medium</sub> = <strong>F<sub>air</sub>/K</strong>." },
+      { q:"Rearranging, the dielectric constant is given by:",
+        opts:["K = F<sub>air</sub>/F<sub>medium</sub>","K = F<sub>medium</sub>/F<sub>air</sub>","K = F<sub>air</sub>&#215;F<sub>medium</sub>","K = F<sub>air</sub> &#8722; F<sub>medium</sub>"],
+        ans:0,
+        sol:"From F<sub>medium</sub> = F<sub>air</sub>/K we get K = <strong>F<sub>air</sub>/F<sub>medium</sub></strong> \u2014 the ratio of the two forces." },
+      { q:"If a medium drops the force from 8&#215;10<sup>&#8722;4</sup> N to 2&#215;10<sup>&#8722;4</sup> N, its dielectric constant is:",
+        opts:["4","2","0.25","6"],
+        ans:0,
+        sol:"K = 8&#215;10<sup>&#8722;4</sup> &#247; 2&#215;10<sup>&#8722;4</sup> = <strong>4</strong>." },
+      { q:"&#9733; Original (DPP-03 Q11): Two charges repel in air with 10<sup>&#8722;4</sup> N. With oil between them the force becomes 2.5&#215;10<sup>&#8722;5</sup> N. The dielectric constant of the oil is:",
+        opts:["4.0","2.5","0.25","2.0"],
+        ans:0,
+        sol:"K = F<sub>air</sub>/F<sub>medium</sub> = 10<sup>&#8722;4</sup> &#247; 2.5&#215;10<sup>&#8722;5</sup> = <strong>4.0</strong>. (Answer key: option 4 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-03 &#183; Q12 &#183; Swap-and-Add Charges",
+    questions:[
+      { q:"At a fixed distance, the size of the Coulomb force depends only on:",
+        opts:["The product of the two charge magnitudes","The sum of the charges","The larger charge only","The difference of the charges"],
+        ans:0,
+        sol:"F = kq&#8321;q&#8322;/r&#178;, so the magnitude is set by the <strong>product</strong> |q&#8321;q&#8322;| (at fixed r)." },
+      { q:"Charges +7 &#956;C and &#8722;5 &#956;C have product magnitude 35. After adding &#8722;2 &#956;C to each, the charges become:",
+        opts:["+5 &#956;C and &#8722;7 &#956;C","+9 &#956;C and &#8722;3 &#956;C","+5 &#956;C and &#8722;3 &#956;C","+7 &#956;C and &#8722;7 &#956;C"],
+        ans:0,
+        sol:"7 &#8722; 2 = +5 &#956;C and &#8722;5 &#8722; 2 = &#8722;7 &#956;C. The two charges have simply <strong>swapped magnitudes</strong>." },
+      { q:"The product magnitude of +5 &#956;C and &#8722;7 &#956;C is:",
+        opts:["35 \u2014 the same as before","12","2","70"],
+        ans:0,
+        sol:"|5 &#215; 7| = <strong>35</strong> \u2014 identical to the original |7 &#215; 5|. Same product, same distance &#8658; same force." },
+      { q:"&#9733; Original (DPP-03 Q12): Charges +7 &#956;C and &#8722;5 &#956;C experience a force F. If each is given an additional &#8722;2 &#956;C, the new force of attraction is:",
+        diagram:DIAGRAMS.twoCharges('+','-','+7 &#956;C','&#8722;5 &#956;C','r'),
+        opts:["F","F/2","F/&#8730;3","2F"],
+        ans:0,
+        sol:"New charges +5 &#956;C and &#8722;7 &#956;C give the same product magnitude (35) at the same distance, so the force is unchanged: <strong>F</strong>. (Both remain opposite in sign, so it is still attraction.) (Answer key: option 1 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-03 &#183; Q13 &#183; Electric vs Gravity (e\u2013p)",
+    questions:[
+      { q:"For an electron and proton a distance r apart, the electric and gravitational forces are:",
+        opts:["F<sub>e</sub> = ke&#178;/r&#178; and F<sub>G</sub> = Gm<sub>e</sub>m<sub>p</sub>/r&#178;","F<sub>e</sub> = ke/r and F<sub>G</sub> = Gm/r","Both &#8733; 1/r","Both independent of r"],
+        ans:0,
+        sol:"Both are inverse-square: the electric force uses charges (ke&#178;/r&#178;) and gravity uses masses (Gm<sub>e</sub>m<sub>p</sub>/r&#178;)." },
+      { q:"In the ratio F<sub>e</sub>/F<sub>G</sub>, the distance r:",
+        opts:["Cancels out completely","Appears as r&#178;","Appears as 1/r&#178;","Appears as r"],
+        ans:0,
+        sol:"Both forces carry the same 1/r&#178;, so r <strong>cancels</strong>: F<sub>e</sub>/F<sub>G</sub> = ke&#178;/(Gm<sub>e</sub>m<sub>p</sub>) \u2014 a pure number, the same at any separation." },
+      { q:"Which describes the size of F<sub>e</sub>/F<sub>G</sub> for the electron\u2013proton pair?",
+        opts:["Enormous \u2014 electric force hugely dominates gravity","About 1 \u2014 they are comparable","Tiny \u2014 gravity dominates","Exactly zero"],
+        ans:0,
+        sol:"Electric force overwhelms gravity by roughly <strong>10<sup>39</sup></strong> \u2014 which is why gravity is utterly negligible inside atoms." },
+      { q:"&#9733; Original (DPP-03 Q13): For an electron and proton at 5&#215;10<sup>&#8722;11</sup> m (e = 1.6&#215;10<sup>&#8722;19</sup> C, m<sub>e</sub> = 9.1&#215;10<sup>&#8722;31</sup> kg, m<sub>p</sub> = 1.6&#215;10<sup>&#8722;27</sup> kg, G = 6.7&#215;10<sup>&#8722;11</sup>), the ratio F<sub>e</sub> : F<sub>G</sub> is about:",
+        opts:["2.36&#215;10<sup>39</sup>","2.36&#215;10<sup>40</sup>","2.34&#215;10<sup>41</sup>","2.34&#215;10<sup>42</sup>"],
+        ans:0,
+        sol:"F<sub>e</sub> = ke&#178;/r&#178; &#8776; 9.2&#215;10<sup>&#8722;8</sup> N; F<sub>G</sub> = Gm<sub>e</sub>m<sub>p</sub>/r&#178; &#8776; 3.9&#215;10<sup>&#8722;47</sup> N. Ratio &#8776; 9.2&#215;10<sup>&#8722;8</sup>/3.9&#215;10<sup>&#8722;47</sup> = <strong>2.36&#215;10<sup>39</sup></strong>. (Answer key: option 1 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-03 &#183; Q14 &#183; Side vs Diagonal on a Square",
+    questions:[
+      { q:"On a square of side a, two charges at <em>adjacent</em> corners are separated by a distance:",
+        opts:["a","a&#8730;2","2a","a/2"],
+        ans:0,
+        sol:"Adjacent corners are one <strong>side</strong> apart, i.e. distance <strong>a</strong>." },
+      { q:"Two charges at <em>diagonally opposite</em> corners of that square are separated by:",
+        opts:["a&#8730;2","a","2a","a/&#8730;2"],
+        ans:0,
+        sol:"The diagonal of a square of side a is <strong>a&#8730;2</strong> (Pythagoras)." },
+      { q:"With equal charges, the ratio of the force across a side to the force across the diagonal, F<sub>side</sub>/F<sub>diag</sub>, is:",
+        diagram:DIAGRAMS.squareThree(),
+        opts:["2","1/2","&#8730;2","1/&#8730;2"],
+        ans:0,
+        sol:"F &#8733; 1/r&#178;, so F<sub>side</sub>/F<sub>diag</sub> = (a&#8730;2)&#178;/a&#178; = 2a&#178;/a&#178; = <strong>2</strong>. The diagonal is farther, so its force is weaker." },
+      { q:"&#9733; Original (DPP-03 Q14): Three equal charges sit on three corners of a square. If F&#8321;&#8322; is the force between q&#8321; and q&#8322; (a side apart) and F&#8321;&#8323; between q&#8321; and q&#8323; (the diagonal), the ratio F&#8321;&#8322;/F&#8321;&#8323; is:",
+        diagram:DIAGRAMS.squareThree(),
+        opts:["2","1/2","1/&#8730;2","&#8730;2"],
+        ans:0,
+        sol:"q&#8321;q&#8322; are a side apart (distance a) and q&#8321;q&#8323; are the diagonal apart (a&#8730;2). F&#8321;&#8322;/F&#8321;&#8323; = (a&#8730;2)&#178;/a&#178; = <strong>2</strong>. (Answer key: option 2 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-03 &#183; Q15 &#183; Add Charge \u2192 Repulsion to Attraction",
+    questions:[
+      { q:"Charges +3 &#956;C and +8 &#956;C repel with 40 N. After adding &#8722;5 &#956;C to each, the charges become:",
+        opts:["&#8722;2 &#956;C and +3 &#956;C","+8 &#956;C and +13 &#956;C","&#8722;2 &#956;C and &#8722;3 &#956;C","+2 &#956;C and +3 &#956;C"],
+        ans:0,
+        sol:"3 &#8722; 5 = &#8722;2 &#956;C and 8 &#8722; 5 = +3 &#956;C. Now the two charges have <strong>opposite signs</strong>." },
+      { q:"With one charge now negative and one positive, the force between them becomes:",
+        opts:["Attractive","Still repulsive","Zero","Perpendicular"],
+        ans:0,
+        sol:"Opposite signs &#8658; the force is now <strong>attractive</strong> (a sign flip from the original repulsion)." },
+      { q:"The original product was 3&#215;8 = 24 (for 40 N). The new product magnitude is 2&#215;3 = 6, so the new force magnitude is:",
+        opts:["10 N","40 N","20 N","6 N"],
+        ans:0,
+        sol:"Force scales with the product: 40 &#215; (6/24) = <strong>10 N</strong>." },
+      { q:"&#9733; Original (DPP-03 Q15): +3 &#956;C and +8 &#956;C repel with 40 N. If &#8722;5 &#956;C is added to each, the force becomes:",
+        diagram:DIAGRAMS.twoCharges('+','+','+3 &#956;C','+8 &#956;C','r'),
+        opts:["&#8722;10 N","+10 N","+20 N","&#8722;20 N"],
+        ans:0,
+        sol:"New charges &#8722;2 &#956;C and +3 &#956;C: opposite signs (attraction) and product 6 vs original 24. Magnitude = 40&#215;6/24 = 10 N, attractive, written as <strong>&#8722;10 N</strong> (minus = attraction). (Answer key: option 1 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-03 &#183; Q16 &#183; Copper Balls, Electron Transfer",
+    questions:[
+      { q:"The number of atoms in 10 g of copper (atomic weight 63.5, N<sub>A</sub> = 6.02&#215;10<sup>23</sup>) is about:",
+        opts:["9.5&#215;10<sup>22</sup>","6.0&#215;10<sup>23</sup>","6.35&#215;10<sup>24</sup>","1.6&#215;10<sup>21</sup>"],
+        ans:0,
+        sol:"Atoms = (mass/atomic weight)&#215;N<sub>A</sub> = (10/63.5)&#215;6.02&#215;10<sup>23</sup> &#8776; <strong>9.5&#215;10<sup>22</sup></strong>." },
+      { q:"If one electron is removed from every 10<sup>6</sup> atoms, the number of electrons transferred is about:",
+        opts:["9.5&#215;10<sup>16</sup>","9.5&#215;10<sup>28</sup>","9.5&#215;10<sup>22</sup>","10<sup>6</sup>"],
+        ans:0,
+        sol:"Divide the atom count by 10<sup>6</sup>: 9.5&#215;10<sup>22</sup>/10<sup>6</sup> = <strong>9.5&#215;10<sup>16</sup></strong> electrons." },
+      { q:"The charge transferred is then q = ne &#8776;:",
+        opts:["1.5&#215;10<sup>&#8722;2</sup> C","1.5&#215;10<sup>&#8722;5</sup> C","9.5&#215;10<sup>&#8722;3</sup> C","1.6&#215;10<sup>&#8722;19</sup> C"],
+        ans:0,
+        sol:"q = (9.5&#215;10<sup>16</sup>)(1.6&#215;10<sup>&#8722;19</sup>) &#8776; <strong>1.5&#215;10<sup>&#8722;2</sup> C</strong> (about 0.015 C) on each ball, equal and opposite." },
+      { q:"&#9733; Original (DPP-03 Q16): Two 10 g copper balls 10 cm apart. One electron from every 10<sup>6</sup> atoms is moved from one ball to the other. The Coulomb force between them is about:",
+        opts:["2.0&#215;10<sup>8</sup> N","2.0&#215;10<sup>10</sup> N","2.0&#215;10<sup>4</sup> N","2.0&#215;10<sup>6</sup> N"],
+        ans:0,
+        sol:"With q &#8776; 1.5&#215;10<sup>&#8722;2</sup> C and r = 0.1 m: F = kq&#178;/r&#178; = (9&#215;10<sup>9</sup>)(1.5&#215;10<sup>&#8722;2</sup>)&#178;/(0.1)&#178; &#8776; <strong>2.0&#215;10<sup>8</sup> N</strong> \u2014 an astonishingly huge force from a tiny fraction of the electrons. (Answer key: option 3 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-03 &#183; Q17 &#183; Charge to Cancel Gravity",
+    questions:[
+      { q:"For two identical balls (mass m, charge q, separation r) the electric force equals the gravitational force when:",
+        opts:["kq&#178;/r&#178; = Gm&#178;/r&#178;","kq/r = Gm/r","kq&#178; = Gm","q = m"],
+        ans:0,
+        sol:"Set the two inverse-square forces equal: <strong>kq&#178;/r&#178; = Gm&#178;/r&#178;</strong>. The r&#178; cancels." },
+      { q:"Solving for q gives:",
+        opts:["q = m&#8730;(G/k)","q = m&#8730;(k/G)","q = m(G/k)","q = &#8730;(Gm)"],
+        ans:0,
+        sol:"From kq&#178; = Gm&#178; &#8658; q&#178; = Gm&#178;/k &#8658; q = <strong>m&#8730;(G/k)</strong>." },
+      { q:"The factor &#8730;(G/k) = &#8730;(6.7&#215;10<sup>&#8722;11</sup>/9&#215;10<sup>9</sup>) is about:",
+        opts:["8.6&#215;10<sup>&#8722;11</sup>","8.6&#215;10<sup>&#8722;5</sup>","1.2&#215;10<sup>10</sup>","7.4&#215;10<sup>&#8722;21</sup>"],
+        ans:0,
+        sol:"G/k = 6.7&#215;10<sup>&#8722;11</sup>/9&#215;10<sup>9</sup> &#8776; 7.4&#215;10<sup>&#8722;21</sup>; its square root is <strong>8.6&#215;10<sup>&#8722;11</sup></strong>." },
+      { q:"&#9733; Original (DPP-03 Q17): Two identical 10 g balls. What charge on each makes their electric interaction equal the gravitational attraction between them?",
+        opts:["8.57&#215;10<sup>&#8722;13</sup> C","6.34&#215;10<sup>&#8722;11</sup> C","8.57&#215;10<sup>&#8722;11</sup> C","6.34&#215;10<sup>&#8722;13</sup> C"],
+        ans:0,
+        sol:"q = m&#8730;(G/k) = (0.01)&#215;(8.6&#215;10<sup>&#8722;11</sup>) &#8776; <strong>8.57&#215;10<sup>&#8722;13</sup> C</strong>. (Note it is independent of the separation r.) (Answer key: option 4 \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-03 &#183; Q18 &#183; Which Sphere Could Be Negative",
+    questions:[
+      { q:"If the electrostatic force between two spheres is <em>attractive</em>, their charges are:",
+        opts:["Opposite in sign","The same sign","Both zero","Both positive"],
+        ans:0,
+        sol:"Attraction &#8658; <strong>opposite signs</strong> (or one neutral). Repulsion &#8658; same sign. Reading arrow directions this way lets you deduce the signs." },
+      { q:"If the force between two spheres is <em>repulsive</em>, their charges must be:",
+        opts:["The same sign","Opposite signs","One neutral","Impossible to tell"],
+        ans:0,
+        sol:"Repulsion is the sure test: the two charges have the <strong>same sign</strong> (both + or both &#8722;)." },
+      { q:"Two spheres are known to be positive. A third sphere is <em>attracted</em> by both of them. That third sphere is:",
+        opts:["Negative","Positive","Neutral for certain","Also repelled"],
+        ans:0,
+        sol:"Being attracted by two positive spheres means the third carries the opposite sign &#8658; <strong>negative</strong> (a neutral sphere could also be attracted, but among charged options it is negative)." },
+      { q:"&#9733; Original (DPP-03 Q18): Three charged spheres A (top), B, C (bottom) have force arrows drawn between them, and at least two spheres are positive. Which sphere <em>could</em> be negative?",
+        diagram:DIAGRAMS.triadABC(),
+        opts:["Sphere A","Sphere B","Sphere C","None of them"],
+        ans:0,
+        sol:"Reading each arrow: repulsion &#8658; same sign, attraction &#8658; opposite. Working through the arrow set with 'at least two positive', the only consistent sign that can be flipped to negative is <strong>A</strong>. <br><br><strong>Note:</strong> this answer relies on the exact arrow directions in the printed figure \u2014 please confirm against the original PDF diagram, since I have reconstructed the layout (A top, B and C bottom) but not the individual arrows. (Answer key: option 1, Sphere A.)" }
+    ] },
+
+  { name:"DPP-03 &#183; Q19 &#183; Does a Third Charge Change the Pair Force?",
+    questions:[
+      { q:"The superposition principle says the Coulomb force between any two charges:",
+        opts:["Is unaffected by the presence of other charges","Depends on all nearby charges","Doubles when a third charge is added","Becomes zero near other charges"],
+        ans:0,
+        sol:"Each pairwise force obeys Coulomb's law <strong>independently</strong>; other charges add their own forces but do not alter an existing pair's force." },
+      { q:"Charge q&#8321; exerts a force on q&#8322;. When q&#8323; is brought near, q&#8323; adds:",
+        opts:["A separate force on q&#8322;, without changing the q&#8321;\u2013q&#8322; force","Nothing at all","A force that cancels the q&#8321;\u2013q&#8322; force","A change to q&#8321;'s charge"],
+        ans:0,
+        sol:"q&#8323; contributes its own force on q&#8322;, but the force <em>from q&#8321;</em> on q&#8322; stays exactly the same." },
+      { q:"So while the <em>net</em> force on q&#8322; may change, the specific force that q&#8321; exerts on q&#8322;:",
+        opts:["Remains unchanged","Increases","Decreases","Reverses"],
+        ans:0,
+        sol:"The q&#8321;-on-q&#8322; force depends only on q&#8321;, q&#8322; and their separation \u2014 none of which q&#8323; alters \u2014 so it <strong>remains unchanged</strong>." },
+      { q:"&#9733; Original (DPP-03 Q19): A charge q&#8321; exerts a force on q&#8322;. If a third charge q&#8323; is brought near, the force exerted by q&#8321; on q&#8322;:",
+        opts:["Remains unchanged","Decreases","Increases","Increases if q&#8323; is like q&#8321;, decreases if unlike"],
+        ans:0,
+        sol:"By superposition each pair acts independently, so the q&#8321;-on-q&#8322; force is <strong>unchanged</strong>. (The tempting option 4 confuses the <em>net</em> force with this single pair force.) (Answer key: option 3, 'remains unchanged' \u2014 correct.)" }
+    ] },
+
+  { name:"DPP-03 &#183; Q20 &#183; Touch Unequal Positive Spheres",
+    questions:[
+      { q:"Two identical conducting spheres carry unequal positive charges q&#8321; and q&#8322;. After touching, each carries:",
+        diagram:DIAGRAMS.chargedSpheres('+','+','q\u2081','q\u2082'),
+        opts:["(q&#8321; + q&#8322;)/2","q&#8321;q&#8322;","q&#8321; &#8722; q&#8322;","q&#8321; + q&#8322;"],
+        ans:0,
+        sol:"Identical spheres share the total equally, so each becomes <strong>(q&#8321; + q&#8322;)/2</strong> \u2014 the average." },
+      { q:"The force before touching &#8733; q&#8321;q&#8322;; after touching &#8733;:",
+        opts:["[(q&#8321; + q&#8322;)/2]&#178;","(q&#8321; + q&#8322;)/2","q&#8321;&#178; + q&#8322;&#178;","q&#8321;q&#8322; still"],
+        ans:0,
+        sol:"Both charges are now (q&#8321; + q&#8322;)/2, so the product is <strong>[(q&#8321; + q&#8322;)/2]&#178;</strong>." },
+      { q:"For unequal positive numbers, the AM\u2013GM inequality says [(q&#8321; + q&#8322;)/2]&#178; compared with q&#8321;q&#8322; is:",
+        opts:["Always greater","Always smaller","Equal","Sometimes smaller"],
+        ans:0,
+        sol:"AM &#8805; GM: the average squared is <strong>greater than</strong> the product whenever q&#8321; &#8800; q&#8322;. So the post-contact charges multiply to a bigger number." },
+      { q:"&#9733; Original (DPP-03 Q20): Two identical conducting spheres with unequal positive charges q&#8321;, q&#8322; at separation r are touched and returned to the same separation. The force between them is now (neglect induction):",
+        diagram:DIAGRAMS.chargedSpheres('+','+','q\u2081','q\u2082'),
+        opts:["More than before","Less than before","Same as before","Zero"],
+        ans:0,
+        sol:"Force &#8733; product of charges. After touching, product = [(q&#8321;+q&#8322;)/2]&#178; > q&#8321;q&#8322; (AM\u2013GM), so the force is <strong>more than before</strong>. (Answer key: option 3 \u2014 correct.)" }
+    ] }
+
+];
+const STORAGE_KEY = 'padipucast_electrostatics_dpp03b_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
