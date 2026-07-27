@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Physics Ladder · Electricity &amp; Magnetism Mixed</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+  svg: { fontCache: 'global' },
+  startup: { typeset: false }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+
+<style>
+:root{
+  --paper:#F5F0E4;
+  --paper-2:#EFE8D8;
+  --card:#FBF8F0;
+  --ink:#22201B;
+  --ink-soft:#5B564C;
+  --line:#DED4BE;
+  --teal:#1F6E6A;
+  --teal-deep:#154B48;
+  --amber:#D08A2E;
+  --amber-soft:#F0DFC0;
+  --correct:#2C7A4B;
+  --correct-bg:#E4F1E6;
+  --wrong:#B44A3A;
+  --wrong-bg:#F6E3DE;
+  --star:#C9821F;
+  --shadow:0 1px 0 #fff inset, 0 2px 10px rgba(60,48,24,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"DM Sans",system-ui,sans-serif;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--teal)}
+
+/* ---------- top bar ---------- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+  padding:14px 22px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,var(--paper-2),var(--paper));
+  position:sticky;top:0;z-index:40;
+}
+.brand{
+  font-family:"Space Grotesk",sans-serif;
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  font-size:.82rem;color:var(--teal-deep);
+  display:flex;align-items:center;gap:10px;
+}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 3px var(--amber-soft)}
+.brand small{color:var(--ink-soft);font-weight:500;letter-spacing:.06em;text-transform:none}
+.menu-btn{
+  border:1px solid var(--line);background:var(--card);border-radius:9px;
+  padding:8px 12px;font-family:"Space Grotesk",sans-serif;font-weight:600;
+  font-size:.8rem;cursor:pointer;color:var(--ink);
+}
+.menu-btn:hover{border-color:var(--teal)}
+
+/* ---------- layout ---------- */
+.wrap{display:grid;grid-template-columns:270px 1fr;gap:0;min-height:calc(100vh - 54px)}
+.sidebar{
+  border-right:1px solid var(--line);
+  background:var(--paper-2);
+  padding:18px 14px;
+}
+.sidebar h2{
+  font-family:"Space Grotesk",sans-serif;
+  font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-soft);margin:4px 6px 12px;
+}
+.model{
+  display:flex;align-items:flex-start;gap:10px;
+  width:100%;text-align:left;border:1px solid transparent;
+  background:transparent;border-radius:10px;padding:9px 10px;margin-bottom:4px;
+  cursor:pointer;font-family:inherit;color:var(--ink);
+  transition:background .12s,border-color .12s;
+}
+.model:hover{background:var(--card)}
+.model.active{background:var(--card);border-color:var(--teal);box-shadow:var(--shadow)}
+.model .num{
+  font-family:"DM Mono",monospace;font-size:.72rem;font-weight:500;
+  min-width:22px;height:22px;display:grid;place-items:center;border-radius:6px;
+  background:var(--amber-soft);color:var(--amber);margin-top:1px;
+}
+.model.done .num{background:var(--correct-bg);color:var(--correct)}
+.model .mtitle{font-size:.82rem;font-weight:600;line-height:1.3}
+.model .mtag{font-size:.68rem;color:var(--ink-soft);font-weight:500;display:block;margin-top:2px}
+
+/* ---------- main ---------- */
+.main{padding:26px clamp(16px,4vw,54px) 60px;max-width:920px;margin:0 auto;width:100%}
+.pagehead{margin-bottom:22px}
+.pagehead .eyebrow{
+  font-family:"Space Grotesk",sans-serif;font-size:.72rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--amber);font-weight:600;
+}
+.pagehead h1{
+  font-family:"Space Grotesk",sans-serif;font-weight:700;
+  font-size:clamp(1.5rem,3.4vw,2.05rem);margin:.25em 0 .35em;letter-spacing:-.01em;
+}
+.pagehead p{color:var(--ink-soft);font-size:.95rem;margin:0;max-width:60ch}
+
+/* score strip */
+.strip{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  border:1px solid var(--line);background:var(--card);border-radius:12px;
+  padding:12px 14px;margin-bottom:22px;box-shadow:var(--shadow);
+}
+.stat{display:flex;flex-direction:column;padding:0 14px;border-right:1px solid var(--line)}
+.stat:last-of-type{border-right:none}
+.stat .k{font-family:"Space Grotesk",sans-serif;font-size:1.15rem;font-weight:700;color:var(--teal-deep)}
+.stat .l{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.strip .spacer{flex:1}
+.clear-btn{
+  border:1px solid var(--line);background:transparent;border-radius:9px;
+  padding:8px 12px;font-size:.78rem;font-weight:600;font-family:inherit;
+  color:var(--wrong);cursor:pointer;
+}
+.clear-btn:hover{background:var(--wrong-bg);border-color:var(--wrong)}
+
+/* ---------- rung tabs ---------- */
+.rungtabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.rungtab{
+  border:1px solid var(--line);background:var(--card);border-radius:999px;
+  padding:7px 15px;font-family:"Space Grotesk",sans-serif;font-weight:600;
+  font-size:.78rem;cursor:pointer;color:var(--ink-soft);display:flex;align-items:center;gap:7px;
+}
+.rungtab .lvl{font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.rungtab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.rungtab.active .lvl{opacity:.9}
+.rungtab.solved::after{content:"✓";color:var(--correct);font-weight:700}
+.rungtab.active.solved::after{color:#CFF3DA}
+
+/* ---------- question card ---------- */
+.qcard{
+  border:1px solid var(--line);background:var(--card);border-radius:16px;
+  padding:22px clamp(16px,3vw,26px);box-shadow:var(--shadow);
+}
+.qmeta{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.badge{
+  font-family:"DM Mono",monospace;font-size:.7rem;font-weight:500;
+  padding:4px 9px;border-radius:6px;background:var(--paper-2);color:var(--ink-soft);
+  border:1px solid var(--line);
+}
+.badge.easy{background:#E9F1EC;color:#3B7A56;border-color:#CBE3D3}
+.badge.mod{background:#F3ECDA;color:#A9781F;border-color:#E7D6AE}
+.badge.orig{background:#FBEBD2;color:var(--star);border-color:#F0D9AE}
+.badge.src{background:transparent}
+.qtext{font-size:1.02rem;margin:0 0 18px;line-height:1.6}
+.qtext .fig{display:block;margin:14px auto;max-width:100%}
+
+/* options */
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{
+  display:flex;align-items:flex-start;gap:12px;
+  border:1px solid var(--line);background:var(--paper);border-radius:11px;
+  padding:12px 14px;cursor:pointer;font-size:.98rem;
+  transition:border-color .12s,background .12s;
+}
+.opt:hover{border-color:var(--teal)}
+.opt .tag{
+  font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:.82rem;
+  width:26px;height:26px;flex:0 0 26px;border-radius:7px;display:grid;place-items:center;
+  background:var(--card);border:1px solid var(--line);color:var(--teal-deep);
+}
+.opt.sel{border-color:var(--teal);background:#EAF2F1}
+.opt.correct{border-color:var(--correct);background:var(--correct-bg)}
+.opt.correct .tag{background:var(--correct);color:#fff;border-color:var(--correct)}
+.opt.wrong{border-color:var(--wrong);background:var(--wrong-bg)}
+.opt.wrong .tag{background:var(--wrong);color:#fff;border-color:var(--wrong)}
+.opt.locked{cursor:default;opacity:.96}
+
+/* controls */
+.controls{display:flex;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn{
+  border:1px solid var(--line);background:var(--card);border-radius:10px;
+  padding:10px 16px;font-family:"Space Grotesk",sans-serif;font-weight:600;
+  font-size:.85rem;cursor:pointer;color:var(--ink);
+}
+.btn:hover{border-color:var(--teal)}
+.btn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+.btn.primary:hover{background:var(--teal-deep)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.controls .spacer{flex:1}
+
+/* solution */
+.solution{
+  margin-top:18px;border-top:1px dashed var(--line);padding-top:16px;display:none;
+}
+.solution.show{display:block}
+.solution h4{
+  font-family:"Space Grotesk",sans-serif;font-size:.74rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--amber);margin:0 0 8px;
+}
+.solution .verdict{font-weight:700;margin-bottom:8px}
+.solution .verdict.ok{color:var(--correct)}
+.solution .verdict.no{color:var(--wrong)}
+.solution p{margin:.5em 0;font-size:.96rem;line-height:1.62}
+
+/* video widget */
+.videobox{
+  margin-top:22px;border:1px solid var(--line);background:var(--card);
+  border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);
+}
+.videobox h4{
+  font-family:"Space Grotesk",sans-serif;font-size:.74rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--teal-deep);margin:0 0 4px;
+}
+.videobox p{margin:0 0 10px;color:var(--ink-soft);font-size:.82rem}
+.videorow{display:flex;gap:8px;flex-wrap:wrap}
+.videorow input{
+  flex:1;min-width:200px;border:1px solid var(--line);border-radius:9px;
+  padding:9px 12px;font-family:"DM Mono",monospace;font-size:.82rem;background:var(--paper);color:var(--ink);
+}
+.videorow input:focus{outline:none;border-color:var(--teal)}
+.videoframe{margin-top:12px;border-radius:12px;overflow:hidden;border:1px solid var(--line);display:none}
+.videoframe.show{display:block}
+.videoframe iframe{width:100%;aspect-ratio:16/9;border:0;display:block}
+
+/* modal */
+.overlay{
+  position:fixed;inset:0;background:rgba(34,32,27,.5);display:none;
+  align-items:center;justify-content:center;z-index:90;padding:20px;
+}
+.overlay.show{display:flex}
+.modal{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  max-width:400px;width:100%;padding:24px;box-shadow:0 20px 50px rgba(40,30,10,.25);
+}
+.modal h3{font-family:"Space Grotesk",sans-serif;margin:0 0 8px}
+.modal p{color:var(--ink-soft);font-size:.92rem;margin:0 0 18px}
+.modal .row{display:flex;gap:10px;justify-content:flex-end}
+
+/* footer */
+.foot{
+  text-align:center;padding:26px;color:var(--ink-soft);font-size:.78rem;
+  border-top:1px solid var(--line);margin-top:20px;
+}
+.foot b{color:var(--teal-deep);font-family:"Space Grotesk",sans-serif;letter-spacing:.05em}
+
+/* responsive */
+@media(max-width:820px){
+  .wrap{grid-template-columns:1fr}
+  .sidebar{
+    position:fixed;inset:54px auto 0 0;width:280px;z-index:60;
+    transform:translateX(-100%);transition:transform .22s;overflow-y:auto;
+    box-shadow:6px 0 30px rgba(40,30,10,.12);
+  }
+  .sidebar.open{transform:translateX(0)}
+  .scrim{position:fixed;inset:54px 0 0 0;background:rgba(34,32,27,.4);display:none;z-index:55}
+  .scrim.open{display:block}
+}
+@media(min-width:821px){.menu-btn{display:none}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="dot"></span>PADIPUCAST <small>· E&amp;M Ladder</small></div>
+  <button class="menu-btn" id="menuBtn">All Models</button>
+</div>
+
+<div class="wrap">
+  <aside class="sidebar" id="sidebar">
+    <h2>Source Questions</h2>
+    <div id="modelList"></div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <main class="main">
+    <div class="pagehead">
+      <div class="eyebrow">Mixed DPP · Q1–Q10</div>
+      <h1>Electricity &amp; Magnetism — Question Ladders</h1>
+      <p>Ten JEE-favourite PYQs across Electric Charges &amp; Fields, Electrostatic Potential &amp; Capacitance, Current Electricity, and Moving Charges &amp; Magnetism. Each source question gets its own ladder: three build-up rungs — easy → moderate → the original DPP question (★).</p>
+    </div>
+
+    <div class="strip">
+      <div class="stat"><span class="k" id="scoreVal">0 / 30</span><span class="l">Score</span></div>
+      <div class="stat"><span class="k" id="attVal">0</span><span class="l">Attempted</span></div>
+      <div class="stat"><span class="k" id="posVal">Q1 · Rung 1</span><span class="l">Position</span></div>
+      <div class="spacer"></div>
+      <button class="clear-btn" id="clearBtn">Clear All Progress</button>
+    </div>
+
+    <div class="rungtabs" id="rungTabs"></div>
+
+    <section class="qcard" id="qcard"></section>
+
+    <div class="videobox">
+      <h4>Solution Video</h4>
+      <p>Paste a YouTube link — timestamps supported (this rung remembers its own video).</p>
+      <div class="videorow">
+        <input id="vidInput" type="text" placeholder="https://youtu.be/... or with &amp;t=90s" />
+        <button class="btn primary" id="vidLoad">Load</button>
+        <button class="btn" id="vidClear">Clear</button>
+      </div>
+      <div class="videoframe" id="vidFrame"></div>
+    </div>
+
+    <div class="foot">
+      <b>PADIPUCAST</b> · Physics for JEE &amp; NEET — practice with intent.
+    </div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3>Clear all progress?</h3>
+    <p>This resets every answer and video across all 10 ladders. This cannot be undone.</p>
+    <div class="row">
+      <button class="btn" id="modalCancel">Cancel</button>
+      <button class="btn primary" id="modalConfirm" style="background:var(--wrong);border-color:var(--wrong)">Yes, clear all</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   DATA — 10 source questions, each with 3 rungs.
+   answer = index into opts. Solutions in HTML-with-LaTeX.
+   ========================================================= */
+const DATA = [
+  {
+    "title": "Gauss flux through a cube",
+    "tag": "Electric Charges & Fields",
+    "src": "IIT-JEE 2009",
+    "rungs": [
+      {
+        "lvl": "easy",
+        "q": "A point charge \\(+q\\) is placed at the exact centre of a cube. What is the total electric flux through the whole cube?",
+        "opts": [
+          "\\(\\dfrac{q}{\\varepsilon_0}\\)",
+          "\\(\\dfrac{q}{6\\varepsilon_0}\\)",
+          "\\(\\dfrac{q}{2\\varepsilon_0}\\)",
+          "\\(0\\)"
+        ],
+        "answer": 0,
+        "sol": "<p>By Gauss's law the flux depends only on the charge enclosed, not on shape or position: \\(\\Phi=\\dfrac{q_{enc}}{\\varepsilon_0}\\).</p><p>The whole charge \\(q\\) is inside, so \\(\\Phi=\\dfrac{q}{\\varepsilon_0}\\). (Each face carries \\(\\tfrac16\\) of it by symmetry, but the total is the full \\(q/\\varepsilon_0\\).)</p>"
+      },
+      {
+        "lvl": "moderate",
+        "q": "A point charge \\(+q\\) lies exactly on one face of a cube (embedded in the plane of that face). What flux passes through the cube?",
+        "opts": [
+          "\\(\\dfrac{q}{\\varepsilon_0}\\)",
+          "\\(\\dfrac{q}{2\\varepsilon_0}\\)",
+          "\\(\\dfrac{q}{6\\varepsilon_0}\\)",
+          "\\(\\dfrac{q}{8\\varepsilon_0}\\)"
+        ],
+        "answer": 1,
+        "sol": "<p>Only half the field lines from the charge enter the cube (the other half go into the space on the far side of the face). So the enclosed effective charge is \\(q/2\\).</p><p>\\(\\Phi=\\dfrac{q}{2\\varepsilon_0}\\). The same fractional idea (\\(\\tfrac12,\\tfrac14,\\tfrac18\\) at a face, edge, corner) is the key to the star problem.</p>"
+      },
+      {
+        "lvl": "orig",
+        "q": "A disk of radius \\(a/4\\) with charge \\(6\\,\\text{C}\\) has centre at \\((-a/2,0,0)\\). A rod of length \\(a\\) with charge \\(8\\,\\text{C}\\) lies on the \\(x\\)-axis from \\(x=a/4\\) to \\(x=5a/4\\). Point charges \\(-7\\,\\text{C}\\) at \\((a/4,-a/4,0)\\) and \\(3\\,\\text{C}\\) at \\((-3a/4,3a/4,0)\\). For the cube \\(x=\\pm a/2,\\;y=\\pm a/2,\\;z=\\pm a/2\\), the flux is:",
+        "opts": [
+          "\\(\\dfrac{10\\,\\text{C}}{\\varepsilon_0}\\)",
+          "\\(\\dfrac{12\\,\\text{C}}{\\varepsilon_0}\\)",
+          "\\(\\dfrac{-2\\,\\text{C}}{\\varepsilon_0}\\)",
+          "\\(\\dfrac{2\\,\\text{C}}{\\varepsilon_0}\\)"
+        ],
+        "answer": 2,
+        "sol": "<p>Count only the charge inside the cube (\\(|x|,|y|,|z|<a/2\\)):</p><p><b>Disk</b> sits on face \\(x=-a/2\\) → half inside → \\(\\tfrac12(6)=3\\,\\text{C}\\).</p><p><b>Rod</b> inside from \\(x=a/4\\) to \\(a/2\\), length \\(a/4\\) out of \\(a\\) → \\(\\tfrac14(8)=2\\,\\text{C}\\).</p><p><b>\\(-7\\,\\text{C}\\)</b> at \\((a/4,-a/4,0)\\): inside → \\(-7\\,\\text{C}\\).</p><p><b>\\(3\\,\\text{C}\\)</b> at \\((-3a/4,\\dots)\\): \\(|x|=3a/4>a/2\\) → outside → \\(0\\).</p><p>\\(q_{enc}=3+2-7+0=-2\\,\\text{C}\\Rightarrow \\Phi=\\dfrac{-2\\,\\text{C}}{\\varepsilon_0}\\).</p>"
+      }
+    ]
+  },
+  {
+    "title": "Energy lost in charge sharing",
+    "tag": "Potential & Capacitance",
+    "src": "IIT-JEE 2011",
+    "rungs": [
+      {
+        "lvl": "easy",
+        "q": "A \\(2\\,\\mu\\text{F}\\) capacitor is charged to \\(10\\,\\text{V}\\). The energy stored in it is:",
+        "opts": [
+          "\\(2\\times10^{-4}\\,\\text{J}\\)",
+          "\\(2\\times10^{-3}\\,\\text{J}\\)",
+          "\\(1\\times10^{-5}\\,\\text{J}\\)",
+          "\\(1\\times10^{-4}\\,\\text{J}\\)"
+        ],
+        "answer": 3,
+        "sol": "<p>\\(U=\\tfrac12 CV^2=\\tfrac12(2\\times10^{-6})(10)^2=1\\times10^{-4}\\,\\text{J}\\).</p>"
+      },
+      {
+        "lvl": "moderate",
+        "q": "A capacitor \\(C\\) charged to voltage \\(V\\) is connected across an identical uncharged capacitor \\(C\\). The final common voltage is:",
+        "opts": [
+          "\\(V\\)",
+          "\\(\\dfrac{V}{2}\\)",
+          "\\(\\dfrac{V}{3}\\)",
+          "\\(\\dfrac{2V}{3}\\)"
+        ],
+        "answer": 1,
+        "sol": "<p>Charge is conserved: \\(Q=CV\\) spreads over total capacitance \\(2C\\).</p><p>\\(V'=\\dfrac{Q}{2C}=\\dfrac{CV}{2C}=\\dfrac{V}{2}\\). (Half the energy is lost here — that loss is exactly what the star question quantifies.)</p>"
+      },
+      {
+        "lvl": "orig",
+        "q": "A \\(2\\,\\mu\\text{F}\\) capacitor is charged to \\(V\\), then (via a switch) disconnected from the source and connected across an uncharged \\(8\\,\\mu\\text{F}\\) capacitor. The percentage of the stored energy dissipated is:",
+        "opts": [
+          "\\(80\\%\\)",
+          "\\(0\\%\\)",
+          "\\(20\\%\\)",
+          "\\(75\\%\\)"
+        ],
+        "answer": 0,
+        "sol": "<p>Initial: \\(U_i=\\tfrac12(2)V^2=V^2\\) (in \\(\\mu\\)J with \\(V\\) in volts). Charge \\(Q=2V\\).</p><p>After sharing: \\(V'=\\dfrac{Q}{2+8}=\\dfrac{2V}{10}=\\dfrac{V}{5}\\).</p><p>\\(U_f=\\tfrac12(10)\\!\\left(\\tfrac{V}{5}\\right)^2=\\tfrac12(10)\\tfrac{V^2}{25}=0.2V^2\\).</p><p>Lost \\(=U_i-U_f=0.8V^2\\Rightarrow \\dfrac{0.8V^2}{V^2}=\\mathbf{80\\%}\\).</p>"
+      }
+    ]
+  },
+  {
+    "title": "Meter bridge — interchange shift",
+    "tag": "Current Electricity",
+    "src": "IIT-JEE 2007",
+    "rungs": [
+      {
+        "lvl": "easy",
+        "q": "In a meter bridge a known resistance \\(2\\,\\Omega\\) is in the left gap and an unknown \\(X\\) in the right gap. The balance point is \\(40\\,\\text{cm}\\) from the left end. Then \\(X=\\)",
+        "opts": [
+          "\\(4\\,\\Omega\\)",
+          "\\(1.5\\,\\Omega\\)",
+          "\\(3\\,\\Omega\\)",
+          "\\(2\\,\\Omega\\)"
+        ],
+        "answer": 2,
+        "sol": "<p>Balance condition: \\(\\dfrac{R}{X}=\\dfrac{l}{100-l}\\Rightarrow \\dfrac{2}{X}=\\dfrac{40}{60}\\).</p><p>\\(X=2\\times\\dfrac{60}{40}=3\\,\\Omega\\).</p>"
+      },
+      {
+        "lvl": "moderate",
+        "q": "With a \\(3\\,\\Omega\\) resistance in the left gap, the null point is at \\(60\\,\\text{cm}\\). The unknown \\(X\\) in the right gap is:",
+        "opts": [
+          "\\(3\\,\\Omega\\)",
+          "\\(4.5\\,\\Omega\\)",
+          "\\(6\\,\\Omega\\)",
+          "\\(2\\,\\Omega\\)"
+        ],
+        "answer": 3,
+        "sol": "<p>\\(\\dfrac{3}{X}=\\dfrac{60}{40}\\Rightarrow X=3\\times\\dfrac{40}{60}=2\\,\\Omega\\).</p><p>Note: the balance moving past 50 cm tells you which resistance is larger — the tool you need for the star question's \"shift.\"</p>"
+      },
+      {
+        "lvl": "orig",
+        "q": "A resistance \\(2\\,\\Omega\\) is in one gap and an unknown resistance (greater than \\(2\\,\\Omega\\)) in the other. When the two are interchanged, the balance point shifts by \\(20\\,\\text{cm}\\). The unknown resistance is:",
+        "opts": [
+          "\\(6\\,\\Omega\\)",
+          "\\(3\\,\\Omega\\)",
+          "\\(4\\,\\Omega\\)",
+          "\\(5\\,\\Omega\\)"
+        ],
+        "answer": 1,
+        "sol": "<p>Let unknown \\(=X\\). First: \\(\\dfrac{2}{X}=\\dfrac{l_1}{100-l_1}\\Rightarrow l_1=\\dfrac{200}{X+2}\\).</p><p>After interchange (\\(X\\) left): \\(l_2=\\dfrac{100X}{X+2}\\).</p><p>Shift \\(=l_2-l_1=\\dfrac{100X-200}{X+2}=\\dfrac{100(X-2)}{X+2}=20\\).</p><p>\\(100X-200=20X+40\\Rightarrow 80X=240\\Rightarrow X=\\mathbf{3\\,\\Omega}\\).</p>"
+      }
+    ]
+  },
+  {
+    "title": "Radius after acceleration",
+    "tag": "Moving Charges & Magnetism",
+    "src": "JEE Adv 2021",
+    "rungs": [
+      {
+        "lvl": "easy",
+        "q": "A particle of mass \\(m\\), charge \\(q\\), moving with speed \\(v\\) enters a magnetic field \\(B\\) perpendicular to \\(v\\). The radius of its circular path is:",
+        "opts": [
+          "\\(\\dfrac{mv}{qB}\\)",
+          "\\(\\dfrac{qB}{mv}\\)",
+          "\\(\\dfrac{mv^2}{qB}\\)",
+          "\\(\\dfrac{qvB}{m}\\)"
+        ],
+        "answer": 0,
+        "sol": "<p>The magnetic force supplies the centripetal force: \\(qvB=\\dfrac{mv^2}{r}\\Rightarrow r=\\dfrac{mv}{qB}\\).</p>"
+      },
+      {
+        "lvl": "moderate",
+        "q": "A charge accelerated from rest through potential \\(V\\) then enters a field \\(B\\perp v\\). Its radius satisfies \\(r=\\dfrac{1}{B}\\sqrt{\\dfrac{2mV}{q}}\\). For two ions with the same charge but masses \\(m\\) and \\(4m\\) (same \\(V\\), same \\(B\\)), the ratio \\(r_2/r_1\\) is:",
+        "opts": [
+          "\\(\\sqrt{2}\\)",
+          "\\(\\tfrac12\\)",
+          "\\(2\\)",
+          "\\(4\\)"
+        ],
+        "answer": 2,
+        "sol": "<p>From \\(qV=\\tfrac12 mv^2\\), \\(v=\\sqrt{2qV/m}\\), so \\(r=\\dfrac{mv}{qB}=\\dfrac{1}{B}\\sqrt{\\dfrac{2mV}{q}}\\), i.e. \\(r\\propto\\sqrt{m}\\) at fixed \\(q,V,B\\).</p><p>\\(\\dfrac{r_2}{r_1}=\\sqrt{\\dfrac{4m}{m}}=2\\).</p>"
+      },
+      {
+        "lvl": "orig",
+        "q": "An \\(\\alpha\\)-particle (mass \\(4\\,\\text{amu}\\), charge \\(2e\\)) and a singly-charged sulfur ion (mass \\(32\\,\\text{amu}\\), charge \\(e\\)) start from rest, are accelerated through the same potential \\(V\\), then move in circles in the same field. The ratio \\(\\left(\\dfrac{r_s}{r_\\alpha}\\right)\\) is:",
+        "opts": [
+          "\\(2\\)",
+          "\\(8\\)",
+          "\\(\\sqrt{8}\\)",
+          "\\(4\\)"
+        ],
+        "answer": 3,
+        "sol": "<p>\\(r=\\dfrac{1}{B}\\sqrt{\\dfrac{2mV}{q}}\\Rightarrow r\\propto\\sqrt{\\dfrac{m}{q}}\\).</p><p>\\(\\dfrac{r_s}{r_\\alpha}=\\sqrt{\\dfrac{m_s/q_s}{m_\\alpha/q_\\alpha}}=\\sqrt{\\dfrac{32/1}{4/2}}=\\sqrt{\\dfrac{32}{2}}=\\sqrt{16}=\\mathbf{4}\\).</p>"
+      }
+    ]
+  },
+  {
+    "title": "Field in a spherical cavity",
+    "tag": "Electric Charges & Fields",
+    "src": "IIT-JEE 2007",
+    "rungs": [
+      {
+        "lvl": "easy",
+        "q": "Inside a uniformly (volume) charged solid sphere of charge density \\(\\rho\\), the electric field at distance \\(r\\) from the centre is:",
+        "opts": [
+          "\\(\\dfrac{\\rho R^3}{3\\varepsilon_0 r^2}\\)",
+          "\\(\\dfrac{\\rho r}{3\\varepsilon_0}\\), radially outward",
+          "\\(\\dfrac{\\rho}{3\\varepsilon_0 r^2}\\)",
+          "\\(0\\)"
+        ],
+        "answer": 1,
+        "sol": "<p>Gauss's law with enclosed charge \\(\\tfrac43\\pi r^3\\rho\\): \\(E\\,(4\\pi r^2)=\\dfrac{\\tfrac43\\pi r^3\\rho}{\\varepsilon_0}\\Rightarrow E=\\dfrac{\\rho r}{3\\varepsilon_0}\\).</p><p>It grows linearly with \\(r\\) and points radially — the linear-in-\\(\\vec r\\) form is what makes the cavity trick work.</p>"
+      },
+      {
+        "lvl": "moderate",
+        "q": "A small off-centre spherical cavity is carved from a uniformly charged sphere. Using superposition (full sphere minus a small sphere of the same \\(\\rho\\) filling the cavity), the field inside the cavity is:",
+        "opts": [
+          "Uniform, equal to \\(\\dfrac{\\rho\\,\\vec d}{3\\varepsilon_0}\\) (\\(\\vec d\\)= centre-to-centre vector)",
+          "Zero everywhere",
+          "Radial and growing with distance from the cavity centre",
+          "Non-uniform and pointing toward the cavity centre"
+        ],
+        "answer": 0,
+        "sol": "<p>At a point \\(\\vec r\\) (from big centre) that is \\(\\vec r'\\) from the cavity centre, with \\(\\vec r=\\vec d+\\vec r'\\):</p><p>\\(\\vec E=\\dfrac{\\rho\\vec r}{3\\varepsilon_0}-\\dfrac{\\rho\\vec r'}{3\\varepsilon_0}=\\dfrac{\\rho(\\vec r-\\vec r')}{3\\varepsilon_0}=\\dfrac{\\rho\\,\\vec d}{3\\varepsilon_0}\\).</p><p>The point cancels out → the field is <b>uniform</b> throughout the cavity.</p>"
+      },
+      {
+        "lvl": "orig",
+        "q": "A spherical portion is removed from a solid sphere carrying uniform volume charge. The electric field inside the emptied (cavity) space is:",
+        "opts": [
+          "Non-uniform",
+          "Zero only at its centre",
+          "Non-zero and uniform",
+          "Zero everywhere"
+        ],
+        "answer": 2,
+        "sol": "<p>By the superposition result above, \\(\\vec E_{cavity}=\\dfrac{\\rho\\,\\vec d}{3\\varepsilon_0}\\), independent of position inside the cavity.</p><p>So the field is <b>non-zero and uniform</b> everywhere in the emptied region.</p>"
+      }
+    ]
+  },
+  {
+    "title": "Concentric shells, equal outer σ",
+    "tag": "Potential & Capacitance",
+    "src": "IIT-JEE 2009",
+    "rungs": [
+      {
+        "lvl": "easy",
+        "q": "Two shells carry the same charge \\(Q\\) but have radii \\(R\\) and \\(2R\\). The ratio of their surface charge densities \\(\\sigma_1:\\sigma_2\\) is:",
+        "opts": [
+          "\\(1:4\\)",
+          "\\(2:1\\)",
+          "\\(1:2\\)",
+          "\\(4:1\\)"
+        ],
+        "answer": 3,
+        "sol": "<p>\\(\\sigma=\\dfrac{Q}{4\\pi R^2}\\Rightarrow \\sigma\\propto\\dfrac{1}{R^2}\\) (same \\(Q\\)).</p><p>\\(\\dfrac{\\sigma_1}{\\sigma_2}=\\dfrac{(2R)^2}{R^2}=4\\Rightarrow 4:1\\).</p>"
+      },
+      {
+        "lvl": "moderate",
+        "q": "Two concentric shells: inner (radius \\(R\\), charge \\(Q_1\\)) and outer (radius \\(2R\\), charge \\(Q_2\\)). The charge on the outer surface of the inner shell is \\(Q_1\\); on the outer surface of the outer shell it is \\(Q_1+Q_2\\). If these two outer-surface densities are equal, then \\(Q_2/Q_1=\\)",
+        "opts": [
+          "\\(1\\)",
+          "\\(3\\)",
+          "\\(4\\)",
+          "\\(2\\)"
+        ],
+        "answer": 1,
+        "sol": "<p>\\(\\dfrac{Q_1}{4\\pi R^2}=\\dfrac{Q_1+Q_2}{4\\pi(2R)^2}\\Rightarrow 4Q_1=Q_1+Q_2\\Rightarrow Q_2=3Q_1\\).</p>"
+      },
+      {
+        "lvl": "orig",
+        "q": "Three concentric metallic shells of radii \\(R,2R,3R\\) carry charges \\(Q_1,Q_2,Q_3\\). The surface charge densities on the <i>outer</i> surfaces of all three shells are equal. Then \\(Q_1:Q_2:Q_3\\) is:",
+        "opts": [
+          "\\(1:3:5\\)",
+          "\\(1:2:3\\)",
+          "\\(1:4:9\\)",
+          "\\(1:8:18\\)"
+        ],
+        "answer": 0,
+        "sol": "<p>Outer-surface charges are \\(Q_1,\\;Q_1+Q_2,\\;Q_1+Q_2+Q_3\\). Equal densities:</p><p>\\(\\dfrac{Q_1}{R^2}=\\dfrac{Q_1+Q_2}{(2R)^2}=\\dfrac{Q_1+Q_2+Q_3}{(3R)^2}\\).</p><p>First pair: \\(Q_1+Q_2=4Q_1\\Rightarrow Q_2=3Q_1\\). Full: \\(Q_1+Q_2+Q_3=9Q_1\\Rightarrow Q_3=5Q_1\\).</p><p>\\(\\therefore Q_1:Q_2:Q_3=\\mathbf{1:3:5}\\).</p>"
+      }
+    ]
+  },
+  {
+    "title": "Bulb wattage vs resistance",
+    "tag": "Current Electricity",
+    "src": "IIT-JEE 2010",
+    "rungs": [
+      {
+        "lvl": "easy",
+        "q": "Two bulbs rated for the same voltage \\(V\\): one \\(100\\,\\text{W}\\), one \\(60\\,\\text{W}\\). Which has the larger filament resistance (at operating conditions)?",
+        "opts": [
+          "Both equal",
+          "Cannot be decided",
+          "The \\(60\\,\\text{W}\\) bulb",
+          "The \\(100\\,\\text{W}\\) bulb"
+        ],
+        "answer": 2,
+        "sol": "<p>At fixed \\(V\\), \\(P=\\dfrac{V^2}{R}\\Rightarrow R=\\dfrac{V^2}{P}\\). Lower power means higher resistance.</p><p>So \\(R_{60}>R_{100}\\): the \\(60\\,\\text{W}\\) bulb has the larger resistance.</p>"
+      },
+      {
+        "lvl": "moderate",
+        "q": "For \\(100\\,\\text{W}\\) and \\(40\\,\\text{W}\\) bulbs at the same rated voltage, which relation is correct?",
+        "opts": [
+          "\\(R_{100}=2R_{40}\\)",
+          "\\(R_{100}<R_{40}\\)",
+          "\\(R_{100}>R_{40}\\)",
+          "\\(R_{100}=R_{40}\\)"
+        ],
+        "answer": 1,
+        "sol": "<p>\\(R=\\dfrac{V^2}{P}\\); higher wattage → lower resistance. Hence \\(R_{100}<R_{40}\\).</p>"
+      },
+      {
+        "lvl": "orig",
+        "q": "For \\(100\\,\\text{W}\\), \\(60\\,\\text{W}\\) and \\(40\\,\\text{W}\\) bulbs (same rated voltage), the correct relation between filament resistances is:",
+        "opts": [
+          "\\(R_{100}>R_{60}>R_{40}\\)",
+          "\\(\\dfrac{1}{R_{100}}=\\dfrac{1}{R_{40}}+\\dfrac{1}{R_{60}}\\)",
+          "\\(R_{100}=R_{40}+R_{60}\\)",
+          "\\(\\dfrac{1}{R_{100}}>\\dfrac{1}{R_{60}}>\\dfrac{1}{R_{40}}\\)"
+        ],
+        "answer": 3,
+        "sol": "<p>Since \\(R=\\dfrac{V^2}{P}\\), we have \\(\\dfrac{1}{R}=\\dfrac{P}{V^2}\\propto P\\).</p><p>\\(P_{100}>P_{60}>P_{40}\\Rightarrow \\dfrac{1}{R_{100}}>\\dfrac{1}{R_{60}}>\\dfrac{1}{R_{40}}\\) (equivalently \\(R_{100}<R_{60}<R_{40}\\)).</p>"
+      }
+    ]
+  },
+  {
+    "title": "Tension in a current loop",
+    "tag": "Moving Charges & Magnetism",
+    "src": "IIT-JEE 2010",
+    "rungs": [
+      {
+        "lvl": "easy",
+        "q": "A straight wire of length \\(L\\) carrying current \\(I\\) sits in a uniform field \\(B\\) perpendicular to it. The magnetic force on it is:",
+        "opts": [
+          "\\(BIL\\)",
+          "\\(\\dfrac{BIL}{2}\\)",
+          "\\(\\dfrac{BIL}{\\pi}\\)",
+          "\\(2BIL\\)"
+        ],
+        "answer": 0,
+        "sol": "<p>\\(\\vec F=I\\vec L\\times\\vec B\\); with \\(\\vec L\\perp\\vec B\\), magnitude \\(F=BIL\\).</p>"
+      },
+      {
+        "lvl": "moderate",
+        "q": "A circular loop of radius \\(R\\) carries current \\(I\\) in a uniform field \\(B\\) directed out of the loop's plane. The outward force per unit length is \\(BI\\). The tension developed in the wire is:",
+        "opts": [
+          "\\(2\\pi BIR\\)",
+          "\\(\\dfrac{BIR}{2}\\)",
+          "\\(\\dfrac{BI}{R}\\)",
+          "\\(BIR\\)"
+        ],
+        "answer": 3,
+        "sol": "<p>Treat a small arc subtending \\(d\\theta\\). The outward force \\(BI\\,(R\\,d\\theta)\\) is balanced by the inward components of tension \\(2T\\sin(d\\theta/2)\\approx T\\,d\\theta\\).</p><p>\\(T\\,d\\theta=BI R\\,d\\theta\\Rightarrow T=BIR\\).</p>"
+      },
+      {
+        "lvl": "orig",
+        "q": "A thin flexible wire of length \\(L\\) carrying current \\(I\\), placed in a uniform field \\(B\\) perpendicular to its plane, springs into a circle. The tension in the wire is:",
+        "opts": [
+          "\\(\\dfrac{IBL}{4\\pi}\\)",
+          "\\(\\dfrac{IBL}{2\\pi}\\)",
+          "\\(IBL\\)",
+          "\\(\\dfrac{IBL}{\\pi}\\)"
+        ],
+        "answer": 1,
+        "sol": "<p>The circle's circumference is \\(L\\), so its radius is \\(R=\\dfrac{L}{2\\pi}\\).</p><p>Using \\(T=BIR\\) from the previous rung: \\(T=BI\\cdot\\dfrac{L}{2\\pi}=\\mathbf{\\dfrac{IBL}{2\\pi}}\\).</p>"
+      }
+    ]
+  },
+  {
+    "title": "Field at the centre of a spiral",
+    "tag": "Moving Charges & Magnetism",
+    "src": "IIT-JEE 2011",
+    "rungs": [
+      {
+        "lvl": "easy",
+        "q": "The magnetic field at the centre of a single circular loop of radius \\(R\\) carrying current \\(I\\) is:",
+        "opts": [
+          "\\(\\dfrac{\\mu_0 I}{2\\pi R}\\)",
+          "\\(\\dfrac{\\mu_0 I R}{2}\\)",
+          "\\(\\dfrac{\\mu_0 I}{2R}\\)",
+          "\\(\\dfrac{\\mu_0 I}{4\\pi R}\\)"
+        ],
+        "answer": 2,
+        "sol": "<p>Standard result at the centre of a loop: \\(B=\\dfrac{\\mu_0 I}{2R}\\).</p>"
+      },
+      {
+        "lvl": "moderate",
+        "q": "\\(N\\) tightly wound concentric loops, each of radius \\(R\\), carry current \\(I\\). The field at the common centre is:",
+        "opts": [
+          "\\(\\dfrac{\\mu_0 N I}{2R}\\)",
+          "\\(\\dfrac{\\mu_0 I}{2NR}\\)",
+          "\\(\\dfrac{\\mu_0 N I}{4\\pi R}\\)",
+          "\\(\\dfrac{\\mu_0 N I}{2\\pi R}\\)"
+        ],
+        "answer": 0,
+        "sol": "<p>Each loop contributes \\(\\dfrac{\\mu_0 I}{2R}\\); \\(N\\) of them add: \\(B=\\dfrac{\\mu_0 N I}{2R}\\). To handle a <i>spread</i> of radii (a spiral), integrate instead of multiply.</p>"
+      },
+      {
+        "lvl": "orig",
+        "q": "An insulated wire is wound as a flat spiral of \\(N\\) turns, inner radius \\(a\\), outer radius \\(b\\), carrying steady current \\(I\\). The magnetic field at the centre of the spiral is:",
+        "opts": [
+          "\\(\\dfrac{\\mu_0 N I}{2(b-a)}\\ln\\!\\left(\\dfrac{b+a}{b-a}\\right)\\)",
+          "\\(\\dfrac{\\mu_0 N I}{2b}\\ln\\!\\left(\\dfrac{b}{a}\\right)\\)",
+          "\\(\\dfrac{\\mu_0 N I}{2b}\\ln\\!\\left(\\dfrac{b+a}{b-a}\\right)\\)",
+          "\\(\\dfrac{\\mu_0 N I}{2(b-a)}\\ln\\!\\left(\\dfrac{b}{a}\\right)\\)"
+        ],
+        "answer": 3,
+        "sol": "<p>Turns per unit radius \\(=\\dfrac{N}{b-a}\\). A ring between \\(r\\) and \\(r+dr\\) has \\(dN=\\dfrac{N}{b-a}\\,dr\\) turns, contributing \\(dB=\\dfrac{\\mu_0 I}{2r}\\,dN\\).</p><p>\\(B=\\displaystyle\\int_a^b\\dfrac{\\mu_0 I}{2r}\\cdot\\dfrac{N}{b-a}\\,dr=\\dfrac{\\mu_0 N I}{2(b-a)}\\ln\\!\\left(\\dfrac{b}{a}\\right)\\).</p>"
+      }
+    ]
+  },
+  {
+    "title": "Charge on a branch capacitor",
+    "tag": "Potential & Capacitance",
+    "src": "IIT-JEE 2012",
+    "rungs": [
+      {
+        "lvl": "easy",
+        "q": "A \\(3\\,\\mu\\text{F}\\) capacitor is charged to \\(4\\,\\text{V}\\). The charge on it is:",
+        "opts": [
+          "\\(1.33\\,\\mu\\text{C}\\)",
+          "\\(12\\,\\mu\\text{C}\\)",
+          "\\(0.75\\,\\mu\\text{C}\\)",
+          "\\(7\\,\\mu\\text{C}\\)"
+        ],
+        "answer": 1,
+        "sol": "<p>\\(Q=CV=3\\,\\mu\\text{F}\\times4\\,\\text{V}=12\\,\\mu\\text{C}\\).</p>"
+      },
+      {
+        "lvl": "moderate",
+        "q": "A total charge of \\(50\\,\\mu\\text{C}\\) is shared between a \\(2\\,\\mu\\text{F}\\) and a \\(3\\,\\mu\\text{F}\\) capacitor connected in parallel. The charge on the \\(3\\,\\mu\\text{F}\\) capacitor is:",
+        "opts": [
+          "\\(25\\,\\mu\\text{C}\\)",
+          "\\(15\\,\\mu\\text{C}\\)",
+          "\\(30\\,\\mu\\text{C}\\)",
+          "\\(20\\,\\mu\\text{C}\\)"
+        ],
+        "answer": 2,
+        "sol": "<p>In parallel the voltage is common, so charge divides in the ratio of capacitances: \\(Q\\propto C\\).</p><p>\\(Q_3=50\\times\\dfrac{3}{2+3}=50\\times\\dfrac{3}{5}=30\\,\\mu\\text{C}\\).</p>"
+      },
+      {
+        "lvl": "orig",
+        "q": "In the circuit, \\(+80\\,\\mu\\text{C}\\) is given to the upper plate of a \\(4\\,\\mu\\text{F}\\) capacitor, which then connects to a parallel pair of \\(2\\,\\mu\\text{F}\\) and \\(3\\,\\mu\\text{F}\\). In steady state, the charge on the upper plate of the \\(3\\,\\mu\\text{F}\\) capacitor is:",
+        "opts": [
+          "\\(+48\\,\\mu\\text{C}\\)",
+          "\\(+32\\,\\mu\\text{C}\\)",
+          "\\(+40\\,\\mu\\text{C}\\)",
+          "\\(+80\\,\\mu\\text{C}\\)"
+        ],
+        "answer": 0,
+        "sol": "<p>The full \\(80\\,\\mu\\text{C}\\) flows onto the parallel combination \\(2\\,\\mu\\text{F}\\parallel3\\,\\mu\\text{F}=5\\,\\mu\\text{F}\\).</p><p>Being in parallel, it splits as \\(Q\\propto C\\): the \\(3\\,\\mu\\text{F}\\) branch gets \\(80\\times\\dfrac{3}{5}=\\mathbf{48\\,\\mu\\text{C}}\\).</p>"
+      }
+    ]
+  }
+];
+
+/* =========================================================
+   STATE + STORAGE
+   ========================================================= */
+const KEY = "padipucast_em_mixed_ladder_v1";
+const LVLNAME = { easy:"Easy", moderate:"Moderate", orig:"Original ★" };
+let state = load();
+let curQ = state.pos ? state.pos.q : 0;
+let curR = state.pos ? state.pos.r : 0;
+
+function load(){
+  try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s && s.ans) return s; }catch(e){}
+  return { ans:{}, videos:{}, pos:{q:0,r:0} };
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function cellId(q,r){ return q+"-"+r; }
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+const modelList = document.getElementById("modelList");
+const rungTabs  = document.getElementById("rungTabs");
+const qcard     = document.getElementById("qcard");
+
+function buildSidebar(){
+  modelList.innerHTML = "";
+  DATA.forEach((m,qi)=>{
+    const solved = m.rungs.every((_,ri)=> state.ans[cellId(qi,ri)] != null);
+    const btn = document.createElement("button");
+    btn.className = "model" + (qi===curQ?" active":"") + (solved?" done":"");
+    btn.innerHTML = `<span class="num">${qi+1}</span>
+      <span><span class="mtitle">${m.title}</span>
+      <span class="mtag">${m.tag}</span></span>`;
+    btn.onclick = ()=>{ curQ=qi; curR=0; commitPos(); renderAll(); closeSidebar(); };
+    modelList.appendChild(btn);
+  });
+}
+
+function buildRungTabs(){
+  rungTabs.innerHTML = "";
+  DATA[curQ].rungs.forEach((rg,ri)=>{
+    const solved = state.ans[cellId(curQ,ri)] != null;
+    const t = document.createElement("button");
+    t.className = "rungtab" + (ri===curR?" active":"") + (solved?" solved":"");
+    t.innerHTML = `<span class="lvl">${LVLNAME[rg.lvl]}</span> Rung ${ri+1}`;
+    t.onclick = ()=>{ curR=ri; commitPos(); renderAll(); };
+    rungTabs.appendChild(t);
+  });
+}
+
+function buildCard(){
+  const m = DATA[curQ];
+  const rg = m.rungs[curR];
+  const id = cellId(curQ,curR);
+  const chosen = state.ans[id];       // index or undefined
+  const answered = chosen != null;
+  const lvlClass = rg.lvl==="easy"?"easy":(rg.lvl==="moderate"?"mod":"orig");
+
+  let opts = rg.opts.map((o,oi)=>{
+    let cls = "opt";
+    if(answered){
+      cls += " locked";
+      if(oi===rg.answer) cls += " correct";
+      else if(oi===chosen) cls += " wrong";
+    }
+    const tag = String.fromCharCode(65+oi);
+    return `<div class="${cls}" data-oi="${oi}"><span class="tag">${tag}</span><span>${o}</span></div>`;
+  }).join("");
+
+  let solution = "";
+  if(answered){
+    const ok = chosen===rg.answer;
+    solution = `<div class="solution show">
+      <div class="verdict ${ok?'ok':'no'}">${ok?'✓ Correct':'✗ Not quite — correct answer is '+String.fromCharCode(65+rg.answer)}</div>
+      <h4>Solution</h4>${rg.sol}</div>`;
+  }
+
+  qcard.innerHTML = `
+    <div class="qmeta">
+      <span class="badge ${lvlClass}">${LVLNAME[rg.lvl]}</span>
+      <span class="badge">Q${curQ+1} · Rung ${curR+1} of 3</span>
+      <span class="badge src">${m.tag} · ${m.src}</span>
+    </div>
+    <p class="qtext">${rg.q}</p>
+    <div class="opts" id="opts">${opts}</div>
+    <div class="controls">
+      <button class="btn" id="showAns">${answered?'Answer shown':'Show Answer'}</button>
+      <div class="spacer"></div>
+      <button class="btn" id="prevBtn">‹ Prev</button>
+      <button class="btn primary" id="nextBtn">Next ›</button>
+    </div>
+    ${solution}`;
+
+  // option clicks
+  if(!answered){
+    qcard.querySelectorAll(".opt").forEach(el=>{
+      el.onclick = ()=>{
+        const oi = +el.dataset.oi;
+        state.ans[id] = oi;
+        save();
+        renderAll();
+      };
+    });
+  }
+  document.getElementById("showAns").onclick = ()=>{
+    if(state.ans[id] == null){ state.ans[id] = -1; save(); renderAll(); } // reveal without credit
+  };
+  document.getElementById("prevBtn").onclick = goPrev;
+  document.getElementById("nextBtn").onclick = goNext;
+
+  buildVideo();
+  if(window.MathJax && MathJax.typesetPromise){ MathJax.typesetClear && MathJax.typesetClear(); MathJax.typesetPromise([qcard]); }
+}
+
+function updateStrip(){
+  let score=0, att=0;
+  DATA.forEach((m,qi)=> m.rungs.forEach((rg,ri)=>{
+    const v = state.ans[cellId(qi,ri)];
+    if(v!=null){ att++; if(v===rg.answer) score++; }
+  }));
+  document.getElementById("scoreVal").textContent = score+" / 30";
+  document.getElementById("attVal").textContent   = att;
+  document.getElementById("posVal").textContent   = "Q"+(curQ+1)+" · Rung "+(curR+1);
+}
+
+/* video widget (per-rung) */
+function ytEmbed(url){
+  try{
+    let id=null, t=0;
+    const u = new URL(url);
+    if(u.hostname.includes("youtu.be")) id = u.pathname.slice(1);
+    else if(u.searchParams.get("v")) id = u.searchParams.get("v");
+    else if(u.pathname.includes("/embed/")) id = u.pathname.split("/embed/")[1];
+    const traw = u.searchParams.get("t") || u.searchParams.get("start");
+    if(traw){
+      if(/[ms]/.test(traw)){
+        const mm=/(\d+)m/.exec(traw); const ss=/(\d+)s/.exec(traw);
+        t=(mm?+mm[1]*60:0)+(ss?+ss[1]:0);
+      } else { t = parseInt(traw,10)||0; }
+    }
+    if(!id) return null;
+    return "https://www.youtube.com/embed/"+id+(t?("?start="+t):"");
+  }catch(e){ return null; }
+}
+function buildVideo(){
+  const id = cellId(curQ,curR);
+  const input = document.getElementById("vidInput");
+  const frame = document.getElementById("vidFrame");
+  const saved = state.videos[id] || "";
+  input.value = saved;
+  const emb = saved ? ytEmbed(saved) : null;
+  if(emb){ frame.innerHTML = `<iframe src="${emb}" allowfullscreen loading="lazy"></iframe>`; frame.classList.add("show"); }
+  else { frame.innerHTML=""; frame.classList.remove("show"); }
+  document.getElementById("vidLoad").onclick = ()=>{
+    const v = input.value.trim();
+    if(!v) return;
+    state.videos[id]=v; save(); buildVideo();
+  };
+  document.getElementById("vidClear").onclick = ()=>{
+    delete state.videos[id]; save(); buildVideo();
+  };
+}
+
+function renderAll(){ buildSidebar(); buildRungTabs(); buildCard(); updateStrip(); }
+
+/* navigation across rungs then questions */
+function goNext(){
+  if(curR < DATA[curQ].rungs.length-1) curR++;
+  else if(curQ < DATA.length-1){ curQ++; curR=0; }
+  commitPos(); renderAll();
+}
+function goPrev(){
+  if(curR>0) curR--;
+  else if(curQ>0){ curQ--; curR=DATA[curQ].rungs.length-1; }
+  commitPos(); renderAll();
+}
+function commitPos(){ state.pos={q:curQ,r:curR}; save(); }
+
+/* sidebar mobile */
+const sidebar=document.getElementById("sidebar"), scrim=document.getElementById("scrim");
+function openSidebar(){ sidebar.classList.add("open"); scrim.classList.add("open"); }
+function closeSidebar(){ sidebar.classList.remove("open"); scrim.classList.remove("open"); }
+document.getElementById("menuBtn").onclick = openSidebar;
+scrim.onclick = closeSidebar;
+
+/* clear modal */
+const overlay=document.getElementById("overlay");
+document.getElementById("clearBtn").onclick = ()=> overlay.classList.add("show");
+document.getElementById("modalCancel").onclick = ()=> overlay.classList.remove("show");
+document.getElementById("modalConfirm").onclick = ()=>{
+  state = { ans:{}, videos:{}, pos:{q:0,r:0} };
+  curQ=0; curR=0; save(); overlay.classList.remove("show"); renderAll();
+};
+
+/* keyboard */
+document.addEventListener("keydown", e=>{
+  if(e.target.tagName==="INPUT") return;
+  if(e.key==="ArrowRight") goNext();
+  else if(e.key==="ArrowLeft") goPrev();
+});
+
+renderAll();
+</script>
+</body>
+</html>
