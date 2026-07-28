@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics DPP · Distance & Displacement · Class 9 (ICSE)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:500px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Class 9 DPP-01</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Topics
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Distance &amp; Displacement</h1></div>
+    <p id="home-sub">ICSE Class 9 · Physics · Motion. Pick a topic to begin — 5 questions each. (Take &pi; = 22/7)</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Question 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every topic. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+// Colours: blue = path/distance, red = displacement, green = start point.
+const DIAGRAMS = {
+
+  // Number line: one-way trip 0 -> 20
+  numberLineOneWay: () => `
+    <svg viewBox="0 0 320 110" width="320" height="110" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="nl_b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker>
+        <marker id="nl_x" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#374151"/></marker>
+      </defs>
+      <line x1="20" y1="70" x2="305" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#nl_x)"/>
+      <line x1="45" y1="66" x2="45" y2="74" stroke="#374151" stroke-width="1.5"/>
+      <line x1="165" y1="66" x2="165" y2="74" stroke="#374151" stroke-width="1.5"/>
+      <line x1="285" y1="66" x2="285" y2="74" stroke="#374151" stroke-width="1.5"/>
+      <text x="45" y="90" font-size="12" fill="#374151" font-family="sans-serif" text-anchor="middle">0</text>
+      <text x="165" y="90" font-size="12" fill="#374151" font-family="sans-serif" text-anchor="middle">10</text>
+      <text x="285" y="90" font-size="12" fill="#374151" font-family="sans-serif" text-anchor="middle">20</text>
+      <line x1="45" y1="46" x2="285" y2="46" stroke="#2563eb" stroke-width="2.5" marker-end="url(#nl_b)"/>
+      <text x="150" y="38" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">moves 0 → 20</text>
+      <circle cx="45" cy="70" r="5" fill="#16a34a"/>
+      <circle cx="285" cy="70" r="5" fill="#dc2626"/>
+    </svg>`,
+
+  // Number line: go to 20 and come straight back to 0
+  numberLineBackForth: () => `
+    <svg viewBox="0 0 320 130" width="320" height="130" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="bf_b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker>
+        <marker id="bf_g" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#16a34a"/></marker>
+        <marker id="bf_x" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#374151"/></marker>
+      </defs>
+      <line x1="20" y1="78" x2="305" y2="78" stroke="#374151" stroke-width="1.5" marker-end="url(#bf_x)"/>
+      <line x1="45" y1="74" x2="45" y2="82" stroke="#374151" stroke-width="1.5"/>
+      <line x1="285" y1="74" x2="285" y2="82" stroke="#374151" stroke-width="1.5"/>
+      <text x="45" y="98" font-size="12" fill="#374151" font-family="sans-serif" text-anchor="middle">0 (start &amp; end)</text>
+      <text x="285" y="98" font-size="12" fill="#374151" font-family="sans-serif" text-anchor="middle">20</text>
+      <line x1="45" y1="52" x2="285" y2="52" stroke="#2563eb" stroke-width="2.5" marker-end="url(#bf_b)"/>
+      <text x="165" y="44" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">go: 0 → 20</text>
+      <line x1="285" y1="30" x2="45" y2="30" stroke="#16a34a" stroke-width="2.5" marker-end="url(#bf_g)"/>
+      <text x="165" y="24" font-size="11" fill="#16a34a" font-family="sans-serif" text-anchor="middle">return: 20 → 0</text>
+      <circle cx="45" cy="78" r="5" fill="#16a34a"/>
+    </svg>`,
+
+  // Number line: forward 6 then back 2
+  numberLineSixTwo: () => `
+    <svg viewBox="0 0 320 130" width="320" height="130" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="st_b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker>
+        <marker id="st_o" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#f59e0b"/></marker>
+        <marker id="st_r" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker>
+        <marker id="st_x" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#374151"/></marker>
+      </defs>
+      <line x1="20" y1="80" x2="305" y2="80" stroke="#374151" stroke-width="1.5" marker-end="url(#st_x)"/>
+      <line x1="40" y1="76" x2="40" y2="84" stroke="#374151" stroke-width="1.5"/>
+      <line x1="200" y1="76" x2="200" y2="84" stroke="#374151" stroke-width="1.5"/>
+      <line x1="253" y1="76" x2="253" y2="84" stroke="#374151" stroke-width="1.5"/>
+      <text x="40" y="98" font-size="11" fill="#374151" font-family="sans-serif" text-anchor="middle">start (0)</text>
+      <text x="253" y="98" font-size="11" fill="#374151" font-family="sans-serif" text-anchor="middle">6 m</text>
+      <text x="200" y="98" font-size="11" fill="#374151" font-family="sans-serif" text-anchor="middle">4 m</text>
+      <line x1="40" y1="56" x2="253" y2="56" stroke="#2563eb" stroke-width="2.5" marker-end="url(#st_b)"/>
+      <text x="140" y="48" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">forward 6 m</text>
+      <line x1="253" y1="34" x2="200" y2="34" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#st_o)"/>
+      <text x="226" y="28" font-size="11" fill="#f59e0b" font-family="sans-serif" text-anchor="middle">back 2 m</text>
+      <line x1="40" y1="112" x2="200" y2="112" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="5,3" marker-end="url(#st_r)"/>
+      <text x="120" y="126" font-size="11" fill="#dc2626" font-family="sans-serif" text-anchor="middle">displacement = 4 m</text>
+      <circle cx="40" cy="80" r="5" fill="#16a34a"/>
+    </svg>`,
+
+  // Number line: x_i = 10 to x_f = 15
+  numberLineTenFifteen: () => `
+    <svg viewBox="0 0 320 110" width="320" height="110" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="tf_b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker>
+        <marker id="tf_x" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#374151"/></marker>
+      </defs>
+      <line x1="20" y1="70" x2="305" y2="70" stroke="#374151" stroke-width="1.5" marker-end="url(#tf_x)"/>
+      <line x1="130" y1="66" x2="130" y2="74" stroke="#374151" stroke-width="1.5"/>
+      <line x1="195" y1="66" x2="195" y2="74" stroke="#374151" stroke-width="1.5"/>
+      <line x1="285" y1="66" x2="285" y2="74" stroke="#374151" stroke-width="1.5"/>
+      <text x="130" y="90" font-size="12" fill="#374151" font-family="sans-serif" text-anchor="middle">10 (xᵢ)</text>
+      <text x="195" y="90" font-size="12" fill="#374151" font-family="sans-serif" text-anchor="middle">15 (x_f)</text>
+      <text x="285" y="90" font-size="12" fill="#374151" font-family="sans-serif" text-anchor="middle">20</text>
+      <line x1="130" y1="46" x2="195" y2="46" stroke="#2563eb" stroke-width="2.5" marker-end="url(#tf_b)"/>
+      <text x="162" y="38" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">x_f − xᵢ</text>
+      <circle cx="130" cy="70" r="5" fill="#16a34a"/>
+      <circle cx="195" cy="70" r="5" fill="#dc2626"/>
+    </svg>`,
+
+  // Circle with radius (for circumference)
+  circleRadius: (r='7 m') => `
+    <svg viewBox="0 0 220 200" width="220" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="cr_g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#6b7280"/></marker></defs>
+      <circle cx="110" cy="100" r="80" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+      <circle cx="110" cy="100" r="3" fill="#374151"/>
+      <line x1="110" y1="100" x2="190" y2="100" stroke="#6b7280" stroke-width="1.5" marker-end="url(#cr_g)"/>
+      <text x="140" y="94" font-size="12" fill="#6b7280" font-family="sans-serif">R = ${r}</text>
+      <text x="110" y="196" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">one full round = circumference</text>
+    </svg>`,
+
+  // Half circle: A -> B along diameter ends
+  halfCircle: () => `
+    <svg viewBox="0 0 260 170" width="260" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="hc_b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker>
+        <marker id="hc_r" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker>
+      </defs>
+      <path d="M 50,120 A 80,80 0 0,1 210,120" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#hc_b)"/>
+      <text x="130" y="24" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">path = half circle = πR</text>
+      <line x1="50" y1="120" x2="210" y2="120" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#hc_r)"/>
+      <text x="130" y="140" font-size="11" fill="#dc2626" font-family="sans-serif" text-anchor="middle">displacement = 2R</text>
+      <circle cx="130" cy="120" r="3" fill="#6b7280"/>
+      <circle cx="50" cy="120" r="5" fill="#16a34a"/>
+      <text x="36" y="138" font-size="13" fill="#374151" font-family="sans-serif" font-weight="700">A</text>
+      <circle cx="210" cy="120" r="5" fill="#dc2626"/>
+      <text x="214" y="138" font-size="13" fill="#374151" font-family="sans-serif" font-weight="700">B</text>
+    </svg>`,
+
+  // Full circle: one revolution, start = end
+  fullCircle: () => `
+    <svg viewBox="0 0 220 210" width="220" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="fc_b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker></defs>
+      <path d="M 190,100 A 80,80 0 1,1 189,99" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#fc_b)"/>
+      <circle cx="110" cy="100" r="3" fill="#374151"/>
+      <circle cx="190" cy="100" r="6" fill="#16a34a"/>
+      <text x="176" y="90" font-size="12" fill="#374151" font-family="sans-serif" font-weight="700">start = end</text>
+      <text x="110" y="205" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">one full round = 2πR · displacement = 0</text>
+    </svg>`,
+
+  // Quarter circle
+  quarterCircle: (r='7 m') => `
+    <svg viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="qc_b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker>
+        <marker id="qc_r" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker>
+      </defs>
+      <line x1="30" y1="30" x2="30" y2="170" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="30" y1="170" x2="180" y2="170" stroke="#e2e8f0" stroke-width="1"/>
+      <path d="M 170,170 A 140,140 0 0,1 30,30" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#qc_b)"/>
+      <text x="150" y="60" font-size="11" fill="#2563eb" font-family="sans-serif">quarter = πR/2</text>
+      <line x1="170" y1="170" x2="30" y2="30" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#qc_r)"/>
+      <text x="82" y="112" font-size="11" fill="#dc2626" font-family="sans-serif">R√2</text>
+      <circle cx="30" cy="170" r="3" fill="#374151"/>
+      <text x="14" y="184" font-size="11" fill="#6b7280" font-family="sans-serif">O</text>
+      <circle cx="170" cy="170" r="5" fill="#16a34a"/>
+      <text x="170" y="190" font-size="13" fill="#374151" font-family="sans-serif" font-weight="700">A</text>
+      <circle cx="30" cy="30" r="5" fill="#dc2626"/>
+      <text x="12" y="26" font-size="13" fill="#374151" font-family="sans-serif" font-weight="700">B</text>
+    </svg>`,
+
+  // Zig-zag bent road: distance > displacement (372 vs 250)
+  zigzagPath: () => `
+    <svg viewBox="0 0 300 170" width="300" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="zz_b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker>
+        <marker id="zz_r" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker>
+      </defs>
+      <polyline points="30,130 90,50 160,120 220,45 270,120" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#zz_b)"/>
+      <text x="150" y="26" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">bent road (path) = distance = 372 m</text>
+      <line x1="30" y1="130" x2="270" y2="120" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#zz_r)"/>
+      <text x="150" y="158" font-size="11" fill="#dc2626" font-family="sans-serif" text-anchor="middle">straight gap = displacement = 250 m</text>
+      <circle cx="30" cy="130" r="5" fill="#16a34a"/>
+      <text x="16" y="126" font-size="12" fill="#374151" font-family="sans-serif" font-weight="700">A</text>
+      <circle cx="270" cy="120" r="5" fill="#dc2626"/>
+      <text x="274" y="116" font-size="12" fill="#374151" font-family="sans-serif" font-weight="700">B</text>
+    </svg>`,
+
+  // Coordinate right-triangle for Pythagoras displacement
+  coordTriangle: (a='3', b='4', hyp='5', xlabel='east', ylabel='north') => `
+    <svg viewBox="0 0 240 200" width="240" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ct_b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker>
+        <marker id="ct_g" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#16a34a"/></marker>
+        <marker id="ct_r" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker>
+      </defs>
+      <line x1="40" y1="160" x2="170" y2="160" stroke="#2563eb" stroke-width="2.5" marker-end="url(#ct_b)"/>
+      <text x="100" y="178" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">${a} m ${xlabel}</text>
+      <line x1="170" y1="160" x2="170" y2="50" stroke="#16a34a" stroke-width="2.5" marker-end="url(#ct_g)"/>
+      <text x="176" y="108" font-size="11" fill="#16a34a" font-family="sans-serif">${b} m ${ylabel}</text>
+      <line x1="40" y1="160" x2="170" y2="50" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#ct_r)"/>
+      <text x="72" y="96" font-size="12" fill="#dc2626" font-family="sans-serif" font-weight="600">${hyp} m</text>
+      <rect x="158" y="148" width="12" height="12" fill="none" stroke="#9ca3af" stroke-width="1"/>
+      <circle cx="40" cy="160" r="5" fill="#16a34a"/>
+      <text x="24" y="176" font-size="12" fill="#374151" font-family="sans-serif" font-weight="700">A</text>
+      <circle cx="170" cy="50" r="5" fill="#dc2626"/>
+      <text x="176" y="46" font-size="12" fill="#374151" font-family="sans-serif" font-weight="700">B</text>
+    </svg>`,
+
+  // Square path, returns to start
+  squarePath: (side='5 m') => `
+    <svg viewBox="0 0 200 190" width="200" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="sq_b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker></defs>
+      <rect x="45" y="40" width="110" height="110" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+      <line x1="45" y1="150" x2="120" y2="150" stroke="#2563eb" stroke-width="2.5" marker-end="url(#sq_b)"/>
+      <text x="100" y="168" font-size="11" fill="#374151" font-family="sans-serif" text-anchor="middle">side = ${side}</text>
+      <text x="100" y="184" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">walk all 4 sides, return to start</text>
+      <circle cx="45" cy="150" r="6" fill="#16a34a"/>
+      <text x="26" y="150" font-size="12" fill="#374151" font-family="sans-serif" font-weight="700">A</text>
+    </svg>`
+};
+
+// ── TOPIC DATA ─────────────────────────────────────────────────────────────────
+const TOPICS = [
+
+  // ── TOPIC 1: Basics — meaning of distance & displacement ──────────────────
+  {
+    name:"The Basics: Distance & Displacement",
+    questions:[
+      {
+        q:"Distance is the total path length travelled by a body. What type of physical quantity is distance?",
+        opts:["A vector quantity","A scalar quantity","Neither scalar nor vector","Both scalar and vector"],
+        ans:1,
+        sol:"Distance tells only 'how much', not direction. A quantity with only magnitude (size) and no direction is a <strong>scalar</strong>. So distance is a scalar quantity."
+      },
+      {
+        q:"Displacement is the shortest distance from the starting point to the final point of a body. What type of quantity is displacement?",
+        opts:["A scalar quantity","A vector quantity","A quantity with no direction","Always zero"],
+        ans:1,
+        sol:"Displacement has both size and direction (it points from the start to the end). A quantity with magnitude and direction is a <strong>vector</strong>. So displacement is a vector quantity."
+      },
+      {
+        q:"Which of these can NEVER be negative?",
+        opts:["Displacement","Distance","Both distance and displacement","Neither of them"],
+        ans:1,
+        sol:"Distance is a total path length that is added up, so it is always positive (or zero). It can never be negative. Displacement can be positive, zero or negative."
+      },
+      {
+        q:"A boy stands still at one spot for 10 minutes. What are his distance and displacement?",
+        opts:["0 and 0","positive and 0","0 and positive","both positive"],
+        ans:0,
+        sol:"If a body does not move, it covers no path (distance = 0) and its position does not change (displacement = 0). This is why distance can also be zero — when the body is at rest."
+      },
+      {
+        q:"For the motion of any body, distance is always:",
+        opts:["less than displacement","exactly equal to displacement","greater than or equal to displacement","only greater than displacement"],
+        ans:2,
+        sol:"The shortest (straight-line) path is the displacement. The real path is either that same straight line or longer. So <strong>distance ≥ displacement</strong> always. They are equal only for straight-line motion in one direction."
+      }
+    ]
+  },
+
+  // ── TOPIC 2: Motion along a straight line (number line) ───────────────────
+  {
+    name:"Motion Along a Straight Line",
+    questions:[
+      {
+        q:"A body starts at 0 m and moves in a straight line to 20 m. Find its distance and displacement.",
+        diagram: DIAGRAMS.numberLineOneWay(),
+        opts:["20 m, 0","0, 20 m","20 m, 20 m","40 m, 20 m"],
+        ans:2,
+        sol:"Path length = 20 m, so distance = 20 m. Change in position = 20 − 0 = 20 m, so displacement = 20 m. In one-way straight motion, distance and displacement are equal."
+      },
+      {
+        q:"A body moves from 0 m to 20 m and then comes straight back to 0 m. Find its distance and displacement.",
+        diagram: DIAGRAMS.numberLineBackForth(),
+        opts:["40 m, 0","20 m, 20 m","0, 40 m","40 m, 40 m"],
+        ans:0,
+        sol:"Distance = 20 (going) + 20 (returning) = 40 m. The body ends where it started, so displacement = final − initial = 0 − 0 = <strong>0</strong>."
+      },
+      {
+        q:"A body's initial position is xᵢ = 10 m and its final position is x_f = 15 m on a straight line. Find its displacement.",
+        diagram: DIAGRAMS.numberLineTenFifteen(),
+        opts:["25 m","5 m","10 m","15 m"],
+        ans:1,
+        sol:"Displacement = x_f − xᵢ = 15 − 10 = <strong>5 m</strong>, in the positive direction. (This is exactly the number-line method from class.)"
+      },
+      {
+        q:"A man walks 3 m towards east, and then 3 m further, in the same straight line. Find his distance and displacement.",
+        opts:["6 m, 0","3 m, 6 m","6 m, 6 m","9 m, 6 m"],
+        ans:2,
+        sol:"He keeps moving in one direction, so path length = 3 + 3 = 6 m and displacement = 6 m east. Same direction all through ⇒ distance = displacement = 6 m."
+      },
+      {
+        q:"A man walks 6 m forward, then turns and walks 2 m back along the same line. Find his distance and displacement.",
+        diagram: DIAGRAMS.numberLineSixTwo(),
+        opts:["8 m, 4 m","4 m, 8 m","8 m, 8 m","6 m, 2 m"],
+        ans:0,
+        sol:"Distance = 6 + 2 = 8 m (whole path). Net forward move = 6 − 2 = 4 m, so displacement = <strong>4 m</strong> forward. Here distance (8) is greater than displacement (4)."
+      }
+    ]
+  },
+
+  // ── TOPIC 3: Comparing distance & displacement ────────────────────────────
+  {
+    name:"Comparing Distance & Displacement",
+    questions:[
+      {
+        q:"A car travels along a bent road. Its distance is 372 m and its displacement is 250 m. What does this tell us?",
+        diagram: DIAGRAMS.zigzagPath(),
+        opts:["displacement is greater than distance","distance is greater than displacement","they are always equal","distance is negative"],
+        ans:1,
+        sol:"The road is not straight, so the path travelled (372 m) is longer than the straight-line gap between the two ends (250 m). Whenever the path is not straight, distance > displacement."
+      },
+      {
+        q:"In which case are distance and displacement EQUAL?",
+        opts:["When the body moves along a circle","When the body returns to its start","When the body moves in a straight line in one direction","They are never equal"],
+        ans:2,
+        sol:"For a straight path taken in a single direction, the path length is the same as the straight-line gap. So distance = displacement only for straight-line, one-direction motion."
+      },
+      {
+        q:"A runner runs exactly once around a circular track and stops at the starting point. Which statement is true?",
+        diagram: DIAGRAMS.fullCircle(),
+        opts:["Distance = 0, displacement is more than 0","Distance is more than 0, displacement = 0","Both are zero","Both are equal"],
+        ans:1,
+        sol:"The runner covers the whole track, so distance > 0. But the start and finish are the same point, so displacement = 0. This is a key example where distance ≠ displacement."
+      },
+      {
+        q:"Which quantity can be positive, zero OR negative?",
+        opts:["Distance only","Displacement","Neither of them","Both equally"],
+        ans:1,
+        sol:"Displacement depends on direction, so it can be positive, zero or negative. Distance can only be positive or zero (never negative)."
+      },
+      {
+        q:"A body moves along some path and finally comes back to its starting point. Its displacement is:",
+        opts:["equal to the distance","greater than the distance","zero","always negative"],
+        ans:2,
+        sol:"The initial and final positions are the same point, so displacement = final − initial = <strong>0</strong>, no matter how much distance was covered."
+      }
+    ]
+  },
+
+  // ── TOPIC 4: Circular motion (π = 22/7) ───────────────────────────────────
+  {
+    name:"Circular Motion (Take π = 22/7)",
+    questions:[
+      {
+        q:"A circular track has radius R = 7 m. Find the length of one complete round (the circumference). Take π = 22/7.",
+        diagram: DIAGRAMS.circleRadius('7 m'),
+        opts:["22 m","44 m","14 m","88 m"],
+        ans:1,
+        sol:"Circumference = 2πR = 2 × (22/7) × 7 = 2 × 22 = <strong>44 m</strong>. (The 7 cancels the 7 in 22/7, which is why R = 7 m is chosen.)"
+      },
+      {
+        q:"A body moves along a half circle of radius R, from one end of a diameter to the other end. Find its distance and displacement.",
+        diagram: DIAGRAMS.halfCircle(),
+        opts:["πR, 2R","2R, πR","2πR, R","πR, R"],
+        ans:0,
+        sol:"Half of the circumference = ½ × 2πR = πR, so distance = πR. The two ends of a diameter are 2R apart in a straight line, so displacement = 2R."
+      },
+      {
+        q:"A body completes exactly one full revolution of a circle of radius R. Find its distance and displacement.",
+        diagram: DIAGRAMS.fullCircle(),
+        opts:["2πR, 0","0, 2πR","πR, 2R","2πR, 2R"],
+        ans:0,
+        sol:"One full round: distance = circumference = 2πR. It finishes at the same point it started, so displacement = <strong>0</strong>."
+      },
+      {
+        q:"A body moves along a quarter circle of radius R = 7 m. Find the distance it travels. Take π = 22/7.",
+        diagram: DIAGRAMS.quarterCircle('7 m'),
+        opts:["22 m","11 m","44 m","14 m"],
+        ans:1,
+        sol:"A quarter of the circumference = ¼ × 2πR = πR/2 = (22/7 × 7)/2 = 22/2 = <strong>11 m</strong>."
+      },
+      {
+        q:"An athlete runs 10 complete rounds of a circular track of radius R and stops at the starting point. Find distance and displacement.",
+        opts:["20πR, 0","20πR, 2R","10πR, 0","0, 20πR"],
+        ans:0,
+        sol:"Distance = 10 × (2πR) = <strong>20πR</strong>. The athlete finishes at the start, so displacement = 0."
+      }
+    ]
+  },
+
+  // ── TOPIC 5: Displacement in a plane (Pythagoras) ─────────────────────────
+  {
+    name:"Displacement in a Plane (Pythagoras)",
+    questions:[
+      {
+        q:"A body starts at the point (0, 0) and reaches the point (3, 4). Find the size (magnitude) of its displacement.",
+        diagram: DIAGRAMS.coordTriangle('3','4','5','across','up'),
+        opts:["7 units","5 units","1 unit","12 units"],
+        ans:1,
+        sol:"Displacement is the straight-line gap = √(3² + 4²) = √(9 + 16) = √25 = <strong>5 units</strong>. (This uses c² = a² + b² from class.)"
+      },
+      {
+        q:"A man walks 3 m towards east, then 4 m towards north. Find his distance and the size of his displacement.",
+        diagram: DIAGRAMS.coordTriangle('3','4','5','east','north'),
+        opts:["7 m, 5 m","5 m, 7 m","7 m, 7 m","12 m, 5 m"],
+        ans:0,
+        sol:"Distance (path) = 3 + 4 = 7 m. The two legs are at right angles, so displacement = √(3² + 4²) = √25 = 5 m. Distance (7) > displacement (5)."
+      },
+      {
+        q:"A boy walks 6 m towards east and then 8 m towards north. Find the size of his displacement.",
+        diagram: DIAGRAMS.coordTriangle('6','8','10','east','north'),
+        opts:["14 m","10 m","2 m","48 m"],
+        ans:1,
+        sol:"The two parts are perpendicular, so displacement = √(6² + 8²) = √(36 + 64) = √100 = <strong>10 m</strong>."
+      },
+      {
+        q:"A body moves from (2, 2) to (5, 5). The move across is (5 − 2) = 3 and the move up is (5 − 2) = 3. Find the size of its displacement.",
+        diagram: DIAGRAMS.coordTriangle('3','3','3√2','across','up'),
+        opts:["6 units","3√2 units","3 units","9 units"],
+        ans:1,
+        sol:"Displacement = √(3² + 3²) = √(9 + 9) = √18 = <strong>3√2 units</strong> (about 4.24 units)."
+      },
+      {
+        q:"A body walks along all four sides of a square of side 5 m and returns to the same corner. Find its distance and displacement.",
+        diagram: DIAGRAMS.squarePath('5 m'),
+        opts:["20 m, 0","20 m, 20 m","5 m, 0","0, 20 m"],
+        ans:0,
+        sol:"Distance = 4 × 5 = 20 m (all four sides). Start and end are the same corner, so displacement = <strong>0</strong>."
+      }
+    ]
+  }
+];
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'padipucast_dist_disp_class9_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(()=>Array(5).fill(null));
+}
+
+function saveAnswers(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+}
+
+// ── SHUFFLE ────────────────────────────────────────────────────────────────────
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Build shuffled topics with randomised option order, preserving saved answers
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────────
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+// ── BUILD HOME ─────────────────────────────────────────────────────────────────
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0, totalAtt=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done; totalAtt+=att;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===5&&done===5?' all-done':'');
+    const dots=Array(5).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Topic ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/5 attempted</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.length*5} correct`;
+}
+
+// ── OPEN TOPIC ─────────────────────────────────────────────────────────────────
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Topic ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=5;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.textContent=i+1;
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.textContent=`Question ${curQ+1} of 5`;
+  qText.textContent=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else {
+    qDiagram.style.display='none';
+    qDiagram.innerHTML='';
+  }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className='';
+  feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else {
+      btn.onclick=()=>choose(i);
+    }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else {
+    showAnsBtn.style.display='inline-block';
+  }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===4){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className='';
+  feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution —</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  if(newQ<0||newQ>4){if(newQ>4) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+// ── CLEAR PROGRESS ─────────────────────────────────────────────────────────────
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(()=>Array(5).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+// ── YOUTUBE ─────────────────────────────────────────────────────────────────────
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+buildHome();
+</script>
+</body>
+</html>
