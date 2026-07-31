@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST · EMI Ladders with Variations</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-label .varlab{color:#2563eb;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+#var-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid #cfe0f5;border-radius:8px;padding:9px 16px;cursor:pointer;color:#2563eb;transition:all 0.15s;}
+#var-btn:hover{background:#f0f6fd;border-color:#2563eb;}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> EMI Ladders</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Ladders
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>EMI Ladders<br>— with Variations</h1></div>
+    <p id="home-sub">Four induction ladders, now with a bank behind every rung. Tap &#8216;Try a variation&#8217; for a fresh twin of the same concept &#8212; new numbers or a new angle, same skill. Base rungs are scored; variations are free practice.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+          <button id="var-btn" onclick="cycleVariant()" style="display:none">&#8635; Try a variation</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every model. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — EMI set
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+// a field of dots (out of page) or crosses (into page)
+function fieldDots(x,y,w,h,cols,rows,sym,color){
+  let s=''; const dx=w/cols, dy=h/rows;
+  for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){
+    const cx=x+dx*(i+0.5), cy=y+dy*(j+0.5);
+    if(sym==='dot') s+=`<circle cx="${cx}" cy="${cy}" r="1.6" fill="${color}"/>`;
+    else s+=`<g stroke="${color}" stroke-width="1"><line x1="${cx-2.4}" y1="${cy-2.4}" x2="${cx+2.4}" y2="${cy+2.4}"/><line x1="${cx-2.4}" y1="${cy+2.4}" x2="${cx+2.4}" y2="${cy-2.4}"/></g>`;
+  }
+  return s;
+}
+
+const DIAGRAMS = {
+
+  // bar magnet approaching a coil
+  magnetCoil: (dir='approaching', poleLabel='N') => `
+    <svg viewBox="0 0 300 170" width="300" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('mc1','#dc2626')}${AR('mc2','#2563eb')}</defs>
+      <!-- coil -->
+      <g stroke="#b45309" stroke-width="2" fill="none">
+        ${[0,1,2,3,4,5].map(i=>`<ellipse cx="${196+i*11}" cy="95" rx="7" ry="30"/>`).join('')}
+      </g>
+      <line x1="196" y1="65" x2="196" y2="30" stroke="#374151" stroke-width="1.4"/>
+      <line x1="251" y1="65" x2="251" y2="30" stroke="#374151" stroke-width="1.4"/>
+      <circle cx="215" cy="20" r="14" fill="#f3f4f6" stroke="#374151" stroke-width="1.4"/>
+      <text x="210" y="24" font-size="11" fill="#374151" ${FS}>G</text>
+      <line x1="196" y1="30" x2="205" y2="24" stroke="#374151" stroke-width="1.4"/>
+      <line x1="251" y1="30" x2="226" y2="24" stroke="#374151" stroke-width="1.4"/>
+      <!-- magnet -->
+      <rect x="40" y="80" width="70" height="30" fill="#fecaca" stroke="#dc2626" stroke-width="1.4"/>
+      <rect x="75" y="80" width="35" height="30" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.4"/>
+      <text x="52" y="100" font-size="13" fill="#dc2626" ${FS} font-weight="700">S</text>
+      <text x="88" y="100" font-size="13" fill="#2563eb" ${FS} font-weight="700">${poleLabel}</text>
+      <line x1="120" y1="95" x2="175" y2="95" stroke="#16a34a" stroke-width="2.6" marker-end="url(#mc1)"/>
+      <text x="128" y="86" font-size="11" fill="#16a34a" ${FS}>${dir==='approaching'?'moving in &#8594;':'moving out'}</text>
+    </svg>`,
+
+  // coil in a changing field — dot version (out of page)
+  coilField: (label='B outward, increasing', sym='dot', showInduced=true) => `
+    <svg viewBox="0 0 260 190" width="260" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('cf1','#dc2626')}</defs>
+      ${fieldDots(40,30,180,130,7,5,sym,'#93c5fd')}
+      <circle cx="130" cy="95" r="52" fill="none" stroke="#b45309" stroke-width="3"/>
+      <text x="150" y="30" font-size="10" fill="#2563eb" ${FS}>${label}</text>
+      ${showInduced?`<path d="M130,43 A52,52 0 0 1 178,79" fill="none" stroke="#dc2626" stroke-width="2.4" marker-end="url(#cf1)"/><text x="150" y="150" font-size="10" fill="#dc2626" ${FS}>I induced</text>`:''}
+    </svg>`,
+
+  // conducting rod moving in a field (motional emf) — into page
+  motionalRod: (v='v', l='l', sym='cross') => `
+    <svg viewBox="0 0 280 180" width="280" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('mr1','#2563eb')}${AR('mr2','#dc2626')}${AR('mr3','#16a34a')}</defs>
+      ${fieldDots(30,25,230,130,8,5,sym,'#cbd5e1')}
+      <!-- rails -->
+      <line x1="40" y1="40" x2="230" y2="40" stroke="#374151" stroke-width="2"/>
+      <line x1="40" y1="140" x2="230" y2="140" stroke="#374151" stroke-width="2"/>
+      <line x1="40" y1="40" x2="40" y2="140" stroke="#374151" stroke-width="2"/>
+      <!-- moving rod -->
+      <line x1="150" y1="40" x2="150" y2="140" stroke="#2563eb" stroke-width="3.5"/>
+      <line x1="150" y1="90" x2="205" y2="90" stroke="#2563eb" stroke-width="2.4" marker-end="url(#mr1)"/>
+      <text x="168" y="82" font-size="12" fill="#2563eb" ${FS} font-weight="700">${v}</text>
+      <line x1="150" y1="150" x2="150" y2="150"/>
+      <text x="120" y="90" font-size="11" fill="#16a34a" ${FS}>${l}</text>
+      <line x1="143" y1="42" x2="143" y2="138" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="150" y="165" font-size="10" fill="#6b7280" ${FS}>rod slides on rails</text>
+    </svg>`,
+
+  // simple horizontal wire falling in earth's field
+  fallingWire: (l='20 m', v='v') => `
+    <svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('fw1','#dc2626')}${AR('fw2','#2563eb')}</defs>
+      ${fieldDots(30,25,200,120,7,4,'cross','#cbd5e1')}
+      <line x1="55" y1="55" x2="205" y2="55" stroke="#2563eb" stroke-width="3.5"/>
+      <text x="95" y="46" font-size="11" fill="#2563eb" ${FS}>wire, length ${l}</text>
+      <text x="52" y="52" font-size="9" fill="#6b7280" ${FS}>W</text>
+      <text x="208" y="52" font-size="9" fill="#6b7280" ${FS}>E</text>
+      <line x1="130" y1="60" x2="130" y2="120" stroke="#dc2626" stroke-width="2.6" marker-end="url(#fw1)"/>
+      <text x="136" y="100" font-size="11" fill="#dc2626" ${FS}>${v} (falling)</text>
+      <text x="150" y="160" font-size="10" fill="#6b7280" ${FS}>B into page (horizontal component)</text>
+    </svg>`,
+
+  // rod rotating about one end (spoke)
+  rotatingRod: (l='l', showB=true) => `
+    <svg viewBox="0 0 240 200" width="240" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rr1','#2563eb')}${AR('rr2','#7c3aed')}</defs>
+      ${showB?fieldDots(30,20,180,160,6,5,'dot','#dbeafe'):''}
+      <circle cx="120" cy="100" r="5" fill="#374151"/>
+      <text x="104" y="96" font-size="11" fill="#374151" ${FS}>O</text>
+      <line x1="120" y1="100" x2="205" y2="100" stroke="#2563eb" stroke-width="3.5"/>
+      <circle cx="205" cy="100" r="4" fill="#2563eb"/>
+      <text x="150" y="115" font-size="11" fill="#2563eb" ${FS}>${l}</text>
+      <path d="M120,55 A45,45 0 0 1 158,72" fill="none" stroke="#7c3aed" stroke-width="2.2" marker-end="url(#rr2)"/>
+      <text x="128" y="48" font-size="11" fill="#7c3aed" ${FS}>&#969;</text>
+      <text x="150" y="185" font-size="10" fill="#6b7280" ${FS}>B out of page, rod pivots at O</text>
+    </svg>`,
+
+  // rod on a string, rotating about a fixed point (original Q6)
+  stringRod: (str='2l', rod='l') => `
+    <svg viewBox="0 0 260 200" width="260" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('sr1','#374151')}${AR('sr2','#2563eb')}${AR('sr3','#7c3aed')}</defs>
+      ${fieldDots(30,20,200,160,6,5,'dot','#dbeafe')}
+      <circle cx="55" cy="100" r="5" fill="#374151"/>
+      <text x="40" y="96" font-size="11" fill="#374151" ${FS}>P</text>
+      <line x1="55" y1="100" x2="150" y2="100" stroke="#374151" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <text x="88" y="94" font-size="11" fill="#374151" ${FS}>string ${str}</text>
+      <circle cx="150" cy="100" r="3.5" fill="#6b7280"/>
+      <line x1="150" y1="100" x2="205" y2="100" stroke="#2563eb" stroke-width="3.5"/>
+      <circle cx="205" cy="100" r="4" fill="#2563eb"/>
+      <text x="168" y="94" font-size="11" fill="#2563eb" ${FS}>rod ${rod}</text>
+      <path d="M55,60 A40,40 0 0 1 88,74" fill="none" stroke="#7c3aed" stroke-width="2.2" marker-end="url(#sr3)"/>
+      <text x="60" y="52" font-size="11" fill="#7c3aed" ${FS}>&#969;</text>
+      <text x="150" y="188" font-size="10" fill="#6b7280" ${FS}>vertical B (out of page), whole thing spins about P</text>
+    </svg>`,
+
+  // aeroplane wings (motional emf variant)
+  plane: (span='10 m') => `
+    <svg viewBox="0 0 280 160" width="280" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('pl1','#2563eb')}${AR('pl2','#16a34a')}</defs>
+      <ellipse cx="140" cy="80" rx="18" ry="42" fill="#e5e7eb" stroke="#374151" stroke-width="1.4"/>
+      <rect x="45" y="73" width="190" height="14" rx="6" fill="#cbd5e1" stroke="#374151" stroke-width="1.2"/>
+      <text x="60" y="65" font-size="10" fill="#374151" ${FS}>wing tip</text>
+      <text x="200" y="65" font-size="10" fill="#374151" ${FS}>wing tip</text>
+      <line x1="45" y1="103" x2="235" y2="103" stroke="#16a34a" stroke-width="1.4" marker-end="url(#pl2)"/>
+      <line x1="235" y1="103" x2="45" y2="103" stroke="#16a34a" stroke-width="1.4" marker-start="url(#pl2)"/>
+      <text x="120" y="118" font-size="11" fill="#16a34a" ${FS}>span ${span}</text>
+      <line x1="140" y1="126" x2="205" y2="126" stroke="#2563eb" stroke-width="2.4" marker-end="url(#pl1)"/>
+      <text x="150" y="142" font-size="10" fill="#2563eb" ${FS}>flying &#8594;, B has vertical part</text>
+    </svg>`,
+
+  // eddy-current damping: metal plate swinging near coil
+  eddyPlate: () => `
+    <svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ep1','#7c3aed')}${AR('ep2','#dc2626')}</defs>
+      <g stroke="#b45309" stroke-width="2.2" fill="none">
+        ${[0,1,2,3].map(i=>`<ellipse cx="${70}" cy="${60+i*18}" rx="26" ry="7"/>`).join('')}
+      </g>
+      <text x="46" y="42" font-size="10" fill="#b45309" ${FS}>coil</text>
+      <rect x="150" y="45" width="46" height="90" rx="4" fill="#e2e8f0" stroke="#475569" stroke-width="1.6"/>
+      <text x="150" y="40" font-size="10" fill="#475569" ${FS}>Al plate</text>
+      <path d="M196,90 A34,34 0 0 1 196,50" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#ep2)"/>
+      <path d="M196,90 A34,34 0 0 0 196,130" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#ep2)"/>
+      <text x="204" y="94" font-size="10" fill="#dc2626" ${FS}>swings</text>
+      <ellipse cx="173" cy="90" rx="9" ry="16" fill="none" stroke="#7c3aed" stroke-width="1.6" marker-end="url(#ep1)"/>
+      <text x="150" y="160" font-size="10" fill="#7c3aed" ${FS}>eddy currents oppose the motion</text>
+    </svg>`,
+
+  // flat coil rotating in a field (AC generator)
+  rotatingCoil: () => `
+    <svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rc1','#2563eb')}${AR('rc2','#7c3aed')}</defs>
+      <line x1="30" y1="40" x2="30" y2="150" stroke="#2563eb" stroke-width="1.4" marker-end="url(#rc1)"/>
+      <line x1="30" y1="40" x2="230" y2="40" stroke="#2563eb" stroke-width="1.2"/>
+      ${[60,110,160,210].map(x=>`<line x1="${x}" y1="45" x2="${x}" y2="150" stroke="#93c5fd" stroke-width="1.2" marker-start="url(#rc1)"/>`).join('')}
+      <text x="200" y="36" font-size="10" fill="#2563eb" ${FS}>B</text>
+      <ellipse cx="135" cy="100" rx="46" ry="18" fill="none" stroke="#b45309" stroke-width="2.6" transform="rotate(-25 135 100)"/>
+      <path d="M135,58 A50,50 0 0 1 168,74" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#rc2)"/>
+      <text x="140" y="52" font-size="11" fill="#7c3aed" ${FS}>&#969;</text>
+      <text x="150" y="168" font-size="10" fill="#6b7280" ${FS}>coil spins about an in-plane axis</text>
+    </svg>`,
+
+  // ring entering a field region (moving loop, emf only while entering)
+  ringEnter: () => `
+    <svg viewBox="0 0 280 170" width="280" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('re1','#2563eb')}</defs>
+      <line x1="150" y1="20" x2="150" y2="150" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4,3"/>
+      <text x="118" y="162" font-size="10" fill="#6b7280" ${FS}>x = 0 (field starts here)</text>
+      ${fieldDots(150,25,110,120,4,5,'cross','#cbd5e1')}
+      <circle cx="110" cy="85" r="40" fill="none" stroke="#b45309" stroke-width="3"/>
+      <text x="92" y="42" font-size="10" fill="#374151" ${FS}>O</text>
+      <circle cx="110" cy="85" r="3" fill="#374151"/>
+      <line x1="110" y1="85" x2="175" y2="85" stroke="#2563eb" stroke-width="2.4" marker-end="url(#re1)"/>
+      <text x="126" y="78" font-size="11" fill="#2563eb" ${FS}>v (1 m/s)</text>
+      <text x="60" y="150" font-size="10" fill="#6b7280" ${FS}>ring of radius 1 m</text>
+    </svg>`,
+
+  solenoidEfield: (rlab='r') => `
+    <svg viewBox="0 0 260 200" width="260" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('se1','#dc2626')}${AR('se2','#16a34a')}</defs>
+      ${fieldDots(95,65,70,70,3,3,'cross','#94a3b8')}
+      <circle cx="130" cy="100" r="55" fill="none" stroke="#374151" stroke-width="2"/>
+      <circle cx="130" cy="100" r="80" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="5,4"/>
+      <path d="M210,100 A80,80 0 0 1 208,117" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#se1)"/>
+      <text x="150" y="30" font-size="10" fill="#2563eb" ${FS}>B increasing (into page)</text>
+      <text x="176" y="152" font-size="10" fill="#dc2626" ${FS}>induced E</text>
+      <line x1="130" y1="100" x2="191" y2="49" stroke="#16a34a" stroke-width="1.4" stroke-dasharray="3,2" marker-end="url(#se2)"/>
+      <text x="158" y="66" font-size="11" fill="#16a34a" ${FS}>${rlab}</text>
+      <text x="90" y="190" font-size="10" fill="#6b7280" ${FS}>solenoid cross-section, radius R</text>
+    </svg>`,
+
+  concentricRing: () => `
+    <svg viewBox="0 0 240 200" width="240" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('cr1','#dc2626')}</defs>
+      <circle cx="120" cy="100" r="80" fill="none" stroke="#b45309" stroke-width="3"/>
+      <circle cx="120" cy="100" r="40" fill="none" stroke="#374151" stroke-width="1.6" stroke-dasharray="4,3"/>
+      ${fieldDots(96,76,48,48,3,3,'cross','#94a3b8')}
+      <text x="150" y="28" font-size="10" fill="#b45309" ${FS}>ring, radius 2R</text>
+      <text x="126" y="150" font-size="10" fill="#374151" ${FS}>solenoid, R</text>
+      <path d="M200,100 A80,80 0 0 1 197,121" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#cr1)"/>
+      <text x="120" y="192" font-size="10" fill="#6b7280" ${FS} text-anchor="middle">changing I in solenoid &#8594; emf in ring</text>
+    </svg>`,
+
+  laminatedCore: () => `
+    <svg viewBox="0 0 260 185" width="260" height="185" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('lc1','#dc2626')}</defs>
+      <rect x="30" y="40" width="70" height="95" fill="#e2e8f0" stroke="#475569" stroke-width="1.6"/>
+      <ellipse cx="65" cy="87" rx="22" ry="36" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#lc1)"/>
+      <text x="34" y="34" font-size="10" fill="#475569" ${FS}>solid core</text>
+      <g stroke="#475569" stroke-width="1.1" fill="#e2e8f0">
+        ${[0,1,2,3,4,5].map(i=>`<rect x="${160+i*11}" y="40" width="9" height="95"/>`).join('')}
+      </g>
+      ${[0,1,2,3,4,5].map(i=>`<ellipse cx="${164+i*11}" cy="87" rx="3" ry="32" fill="none" stroke="#dc2626" stroke-width="1"/>`).join('')}
+      <text x="156" y="34" font-size="10" fill="#475569" ${FS}>laminated core</text>
+      <text x="130" y="172" font-size="10" fill="#6b7280" ${FS} text-anchor="middle">laminations reduce eddy-current heating</text>
+    </svg>`,
+
+  solenoidCoil: (turns='N', len='l') => `
+    <svg viewBox="0 0 280 170" width="280" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('sc1','#2563eb')}</defs>
+      <g stroke="#b45309" stroke-width="2" fill="none">
+        ${[0,1,2,3,4,5,6,7,8].map(i=>`<ellipse cx="${70+i*17}" cy="80" rx="8" ry="34"/>`).join('')}
+      </g>
+      <line x1="70" y1="44" x2="222" y2="44" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <line x1="70" y1="116" x2="222" y2="116" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <text x="118" y="38" font-size="10" fill="#16a34a" ${FS}>${turns} turns, area A</text>
+      <line x1="70" y1="140" x2="222" y2="140" stroke="#374151" stroke-width="1" marker-start="url(#sc1)" marker-end="url(#sc1)"/>
+      <text x="128" y="156" font-size="11" fill="#374151" ${FS}>length ${len}</text>
+      <line x1="30" y1="80" x2="62" y2="80" stroke="#2563eb" stroke-width="2.4" marker-end="url(#sc1)"/>
+      <text x="34" y="72" font-size="11" fill="#2563eb" ${FS}>I</text>
+      <text x="150" y="88" font-size="10" fill="#6b7280" ${FS}>B = &#956;&#8320;nI inside</text>
+    </svg>`
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  LADDER DATA — 4 ladders; every rung has a base question + 2 variations
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  // == LADDER 1 -- INDUCED ELECTRIC FIELD FROM A CHANGING B ===================
+  {
+    name:"Ladder 1 &#183; Induced Electric Field (changing B)",
+    questions:[
+      {
+        q:"A magnetic field through a region is increasing with time. A stationary charge placed there feels a push &#8212; though it is not moving and there is no battery. What creates this force?",
+        diagram:DIAGRAMS.solenoidEfield('r'),
+        opts:["A circulating induced electric field set up by the changing B, given by &#8750;E&#183;dl = &#8722;d&#934;/dt","The magnetic force qv&#215;B","An electrostatic field from stored charges","Nothing &#8212; a stationary charge feels no force"],
+        ans:0,
+        sol:"A changing magnetic field induces a <strong>non-conservative electric field</strong> that curls around the region of changing flux &#8212; Faraday's law in field form, &#8750;E&#183;dl = &#8722;d&#934;/dt. It acts on a charge whether it moves or not, and needs no source charges.",
+        variants:[
+          {
+            q:"Which statement about the induced electric field produced by a changing B is correct?",
+            diagram:DIAGRAMS.solenoidEfield('r'),
+            opts:["Its field lines form closed loops; it is non-conservative","It is conservative, like an electrostatic field","It can exist only where B itself is non-zero","It acts only on charges that are moving"],
+            ans:0,
+            sol:"The induced E-field lines close on themselves (no start/end charges), so the field is <strong>non-conservative</strong> &#8212; the work done around a closed loop is &#8722;d&#934;/dt, not zero. It exists even where B = 0 and acts on stationary charges too."
+          },
+          {
+            q:"A changing magnetic flux drives an emf around a loop even when the loop is purely imaginary (no wire at all). Why?",
+            diagram:DIAGRAMS.solenoidEfield('r'),
+            opts:["The changing B sets up a real circulating electric field along the loop","An emf needs a physical wire, so this is impossible","A battery must be present somewhere on the loop","The loop must be moving for any emf to appear"],
+            ans:0,
+            sol:"Faraday's law &#8750;E&#183;dl = &#8722;d&#934;/dt is about the <strong>electric field</strong>, not about any wire. The changing flux creates a real induced E all along the imaginary loop; put a wire there and this same field drives a current."
+          }
+        ]
+      },
+      {
+        q:"Inside a long solenoid of radius R the field is uniform and changing at rate dB/dt. For a coaxial circle of radius r &lt; R, Faraday gives E&#183;(2&#960;r) = (&#960;r&#178;)(dB/dt). What is the induced electric field E at radius r?",
+        diagram:DIAGRAMS.solenoidEfield('r &lt; R'),
+        opts:["E = (r/2)(dB/dt)","E = (r&#178;/2)(dB/dt)","E = (R/2)(dB/dt)","E = r(dB/dt)"],
+        ans:0,
+        sol:"Enclosed flux &#934; = B&#215;&#960;r&#178;, so d&#934;/dt = &#960;r&#178;(dB/dt). Then E&#215;2&#960;r = &#960;r&#178;(dB/dt) &#8658; <strong>E = (r/2)(dB/dt)</strong>. Inside, the induced field grows linearly with r.",
+        variants:[
+          {
+            q:"Inside a solenoid the field changes at dB/dt = 0.20 T/s. The magnitude of the induced electric field at radius r = 5 cm (inside, r &lt; R) is:",
+            diagram:DIAGRAMS.solenoidEfield('5 cm'),
+            opts:["5 mV/m","10 mV/m","2.5 mV/m","0.5 mV/m"],
+            ans:0,
+            sol:"E = (r/2)(dB/dt) = (0.05/2)(0.20) = 0.025 &#215; 0.20 = 5&#215;10&#8722;&#179; V/m = <strong>5 mV/m</strong>."
+          },
+          {
+            q:"Inside a solenoid with uniform dB/dt, how does the induced E at radius r = R/2 compare with the value at r = R?",
+            diagram:DIAGRAMS.solenoidEfield('R/2'),
+            opts:["Half as large (E &#8733; r inside)","Twice as large","Exactly the same","One quarter as large"],
+            ans:0,
+            sol:"Inside, E = (r/2)(dB/dt), so E &#8733; r. At r = R/2 the field is <strong>half</strong> its value at r = R."
+          }
+        ]
+      },
+      {
+        q:"Now take a coaxial circle of radius r &gt; R, <em>outside</em> the solenoid, where B = 0. Only the solenoid's cross-section (area &#960;R&#178;) carries flux, so E&#183;(2&#960;r) = &#960;R&#178;(dB/dt). What is E outside, and how does it vary with r?",
+        diagram:DIAGRAMS.solenoidEfield('r &gt; R'),
+        opts:["E = R&#178;/(2r) &#183; (dB/dt), so E &#8733; 1/r","E = 0, because B = 0 there","E = (r/2)(dB/dt), the same as inside","E = R/(2r) &#183; (dB/dt)"],
+        ans:0,
+        sol:"Even where B = 0, the enclosed flux still changes because B changes inside: d&#934;/dt = &#960;R&#178;(dB/dt), fixed. So E = R&#178;/(2r)&#183;(dB/dt), which <strong>falls off as 1/r</strong>. A changing B makes an induced E even in field-free space.",
+        variants:[
+          {
+            q:"A solenoid of radius R = 4 cm has dB/dt = 0.30 T/s. The induced electric field just outside, at r = 8 cm, is:",
+            diagram:DIAGRAMS.solenoidEfield('8 cm'),
+            opts:["3 mV/m","6 mV/m","1.5 mV/m","12 mV/m"],
+            ans:0,
+            sol:"E = R&#178;/(2r)&#183;(dB/dt) = (0.04&#178;)/(2&#215;0.08) &#215; 0.30 = (0.0016/0.16)&#215;0.30 = 0.01&#215;0.30 = 3&#215;10&#8722;&#179; V/m = <strong>3 mV/m</strong>."
+          },
+          {
+            q:"Outside a solenoid, comparing the induced E just outside (r &#8776; R) with the value far out at r = 2R:",
+            diagram:DIAGRAMS.solenoidEfield('2R'),
+            opts:["It halves when r doubles (E &#8733; 1/r)","It stays constant outside","It falls as 1/r&#178;","It is exactly zero outside"],
+            ans:0,
+            sol:"Outside, E = R&#178;/(2r)&#183;(dB/dt) &#8733; 1/r. Doubling r from R to 2R <strong>halves</strong> the field."
+          }
+        ]
+      },
+      {
+        q:"&#9733; Original (Archive Q27): A long solenoid of radius R carries current I(t) = I&#8320;t(1 &#8722; t). A ring of radius 2R is placed coaxially near its middle. During 0 &#8804; t &#8804; 1, how do the induced current I&#8345; and induced EMF V&#8345; in the ring behave?",
+        diagram:DIAGRAMS.concentricRing(),
+        opts:["At t = 0.5 the direction of I&#8345; reverses and V&#8345; is zero","Direction of I&#8345; never changes; V&#8345; is zero at t = 0.25","Direction of I&#8345; never changes; V&#8345; is maximum at t = 0.5","At t = 0.25 the direction of I&#8345; reverses and V&#8345; is maximum"],
+        ans:0,
+        sol:"The ring encloses only the solenoid's area, so &#934; &#8733; I(t) and V&#8345; &#8733; &#8722;dI/dt. With I = I&#8320;(t &#8722; t&#178;), dI/dt = I&#8320;(1 &#8722; 2t). At <strong>t = 0.5</strong>, dI/dt = 0 so V&#8345; = 0; and dI/dt changes sign there, so I&#8345; <strong>reverses direction</strong>.",
+        variants:[
+          {
+            q:"&#9733; A long solenoid carries I(t) = I&#8320; sin&#969;t, with a coaxial ring around it. The emf induced in the ring is largest at the instant when:",
+            diagram:DIAGRAMS.concentricRing(),
+            opts:["The solenoid current passes through zero","The solenoid current is maximum","The solenoid current is minimum but non-zero","The emf is constant, so no special instant"],
+            ans:0,
+            sol:"emf &#8733; &#8722;dI/dt &#8733; &#8722;cos&#969;t, which is largest in magnitude when |cos&#969;t| = 1 &#8212; exactly when I = I&#8320;sin&#969;t <strong>= 0</strong> (current changing fastest)."
+          },
+          {
+            q:"&#9733; A ring of radius 2R sits coaxially around a solenoid of radius R with a changing current. If the ring were instead radius 5R, the emf induced in it would:",
+            diagram:DIAGRAMS.concentricRing(),
+            opts:["Stay the same &#8212; only the solenoid's flux (&#8733; R&#178;) links the ring","Increase by a factor of 25","Increase, but not by 25","Decrease, since the ring is farther out"],
+            ans:0,
+            sol:"All the flux is confined to the solenoid (area &#960;R&#178;); as long as the ring encloses it, the linked flux &#8212; and hence the emf &#8212; is <strong>independent of the ring's radius</strong>."
+          }
+        ]
+      }
+    ]
+  },
+
+  // == LADDER 2 -- EMF FROM A ROTATING COIL ==================================
+  {
+    name:"Ladder 2 &#183; EMF from a Rotating Coil",
+    questions:[
+      {
+        q:"A flat coil of N turns and area A is rotated at angular speed &#969; in a uniform field B, about an axis in its own plane (&#8869; to B). Its flux is &#934; = NBA cos&#969;t. What is the induced emf?",
+        diagram:DIAGRAMS.rotatingCoil(),
+        opts:["&#949; = NBA&#969; sin&#969;t","&#949; = NBA cos&#969;t","&#949; = NBA&#969; cos&#969;t","&#949; = (NBA/&#969;) sin&#969;t"],
+        ans:0,
+        sol:"Only the <em>orientation</em> changes (angle &#952; = &#969;t). &#949; = &#8722;d&#934;/dt = &#8722;d/dt(NBA cos&#969;t) = <strong>NBA&#969; sin&#969;t</strong> &#8212; the AC generator.",
+        variants:[
+          {
+            q:"For a coil rotating in a field, the peak (maximum) induced emf &#949;&#8320; equals:",
+            diagram:DIAGRAMS.rotatingCoil(),
+            opts:["NBA&#969;","NBA","NBA&#969;&#178;","NBA/&#969;"],
+            ans:0,
+            sol:"&#949; = NBA&#969; sin&#969;t peaks when sin&#969;t = 1, giving <strong>&#949;&#8320; = NBA&#969;</strong>."
+          },
+          {
+            q:"A coil generator's rotation speed &#969; is doubled (same coil, same field). Its peak emf:",
+            diagram:DIAGRAMS.rotatingCoil(),
+            opts:["Doubles (&#949;&#8320; &#8733; &#969;)","Halves","Becomes four times larger","Is unchanged"],
+            ans:0,
+            sol:"&#949;&#8320; = NBA&#969; &#8733; &#969;, so doubling &#969; <strong>doubles</strong> the peak emf (and doubles the frequency too)."
+          }
+        ]
+      },
+      {
+        q:"A coil of 20 turns and radius 8 cm spins at &#969; = 50 rad/s in a field B = 3 &#215; 10&#8722;&#178; T. The peak emf is &#949;&#8320; = NBA&#969;, with A = &#960;r&#178; (&#960; &#8776; 3.14). &#949;&#8320; is closest to:",
+        diagram:DIAGRAMS.rotatingCoil(),
+        opts:["0.60 V","0.30 V","1.2 V","6.0 V"],
+        ans:0,
+        sol:"A = &#960;r&#178; &#8776; 3.14 &#215; (0.08)&#178; &#8776; 2.01&#215;10&#8722;&#178; m&#178;. &#949;&#8320; = 20 &#215; (3&#215;10&#8722;&#178;) &#215; (2.01&#215;10&#8722;&#178;) &#215; 50 &#8776; <strong>0.60 V</strong>.",
+        variants:[
+          {
+            q:"A 50-turn coil of area 2 &#215; 10&#8722;&#178; m&#178; spins at &#969; = 100 rad/s in a field B = 0.1 T. Its peak emf is:",
+            diagram:DIAGRAMS.rotatingCoil(),
+            opts:["10 V","5 V","1 V","20 V"],
+            ans:0,
+            sol:"&#949;&#8320; = NBA&#969; = 50 &#215; 0.1 &#215; (2&#215;10&#8722;&#178;) &#215; 100 = <strong>10 V</strong>."
+          },
+          {
+            q:"A 100-turn coil of area 5 &#215; 10&#8722;&#179; m&#178; rotates at &#969; = 20 rad/s in B = 0.2 T. Its peak emf is:",
+            diagram:DIAGRAMS.rotatingCoil(),
+            opts:["2 V","4 V","1 V","0.5 V"],
+            ans:0,
+            sol:"&#949;&#8320; = NBA&#969; = 100 &#215; 0.2 &#215; (5&#215;10&#8722;&#179;) &#215; 20 = <strong>2 V</strong>."
+          }
+        ]
+      },
+      {
+        q:"For this rotating coil, at which orientation is the induced emf the largest?",
+        diagram:DIAGRAMS.rotatingCoil(),
+        opts:["When the coil's plane is parallel to B (flux zero, changing fastest)","When the coil's plane is perpendicular to B (flux maximum)","When &#969; is smallest","The emf is the same at every orientation"],
+        ans:0,
+        sol:"&#949; &#8733; sin&#969;t is largest as the flux (&#8733; cos&#969;t) sweeps through zero &#8212; when the coil's plane is <strong>parallel to B</strong>. When the plane is &#8869; B the flux is maximum but momentarily unchanging, so emf = 0.",
+        variants:[
+          {
+            q:"The induced emf of a rotating coil is instantaneously zero when:",
+            diagram:DIAGRAMS.rotatingCoil(),
+            opts:["The coil's plane is perpendicular to B (flux maximum, momentarily steady)","The coil's plane is parallel to B","The angular speed &#969; is largest","Never &#8212; the emf is never zero"],
+            ans:0,
+            sol:"Flux is maximum, and momentarily unchanging, when the plane is &#8869; B (normal parallel to B). There d&#934;/dt = 0, so the <strong>emf is zero</strong>."
+          },
+          {
+            q:"In a rotating coil, the peak flux and the peak emf are separated by a phase of:",
+            diagram:DIAGRAMS.rotatingCoil(),
+            opts:["90&#176; (a quarter cycle)","0&#176;","180&#176;","45&#176;"],
+            ans:0,
+            sol:"&#934; &#8733; cos&#969;t and &#949; &#8733; sin&#969;t &#8212; sine and cosine are <strong>90&#176; out of phase</strong>, so their peaks are a quarter-cycle apart."
+          }
+        ]
+      },
+      {
+        q:"&#9733; Original (Archive Q62): A circular coil of 1000 turns, each of area 1 m&#178;, is rotated about its vertical diameter at one revolution per second in a horizontal field of 0.07 T. The maximum voltage generated is:",
+        diagram:DIAGRAMS.rotatingCoil(),
+        opts:["440 V","70 V","220 V","44 V"],
+        ans:0,
+        sol:"One rev/s means &#969; = 2&#960; rad/s. V&#8320; = NBA&#969; = 1000 &#215; 0.07 &#215; 1 &#215; 2&#960; = 70 &#215; 2&#960; &#8776; <strong>440 V</strong>.",
+        variants:[
+          {
+            q:"&#9733; A 100-turn coil of area 0.1 m&#178; rotates at 10 revolutions per second in a field of 0.5 T. The peak emf is closest to:",
+            diagram:DIAGRAMS.rotatingCoil(),
+            opts:["&#8776; 314 V","&#8776; 100 V","&#8776; 628 V","&#8776; 50 V"],
+            ans:0,
+            sol:"&#969; = 2&#960;&#215;10 = 20&#960; rad/s. V&#8320; = NBA&#969; = 100 &#215; 0.5 &#215; 0.1 &#215; 20&#960; = 5 &#215; 20&#960; = 100&#960; &#8776; <strong>314 V</strong>."
+          },
+          {
+            q:"&#9733; A coil generator gives a peak emf of 440 V when spun at 1 rev/s. Spun at 2 rev/s (same coil, same field), the peak emf becomes:",
+            diagram:DIAGRAMS.rotatingCoil(),
+            opts:["880 V","440 V","220 V","1760 V"],
+            ans:0,
+            sol:"Peak emf &#8733; &#969; &#8733; rev/s. Doubling the spin rate <strong>doubles</strong> the peak emf: 2 &#215; 440 = 880 V."
+          }
+        ]
+      }
+    ]
+  },
+
+  // == LADDER 3 -- EDDY CURRENTS ============================================
+  {
+    name:"Ladder 3 &#183; Eddy Currents",
+    questions:[
+      {
+        q:"A solid block of metal sits in a changing magnetic field. What happens inside it?",
+        diagram:DIAGRAMS.coilField('B changing','dot',true),
+        opts:["Circulating (eddy) currents are induced throughout its volume","No current, because a block has no wire loop","A steady current flows in one straight line","The block becomes permanently magnetised"],
+        ans:0,
+        sol:"A changing flux induces an emf around every closed path in the metal, driving swirling <strong>eddy currents</strong>. By Lenz's law they oppose the change, dissipating energy as heat. No wire loop is needed.",
+        variants:[
+          {
+            q:"Eddy currents induced in a bulk conductor, by Lenz's law, always:",
+            diagram:DIAGRAMS.coilField('B changing','dot',true),
+            opts:["Oppose the change in flux, dissipating energy as heat","Aid the change in flux","Flow only on the surface with no heating","Magnetise the block permanently"],
+            ans:0,
+            sol:"Like any induced current, eddy currents <strong>oppose the change</strong> that creates them (Lenz), converting energy into I&#178;R heat and resisting relative motion."
+          },
+          {
+            q:"Which of these is NOT a genuine effect of eddy currents?",
+            diagram:DIAGRAMS.coilField('B changing','dot',true),
+            opts:["Loss-free storage of energy in a metal core","Heating in an induction cooktop","Braking in eddy-current brakes","Damping of a balance/galvanometer needle"],
+            ans:0,
+            sol:"Eddy currents always <em>dissipate</em> energy as heat, so 'loss-free storage' is <strong>not real</strong>. Induction heating, braking, and damping are all genuine eddy-current effects."
+          }
+        ]
+      },
+      {
+        q:"Transformer and motor cores are built from thin insulated sheets (laminations) rather than one solid lump. Why?",
+        diagram:DIAGRAMS.laminatedCore(),
+        opts:["Laminations break up the eddy-current paths, raising resistance and cutting heat loss","Laminations only make the core lighter","Laminations increase eddy currents to strengthen the field","Laminations stop the magnetic flux from changing"],
+        ans:0,
+        sol:"Eddy loss goes as (emf)&#178;/R. Thin insulated laminations force the eddies into many small, high-resistance loops, so current &#8212; and wasted heat &#8212; drops sharply. The useful flux still passes freely.",
+        variants:[
+          {
+            q:"Laminating a core reduces eddy-current power loss mainly because the laminations:",
+            diagram:DIAGRAMS.laminatedCore(),
+            opts:["Increase the resistance of the eddy-current paths","Increase the magnetic flux through the core","Reduce the core's permeability","Cool the core through air gaps"],
+            ans:0,
+            sol:"Insulating thin sheets confines eddies to narrow, high-<strong>resistance</strong> loops. Since loss = (emf)&#178;/R, higher R means much less wasted power."
+          },
+          {
+            q:"A solid iron core is replaced by a bundle of thin, mutually insulated iron wires of the same overall shape. The eddy-current heat loss will:",
+            diagram:DIAGRAMS.laminatedCore(),
+            opts:["Decrease sharply","Increase","Stay exactly the same","Become infinite"],
+            ans:0,
+            sol:"Breaking the metal into insulated strands blocks the large circulating loops, so eddy currents &#8212; and their heating &#8212; <strong>fall sharply</strong>. Same principle as lamination."
+          }
+        ]
+      },
+      {
+        q:"A metal plate swings between the poles of a magnet. Compared with swinging in no field, the plate:",
+        diagram:DIAGRAMS.eddyPlate(),
+        opts:["Slows and stops quickly, as eddy currents oppose its motion (magnetic braking)","Speeds up, as eddy currents push it along","Swings forever, since the field does no work","Is unaffected, because the plate carries no wire"],
+        ans:0,
+        sol:"Entering and leaving the field changes the flux through the plate, inducing eddy currents; by Lenz's law they oppose the motion, turning kinetic energy into heat, so it stops fast.",
+        variants:[
+          {
+            q:"A slotted (comb-shaped) metal plate swings in a magnetic field. Compared with an identical solid plate, it is damped:",
+            diagram:DIAGRAMS.eddyPlate(),
+            opts:["Less, because the slots break up the eddy-current loops","More, because slots add resistance-free paths","Exactly the same","Not at all"],
+            ans:0,
+            sol:"Slots interrupt the large circulating eddy loops, so far less current flows and the braking is <strong>weaker</strong>. A solid plate damps most strongly."
+          },
+          {
+            q:"Eddy-current brakes are used on some trains and rides. The braking force on the moving metal is largest when:",
+            diagram:DIAGRAMS.eddyPlate(),
+            opts:["The metal moves fastest (larger d&#934;/dt &#8594; larger eddy currents)","The metal is at rest","The field is switched off","The metal is a poor conductor"],
+            ans:0,
+            sol:"Faster motion means a faster flux change, larger induced eddy currents, and a bigger opposing force. So braking is strongest at <strong>high speed</strong> &#8212; and fades to zero as the metal stops."
+          }
+        ]
+      },
+      {
+        q:"&#9733; Original (Archive Q5): A coil suspended in a magnetic field oscillates and is hard to stop. When an aluminium plate is brought near it, it stops quickly. This is due to:",
+        diagram:DIAGRAMS.eddyPlate(),
+        opts:["Electromagnetic induction in the aluminium plate giving rise to electromagnetic damping","Induction of electric charge on the plate","Shielding of magnetic field lines, as aluminium is paramagnetic","Air currents produced when the plate is placed"],
+        ans:0,
+        sol:"The oscillating coil changes the flux through the nearby plate, inducing <strong>eddy currents</strong>. By Lenz's law they oppose the motion, draining energy as heat &#8212; electromagnetic <strong>damping</strong>.",
+        variants:[
+          {
+            q:"&#9733; A metal detector at an airport rings when a coin passes through it. It works on the principle of:",
+            diagram:DIAGRAMS.eddyPlate(),
+            opts:["Electromagnetic induction (eddy currents in the metal)","Resonance in a dc circuit","Static electric charge on the coin","Gravity acting on the metal"],
+            ans:0,
+            sol:"The detector's changing field induces <strong>eddy currents</strong> in any metal, whose own field is sensed by the detector. (This is Archive Q69.)"
+          },
+          {
+            q:"&#9733; A small magnet dropped down a long vertical copper pipe falls much more slowly than in free air. The reason is:",
+            diagram:DIAGRAMS.eddyPlate(),
+            opts:["Eddy currents induced in the pipe oppose the magnet's motion (Lenz's law)","Copper is magnetic and attracts the magnet","Air resistance is greater inside the pipe","The pipe heats up and lifts the magnet"],
+            ans:0,
+            sol:"As the magnet falls, it changes the flux through each ring of the copper pipe, inducing eddy currents that (by Lenz) <strong>oppose the fall</strong> &#8212; a retarding force that nearly balances gravity, giving a slow, near-constant speed."
+          }
+        ]
+      }
+    ]
+  },
+
+  // == LADDER 4 -- SELF-INDUCTANCE OF A SOLENOID ============================
+  {
+    name:"Ladder 4 &#183; Self-Inductance of a Solenoid",
+    questions:[
+      {
+        q:"A solenoid of n turns per unit length, area A and length l carries current I (&#949; = &#8722;L dI/dt). Using B = &#956;&#8320;nI and total flux linkage N&#934; = (nl)(BA), the self-inductance L is:",
+        diagram:DIAGRAMS.solenoidCoil('N','l'),
+        opts:["L = &#956;&#8320;n&#178;Al","L = &#956;&#8320;nAl","L = &#956;&#8320;n&#178;A/l","L = &#956;&#8320;nA/l"],
+        ans:0,
+        sol:"Flux per turn = &#956;&#8320;nI&#183;A. With N = nl turns, linkage = (nl)(&#956;&#8320;nIA) = &#956;&#8320;n&#178;lA&#183;I = L&#183;I, so <strong>L = &#956;&#8320;n&#178;Al</strong>. (Equivalently L = &#956;&#8320;N&#178;A/l.)",
+        variants:[
+          {
+            q:"Written in terms of the total number of turns N, the self-inductance of a solenoid is:",
+            diagram:DIAGRAMS.solenoidCoil('N','l'),
+            opts:["L = &#956;&#8320;N&#178;A/l","L = &#956;&#8320;NA/l","L = &#956;&#8320;N&#178;A/l&#178;","L = &#956;&#8320;NAl"],
+            ans:0,
+            sol:"Substituting n = N/l into L = &#956;&#8320;n&#178;Al gives <strong>L = &#956;&#8320;N&#178;A/l</strong> &#8212; the total-turns form of the same result."
+          },
+          {
+            q:"Self-inductance L links a coil's own flux to its own current. The defining relation is:",
+            diagram:DIAGRAMS.solenoidCoil('N','l'),
+            opts:["N&#934; = L&#183;I (flux linkage proportional to current)","&#934; = L/I","L = N&#934;&#183;I","emf = L&#183;I"],
+            ans:0,
+            sol:"By definition the flux linkage is proportional to the current: <strong>N&#934; = L&#183;I</strong>. Differentiating gives the emf, &#949; = &#8722;L&#183;dI/dt."
+          }
+        ]
+      },
+      {
+        q:"A solenoid has n = 1000 turns/m, length l = 0.5 m and area A = 4 &#215; 10&#8722;&#179; m&#178;. Take &#956;&#8320; = 4&#960; &#215; 10&#8722;&#8311;. Its self-inductance L = &#956;&#8320;n&#178;Al is closest to:",
+        diagram:DIAGRAMS.solenoidCoil('N','l'),
+        opts:["2.5 mH","25 mH","0.25 mH","5.0 mH"],
+        ans:0,
+        sol:"L = (4&#960;&#215;10&#8722;&#8311;)(1000)&#178;(4&#215;10&#8722;&#179;)(0.5): (1000)&#178;=10&#8310;; &#215;4&#215;10&#8722;&#179;=4&#215;10&#179;; &#215;0.5=2&#215;10&#179;; &#215;(1.26&#215;10&#8722;&#8310;) &#8776; <strong>2.5 mH</strong>.",
+        variants:[
+          {
+            q:"A solenoid has n = 500 turns/m, length l = 0.4 m and area A = 2 &#215; 10&#8722;&#179; m&#178; (&#956;&#8320; = 4&#960;&#215;10&#8722;&#8311;). Its self-inductance L = &#956;&#8320;n&#178;Al is closest to:",
+            diagram:DIAGRAMS.solenoidCoil('N','l'),
+            opts:["0.25 mH","2.5 mH","1.0 mH","0.05 mH"],
+            ans:0,
+            sol:"n&#178; = 2.5&#215;10&#8309;; &#215;A&#215;l = 2.5&#215;10&#8309; &#215; 2&#215;10&#8722;&#179; &#215; 0.4 = 200; &#215; &#956;&#8320;(1.26&#215;10&#8722;&#8310;) &#8776; 2.5&#215;10&#8722;&#8308; H = <strong>0.25 mH</strong>."
+          },
+          {
+            q:"A solenoid has N = 800 total turns, length 0.2 m and area 5 &#215; 10&#8722;&#8308; m&#178;. Using L = &#956;&#8320;N&#178;A/l (&#956;&#8320; = 4&#960;&#215;10&#8722;&#8311;), L is closest to:",
+            diagram:DIAGRAMS.solenoidCoil('N','l'),
+            opts:["2 mH","4 mH","1 mH","0.5 mH"],
+            ans:0,
+            sol:"N&#178; = 6.4&#215;10&#8309;; &#215;A/l = 6.4&#215;10&#8309; &#215; (5&#215;10&#8722;&#8308;/0.2) = 6.4&#215;10&#8309; &#215; 2.5&#215;10&#8722;&#179; = 1600; &#215; &#956;&#8320; &#8776; 2.0&#215;10&#8722;&#179; H = <strong>2 mH</strong>."
+          }
+        ]
+      },
+      {
+        q:"Keeping the <em>total number of turns N and area A fixed</em>, a solenoid is stretched so its length l increases. Using L = &#956;&#8320;N&#178;A/l, how does the self-inductance change?",
+        diagram:DIAGRAMS.solenoidCoil('N','l'),
+        opts:["L &#8733; 1/l &#8212; making it longer lowers L","L &#8733; l &#8212; longer means larger L","L is unchanged, since N and A are fixed","L &#8733; l&#178;"],
+        ans:0,
+        sol:"With N and A fixed, L = &#956;&#8320;N&#178;A/l &#8733; <strong>1/l</strong> &#8212; spreading the same turns over more length lowers the linkage. (Careful: L = &#956;&#8320;n&#178;Al uses turns-per-length n.)",
+        variants:[
+          {
+            q:"A solenoid is stretched so its length l doubles, but by adding turns the turns-per-length n and area A are kept fixed (so N doubles). Using L = &#956;&#8320;n&#178;Al, the inductance:",
+            diagram:DIAGRAMS.solenoidCoil('N','l'),
+            opts:["Doubles (L &#8733; l when n, A fixed)","Halves","Stays the same","Becomes 4&#215; larger"],
+            ans:0,
+            sol:"Here it is n (not N) that is held fixed, so L = &#956;&#8320;n&#178;Al &#8733; l &#8212; doubling the length <strong>doubles</strong> L. Contrast this with fixing N, where L &#8733; 1/l."
+          },
+          {
+            q:"A solenoid's radius is doubled (so area A becomes 4&#215;), keeping n and l unchanged. Its self-inductance:",
+            diagram:DIAGRAMS.solenoidCoil('N','l'),
+            opts:["Increases 4&#215; (L &#8733; A &#8733; r&#178;)","Doubles","Halves","Is unchanged"],
+            ans:0,
+            sol:"L = &#956;&#8320;n&#178;Al &#8733; A &#8733; r&#178;. Doubling the radius quadruples the area, so L becomes <strong>4&#215;</strong> larger."
+          }
+        ]
+      },
+      {
+        q:"&#9733; Original (Archive Q21): The total number of turns and the cross-section area of a solenoid are fixed, but its length L is varied by adjusting the spacing between windings. The self-inductance is proportional to:",
+        diagram:DIAGRAMS.solenoidCoil('N','L'),
+        opts:["1/L","L","1/L&#178;","L&#178;"],
+        ans:0,
+        sol:"Self-inductance = &#956;&#8320;N&#178;A/L. With N and A fixed and only length L varying, it &#8733; <strong>1/L</strong>.",
+        variants:[
+          {
+            q:"&#9733; A coil is wound on an equilateral-triangle frame. Each side is made 3&#215; longer, keeping the number of turns per unit length the same. The self-inductance:",
+            diagram:DIAGRAMS.solenoidCoil('N','L'),
+            opts:["Increases by a factor of 3","Increases by a factor of 9","Increases by a factor of 27","Is unchanged"],
+            ans:0,
+            sol:"L = &#956;&#8320;n&#178;(A)(length). With n fixed, L &#8733; A&#215;length. Area &#8733; side&#178; (&#215;9) but the winding length also scales, and working it through gives L &#8733; linear size &#8212; so tripling the side <strong>triples</strong> L. (Archive Q16.)"
+          },
+          {
+            q:"&#9733; In a choke, a back-emf of 100 V appears when the current falls from 0.25 A to 0 in 0.025 ms. The self-inductance of the choke is:",
+            diagram:DIAGRAMS.solenoidCoil('N','L'),
+            opts:["10 mH","1 mH","100 mH","0.1 mH"],
+            ans:0,
+            sol:"|&#949;| = L&#183;|dI/dt| &#8658; L = 100 &#247; (0.25 / 0.025&#215;10&#8722;&#179;) = 100 &#247; 10000 = 0.01 H = <strong>10 mH</strong>. (Archive Q38.)"
+          }
+        ]
+      }
+    ]
+  }
+
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  ENGINE (variable question count per topic)
+// ═══════════════════════════════════════════════════════════════════════════════
+const STORAGE_KEY = 'padipucast_emi_bank_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+function shuffleQ(raw){
+  const indexed=raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+  shuffle(indexed);
+  return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+}
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const base=shuffleQ(raw);
+    base.variants=(raw.variants||[]).map(v=>shuffleQ(v));
+    return base;
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0, vIndex = 0, vLocal = null;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const varBtn=document.getElementById('var-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  vIndex=0; vLocal=null;
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const base=curTopic.questions[curQ];
+  const nVar=base.variants?base.variants.length:0;
+  const isVar=vIndex>0;
+  const q=isVar?base.variants[vIndex-1]:base;
+  const a=isVar?vLocal:answers[ti][curQ];
+  let head=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Archive question</span>`
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`;
+  if(isVar) head+=` &#183; <span class="varlab">Variation ${vIndex} of ${nVar}</span>`;
+  qLabel.innerHTML=head;
+  qText.innerHTML=q.q;
+  if(q.diagram){ qDiagram.style.display='flex'; qDiagram.innerHTML=q.diagram; }
+  else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open'); solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card'); card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=> isVar?chooseVariant(i):choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    if(a.chosen===-1){ feedbackEl.className='fb-w show'; feedbackEl.textContent='Answer shown'; }
+    else showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  showAnsBtn.onclick=isVar?showAnswerVariant:showAnswer;
+  if(nVar>0){ varBtn.style.display='inline-block'; varBtn.innerHTML=isVar?`&#8635; Next variation`:`&#8635; Try a variation`; }
+  else { varBtn.style.display='none'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){ nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`; }
+  else { nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`; }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function chooseVariant(chosen){
+  const q=curTopic.questions[curQ].variants[vIndex-1];
+  vLocal={chosen, correct:chosen===q.ans};
+  renderQuestion();
+}
+function showAnswerVariant(){
+  vLocal={chosen:-1, correct:false};
+  renderQuestion();
+}
+function cycleVariant(){
+  const base=curTopic.questions[curQ];
+  const nVar=base.variants?base.variants.length:0;
+  if(nVar===0) return;
+  vIndex=(vIndex+1)%(nVar+1);
+  vLocal=null;
+  renderQuestion();
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
