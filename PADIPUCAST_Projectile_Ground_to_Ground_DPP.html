@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST · Projectile Motion — Ground-to-Ground DPP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Projectile DPP</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Ladders
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Projectile Motion<br>— Ground to Ground</h1></div>
+    <p id="home-sub">A DPP on ground-to-ground projectile motion, easy to difficult: range, then height &amp; time of flight, then the maximum-range case, then velocity along the path, then exam classics. Each ladder is 3 build-up rungs, then a &#9733; original exam-style question.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every model. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — EMI set
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+// a field of dots (out of page) or crosses (into page)
+function fieldDots(x,y,w,h,cols,rows,sym,color){
+  let s=''; const dx=w/cols, dy=h/rows;
+  for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){
+    const cx=x+dx*(i+0.5), cy=y+dy*(j+0.5);
+    if(sym==='dot') s+=`<circle cx="${cx}" cy="${cy}" r="1.6" fill="${color}"/>`;
+    else s+=`<g stroke="${color}" stroke-width="1"><line x1="${cx-2.4}" y1="${cy-2.4}" x2="${cx+2.4}" y2="${cy+2.4}"/><line x1="${cx-2.4}" y1="${cy+2.4}" x2="${cx+2.4}" y2="${cy-2.4}"/></g>`;
+  }
+  return s;
+}
+
+const DIAGRAMS = {
+
+  // full projectile arc: launch angle th, labels for u, H, R
+  arc: (th=45, showHR=true) => {
+    const rad=th*Math.PI/180;
+    const x0=42, x1=272, span=x1-x0, ybase=138;
+    // peak height chosen so the initial slope of the parabola = tan(theta):
+    // parabola y = ybase - h*4*t*(1-t), slope at t=0 is 4h/span (in svg px per px)
+    const peakH = Math.min(96, (span/4)*Math.tan(rad));   // cap so it stays in view
+    let pts=''; const N=26;
+    for(let i=0;i<=N;i++){ const t=i/N; const x=x0+span*t; const y=ybase-peakH*4*t*(1-t); pts+=`${x.toFixed(1)},${y.toFixed(1)} `; }
+    // launch arrow drawn tangent to the curve (same initial slope)
+    const aLen=32, ax=x0+aLen*Math.cos(rad), ay=ybase-aLen*Math.sin(rad);
+    const peakY=ybase-peakH, midX=x0+span/2;
+    return `
+    <svg viewBox="0 0 300 170" width="300" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ar_u','#dc2626')}</defs>
+      <line x1="30" y1="${ybase}" x2="288" y2="${ybase}" stroke="#374151" stroke-width="1.6"/>
+      <g stroke="#9ca3af" stroke-width="1">${[0,1,2,3,4,5,6,7,8].map(i=>`<line x1="${34+i*28}" y1="${ybase}" x2="${28+i*28}" y2="${ybase+8}"/>`).join('')}</g>
+      <polyline points="${pts}" fill="none" stroke="#dc2626" stroke-width="2.2"/>
+      <line x1="${x0}" y1="${ybase}" x2="${ax.toFixed(1)}" y2="${ay.toFixed(1)}" stroke="#dc2626" stroke-width="2.6" marker-end="url(#ar_u)"/>
+      <text x="${(ax+3).toFixed(1)}" y="${(ay-2).toFixed(1)}" font-size="13" fill="#dc2626" ${FS} font-style="italic">u</text>
+      <path d="M${x0+20},${ybase} A20,20 0 0,0 ${(x0+20*Math.cos(rad)).toFixed(1)},${(ybase-20*Math.sin(rad)).toFixed(1)}" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="${x0+24}" y="${ybase-5}" font-size="11" fill="#6b7280" ${FS}>${th}&#176;</text>
+      ${showHR?`<line x1="${midX}" y1="${ybase}" x2="${midX}" y2="${peakY.toFixed(1)}" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <text x="${midX+5}" y="${((ybase+peakY)/2).toFixed(1)}" font-size="12" fill="#2563eb" ${FS} font-style="italic">H</text>
+      <line x1="${x0}" y1="${ybase+15}" x2="${x1}" y2="${ybase+15}" stroke="#2563eb" stroke-width="1.2"/>
+      <line x1="${x0}" y1="${ybase+11}" x2="${x0}" y2="${ybase+19}" stroke="#2563eb" stroke-width="1.2"/>
+      <line x1="${x1}" y1="${ybase+11}" x2="${x1}" y2="${ybase+19}" stroke="#2563eb" stroke-width="1.2"/>
+      <text x="${midX-4}" y="${ybase+27}" font-size="12" fill="#2563eb" ${FS} font-style="italic">R</text>`:''}
+    </svg>`;
+  },
+
+  // velocity components resolved at launch
+  components: (th=53) => {
+    const rad=th*Math.PI/180, x0=70, y0=130, L=90;
+    const ux=x0+L*Math.cos(rad), uy=y0-L*Math.sin(rad);
+    return `
+    <svg viewBox="0 0 300 170" width="300" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('cp_u','#dc2626')}${AR('cp_x','#16a34a')}${AR('cp_y','#2563eb')}</defs>
+      <line x1="30" y1="${y0}" x2="288" y2="${y0}" stroke="#374151" stroke-width="1.4"/>
+      <line x1="${x0}" y1="${y0}" x2="${ux.toFixed(1)}" y2="${uy.toFixed(1)}" stroke="#dc2626" stroke-width="2.6" marker-end="url(#cp_u)"/>
+      <text x="${(ux+4).toFixed(1)}" y="${(uy-2).toFixed(1)}" font-size="13" fill="#dc2626" ${FS} font-style="italic">u</text>
+      <line x1="${x0}" y1="${y0}" x2="${ux.toFixed(1)}" y2="${y0}" stroke="#16a34a" stroke-width="2.2" marker-end="url(#cp_x)"/>
+      <text x="${(x0+55)}" y="${y0-6}" font-size="11" fill="#16a34a" ${FS}>u cos&#952;</text>
+      <line x1="${ux.toFixed(1)}" y1="${y0}" x2="${ux.toFixed(1)}" y2="${uy.toFixed(1)}" stroke="#2563eb" stroke-width="2.2" stroke-dasharray="4,3" marker-end="url(#cp_y)"/>
+      <text x="${(ux+4).toFixed(1)}" y="${((y0+uy)/2).toFixed(1)}" font-size="11" fill="#2563eb" ${FS}>u sin&#952;</text>
+      <path d="M${x0+26},${y0} A26,26 0 0,0 ${(x0+26*Math.cos(rad)).toFixed(1)},${(y0-26*Math.sin(rad)).toFixed(1)}" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="${x0+30}" y="${y0-8}" font-size="11" fill="#6b7280" ${FS}>${th}&#176;</text>
+    </svg>`;
+  },
+
+  // two complementary-angle arcs giving the same range
+  twoArcs: () => `
+    <svg viewBox="0 0 300 170" width="300" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ta','#374151')}</defs>
+      <line x1="30" y1="140" x2="288" y2="140" stroke="#374151" stroke-width="1.6"/>
+      <g stroke="#9ca3af" stroke-width="1">${[0,1,2,3,4,5,6,7,8].map(i=>`<line x1="${34+i*28}" y1="140" x2="${28+i*28}" y2="148"/>`).join('')}</g>
+      <path d="M40,140 Q159,40 278,140" fill="none" stroke="#dc2626" stroke-width="2.2"/>
+      <path d="M40,140 Q159,96 278,140" fill="none" stroke="#2563eb" stroke-width="2.2"/>
+      <text x="120" y="60" font-size="11" fill="#dc2626" ${FS}>&#952; (steeper)</text>
+      <text x="150" y="118" font-size="11" fill="#2563eb" ${FS}>90&#176;&#8722;&#952; (flatter)</text>
+      <text x="270" y="158" font-size="11" fill="#374151" ${FS} font-style="italic">same R</text>
+    </svg>`,
+
+  // velocity at the top of the trajectory (horizontal only)
+  topVel: (th=60) => {
+    const x0=40, ybase=140, peak=54, mid=159;
+    return `
+    <svg viewBox="0 0 300 170" width="300" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('tv_u','#dc2626')}${AR('tv_t','#16a34a')}</defs>
+      <line x1="30" y1="${ybase}" x2="288" y2="${ybase}" stroke="#374151" stroke-width="1.6"/>
+      <path d="M${x0},${ybase} Q${mid},${2*peak-ybase} 278,${ybase}" fill="none" stroke="#dc2626" stroke-width="2.2"/>
+      <line x1="${x0}" y1="${ybase}" x2="${x0+30}" y2="${ybase-52}" stroke="#dc2626" stroke-width="2.4" marker-end="url(#tv_u)"/>
+      <text x="${x0+14}" y="${ybase-46}" font-size="12" fill="#dc2626" ${FS} font-style="italic">u</text>
+      <text x="${x0+34}" y="${ybase-6}" font-size="11" fill="#6b7280" ${FS}>${th}&#176;</text>
+      <line x1="${mid-24}" y1="${peak}" x2="${mid+30}" y2="${peak}" stroke="#16a34a" stroke-width="2.4" marker-end="url(#tv_t)"/>
+      <text x="${mid+2}" y="${peak-6}" font-size="11" fill="#16a34a" ${FS}>u cos&#952; (at top)</text>
+      <circle cx="${mid}" cy="${peak}" r="2.6" fill="#374151"/>
+    </svg>`;
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  LADDER DATA — 4 vector-addition ladders (3 build-up rungs + 1 archive question)
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  // == LADDER 1 -- HORIZONTAL RANGE (easy) ==================================
+  {
+    name:"Ladder 1 &#183; Horizontal Range",
+    questions:[
+      {
+        q:"A projectile is launched from the ground with speed u at angle &#952; above the horizontal. Its horizontal range on the level ground is:",
+        diagram:DIAGRAMS.arc(45),
+        opts:["R = u&#178; sin2&#952; / g","R = u&#178; sin&#952; / g","R = 2u&#178; sin&#952; / g","R = u&#178; cos2&#952; / g"],
+        ans:0,
+        sol:"Range = (horizontal velocity) &#215; (time of flight) = (u cos&#952;)(2u sin&#952;/g) = <strong>u&#178; (2 sin&#952; cos&#952;)/g = u&#178; sin2&#952; / g</strong>. The 2 sin&#952; cos&#952; = sin2&#952; identity is what makes the range formula so compact."
+      },
+      {
+        q:"A ball is thrown at 20 m/s at 45&#176; to the horizontal. Its range is: (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.arc(45),
+        opts:["40 m","20 m","80 m","10 m"],
+        ans:0,
+        sol:"R = u&#178; sin2&#952; / g = 20&#178; &#215; sin90&#176; / 10 = 400 &#215; 1 / 10 = <strong>40 m</strong>. At 45&#176; the range is maximum for a given speed, since sin2&#952; = sin90&#176; = 1."
+      },
+      {
+        q:"Two projectiles are fired with the same speed, one at 30&#176; and one at 60&#176;. Their horizontal ranges are:",
+        diagram:DIAGRAMS.twoArcs(),
+        opts:["Equal","In the ratio 1 : 2","In the ratio 1 : 4","In the ratio &#8730;3 : 1"],
+        ans:0,
+        sol:"R = u&#178; sin2&#952; / g. For 30&#176;: sin60&#176;. For 60&#176;: sin120&#176; = sin60&#176;. <strong>Equal ranges.</strong> Any two <em>complementary</em> angles (&#952; and 90&#176;&#8722;&#952;) give the same range &#8212; a favourite exam fact."
+      },
+      {
+        q:"&#9733; Original: A body is projected with velocity u at an angle of projection &#952; with the horizontal. The range is maximum when &#952; equals:",
+        diagram:DIAGRAMS.arc(45),
+        opts:["45&#176;","30&#176;","60&#176;","90&#176;"],
+        ans:0,
+        sol:"R = u&#178; sin2&#952; / g is largest when sin2&#952; = 1, i.e. 2&#952; = 90&#176; &#8658; <strong>&#952; = 45&#176;</strong>. At 90&#176; the body goes straight up and the range is zero &#8212; the trap option."
+      }
+    ]
+  },
+
+  // == LADDER 2 -- MAX HEIGHT & TIME OF FLIGHT (easy-medium) ================
+  {
+    name:"Ladder 2 &#183; Height &amp; Time of Flight",
+    questions:[
+      {
+        q:"For a ground-to-ground projectile (speed u, angle &#952;), which pair of formulas is correct?",
+        diagram:DIAGRAMS.components(53),
+        opts:["H = u&#178;sin&#178;&#952;/2g and T = 2u sin&#952;/g","H = u&#178;sin&#178;&#952;/g and T = u sin&#952;/g","H = u&#178;cos&#178;&#952;/2g and T = 2u cos&#952;/g","H = u sin&#952;/2g and T = u&#178; sin&#952;/g"],
+        ans:0,
+        sol:"Only the <em>vertical</em> component u sin&#952; matters for both. Rising: v&#178; = (u sin&#952;)&#178; &#8722; 2gH &#8658; H = u&#178;sin&#178;&#952;/2g. Up-and-down time: T = 2(u sin&#952;)/g. Hence <strong>H = u&#178;sin&#178;&#952;/2g, T = 2u sin&#952;/g</strong>."
+      },
+      {
+        q:"A projectile is thrown at 20 m/s at 30&#176;. Its time of flight is: (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.arc(30),
+        opts:["2 s","1 s","4 s","0.5 s"],
+        ans:0,
+        sol:"T = 2u sin&#952;/g = 2 &#215; 20 &#215; sin30&#176; / 10 = 2 &#215; 20 &#215; 0.5 / 10 = <strong>2 s</strong>. Only u sin&#952; = 10 m/s enters &#8212; the horizontal part never affects the time in the air."
+      },
+      {
+        q:"Same projectile (20 m/s at 30&#176;): its maximum height is: (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.arc(30),
+        opts:["5 m","10 m","20 m","2.5 m"],
+        ans:0,
+        sol:"H = u&#178;sin&#178;&#952;/2g = (20 &#215; sin30&#176;)&#178; / (2 &#215; 10) = (10)&#178; / 20 = 100/20 = <strong>5 m</strong>. Equivalently H = (u sin&#952;)&#178;/2g using the vertical launch component of 10 m/s."
+      },
+      {
+        q:"&#9733; Original: The time of flight of a projectile depends on:",
+        diagram:DIAGRAMS.components(53),
+        opts:["The vertical component of velocity only","The horizontal component of velocity only","The total speed but not the angle","Neither the speed nor the angle"],
+        ans:0,
+        sol:"T = 2u sin&#952;/g contains only <strong>u sin&#952;, the vertical component</strong>. Two projectiles with the same vertical component but different horizontal speeds stay airborne for exactly the same time &#8212; the idea behind the classic 'bullet and dropped ball land together' demo."
+      }
+    ]
+  },
+
+  // == LADDER 3 -- MAXIMUM RANGE & 45-degree CASE (medium) ==================
+  {
+    name:"Ladder 3 &#183; Maximum Range Case",
+    questions:[
+      {
+        q:"For a given launch speed u, the maximum possible range (at 45&#176;) is:",
+        diagram:DIAGRAMS.arc(45),
+        opts:["R&#8339;&#8330;&#8339; = u&#178;/g","R&#8339;&#8330;&#8339; = u&#178;/2g","R&#8339;&#8330;&#8339; = 2u&#178;/g","R&#8339;&#8330;&#8339; = u/g"],
+        ans:0,
+        sol:"At &#952; = 45&#176;, sin2&#952; = 1, so R = u&#178; sin2&#952;/g reaches <strong>R&#8339;&#8330;&#8339; = u&#178;/g</strong>. This is the largest horizontal distance achievable with speed u on level ground."
+      },
+      {
+        q:"A projectile launched at 45&#176; has maximum height H and range R. The ratio R : H is:",
+        diagram:DIAGRAMS.arc(45),
+        opts:["4 : 1","1 : 4","2 : 1","1 : 1"],
+        ans:0,
+        sol:"At 45&#176;: R = u&#178;/g and H = u&#178;sin&#178;45&#176;/2g = u&#178;/4g. So R/H = (u&#178;/g)/(u&#178;/4g) = <strong>4</strong>, i.e. <strong>R : H = 4 : 1</strong>. Handy shortcut: at 45&#176;, the range is always four times the peak height."
+      },
+      {
+        q:"A ball thrown at 30 m/s at 45&#176; achieves a maximum range of: (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.arc(45),
+        opts:["90 m","45 m","180 m","30 m"],
+        ans:0,
+        sol:"R&#8339;&#8330;&#8339; = u&#178;/g = 30&#178;/10 = 900/10 = <strong>90 m</strong>. (Its maximum height here would be R/4 = 22.5 m, from the 4 : 1 rule above.)"
+      },
+      {
+        q:"&#9733; Original: A projectile has the same range R for two angles of projection. If the angles are &#952;&#8321; and &#952;&#8322;, then:",
+        diagram:DIAGRAMS.twoArcs(),
+        opts:["&#952;&#8321; + &#952;&#8322; = 90&#176;","&#952;&#8321; + &#952;&#8322; = 180&#176;","&#952;&#8321; = &#952;&#8322;","&#952;&#8321; &#8722; &#952;&#8322; = 45&#176;"],
+        ans:0,
+        sol:"Equal ranges need sin2&#952;&#8321; = sin2&#952;&#8322;, satisfied when 2&#952;&#8322; = 180&#176; &#8722; 2&#952;&#8321;, i.e. <strong>&#952;&#8321; + &#952;&#8322; = 90&#176;</strong>. The two angles are complementary &#8212; e.g. 30&#176; &amp; 60&#176;, or 15&#176; &amp; 75&#176; &#8212; and the steeper one gives the greater height and longer flight time."
+      }
+    ]
+  },
+
+  // == LADDER 4 -- VELOCITY & COMPONENTS (medium) ==========================
+  {
+    name:"Ladder 4 &#183; Velocity Along the Path",
+    questions:[
+      {
+        q:"At the highest point of a ground-to-ground projectile's path, its velocity is:",
+        diagram:DIAGRAMS.topVel(60),
+        opts:["Horizontal, equal to u cos&#952;","Zero","Vertical, equal to u sin&#952;","Equal to u, along the original direction"],
+        ans:0,
+        sol:"At the top the vertical component has been brought to zero by gravity; only the (unchanged) horizontal component survives. So the speed there is <strong>u cos&#952;, directed horizontally</strong>. It is never zero unless the throw was straight up (&#952; = 90&#176;)."
+      },
+      {
+        q:"A ball is projected at 20 m/s at 60&#176;. Its speed at the highest point is:",
+        diagram:DIAGRAMS.topVel(60),
+        opts:["10 m/s","20 m/s","17.3 m/s","0 m/s"],
+        ans:0,
+        sol:"Speed at top = u cos&#952; = 20 &#215; cos60&#176; = 20 &#215; 0.5 = <strong>10 m/s</strong>. The 17.3 m/s trap is u cos30&#176; &#8212; using the wrong component."
+      },
+      {
+        q:"A projectile is thrown at 50 m/s at angle &#952; with sin&#952; = 0.6, cos&#952; = 0.8. Its range is: (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.components(37),
+        opts:["240 m","300 m","180 m","125 m"],
+        ans:0,
+        sol:"u sin&#952; = 30, u cos&#952; = 40. T = 2(u sin&#952;)/g = 60/10 = 6 s. R = (u cos&#952;) &#215; T = 40 &#215; 6 = <strong>240 m</strong>. Resolving into components first is the safest route when &#952; isn't a standard angle."
+      },
+      {
+        q:"&#9733; Original: A particle is projected with velocity u at angle &#952;. The change in its velocity when it returns to the ground is:",
+        diagram:DIAGRAMS.arc(55),
+        opts:["2u sin&#952;, directed downward","Zero","2u cos&#952;, horizontal","u sin&#952;, downward"],
+        ans:0,
+        sol:"Horizontal velocity is the same at launch and landing (u cos&#952; each way), so it cancels in the change. Vertical velocity flips from +u sin&#952; (up) to &#8722;u sin&#952; (down), a change of <strong>2u sin&#952; directed downward</strong>. Speed is unchanged, but velocity &#8212; a vector &#8212; certainly is not."
+      }
+    ]
+  },
+
+  // == LADDER 5 -- EXAM CLASSICS (harder mix) ==============================
+  {
+    name:"Ladder 5 &#183; Exam Classics",
+    questions:[
+      {
+        q:"A man can throw a ball to a maximum height of 10 m (straight up). The maximum horizontal distance he can throw the same ball is: (g = 10 m/s&#178;)",
+        diagram:DIAGRAMS.arc(45),
+        opts:["20 m","10 m","40 m","5 m"],
+        ans:0,
+        sol:"Straight up, H&#8339;&#8330;&#8339; = u&#178;/2g = 10 &#8658; u&#178; = 200. Maximum range (at 45&#176;) = u&#178;/g = 200/10 = <strong>20 m</strong>. Neat result: <strong>R&#8339;&#8330;&#8339; = 2 &#215; H&#8339;&#8330;&#8339;</strong> for the same launch speed."
+      },
+      {
+        q:"Two balls are thrown at the same angle, one at 20 m/s and one at 40 m/s. The ratio of their maximum heights (H&#8321; : H&#8322;) is:",
+        diagram:DIAGRAMS.twoArcs(),
+        opts:["1 : 4","1 : 2","1 : 1","2 : 1"],
+        ans:0,
+        sol:"H = u&#178;sin&#178;&#952;/2g &#8658; at fixed &#952;, H &#8733; u&#178;. So H&#8321; : H&#8322; = 20&#178; : 40&#178; = 400 : 1600 = <strong>1 : 4</strong>. (Their ranges are also in 1 : 4, since R &#8733; u&#178; too.)"
+      },
+      {
+        q:"A projectile's range is R and its maximum height is H. The launch angle satisfies:",
+        diagram:DIAGRAMS.arc(55),
+        opts:["tan&#952; = 4H/R","tan&#952; = H/R","tan&#952; = R/4H","tan&#952; = 2H/R"],
+        ans:0,
+        sol:"R = u&#178;sin2&#952;/g and H = u&#178;sin&#178;&#952;/2g. Dividing, H/R = sin&#178;&#952;/(2&#183;2sin&#952;cos&#952;) = tan&#952;/4, so <strong>tan&#952; = 4H/R</strong>. A one-line way to recover the angle straight from a measured range and height."
+      },
+      {
+        q:"&#9733; Original: For a projectile, the ratio of the maximum height to the square of the time of flight (H : T&#178;) is:",
+        diagram:DIAGRAMS.arc(45),
+        opts:["g : 8","g : 4","g : 2","1 : g"],
+        ans:0,
+        sol:"H = u&#178;sin&#178;&#952;/2g and T = 2u sin&#952;/g, so T&#178; = 4u&#178;sin&#178;&#952;/g&#178;. Then H/T&#178; = (u&#178;sin&#178;&#952;/2g) &#247; (4u&#178;sin&#178;&#952;/g&#178;) = g/8. Hence <strong>H : T&#178; = g : 8</strong> &#8212; independent of u and &#952; entirely."
+      }
+    ]
+  }
+
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  ENGINE (variable question count per topic)
+// ═══════════════════════════════════════════════════════════════════════════════
+const STORAGE_KEY = 'padipucast_projectile_g2g_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct ✓':'Incorrect ✗';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
