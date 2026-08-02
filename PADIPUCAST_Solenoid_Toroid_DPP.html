@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST · Solenoid & Toroid — DPP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;
+  --correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --A:#1a7a4a;--Ab:#e3f4ea;--B:#2563eb;--Bb:#e6effd;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#wrap{max-width:780px;margin:0 auto;padding:0 22px 90px;}
+
+header{padding:30px 0 6px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;margin-bottom:16px;}
+.brand span{color:var(--text3);}
+header h1{font-family:'LemonMilk',sans-serif;font-size:23px;font-weight:700;letter-spacing:0.02em;line-height:1.25;}
+header .sub{font-size:14px;color:var(--text2);margin-top:6px;}
+
+.levelbar{display:flex;gap:10px;margin:24px 0 14px;}
+.lvl{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;cursor:pointer;text-align:left;transition:all .18s;font-family:inherit;position:relative;}
+.lvl:hover{border-color:var(--border2);}
+.lvl .lt{font-family:'LemonMilk',sans-serif;font-size:12px;letter-spacing:0.06em;color:var(--text);text-transform:uppercase;}
+.lvl .ls{display:block;font-size:12px;color:var(--text3);margin-top:4px;letter-spacing:0.02em;}
+.lvl[data-lvl="A"].active{border-color:var(--A);background:var(--Ab);}
+.lvl[data-lvl="A"].active .lt,.lvl[data-lvl="A"].active .ls{color:var(--A);}
+.lvl[data-lvl="B"].active{border-color:var(--B);background:var(--Bb);}
+.lvl[data-lvl="B"].active .lt,.lvl[data-lvl="B"].active .ls{color:var(--B);}
+
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:26px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.chips{display:flex;gap:10px;flex-wrap:wrap;}
+.chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 13px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.chip b{color:var(--text);}
+.btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btns button{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 15px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.btns button:hover{border-color:var(--border2);color:var(--text);}
+
+.concept{margin-bottom:14px;}
+.concept-head{display:flex;align-items:center;gap:10px;margin:30px 0 14px;}
+.concept-head .cn{font-family:'LemonMilk',sans-serif;font-size:13px;letter-spacing:0.05em;color:var(--text);text-transform:uppercase;}
+.concept-head .tag{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border-radius:6px;background:var(--text);color:var(--bg);}
+.concept-head .line{flex:1;height:1px;background:var(--border);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 26px 20px;margin-bottom:14px;}
+.q-top{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.q-no{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.16em;color:var(--text3);text-transform:uppercase;}
+.q-diff{font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;border-radius:5px;margin-left:auto;}
+.q-diff.A{background:var(--Ab);color:var(--A);}
+.q-diff.B{background:var(--Bb);color:var(--B);}
+.q-text{font-size:15.5px;line-height:1.7;margin-bottom:14px;}
+.q-text sup,.q-text sub{font-size:.75em;}
+.q-diagram{margin:0 0 18px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.opts{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.opt{display:flex;align-items:center;gap:12px;padding:11px 15px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all .15s;}
+.opt sup,.opt sub{font-size:.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt .lt{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;color:var(--text3);flex-shrink:0;background:var(--surface);}
+.opt.correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.correct .lt{border-color:var(--correct-border);color:var(--correct);}
+.opt.wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.wrong .lt{border-color:var(--wrong-border);color:var(--wrong);}
+.opt.locked{pointer-events:none;}
+.sol{overflow:hidden;max-height:0;opacity:0;transition:max-height .35s ease,opacity .3s ease;}
+.sol.open{max-height:700px;opacity:1;margin-top:12px;}
+.sol-in{border-left:2px solid var(--text3);padding:10px 15px;font-size:13.5px;line-height:1.7;color:var(--text2);}
+.sol-in strong{color:var(--text);font-weight:600;}
+.sol-in sup,.sol-in sub{font-size:.75em;}
+.act{display:flex;align-items:center;gap:10px;margin-top:12px;}
+.act .fb{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 11px;border-radius:20px;display:none;}
+.act .fb.c{display:inline-block;background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+.act .fb.w{display:inline-block;background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+.act .showsol{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:8px 13px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.act .showsol:hover{border-color:var(--border2);color:var(--text);}
+
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);text-align:center;}
+
+@media print{
+  body{background:#fff;}
+  .levelbar .lvl:not(.active){display:none;}
+  .toolbar .btns{display:none;}
+  .opt{background:#fff;}
+  .sol{max-height:none!important;opacity:1!important;margin-top:12px;}
+  .card{break-inside:avoid;border-color:#ccc;}
+  .act .showsol{display:none;}
+}
+@media(max-width:560px){.levelbar{flex-direction:column;}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <header>
+    <div class="brand">PADIPUCAST <span>·</span> Daily Practice</div>
+    <h1>Solenoid &amp; Toroid — DPP</h1>
+    <p class="sub">Solenoid Field &nbsp;·&nbsp; Toroid Field &nbsp;·&nbsp; Ampère's Law Applied</p>
+  </header>
+
+  <div class="levelbar" id="levelbar">
+    <button class="lvl active" data-lvl="A"><span class="lt">Class A</span><span class="ls">NCERT · Foundation level</span></button>
+    <button class="lvl" data-lvl="B"><span class="lt">Class B</span><span class="ls">JEE · Main / Advanced level</span></button>
+  </div>
+
+  <div class="toolbar">
+    <div class="chips">
+      <span class="chip">Score <b id="sc">0</b>/<b id="tot">0</b></span>
+      <span class="chip">Attempted <b id="att">0</b></span>
+    </div>
+    <div class="btns">
+      <button id="revealBtn">Reveal all answers</button>
+      <button id="resetBtn">Reset level</button>
+      <button id="printBtn">Print</button>
+    </div>
+  </div>
+
+  <div id="paper"></div>
+
+  <footer>PADIPUCAST · Prepared for Allen · μ₀ = 4π×10⁻⁷ T·m/A unless stated</footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — Magnetism (solenoid, toroid, Ampèrian loops)
+// ═══════════════════════════════════════════════════════════════════
+const FS='font-family="DM Sans,sans-serif"';
+const AR=(id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const C={b:'#2563eb',cur:'#dc2626',field:'#16a34a',loop:'#7c3aed',g:'#9ca3af',
+         core:'#eef2ff',wire:'#b45309',ink:'#334155',dim:'#64748b',line:'#334155'};
+
+// current-into-page  ⊗  and out-of-page  ⊙  markers
+function into(cx,cy,r){r=r||7;return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="${C.cur}" stroke-width="1.4"/>`+
+  `<line x1="${cx-r*0.6}" y1="${cy-r*0.6}" x2="${cx+r*0.6}" y2="${cy+r*0.6}" stroke="${C.cur}" stroke-width="1.4"/>`+
+  `<line x1="${cx+r*0.6}" y1="${cy-r*0.6}" x2="${cx-r*0.6}" y2="${cy+r*0.6}" stroke="${C.cur}" stroke-width="1.4"/>`;}
+function outof(cx,cy,r){r=r||7;return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="${C.cur}" stroke-width="1.4"/>`+
+  `<circle cx="${cx}" cy="${cy}" r="1.7" fill="${C.cur}"/>`;}
+
+const D={
+  // ── long solenoid, section shown, field lines inside, uniform B ──
+  solenoid:(label)=>`<svg viewBox="0 0 320 175" width="320" height="175" xmlns="http://www.w3.org/2000/svg">
+    <defs>${AR('f',C.field)}</defs>
+    <rect x="45" y="55" width="230" height="60" fill="${C.core}" stroke="none"/>
+    ${[...Array(8)].map((_,i)=>{const cx=60+i*30;return outof(cx,55,6)+into(cx,115,6);}).join('')}
+    <line x1="60" y1="85" x2="256" y2="85" stroke="${C.field}" stroke-width="2.2" marker-end="url(#f)"/>
+    <line x1="60" y1="70" x2="240" y2="70" stroke="${C.field}" stroke-width="1.2" opacity="0.55"/>
+    <line x1="60" y1="100" x2="240" y2="100" stroke="${C.field}" stroke-width="1.2" opacity="0.55"/>
+    <text x="150" y="46" font-size="11" fill="${C.field}" text-anchor="middle" ${FS}>B (uniform, →axis)</text>
+    <text x="160" y="140" font-size="11" fill="${C.dim}" text-anchor="middle" ${FS}>${label||'long solenoid'}</text></svg>`,
+
+  // ── solenoid drawn as a coil (loops) with current, n turns per length ──
+  solenoidCoil:(label)=>`<svg viewBox="0 0 320 165" width="320" height="165" xmlns="http://www.w3.org/2000/svg">
+    <defs>${AR('c',C.cur)}${AR('f',C.field)}</defs>
+    <ellipse cx="55" cy="80" rx="14" ry="38" fill="none" stroke="${C.wire}" stroke-width="2"/>
+    ${[...Array(9)].map((_,i)=>{const x=55+i*24;return `<path d="M ${x} 42 A 14 38 0 0 1 ${x} 118" fill="none" stroke="${C.wire}" stroke-width="2"/><path d="M ${x} 118 A 5 38 0 0 0 ${x+24} 42" fill="none" stroke="${C.wire}" stroke-width="1.4" opacity="0.4"/>`;}).join('')}
+    <ellipse cx="271" cy="80" rx="14" ry="38" fill="none" stroke="${C.wire}" stroke-width="2"/>
+    <line x1="90" y1="80" x2="245" y2="80" stroke="${C.field}" stroke-width="2.2" marker-end="url(#f)"/>
+    <text x="168" y="72" font-size="11" fill="${C.field}" text-anchor="middle" ${FS}>B</text>
+    <line x1="45" y1="128" x2="55" y2="128" stroke="${C.cur}" stroke-width="2" marker-end="url(#c)"/>
+    <text x="30" y="132" font-size="10" fill="${C.cur}" ${FS}>I</text>
+    <text x="160" y="150" font-size="11" fill="${C.dim}" text-anchor="middle" ${FS}>${label||'n turns per metre'}</text></svg>`,
+
+  // ── solenoid with an Amperian rectangular loop straddling the wall ──
+  solenoidLoop:()=>`<svg viewBox="0 0 320 185" width="320" height="185" xmlns="http://www.w3.org/2000/svg">
+    <defs>${AR('f',C.field)}</defs>
+    <rect x="40" y="50" width="240" height="60" fill="${C.core}" stroke="none"/>
+    ${[...Array(8)].map((_,i)=>{const cx=56+i*30;return outof(cx,50,5.5)+into(cx,110,5.5);}).join('')}
+    <line x1="60" y1="80" x2="250" y2="80" stroke="${C.field}" stroke-width="1.8" marker-end="url(#f)"/>
+    <rect x="120" y="70" width="80" height="60" fill="none" stroke="${C.loop}" stroke-width="1.8" stroke-dasharray="5,3"/>
+    <text x="160" y="66" font-size="10" fill="${C.loop}" text-anchor="middle" ${FS}>Ampèrian loop</text>
+    <text x="128" y="86" font-size="10" fill="${C.loop}" ${FS}>a</text>
+    <text x="188" y="86" font-size="10" fill="${C.loop}" ${FS}>b</text>
+    <text x="188" y="126" font-size="10" fill="${C.loop}" ${FS}>c</text>
+    <text x="128" y="126" font-size="10" fill="${C.loop}" ${FS}>d</text>
+    <text x="160" y="152" font-size="10.5" fill="${C.dim}" text-anchor="middle" ${FS}>loop ab inside, cd outside</text></svg>`,
+
+  // ── toroid: ring with cross-section windings, central axis ──
+  toroid:(label)=>`<svg viewBox="0 0 300 210" width="300" height="210" xmlns="http://www.w3.org/2000/svg">
+    <defs>${AR('f',C.field)}</defs>
+    <circle cx="150" cy="105" r="80" fill="none" stroke="${C.core}" stroke-width="34"/>
+    <circle cx="150" cy="105" r="80" fill="none" stroke="${C.wire}" stroke-width="1" opacity="0.5"/>
+    ${[...Array(24)].map((_,i)=>{const a=i/24*2*Math.PI;const c=Math.cos(a),s=Math.sin(a);
+      const x1=150+(80-19)*c,y1=105+(80-19)*s,x2=150+(80+19)*c,y2=105+(80+19)*s;
+      return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${C.wire}" stroke-width="1.6"/>`;}).join('')}
+    <circle cx="150" cy="105" r="80" fill="none" stroke="${C.field}" stroke-width="2" stroke-dasharray="6,4"/>
+    <path d="M 226 90 A 80 80 0 0 1 232 118" fill="none" stroke="${C.field}" stroke-width="2.2" marker-end="url(#f)"/>
+    <text x="150" y="108" font-size="10.5" fill="${C.field}" text-anchor="middle" ${FS}>B along ring</text>
+    <text x="150" y="205" font-size="11" fill="${C.dim}" text-anchor="middle" ${FS}>${label||'toroid · N turns'}</text></svg>`,
+
+  // ── toroid cross-section with three Amperian circles: inside-core, hole, outside ──
+  toroidRegions:()=>`<svg viewBox="0 0 300 210" width="300" height="210" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="150" cy="105" r="82" fill="none" stroke="${C.core}" stroke-width="30"/>
+    <circle cx="150" cy="105" r="55" fill="none" stroke="${C.loop}" stroke-width="1.6" stroke-dasharray="4,3"/>
+    <circle cx="150" cy="105" r="82" fill="none" stroke="${C.loop}" stroke-width="1.8"/>
+    <circle cx="150" cy="105" r="108" fill="none" stroke="${C.loop}" stroke-width="1.6" stroke-dasharray="4,3"/>
+    <text x="150" y="58" font-size="10" fill="${C.loop}" text-anchor="middle" ${FS}>①</text>
+    <text x="150" y="30" font-size="10" fill="${C.loop}" text-anchor="middle" ${FS}>②</text>
+    <text x="150" y="6" font-size="10" fill="${C.loop}" text-anchor="middle" ${FS}>③</text>
+    <text x="46" y="200" font-size="9.5" fill="${C.dim}" ${FS}>① inner hole  ② inside core  ③ outside</text></svg>`,
+
+  // ── plain ring/torus outline with r marked (for radius questions) ──
+  toroidRadius:(r)=>`<svg viewBox="0 0 290 200" width="290" height="200" xmlns="http://www.w3.org/2000/svg">
+    <defs>${AR('r',C.dim)}</defs>
+    <circle cx="145" cy="100" r="72" fill="none" stroke="${C.core}" stroke-width="26"/>
+    ${[...Array(20)].map((_,i)=>{const a=i/20*2*Math.PI;const c=Math.cos(a),s=Math.sin(a);
+      const x1=145+(72-15)*c,y1=100+(72-15)*s,x2=145+(72+15)*c,y2=100+(72+15)*s;
+      return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${C.wire}" stroke-width="1.5"/>`;}).join('')}
+    <circle cx="145" cy="100" r="3" fill="${C.dim}"/>
+    <line x1="145" y1="100" x2="217" y2="100" stroke="${C.dim}" stroke-width="1.3" stroke-dasharray="3,2" marker-end="url(#r)"/>
+    <text x="176" y="94" font-size="11" fill="${C.dim}" ${FS}>${r||'r'}</text>
+    <text x="145" y="196" font-size="10.5" fill="${C.dim}" text-anchor="middle" ${FS}>mean radius r</text></svg>`,
+
+  // ── graph: B vs position across a solenoid wall (step) ──
+  bStep:()=>`<svg viewBox="0 0 300 180" width="300" height="180" xmlns="http://www.w3.org/2000/svg">
+    <defs>${AR('ax',C.dim)}</defs>
+    <line x1="40" y1="150" x2="285" y2="150" stroke="${C.dim}" stroke-width="1.3" marker-end="url(#ax)"/>
+    <line x1="40" y1="150" x2="40" y2="25" stroke="${C.dim}" stroke-width="1.3" marker-end="url(#ax)"/>
+    <text x="285" y="168" font-size="10" fill="${C.dim}" text-anchor="end" ${FS}>position (across wall →)</text>
+    <text x="24" y="32" font-size="10" fill="${C.dim}" ${FS}>B</text>
+    <line x1="40" y1="55" x2="160" y2="55" stroke="${C.b}" stroke-width="2.4"/>
+    <line x1="160" y1="55" x2="160" y2="150" stroke="${C.b}" stroke-width="2.4" stroke-dasharray="4,3"/>
+    <line x1="160" y1="150" x2="270" y2="150" stroke="${C.b}" stroke-width="2.4"/>
+    <text x="90" y="48" font-size="10" fill="${C.b}" ${FS}>inside: μ₀nI</text>
+    <text x="200" y="143" font-size="10" fill="${C.b}" ${FS}>outside: 0</text>
+    <line x1="160" y1="150" x2="160" y2="25" stroke="${C.dim}" stroke-width="0.8" stroke-dasharray="2,3"/>
+    <text x="150" y="170" font-size="9.5" fill="${C.dim}" text-anchor="middle" ${FS}>wall</text></svg>`,
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  QUESTION BANK  —  two levels, three concepts each
+// ═══════════════════════════════════════════════════════════════════
+const LEVELS={
+ A:{concepts:[
+   {name:"1 · Field of a Solenoid",tag:"B = μ₀nI",qs:[
+     {q:"The magnetic field <em>inside</em> a long, ideal solenoid carrying a steady current is best described as:",
+      diagram:D.solenoid("long ideal solenoid"),
+      opts:["Zero everywhere","Strong near the axis and weak near the walls","Uniform, directed along the axis","Radial, pointing outward from the axis"],
+      ans:2,sol:"For a long solenoid the interior field is <strong>uniform</strong> and points <strong>parallel to the axis</strong>. Its magnitude B = μ₀nI does not depend on the distance from the axis."},
+     {q:"A long solenoid has n turns per metre and carries current I. The magnitude of the field deep inside is:",
+      diagram:D.solenoidCoil("n turns per metre"),
+      opts:["μ₀nI","μ₀NI","μ₀nI / 2","μ₀I / (2πn)"],
+      ans:0,sol:"For an ideal long solenoid, <strong>B = μ₀nI</strong>, where n = N/L is the number of turns per unit length. It is independent of the solenoid's radius."},
+     {q:"A solenoid of length 0.5 m has 1000 turns and carries a current of 2 A. The field inside is (μ₀ = 4π×10⁻⁷):",
+      diagram:D.solenoidCoil("1000 turns · 0.5 m"),
+      opts:["≈ 2.5×10⁻³ T","≈ 5.0×10⁻³ T","≈ 1.0×10⁻³ T","≈ 8.0×10⁻³ T"],
+      ans:1,sol:"n = 1000/0.5 = 2000 turns/m. B = μ₀nI = (4π×10⁻⁷)(2000)(2) ≈ (1.256×10⁻⁶)(4000) ≈ <strong>5.0×10⁻³ T</strong>."},
+     {q:"For a long solenoid, the magnetic field just <em>outside</em> the winding (far from the ends) is:",
+      diagram:D.solenoid("field outside?"),
+      opts:["Equal to the inside field","Half the inside field","Approximately zero","Twice the inside field"],
+      ans:2,sol:"The external field of a long ideal solenoid is <strong>≈ 0</strong>: the return field lines spread over a huge area, so the field per unit area outside is negligible compared with the concentrated interior field."},
+   ]},
+   {name:"2 · Field of a Toroid",tag:"B = μ₀NI/2πr",qs:[
+     {q:"A toroid is essentially a solenoid bent into a closed ring. The magnetic field of an ideal toroid exists:",
+      diagram:D.toroid("ideal toroid"),
+      opts:["Everywhere around the toroid","Only inside the core (within the windings)","Only outside the ring","Only at the central axis"],
+      ans:1,sol:"For an ideal toroid the field is confined <strong>entirely within the core</strong>. Both the central hole and the region outside the ring have B = 0."},
+     {q:"Inside the core of a toroid with N total turns and mean radius r, carrying current I, the field magnitude is:",
+      diagram:D.toroidRadius("r"),
+      opts:["μ₀NI / (2πr)","μ₀NI / r","μ₀NIr","μ₀NI / (4πr)"],
+      ans:0,sol:"Applying Ampère's law to a circle of radius r inside the core: B(2πr) = μ₀(NI) ⇒ <strong>B = μ₀NI/(2πr)</strong>."},
+     {q:"In an ideal toroid, the magnetic field in the empty region <em>inside</em> the central hole (radius smaller than the toroid) is:",
+      diagram:D.toroidRegions(),
+      opts:["μ₀NI / (2πr)","Maximum there","Zero","Equal to the core field"],
+      ans:2,sol:"An Ampèrian circle drawn through the central hole encloses <strong>no current</strong> (the windings lie outside it), so B(2πr) = 0 ⇒ <strong>B = 0</strong>."},
+     {q:"A toroid has 500 turns, mean radius 0.1 m, and carries 2 A. The field inside its core is (μ₀ = 4π×10⁻⁷):",
+      diagram:D.toroidRadius("0.1 m"),
+      opts:["≈ 1.0×10⁻³ T","≈ 2.0×10⁻³ T","≈ 4.0×10⁻³ T","≈ 0.5×10⁻³ T"],
+      ans:1,sol:"B = μ₀NI/(2πr) = (4π×10⁻⁷)(500)(2)/(2π×0.1) = (2×10⁻⁷×500×2)/0.1 ... = (4π×10⁻⁷×1000)/(0.628) ≈ <strong>2.0×10⁻³ T</strong>."},
+   ]},
+   {name:"3 · Ampère's Law Applied",tag:"∮B·dl = μ₀Iₑₙ",qs:[
+     {q:"To derive B inside a long solenoid, the Ampèrian loop is a rectangle with one side inside (parallel to the axis) and one side outside. The loop is chosen this way because:",
+      diagram:D.solenoidLoop(),
+      opts:["It encloses the maximum current","Along three of its sides B·dl contributes zero, leaving only the inside segment","It matches the shape of the solenoid","Ampère's law only works for rectangles"],
+      ans:1,sol:"On the outside side B ≈ 0; on the two short sides B is perpendicular to dl (or B = 0 outside). Only the <strong>inside length</strong> contributes: B·L = μ₀(nL)I ⇒ B = μ₀nI."},
+     {q:"For the rectangular Ampèrian loop across a solenoid wall (segment ab inside, cd outside), the enclosed current for a loop of length L is:",
+      diagram:D.solenoidLoop(),
+      opts:["I","nLI","NI","μ₀nI"],
+      ans:1,sol:"The number of turns threaded by a loop of length L is nL, each carrying I, so the enclosed current is <strong>nLI</strong>. Then B·L = μ₀(nLI) ⇒ B = μ₀nI."},
+     {q:"Ampère's law states ∮B·dl = μ₀Iₑₙ around a closed loop. Here Iₑₙ is:",
+      diagram:D.toroidRegions(),
+      opts:["The total current in the whole circuit","Only the current that passes through the loop (is enclosed by it)","The current times the loop's area","The average of inside and outside currents"],
+      ans:1,sol:"Iₑₙ is strictly the <strong>net current threading the loop</strong>. Currents outside the loop contribute nothing — this is exactly why the toroid's hole and exterior have B = 0."},
+     {q:"Across the wall of a long solenoid, a plot of the field magnitude B against position looks like:",
+      diagram:D.bStep(),
+      opts:["Constant everywhere","A step: constant μ₀nI inside, dropping to ≈ 0 outside","Rising linearly with position","Peaking sharply at the wall"],
+      ans:1,sol:"Inside, B = μ₀nI (uniform); outside, B ≈ 0. So the graph is a <strong>step</strong>, falling from μ₀nI to nearly zero at the winding."},
+   ]},
+ ]},
+ B:{concepts:[
+   {name:"1 · Field of a Solenoid",tag:"B = μ₀nI",qs:[
+     {q:"At the very <em>end</em> (on the axis) of a long solenoid, the field is approximately:",
+      diagram:D.solenoid("field at the open end"),
+      opts:["μ₀nI","μ₀nI / 2","2μ₀nI","Zero"],
+      ans:1,sol:"At the end face on the axis of a semi-infinite solenoid, half the solid angle is 'missing', giving <strong>B = μ₀nI/2</strong> — exactly half the deep-interior value."},
+     {q:"Two long solenoids have the same current and the same total number of turns N, but solenoid P is twice as long as solenoid Q. The ratio B_P : B_Q of interior fields is:",
+      diagram:D.solenoidCoil("same N, lengths L and L/2"),
+      opts:["2 : 1","1 : 1","1 : 2","4 : 1"],
+      ans:2,sol:"B = μ₀nI = μ₀(N/L)I. Same N and I ⇒ B ∝ 1/L. P is twice as long, so B_P = B_Q/2 ⇒ <strong>1 : 2</strong>."},
+     {q:"A solenoid is stretched so that its length doubles while the total number of turns and the current stay the same. The interior field:",
+      diagram:D.solenoidCoil("stretched ×2"),
+      opts:["Doubles","Stays the same","Halves","Quadruples"],
+      ans:2,sol:"B = μ₀(N/L)I. Doubling L with N, I fixed <strong>halves</strong> n and hence halves B."},
+     {q:"A wire of fixed length is wound into a single-layer solenoid on a former of fixed radius. If it is rewound to make the solenoid half as long (turns packed twice as densely), the interior field for the same current:",
+      diagram:D.solenoidCoil("same wire, ½ length"),
+      opts:["Doubles","Halves","Unchanged","Quadruples"],
+      ans:0,sol:"Fixed wire length ⇒ fixed number of turns N. Halving L doubles n = N/L, so B = μ₀nI <strong>doubles</strong>. (Packing the same turns into half the length is the key.)"},
+   ]},
+   {name:"2 · Field of a Toroid",tag:"B = μ₀NI/2πr",qs:[
+     {q:"Inside a real toroid of finite thickness, comparing the field at the inner edge of the core (small r) with the outer edge (large r):",
+      diagram:D.toroidRegions(),
+      opts:["They are equal — the field is uniform","The field is larger at the inner edge (smaller r)","The field is larger at the outer edge","The field is zero at both"],
+      ans:1,sol:"B = μ₀NI/(2πr) ∝ 1/r, so the field is <strong>stronger at smaller r</strong> (inner edge). This non-uniformity is why the 'thin toroid' approximation (r ≈ mean radius) is used."},
+     {q:"A toroid and a long solenoid are wound with the same turn density n = N/(2πr) and carry the same current. Their core fields compare as:",
+      diagram:D.toroid("compare with solenoid"),
+      opts:["Toroid field is larger","Solenoid field is larger","They are equal, both μ₀nI","Cannot be compared"],
+      ans:2,sol:"Writing the toroid field as B = μ₀NI/(2πr) = μ₀(N/2πr)I = μ₀nI shows a toroid is just a <strong>solenoid closed on itself</strong>: same formula, B = μ₀nI, with n the local turn density."},
+     {q:"A toroid with N turns carries current I. If both N and I are doubled while r is unchanged, the core field becomes:",
+      diagram:D.toroidRadius("r fixed"),
+      opts:["Twice the original","Four times the original","The same","Half the original"],
+      ans:1,sol:"B = μ₀NI/(2πr) ∝ N·I. Doubling each multiplies the product by 4 ⇒ <strong>4×</strong> the original field."},
+     {q:"A toroidal core of mean radius 15 cm has 1200 turns and carries 5 A. The field inside is nearest to (μ₀ = 4π×10⁻⁷):",
+      diagram:D.toroidRadius("15 cm"),
+      opts:["≈ 4×10⁻³ T","≈ 8×10⁻³ T","≈ 1×10⁻³ T","≈ 2×10⁻² T"],
+      ans:1,sol:"B = μ₀NI/(2πr) = (4π×10⁻⁷)(1200)(5)/(2π×0.15) = (2×10⁻⁷×1200×5)/0.15 = (1.2×10⁻³)/0.15 ≈ <strong>8×10⁻³ T</strong>."},
+   ]},
+   {name:"3 · Ampère's Law Applied",tag:"∮B·dl = μ₀Iₑₙ",qs:[
+     {q:"An Ampèrian loop is drawn as a circle coaxial with a long solenoid but lying <em>entirely outside</em> the windings. The value of ∮B·dl around it is:",
+      diagram:D.solenoidLoop(),
+      opts:["μ₀nI","μ₀NI","Zero","μ₀I"],
+      ans:2,sol:"A coaxial circle outside the solenoid encloses equal currents going 'up' the front and 'down' the back of the winding — net enclosed current is <strong>zero</strong>, so ∮B·dl = 0. (Consistent with B ≈ 0 outside.)"},
+     {q:"For the rectangular loop used to derive the solenoid field, why do the two sides perpendicular to the axis contribute nothing to ∮B·dl?",
+      diagram:D.solenoidLoop(),
+      opts:["Because B is zero there","Because inside, B ⊥ dl on those sides, and outside B ≈ 0","Because they are shorter than the axial side","Because current does not thread them"],
+      ans:1,sol:"On the perpendicular sides, the portion inside has <strong>B ⊥ dl</strong> (so B·dl = 0) and the portion outside has B ≈ 0. Only the inside axial segment survives."},
+     {q:"Ampère's law gives the correct field for an infinite solenoid but only an approximation for a real one because:",
+      diagram:D.solenoid("real vs ideal"),
+      opts:["Ampère's law is wrong for finite objects","A real solenoid has fringing/end fields, so the symmetry (B uniform inside, 0 outside) is only approximate","The current is not steady","μ₀ changes with length"],
+      ans:1,sol:"Ampère's law is always exact, but <em>solving</em> it needs a symmetry assumption. A finite solenoid has <strong>fringing fields near its ends</strong>, so 'B uniform inside, zero outside' — and hence B = μ₀nI — holds only in the ideal/long limit."},
+     {q:"Two Ampèrian circles are drawn in a toroid's plane: circle ② passes through the core, circle ③ lies just outside the whole ring. Comparing ∮B·dl:",
+      diagram:D.toroidRegions(),
+      opts:["Both equal μ₀NI","② gives μ₀NI, ③ gives 0","Both give 0","② gives 0, ③ gives μ₀NI"],
+      ans:1,sol:"Circle ② encloses all N turns once ⇒ ∮B·dl = μ₀NI. Circle ③ encloses each turn's 'in' and 'out' crossing, netting <strong>zero</strong> enclosed current ⇒ ∮B·dl = 0. Hence B = 0 outside the toroid."},
+   ]},
+ ]},
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  APP
+// ═══════════════════════════════════════════════════════════════════
+const LETT=['A','B','C','D'];
+let level='A';
+const state={A:{},B:{}}; // key "c-q" -> chosen index
+try{const s=localStorage.getItem('padi_soltor_dpp');if(s)Object.assign(state,JSON.parse(s));}catch(e){}
+function save(){try{localStorage.setItem('padi_soltor_dpp',JSON.stringify(state));}catch(e){}}
+
+const paper=document.getElementById('paper');
+function render(){
+  paper.innerHTML='';
+  LEVELS[level].concepts.forEach((con,ci)=>{
+    const head=document.createElement('div');head.className='concept-head';
+    head.innerHTML=`<span class="cn">${con.name}</span><span class="tag">${con.tag}</span><span class="line"></span>`;
+    paper.appendChild(head);
+    con.qs.forEach((qq,qi)=>{
+      const key=ci+'-'+qi;
+      const card=document.createElement('div');card.className='card';card.dataset.key=key;
+      let optHtml='';
+      qq.opts.forEach((o,oi)=>{optHtml+=`<button class="opt" data-oi="${oi}"><span class="lt">${LETT[oi]}</span><span>${o}</span></button>`;});
+      card.innerHTML=`
+        <div class="q-top"><span class="q-no">Q${qi+1}</span><span class="q-diff ${level}">${level==='A'?'NCERT':'JEE'}</span></div>
+        <div class="q-text">${qq.q}</div>
+        ${qq.diagram?`<div class="q-diagram">${qq.diagram}</div>`:''}
+        <div class="opts">${optHtml}</div>
+        <div class="act">
+          <span class="fb"></span>
+          <button class="showsol">Show solution</button>
+        </div>
+        <div class="sol"><div class="sol-in"><strong>Answer: ${LETT[qq.ans]}.</strong> ${qq.sol}</div></div>`;
+      paper.appendChild(card);
+      const opts=card.querySelectorAll('.opt');
+      const fb=card.querySelector('.fb');
+      const sol=card.querySelector('.sol');
+      const solBtn=card.querySelector('.showsol');
+      function lockIn(chosen){
+        opts.forEach(op=>{op.classList.add('locked');
+          const oi=+op.dataset.oi;
+          if(oi===qq.ans)op.classList.add('correct');
+          if(oi===chosen&&chosen!==qq.ans)op.classList.add('wrong');});
+        const ok=chosen===qq.ans;
+        fb.className='fb '+(ok?'c':'w');fb.textContent=ok?'Correct':'Review';
+        sol.classList.add('open');
+      }
+      opts.forEach(op=>op.addEventListener('click',()=>{
+        if(op.classList.contains('locked'))return;
+        const chosen=+op.dataset.oi;
+        state[level][key]=chosen;save();lockIn(chosen);updateScore();
+      }));
+      solBtn.addEventListener('click',()=>sol.classList.toggle('open'));
+      if(state[level][key]!==undefined)lockIn(state[level][key]);
+    });
+  });
+  updateScore();
+}
+function updateScore(){
+  let tot=0,att=0,sc=0;
+  LEVELS[level].concepts.forEach((con,ci)=>con.qs.forEach((qq,qi)=>{
+    tot++;const v=state[level][ci+'-'+qi];
+    if(v!==undefined){att++;if(v===qq.ans)sc++;}
+  }));
+  document.getElementById('tot').textContent=tot;
+  document.getElementById('att').textContent=att;
+  document.getElementById('sc').textContent=sc;
+}
+document.getElementById('levelbar').addEventListener('click',e=>{
+  const b=e.target.closest('.lvl');if(!b)return;
+  level=b.dataset.lvl;
+  document.querySelectorAll('.lvl').forEach(x=>x.classList.toggle('active',x.dataset.lvl===level));
+  render();window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('revealBtn').addEventListener('click',()=>{
+  document.querySelectorAll('.card').forEach(card=>{
+    const ci_qi=card.dataset.key.split('-'),ci=+ci_qi[0],qi=+ci_qi[1];
+    const qq=LEVELS[level].concepts[ci].qs[qi];
+    card.querySelectorAll('.opt').forEach(op=>{op.classList.add('locked');
+      if(+op.dataset.oi===qq.ans)op.classList.add('correct');});
+    card.querySelector('.sol').classList.add('open');
+  });
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  state[level]={};save();render();window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+render();
+</script>
+</body>
+</html>
