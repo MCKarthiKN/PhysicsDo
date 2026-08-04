@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder &#183; Impulse &amp; Momentum (NLM)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Impulse Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Ladders
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Impulse &amp; Momentum<br>&#8212; Question Ladders</h1></div>
+    <p id="home-sub">Every source question gets its own ladder: 3 build-up rungs, easy to hard, leading smoothly to the original module question (&#9733;). Lecture 2 of the NLM &amp; Friction plan &#8212; Concept 3: Impulse, Force&#8211;Time Graphs &amp; Average Force (15 source questions from ALLEN Ex-I &amp; Ex-II PYQ).</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — NLM / IMPULSE set (PADIPUCAST)
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const DIAGRAMS = {
+  // symmetric F–t graph: equal + and – areas → net impulse zero
+  ftSymmetric:()=>`
+    <svg viewBox="0 0 300 172" width="300" height="172" xmlns="http://www.w3.org/2000/svg">
+      <line x1="42" y1="92" x2="286" y2="92" stroke="#374151" stroke-width="1.4"/>
+      <line x1="46" y1="26" x2="46" y2="150" stroke="#374151" stroke-width="1.4"/>
+      <text x="30" y="32" font-size="10" fill="#6b7280" ${FS}>F</text>
+      <text x="289" y="106" font-size="10" fill="#6b7280" ${FS}>t</text>
+      <path d="M46,92 C78,34 110,34 142,92 C174,150 206,150 238,92 L286,92" fill="none" stroke="#2563eb" stroke-width="2.3"/>
+      <text x="88" y="54" font-size="9" fill="#16a34a" ${FS}>+ area</text>
+      <text x="176" y="132" font-size="9" fill="#dc2626" ${FS}>&#8722; area</text>
+      <text x="142" y="106" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>4</text>
+      <text x="238" y="106" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>8</text>
+      <text x="150" y="167" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>0 to 8 s &#183; equal areas above &amp; below</text>
+    </svg>`,
+  // reconstructed F–t graph netting 12 N·s (triangle, peak 6 N at t=2 s, base 0–4 s)
+  ftTri131:()=>`
+    <svg viewBox="0 0 300 172" width="300" height="172" xmlns="http://www.w3.org/2000/svg">
+      <line x1="46" y1="122" x2="286" y2="122" stroke="#374151" stroke-width="1.4"/>
+      <line x1="46" y1="26" x2="46" y2="132" stroke="#374151" stroke-width="1.4"/>
+      <polygon points="46,122 106,44 166,122" fill="#dbeafe" stroke="#2563eb" stroke-width="2.2"/>
+      <line x1="166" y1="122" x2="286" y2="122" stroke="#2563eb" stroke-width="2.2"/>
+      <line x1="43" y1="44" x2="46" y2="44" stroke="#374151" stroke-width="1.4"/>
+      <text x="38" y="48" font-size="9" fill="#6b7280" text-anchor="end" ${FS}>6</text>
+      <text x="30" y="30" font-size="9" fill="#6b7280" ${FS}>F(N)</text>
+      <text x="106" y="136" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>2</text>
+      <text x="166" y="136" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>4</text>
+      <text x="286" y="136" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>8</text>
+      <text x="289" y="126" font-size="10" fill="#6b7280" ${FS}>t(s)</text>
+      <text x="106" y="92" font-size="9" fill="#16a34a" text-anchor="middle" ${FS}>area = 12 N&#183;s</text>
+      <text x="150" y="167" font-size="8.5" fill="#a09d97" text-anchor="middle" ${FS}>schematic &#8212; verify vs source PDF</text>
+    </svg>`,
+  // rectangular F–t pulse 6 N × 2 s
+  ftBox:()=>`
+    <svg viewBox="0 0 260 150" width="260" height="150" xmlns="http://www.w3.org/2000/svg">
+      <line x1="44" y1="112" x2="246" y2="112" stroke="#374151" stroke-width="1.4"/>
+      <line x1="44" y1="24" x2="44" y2="120" stroke="#374151" stroke-width="1.4"/>
+      <rect x="44" y="48" width="70" height="64" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+      <line x1="41" y1="48" x2="44" y2="48" stroke="#374151" stroke-width="1.4"/>
+      <text x="36" y="52" font-size="9" fill="#6b7280" text-anchor="end" ${FS}>6</text>
+      <text x="30" y="30" font-size="9" fill="#6b7280" ${FS}>F(N)</text>
+      <text x="114" y="126" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>2</text>
+      <text x="248" y="116" font-size="10" fill="#6b7280" ${FS}>t(s)</text>
+      <text x="79" y="86" font-size="9" fill="#16a34a" text-anchor="middle" ${FS}>6 &#215; 2</text>
+      <text x="79" y="100" font-size="9" fill="#16a34a" text-anchor="middle" ${FS}>= 12 N&#183;s</text>
+    </svg>`,
+  // x–t graph: ramp 0→4 m over 0–2 s, then flat
+  xtRamp:()=>`
+    <svg viewBox="0 0 280 168" width="280" height="168" xmlns="http://www.w3.org/2000/svg">
+      <line x1="48" y1="130" x2="268" y2="130" stroke="#374151" stroke-width="1.4"/>
+      <line x1="48" y1="26" x2="48" y2="136" stroke="#374151" stroke-width="1.4"/>
+      <polyline points="48,130 108,52 268,52" fill="none" stroke="#2563eb" stroke-width="2.3"/>
+      <line x1="48" y1="52" x2="108" y2="52" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="108" y1="52" x2="108" y2="130" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="42" y="56" font-size="9" fill="#6b7280" text-anchor="end" ${FS}>4</text>
+      <text x="32" y="30" font-size="9" fill="#6b7280" ${FS}>X(m)</text>
+      <text x="108" y="144" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>2</text>
+      <text x="270" y="134" font-size="10" fill="#6b7280" ${FS}>t(s)</text>
+      <text x="150" y="46" font-size="9" fill="#16a34a" ${FS}>flat: v = 0</text>
+      <text x="60" y="96" font-size="9" fill="#16a34a" ${FS} transform="rotate(-38 60 96)">v = 2 m/s</text>
+    </svg>`,
+  // wall bounce: incoming & outgoing v symmetric about the normal
+  wallBounce:(angText,ref)=>`
+    <svg viewBox="0 0 300 184" width="300" height="184" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('wb1','#dc2626')}${AR('wb2','#2563eb')}</defs>
+      <line x1="236" y1="22" x2="236" y2="162" stroke="#374151" stroke-width="2.6"/>
+      ${Array.from({length:9}).map((_,i)=>`<line x1="236" y1="${30+i*15}" x2="250" y2="${20+i*15}" stroke="#9ca3af" stroke-width="1.3"/>`).join('')}
+      <line x1="236" y1="92" x2="120" y2="92" stroke="#9ca3af" stroke-width="1.1" stroke-dasharray="5,3"/>
+      <text x="126" y="86" font-size="8.5" fill="#9ca3af" ${FS}>normal</text>
+      <line x1="118" y1="40" x2="229" y2="88" stroke="#dc2626" stroke-width="2.4" marker-end="url(#wb1)"/>
+      <text x="150" y="52" font-size="11" fill="#dc2626" ${FS} font-weight="700">v</text>
+      <line x1="229" y1="96" x2="118" y2="144" stroke="#2563eb" stroke-width="2.4" marker-end="url(#wb2)"/>
+      <text x="150" y="140" font-size="11" fill="#2563eb" ${FS} font-weight="700">v</text>
+      <text x="198" y="80" font-size="10.5" fill="#16a34a" ${FS} font-weight="700">${angText}</text>
+      <text x="198" y="112" font-size="10.5" fill="#16a34a" ${FS} font-weight="700">${angText}</text>
+      <text x="150" y="176" font-size="8.5" fill="#6b7280" text-anchor="middle" ${FS}>angle measured from the ${ref}</text>
+    </svg>`,
+  // drop and rebound
+  dropRebound:(hd,hr,note)=>`
+    <svg viewBox="0 0 260 192" width="260" height="192" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('dr1','#dc2626')}${AR('dr2','#2563eb')}</defs>
+      <line x1="18" y1="166" x2="242" y2="166" stroke="#374151" stroke-width="2.6"/>
+      ${Array.from({length:11}).map((_,i)=>`<line x1="${24+i*20}" y1="166" x2="${16+i*20}" y2="176" stroke="#9ca3af" stroke-width="1.1"/>`).join('')}
+      <circle cx="92" cy="30" r="9" fill="#fee2e2" stroke="#dc2626" stroke-width="1.8"/>
+      <line x1="92" y1="46" x2="92" y2="118" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,3"/>
+      <line x1="92" y1="118" x2="92" y2="152" stroke="#dc2626" stroke-width="2.4" marker-end="url(#dr1)"/>
+      <text x="102" y="92" font-size="10" fill="#dc2626" ${FS}>drop ${hd}</text>
+      <text x="82" y="150" font-size="11" fill="#dc2626" ${FS} text-anchor="end" font-weight="700">v&#8595;</text>
+      <circle cx="182" cy="70" r="9" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8"/>
+      <line x1="182" y1="152" x2="182" y2="90" stroke="#2563eb" stroke-width="2.4" marker-end="url(#dr2)"/>
+      <text x="192" y="120" font-size="10" fill="#2563eb" ${FS}>rise ${hr}</text>
+      <text x="172" y="96" font-size="11" fill="#2563eb" ${FS} text-anchor="end" font-weight="700">v&#8593;</text>
+      <text x="130" y="188" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>${note||''}</text>
+    </svg>`
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  QUESTION LADDERS — one ladder per SOURCE QUESTION (4 rungs, easy → original ★)
+//  Lecture 2 · Concept 3: Impulse, Force–Time Graphs & Average Force
+//  Source: ALLEN NEET "NLM & Friction" — Ex-I (Conceptual) + Ex-II (Previous Year)
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  { name:"Ex-I &#183; MNNL0024 &#183; Rebounding Ball &#8212; Average Force",
+    questions:[
+      { q:"Impulse&#8211;momentum theorem: the impulse of a force on a body equals the change in its ___.",
+        opts:["momentum","kinetic energy","speed only","weight"], ans:0,
+        sol:"Impulse = F&#916;t = <strong>change in momentum</strong> (&#916;p). This is the working tool for every collision problem." },
+      { q:"A ball hits a wall at +v and bounces straight back at &#8722;v (same speed). The magnitude of its change in velocity is:",
+        opts:["2v","0","v","v/2"], ans:0,
+        sol:"&#916;v = v<sub>final</sub> &#8722; v<sub>initial</sub> = (&#8722;v) &#8722; (+v) = <strong>&#8722;2v</strong>, magnitude 2v. A reversal doubles the effect." },
+      { q:"For m = 0.01 kg (10 g) and v = 5 m/s, the magnitude of the change in momentum |&#916;p| = m&#183;2v is:",
+        opts:["0.1 kg&#183;m/s","0.05 kg&#183;m/s","0.5 kg&#183;m/s","1.0 kg&#183;m/s"], ans:0,
+        sol:"|&#916;p| = 0.01 &#215; (2&#215;5) = 0.01 &#215; 10 = <strong>0.1 kg&#183;m/s</strong>." },
+      { q:"&#9733; Original (Ex-I): A 10 g ball hits a hard surface vertically at 5 m/s and rebounds with the same speed, staying in contact for 0.01 s. The average force exerted by the surface on the ball is:",
+        opts:["100 N","10 N","1 N","0.1 N"], ans:1,
+        sol:"F = |&#916;p|/&#916;t = 0.1/0.01 = <strong>10 N</strong>. (Answer key: option 2 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0025 &#183; Symmetric F&#8211;t Graph &#8212; &#916;p",
+    questions:[
+      { q:"The change in momentum of a body equals the area under its:",
+        opts:["F&#8211;t graph","v&#8211;t graph","x&#8211;t graph","a&#8211;x graph"], ans:0,
+        sol:"Since F&#916;t = &#916;p, the <strong>area under the F&#8211;t graph</strong> gives the change in momentum (impulse)." },
+      { q:"If the area of the F&#8211;t graph above the time axis exactly equals the area below it, the net impulse is:",
+        opts:["zero","positive","negative","cannot be decided"], ans:0,
+        sol:"Positive area (push one way) cancels negative area (push the other way), so the net impulse is <strong>zero</strong>." },
+      { q:"A net impulse of zero over an interval means the change in momentum over that interval is:",
+        diagram:DIAGRAMS.ftSymmetric(),
+        opts:["zero","maximum","equal to mv","negative"], ans:0,
+        sol:"Impulse = &#916;p, so zero impulse &#8658; <strong>&#916;p = 0</strong>. The body ends with the same momentum it started with." },
+      { q:"&#9733; Original (Ex-I): The F&#8211;t graph of a body is symmetric &#8212; equal positive and negative areas from 0 to 8 s. The change in linear momentum between 0 and 8 s is:",
+        diagram:DIAGRAMS.ftSymmetric(),
+        opts:["Zero","4 N&#183;s","8 N&#183;s","None"], ans:0,
+        sol:"Equal + area and &#8722; area cancel &#8658; &#916;p = <strong>Zero</strong>. (Answer key: option 1 &#8212; correct.) The curve here is a schematic of the symmetric shape &#8212; confirm against the source PDF." }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0122 &#183; Oblique Wall Bounce &#8212; Force",
+    questions:[
+      { q:"When a ball bounces off a smooth wall at the same speed and angle, the velocity component that reverses is the one:",
+        diagram:DIAGRAMS.wallBounce('30&#176;','wall'),
+        opts:["perpendicular (normal) to the wall","parallel to the wall","along both directions","neither &#8212; nothing changes"], ans:0,
+        sol:"Only the <strong>normal component</strong> reverses; the component parallel to the wall is unchanged (smooth wall exerts no tangential force)." },
+      { q:"A ball strikes at angle &#952; to the wall. The velocity component along the normal is v&#183;sin&#952;. The magnitude of the change in momentum is:",
+        opts:["2mv&#183;sin&#952;","2mv&#183;cos&#952;","mv&#183;sin&#952;","mv"], ans:0,
+        sol:"The normal component v&#183;sin&#952; reverses, so |&#916;p| = m&#215;2(v&#183;sin&#952;) = <strong>2mv&#183;sin&#952;</strong>." },
+      { q:"For m = 0.5 kg, v = 12 m/s, &#952; = 30&#176; (sin30&#176; = &#189;), |&#916;p| = 2mv&#183;sin&#952; equals:",
+        opts:["6 kg&#183;m/s","12 kg&#183;m/s","3 kg&#183;m/s","10.4 kg&#183;m/s"], ans:0,
+        sol:"|&#916;p| = 2 &#215; 0.5 &#215; 12 &#215; &#189; = <strong>6 kg&#183;m/s</strong>." },
+      { q:"&#9733; Original (Ex-I): A 0.5 kg ball at 12 m/s strikes a wall at 30&#176; to the wall and reflects at the same speed and angle. If contact lasts 0.25 s, the average force on the wall is:",
+        diagram:DIAGRAMS.wallBounce('30&#176;','wall'),
+        opts:["48 N","24 N","12 N","96 N"], ans:1,
+        sol:"F = |&#916;p|/&#916;t = 6/0.25 = <strong>24 N</strong>. (Answer key: option 2 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0029 &#183; Catching a Ball &#8212; Force",
+    questions:[
+      { q:"When a player 'catches' a moving ball, the ball's final speed is:",
+        opts:["0","2v","v","&#8722;v"], ans:0,
+        sol:"Catching means the ball is brought to <strong>rest</strong> in the hand, so v<sub>final</sub> = 0." },
+      { q:"For m = 0.2 kg (200 g) brought from 20 m/s to rest, |&#916;p| =",
+        opts:["4 kg&#183;m/s","20 kg&#183;m/s","2 kg&#183;m/s","40 kg&#183;m/s"], ans:0,
+        sol:"|&#916;p| = m&#916;v = 0.2 &#215; 20 = <strong>4 kg&#183;m/s</strong>." },
+      { q:"Average force = |&#916;p|/&#916;t. With &#916;t = 0.5 s, F =",
+        opts:["8 N","4 N","2 N","0.8 N"], ans:0,
+        sol:"F = 4/0.5 = <strong>8 N</strong>." },
+      { q:"&#9733; Original (Ex-I): A player catches a 200 g ball moving at 20 m/s. If the catch takes 0.5 s, the force on the player's hand is:",
+        opts:["8 N","4 N","2 N","0"], ans:0,
+        sol:"F = |&#916;p|/&#916;t = (0.2&#215;20)/0.5 = 4/0.5 = <strong>8 N</strong>. (Answer key: option 1 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0030 &#183; Bounce &amp; Rebound &#8212; Acceleration",
+    questions:[
+      { q:"A ball dropped from height h reaches the ground with speed:",
+        diagram:DIAGRAMS.dropRebound('20 m','5 m',''),
+        opts:["&#8730;(2gh)","&#8730;(gh)","2gh","gh"], ans:0,
+        sol:"From v&#178; = 2gh, the speed on landing is <strong>&#8730;(2gh)</strong>." },
+      { q:"With g = 10 m/s&#178;, the speed on reaching the ground from 20 m is:",
+        opts:["20 m/s","10 m/s","40 m/s","400 m/s"], ans:0,
+        sol:"v = &#8730;(2&#215;10&#215;20) = &#8730;400 = <strong>20 m/s</strong>." },
+      { q:"It rebounds to 5 m, so it leaves at &#8730;(2&#215;10&#215;5) = 10 m/s upward. Taking down as +, the change in velocity magnitude is 20 &#8722; (&#8722;10) =",
+        opts:["30 m/s","10 m/s","20 m/s","15 m/s"], ans:0,
+        sol:"&#916;v = 20 &#8722; (&#8722;10) = <strong>30 m/s</strong> &#8212; the reversal adds the two speeds." },
+      { q:"&#9733; Original (Ex-I): A tennis ball dropped from 20 m rebounds to 5 m, in contact with the floor for 0.01 s. Its average acceleration during contact (g = 10 m/s&#178;) is:",
+        diagram:DIAGRAMS.dropRebound('20 m','5 m','g = 10 m/s&#178;'),
+        opts:["3000 m/s&#178;","2000 m/s&#178;","1000 m/s&#178;","500 m/s&#178;"], ans:0,
+        sol:"a = &#916;v/&#916;t = 30/0.01 = <strong>3000 m/s&#178;</strong>. (Answer key: option 1 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0034 &#183; Time-Varying Force &#8212; Impulse(t)",
+    questions:[
+      { q:"For a force that changes with time, the impulse from 0 to t is obtained by:",
+        opts:["integrating F over time","multiplying F by t","differentiating F","taking the slope of F"], ans:0,
+        sol:"Impulse = &#8747;F dt &#8212; you <strong>integrate F over time</strong>. Multiplying works only for a constant force." },
+      { q:"&#8747; 500 dt =",
+        opts:["500t","500","250t&#178;","500t&#178;"], ans:0,
+        sol:"The integral of a constant is (constant)&#215;t = <strong>500t</strong>." },
+      { q:"&#8747; (&#8722;100t) dt =",
+        opts:["&#8722;50t&#178;","&#8722;100t&#178;","&#8722;50t","&#8722;100"], ans:0,
+        sol:"&#8747;t dt = t&#178;/2, so &#8747;(&#8722;100t) dt = &#8722;100&#215;t&#178;/2 = <strong>&#8722;50t&#178;</strong>." },
+      { q:"&#9733; Original (Ex-I): If F = 500 &#8722; 100t, the impulse as a function of time is:",
+        opts:["500t &#8722; 50t&#178;","50t &#8722; 10","50 &#8722; t&#178;","100t&#178;"], ans:0,
+        sol:"Impulse = &#8747;(500 &#8722; 100t) dt = <strong>500t &#8722; 50t&#178;</strong>. (Answer key: option 1 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0040 &#183; x&#8211;t Graph &#8212; Impulse",
+    questions:[
+      { q:"On a position&#8211;time (x&#8211;t) graph, the velocity at any instant is the:",
+        diagram:DIAGRAMS.xtRamp(),
+        opts:["slope","area under the curve","curvature","y-intercept"], ans:0,
+        sol:"v = dx/dt = <strong>slope</strong> of the x&#8211;t graph." },
+      { q:"Before t = 2 s the graph rises from 0 to 4 m in 2 s, so v =",
+        opts:["2 m/s","4 m/s","1 m/s","0.5 m/s"], ans:0,
+        sol:"v = 4 m &#247; 2 s = <strong>2 m/s</strong>." },
+      { q:"After t = 2 s the graph is flat, so v = 0. For m = 0.1 kg, impulse = m(v&#8322; &#8722; v&#8321;) = 0.1(0 &#8722; 2) =",
+        opts:["&#8722;0.2 kg&#183;m/s","+0.2 kg&#183;m/s","&#8722;0.1 kg&#183;m/s","&#8722;0.4 kg&#183;m/s"], ans:0,
+        sol:"Impulse = 0.1 &#215; (0 &#8722; 2) = <strong>&#8722;0.2 kg&#183;m/s</strong> (negative: the body is decelerated to rest)." },
+      { q:"&#9733; Original (Ex-I): The x&#8211;t graph of a 0.1 kg particle rises to 4 m at t = 2 s then stays flat. The impulse at t = 2 s is:",
+        diagram:DIAGRAMS.xtRamp(),
+        opts:["0.2 kg&#183;m/s","&#8722;0.2 kg&#183;m/s","0.1 kg&#183;m/s","&#8722;0.4 kg&#183;m/s"], ans:1,
+        sol:"v drops from 2 m/s to 0, so impulse = m&#916;v = 0.1&#215;(&#8722;2) = <strong>&#8722;0.2 kg&#183;m/s</strong>. (Answer key: option 2 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0042 &#183; Constant Force &#8212; &#916;p",
+    questions:[
+      { q:"For a constant force, impulse = F&#215;t. Does the body's mass enter this product?",
+        opts:["No &#8212; impulse depends only on F and t","Yes, divide by mass","Only if the body is moving","Only at rest"], ans:0,
+        sol:"Impulse = F&#215;t, so <strong>mass is not needed</strong> for &#916;p. Mass only matters if you go on to find &#916;v = &#916;p/m." },
+      { q:"Change in momentum = impulse = F&#215;t = 10&#215;10 =",
+        opts:["100 kg&#183;m/s","200 kg&#183;m/s","50 kg&#183;m/s","1000 kg&#183;m/s"], ans:0,
+        sol:"&#916;p = 10 &#215; 10 = <strong>100 kg&#183;m/s</strong>." },
+      { q:"The 20 kg is a distractor for &#916;p, but it sets the change in velocity: &#916;v = &#916;p/m = 100/20 =",
+        opts:["5 m/s","100 m/s","2 m/s","10 m/s"], ans:0,
+        sol:"&#916;v = 100/20 = <strong>5 m/s</strong>. (Good to see the split: &#916;p needs no mass, &#916;v does.)" },
+      { q:"&#9733; Original (Ex-I): A force of 10 N acts on a 20 kg body for 10 s. The change in its momentum is:",
+        opts:["50 kg&#183;m/s","100 kg&#183;m/s","300 kg&#183;m/s","1000 kg&#183;m/s"], ans:1,
+        sol:"&#916;p = F&#215;t = 10&#215;10 = <strong>100 kg&#183;m/s</strong> (mass is not needed). (Answer key: option 2 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0044 &#183; Ball Hit Back by Bat &#8212; Force",
+    questions:[
+      { q:"A ball is 'hit straight back', reversing direction. Taking the incoming speed 40 m/s as +40, the outgoing 60 m/s is:",
+        opts:["&#8722;60 m/s","+60 m/s","+40 m/s","&#8722;40 m/s"], ans:0,
+        sol:"Reversing direction flips the sign: outgoing velocity is <strong>&#8722;60 m/s</strong>." },
+      { q:"The magnitude of the change in velocity is 40 &#8722; (&#8722;60) =",
+        opts:["100 m/s","20 m/s","60 m/s","40 m/s"], ans:0,
+        sol:"&#916;v = 40 &#8722; (&#8722;60) = <strong>100 m/s</strong> (speeds add on reversal)." },
+      { q:"For m = 0.15 kg (150 g), |&#916;p| = m&#215;100 =",
+        opts:["15 kg&#183;m/s","1.5 kg&#183;m/s","150 kg&#183;m/s","6 kg&#183;m/s"], ans:0,
+        sol:"|&#916;p| = 0.15 &#215; 100 = <strong>15 kg&#183;m/s</strong>." },
+      { q:"&#9733; Original (Ex-I): A 150 g ball coming at 40 m/s is hit straight back to 60 m/s. If contact lasts 5 ms, the average force on the ball is:",
+        opts:["2500 N","3000 N","3500 N","4000 N"], ans:1,
+        sol:"F = |&#916;p|/&#916;t = 15/(5&#215;10<sup>&#8722;3</sup>) = <strong>3000 N</strong>. (Answer key: option 2 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0046 &#183; Reversed Ball &#8212; Average Force",
+    questions:[
+      { q:"A ball reverses direction at the same speed v. Its change in velocity magnitude is:",
+        opts:["2v = 78 m/s","0","39 m/s","v"], ans:0,
+        sol:"Same speed reversed &#8658; &#916;v = 2v = 2&#215;39 = <strong>78 m/s</strong>." },
+      { q:"For m = 0.14 kg (140 g), |&#916;p| = m&#215;2v = 0.14&#215;78 =",
+        opts:["10.92 kg&#183;m/s","5.46 kg&#183;m/s","21.84 kg&#183;m/s","78 kg&#183;m/s"], ans:0,
+        sol:"|&#916;p| = 0.14 &#215; 78 = <strong>10.92 kg&#183;m/s</strong>." },
+      { q:"The impact time &#916;t = 1.20 ms in seconds is:",
+        opts:["1.2&#215;10<sup>&#8722;3</sup> s","1.2 s","0.12 s","1.2&#215;10<sup>&#8722;6</sup> s"], ans:0,
+        sol:"1 ms = 10<sup>&#8722;3</sup> s, so 1.20 ms = <strong>1.2&#215;10<sup>&#8722;3</sup> s</strong>." },
+      { q:"&#9733; Original (Ex-I): A 140 g ball flying at 39.0 m/s is struck and rebounds at 39.0 m/s the opposite way. If &#916;t = 1.20 ms, the average force on the ball is:",
+        opts:["1308 N","1090 N","9100 N","980 N"], ans:2,
+        sol:"F = |&#916;p|/&#916;t = 10.92/(1.2&#215;10<sup>&#8722;3</sup>) = <strong>9100 N</strong>. (Answer key: option 3 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-II &#183; MLNL0131 &#183; F&#8211;t Graph &#8212; &#916;p (AIPMT 2014)",
+    questions:[
+      { q:"The change in momentum equals the area under the F&#8211;t graph. The unit of that area is:",
+        opts:["N&#183;s (= kg&#183;m/s)","N/s","kg&#183;m/s&#178;","J"], ans:0,
+        sol:"Force &#215; time = N&#183;s, which equals <strong>kg&#183;m/s</strong> &#8212; the unit of momentum." },
+      { q:"For a rectangular pulse of height F and width &#916;t, the area (impulse) is:",
+        opts:["F&#215;&#916;t","&#189;F&#215;&#916;t","F/&#916;t","F + &#916;t"], ans:0,
+        sol:"A rectangle's area is height &#215; width = <strong>F&#215;&#916;t</strong>. Triangles use &#189;&#215;base&#215;height." },
+      { q:"A rectangular pulse 6 N tall and 2 s wide gives an impulse of:",
+        diagram:DIAGRAMS.ftBox(),
+        opts:["12 N&#183;s","8 N&#183;s","3 N&#183;s","6 N&#183;s"], ans:0,
+        sol:"Impulse = 6 &#215; 2 = <strong>12 N&#183;s</strong>." },
+      { q:"&#9733; Original (Ex-II &#183; AIPMT 2014): From the F&#8211;t graph shown, the change in momentum of the particle from 0 to 8 s is:",
+        diagram:DIAGRAMS.ftTri131(),
+        opts:["24 Ns","20 Ns","12 Ns","6 Ns"], ans:2,
+        sol:"&#916;p = area under the F&#8211;t curve = <strong>12 Ns</strong>. (Answer key: option 3 &#8212; correct.) The graph here is reconstructed to net 12 N&#183;s &#8212; please verify the exact shape against the source PDF." }
+    ] },
+
+  { name:"Ex-II &#183; MLNL0138 &#183; Wall Bounce at 60&#176; &#8212; Impulse (NEET 2016)",
+    questions:[
+      { q:"The impulse the wall gives the ball equals the ball's change in momentum. In an elastic bounce, the component that changes is the one:",
+        diagram:DIAGRAMS.wallBounce('60&#176;','normal'),
+        opts:["normal to the wall","tangential (along the wall)","the whole speed","none of these"], ans:0,
+        sol:"Only the <strong>normal component</strong> reverses; the tangential part is unchanged." },
+      { q:"If the ball makes 60&#176; with the normal, the normal component of velocity is V&#183;cos60&#176;, so the magnitude of the impulse is:",
+        opts:["2mV&#183;cos60&#176;","2mV&#183;sin60&#176;","mV&#183;cos60&#176;","2mV"], ans:0,
+        sol:"The normal component V&#183;cos60&#176; reverses, so |Impulse| = 2m(V&#183;cos60&#176;) = <strong>2mV&#183;cos60&#176;</strong>." },
+      { q:"Since cos60&#176; = &#189;, 2mV&#183;cos60&#176; equals:",
+        opts:["mV","2mV","mV/2","&#8730;3&#183;mV"], ans:0,
+        sol:"2mV &#215; &#189; = <strong>mV</strong>." },
+      { q:"&#9733; Original (Ex-II &#183; NEET-II 2016): A ball of mass m strikes a rigid wall at 60&#176; (to the normal) and reflects without loss of speed. The impulse the wall gives the ball is:",
+        diagram:DIAGRAMS.wallBounce('60&#176;','normal'),
+        opts:["mV/2","mV/3","mV","2mV"], ans:2,
+        sol:"|Impulse| = 2mV&#183;cos60&#176; = 2mV&#215;&#189; = <strong>mV</strong>. (Answer key: option 3 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-II &#183; MLNL0211 &#183; Same-Height Rebound &#8212; Impulse (NEET 2021)",
+    questions:[
+      { q:"The ball rebounds to the SAME height it fell from. So it leaves the ground at the same speed it arrived, but pointing:",
+        diagram:DIAGRAMS.dropRebound('10 m','10 m',''),
+        opts:["the opposite way","the same way","sideways","at random"], ans:0,
+        sol:"Same height &#8658; same speed, <strong>opposite direction</strong> (perfectly elastic bounce)." },
+      { q:"With g = 10 m/s&#178;, the impact speed from 10 m is v = &#8730;(2gh) =",
+        opts:["&#8730;200 &#8776; 14.1 m/s","100 m/s","10 m/s","20 m/s"], ans:0,
+        sol:"v = &#8730;(2&#215;10&#215;10) = &#8730;200 &#8776; <strong>14.1 m/s</strong>." },
+      { q:"Up and down speeds are equal and opposite, so |&#916;p| = 2mv = 2&#215;0.15&#215;14.1 &#8776;",
+        opts:["4.24 kg&#183;m/s","2.12 kg&#183;m/s","8.5 kg&#183;m/s","14.1 kg&#183;m/s"], ans:0,
+        sol:"|&#916;p| = 2 &#215; 0.15 &#215; 14.1 &#8776; <strong>4.24 kg&#183;m/s</strong>." },
+      { q:"&#9733; Original (Ex-II &#183; NEET 2021): A 0.15 kg ball dropped from 10 m rebounds to the same height. The magnitude of impulse on the ball (g = 10 m/s&#178;) is nearly:",
+        opts:["0 kg m/s","4.2 kg m/s","2.1 kg m/s","1.4 kg m/s"], ans:1,
+        sol:"|Impulse| = 2mv = 2&#215;0.15&#215;&#8730;200 &#8776; <strong>4.2 kg m/s</strong>. (Answer key: option 2 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-II &#183; MLNL0222 &#183; Oblique Bounce &#8212; Force (NEET 2023)",
+    questions:[
+      { q:"Only the component of velocity normal to the wall reverses. If the ball makes 60&#176; with the wall, that normal component is:",
+        diagram:DIAGRAMS.wallBounce('60&#176;','wall'),
+        opts:["v&#183;sin60&#176;","v&#183;cos60&#176;","v","0"], ans:0,
+        sol:"Angle measured from the wall &#8658; the perpendicular (normal) part is <strong>v&#183;sin60&#176;</strong>." },
+      { q:"So |&#916;p| = 2mv&#183;sin60&#176; = 2&#215;1&#215;1&#215;(&#8730;3/2) =",
+        opts:["&#8730;3 kg&#183;m/s","1 kg&#183;m/s","2 kg&#183;m/s","&#8730;3/2 kg&#183;m/s"], ans:0,
+        sol:"|&#916;p| = 2&#215;1&#215;1&#215;(&#8730;3/2) = <strong>&#8730;3 kg&#183;m/s</strong>." },
+      { q:"With contact time 0.1 s, F = |&#916;p|/&#916;t = &#8730;3/0.1 =",
+        opts:["10&#8730;3 N","&#8730;3 N","&#8730;3/10 N","30&#8730;3 N"], ans:0,
+        sol:"F = &#8730;3/0.1 = <strong>10&#8730;3 N</strong> (&#8776; 17.3 N)." },
+      { q:"&#9733; Original (Ex-II &#183; NEET 2023): A 1 kg object strikes a wall at 1 m/s at 60&#176; to the wall and reflects at the same angle. If contact lasts 0.1 s, the force on the wall is:",
+        diagram:DIAGRAMS.wallBounce('60&#176;','wall'),
+        opts:["30&#8730;3 N","Zero","10&#8730;3 N","20&#8730;3 N"], ans:2,
+        sol:"F = 2mv&#183;sin60&#176;/&#916;t = &#8730;3/0.1 = <strong>10&#8730;3 N</strong>. (Answer key: option 3 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-II &#183; MLNL0228 &#183; Unequal Rebound &#8212; Impulse (NEET 2025)",
+    questions:[
+      { q:"Because the rebound height (10 m) differs from the drop height (40 m), the up and down speeds differ. Both come from v = &#8730;(2gh). With g = 9.8, the speed falling from 40 m is:",
+        diagram:DIAGRAMS.dropRebound('40 m','10 m',''),
+        opts:["28 m/s","14 m/s","40 m/s","20 m/s"], ans:0,
+        sol:"v = &#8730;(2&#215;9.8&#215;40) = &#8730;784 = <strong>28 m/s</strong>." },
+      { q:"The speed leaving the ground, rising to 10 m, is &#8730;(2&#215;9.8&#215;10) =",
+        opts:["14 m/s","28 m/s","10 m/s","7 m/s"], ans:0,
+        sol:"v = &#8730;196 = <strong>14 m/s</strong>." },
+      { q:"Taking up as +, |&#916;p| = m(v&#8593; + v&#8595;) = 0.5&#215;(14 + 28) =",
+        opts:["21 kg&#183;m/s","7 kg&#183;m/s","42 kg&#183;m/s","84 kg&#183;m/s"], ans:0,
+        sol:"|&#916;p| = 0.5 &#215; 42 = <strong>21 kg&#183;m/s</strong> (up and down speeds add on reversal)." },
+      { q:"&#9733; Original (Ex-II &#183; NEET 2025): A 0.5 kg ball dropped from 40 m rebounds to 10 m. The impulse on the ball during the collision (g = 9.8 m/s&#178;) is:",
+        diagram:DIAGRAMS.dropRebound('40 m','10 m','g = 9.8 m/s&#178;'),
+        opts:["21 NS","7 NS","0","84 NS"], ans:0,
+        sol:"Impulse = m(v&#8595; + v&#8593;) = 0.5&#215;(28 + 14) = <strong>21 N&#183;s</strong>. (Answer key: option 1 &#8212; correct.)" }
+    ] }
+
+];
+const STORAGE_KEY = 'padipucast_nlm_c3_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
