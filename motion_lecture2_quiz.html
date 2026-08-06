@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scalars & Vectors · Lecture 2 Quiz · Class 9</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --sel:#1a1916;--sel-text:#f7f6f3;--accent:#b45309;--accent-bg:#fdf6ec;--accent-border:#f0dcc0;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:640px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:26px 0 30px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+.screen{display:none;}
+.screen.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* start screen */
+.start-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:34px 30px;text-align:center;}
+.start-tag{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.start-card h1{font-family:'LemonMilk',sans-serif;font-size:23px;font-weight:700;letter-spacing:0.03em;line-height:1.25;margin-bottom:10px;}
+.start-card p{font-size:14px;color:var(--text2);margin-bottom:8px;}
+.start-meta{display:flex;justify-content:center;gap:10px;margin:20px 0 8px;flex-wrap:wrap;}
+.meta-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:6px 14px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.meta-chip b{color:var(--text);}
+.best-line{font-size:13px;color:var(--correct);margin-top:6px;min-height:20px;}
+.rules{text-align:left;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin:22px 0;font-size:13px;color:var(--text2);line-height:1.7;}
+.rules b{color:var(--text);}
+.btn-primary{font-family:'LemonMilk',sans-serif;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:var(--text);color:var(--bg);border:none;border-radius:10px;padding:14px 30px;cursor:pointer;transition:opacity .15s,transform .15s;}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px);}
+
+/* quiz screen */
+.q-top{margin-bottom:18px;}
+.q-progress-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.q-count{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);}
+.q-count b{color:var(--text);}
+.q-abandon{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);background:none;border:none;cursor:pointer;}
+.q-abandon:hover{color:var(--text2);}
+.pbar{height:6px;background:var(--border);border-radius:20px;overflow:hidden;}
+.pbar-fill{height:100%;background:var(--text);border-radius:20px;transition:width .35s ease;}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 26px 24px;}
+.q-text{font-size:16.5px;line-height:1.7;color:var(--text);margin-bottom:20px;font-weight:500;}
+.q-diagram{margin:0 0 20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:9px;}
+.opt{display:flex;align-items:center;gap:13px;padding:13px 16px;border:1px solid var(--border);border-radius:11px;background:var(--bg);cursor:pointer;font-size:14.5px;color:var(--text2);transition:all .14s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:25px;height:25px;border-radius:7px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;color:var(--text3);flex-shrink:0;background:var(--surface);transition:all .14s;}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.selected{background:var(--sel);border-color:var(--sel);color:var(--sel-text);}
+.opt.selected .opt-letter{background:var(--sel-text);border-color:var(--sel-text);color:var(--sel);}
+.opt.locked{cursor:default;pointer-events:none;}
+.q-actions{display:flex;justify-content:flex-end;margin-top:22px;}
+#next-btn{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;background:var(--text);color:var(--bg);border:none;border-radius:9px;padding:11px 24px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:opacity .15s;}
+#next-btn:hover{opacity:.88;}
+#next-btn:disabled{opacity:.28;cursor:default;}
+
+/* results */
+.res-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:32px 28px;text-align:center;margin-bottom:24px;}
+.res-tag{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3);margin-bottom:16px;}
+.score-ring{width:130px;height:130px;margin:0 auto 16px;position:relative;}
+.score-ring svg{transform:rotate(-90deg);}
+.score-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-num .big{font-family:'LemonMilk',sans-serif;font-size:30px;font-weight:700;color:var(--text);line-height:1;}
+.score-num .of{font-size:12px;color:var(--text3);margin-top:3px;}
+.res-msg{font-size:15px;color:var(--text);font-weight:500;margin-bottom:6px;}
+.res-best{font-size:13px;color:var(--text2);}
+.res-best b{color:var(--correct);}
+.res-btns{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
+.btn-ghost{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:10px;padding:12px 22px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text);}
+.review-h{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin:6px 0 14px;}
+.rev-item{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:16px 18px;margin-bottom:11px;}
+.rev-top{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;}
+.rev-badge{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-top:1px;}
+.rev-badge.ok{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+.rev-badge.no{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+.rev-q{font-size:14.5px;color:var(--text);font-weight:500;line-height:1.55;}
+.rev-ans{font-size:13.5px;margin:3px 0 0 32px;padding:3px 0;}
+.rev-ans .lbl{color:var(--text3);}
+.rev-ans.mine .val{color:var(--wrong);font-weight:600;}
+.rev-ans.mine.correct .val{color:var(--correct);font-weight:600;}
+.rev-ans.right .val{color:var(--correct);font-weight:600;}
+.rev-why{font-size:13px;color:var(--text2);line-height:1.6;margin:8px 0 0 32px;padding:9px 13px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:9px;}
+.rev-why b{color:var(--accent);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Class 9 · Lecture 2 Quiz</div>
+  </div>
+
+  <!-- START -->
+  <div id="start-screen" class="screen active">
+    <div class="start-card">
+      <div class="start-tag">End-of-Lecture Quiz</div>
+      <h1>Scalars &amp; Vectors</h1>
+      <p>ICSE Class 9 · Motion in One Dimension</p>
+      <div class="start-meta">
+        <div class="meta-chip"><b>10</b> questions</div>
+        <div class="meta-chip">1 mark each</div>
+        <div class="meta-chip">no time limit</div>
+      </div>
+      <div class="best-line" id="best-line"></div>
+      <div class="rules">
+        <b>How it works:</b> One question at a time. Once you pick an answer it is <b>locked</b> — you won't be told right or wrong until the end. After question 10 you get your score and a full review of every question with the reason.
+      </div>
+      <button class="btn-primary" onclick="startQuiz()">Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-screen" class="screen">
+    <div class="q-top">
+      <div class="q-progress-row">
+        <div class="q-count">Question <b id="qc-now">1</b> of <b>10</b></div>
+        <button class="q-abandon" onclick="abandon()">Restart</button>
+      </div>
+      <div class="pbar"><div class="pbar-fill" id="pbar-fill" style="width:10%"></div></div>
+    </div>
+    <div id="q-card">
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div class="q-actions">
+        <button id="next-btn" onclick="nextQ()" disabled>
+          Next
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-screen" class="screen">
+    <div class="res-card">
+      <div class="res-tag">Your Result</div>
+      <div class="score-ring">
+        <svg width="130" height="130" viewBox="0 0 130 130">
+          <circle cx="65" cy="65" r="58" fill="none" stroke="#e8e6e0" stroke-width="10"/>
+          <circle id="ring-fill" cx="65" cy="65" r="58" fill="none" stroke="#1a7a4a" stroke-width="10" stroke-linecap="round" stroke-dasharray="364.4" stroke-dashoffset="364.4"/>
+        </svg>
+        <div class="score-num"><span class="big" id="score-big">0</span><span class="of">out of 10</span></div>
+      </div>
+      <div class="res-msg" id="res-msg"></div>
+      <div class="res-best" id="res-best"></div>
+      <div class="res-btns">
+        <button class="btn-primary" onclick="retake()">Try Again</button>
+      </div>
+    </div>
+    <div class="review-h">Review — every question</div>
+    <div id="review-list"></div>
+  </div>
+</div>
+
+<script>
+// ── DIAGRAM (one small vector illustration) ────────────────────────────────────
+const ARROW_DIA = `
+<svg viewBox="0 0 320 90" width="320" height="90" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <defs>
+    <marker id="vp" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker>
+    <marker id="vn" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker>
+    <marker id="ax" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#374151"/></marker>
+  </defs>
+  <line x1="10" y1="55" x2="310" y2="55" stroke="#374151" stroke-width="1.3" marker-end="url(#ax)"/>
+  <line x1="160" y1="50" x2="160" y2="60" stroke="#374151" stroke-width="1.3"/>
+  <text x="160" y="76" font-size="11" fill="#374151" text-anchor="middle">O</text>
+  <line x1="160" y1="34" x2="260" y2="34" stroke="#2563eb" stroke-width="2.6" marker-end="url(#vp)"/>
+  <text x="210" y="27" font-size="11" fill="#2563eb" text-anchor="middle">+a  (to the right)</text>
+  <line x1="160" y1="34" x2="60" y2="34" stroke="#dc2626" stroke-width="2.6" marker-end="url(#vn)"/>
+  <text x="110" y="27" font-size="11" fill="#dc2626" text-anchor="middle">&minus;a  (to the left)</text>
+</svg>`;
+
+// ── QUESTIONS (Scalars & Vectors) ──────────────────────────────────────────────
+const QUESTIONS = [
+  { q:"Which of the following is a scalar quantity?",
+    opts:["Force","Time","Acceleration","Displacement"], ans:1,
+    why:"A scalar has size only, no direction. Time has only a value and unit, so it is a scalar. Force, acceleration and displacement all have direction." },
+
+  { q:"A vector quantity must have:",
+    opts:["direction only","magnitude only","both magnitude and direction","neither of these"], ans:2,
+    why:"A vector is complete only when you give both its size (magnitude) and its direction." },
+
+  { q:"Which of the following is a vector quantity?",
+    opts:["Work","Pressure","Distance","Velocity"], ans:3,
+    why:"Velocity is speed in a stated direction, so it is a vector. Work, pressure and distance have no direction." },
+
+  { q:"To fully express a scalar quantity, you need:",
+    opts:["a number and a unit","a number, a unit and a direction","only a direction","only a number"], ans:0,
+    why:"A scalar is expressed by a value (number) together with its unit — for example, mass = 5 kg. No direction is needed." },
+
+  { q:"To fully express a vector quantity, you need:",
+    opts:["magnitude only","magnitude, unit and direction","a direction only","a number without any unit"], ans:1,
+    why:"A vector needs magnitude, its unit, and the direction — for example, displacement = 5 m towards east." },
+
+  { q:"A negative sign written with a vector quantity tells us that it acts:",
+    diagram: ARROW_DIA,
+    opts:["in the opposite direction","with a smaller magnitude","as a scalar","with no direction"], ans:0,
+    why:"For a vector the minus sign means the opposite direction. If +a points right, then &minus;a points left." },
+
+  { q:"Which set contains ONLY scalar quantities?",
+    opts:["mass, distance, speed","velocity, force, weight","displacement, acceleration, momentum","speed, velocity, force"], ans:0,
+    why:"Mass, distance and speed all have size only, so all three are scalars." },
+
+  { q:"Which set contains ONLY vector quantities?",
+    opts:["distance, speed, time","displacement, velocity, force","mass, energy, speed","pressure, work, distance"], ans:1,
+    why:"Displacement, velocity and force each have a direction, so all three are vectors." },
+
+  { q:"Which statement is correct?",
+    opts:["Speed is a vector, velocity is a scalar","Distance is a vector, displacement is a scalar","Speed is a scalar, velocity is a vector","Mass is a vector, weight is a scalar"], ans:2,
+    why:"Speed has no direction (scalar); velocity is speed with a direction (vector). Weight is actually a vector (a force) and mass is a scalar." },
+
+  { q:"Two scalars are added by simple arithmetic. Two vectors, however:",
+    opts:["are added in the same simple way","must be added taking their directions into account","cannot be added at all","are always subtracted"], ans:1,
+    why:"Vectors have direction, so they are combined by special vector rules, not by plain arithmetic like scalars." }
+];
+
+const STORAGE_KEY = 'padipucast_motion_l2_quiz_best_v1';
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function getBest(){ try{const v=localStorage.getItem(STORAGE_KEY);return v===null?null:parseInt(v);}catch(e){return null;} }
+function setBest(s){ try{localStorage.setItem(STORAGE_KEY,String(s));}catch(e){} }
+
+// state
+let work=[], answers=[], cur=0;
+
+const startScreen=document.getElementById('start-screen');
+const quizScreen=document.getElementById('quiz-screen');
+const resultsScreen=document.getElementById('results-screen');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const nextBtn=document.getElementById('next-btn');
+const qcNow=document.getElementById('qc-now');
+const pbarFill=document.getElementById('pbar-fill');
+
+function showBest(){
+  const b=getBest();
+  document.getElementById('best-line').textContent = b===null ? '' : `Your best score so far: ${b} / 10`;
+}
+showBest();
+
+function startQuiz(){
+  work = shuffle(QUESTIONS.map(q=>{
+    const idx=q.opts.map((o,i)=>({o,correct:i===q.ans}));
+    shuffle(idx);
+    return {q:q.q, diagram:q.diagram||null, why:q.why, opts:idx.map(x=>x.o), ans:idx.findIndex(x=>x.correct)};
+  }));
+  answers = Array(work.length).fill(null);
+  cur=0;
+  startScreen.classList.remove('active');
+  resultsScreen.classList.remove('active');
+  quizScreen.classList.add('active');
+  renderQ();
+}
+
+function renderQ(){
+  const q=work[cur];
+  qcNow.textContent=cur+1;
+  pbarFill.style.width=((cur+1)/work.length*100)+'%';
+  qText.textContent=q.q;
+  if(q.diagram){ qDiagram.style.display='flex'; qDiagram.innerHTML=q.diagram; }
+  else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  optionsDiv.innerHTML='';
+  const chosen=answers[cur];
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(chosen!==null?' locked':'')+(chosen===i?' selected':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(chosen===null) btn.onclick=()=>choose(i);
+    optionsDiv.appendChild(btn);
+  });
+  nextBtn.disabled = chosen===null;
+  nextBtn.innerHTML = (cur===work.length-1)
+    ? 'Finish <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'
+    : 'Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>';
+}
+
+function choose(i){
+  answers[cur]=i;
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((b,j)=>{ b.classList.add('locked'); b.onclick=null; if(j===i) b.classList.add('selected'); });
+  nextBtn.disabled=false;
+}
+
+function nextQ(){
+  if(answers[cur]===null) return;
+  if(cur===work.length-1){ finish(); return; }
+  cur++; renderQ();
+}
+
+function finish(){
+  let score=0;
+  work.forEach((q,i)=>{ if(answers[i]===q.ans) score++; });
+  const prevBest=getBest();
+  const isBest = prevBest===null || score>prevBest;
+  if(isBest) setBest(score);
+
+  quizScreen.classList.remove('active');
+  resultsScreen.classList.add('active');
+  window.scrollTo(0,0);
+
+  document.getElementById('score-big').textContent=score;
+  // ring
+  const circ=364.4, off=circ*(1-score/work.length);
+  const ring=document.getElementById('ring-fill');
+  const col = score>=8?'#1a7a4a':score>=5?'#b45309':'#c0392b';
+  ring.setAttribute('stroke',col);
+  setTimeout(()=>{ ring.style.transition='stroke-dashoffset 0.9s ease'; ring.style.strokeDashoffset=off; },80);
+
+  let msg;
+  if(score===10) msg="Perfect! You've nailed scalars and vectors.";
+  else if(score>=8) msg="Great work — just a tiny gap to close.";
+  else if(score>=5) msg="Good start. Look over the ones you missed and try again.";
+  else msg="Let's revisit the basics — go through the review below, then retry.";
+  document.getElementById('res-msg').textContent=msg;
+
+  const best=getBest();
+  document.getElementById('res-best').innerHTML =
+    isBest ? `New best score: <b>${best} / 10</b>` : `Your best score: <b>${best} / 10</b>`;
+
+  renderReview();
+}
+
+function renderReview(){
+  const list=document.getElementById('review-list');
+  list.innerHTML='';
+  work.forEach((q,i)=>{
+    const mine=answers[i], correct=q.ans, ok=mine===correct;
+    const item=document.createElement('div');
+    item.className='rev-item';
+    let html=`<div class="rev-top">
+        <div class="rev-badge ${ok?'ok':'no'}">${ok?'\u2713':'\u2717'}</div>
+        <div class="rev-q">${i+1}. ${q.q}</div>
+      </div>`;
+    html+=`<div class="rev-ans mine${ok?' correct':''}"><span class="lbl">Your answer: </span><span class="val">${q.opts[mine]}</span></div>`;
+    if(!ok) html+=`<div class="rev-ans right"><span class="lbl">Correct answer: </span><span class="val">${q.opts[correct]}</span></div>`;
+    html+=`<div class="rev-why"><b>Why:</b> ${q.why}</div>`;
+    item.innerHTML=html;
+    list.appendChild(item);
+  });
+}
+
+function retake(){ startQuiz(); }
+function abandon(){
+  if(confirm('Restart the quiz? Your current answers will be cleared.')){
+    quizScreen.classList.remove('active');
+    startScreen.classList.add('active');
+    showBest();
+    window.scrollTo(0,0);
+  }
+}
+</script>
+</body>
+</html>
