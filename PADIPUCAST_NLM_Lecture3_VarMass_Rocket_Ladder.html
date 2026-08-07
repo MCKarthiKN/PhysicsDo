@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder &#183; Variable Mass &amp; Rocket (NLM)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Mass &amp; Rocket Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Ladders
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Variable Mass &amp; Rocket<br>&#8212; Question Ladders</h1></div>
+    <p id="home-sub">Every source question gets its own ladder: 3 build-up rungs, easy to hard, leading smoothly to the original module question (&#9733;). Lecture 3 of the NLM &amp; Friction plan &#8212; Concepts 4 &amp; 5: Variable-Mass Systems (jet, belt, bullets, balloon) &amp; Rocket Propulsion (10 source questions from ALLEN Ex-I &amp; Ex-II PYQ).</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — NLM / IMPULSE set (PADIPUCAST)
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const DIAGRAMS = {
+  // gravel dropping onto a moving conveyor belt
+  belt:()=>`
+    <svg viewBox="0 0 300 160" width="300" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('bl2','#2563eb')}</defs>
+      <path d="M120,20 L170,20 L156,58 L134,58 Z" fill="#f0ede8" stroke="#b45309" stroke-width="1.4"/>
+      <text x="145" y="14" font-size="9" fill="#b45309" text-anchor="middle" ${FS}>gravel 0.5 kg/s</text>
+      <circle cx="142" cy="66" r="2.4" fill="#8a5a2b"/><circle cx="149" cy="74" r="2.4" fill="#8a5a2b"/><circle cx="144" cy="82" r="2.4" fill="#8a5a2b"/><circle cx="151" cy="92" r="2.2" fill="#8a5a2b"/>
+      <rect x="55" y="100" width="200" height="14" rx="7" fill="#d4d1c8" stroke="#374151" stroke-width="1.4"/>
+      <circle cx="62" cy="107" r="12" fill="#fff" stroke="#374151" stroke-width="1.6"/>
+      <circle cx="248" cy="107" r="12" fill="#fff" stroke="#374151" stroke-width="1.6"/>
+      <line x1="118" y1="132" x2="200" y2="132" stroke="#2563eb" stroke-width="2.2" marker-end="url(#bl2)"/>
+      <text x="160" y="150" font-size="10" fill="#2563eb" text-anchor="middle" ${FS} font-weight="700">v = 2 m/s</text>
+    </svg>`,
+  // water jet striking a block on a smooth floor
+  jetBlock:()=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('jb1','#2563eb')}</defs>
+      <rect x="20" y="78" width="26" height="18" rx="3" fill="#6b7280"/>
+      <line x1="48" y1="87" x2="150" y2="87" stroke="#2563eb" stroke-width="2.6" marker-end="url(#jb1)"/>
+      <text x="92" y="78" font-size="9" fill="#2563eb" ${FS}>water 1 kg/s, 5 m/s</text>
+      <rect x="155" y="70" width="42" height="48" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8"/>
+      <text x="176" y="98" font-size="10" fill="#2563eb" text-anchor="middle" ${FS} font-weight="700">2 kg</text>
+      <line x1="16" y1="120" x2="284" y2="120" stroke="#374151" stroke-width="2"/>
+      ${Array.from({length:11}).map((_,i)=>`<line x1="${22+i*24}" y1="120" x2="${14+i*24}" y2="130" stroke="#9ca3af" stroke-width="1.1"/>`).join('')}
+      <text x="238" y="98" font-size="9" fill="#6b7280" ${FS}>smooth</text>
+    </svg>`,
+  // jet striking a wall at angle to the normal, rebounding
+  jetWall:(angText)=>`
+    <svg viewBox="0 0 300 178" width="300" height="178" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('jw1','#2563eb')}${AR('jw2','#16a34a')}</defs>
+      <line x1="236" y1="22" x2="236" y2="158" stroke="#374151" stroke-width="2.6"/>
+      ${Array.from({length:9}).map((_,i)=>`<line x1="236" y1="${28+i*15}" x2="250" y2="${18+i*15}" stroke="#9ca3af" stroke-width="1.3"/>`).join('')}
+      <line x1="236" y1="90" x2="120" y2="90" stroke="#9ca3af" stroke-width="1.1" stroke-dasharray="5,3"/>
+      <text x="126" y="84" font-size="8.5" fill="#9ca3af" ${FS}>normal</text>
+      <line x1="116" y1="40" x2="229" y2="86" stroke="#2563eb" stroke-width="2.6" marker-end="url(#jw1)"/>
+      <text x="150" y="52" font-size="10" fill="#2563eb" ${FS} font-weight="700">v</text>
+      <line x1="229" y1="94" x2="116" y2="140" stroke="#16a34a" stroke-width="2.4" marker-end="url(#jw2)"/>
+      <text x="196" y="80" font-size="11" fill="#374151" ${FS} font-weight="700">${angText}</text>
+      <text x="150" y="172" font-size="8.5" fill="#6b7280" text-anchor="middle" ${FS}>area a &#183; density d &#183; speed v &#183; elastic</text>
+    </svg>`,
+  // disc held up by bullets fired upward
+  discBullets:()=>`
+    <svg viewBox="0 0 300 178" width="300" height="178" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('db1','#2563eb')}${AR('db2','#dc2626')}</defs>
+      <ellipse cx="150" cy="52" rx="72" ry="12" fill="#d4d1c8" stroke="#374151" stroke-width="1.6"/>
+      <text x="150" y="40" font-size="9" fill="#374151" text-anchor="middle" ${FS}>disc 1.0 kg</text>
+      <line x1="150" y1="64" x2="150" y2="98" stroke="#dc2626" stroke-width="2.2" marker-end="url(#db2)"/>
+      <text x="160" y="86" font-size="9" fill="#dc2626" ${FS}>mg</text>
+      <line x1="112" y1="150" x2="112" y2="72" stroke="#2563eb" stroke-width="1.8" marker-end="url(#db1)"/>
+      <line x1="150" y1="158" x2="150" y2="76" stroke="#2563eb" stroke-width="1.8" marker-end="url(#db1)"/>
+      <line x1="188" y1="150" x2="188" y2="72" stroke="#2563eb" stroke-width="1.8" marker-end="url(#db1)"/>
+      <circle cx="112" cy="152" r="3.4" fill="#2563eb"/><circle cx="150" cy="160" r="3.4" fill="#2563eb"/><circle cx="188" cy="152" r="3.4" fill="#2563eb"/>
+      <text x="150" y="174" font-size="9" fill="#2563eb" text-anchor="middle" ${FS}>10 bullets/s &#183; 0.05 kg &#183; rebound</text>
+    </svg>`,
+  // bullets striking a wall and rebounding elastically
+  bulletsWall:()=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('bw1','#2563eb')}${AR('bw2','#dc2626')}</defs>
+      <line x1="242" y1="20" x2="242" y2="128" stroke="#374151" stroke-width="2.6"/>
+      ${Array.from({length:8}).map((_,i)=>`<line x1="242" y1="${28+i*14}" x2="256" y2="${18+i*14}" stroke="#9ca3af" stroke-width="1.3"/>`).join('')}
+      <line x1="60" y1="60" x2="150" y2="60" stroke="#2563eb" stroke-width="2.2" marker-end="url(#bw1)"/>
+      <circle cx="56" cy="60" r="4" fill="#2563eb"/>
+      <line x1="90" y1="88" x2="180" y2="88" stroke="#2563eb" stroke-width="2.2" marker-end="url(#bw1)"/>
+      <circle cx="86" cy="88" r="4" fill="#2563eb"/>
+      <line x1="235" y1="42" x2="150" y2="42" stroke="#dc2626" stroke-width="2.2" marker-end="url(#bw2)"/>
+      <text x="150" y="34" font-size="9" fill="#dc2626" ${FS}>rebound</text>
+      <text x="150" y="144" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>n per second &#183; mass m &#183; speed v &#183; elastic</text>
+    </svg>`,
+  // balloon: upthrust vs weight
+  balloon:()=>`
+    <svg viewBox="0 0 260 190" width="260" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ba1','#16a34a')}${AR('ba2','#dc2626')}</defs>
+      <ellipse cx="130" cy="70" rx="40" ry="48" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8"/>
+      <path d="M118,114 L142,114 L130,130 Z" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+      <rect x="118" y="130" width="24" height="16" fill="#f0ede8" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="130" y="142" font-size="8.5" fill="#6b7280" text-anchor="middle" ${FS}>m</text>
+      <line x1="72" y1="92" x2="72" y2="34" stroke="#16a34a" stroke-width="2.4" marker-end="url(#ba1)"/>
+      <text x="56" y="62" font-size="10" fill="#16a34a" ${FS} font-weight="700">U</text>
+      <line x1="188" y1="58" x2="188" y2="116" stroke="#dc2626" stroke-width="2.4" marker-end="url(#ba2)"/>
+      <text x="194" y="90" font-size="10" fill="#dc2626" ${FS} font-weight="700">mg</text>
+      <text x="130" y="182" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>upthrust U up, weight mg down &#183; a &lt; g</text>
+    </svg>`,
+  // rocket: thrust up, exhaust down, optional weight
+  rocket:(showWeight)=>`
+    <svg viewBox="0 0 210 210" width="210" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rk1','#16a34a')}${AR('rk2','#dc2626')}${AR('rk3','#ea580c')}</defs>
+      <path d="M105,18 L112,44 L88,44 Z" fill="#dc2626"/>
+      <path d="M88,44 L122,44 L122,128 L88,128 Z" fill="#e8e6e0" stroke="#374151" stroke-width="1.6"/>
+      <rect x="97" y="70" width="16" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2"/>
+      <path d="M88,110 L66,142 L88,128 Z" fill="#374151"/>
+      <path d="M122,110 L144,142 L122,128 Z" fill="#374151"/>
+      <path d="M92,128 L118,128 L110,148 L100,148 Z" fill="#4b5563"/>
+      <line x1="105" y1="150" x2="105" y2="190" stroke="#ea580c" stroke-width="2.8" marker-end="url(#rk3)"/>
+      <text x="150" y="176" font-size="9" fill="#ea580c" ${FS}>v(rel) &#183; dm/dt</text>
+      <line x1="42" y1="112" x2="42" y2="52" stroke="#16a34a" stroke-width="2.4" marker-end="url(#rk1)"/>
+      <text x="20" y="88" font-size="9" fill="#16a34a" ${FS} font-weight="700">thrust</text>
+      ${showWeight?`<line x1="168" y1="74" x2="168" y2="132" stroke="#dc2626" stroke-width="2.4" marker-end="url(#rk2)"/><text x="174" y="106" font-size="9" fill="#dc2626" ${FS} font-weight="700">mg</text>`:`<text x="150" y="106" font-size="8.5" fill="#a09d97" ${FS}>gravity-free</text>`}
+    </svg>`
+};
+
+// ===============================================================================
+//  QUESTION LADDERS - one ladder per SOURCE QUESTION (4 rungs, easy -> original)
+//  Lecture 3 . Concepts 4 & 5: Variable-Mass Systems + Rocket Propulsion
+//  Source: ALLEN NEET "NLM & Friction" - Ex-I (Conceptual) + Ex-II (Previous Year)
+// ===============================================================================
+const TOPICS = [
+
+  { name:"Ex-I &#183; MNNL0022 &#183; Gravel on a Conveyor Belt",
+    questions:[
+      { q:"When mass is added to (or thrown at) a moving system at a rate dm/dt and must reach speed v, the extra force needed is:",
+        diagram:DIAGRAMS.belt(),
+        opts:["v&#183;(dm/dt)","&#189;v&#183;(dm/dt)","v&#178;&#183;(dm/dt)","(dm/dt)/v"], ans:0,
+        sol:"Force = rate of change of momentum = v&#183;(dm/dt) &#8212; the speed each new bit of mass must be given, times how fast mass arrives." },
+      { q:"Gravel lands on the belt at 0.5 kg/s and must be carried at 2 m/s. Identify the mass rate dm/dt:",
+        opts:["0.5 kg/s","2 kg/s","1 kg/s","0.25 kg/s"], ans:0,
+        sol:"dm/dt is the rate mass is added = <strong>0.5 kg/s</strong>; v = 2 m/s is the belt speed." },
+      { q:"So the extra force = v&#183;(dm/dt) = 2 &#215; 0.5 =",
+        opts:["1 N","2 N","4 N","0.5 N"], ans:0,
+        sol:"F = 2 &#215; 0.5 = <strong>1 N</strong>." },
+      { q:"&#9733; Original (Ex-I): Gravel is dropped onto a conveyor belt at 0.5 kg/s. The extra force needed to keep the belt moving at 2 m/s is:",
+        diagram:DIAGRAMS.belt(),
+        opts:["1 N","2 N","4 N","0.5 N"], ans:0,
+        sol:"F = v&#183;(dm/dt) = 2 &#215; 0.5 = <strong>1 N</strong>. (Answer key: option 1 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0023 &#183; Water Jet on a Block",
+    questions:[
+      { q:"A jet delivering water at rate dm/dt with speed v exerts a force F = v&#183;(dm/dt) on the target. For v = 5 m/s and dm/dt = 1 kg/s, F =",
+        diagram:DIAGRAMS.jetBlock(),
+        opts:["5 N","1 N","10 N","2.5 N"], ans:0,
+        sol:"F = v&#183;(dm/dt) = 5 &#215; 1 = <strong>5 N</strong>." },
+      { q:"The block (mass 2 kg) is on a frictionless plane, so its acceleration a = F/m =",
+        opts:["2.5 m/s&#178;","5 m/s&#178;","10 m/s&#178;","1.25 m/s&#178;"], ans:0,
+        sol:"a = F/m = 5/2 = <strong>2.5 m/s&#178;</strong>." },
+      { q:"If the same jet instead struck a 5 kg block, its initial acceleration would be:",
+        opts:["1 m/s&#178;","2.5 m/s&#178;","5 m/s&#178;","0.5 m/s&#178;"], ans:0,
+        sol:"a = F/m = 5/5 = <strong>1 m/s&#178;</strong> &#8212; same jet force, larger mass, smaller a." },
+      { q:"&#9733; Original (Ex-I): A 2 kg block on a frictionless plane is struck by a jet releasing water at 1 kg/s with speed 5 m/s. The initial acceleration of the block is:",
+        diagram:DIAGRAMS.jetBlock(),
+        opts:["2.5 m/s&#178;","5 m/s&#178;","10 m/s&#178;","15 m/s&#178;"], ans:0,
+        sol:"F = v&#183;(dm/dt) = 5 N; a = F/m = 5/2 = <strong>2.5 m/s&#178;</strong>. (Answer key: option 1 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0027 &#183; Jet on a Wall at an Angle",
+    questions:[
+      { q:"A jet of cross-section a and speed v carries water of density d. The mass hitting per second (mass rate) is:",
+        opts:["a&#183;v&#183;d","a&#183;d","v&#183;d","a&#183;v"], ans:0,
+        sol:"Volume per second = a&#215;v; multiply by density d &#8658; mass rate = <strong>a&#183;v&#183;d</strong>." },
+      { q:"The jet hits at angle &#952; to the normal and rebounds elastically. Only the normal component v&#183;cos&#952; reverses, so the velocity change per unit mass is:",
+        diagram:DIAGRAMS.jetWall('&#952;'),
+        opts:["2v&#183;cos&#952;","2v&#183;sin&#952;","v&#183;cos&#952;","v"], ans:0,
+        sol:"Elastic rebound of the normal part gives a change of <strong>2v&#183;cos&#952;</strong> (tangential part is unchanged)." },
+      { q:"Force = (mass rate) &#215; (velocity change) = (a v d)(2v&#183;cos&#952;) =",
+        opts:["2av&#178;d&#183;cos&#952;","2av&#178;d&#183;sin&#952;","av&#178;d&#183;cos&#952;","2avd&#183;cos&#952;"], ans:0,
+        sol:"F = (a v d)(2v&#183;cos&#952;) = <strong>2av&#178;d&#183;cos&#952;</strong>." },
+      { q:"&#9733; Original (Ex-I): A water jet of area a strikes a wall at angle &#952; to the normal and rebounds elastically. If the water has density d and speed v, the force on the wall is:",
+        diagram:DIAGRAMS.jetWall('&#952;'),
+        opts:["2 av&#178;d cos&#952;","2 av&#178;d sin&#952;","2 avd cos&#952;","avd cos&#952;"], ans:0,
+        sol:"F = 2av&#178;d&#183;cos&#952;. (Answer key: option 1 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0032 &#183; Disc Held Up by Bullets",
+    questions:[
+      { q:"To keep the disc floating, the upward force from the bullets must balance the disc's:",
+        diagram:DIAGRAMS.discBullets(),
+        opts:["weight (Mg)","2 &#215; weight","half its weight","zero"], ans:0,
+        sol:"For floating (no acceleration), bullet force = <strong>weight Mg</strong> of the disc." },
+      { q:"The disc's weight is Mg = 1.0 &#215; 9.8 =",
+        opts:["9.8 N","1.0 N","19.6 N","0.98 N"], ans:0,
+        sol:"Mg = 1.0 &#215; 9.8 = <strong>9.8 N</strong>." },
+      { q:"Each bullet (0.05 kg, speed v) rebounds with the same speed, so per bullet &#916;p = 2(0.05)v. At 10 per second the force is 10&#215;2&#215;0.05&#215;v = 1.0v. Setting 1.0v = 9.8 gives v =",
+        opts:["9.8 m/s","0.98 m/s","98 m/s","0.098 m/s"], ans:0,
+        sol:"1.0 &#215; v = 9.8 &#8658; v = <strong>9.8 m/s</strong>." },
+      { q:"&#9733; Original (Ex-I): A 1.0 kg disc floats in air as 0.05 kg bullets are fired up at it at 10 per second and rebound with the same speed. The firing speed is (g = 9.8 m/s&#178;):",
+        diagram:DIAGRAMS.discBullets(),
+        opts:["0.098 m/s","0.98 m/s","9.8 m/s","98.0 m/s"], ans:2,
+        sol:"Force = n&#183;2mv = Mg &#8658; 10&#215;2&#215;0.05&#215;v = 9.8 &#8658; v = <strong>9.8 m/s</strong>. (Answer key: option 3 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0038 &#183; n Bullets per Second on a Wall",
+    questions:[
+      { q:"A bullet of mass m and speed v that rebounds elastically undergoes a change in momentum of magnitude:",
+        diagram:DIAGRAMS.bulletsWall(),
+        opts:["2mv","mv","&#189;mv","4mv"], ans:0,
+        sol:"Elastic rebound reverses the velocity: &#916;p = m(v &#8722; (&#8722;v)) = <strong>2mv</strong>." },
+      { q:"If n bullets strike each second, the total momentum delivered per second is:",
+        opts:["2mnv","mnv","4mnv","mnv/2"], ans:0,
+        sol:"n bullets &#215; 2mv each = <strong>2mnv</strong> per second." },
+      { q:"Force equals the rate of change of momentum, i.e. momentum delivered per second. So F =",
+        opts:["2mnv","mnv","mn/v","2mn/v"], ans:0,
+        sol:"F = <strong>2mnv</strong>." },
+      { q:"&#9733; Original (Ex-I): n bullets strike a wall per second elastically and rebound. If each bullet has mass m and speed v, the force on the wall is:",
+        opts:["mnv","4mnv","2mnv","mnv/2"], ans:2,
+        sol:"F = 2mnv. (Answer key: option 3 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-II &#183; MLNL0132 &#183; Balloon: Mass to Remove to Rise (AIPMT 2014)",
+    questions:[
+      { q:"A balloon descends with acceleration a (a &lt; g). Two vertical forces act: weight mg (down) and upthrust U (up). Newton's 2nd law with down as positive is:",
+        diagram:DIAGRAMS.balloon(),
+        opts:["mg &#8722; U = ma","U &#8722; mg = ma","mg + U = ma","U = mg"], ans:0,
+        sol:"It accelerates downward, so the net downward force is mg &#8722; U = ma." },
+      { q:"Therefore the upthrust is:",
+        opts:["m(g &#8722; a)","m(g + a)","mg","ma"], ans:0,
+        sol:"From mg &#8722; U = ma &#8658; U = <strong>m(g &#8722; a)</strong>. The upthrust does not change when we drop ballast (volume fixed)." },
+      { q:"After removing mass &#916;m, the balloon (mass m &#8722; &#916;m) rises with acceleration a. With U unchanged, U &#8722; (m&#8722;&#916;m)g = (m&#8722;&#916;m)a. Solving gives &#916;m =",
+        opts:["2ma/(g + a)","2ma/(g &#8722; a)","ma/(g + a)","ma/(g &#8722; a)"], ans:0,
+        sol:"Substitute U = m(g&#8722;a): m(g&#8722;a) &#8722; (m&#8722;&#916;m)g = (m&#8722;&#916;m)a &#8658; &#916;m(g+a) = 2ma &#8658; &#916;m = <strong>2ma/(g+a)</strong>." },
+      { q:"&#9733; Original (Ex-II &#183; AIPMT 2014): A balloon of mass m descends with acceleration a (a &lt; g). The mass that must be removed for it to rise with the same acceleration a is:",
+        diagram:DIAGRAMS.balloon(),
+        opts:["2ma/(g + a)","2ma/(g &#8722; a)","ma/(g + a)","ma/(g &#8722; a)"], ans:0,
+        sol:"&#916;m = 2ma/(g + a). (Answer key: option 1 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0035 &#183; Rocket: Fuel Rate for a = 4.9 m/s&#178;",
+    questions:[
+      { q:"A rocket lifting off must overcome gravity AND accelerate. From thrust &#8722; mg = ma, the thrust needed is:",
+        diagram:DIAGRAMS.rocket(true),
+        opts:["m(g + a)","m(g &#8722; a)","mg","ma"], ans:0,
+        sol:"thrust = mg + ma = <strong>m(g + a)</strong>." },
+      { q:"Thrust also equals v(rel)&#183;(dm/dt). Setting v(rel)&#183;(dm/dt) = m(g+a) and solving for the burn rate:",
+        opts:["m(g+a)/v(rel)","m(g&#8722;a)/v(rel)","mg/v(rel)","ma/v(rel)"], ans:0,
+        sol:"dm/dt = <strong>m(g+a)/v(rel)</strong>." },
+      { q:"Plug in m = 1000 kg, g + a = 9.8 + 4.9 = 14.7, v(rel) = 2000 m/s: dm/dt =",
+        opts:["7.35 kg/s","14.7 kg/s","3.68 kg/s","12.25 kg/s"], ans:0,
+        sol:"dm/dt = 1000 &#215; 14.7 / 2000 = <strong>7.35 kg/s</strong>." },
+      { q:"&#9733; Original (Ex-I): A 1000 kg rocket rises with a = 4.9 m/s&#178;; exhaust speed relative to the rocket is 2 km/s. The rate of fuel consumption is:",
+        diagram:DIAGRAMS.rocket(true),
+        opts:["12.25 kg/s","17.5 kg/s","7.35 kg/s","5.2 kg/s"], ans:2,
+        sol:"dm/dt = m(g+a)/v(rel) = 1000&#215;14.7/2000 = <strong>7.35 kg/s</strong>. (Answer key: option 3 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0036 &#183; Rocket in Force-Free Space",
+    questions:[
+      { q:"In force-free (gravity-free) space the only force on a rocket is its thrust, F = v(rel)&#183;(dm/dt). To find the burn rate:",
+        diagram:DIAGRAMS.rocket(false),
+        opts:["dm/dt = F/v(rel)","dm/dt = F&#183;v(rel)","dm/dt = v(rel)/F","dm/dt = F/v(rel)&#178;"], ans:0,
+        sol:"Rearranging F = v(rel)&#183;(dm/dt) gives dm/dt = <strong>F/v(rel)</strong>." },
+      { q:"With F = 210 N and v(rel) = 300 m/s, dm/dt = 210/300 =",
+        opts:["0.7 kg/s","1.4 kg/s","2.7 kg/s","0.35 kg/s"], ans:0,
+        sol:"dm/dt = 210/300 = <strong>0.7 kg/s</strong>." },
+      { q:"For the same thrust, a rocket with a FASTER exhaust would need to burn fuel at a rate that is:",
+        opts:["smaller","larger","the same","zero"], ans:0,
+        sol:"F = v(rel)&#183;(dm/dt): a bigger v(rel) means a <strong>smaller</strong> dm/dt for the same thrust." },
+      { q:"&#9733; Original (Ex-I): A rocket in force-free space has an exhaust speed of 300 m/s and a thrust of 210 N. The rate of combustion of fuel is:",
+        diagram:DIAGRAMS.rocket(false),
+        opts:["0.7 kg/s","1.4 kg/s","2.7 kg/s","10.7 kg/s"], ans:0,
+        sol:"dm/dt = F/v(rel) = 210/300 = <strong>0.7 kg/s</strong>. (Answer key: option 1 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0037 &#183; Rocket: Initial Acceleration (gravity-free)",
+    questions:[
+      { q:"In gravity-free space the thrust is v(rel)&#183;(dm/dt). With v(rel) = 600 m/s and dm/dt = 1 kg/s, the thrust is:",
+        diagram:DIAGRAMS.rocket(false),
+        opts:["600 N","60 N","6000 N","120 N"], ans:0,
+        sol:"thrust = 600 &#215; 1 = <strong>600 N</strong>." },
+      { q:"The rocket's acceleration is a = thrust/mass. With m = 120 kg, a = 600/120 =",
+        opts:["5 m/s&#178;","1 m/s&#178;","10 m/s&#178;","0.2 m/s&#178;"], ans:0,
+        sol:"a = 600/120 = <strong>5 m/s&#178;</strong>." },
+      { q:"Because this is gravity-free space, do we subtract mg from the thrust?",
+        opts:["No &#8212; the full thrust accelerates the rocket","Yes, subtract mg","Add mg","Use half the thrust"], ans:0,
+        sol:"With no gravity there is <strong>no mg to subtract</strong> &#8212; net force = thrust." },
+      { q:"&#9733; Original (Ex-I): A 120 kg rocket in gravity-free space ejects gases at 600 m/s at 1 kg/s. Its initial acceleration is:",
+        diagram:DIAGRAMS.rocket(false),
+        opts:["1 m/s&#178;","5 m/s&#178;","10 m/s&#178;","15 m/s&#178;"], ans:1,
+        sol:"a = v(rel)(dm/dt)/m = 600&#215;1/120 = <strong>5 m/s&#178;</strong>. (Answer key: option 2 &#8212; correct.)" }
+    ] },
+
+  { name:"Ex-I &#183; MNNL0043 &#183; Rocket: Minimum Burn Rate to Just Lift",
+    questions:[
+      { q:"To 'just lift' a rocket (on the verge of rising, a = 0), the thrust must exactly balance:",
+        diagram:DIAGRAMS.rocket(true),
+        opts:["its weight, mg","m(g + a)","zero","ma"], ans:0,
+        sol:"Just lifting means net force = 0, so thrust = <strong>mg</strong>." },
+      { q:"So v(rel)&#183;(dm/dt) = mg &#8658; dm/dt = mg/v(rel). With m = 1000, g = 10, v(rel) = 100 m/s:",
+        opts:["100 kg/s","50 kg/s","200 kg/s","10 kg/s"], ans:0,
+        sol:"dm/dt = 1000&#215;10/100 = <strong>100 kg/s</strong>." },
+      { q:"To give the rocket a real upward acceleration (not just lift it), the burn rate would need to be:",
+        opts:["greater than this minimum","smaller","equal","zero"], ans:0,
+        sol:"More thrust (m(g+a) &gt; mg) needs a <strong>greater</strong> burn rate." },
+      { q:"&#9733; Original (Ex-I): A 1000 kg rocket exhausts gas downward at 100 m/s relative to it. The minimum rate of burning fuel to just lift it (g = 10 m/s&#178;) is:",
+        diagram:DIAGRAMS.rocket(true),
+        opts:["50 kg/s","100 kg/s","200 kg/s","400 kg/s"], ans:1,
+        sol:"dm/dt = mg/v(rel) = 1000&#215;10/100 = <strong>100 kg/s</strong>. (Answer key: option 2 &#8212; correct.)" }
+    ] }
+
+];
+const STORAGE_KEY = 'padipucast_nlm_c45_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
