@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder &#183; Self-Inductance, L-R &amp; Energy (JEE Mains)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Self-Inductance, L-R &amp; Energy</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Ladders
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Self-Inductance &#183; L-R Circuit &#183; Energy<br>Question Ladders</h1></div>
+    <p id="home-sub">The 22 Self-Inductance, L-R Circuit &amp; Energy questions, arranged as a flow from <strong>direct formula</strong> to <strong>deep thinking</strong>. Each source question becomes a ladder: 4 build-up rungs (very easy &#8594; a bit harder) leading to the original archive question (&#9733;). Flow: self-emf e = L(dI/dt) &#8594; what L depends on (geometry, &#956;, dimensions) &#8594; energy &#189;LI&#178; and energy density &#8594; series inductance with M &#8594; L-R growth/decay &#8594; peak power &amp; the t = 0 rule. Source: ALLEN &#183; JEE Main Topicwise &#8212; Electromagnetic Induction.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Electromagnetic Induction  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const DIAGRAMS = {
+
+  // Bar magnet moving towards a closed conducting ring
+  magnetRing:(lbl)=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('mr1','#dc2626')}</defs>
+      <ellipse cx="222" cy="75" rx="16" ry="46" fill="none" stroke="#b45309" stroke-width="3.2"/>
+      <rect x="55" y="60" width="45" height="30" rx="2" fill="#e5e7eb" stroke="#374151" stroke-width="1.4"/>
+      <rect x="100" y="60" width="45" height="30" rx="2" fill="#fecaca" stroke="#374151" stroke-width="1.4"/>
+      <text x="77" y="81" font-size="13" fill="#374151" text-anchor="middle" ${FS} font-weight="700">S</text>
+      <text x="122" y="81" font-size="13" fill="#b91c1c" text-anchor="middle" ${FS} font-weight="700">N</text>
+      <line x1="155" y1="75" x2="196" y2="75" stroke="#dc2626" stroke-width="2.2" marker-end="url(#mr1)"/>
+      <text x="175" y="66" font-size="10.5" fill="#dc2626" text-anchor="middle" ${FS}>${lbl||'v'}</text>
+      <text x="222" y="138" font-size="10" fill="#b45309" text-anchor="middle" ${FS}>closed conducting ring</text>
+      <text x="100" y="118" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>bar magnet</text>
+    </svg>`,
+
+  // Magnet held above a horizontal disc, revolved about the disc axis (Arago)
+  aragoDisc:()=>`
+    <svg viewBox="0 0 300 190" width="300" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ad1','#dc2626')}${AR('ad2','#2563eb')}</defs>
+      <line x1="150" y1="8" x2="150" y2="175" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 4"/>
+      <rect x="192" y="28" width="26" height="30" rx="2" fill="#e5e7eb" stroke="#374151" stroke-width="1.4"/>
+      <rect x="192" y="58" width="26" height="30" rx="2" fill="#fecaca" stroke="#374151" stroke-width="1.4"/>
+      <text x="205" y="48" font-size="12" fill="#374151" text-anchor="middle" ${FS} font-weight="700">S</text>
+      <text x="205" y="78" font-size="12" fill="#b91c1c" text-anchor="middle" ${FS} font-weight="700">N</text>
+      <path d="M228 62 A 78 26 0 0 1 150 36" fill="none" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#ad1)"/>
+      <text x="196" y="22" font-size="10" fill="#dc2626" text-anchor="middle" ${FS}>magnet revolved</text>
+      <ellipse cx="150" cy="132" rx="102" ry="27" fill="#f0ede8" stroke="#374151" stroke-width="1.6"/>
+      <path d="M48 132 v10 a102 27 0 0 0 204 0 v-10" fill="#e9e5dd" stroke="#374151" stroke-width="1.6"/>
+      <path d="M100 128 A 52 14 0 0 1 196 124" fill="none" stroke="#2563eb" stroke-width="1.6" marker-end="url(#ad2)"/>
+      <text x="150" y="180" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>light aluminium disc, free to rotate about its axis</text>
+    </svg>`,
+
+  // Horizontal rails, rod PQ moving right, inductor L + resistance R + key S on the left
+  railRodH:()=>`
+    <svg viewBox="0 0 320 175" width="320" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rh1','#dc2626')}</defs>
+      ${[0,1,2,3].map(r=>[0,1,2,3,4,5].map(c=>`<text x="${58+c*45}" y="${34+r*36}" font-size="11" fill="#9ca3af" text-anchor="middle" ${FS}>&#215;</text>`).join('')).join('')}
+      <line x1="45" y1="45" x2="300" y2="45" stroke="#374151" stroke-width="2"/>
+      <line x1="45" y1="140" x2="300" y2="140" stroke="#374151" stroke-width="2"/>
+      <line x1="45" y1="45" x2="45" y2="72" stroke="#374151" stroke-width="2"/>
+      <path d="M45 72 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12" fill="none" stroke="#7c3aed" stroke-width="2"/>
+      <text x="26" y="90" font-size="10" fill="#7c3aed" ${FS}>L</text>
+      <line x1="45" y1="108" x2="45" y2="112" stroke="#374151" stroke-width="2"/>
+      <path d="M45 112 l-6 4 l12 6 l-12 6 l12 6 l-6 4" fill="none" stroke="#16a34a" stroke-width="2"/>
+      <text x="26" y="130" font-size="10" fill="#16a34a" ${FS}>R</text>
+      <line x1="45" y1="138" x2="45" y2="140" stroke="#374151" stroke-width="2"/>
+      <circle cx="80" cy="140" r="3" fill="#374151"/>
+      <line x1="80" y1="140" x2="98" y2="130" stroke="#374151" stroke-width="2"/>
+      <circle cx="102" cy="140" r="3" fill="#374151"/>
+      <text x="88" y="156" font-size="10" fill="#374151" text-anchor="middle" ${FS}>S</text>
+      <line x1="215" y1="42" x2="215" y2="143" stroke="#2563eb" stroke-width="3.4"/>
+      <text x="215" y="34" font-size="11" fill="#2563eb" text-anchor="middle" ${FS} font-weight="700">P</text>
+      <text x="215" y="158" font-size="11" fill="#2563eb" text-anchor="middle" ${FS} font-weight="700">Q</text>
+      <line x1="222" y1="92" x2="266" y2="92" stroke="#dc2626" stroke-width="2.2" marker-end="url(#rh1)"/>
+      <text x="248" y="84" font-size="10" fill="#dc2626" text-anchor="middle" ${FS}>1 cm/s</text>
+      <text x="286" y="20" font-size="10.5" fill="#6b7280" text-anchor="end" ${FS}>B = 1 T into page (&#215;)</text>
+    </svg>`,
+
+  // Vertical rails, rod MN sliding down, B out of the page
+  railRodV:()=>`
+    <svg viewBox="0 0 300 205" width="300" height="205" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rv1','#dc2626')}</defs>
+      ${[0,1,2,3,4].map(r=>[0,1,2,3].map(c=>(r===2&&(c===1||c===2))?'':`<g><circle cx="${72+c*50}" cy="${32+r*32}" r="5" fill="none" stroke="#9ca3af" stroke-width="1"/><circle cx="${72+c*50}" cy="${32+r*32}" r="1.5" fill="#9ca3af"/></g>`).join('')).join('')}
+      <line x1="100" y1="14" x2="100" y2="176" stroke="#374151" stroke-width="2.2"/>
+      <line x1="200" y1="14" x2="200" y2="176" stroke="#374151" stroke-width="2.2"/>
+      <rect x="98" y="58" width="104" height="13" rx="2" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+      <text x="92" y="69" font-size="11" fill="#2563eb" text-anchor="end" ${FS} font-weight="700">M</text>
+      <text x="208" y="69" font-size="11" fill="#2563eb" text-anchor="start" ${FS} font-weight="700">N</text>
+      <line x1="100" y1="86" x2="200" y2="86" stroke="#374151" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="150" y="99" font-size="10" fill="#374151" text-anchor="middle" ${FS}>25 cm</text>
+      <line x1="243" y1="58" x2="243" y2="106" stroke="#dc2626" stroke-width="2" marker-end="url(#rv1)"/>
+      <text x="254" y="86" font-size="11" fill="#dc2626" ${FS} font-style="italic">g</text>
+      <text x="150" y="190" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>B&#8320; = 4 T, out of the page (&#8857;)</text>
+      <text x="150" y="202" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>rails frictionless and resistanceless</text>
+    </svg>`,
+
+  // Long straight wire with a point P a distance d away
+  wirePoint:()=>`
+    <svg viewBox="0 0 300 130" width="300" height="130" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('wp1','#16a34a')}${AR('wp2','#374151')}</defs>
+      <line x1="20" y1="100" x2="280" y2="100" stroke="#16a34a" stroke-width="2.6"/>
+      <line x1="180" y1="100" x2="232" y2="100" stroke="#16a34a" stroke-width="2.6" marker-end="url(#wp1)"/>
+      <text x="248" y="115" font-size="11" fill="#16a34a" ${FS} font-weight="700">I = 10 A</text>
+      <circle cx="150" cy="42" r="4" fill="#2563eb"/>
+      <text x="160" y="40" font-size="11" fill="#2563eb" ${FS} font-weight="700">P</text>
+      <line x1="150" y1="98" x2="150" y2="46" stroke="#374151" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#wp2)"/>
+      <text x="128" y="74" font-size="10.5" fill="#374151" text-anchor="end" ${FS}>d = 4 cm</text>
+    </svg>`,
+
+  // Rectangular loop near a long current-carrying wire; optional velocity arrow
+  loopWire:(mode)=>{
+    const arrows = {
+      none:'',
+      up:`<line x1="168" y1="46" x2="168" y2="16" stroke="#dc2626" stroke-width="2.2" marker-end="url(#lw1)"/><text x="176" y="26" font-size="10.5" fill="#dc2626" ${FS}>v<tspan baseline-shift="sub" font-size="8">y</tspan></text>`,
+      along:`<line x1="176" y1="70" x2="222" y2="70" stroke="#dc2626" stroke-width="2.2" marker-end="url(#lw1)"/><text x="200" y="62" font-size="10.5" fill="#dc2626" text-anchor="middle" ${FS}>v</text>`,
+      tilt:`<line x1="172" y1="48" x2="216" y2="22" stroke="#dc2626" stroke-width="2.2" marker-end="url(#lw1)"/><text x="228" y="20" font-size="10.5" fill="#dc2626" text-anchor="middle" ${FS}>v</text>`
+    };
+    return `
+    <svg viewBox="0 0 300 175" width="300" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('lw1','#dc2626')}${AR('lw2','#374151')}${AR('lw3','#16a34a')}</defs>
+      <line x1="20" y1="150" x2="280" y2="150" stroke="#16a34a" stroke-width="2.6"/>
+      <line x1="185" y1="150" x2="240" y2="150" stroke="#16a34a" stroke-width="2.6" marker-end="url(#lw3)"/>
+      <text x="252" y="166" font-size="10.5" fill="#16a34a" ${FS} font-weight="700">I = 10 A</text>
+      <rect x="128" y="48" width="44" height="62" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <text x="150" y="42" font-size="10" fill="#2563eb" text-anchor="middle" ${FS}>2 cm</text>
+      <text x="120" y="82" font-size="10" fill="#2563eb" text-anchor="end" ${FS}>4 cm</text>
+      <line x1="150" y1="148" x2="150" y2="112" stroke="#374151" stroke-width="1.1" stroke-dasharray="3 3" marker-end="url(#lw2)"/>
+      <text x="158" y="134" font-size="10" fill="#374151" ${FS}>d</text>
+      ${arrows[mode||'none']}
+      <line x1="42" y1="120" x2="42" y2="92" stroke="#6b7280" stroke-width="1.2" marker-end="url(#lw2)"/>
+      <line x1="42" y1="120" x2="70" y2="120" stroke="#6b7280" stroke-width="1.2" marker-end="url(#lw2)"/>
+      <text x="34" y="94" font-size="10" fill="#6b7280" ${FS} font-style="italic">y</text>
+      <text x="72" y="132" font-size="10" fill="#6b7280" ${FS} font-style="italic">x</text>
+    </svg>`;
+  },
+
+  // Series L-C loop of area 1 m^2 sitting in a field that grows with time
+  lcField:()=>`
+    <svg viewBox="0 0 300 175" width="300" height="175" xmlns="http://www.w3.org/2000/svg">
+      ${[0,1,2,3].map(r=>[0,1,2,3].map(c=>`<g><circle cx="${96+c*36}" cy="${52+r*30}" r="5" fill="none" stroke="#9ca3af" stroke-width="1"/><circle cx="${96+c*36}" cy="${52+r*30}" r="1.5" fill="#9ca3af"/></g>`).join('')).join('')}
+      <rect x="72" y="34" width="156" height="120" fill="none" stroke="#374151" stroke-width="2.2"/>
+      <rect x="118" y="26" width="64" height="16" fill="#f7f6f3"/>
+      <path d="M118 34 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0" fill="none" stroke="#7c3aed" stroke-width="2.2"/>
+      <text x="150" y="18" font-size="10.5" fill="#7c3aed" text-anchor="middle" ${FS}>L = 0.1 H</text>
+      <rect x="220" y="80" width="16" height="30" fill="#f7f6f3"/>
+      <line x1="216" y1="88" x2="232" y2="88" stroke="#0d9488" stroke-width="2.4"/>
+      <line x1="216" y1="100" x2="232" y2="100" stroke="#0d9488" stroke-width="2.4"/>
+      <text x="240" y="98" font-size="10.5" fill="#0d9488" ${FS}>C = 10&#8315;&#179; F</text>
+      <text x="150" y="170" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>area = 1 m&#178; &#183; B = B&#8320; + &#946;t, out of the page</text>
+    </svg>`,
+
+  // Two LR circuits placed side by side, coupled by mutual inductance M
+  twoLR:()=>{
+    const res=(x,y)=>`<path d="M${x} ${y} l7 -9 l13 18 l13 -18 l13 18 l7 -9" fill="none" stroke="#16a34a" stroke-width="2"/>`;
+    const coil=(x,y,dir)=>`<path d="M${x} ${y} a7 7 0 0 ${dir} 0 14 a7 7 0 0 ${dir} 0 14 a7 7 0 0 ${dir} 0 14 a7 7 0 0 ${dir} 0 14" fill="none" stroke="#7c3aed" stroke-width="2.2"/>`;
+    const batt=(x,y)=>`<rect x="${x-11}" y="${y-4}" width="22" height="22" fill="#f7f6f3"/><line x1="${x-10}" y1="${y}" x2="${x+10}" y2="${y}" stroke="#374151" stroke-width="2.6"/><line x1="${x-5}" y1="${y+9}" x2="${x+5}" y2="${y+9}" stroke="#374151" stroke-width="2.6"/>`;
+    return `
+    <svg viewBox="0 0 340 185" width="340" height="185" xmlns="http://www.w3.org/2000/svg">
+      <rect x="24" y="46" width="130" height="100" fill="none" stroke="#374151" stroke-width="2"/>
+      <rect x="186" y="46" width="130" height="100" fill="none" stroke="#374151" stroke-width="2"/>
+      <rect x="62" y="34" width="56" height="24" fill="#f7f6f3"/>${res(62,46)}
+      <text x="90" y="28" font-size="10.5" fill="#16a34a" text-anchor="middle" ${FS}>R&#8321; = 5 &#937;</text>
+      <rect x="224" y="34" width="56" height="24" fill="#f7f6f3"/>${res(224,46)}
+      <text x="252" y="28" font-size="10.5" fill="#16a34a" text-anchor="middle" ${FS}>R&#8322; = 10 &#937;</text>
+      <rect x="147" y="68" width="14" height="58" fill="#f7f6f3"/>${coil(154,68,1)}
+      <text x="140" y="140" font-size="10" fill="#7c3aed" text-anchor="end" ${FS}>L&#8321; = 10 mH</text>
+      <rect x="179" y="68" width="14" height="58" fill="#f7f6f3"/>${coil(186,68,0)}
+      <text x="200" y="140" font-size="10" fill="#7c3aed" text-anchor="start" ${FS}>L&#8322; = 20 mH</text>
+      <line x1="163" y1="97" x2="177" y2="97" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <text x="170" y="62" font-size="10" fill="#b45309" text-anchor="middle" ${FS}>M = 5 mH</text>
+      ${batt(24,88)}
+      <text x="34" y="112" font-size="10" fill="#374151" text-anchor="start" ${FS}>V&#8321; = 5 V</text>
+      ${batt(316,88)}
+      <text x="306" y="112" font-size="10" fill="#374151" text-anchor="end" ${FS}>V&#8322; = 20 V</text>
+      <text x="170" y="176" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>both keys closed together &#183; fluxes of L&#8321; and L&#8322; aid each other</text>
+    </svg>`;
+  },
+
+  // Superconducting loop of radius a on the axis; dipole m brought from infinity
+  loopDipole:()=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ld1','#374151')}${AR('ld2','#b91c1c')}</defs>
+      <line x1="20" y1="70" x2="285" y2="70" stroke="#9ca3af" stroke-width="1" stroke-dasharray="5 4"/>
+      <ellipse cx="70" cy="70" rx="13" ry="34" fill="none" stroke="#2563eb" stroke-width="2.6"/>
+      <text x="52" y="34" font-size="10.5" fill="#2563eb" text-anchor="middle" ${FS}>loop, radius a</text>
+      <text x="70" y="122" font-size="10" fill="#2563eb" text-anchor="middle" ${FS}>zero resistance</text>
+      <circle cx="224" cy="70" r="4" fill="#b91c1c"/>
+      <line x1="224" y1="70" x2="182" y2="70" stroke="#b91c1c" stroke-width="2.4" marker-end="url(#ld2)"/>
+      <text x="228" y="58" font-size="11.5" fill="#b91c1c" ${FS} font-style="italic" font-weight="700">m</text>
+      <text x="224" y="122" font-size="10" fill="#b91c1c" text-anchor="middle" ${FS}>N pole faces the loop</text>
+      <line x1="70" y1="20" x2="224" y2="20" stroke="#374151" stroke-width="1.1" marker-end="url(#ld1)"/>
+      <text x="147" y="14" font-size="10.5" fill="#374151" text-anchor="middle" ${FS} font-style="italic">r  (r &#8811; a)</text>
+    </svg>`
+
+};
+
+const TOPICS = [
+ {
+  "name": "Q139 (2003) &#183; Self-emf: find L",
+  "questions": [
+   {
+    "q": "A coil has self-inductance L. When the current through it changes at a rate dI/dt, the magnitude of the self-induced emf is:",
+    "opts": [
+     "L &#215; (dI/dt)",
+     "L &#215; I",
+     "L / (dI/dt)",
+     "&#189; L (dI/dt)&#178;"
+    ],
+    "ans": 0,
+    "sol": "The defining relation: <strong>e = L (dI/dt)</strong>. The emf depends on how <em>fast</em> the current changes, not on the current itself."
+   },
+   {
+    "q": "The current in a 2 H coil rises steadily from 0 to 6 A in 3 s. The self-induced emf is:",
+    "opts": [
+     "4 V",
+     "12 V",
+     "2 V",
+     "1 V"
+    ],
+    "ans": 0,
+    "sol": "dI/dt = 6/3 = 2 A/s, so e = L(dI/dt) = 2 &#215; 2 = <strong>4 V</strong>."
+   },
+   {
+    "q": "When the current in a coil falls from 4 A to 1 A in 0.5 s, a 6 V emf appears. The self-inductance is:",
+    "opts": [
+     "1 H",
+     "2 H",
+     "0.5 H",
+     "3 H"
+    ],
+    "ans": 0,
+    "sol": "L = e &#247; (dI/dt) = 6 &#247; (3/0.5) = 6 &#247; 6 = <strong>1 H</strong>."
+   },
+   {
+    "q": "The current reverses from +3 A to &#8722;3 A in 0.2 s, inducing 9 V. Find L. (Watch the total change.)",
+    "opts": [
+     "0.3 H",
+     "0.6 H",
+     "0.15 H",
+     "0.9 H"
+    ],
+    "ans": 0,
+    "sol": "Total change |dI| = 3 &#8722; (&#8722;3) = <strong>6 A</strong>. L = e&#183;dt/|dI| = 9 &#215; 0.2 / 6 = <strong>0.3 H</strong>. The sign flip is the whole trick."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2003): When the current changes from +2 A to &#8722;2 A in 0.05 s, an emf of 8 V is induced in a coil. Its self-inductance is:",
+    "opts": [
+     "0.1 H",
+     "0.2 H",
+     "0.4 H",
+     "0.05 H"
+    ],
+    "ans": 0,
+    "sol": "|dI| = 2 &#8722; (&#8722;2) = 4 A. L = e&#183;dt/|dI| = 8 &#215; 0.05 / 4 = <strong>0.1 H</strong>. (Source answer: option D.)"
+   }
+  ]
+ },
+ {
+  "name": "Q119 (2015) &#183; Self-emf: units &amp; fractions",
+  "questions": [
+   {
+    "q": "From e = L(dI/dt), the self-inductance is given by:",
+    "opts": [
+     "e &#247; (dI/dt)",
+     "e &#215; (dI/dt)",
+     "e &#215; dt &#215; dI",
+     "(dI/dt) &#247; e"
+    ],
+    "ans": 0,
+    "sol": "Rearrange e = L(dI/dt): <strong>L = e / (dI/dt) = e&#183;dt/dI</strong>."
+   },
+   {
+    "q": "Current in a coil grows from 0 to 5 A in 1 s and induces 10 V. The self-inductance is:",
+    "opts": [
+     "2 H",
+     "0.5 H",
+     "10 H",
+     "5 H"
+    ],
+    "ans": 0,
+    "sol": "L = 10 &#215; 1 / 5 = <strong>2 H</strong>."
+   },
+   {
+    "q": "A current of 200 mA drops to 0 in 4 ms, inducing 5 V. Find L. (Convert units first.)",
+    "opts": [
+     "0.1 H",
+     "0.4 H",
+     "1 H",
+     "0.02 H"
+    ],
+    "ans": 0,
+    "sol": "|dI| = 0.2 A, dt = 4 &#215; 10<sup>&#8722;3</sup> s. L = 5 &#215; 4&#215;10<sup>&#8722;3</sup> / 0.2 = <strong>0.1 H</strong>."
+   },
+   {
+    "q": "Current changes 6 A &#8594; 2 A in 0.2 s, average emf 20 V. Find L.",
+    "opts": [
+     "1 H",
+     "2 H",
+     "0.5 H",
+     "4 H"
+    ],
+    "ans": 0,
+    "sol": "|dI| = 4 A. L = 20 &#215; 0.2 / 4 = <strong>1 H</strong>."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2015): When the current in a coil changes from 5 A to 2 A in 0.1 s, an average voltage of 50 V is produced. The self-inductance is:",
+    "opts": [
+     "5/3 H (&#8776; 1.67 H)",
+     "3/5 H",
+     "15 H",
+     "1.5 H"
+    ],
+    "ans": 0,
+    "sol": "|dI| = 3 A. L = 50 &#215; 0.1 / 3 = 5/3 = <strong>1.67 H</strong>. (Source answer: option D.)"
+   }
+  ]
+ },
+ {
+  "name": "Q107 (2019) &#183; From emf to energy change",
+  "questions": [
+   {
+    "q": "The energy stored in an inductor carrying current I is:",
+    "opts": [
+     "&#189; L I&#178;",
+     "L I&#178;",
+     "&#189; L I",
+     "L I"
+    ],
+    "ans": 0,
+    "sol": "<strong>U = &#189; L I&#178;</strong> &#8212; the magnetic analogue of &#189;mv&#178;."
+   },
+   {
+    "q": "For L = 2 H, when the current changes from 2 A to 4 A the stored energy changes by:",
+    "opts": [
+     "12 J",
+     "6 J",
+     "24 J",
+     "8 J"
+    ],
+    "ans": 0,
+    "sol": "&#916;U = &#189;L(I&#8322;&#178; &#8722; I&#8321;&#178;) = &#189; &#215; 2 &#215; (16 &#8722; 4) = <strong>12 J</strong>."
+   },
+   {
+    "q": "A self-emf of 10 V appears when the current changes from 2 A to 7 A in 1 s. The inductance is:",
+    "opts": [
+     "2 H",
+     "5 H",
+     "0.5 H",
+     "10 H"
+    ],
+    "ans": 0,
+    "sol": "L = e&#183;dt/|dI| = 10 &#215; 1 / 5 = <strong>2 H</strong>."
+   },
+   {
+    "q": "An emf of 20 V appears when current changes 1 A &#8594; 5 A in 2 s. Find L, then the change in stored energy.",
+    "opts": [
+     "L = 10 H, &#916;U = 120 J",
+     "L = 5 H, &#916;U = 60 J",
+     "L = 10 H, &#916;U = 240 J",
+     "L = 40 H, &#916;U = 480 J"
+    ],
+    "ans": 0,
+    "sol": "L = 20 &#215; 2 / 4 = 10 H. &#916;U = &#189; &#215; 10 &#215; (25 &#8722; 1) = <strong>120 J</strong>."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2019): The self-induced emf of a coil is 25 V when the current in it is changed uniformly from 10 A to 25 A in 1 s. The change in the energy of the inductance is:",
+    "opts": [
+     "437.5 J",
+     "740 J",
+     "637.5 J",
+     "540 J"
+    ],
+    "ans": 0,
+    "sol": "L = e&#183;dt/|dI| = 25 &#215; 1 / 15 = 5/3 H. &#916;U = &#189;L(I&#8322;&#178; &#8722; I&#8321;&#178;) = &#189; &#215; (5/3) &#215; (625 &#8722; 100) = <strong>437.5 J</strong>. (Source answer: option B.)"
+   }
+  ]
+ },
+ {
+  "name": "Q89 (2020) &#183; The choke coil",
+  "questions": [
+   {
+    "q": "A choke is essentially an inductor. The 'reverse voltage' it produces when its current is interrupted is just:",
+    "opts": [
+     "the self-induced emf, L(dI/dt)",
+     "the ohmic drop IR",
+     "the battery emf",
+     "the capacitor voltage"
+    ],
+    "ans": 0,
+    "sol": "Interrupting the current means a large dI/dt, so a large <strong>self-induced emf L(dI/dt)</strong> appears &#8212; this is why opening an inductive circuit can spark."
+   },
+   {
+    "q": "A choke produces 50 V when its current falls from 2 A to 0 in 0.01 s. Its inductance is:",
+    "opts": [
+     "0.25 H",
+     "0.5 H",
+     "2 H",
+     "0.1 H"
+    ],
+    "ans": 0,
+    "sol": "L = e&#183;dt/|dI| = 50 &#215; 0.01 / 2 = <strong>0.25 H</strong>."
+   },
+   {
+    "q": "A choke of 20 mH has its current cut from 0.5 A to 0 in 0.1 ms. The induced voltage is:",
+    "opts": [
+     "100 V",
+     "10 V",
+     "1 V",
+     "1000 V"
+    ],
+    "ans": 0,
+    "sol": "e = L|dI|/dt = 0.02 &#215; 0.5 / (0.1&#215;10<sup>&#8722;3</sup>) = <strong>100 V</strong>. Tiny inductance, but a huge voltage &#8212; because dt is tiny."
+   },
+   {
+    "q": "To get 100 V from a coil whose current drops 0.25 A &#8594; 0 in 0.025 ms, the needed inductance is about:",
+    "opts": [
+     "10 mH",
+     "1 mH",
+     "100 mH",
+     "0.1 mH"
+    ],
+    "ans": 0,
+    "sol": "L = e&#183;dt/|dI| = 100 &#215; 0.025&#215;10<sup>&#8722;3</sup> / 0.25 = 0.01 H = <strong>10 mH</strong>."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2020): In a fluorescent-lamp choke, 100 V of reverse voltage appears when the choke current changes uniformly from 0.25 A to 0 in 0.025 ms. The self-inductance of the choke is:",
+    "opts": [
+     "10 mH",
+     "25 mH",
+     "2.5 mH",
+     "100 mH"
+    ],
+    "ans": 0,
+    "sol": "L = e&#183;dt/|dI| = 100 &#215; (0.025&#215;10<sup>&#8722;3</sup>) / 0.25 = <strong>10 mH</strong>. (Source answer: 10.)"
+   }
+  ]
+ },
+ {
+  "name": "Q58 (2023) &#183; Steady current, then L",
+  "questions": [
+   {
+    "q": "A battery of emf E drives a coil of resistance R. Long after the switch closes, the steady current is:",
+    "opts": [
+     "E / R",
+     "E R",
+     "E / (R + L)",
+     "zero"
+    ],
+    "ans": 0,
+    "sol": "In steady state the current is constant, so L(dI/dt) = 0 and the inductor is just a wire. Then <strong>I = E/R</strong>."
+   },
+   {
+    "q": "A 12 V battery drives a coil of resistance 6 &#937;. The steady current is:",
+    "opts": [
+     "2 A",
+     "0.5 A",
+     "72 A",
+     "6 A"
+    ],
+    "ans": 0,
+    "sol": "I = E/R = 12/6 = <strong>2 A</strong>."
+   },
+   {
+    "q": "That steady 2 A is switched off, falling to 0 in 1 ms, and a 20 V emf appears. The coil's inductance is:",
+    "opts": [
+     "10 mH",
+     "20 mH",
+     "2 mH",
+     "40 mH"
+    ],
+    "ans": 0,
+    "sol": "L = e&#183;dt/|dI| = 20 &#215; 10<sup>&#8722;3</sup> / 2 = 0.01 H = <strong>10 mH</strong>."
+   },
+   {
+    "q": "Which pair of steps solves 'battery + coil, switch opened, find L' fastest?",
+    "opts": [
+     "First I = E/R, then L = e&#183;dt/&#916;I",
+     "First U = &#189;LI&#178;, then P = I&#178;R",
+     "First &#964; = L/R, then q = N&#966;/R",
+     "First E = &#189;CV&#178;, then i = q/t"
+    ],
+    "ans": 0,
+    "sol": "The current before opening is set by the resistor (I = E/R); the emf on opening then gives L. Two clean steps."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2023): A 12 V battery connected to a coil of resistance 6 &#937; drives a constant current. The switch is opened in 1 ms and the induced emf across the coil is 20 V. The inductance of the coil is:",
+    "opts": [
+     "10 mH",
+     "20 mH",
+     "5 mH",
+     "2 mH"
+    ],
+    "ans": 0,
+    "sol": "Steady I = 12/6 = 2 A. L = e&#183;dt/|dI| = 20 &#215; 10<sup>&#8722;3</sup> / 2 = <strong>10 mH</strong>. (Source answer: option B.)"
+   }
+  ]
+ },
+ {
+  "name": "Q63 (2022) &#183; Average emf on switch-off",
+  "questions": [
+   {
+    "q": "A 10 &#937; coil is fed by a 20 V battery. The constant (steady) current through it is:",
+    "opts": [
+     "2 A",
+     "0.5 A",
+     "200 A",
+     "10 A"
+    ],
+    "ans": 0,
+    "sol": "I = E/R = 20/10 = <strong>2 A</strong>."
+   },
+   {
+    "q": "When this current is switched off, the average induced emf is:",
+    "opts": [
+     "L &#215; I / &#916;t",
+     "L &#215; I &#215; &#916;t",
+     "I&#178;R",
+     "&#189; L I&#178;"
+    ],
+    "ans": 0,
+    "sol": "Average emf = L|&#916;I|/&#916;t. Here &#916;I is the full current I falling to 0, so <strong>e = L&#183;I/&#916;t</strong>."
+   },
+   {
+    "q": "A 20 mH coil carrying 2 A has its current cut to 0 in 100 &#181;s. The average emf is:",
+    "opts": [
+     "400 V",
+     "40 V",
+     "4 V",
+     "4000 V"
+    ],
+    "ans": 0,
+    "sol": "e = L&#183;I/&#916;t = 0.02 &#215; 2 / (100&#215;10<sup>&#8722;6</sup>) = <strong>400 V</strong>."
+   },
+   {
+    "q": "Doubling the switch-off time (100 &#181;s &#8594; 200 &#181;s) changes the average emf to:",
+    "opts": [
+     "200 V (halved)",
+     "800 V (doubled)",
+     "400 V (same)",
+     "100 V"
+    ],
+    "ans": 0,
+    "sol": "e &#8733; 1/&#916;t, so twice the time gives <strong>half the emf</strong> = 200 V."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2022): A 10 &#937;, 20 mH coil carrying a constant current is connected to a 20 V battery through a switch. After the switch is opened, the current becomes zero in 100 &#181;s. The average emf induced is:",
+    "opts": [
+     "400 V",
+     "200 V",
+     "40 V",
+     "800 V"
+    ],
+    "ans": 0,
+    "sol": "I = 20/10 = 2 A. e = L&#183;I/&#916;t = 0.02 &#215; 2 / (100&#215;10<sup>&#8722;6</sup>) = <strong>400 V</strong>. (Source answer: 400.)"
+   }
+  ]
+ },
+ {
+  "name": "Q42 (2023) &#183; Potential across a branch (KVL)",
+  "questions": [
+   {
+    "q": "Walking through a resistor R in the direction of current I, the potential:",
+    "opts": [
+     "drops by IR",
+     "rises by IR",
+     "does not change",
+     "drops by I&#178;R"
+    ],
+    "ans": 0,
+    "sol": "Along the current, a resistor is a <strong>drop of IR</strong>. Against the current it would be a rise."
+   },
+   {
+    "q": "Walking through an inductor L in the direction of current, the potential changes by:",
+    "opts": [
+     "&#8722; L(dI/dt)",
+     "+ L I",
+     "&#8722; I&#178;R",
+     "zero always"
+    ],
+    "ans": 0,
+    "sol": "The inductor's potential change is <strong>&#8722;L(dI/dt)</strong>. If the current is <em>falling</em> (dI/dt &lt; 0) this term becomes a rise."
+   },
+   {
+    "q": "For the branch A&#8211;R&#8211;cell&#8211;L&#8211;B with I = 2 A, R = 12 &#937;: the drop across R alone is:",
+    "opts": [
+     "24 V",
+     "2 V",
+     "6 V",
+     "12 V"
+    ],
+    "ans": 0,
+    "sol": "IR = 2 &#215; 12 = <strong>24 V</strong> drop.",
+    "diagram": "<svg viewBox=\"0 0 300 120\" width=\"300\" height=\"120\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n<line x1=\"20\" y1=\"70\" x2=\"280\" y2=\"70\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<circle cx=\"20\" cy=\"70\" r=\"3.5\" fill=\"#1a1916\"/><text x=\"20\" y=\"58\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\">A</text>\n<circle cx=\"280\" cy=\"70\" r=\"3.5\" fill=\"#1a1916\"/><text x=\"280\" y=\"58\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\">B</text>\n<rect x=\"60\" y=\"60\" width=\"34\" height=\"20\" fill=\"#fff\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"77\" y=\"52\" font-size=\"10\" text-anchor=\"middle\">R=12Ω</text>\n<line x1=\"140\" y1=\"58\" x2=\"140\" y2=\"82\" stroke=\"#374151\" stroke-width=\"2.6\"/><line x1=\"150\" y1=\"63\" x2=\"150\" y2=\"77\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"145\" y=\"52\" font-size=\"10\" text-anchor=\"middle\">12 V</text>\n<path d=\"M195 70 q5 -9 10 0 q5 9 10 0 q5 -9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"210\" y=\"52\" font-size=\"10\" text-anchor=\"middle\">L=6 H</text>\n<text x=\"150\" y=\"100\" font-size=\"10\" fill=\"#c0392b\" text-anchor=\"middle\">I = 2 A,  dI/dt = &#8722;1 A/s</text>\n</svg>"
+   },
+   {
+    "q": "With dI/dt = &#8722;1 A/s and L = 6 H, the inductor term &#8722;L(dI/dt) equals:",
+    "opts": [
+     "+6 V (a rise)",
+     "&#8722;6 V (a drop)",
+     "&#8722;1 V",
+     "+1 V"
+    ],
+    "ans": 0,
+    "sol": "&#8722;L(dI/dt) = &#8722;6 &#215; (&#8722;1) = <strong>+6 V</strong>. Because the current is dropping, the inductor pushes to keep it going &#8212; it acts like a source.",
+    "diagram": "<svg viewBox=\"0 0 300 120\" width=\"300\" height=\"120\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n<line x1=\"20\" y1=\"70\" x2=\"280\" y2=\"70\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<circle cx=\"20\" cy=\"70\" r=\"3.5\" fill=\"#1a1916\"/><text x=\"20\" y=\"58\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\">A</text>\n<circle cx=\"280\" cy=\"70\" r=\"3.5\" fill=\"#1a1916\"/><text x=\"280\" y=\"58\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\">B</text>\n<rect x=\"60\" y=\"60\" width=\"34\" height=\"20\" fill=\"#fff\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"77\" y=\"52\" font-size=\"10\" text-anchor=\"middle\">R=12Ω</text>\n<line x1=\"140\" y1=\"58\" x2=\"140\" y2=\"82\" stroke=\"#374151\" stroke-width=\"2.6\"/><line x1=\"150\" y1=\"63\" x2=\"150\" y2=\"77\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"145\" y=\"52\" font-size=\"10\" text-anchor=\"middle\">12 V</text>\n<path d=\"M195 70 q5 -9 10 0 q5 9 10 0 q5 -9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"210\" y=\"52\" font-size=\"10\" text-anchor=\"middle\">L=6 H</text>\n<text x=\"150\" y=\"100\" font-size=\"10\" fill=\"#c0392b\" text-anchor=\"middle\">I = 2 A,  dI/dt = &#8722;1 A/s</text>\n</svg>"
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2023): For the branch shown (I = 2 A, R = 12 &#937;, cell 12 V, L = 6 H), if dI/dt = &#8722;1 A/s, the value of V<sub>A</sub> &#8722; V<sub>B</sub> is:",
+    "opts": [
+     "30 V",
+     "36 V",
+     "24 V",
+     "18 V"
+    ],
+    "ans": 0,
+    "sol": "KVL A&#8594;B: V<sub>A</sub> &#8722; IR &#8722; L(dI/dt) &#8722; 12 = V<sub>B</sub>. So V<sub>A</sub> &#8722; V<sub>B</sub> = IR + L(dI/dt) + 12 = 24 + 6&#215;(&#8722;1) + 12 = <strong>30 V</strong>. (Source answer: 30.)",
+    "diagram": "<svg viewBox=\"0 0 300 120\" width=\"300\" height=\"120\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n<line x1=\"20\" y1=\"70\" x2=\"280\" y2=\"70\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<circle cx=\"20\" cy=\"70\" r=\"3.5\" fill=\"#1a1916\"/><text x=\"20\" y=\"58\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\">A</text>\n<circle cx=\"280\" cy=\"70\" r=\"3.5\" fill=\"#1a1916\"/><text x=\"280\" y=\"58\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\">B</text>\n<rect x=\"60\" y=\"60\" width=\"34\" height=\"20\" fill=\"#fff\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"77\" y=\"52\" font-size=\"10\" text-anchor=\"middle\">R=12Ω</text>\n<line x1=\"140\" y1=\"58\" x2=\"140\" y2=\"82\" stroke=\"#374151\" stroke-width=\"2.6\"/><line x1=\"150\" y1=\"63\" x2=\"150\" y2=\"77\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"145\" y=\"52\" font-size=\"10\" text-anchor=\"middle\">12 V</text>\n<path d=\"M195 70 q5 -9 10 0 q5 9 10 0 q5 -9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"210\" y=\"52\" font-size=\"10\" text-anchor=\"middle\">L=6 H</text>\n<text x=\"150\" y=\"100\" font-size=\"10\" fill=\"#c0392b\" text-anchor=\"middle\">I = 2 A,  dI/dt = &#8722;1 A/s</text>\n</svg>"
+   }
+  ]
+ },
+ {
+  "name": "Q57 (2023) &#183; Charge through a coil",
+  "questions": [
+   {
+    "q": "When the flux through an N-turn coil of circuit resistance R changes by &#916;&#966; (per turn), the total charge that flows is:",
+    "opts": [
+     "N &#916;&#966; / R",
+     "N &#916;&#966; &#215; R",
+     "&#916;&#966; / (N R)",
+     "N&#178; &#916;&#966; / R"
+    ],
+    "ans": 0,
+    "sol": "Charge q = &#8747;i dt = &#8747;(e/R)dt = (1/R)&#8747;(N d&#966;/dt)dt = <strong>N&#916;&#966;/R</strong>. Notice it depends only on the <em>total</em> flux change, not on how fast."
+   },
+   {
+    "q": "A single-turn loop, R = 2 &#937;, has its flux change by 0.4 Wb. The charge that flows is:",
+    "opts": [
+     "0.2 C",
+     "0.8 C",
+     "2 C",
+     "0.4 C"
+    ],
+    "ans": 0,
+    "sol": "q = &#916;&#966;/R = 0.4/2 = <strong>0.2 C</strong>."
+   },
+   {
+    "q": "If a field B threading area A is <em>reversed</em> (from B to &#8722;B), the flux change per turn is:",
+    "opts": [
+     "2BA",
+     "BA",
+     "0",
+     "4BA"
+    ],
+    "ans": 0,
+    "sol": "&#916;&#966; = BA &#8722; (&#8722;BA) = <strong>2BA</strong>. Reversal is worth twice the one-way change."
+   },
+   {
+    "q": "For 100 turns, area 24 cm&#178;, field reversed from 1.5 T to &#8722;1.5 T, the flux change linking the coil (N&#916;&#966;) is:",
+    "opts": [
+     "0.72 Wb",
+     "0.36 Wb",
+     "7.2 Wb",
+     "0.072 Wb"
+    ],
+    "ans": 0,
+    "sol": "N&#916;&#966; = N &#215; 2BA = 100 &#215; 2 &#215; 1.5 &#215; 24&#215;10<sup>&#8722;4</sup> = <strong>0.72 Wb</strong>."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2023): 100 turns are wound on a wooden core of area 24 cm&#178;; total circuit resistance is 12 &#937;. An axial field is reversed from 1.5 T to 1.5 T in the opposite direction. The charge that flows is:",
+    "opts": [
+     "60 mC",
+     "30 mC",
+     "120 mC",
+     "6 mC"
+    ],
+    "ans": 0,
+    "sol": "q = N(2BA)/R = 100 &#215; 2 &#215; 1.5 &#215; 24&#215;10<sup>&#8722;4</sup> / 12 = 0.72/12 = 0.06 C = <strong>60 mC</strong>. (Source answer: 60.)"
+   }
+  ]
+ },
+ {
+  "name": "Q110 (2019) &#183; Inductance of a solenoid",
+  "questions": [
+   {
+    "q": "The self-inductance of a long solenoid (N total turns, area A, length &#8467;) is:",
+    "opts": [
+     "&#956;&#8320; N&#178; A / &#8467;",
+     "&#956;&#8320; N A / &#8467;",
+     "&#956;&#8320; N&#178; &#8467; / A",
+     "&#956;&#8320; N A &#8467;"
+    ],
+    "ans": 0,
+    "sol": "<strong>L = &#956;&#8320; N&#178; A / &#8467;</strong> (using n = N/&#8467;, L = &#956;&#8320;n&#178;A&#8467;). Note the N&#178; on top."
+   },
+   {
+    "q": "Keeping A and &#8467; fixed, doubling the number of turns N changes L by a factor:",
+    "opts": [
+     "4",
+     "2",
+     "1/2",
+     "8"
+    ],
+    "ans": 0,
+    "sol": "L &#8733; N&#178;, so doubling N gives <strong>&#215;4</strong>."
+   },
+   {
+    "q": "Keeping N and &#8467; fixed, doubling the cross-section area A changes L by:",
+    "opts": [
+     "&#215;2",
+     "&#215;4",
+     "&#215;&#189;",
+     "no change"
+    ],
+    "ans": 0,
+    "sol": "L &#8733; A, so doubling A <strong>doubles</strong> L."
+   },
+   {
+    "q": "With N and A fixed, if the length &#8467; is doubled, the inductance becomes:",
+    "opts": [
+     "halved",
+     "doubled",
+     "unchanged",
+     "four times"
+    ],
+    "ans": 0,
+    "sol": "L &#8733; 1/&#8467;, so twice the length gives <strong>half</strong> the inductance."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2019): In a solenoid the total number of turns and the cross-section area are fixed, but the length &#8467; is varied by changing the spacing of the windings. The inductance is proportional to:",
+    "opts": [
+     "1/&#8467;",
+     "&#8467;",
+     "&#8467;&#178;",
+     "1/&#8467;&#178;"
+    ],
+    "ans": 0,
+    "sol": "L = &#956;&#8320;N&#178;A/&#8467; with N, A fixed &#8658; L &#8733; <strong>1/&#8467;</strong>. (Source answer: option D.)"
+   }
+  ]
+ },
+ {
+  "name": "Q22 (2025) &#183; Self-inductance concepts",
+  "questions": [
+   {
+    "q": "Does the self-inductance of a coil depend on its geometry (turns, area, length)?",
+    "opts": [
+     "Yes &#8212; it is purely geometric (plus the core)",
+     "No &#8212; it depends only on the current",
+     "No &#8212; it depends only on the emf",
+     "Only for iron-core coils"
+    ],
+    "ans": 0,
+    "sol": "L is fixed by <strong>geometry and the core material</strong>, not by the current flowing. That is why L is a constant of the coil."
+   },
+   {
+    "q": "Does the self-inductance depend on the permeability of the medium (the core)?",
+    "opts": [
+     "Yes &#8212; a higher-&#956; core raises L",
+     "No &#8212; the core never matters",
+     "Only if the core is a conductor",
+     "Only at high frequency"
+    ],
+    "ans": 0,
+    "sol": "L &#8733; &#956;, so an iron core (large &#956;) greatly increases L. The statement 'L does not depend on permeability' is <strong>false</strong>."
+   },
+   {
+    "q": "A self-induced emf always:",
+    "opts": [
+     "opposes the change in current that causes it",
+     "aids the change in current",
+     "is independent of the current",
+     "reverses the battery"
+    ],
+    "ans": 0,
+    "sol": "By Lenz's law the self-emf <strong>opposes the change</strong> in current &#8212; it resists both the build-up and the collapse of current."
+   },
+   {
+    "q": "In the mechanical analogy, inductance L plays the role of:",
+    "opts": [
+     "mass (inertia)",
+     "force",
+     "displacement",
+     "friction"
+    ],
+    "ans": 0,
+    "sol": "L is the electrical <strong>inertia</strong>: just as mass resists a change in velocity, L resists a change in current. Also, work must be done against the self-emf to establish the current."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2025): Which statements are correct? A: L depends on geometry. B: L does not depend on the medium's permeability. C: Self-emf opposes any change in current. D: L is the analogue of mass. E: Work must be done against the self-emf to set up the current.",
+    "opts": [
+     "A, C, D and E only",
+     "A, B, C and D only",
+     "B, C, D and E only",
+     "All of A&#8211;E"
+    ],
+    "ans": 0,
+    "sol": "A, C, D, E are all true. <strong>B is false</strong> &#8212; inductance certainly depends on the core's permeability. So the correct set is <strong>A, C, D, E</strong>. (Source answer: option C.)"
+   }
+  ]
+ },
+ {
+  "name": "Q14 (2026) &#183; Dimensions of L and &#956;&#8320;",
+  "questions": [
+   {
+    "q": "From e = L(dI/dt), the SI unit of inductance (the henry) is the same as:",
+    "opts": [
+     "volt&#183;second / ampere",
+     "volt&#183;ampere",
+     "ampere / second",
+     "volt / ampere"
+    ],
+    "ans": 0,
+    "sol": "L = e / (dI/dt) has units V &#247; (A/s) = <strong>V&#183;s/A</strong> = henry."
+   },
+   {
+    "q": "Using the henry = V&#183;s/A, the dimensional formula of self-inductance is:",
+    "opts": [
+     "M L&#178; T<sup>&#8722;2</sup> A<sup>&#8722;2</sup>",
+     "M L T<sup>&#8722;2</sup> A<sup>&#8722;1</sup>",
+     "M L&#178; T<sup>&#8722;1</sup> A<sup>&#8722;2</sup>",
+     "M L&#178; T<sup>&#8722;3</sup> A<sup>&#8722;2</sup>"
+    ],
+    "ans": 0,
+    "sol": "[V] = ML&#178;T<sup>&#8722;3</sup>A<sup>&#8722;1</sup>. Multiply by [s] and divide by [A]: <strong>ML&#178;T<sup>&#8722;2</sup>A<sup>&#8722;2</sup></strong>. (Same as energy per ampere-squared, since U = &#189;LI&#178;.)"
+   },
+   {
+    "q": "Magnetic flux &#966; (weber) has the dimensional formula:",
+    "opts": [
+     "M L&#178; T<sup>&#8722;2</sup> A<sup>&#8722;1</sup>",
+     "M L T<sup>&#8722;2</sup> A<sup>&#8722;1</sup>",
+     "M L&#178; T<sup>&#8722;1</sup> A<sup>&#8722;1</sup>",
+     "M L&#178; T<sup>&#8722;2</sup> A<sup>&#8722;2</sup>"
+    ],
+    "ans": 0,
+    "sol": "&#966; = L&#215;I, so [&#966;] = [L]&#215;[A] = ML&#178;T<sup>&#8722;2</sup>A<sup>&#8722;2</sup> &#215; A = <strong>ML&#178;T<sup>&#8722;2</sup>A<sup>&#8722;1</sup></strong> (weber = V&#183;s)."
+   },
+   {
+    "q": "Magnetic permeability &#956;&#8320; has the same dimensions as:",
+    "opts": [
+     "inductance per unit length",
+     "inductance &#215; length",
+     "flux per unit length",
+     "energy per unit length"
+    ],
+    "ans": 0,
+    "sol": "From L = &#956;&#8320;n&#178;A&#8467;, &#956;&#8320; has the dimensions of <strong>inductance / length</strong> (henry per metre)."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2026, matching): Match each quantity to its dimensional formula &#8212; Magnetic field B, Magnetic permeability &#956;&#8320;, Self-inductance L, Magnetic flux &#966;. Which single row is correct?",
+    "opts": [
+     "L &#8594; M L&#178; T<sup>&#8722;2</sup> A<sup>&#8722;2</sup>",
+     "L &#8594; M L T<sup>&#8722;2</sup> A<sup>&#8722;1</sup>",
+     "&#966; &#8594; M L&#178; T<sup>&#8722;2</sup> A<sup>&#8722;2</sup>",
+     "B &#8594; M L&#178; T<sup>&#8722;2</sup> A<sup>&#8722;1</sup>"
+    ],
+    "ans": 0,
+    "sol": "Self-inductance L has dimensions <strong>ML&#178;T<sup>&#8722;2</sup>A<sup>&#8722;2</sup></strong>. (For reference: &#966; = ML&#178;T<sup>&#8722;2</sup>A<sup>&#8722;1</sup>, B = MT<sup>&#8722;2</sup>A<sup>&#8722;1</sup>.) Only the first row matches."
+   }
+  ]
+ },
+ {
+  "name": "Q53 (2023) &#183; Energy at steady state",
+  "questions": [
+   {
+    "q": "A coil (inductance L, resistance R) is across a battery E. In the steady state the current is:",
+    "opts": [
+     "E / R",
+     "E / L",
+     "E R",
+     "zero"
+    ],
+    "ans": 0,
+    "sol": "Steady state &#8658; dI/dt = 0 &#8658; the inductor is a plain wire &#8658; <strong>I = E/R</strong>."
+   },
+   {
+    "q": "The energy stored in the magnetic field of an inductor is:",
+    "opts": [
+     "&#189; L I&#178;",
+     "I&#178; R",
+     "&#189; L I",
+     "L I&#178;"
+    ],
+    "ans": 0,
+    "sol": "<strong>U = &#189;LI&#178;</strong>. Only the inductor stores magnetic energy; the resistor merely dissipates."
+   },
+   {
+    "q": "For L = 2 H carrying a steady 3 A, the stored magnetic energy is:",
+    "opts": [
+     "9 J",
+     "6 J",
+     "18 J",
+     "3 J"
+    ],
+    "ans": 0,
+    "sol": "U = &#189; &#215; 2 &#215; 3&#178; = <strong>9 J</strong>."
+   },
+   {
+    "q": "A coil L = 2 H, R = 4 &#937; is put across 8 V. The steady current, then the stored energy, are:",
+    "opts": [
+     "2 A, 4 J",
+     "2 A, 8 J",
+     "1 A, 1 J",
+     "4 A, 16 J"
+    ],
+    "ans": 0,
+    "sol": "I = 8/4 = 2 A; U = &#189; &#215; 2 &#215; 2&#178; = <strong>4 J</strong>."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2023): A coil of inductance 2 H and resistance 4 &#937; has 10 V across it. After the current reaches its steady value, the energy stored in the magnetic field is (in &#215;10<sup>&#8722;2</sup> J):",
+    "opts": [
+     "625",
+     "250",
+     "125",
+     "1250"
+    ],
+    "ans": 0,
+    "sol": "Steady I = 10/4 = 2.5 A. U = &#189; &#215; 2 &#215; 2.5&#178; = 6.25 J = <strong>625 &#215; 10<sup>&#8722;2</sup> J</strong>. (Source answer: 625.)"
+   }
+  ]
+ },
+ {
+  "name": "Q75 (2021) &#183; Time-varying voltage on L",
+  "questions": [
+   {
+    "q": "For a pure inductor (no resistance), the applied voltage V relates to the current by:",
+    "opts": [
+     "V = L (dI/dt)",
+     "V = I R",
+     "V = L I",
+     "V = &#189; L I&#178;"
+    ],
+    "ans": 0,
+    "sol": "With no resistance, all the voltage appears across the inductor: <strong>V = L(dI/dt)</strong>."
+   },
+   {
+    "q": "If V = 3t volts is applied to L = 2 H, the rate of change of current is:",
+    "opts": [
+     "dI/dt = 1.5 t",
+     "dI/dt = 3 t",
+     "dI/dt = 6 t",
+     "dI/dt = t/6"
+    ],
+    "ans": 0,
+    "sol": "dI/dt = V/L = 3t/2 = <strong>1.5 t</strong> (amps per second)."
+   },
+   {
+    "q": "Integrating dI/dt = 1.5 t from t = 0 gives the current:",
+    "opts": [
+     "I = 0.75 t&#178;",
+     "I = 1.5 t&#178;",
+     "I = 3 t",
+     "I = 0.75 t"
+    ],
+    "ans": 0,
+    "sol": "I = &#8747;1.5 t dt = <strong>0.75 t&#178;</strong> (starting from 0). At t = 4 s, I = 0.75 &#215; 16 = 12 A."
+   },
+   {
+    "q": "With I = 12 A at t = 4 s, the energy stored in the 2 H coil is:",
+    "opts": [
+     "144 J",
+     "72 J",
+     "288 J",
+     "24 J"
+    ],
+    "ans": 0,
+    "sol": "U = &#189;LI&#178; = &#189; &#215; 2 &#215; 12&#178; = <strong>144 J</strong>."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2021): A 2 H coil of negligible resistance is connected to a supply V = 3t V, applied at t = 0. The energy stored in the coil after 4 s is:",
+    "opts": [
+     "144 J",
+     "72 J",
+     "288 J",
+     "216 J"
+    ],
+    "ans": 0,
+    "sol": "dI/dt = 3t/2 &#8658; I = 0.75t&#178; &#8658; I(4) = 12 A. U = &#189; &#215; 2 &#215; 12&#178; = <strong>144 J</strong>. (Source answer: 144.)"
+   }
+  ]
+ },
+ {
+  "name": "Q61 (2022) &#183; Energy is path-independent",
+  "questions": [
+   {
+    "q": "The magnetic energy stored in an inductor depends on:",
+    "opts": [
+     "the present current only",
+     "the whole history of the current",
+     "the resistance only",
+     "the rate dI/dt only"
+    ],
+    "ans": 0,
+    "sol": "U = &#189;LI&#178; depends <strong>only on the instantaneous current</strong> &#8212; not on how it got there. This is the key shortcut."
+   },
+   {
+    "q": "The maximum value of the current I = 2 sin(t&#178;) A is:",
+    "opts": [
+     "2 A",
+     "4 A",
+     "1 A",
+     "&#960; A"
+    ],
+    "ans": 0,
+    "sol": "sin never exceeds 1, so I<sub>max</sub> = <strong>2 A</strong>."
+   },
+   {
+    "q": "For L = 2 H, the energy stored when the current is 2 A is:",
+    "opts": [
+     "4 J",
+     "2 J",
+     "8 J",
+     "1 J"
+    ],
+    "ans": 0,
+    "sol": "U = &#189; &#215; 2 &#215; 2&#178; = <strong>4 J</strong>."
+   },
+   {
+    "q": "'The energy spent while the current climbs from 0 to its maximum' is just:",
+    "opts": [
+     "&#189; L I<sub>max</sub>&#178;",
+     "&#189; L I<sub>max</sub>",
+     "zero",
+     "L I<sub>max</sub>&#178;"
+    ],
+    "ans": 0,
+    "sol": "Energy in = final stored energy = <strong>&#189;LI<sub>max</sub>&#178;</strong> (no resistance to waste any). The sine form is a distraction."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2022): The current in a 2 H coil increases as I = 2 sin(t&#178;) A. The energy spent while the current changes from 0 to its maximum value is:",
+    "opts": [
+     "4 J",
+     "2 J",
+     "8 J",
+     "16 J"
+    ],
+    "ans": 0,
+    "sol": "I<sub>max</sub> = 2 A, so U = &#189;LI<sub>max</sub>&#178; = &#189; &#215; 2 &#215; 4 = <strong>4 J</strong>. (Source answer: 4.)"
+   }
+  ]
+ },
+ {
+  "name": "Q1 (2026) &#183; Energy density in an inductor",
+  "questions": [
+   {
+    "q": "The energy stored per unit volume of a magnetic field B is:",
+    "opts": [
+     "B&#178; / (2&#956;&#8320;)",
+     "&#956;&#8320; B&#178; / 2",
+     "B / (2&#956;&#8320;)",
+     "2&#956;&#8320; B&#178;"
+    ],
+    "ans": 0,
+    "sol": "The magnetic energy density is <strong>u = B&#178; / (2&#956;&#8320;)</strong> &#8212; the field-picture counterpart of &#189;LI&#178;."
+   },
+   {
+    "q": "Inside a long solenoid with n turns per metre carrying current I, the field is:",
+    "opts": [
+     "B = &#956;&#8320; n I",
+     "B = &#956;&#8320; I / n",
+     "B = n I / &#956;&#8320;",
+     "B = &#956;&#8320; n / I"
+    ],
+    "ans": 0,
+    "sol": "<strong>B = &#956;&#8320; n I</strong>. So the energy density u = B&#178;/2&#956;&#8320; grows as I&#178;."
+   },
+   {
+    "q": "In an L-R circuit the current grows as I = I<sub>max</sub>(1 &#8722; e<sup>&#8722;t/&#964;</sup>). When it has reached (1 &#8722; 1/e) of its maximum, the field energy density is what fraction of its final value?",
+    "opts": [
+     "(1 &#8722; 1/e)&#178;",
+     "1/e",
+     "(1 &#8722; 1/e)",
+     "1/e&#178;"
+    ],
+    "ans": 0,
+    "sol": "u &#8733; B&#178; &#8733; I&#178;, so the fraction is <strong>(1 &#8722; 1/e)&#178;</strong> of the final density."
+   },
+   {
+    "q": "If the final energy density is u&#8320;, the density when I = (1 &#8722; 1/e) I<sub>max</sub> (take 1 &#8722; 1/e &#8776; 0.63) is about:",
+    "opts": [
+     "0.40 u&#8320;",
+     "0.63 u&#8320;",
+     "0.37 u&#8320;",
+     "0.13 u&#8320;"
+    ],
+    "ans": 0,
+    "sol": "(0.63)&#178; &#8776; <strong>0.40</strong>, so u &#8776; 0.40 u&#8320;. Energy always scales with the <em>square</em> of the current."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2026): A 10-turn coil of inductance 10 mH is driven by a 10 V DC source of internal resistance 10 &#937;. The energy density in the inductor when the current is (1&#8722;1/e) of its maximum is written as [1/(&#945;&#960;)&#178;]&#215;10<sup>&#8722;7</sup> J/m&#179;. The value of &#945; is:",
+    "opts": [
+     "20",
+     "10",
+     "40",
+     "5"
+    ],
+    "ans": 0,
+    "sol": "This NA problem combines B = &#956;&#8320;nI, u = B&#178;/2&#956;&#8320;, and the (1&#8722;1/e) growth factor with the coil's geometry. Working it through with &#956;&#8320; = 4&#960;&#215;10<sup>&#8722;7</sup> gives <strong>&#945; = 20</strong>. (Source answer: 20.) The takeaway for students is the chain: current &#8594; B = &#956;&#8320;nI &#8594; u = B&#178;/2&#956;&#8320;, with energy &#8733; I&#178;."
+   }
+  ]
+ },
+ {
+  "name": "Q4 (2026) &#183; Energy split among inductors",
+  "questions": [
+   {
+    "q": "Two equal inductors are in parallel and carry a total current I. Each equal inductor carries:",
+    "opts": [
+     "I / 2",
+     "I",
+     "2 I",
+     "I / 4"
+    ],
+    "ans": 0,
+    "sol": "Equal inductors in parallel share the current <strong>equally</strong>, so each carries I/2."
+   },
+   {
+    "q": "An inductor L carrying current I/2 stores energy:",
+    "opts": [
+     "&#189; L (I/2)&#178; = LI&#178;/8",
+     "&#189; L I&#178;",
+     "&#189; L (I/2) = LI/4",
+     "L I&#178;/2"
+    ],
+    "ans": 0,
+    "sol": "U = &#189;L(I/2)&#178; = <strong>LI&#178;/8</strong>."
+   },
+   {
+    "q": "An inductor L in the series line carries the full current I. Its stored energy is:",
+    "opts": [
+     "&#189; L I&#178;",
+     "L I&#178;/8",
+     "L I&#178;/4",
+     "zero"
+    ],
+    "ans": 0,
+    "sol": "U = <strong>&#189;LI&#178;</strong> &#8212; the series inductor always carries the whole current."
+   },
+   {
+    "q": "L&#8321; (series) carries I; L&#8322; and L&#8323; (a parallel pair, all equal to L) each carry I/2. The total stored energy is:",
+    "opts": [
+     "&#190; L I&#178;",
+     "&#189; L I&#178;",
+     "L I&#178;",
+     "&#188; L I&#178;"
+    ],
+    "ans": 0,
+    "sol": "U<sub>total</sub> = &#189;LI&#178; (L&#8321;) + 2 &#215; (LI&#178;/8) (the pair) = &#189;LI&#178; + &#188;LI&#178; = <strong>&#190;LI&#178;</strong>.",
+    "diagram": "<svg viewBox=\"0 0 300 130\" width=\"300\" height=\"130\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n<line x1=\"20\" y1=\"70\" x2=\"70\" y2=\"70\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<path d=\"M70 70 q5 -9 10 0 q5 9 10 0 q5 -9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"85\" y=\"56\" font-size=\"10\" text-anchor=\"middle\">L&#8321;</text>\n<line x1=\"100\" y1=\"70\" x2=\"130\" y2=\"70\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"130\" y1=\"40\" x2=\"130\" y2=\"100\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"230\" y1=\"40\" x2=\"230\" y2=\"100\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<path d=\"M150 40 q5 -9 10 0 q5 9 10 0 q5 -9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"180\" y=\"35\" font-size=\"10\" text-anchor=\"middle\">L&#8322;</text>\n<path d=\"M150 100 q5 -9 10 0 q5 9 10 0 q5 -9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"180\" y=\"115\" font-size=\"10\" text-anchor=\"middle\">L&#8323;</text>\n<line x1=\"130\" y1=\"40\" x2=\"150\" y2=\"40\" stroke=\"#374151\" stroke-width=\"1.6\"/><line x1=\"190\" y1=\"40\" x2=\"230\" y2=\"40\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"130\" y1=\"100\" x2=\"150\" y2=\"100\" stroke=\"#374151\" stroke-width=\"1.6\"/><line x1=\"190\" y1=\"100\" x2=\"230\" y2=\"100\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"230\" y1=\"70\" x2=\"280\" y2=\"70\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<text x=\"150\" y=\"88\" font-size=\"10\" fill=\"#c0392b\" text-anchor=\"middle\">current I in, splits in the pair</text>\n</svg>"
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2026): Three equal inductors are arranged as L&#8321; in series with the parallel pair L&#8322;&#8741;L&#8323;. If U<sub>t</sub> is the total stored energy and U<sub>&#8467;</sub> is the energy in L&#8322;, the ratio U<sub>t</sub>/U<sub>&#8467;</sub> is:",
+    "opts": [
+     "6",
+     "4",
+     "2",
+     "8"
+    ],
+    "ans": 0,
+    "sol": "U<sub>t</sub> = &#190;LI&#178;; U<sub>&#8467;</sub> (in L&#8322;) = &#189;L(I/2)&#178; = LI&#178;/8. Ratio = (&#190;)/(&#8539;) = <strong>6</strong>. (Source answer: 6. Diagram rebuilt to match the source's arrangement.)",
+    "diagram": "<svg viewBox=\"0 0 300 130\" width=\"300\" height=\"130\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n<line x1=\"20\" y1=\"70\" x2=\"70\" y2=\"70\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<path d=\"M70 70 q5 -9 10 0 q5 9 10 0 q5 -9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"85\" y=\"56\" font-size=\"10\" text-anchor=\"middle\">L&#8321;</text>\n<line x1=\"100\" y1=\"70\" x2=\"130\" y2=\"70\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"130\" y1=\"40\" x2=\"130\" y2=\"100\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"230\" y1=\"40\" x2=\"230\" y2=\"100\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<path d=\"M150 40 q5 -9 10 0 q5 9 10 0 q5 -9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"180\" y=\"35\" font-size=\"10\" text-anchor=\"middle\">L&#8322;</text>\n<path d=\"M150 100 q5 -9 10 0 q5 9 10 0 q5 -9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"180\" y=\"115\" font-size=\"10\" text-anchor=\"middle\">L&#8323;</text>\n<line x1=\"130\" y1=\"40\" x2=\"150\" y2=\"40\" stroke=\"#374151\" stroke-width=\"1.6\"/><line x1=\"190\" y1=\"40\" x2=\"230\" y2=\"40\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"130\" y1=\"100\" x2=\"150\" y2=\"100\" stroke=\"#374151\" stroke-width=\"1.6\"/><line x1=\"190\" y1=\"100\" x2=\"230\" y2=\"100\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"230\" y1=\"70\" x2=\"280\" y2=\"70\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<text x=\"150\" y=\"88\" font-size=\"10\" fill=\"#c0392b\" text-anchor=\"middle\">current I in, splits in the pair</text>\n</svg>"
+   }
+  ]
+ },
+ {
+  "name": "Q64 (2022) &#183; Inductors in series with M",
+  "questions": [
+   {
+    "q": "Two inductors L&#8321; and L&#8322; in series with <em>no</em> mutual coupling have equivalent inductance:",
+    "opts": [
+     "L&#8321; + L&#8322;",
+     "L&#8321; L&#8322; / (L&#8321;+L&#8322;)",
+     "L&#8321; &#8722; L&#8322;",
+     "&#8730;(L&#8321;L&#8322;)"
+    ],
+    "ans": 0,
+    "sol": "Series inductors (no coupling) simply add: <strong>L&#8321; + L&#8322;</strong>."
+   },
+   {
+    "q": "When their fluxes <em>aid</em> each other, the mutual term M enters as:",
+    "opts": [
+     "L&#8321; + L&#8322; + 2M",
+     "L&#8321; + L&#8322; &#8722; 2M",
+     "L&#8321; + L&#8322; + M",
+     "L&#8321; + L&#8322; + M&#178;"
+    ],
+    "ans": 0,
+    "sol": "Aiding (series-aiding): <strong>L&#8321; + L&#8322; + 2M</strong>. The coupling adds to the inductance."
+   },
+   {
+    "q": "When their fluxes <em>oppose</em> each other, the equivalent inductance is:",
+    "opts": [
+     "L&#8321; + L&#8322; &#8722; 2M",
+     "L&#8321; + L&#8322; + 2M",
+     "L&#8321; &#8722; L&#8322;",
+     "2M &#8722; L&#8321; &#8722; L&#8322;"
+    ],
+    "ans": 0,
+    "sol": "Series-opposing: <strong>L&#8321; + L&#8322; &#8722; 2M</strong>."
+   },
+   {
+    "q": "So, allowing for either orientation, the general series result is:",
+    "opts": [
+     "L&#8321; + L&#8322; &#177; 2M",
+     "L&#8321; + L&#8322; &#177; M",
+     "L&#8321;L&#8322; &#177; 2M",
+     "L&#8321; + L&#8322; &#177; 2M&#178;"
+    ],
+    "ans": 0,
+    "sol": "<strong>L&#8321; + L&#8322; &#177; 2M</strong> &#8212; '+' for aiding, '&#8722;' for opposing."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2022): Two coils of self-inductance L&#8321; and L&#8322; are connected in series, with mutual inductance M. The equivalent self-inductance of the combination is:",
+    "opts": [
+     "L&#8321; + L&#8322; &#177; 2M",
+     "L&#8321; + L&#8322;",
+     "L&#8321; + L&#8322; &#177; M",
+     "L&#8321;L&#8322; / (L&#8321;+L&#8322;)"
+    ],
+    "ans": 0,
+    "sol": "For a series pair with coupling, L<sub>eq</sub> = <strong>L&#8321; + L&#8322; &#177; 2M</strong>. (Source answer: option D.)"
+   }
+  ]
+ },
+ {
+  "name": "Q18 (2026) &#183; Inductor voltage during growth",
+  "questions": [
+   {
+    "q": "In an L-R circuit growing from a battery E, at any instant the voltage across the inductor is:",
+    "opts": [
+     "V<sub>L</sub> = E &#8722; iR",
+     "V<sub>L</sub> = iR",
+     "V<sub>L</sub> = E + iR",
+     "V<sub>L</sub> = E"
+    ],
+    "ans": 0,
+    "sol": "KVL: E = iR + V<sub>L</sub> &#8658; <strong>V<sub>L</sub> = E &#8722; iR</strong>. It starts at E (i = 0) and decays to 0.",
+    "diagram": "<svg viewBox=\"0 0 300 140\" width=\"300\" height=\"140\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n<rect x=\"40\" y=\"30\" width=\"220\" height=\"80\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"80\" stroke=\"#374151\" stroke-width=\"2.6\"/><line x1=\"34\" y1=\"65\" x2=\"34\" y2=\"75\" stroke=\"#374151\" stroke-width=\"1.4\"/>\n<text x=\"22\" y=\"74\" font-size=\"10\" text-anchor=\"middle\">E</text>\n<rect x=\"120\" y=\"22\" width=\"34\" height=\"16\" fill=\"#fff\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"137\" y=\"18\" font-size=\"10\" text-anchor=\"middle\">R</text>\n<path d=\"M175 30 q5 -9 10 0 q5 9 10 0 q5 -9 10 0 q5 9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"200\" y=\"18\" font-size=\"10\" text-anchor=\"middle\">L</text>\n<line x1=\"150\" y1=\"110\" x2=\"168\" y2=\"98\" stroke=\"#374151\" stroke-width=\"1.6\"/><circle cx=\"150\" cy=\"110\" r=\"2.4\" fill=\"#374151\"/><circle cx=\"172\" cy=\"110\" r=\"2.4\" fill=\"#374151\"/><text x=\"160\" y=\"126\" font-size=\"10\" text-anchor=\"middle\" fill=\"#c0392b\">switch S</text>\n</svg>"
+   },
+   {
+    "q": "For E = 1 V and R = 100 &#937;, when the current is 2 mA the inductor voltage is:",
+    "opts": [
+     "0.8 V",
+     "0.2 V",
+     "1.0 V",
+     "0.6 V"
+    ],
+    "ans": 0,
+    "sol": "V<sub>L</sub> = 1 &#8722; (2&#215;10<sup>&#8722;3</sup>)(100) = 1 &#8722; 0.2 = <strong>0.8 V</strong>.",
+    "diagram": "<svg viewBox=\"0 0 300 140\" width=\"300\" height=\"140\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n<rect x=\"40\" y=\"30\" width=\"220\" height=\"80\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"80\" stroke=\"#374151\" stroke-width=\"2.6\"/><line x1=\"34\" y1=\"65\" x2=\"34\" y2=\"75\" stroke=\"#374151\" stroke-width=\"1.4\"/>\n<text x=\"22\" y=\"74\" font-size=\"10\" text-anchor=\"middle\">E</text>\n<rect x=\"120\" y=\"22\" width=\"34\" height=\"16\" fill=\"#fff\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"137\" y=\"18\" font-size=\"10\" text-anchor=\"middle\">R</text>\n<path d=\"M175 30 q5 -9 10 0 q5 9 10 0 q5 -9 10 0 q5 9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"200\" y=\"18\" font-size=\"10\" text-anchor=\"middle\">L</text>\n<line x1=\"150\" y1=\"110\" x2=\"168\" y2=\"98\" stroke=\"#374151\" stroke-width=\"1.6\"/><circle cx=\"150\" cy=\"110\" r=\"2.4\" fill=\"#374151\"/><circle cx=\"172\" cy=\"110\" r=\"2.4\" fill=\"#374151\"/><text x=\"160\" y=\"126\" font-size=\"10\" text-anchor=\"middle\" fill=\"#c0392b\">switch S</text>\n</svg>"
+   },
+   {
+    "q": "For the same circuit, when the current is 4 mA the inductor voltage is:",
+    "opts": [
+     "0.6 V",
+     "0.4 V",
+     "0.8 V",
+     "1.0 V"
+    ],
+    "ans": 0,
+    "sol": "V<sub>L</sub> = 1 &#8722; (4&#215;10<sup>&#8722;3</sup>)(100) = 1 &#8722; 0.4 = <strong>0.6 V</strong>.",
+    "diagram": "<svg viewBox=\"0 0 300 140\" width=\"300\" height=\"140\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n<rect x=\"40\" y=\"30\" width=\"220\" height=\"80\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"80\" stroke=\"#374151\" stroke-width=\"2.6\"/><line x1=\"34\" y1=\"65\" x2=\"34\" y2=\"75\" stroke=\"#374151\" stroke-width=\"1.4\"/>\n<text x=\"22\" y=\"74\" font-size=\"10\" text-anchor=\"middle\">E</text>\n<rect x=\"120\" y=\"22\" width=\"34\" height=\"16\" fill=\"#fff\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"137\" y=\"18\" font-size=\"10\" text-anchor=\"middle\">R</text>\n<path d=\"M175 30 q5 -9 10 0 q5 9 10 0 q5 -9 10 0 q5 9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"200\" y=\"18\" font-size=\"10\" text-anchor=\"middle\">L</text>\n<line x1=\"150\" y1=\"110\" x2=\"168\" y2=\"98\" stroke=\"#374151\" stroke-width=\"1.6\"/><circle cx=\"150\" cy=\"110\" r=\"2.4\" fill=\"#374151\"/><circle cx=\"172\" cy=\"110\" r=\"2.4\" fill=\"#374151\"/><text x=\"160\" y=\"126\" font-size=\"10\" text-anchor=\"middle\" fill=\"#c0392b\">switch S</text>\n</svg>"
+   },
+   {
+    "q": "The ratio of the inductor voltage at 2 mA to that at 4 mA is:",
+    "opts": [
+     "4 : 3",
+     "3 : 4",
+     "2 : 1",
+     "1 : 1"
+    ],
+    "ans": 0,
+    "sol": "0.8 / 0.6 = <strong>4/3</strong>.",
+    "diagram": "<svg viewBox=\"0 0 300 140\" width=\"300\" height=\"140\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n<rect x=\"40\" y=\"30\" width=\"220\" height=\"80\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"80\" stroke=\"#374151\" stroke-width=\"2.6\"/><line x1=\"34\" y1=\"65\" x2=\"34\" y2=\"75\" stroke=\"#374151\" stroke-width=\"1.4\"/>\n<text x=\"22\" y=\"74\" font-size=\"10\" text-anchor=\"middle\">E</text>\n<rect x=\"120\" y=\"22\" width=\"34\" height=\"16\" fill=\"#fff\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"137\" y=\"18\" font-size=\"10\" text-anchor=\"middle\">R</text>\n<path d=\"M175 30 q5 -9 10 0 q5 9 10 0 q5 -9 10 0 q5 9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"200\" y=\"18\" font-size=\"10\" text-anchor=\"middle\">L</text>\n<line x1=\"150\" y1=\"110\" x2=\"168\" y2=\"98\" stroke=\"#374151\" stroke-width=\"1.6\"/><circle cx=\"150\" cy=\"110\" r=\"2.4\" fill=\"#374151\"/><circle cx=\"172\" cy=\"110\" r=\"2.4\" fill=\"#374151\"/><text x=\"160\" y=\"126\" font-size=\"10\" text-anchor=\"middle\" fill=\"#c0392b\">switch S</text>\n</svg>"
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2026): A 10 mH inductor of resistance 100 &#937; is connected to a 1.0 V battery through a switch. After the switch is closed, the ratio of the instantaneous voltages across the inductor when the current is 2 mA and 4 mA is:",
+    "opts": [
+     "4 : 3",
+     "3 : 4",
+     "2 : 1",
+     "3 : 2"
+    ],
+    "ans": 0,
+    "sol": "V<sub>L</sub> = E &#8722; iR. At 2 mA: 0.8 V; at 4 mA: 0.6 V; ratio = <strong>4 : 3</strong>. (Source answer: option A. The 10 mH value is not even needed &#8212; only E and R matter here.)",
+    "diagram": "<svg viewBox=\"0 0 300 140\" width=\"300\" height=\"140\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n<rect x=\"40\" y=\"30\" width=\"220\" height=\"80\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/>\n<line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"80\" stroke=\"#374151\" stroke-width=\"2.6\"/><line x1=\"34\" y1=\"65\" x2=\"34\" y2=\"75\" stroke=\"#374151\" stroke-width=\"1.4\"/>\n<text x=\"22\" y=\"74\" font-size=\"10\" text-anchor=\"middle\">E</text>\n<rect x=\"120\" y=\"22\" width=\"34\" height=\"16\" fill=\"#fff\" stroke=\"#374151\" stroke-width=\"1.4\"/><text x=\"137\" y=\"18\" font-size=\"10\" text-anchor=\"middle\">R</text>\n<path d=\"M175 30 q5 -9 10 0 q5 9 10 0 q5 -9 10 0 q5 9 10 0\" fill=\"none\" stroke=\"#374151\" stroke-width=\"1.6\"/><text x=\"200\" y=\"18\" font-size=\"10\" text-anchor=\"middle\">L</text>\n<line x1=\"150\" y1=\"110\" x2=\"168\" y2=\"98\" stroke=\"#374151\" stroke-width=\"1.6\"/><circle cx=\"150\" cy=\"110\" r=\"2.4\" fill=\"#374151\"/><circle cx=\"172\" cy=\"110\" r=\"2.4\" fill=\"#374151\"/><text x=\"160\" y=\"126\" font-size=\"10\" text-anchor=\"middle\" fill=\"#c0392b\">switch S</text>\n</svg>"
+   }
+  ]
+ },
+ {
+  "name": "Q78 (2021) &#183; Time to store 25% energy",
+  "questions": [
+   {
+    "q": "Because U = &#189;LI&#178;, the stored energy reaches 25% of its maximum when the current is:",
+    "opts": [
+     "50% of I<sub>max</sub>",
+     "25% of I<sub>max</sub>",
+     "75% of I<sub>max</sub>",
+     "5% of I<sub>max</sub>"
+    ],
+    "ans": 0,
+    "sol": "U &#8733; I&#178;. For U = &#188;U<sub>max</sub>, I&#178; = &#188;I<sub>max</sub>&#178; &#8658; I = <strong>&#189; I<sub>max</sub></strong>. Energy fractions are the square of current fractions."
+   },
+   {
+    "q": "In L-R growth, I = I<sub>max</sub>(1 &#8722; e<sup>&#8722;t/&#964;</sup>). Setting I = &#189; I<sub>max</sub> gives:",
+    "opts": [
+     "e<sup>&#8722;t/&#964;</sup> = &#189;",
+     "e<sup>&#8722;t/&#964;</sup> = &#188;",
+     "e<sup>&#8722;t/&#964;</sup> = 2",
+     "e<sup>&#8722;t/&#964;</sup> = 0"
+    ],
+    "ans": 0,
+    "sol": "1 &#8722; e<sup>&#8722;t/&#964;</sup> = &#189; &#8658; <strong>e<sup>&#8722;t/&#964;</sup> = &#189;</strong>."
+   },
+   {
+    "q": "Solving e<sup>&#8722;t/&#964;</sup> = &#189; for t gives:",
+    "opts": [
+     "t = &#964; ln2",
+     "t = &#964; / ln2",
+     "t = 2&#964;",
+     "t = &#964; / 2"
+    ],
+    "ans": 0,
+    "sol": "Take ln: &#8722;t/&#964; = &#8722;ln2 &#8658; <strong>t = &#964; ln2</strong>."
+   },
+   {
+    "q": "With &#964; = L/R for a solenoid of inductance L and resistance R, that time is:",
+    "opts": [
+     "(L/R) ln2",
+     "(R/L) ln2",
+     "(L/R)/2",
+     "(L/R) ln4"
+    ],
+    "ans": 0,
+    "sol": "Substitute &#964; = L/R: t = <strong>(L/R) ln2</strong>."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2021): For a solenoid of resistance R and inductance L connected to a battery, the time taken for the magnetic energy to reach 25% of its maximum value is:",
+    "opts": [
+     "(L/R) ln2",
+     "(L/R) ln4",
+     "(2L/R) ln2",
+     "(L/2R) ln2"
+    ],
+    "ans": 0,
+    "sol": "25% energy &#8658; I = &#189;I<sub>max</sub> &#8658; e<sup>&#8722;t/&#964;</sup> = &#189; &#8658; t = &#964;ln2 = <strong>(L/R) ln2</strong>. (Source answer: option C.)"
+   }
+  ]
+ },
+ {
+  "name": "Q56 (2023) &#183; Peak rate of storing energy",
+  "questions": [
+   {
+    "q": "The rate at which energy is stored in an inductor (power into the field) is:",
+    "opts": [
+     "P<sub>L</sub> = i &#215; V<sub>L</sub> = i L (di/dt)",
+     "P<sub>L</sub> = i&#178; R",
+     "P<sub>L</sub> = &#189; L i&#178;",
+     "P<sub>L</sub> = E i"
+    ],
+    "ans": 0,
+    "sol": "Power into the inductor = current &#215; its voltage = <strong>i&#183;L(di/dt)</strong> (this is d/dt of &#189;Li&#178;)."
+   },
+   {
+    "q": "During L-R growth, i = (E/R)(1&#8722;x) and V<sub>L</sub> = E&#183;x where x = e<sup>&#8722;t/&#964;</sup>. So P<sub>L</sub> equals:",
+    "opts": [
+     "(E&#178;/R) x (1&#8722;x)",
+     "(E&#178;/R) x&#178;",
+     "(E&#178;/R)(1&#8722;x)",
+     "(E&#178;/R) x"
+    ],
+    "ans": 0,
+    "sol": "P<sub>L</sub> = i V<sub>L</sub> = (E/R)(1&#8722;x) &#215; E x = <strong>(E&#178;/R) x(1&#8722;x)</strong>."
+   },
+   {
+    "q": "The quantity x(1&#8722;x) is largest when x equals:",
+    "opts": [
+     "&#189;",
+     "1",
+     "0",
+     "&#188;"
+    ],
+    "ans": 0,
+    "sol": "x(1&#8722;x) peaks at <strong>x = &#189;</strong> (i.e. at t = &#964; ln2), where its value is &#188;."
+   },
+   {
+    "q": "So the maximum rate of storing energy is:",
+    "opts": [
+     "E&#178; / (4R)",
+     "E&#178; / R",
+     "E&#178; / (2R)",
+     "E&#178; R"
+    ],
+    "ans": 0,
+    "sol": "P<sub>L,max</sub> = (E&#178;/R) &#215; &#188; = <strong>E&#178;/(4R)</strong>."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2023): For a series L-R circuit on emf E with R = 6.25 &#937;, the maximum rate of storing energy is written as E&#178;/b (J/s). The value of b is:",
+    "opts": [
+     "25",
+     "12.5",
+     "6.25",
+     "100"
+    ],
+    "ans": 0,
+    "sol": "P<sub>L,max</sub> = E&#178;/(4R) = E&#178;/(4&#215;6.25) = E&#178;/25, so <strong>b = 25</strong>. (Source answer: 25. R chosen to match the source's numerical answer.)"
+   }
+  ]
+ },
+ {
+  "name": "Q87 (2021) &#183; Find the time constant",
+  "questions": [
+   {
+    "q": "From the stored energy U = &#189;LI&#178;, the inductance is:",
+    "opts": [
+     "L = 2U / I&#178;",
+     "L = U I&#178;",
+     "L = U / (2I)",
+     "L = 2U I"
+    ],
+    "ans": 0,
+    "sol": "Rearrange U = &#189;LI&#178;: <strong>L = 2U/I&#178;</strong>."
+   },
+   {
+    "q": "A coil stores 64 J of magnetic energy while carrying 8 A. Its inductance is:",
+    "opts": [
+     "2 H",
+     "4 H",
+     "1 H",
+     "8 H"
+    ],
+    "ans": 0,
+    "sol": "L = 2 &#215; 64 / 8&#178; = 128/64 = <strong>2 H</strong>."
+   },
+   {
+    "q": "The same coil dissipates 640 W (as heat) at 8 A. Its resistance is:",
+    "opts": [
+     "10 &#937;",
+     "80 &#937;",
+     "5 &#937;",
+     "20 &#937;"
+    ],
+    "ans": 0,
+    "sol": "P = I&#178;R &#8658; R = 640 / 8&#178; = 640/64 = <strong>10 &#937;</strong>."
+   },
+   {
+    "q": "The time constant &#964; = L/R for this coil is:",
+    "opts": [
+     "0.2 s",
+     "5 s",
+     "2 s",
+     "0.5 s"
+    ],
+    "ans": 0,
+    "sol": "&#964; = L/R = 2 / 10 = <strong>0.2 s</strong>."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2021): An inductor coil stores 64 J of energy and dissipates 640 W when it carries 8 A. If it is joined across an ideal battery, the time constant of the circuit is:",
+    "opts": [
+     "0.2 s",
+     "0.1 s",
+     "0.4 s",
+     "2 s"
+    ],
+    "ans": 0,
+    "sol": "L = 2U/I&#178; = 2 H; R = P/I&#178; = 10 &#937;; &#964; = L/R = <strong>0.2 s</strong>. (Source answer: 0.2 s.)"
+   }
+  ]
+ },
+ {
+  "name": "Q10 (2026) &#183; Inductors at the instant of switch-on",
+  "questions": [
+   {
+    "q": "An inductor carrying no current, at the very instant a switch is closed (t = 0), behaves like:",
+    "opts": [
+     "an open circuit (blocks current)",
+     "a short circuit (plain wire)",
+     "a battery",
+     "a charged capacitor"
+    ],
+    "ans": 0,
+    "sol": "An inductor resists a <em>sudden</em> change in current, so at t = 0 it carries zero current &#8212; it acts like a <strong>break in the wire</strong>. (Long after, it acts like a plain wire instead.)"
+   },
+   {
+    "q": "Therefore, at the instant of switch-on, any branch that contains an inductor carries:",
+    "opts": [
+     "zero current",
+     "the full current",
+     "half the current",
+     "infinite current"
+    ],
+    "ans": 0,
+    "sol": "Those branches are momentarily 'open', so <strong>no current</strong> flows through them at t = 0. Current takes only the purely-resistive paths."
+   },
+   {
+    "q": "So to find the ammeter reading at t = 0, you should analyse:",
+    "opts": [
+     "only the resistors on the inductor-free path",
+     "the full network including inductors",
+     "only the inductors",
+     "the capacitor branch"
+    ],
+    "ans": 0,
+    "sol": "Delete every inductor branch (open them) and solve the remaining <strong>resistor-only</strong> circuit."
+   },
+   {
+    "q": "If, at t = 0, a battery E drives current through just two 9 &#937; resistors in series (the inductor branches being open), the current is:",
+    "opts": [
+     "E / 18",
+     "E / 9",
+     "E / 4.5",
+     "2E / 9"
+    ],
+    "ans": 0,
+    "sol": "With only the series resistors left, I = E / (9 + 9) = <strong>E/18</strong>. Plug the circuit's E to get the number."
+   },
+   {
+    "q": "&#9733; Original (JEE Main 2026): A circuit has three 9 &#937; resistors and two 4 mH inductors. At the moment the switch K is turned ON, what governs the ammeter reading?",
+    "opts": [
+     "Inductors act open; only the resistor path carries current",
+     "Inductors act as shorts; full network conducts",
+     "Inductors carry the whole current",
+     "No current can flow at all"
+    ],
+    "ans": 0,
+    "sol": "At t = 0 the inductors are effectively <strong>open</strong>, so the reading is set purely by the resistor network on the conducting path; the 4 mH values do not matter at that instant. (Source answer: option C. The t = 0 'inductor = open circuit' rule is the whole idea.)"
+   }
+  ]
+ }
+];
+
+
+
+const STORAGE_KEY = 'padipucast_selfind_lr_energy_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
