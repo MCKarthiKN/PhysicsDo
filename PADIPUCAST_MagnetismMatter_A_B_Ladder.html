@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder &#183; Magnetism &amp; Matter &#8212; Bar Magnet &amp; Earth</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-tag{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:8.5px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:var(--tag-bg);color:var(--text2);margin-left:8px;vertical-align:middle;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:900px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Magnetism Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Ladders
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Magnetism &amp; Matter<br>&#8212; Bar Magnet &amp; Earth</h1></div>
+    <p id="home-sub">Every JEE Main PYQ gets its own ladder: 3 build-up rungs, easy to hard, leading smoothly to the original archive question (&#9733;). Concept A &#8212; Bar magnet as a magnetic dipole (field, torque, energy, work, oscillations, moment) and Concept B &#8212; Earth's magnetism (dip, apparent dip, neutral points, Earth as a dipole). 16 source questions.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">4</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — MAGNETISM & MATTER set (PADIPUCAST)
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const DIAGRAMS = {
+  // bar magnet at angle theta to a horizontal field B
+  magnetInField:(angLabel)=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('mf1','#2563eb')}${AR('mf2','#c0392b')}</defs>
+      <line x1="30" y1="100" x2="270" y2="100" stroke="#2563eb" stroke-width="2.2" marker-end="url(#mf1)"/>
+      <text x="256" y="92" font-size="12" fill="#2563eb" ${FS} font-weight="700">B</text>
+      <g transform="rotate(-32 120 100)">
+        <rect x="70" y="90" width="100" height="20" rx="3" fill="#fee2e2" stroke="#c0392b" stroke-width="1.6"/>
+        <rect x="120" y="90" width="50" height="20" rx="0" fill="#dbeafe" stroke="#c0392b" stroke-width="1.6"/>
+        <text x="95" y="104" font-size="11" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+        <text x="145" y="104" font-size="11" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+        <line x1="170" y1="100" x2="212" y2="100" stroke="#c0392b" stroke-width="2" marker-end="url(#mf2)"/>
+        <text x="206" y="92" font-size="11" fill="#c0392b" ${FS} font-weight="700">M</text>
+      </g>
+      <path d="M162,100 A28,28 0 0 0 148,76" fill="none" stroke="#16a34a" stroke-width="1.4"/>
+      <text x="176" y="84" font-size="11" fill="#16a34a" ${FS} font-weight="700">${angLabel}</text>
+    </svg>`,
+  // rotate a dipole from stable (theta=0) to unstable (theta=180)
+  stableUnstable:()=>`
+    <svg viewBox="0 0 320 150" width="320" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('su1','#2563eb')}</defs>
+      <line x1="20" y1="120" x2="300" y2="120" stroke="#2563eb" stroke-width="1.8" marker-end="url(#su1)"/>
+      <text x="286" y="112" font-size="11" fill="#2563eb" ${FS} font-weight="700">B</text>
+      <g>
+        <rect x="44" y="44" width="70" height="16" rx="2" fill="#dbeafe" stroke="#c0392b" stroke-width="1.4"/>
+        <text x="61" y="56" font-size="9" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+        <text x="97" y="56" font-size="9" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+        <text x="79" y="34" font-size="9" fill="#16a34a" text-anchor="middle" ${FS}>&#952;=0&#176; stable</text>
+        <text x="79" y="78" font-size="8.5" fill="#6b7280" text-anchor="middle" ${FS}>U = &#8722;MB (min)</text>
+      </g>
+      <g>
+        <rect x="206" y="44" width="70" height="16" rx="2" fill="#fee2e2" stroke="#c0392b" stroke-width="1.4"/>
+        <text x="223" y="56" font-size="9" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+        <text x="259" y="56" font-size="9" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+        <text x="241" y="34" font-size="9" fill="#c0392b" text-anchor="middle" ${FS}>&#952;=180&#176; unstable</text>
+        <text x="241" y="78" font-size="8.5" fill="#6b7280" text-anchor="middle" ${FS}>U = +MB (max)</text>
+      </g>
+      <path d="M120,50 q40,-20 80,0" fill="none" stroke="#a09d97" stroke-width="1.3" stroke-dasharray="4,3"/>
+      <text x="160" y="24" font-size="9" fill="#a09d97" text-anchor="middle" ${FS}>rotate 180&#176;</text>
+    </svg>`,
+  // two perpendicular bar magnets, P at midpoint (Q2)
+  perpDipoles:()=>`
+    <svg viewBox="0 0 320 176" width="320" height="176" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="86" width="70" height="20" rx="3" fill="#f0ede8" stroke="#374151" stroke-width="1.4"/>
+      <text x="47" y="100" font-size="10" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+      <text x="83" y="100" font-size="10" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+      <line x1="100" y1="96" x2="248" y2="96" stroke="#9ca3af" stroke-width="1.1" stroke-dasharray="5,3"/>
+      <circle cx="174" cy="96" r="3.4" fill="#1a1916"/>
+      <text x="174" y="116" font-size="11" fill="#1a1916" ${FS} text-anchor="middle" font-weight="700">P</text>
+      <rect x="252" y="40" width="20" height="110" rx="3" fill="#f0ede8" stroke="#374151" stroke-width="1.4"/>
+      <text x="262" y="54" font-size="10" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+      <text x="262" y="144" font-size="10" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+      <line x1="66" y1="32" x2="262" y2="32" stroke="#374151" stroke-width="1" marker-end="url(#pd1)"/>
+      <defs>${AR('pd1','#374151')}</defs>
+      <text x="150" y="26" font-size="9" fill="#6b7280" text-anchor="middle" ${FS}>10 cm (centre to centre)</text>
+      <text x="150" y="168" font-size="8.5" fill="#a09d97" text-anchor="middle" ${FS}>P on axis of left magnet, on equator of right magnet</text>
+    </svg>`,
+  // wire bent into a circle (Q31)
+  wireToCircle:()=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('wc1','#2563eb')}</defs>
+      <line x1="20" y1="46" x2="150" y2="46" stroke="#374151" stroke-width="2.4"/>
+      <text x="85" y="38" font-size="10" fill="#6b7280" ${FS} text-anchor="middle">length L, current I</text>
+      <text x="168" y="80" font-size="20" fill="#a09d97" ${FS}>&#8594;</text>
+      <circle cx="240" cy="80" r="42" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+      <line x1="240" y1="80" x2="272" y2="52" stroke="#374151" stroke-width="1.2" marker-end="url(#wc1)"/>
+      <text x="266" y="70" font-size="10" fill="#374151" ${FS}>R</text>
+      <path d="M262,58 a12,12 0 0 1 6,14" fill="none" stroke="#2563eb" stroke-width="1.4" marker-end="url(#wc1)"/>
+      <text x="240" y="140" font-size="9" fill="#6b7280" ${FS} text-anchor="middle">L = 2&#960;R</text>
+    </svg>`,
+  // Earth field triangle: B, BH, BV with dip angle (Q26, Q33)
+  dipTriangle:(dipLabel)=>`
+    <svg viewBox="0 0 260 176" width="260" height="176" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('dt1','#c0392b')}${AR('dt2','#2563eb')}${AR('dt3','#16a34a')}</defs>
+      <line x1="50" y1="40" x2="50" y2="140" stroke="#2563eb" stroke-width="2.2" marker-end="url(#dt2)"/>
+      <text x="20" y="96" font-size="11" fill="#2563eb" ${FS} font-weight="700">B<tspan font-size="8" dy="3">V</tspan></text>
+      <line x1="50" y1="40" x2="200" y2="40" stroke="#c0392b" stroke-width="2.2" marker-end="url(#dt1)"/>
+      <text x="120" y="32" font-size="11" fill="#c0392b" ${FS} font-weight="700">B<tspan font-size="8" dy="3">H</tspan></text>
+      <line x1="50" y1="40" x2="200" y2="140" stroke="#16a34a" stroke-width="2.4" marker-end="url(#dt3)"/>
+      <text x="150" y="104" font-size="11" fill="#16a34a" ${FS} font-weight="700">B</text>
+      <path d="M84,40 A34,34 0 0 1 74,63" fill="none" stroke="#374151" stroke-width="1.2"/>
+      <text x="92" y="60" font-size="10" fill="#374151" ${FS} font-weight="700">${dipLabel}</text>
+      <text x="130" y="168" font-size="8.5" fill="#a09d97" text-anchor="middle" ${FS}>tan(dip) = B<tspan font-size="7" dy="2">V</tspan><tspan dy="-2"> / B</tspan><tspan font-size="7" dy="2">H</tspan></text>
+    </svg>`,
+  // apparent dip: vertical plane at angle beta to magnetic meridian
+  apparentDip:()=>`
+    <svg viewBox="0 0 300 168" width="300" height="168" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ad1','#c0392b')}${AR('ad2','#2563eb')}</defs>
+      <line x1="40" y1="50" x2="230" y2="50" stroke="#c0392b" stroke-width="2" marker-end="url(#ad1)"/>
+      <text x="150" y="42" font-size="10" fill="#c0392b" ${FS} font-weight="700">B<tspan font-size="8" dy="3">H</tspan> (magnetic meridian)</text>
+      <line x1="40" y1="50" x2="150" y2="66" stroke="#2563eb" stroke-width="1.6" stroke-dasharray="4,3"/>
+      <text x="96" y="82" font-size="9" fill="#2563eb" ${FS}>B<tspan font-size="7" dy="2">H</tspan> cos&#946;</text>
+      <line x1="40" y1="50" x2="40" y2="140" stroke="#16a34a" stroke-width="2" marker-end="url(#ad2)"/>
+      <text x="12" y="100" font-size="10" fill="#16a34a" ${FS} font-weight="700">B<tspan font-size="8" dy="3">V</tspan></text>
+      <path d="M62,50 A22,22 0 0 1 58,64" fill="none" stroke="#374151" stroke-width="1.1"/>
+      <text x="70" y="66" font-size="9" fill="#374151" ${FS}>&#946;</text>
+      <text x="150" y="160" font-size="8.5" fill="#a09d97" text-anchor="middle" ${FS}>tan&#966;<tspan font-size="7" dy="2">a</tspan><tspan dy="-2"> = tan&#966; / cos&#946;  &#8658;  apparent dip &gt; true dip</tspan></text>
+    </svg>`,
+  // neutral points on the E-W (equatorial) line of a bar magnet in earth field (Q67)
+  neutralEW:()=>`
+    <svg viewBox="0 0 300 168" width="300" height="168" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ne1','#374151')}</defs>
+      <line x1="150" y1="16" x2="150" y2="152" stroke="#9ca3af" stroke-width="1.1" stroke-dasharray="5,3"/>
+      <text x="158" y="26" font-size="9" fill="#6b7280" ${FS}>N (geographic)</text>
+      <rect x="132" y="60" width="36" height="48" rx="3" fill="#f0ede8" stroke="#374151" stroke-width="1.4"/>
+      <text x="150" y="76" font-size="9" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+      <text x="150" y="102" font-size="9" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+      <line x1="20" y1="84" x2="280" y2="84" stroke="#9ca3af" stroke-width="1.1" stroke-dasharray="5,3"/>
+      <text x="26" y="78" font-size="8.5" fill="#6b7280" ${FS}>W</text>
+      <text x="270" y="78" font-size="8.5" fill="#6b7280" ${FS}>E</text>
+      <circle cx="70" cy="84" r="3.4" fill="#16a34a"/>
+      <circle cx="230" cy="84" r="3.4" fill="#16a34a"/>
+      <text x="70" y="102" font-size="9" fill="#16a34a" ${FS} text-anchor="middle">neutral</text>
+      <text x="230" y="102" font-size="9" fill="#16a34a" ${FS} text-anchor="middle">neutral</text>
+      <line x1="150" y1="130" x2="230" y2="130" stroke="#374151" stroke-width="1" marker-end="url(#ne1)"/>
+      <text x="190" y="126" font-size="9" fill="#6b7280" ${FS} text-anchor="middle">d</text>
+      <text x="150" y="164" font-size="8.5" fill="#a09d97" text-anchor="middle" ${FS}>equatorial field of magnet cancels B<tspan font-size="7" dy="2">H</tspan></text>
+    </svg>`,
+  // magnet cut into halves along length (Q84)
+  cutMagnet:()=>`
+    <svg viewBox="0 0 300 138" width="300" height="138" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="30" width="120" height="24" rx="3" fill="#f0ede8" stroke="#374151" stroke-width="1.4"/>
+      <text x="60" y="46" font-size="10" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+      <text x="140" y="46" font-size="10" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+      <text x="100" y="22" font-size="9" fill="#6b7280" ${FS} text-anchor="middle">length l,  moment M,  T</text>
+      <text x="176" y="72" font-size="18" fill="#a09d97" ${FS}>&#8594;</text>
+      <rect x="210" y="30" width="60" height="24" rx="3" fill="#f0ede8" stroke="#374151" stroke-width="1.4"/>
+      <text x="220" y="46" font-size="9" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+      <text x="260" y="46" font-size="9" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+      <text x="240" y="76" font-size="8.5" fill="#6b7280" ${FS} text-anchor="middle">half length,  M/2,  I/8</text>
+      <text x="150" y="118" font-size="8.5" fill="#a09d97" text-anchor="middle" ${FS}>cut &#8869; to length: each piece has l/2, m same, M/2, I/8</text>
+    </svg>`,
+  // Earth as a dipole (Q74)
+  earthDipole:()=>`
+    <svg viewBox="0 0 240 170" width="240" height="170" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="120" cy="85" r="56" fill="#eef3f7" stroke="#374151" stroke-width="1.4"/>
+      <line x1="120" y1="20" x2="120" y2="150" stroke="#c0392b" stroke-width="2" stroke-dasharray="4,3"/>
+      <rect x="112" y="55" width="16" height="60" rx="2" fill="#f0ede8" stroke="#374151" stroke-width="1.2"/>
+      <text x="120" y="70" font-size="8" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">S</text>
+      <text x="120" y="108" font-size="8" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">N</text>
+      <line x1="176" y1="85" x2="220" y2="85" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4,3"/>
+      <circle cx="212" cy="85" r="3.2" fill="#16a34a"/>
+      <text x="212" y="76" font-size="9" fill="#16a34a" ${FS} text-anchor="middle">equator</text>
+      <text x="120" y="164" font-size="8.5" fill="#a09d97" text-anchor="middle" ${FS}>equatorial field  B<tspan font-size="7" dy="2">e</tspan><tspan dy="-2"> = (&#956;&#8320;/4&#960;)&#183;M/R&#179;</tspan></text>
+    </svg>`
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  QUESTION LADDERS — one ladder per SOURCE QUESTION (4 rungs, easy → original ★)
+//  Concept A: Bar magnet as a magnetic dipole  ·  Concept B: Earth's magnetism
+//  Source: JEE Main PYQ archive ("Magnetism and Matter")
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  // ─────────────────────────── A2 · Torque, PE, Work ───────────────────────────
+  { name:"A2 &#183; Torque &#8594; M &#8594; Work (stable to unstable)", tag:"A2 Work",
+    questions:[
+      { q:"A bar magnet of moment M in a field B at angle &#952; to the field feels a torque:",
+        diagram:DIAGRAMS.magnetInField('&#952;'),
+        opts:["MB sin&#952;","MB cos&#952;","MB tan&#952;","MB"], ans:0,
+        sol:"Torque &#964; = <strong>MB sin&#952;</strong> (= M &#215; B). It is maximum at 90&#176; and zero when the magnet is aligned with B." },
+      { q:"Convert 800 gauss to tesla. (1 T = 10<sup>4</sup> G)",
+        opts:["0.08 T","0.8 T","8 T","0.008 T"], ans:0,
+        sol:"B = 800 &#215; 10<sup>&#8722;4</sup> = <strong>0.08 T</strong>. Always take B to SI (tesla) before using torque or energy formulas." },
+      { q:"Work to rotate a magnet from &#952;<sub>1</sub> to &#952;<sub>2</sub> is W = MB(cos&#952;<sub>1</sub> &#8722; cos&#952;<sub>2</sub>). For stable (0&#176;) to unstable (180&#176;) this equals:",
+        diagram:DIAGRAMS.stableUnstable(),
+        opts:["2MB","MB","MB/2","0"], ans:0,
+        sol:"cos0&#176; &#8722; cos180&#176; = 1 &#8722; (&#8722;1) = 2, so W = <strong>2MB</strong>. Most stable &#8594; most unstable always costs 2MB." },
+      { q:"&#9733; Original (JEE Main 2026, 24 Jan): A short bar magnet at 30&#176; to an 800 G field feels a torque 0.016 N&#183;m. The work to move it from most stable to most unstable position is &#945; &#215; 10<sup>&#8722;3</sup> J. Find &#945;.",
+        opts:["64","32","16","128"], ans:0,
+        sol:"From &#964; = MB sin&#952;: 0.016 = M(0.08)(&#189;) &#8658; M = 0.4 A&#183;m<sup>2</sup>. Then W = 2MB = 2(0.4)(0.08) = 0.064 J = 64 &#215; 10<sup>&#8722;3</sup> J. <strong>&#945; = 64</strong>. (Answer key: 64.)" }
+    ] },
+
+  { name:"A2 &#183; Minimum Work, Stable to Unstable", tag:"A2 Work",
+    questions:[
+      { q:"The most stable equilibrium of a dipole in field B is at &#952; =",
+        opts:["0&#176; (M along B)","90&#176;","180&#176; (M opposite B)","45&#176;"], ans:0,
+        sol:"U = &#8722;MB cos&#952; is minimum at <strong>&#952; = 0&#176;</strong> &#8212; M parallel to B. That is the most stable position." },
+      { q:"For a magnet at 30&#176; in a 0.06 T field with torque 0.018 N&#183;m, the moment M = &#964;/(B sin30&#176;) is:",
+        diagram:DIAGRAMS.magnetInField('30&#176;'),
+        opts:["0.6 A&#183;m<sup>2</sup>","0.3 A&#183;m<sup>2</sup>","6 A&#183;m<sup>2</sup>","0.06 A&#183;m<sup>2</sup>"], ans:0,
+        sol:"M = 0.018 / (0.06 &#215; &#189;) = 0.018 / 0.03 = <strong>0.6 A&#183;m<sup>2</sup></strong>." },
+      { q:"The minimum work from stable (0&#176;) to unstable (180&#176;) is W = 2MB. With M = 0.6, B = 0.06 T:",
+        opts:["7.2 &#215; 10<sup>&#8722;2</sup> J","3.6 &#215; 10<sup>&#8722;2</sup> J","1.2 &#215; 10<sup>&#8722;1</sup> J","7.2 &#215; 10<sup>&#8722;3</sup> J"], ans:0,
+        sol:"W = 2(0.6)(0.06) = 0.072 = <strong>7.2 &#215; 10<sup>&#8722;2</sup> J</strong>." },
+      { q:"&#9733; Original (JEE Main, Sep 2020): A small magnet at 30&#176; to a 0.06 T field feels a torque 0.018 N&#183;m. The minimum work to rotate it from stable to unstable equilibrium is:",
+        opts:["7.2 &#215; 10<sup>&#8722;2</sup> J","6.4 &#215; 10<sup>&#8722;2</sup> J","9.2 &#215; 10<sup>&#8722;3</sup> J","11.7 &#215; 10<sup>&#8722;3</sup> J"], ans:0,
+        sol:"M = 0.6 A&#183;m<sup>2</sup>, then W = 2MB = 2(0.6)(0.06) = <strong>7.2 &#215; 10<sup>&#8722;2</sup> J</strong>. (Answer key: option C &#8212; correct.)" }
+    ] },
+
+  { name:"A2 &#183; Torque Given &#8594; Potential Energy", tag:"A2 Energy",
+    questions:[
+      { q:"The potential energy of a dipole in a uniform field is:",
+        opts:["U = &#8722;MB cos&#952;","U = +MB sin&#952;","U = MB cos&#952;","U = &#8722;MB sin&#952;"], ans:0,
+        sol:"U = &#8722;M&#183;B = <strong>&#8722;MB cos&#952;</strong>. Lowest (most negative) when aligned, highest when anti-aligned." },
+      { q:"At &#952; = 60&#176;, given &#964; = MB sin60&#176; = 80&#8730;3 N&#183;m, the product MB equals:",
+        opts:["160","80","320","80&#8730;3"], ans:0,
+        sol:"sin60&#176; = &#8730;3/2, so MB(&#8730;3/2) = 80&#8730;3 &#8658; MB = <strong>160</strong>." },
+      { q:"With MB = 160 and &#952; = 60&#176;, U = &#8722;MB cos60&#176; is:",
+        opts:["&#8722;80 J","+80 J","&#8722;160 J","&#8722;40&#8730;3 J"], ans:0,
+        sol:"U = &#8722;160 &#215; cos60&#176; = &#8722;160 &#215; &#189; = <strong>&#8722;80 J</strong>." },
+      { q:"&#9733; Original (JEE Main 2025, 3 Apr): A dipole feels a torque 80&#8730;3 N&#183;m when its moment makes 60&#176; with the field. Its potential energy is:",
+        opts:["&#8722;80 J","&#8722;40&#8730;3 J","+80 J","&#8722;60 J"], ans:0,
+        sol:"MB = 160 from the torque; U = &#8722;MB cos60&#176; = <strong>&#8722;80 J</strong>. (Answer key: option B in the file &#8594; &#8722;80 J.)" }
+    ] },
+
+  { name:"A2 &#183; Work Given &#8594; Torque (60&#176; turn)", tag:"A2 Work",
+    questions:[
+      { q:"A magnet starts parallel to the field (&#952; = 0&#176;) and is turned to 60&#176;. Work done W = MB(cos0&#176; &#8722; cos60&#176;) equals:",
+        opts:["MB/2","MB","2MB","MB&#8730;3"], ans:0,
+        sol:"cos0&#176; &#8722; cos60&#176; = 1 &#8722; &#189; = &#189;, so W = <strong>MB/2</strong>." },
+      { q:"So in terms of W, the product MB is:",
+        opts:["2W","W/2","W","4W"], ans:0,
+        sol:"W = MB/2 &#8658; MB = <strong>2W</strong>." },
+      { q:"The torque needed to hold the magnet at 60&#176; is &#964; = MB sin60&#176;. Substituting MB = 2W:",
+        opts:["&#8730;3 W","W","&#8730;3 W/2","2W"], ans:0,
+        sol:"&#964; = (2W)(&#8730;3/2) = <strong>&#8730;3 W</strong>." },
+      { q:"&#9733; Original (JEE Main 2003): A needle parallel to a field needs W units of work to turn through 60&#176;. The torque needed to hold it there is:",
+        opts:["&#8730;3 W","W","&#8730;3 W/2","2W"], ans:0,
+        sol:"MB = 2W, so &#964; = MB sin60&#176; = 2W(&#8730;3/2) = <strong>&#8730;3 W</strong>. (Answer key: option A.)" }
+    ] },
+
+  // ─────────────────────────── A1 · Dipole Field ───────────────────────────
+  { name:"A1 &#183; Perpendicular Dipoles at Midpoint", tag:"A1 Field",
+    questions:[
+      { q:"On the AXIS of a short dipole, the field is B<sub>a</sub> = (&#956;<sub>0</sub>/4&#960;)(2M/r<sup>3</sup>). On the EQUATOR it is:",
+        opts:["(&#956;<sub>0</sub>/4&#960;)(M/r<sup>3</sup>)","(&#956;<sub>0</sub>/4&#960;)(2M/r<sup>3</sup>)","(&#956;<sub>0</sub>/4&#960;)(M/r<sup>2</sup>)","zero"], ans:0,
+        sol:"Equatorial field B<sub>e</sub> = <strong>(&#956;<sub>0</sub>/4&#960;)(M/r<sup>3</sup>)</strong> &#8212; exactly half the axial value at the same distance." },
+      { q:"If two field contributions at a point are perpendicular, the resultant is:",
+        opts:["&#8730;(B<sub>1</sub><sup>2</sup> + B<sub>2</sub><sup>2</sup>)","B<sub>1</sub> + B<sub>2</sub>","B<sub>1</sub> &#8722; B<sub>2</sub>","B<sub>1</sub>B<sub>2</sub>"], ans:0,
+        sol:"Perpendicular vectors add in quadrature: B<sub>net</sub> = <strong>&#8730;(B<sub>1</sub><sup>2</sup> + B<sub>2</sub><sup>2</sup>)</strong>." },
+      { q:"For each magnet M = 3&#8730;5 J/T at r = 0.05 m, the axial field is B<sub>1</sub> = 6&#8730;5/1.25 &#215; 10<sup>&#8722;3</sup> T and equatorial B<sub>2</sub> = 3&#8730;5/1.25 &#215; 10<sup>&#8722;3</sup> T. Their ratio B<sub>1</sub>:B<sub>2</sub> is:",
+        diagram:DIAGRAMS.perpDipoles(),
+        opts:["2 : 1","1 : 2","1 : 1","4 : 1"], ans:0,
+        sol:"Axial is twice equatorial at the same r, so B<sub>1</sub>:B<sub>2</sub> = <strong>2 : 1</strong> (i.e. 6&#8730;5 vs 3&#8730;5)." },
+      { q:"&#9733; Original (JEE Main 2026, 4 Apr): Two identical magnets (M = 3&#8730;5 J/T) sit 10 cm apart with axes perpendicular. P is the midpoint (5 cm from each). B<sub>net</sub> = &#945; &#215; 10<sup>&#8722;3</sup> T. Find &#945;.",
+        diagram:DIAGRAMS.perpDipoles(),
+        opts:["12","6","15","9"], ans:0,
+        sol:"B<sub>net</sub> = &#8730;(B<sub>1</sub><sup>2</sup>+B<sub>2</sub><sup>2</sup>) = (&#8730;5/1.25)&#215;10<sup>&#8722;3</sup>&#8730;(6<sup>2</sup>+3<sup>2</sup>) = (&#8730;5&#215;3&#8730;5)/1.25 &#215; 10<sup>&#8722;3</sup> = 15/1.25 &#215; 10<sup>&#8722;3</sup> = 12 &#215; 10<sup>&#8722;3</sup> T. <strong>&#945; = 12</strong>. (Answer key: 12.)" }
+    ] },
+
+  { name:"A1 &#183; Two Magnets on a Common Equator", tag:"A1 Field",
+    questions:[
+      { q:"Both magnets lie parallel with N poles pointing South, and point O is on the equatorial line of both. Each equatorial field points:",
+        opts:["North (same direction, they add)","opposite (they cancel)","perpendicular","zero"], ans:0,
+        sol:"On the equatorial line the dipole field points opposite to M. With both N poles South, both equatorial fields point <strong>North</strong> &#8212; so they add, and B<sub>H</sub> also points North." },
+      { q:"For a magnet of moment M at equatorial distance r, the field magnitude is B = (&#956;<sub>0</sub>/4&#960;)(M/r<sup>3</sup>). Two such fields simply add. Total from the pair =",
+        opts:["(&#956;<sub>0</sub>/4&#960;)(M<sub>1</sub>+M<sub>2</sub>)/r<sup>3</sup>","(&#956;<sub>0</sub>/4&#960;)(M<sub>1</sub>&#8722;M<sub>2</sub>)/r<sup>3</sup>","(&#956;<sub>0</sub>/4&#960;)(2M/r<sup>3</sup>)","zero"], ans:0,
+        sol:"Both add along the same line: B = <strong>(&#956;<sub>0</sub>/4&#960;)(M<sub>1</sub>+M<sub>2</sub>)/r<sup>3</sup></strong>." },
+      { q:"With M<sub>1</sub>+M<sub>2</sub> = 2.2 A&#183;m<sup>2</sup>, r = 0.1 m, the dipole part is (10<sup>&#8722;7</sup>&#215;2.2)/(0.1)<sup>3</sup> =",
+        opts:["2.2 &#215; 10<sup>&#8722;4</sup> T","2.2 &#215; 10<sup>&#8722;5</sup> T","2.2 &#215; 10<sup>&#8722;3</sup> T","1.1 &#215; 10<sup>&#8722;4</sup> T"], ans:0,
+        sol:"(10<sup>&#8722;7</sup> &#215; 2.2)/10<sup>&#8722;3</sup> = 2.2 &#215; 10<sup>&#8722;4</sup> T. Then add B<sub>H</sub> for the total." },
+      { q:"&#9733; Original (JEE Main 2013): Two short magnets (1.20 and 1.00 A&#183;m<sup>2</sup>) with N poles South, common equator, 20 cm apart. With B<sub>H</sub> = 3.6 &#215; 10<sup>&#8722;5</sup> T, the resultant horizontal field at midpoint O is close to:",
+        opts:["2.56 &#215; 10<sup>&#8722;4</sup> Wb/m<sup>2</sup>","3.6 &#215; 10<sup>&#8722;5</sup> Wb/m<sup>2</sup>","3.50 &#215; 10<sup>&#8722;4</sup> Wb/m<sup>2</sup>","5.80 &#215; 10<sup>&#8722;4</sup> Wb/m<sup>2</sup>"], ans:0,
+        sol:"B = (&#956;<sub>0</sub>/4&#960;)(M<sub>1</sub>+M<sub>2</sub>)/r<sup>3</sup> + B<sub>H</sub> = 2.2&#215;10<sup>&#8722;4</sup> + 0.36&#215;10<sup>&#8722;4</sup> = <strong>2.56 &#215; 10<sup>&#8722;4</sup> Wb/m<sup>2</sup></strong>. (Answer key: option B.)" }
+    ] },
+
+  // ─────────────────────────── A4 · Magnetic Moment ───────────────────────────
+  { name:"A4 &#183; Wire Bent into a Circle &#8594; Moment", tag:"A4 Moment",
+    questions:[
+      { q:"The magnetic moment of a single current loop of area A carrying current I is:",
+        opts:["M = IA","M = I/A","M = I<sup>2</sup>A","M = IA<sup>2</sup>"], ans:0,
+        sol:"For one turn, magnetic moment <strong>M = IA</strong> (M = NIA for N turns)." },
+      { q:"A wire of length L is bent into a circle. Its radius R satisfies L = 2&#960;R, so R =",
+        diagram:DIAGRAMS.wireToCircle(),
+        opts:["L/(2&#960;)","L/&#960;","2&#960;L","L/4"], ans:0,
+        sol:"Circumference L = 2&#960;R &#8658; R = <strong>L/(2&#960;)</strong>. For L = 314 cm = 3.14 m, R = 0.5 m." },
+      { q:"With I = 14 A and R = 0.5 m, the area A = &#960;R<sup>2</sup> and M = I&#960;R<sup>2</sup> is about:",
+        opts:["11 A&#183;m<sup>2</sup>","22 A&#183;m<sup>2</sup>","5.5 A&#183;m<sup>2</sup>","44 A&#183;m<sup>2</sup>"], ans:0,
+        sol:"M = 14 &#215; 3.14 &#215; (0.5)<sup>2</sup> = 14 &#215; 3.14 &#215; 0.25 = 10.99 &#8776; <strong>11 A&#183;m<sup>2</sup></strong>." },
+      { q:"&#9733; Original (JEE Main 2022, 29 Jul): A wire of length 314 cm carrying 14 A is bent into a circle. Its magnetic moment (&#960; = 3.14) is ___ A&#183;m<sup>2</sup>.",
+        diagram:DIAGRAMS.wireToCircle(),
+        opts:["11","14","7","22"], ans:0,
+        sol:"R = 314/(100&#215;2&#960;) = 0.5 m; M = I&#960;R<sup>2</sup> = 14&#215;3.14&#215;0.25 = 10.99 &#8776; <strong>11</strong>. (Answer key: 11.)" }
+    ] },
+
+  // ─────────────────────────── A3 · Oscillations ───────────────────────────
+  { name:"A3 &#183; Oscillation Period &#8594; Field", tag:"A3 Oscillation",
+    questions:[
+      { q:"The oscillation period of a magnet in a field B is:",
+        opts:["T = 2&#960;&#8730;(I/MB)","T = 2&#960;&#8730;(MB/I)","T = 2&#960;&#8730;(I/M)","T = 2&#960;&#8730;(IB/M)"], ans:0,
+        sol:"T = <strong>2&#960;&#8730;(I/MB)</strong>, with I the moment of inertia, M the magnetic moment, B the field." },
+      { q:"If a magnet makes 10 complete oscillations in 5 s, the period T of one oscillation is:",
+        opts:["0.5 s","2 s","5 s","1 s"], ans:0,
+        sol:"T = total time / number = 5/10 = <strong>0.5 s</strong>." },
+      { q:"Squaring gives B = 4&#960;<sup>2</sup>I/(MT<sup>2</sup>). With I = 5&#215;10<sup>&#8722;6</sup>, M = 9.85&#215;10<sup>&#8722;2</sup>, T = 0.5 s, &#960;<sup>2</sup> = 9.85, B is about:",
+        opts:["8 mT","80 mT","0.8 mT","16 mT"], ans:0,
+        sol:"B = 4(9.85)(5&#215;10<sup>&#8722;6</sup>)/[(9.85&#215;10<sup>&#8722;2</sup>)(0.25)] = 8&#215;10<sup>&#8722;3</sup> T = <strong>8 mT</strong>." },
+      { q:"&#9733; Original (JEE Main 2021, 27 Jul): A needle (M = 9.85&#215;10<sup>&#8722;2</sup> A/m<sup>2</sup>, I = 5&#215;10<sup>&#8722;6</sup> kg&#183;m<sup>2</sup>) makes 10 oscillations in 5 s. Take &#960;<sup>2</sup> = 9.85. The field magnitude is ___ mT.",
+        opts:["8","4","16","2"], ans:0,
+        sol:"T = 0.5 s; B = 4&#960;<sup>2</sup>I/(MT<sup>2</sup>) = 80&#215;10<sup>&#8722;4</sup> = <strong>8 mT</strong>. (Answer key: 8.)" }
+    ] },
+
+  { name:"A3 &#183; Magnet Cut in Half &#8594; New Period", tag:"A3 Oscillation",
+    questions:[
+      { q:"A uniform bar magnet is cut perpendicular to its length into two equal halves. The pole strength of each half:",
+        diagram:DIAGRAMS.cutMagnet(),
+        opts:["stays the same","halves","doubles","becomes zero"], ans:0,
+        sol:"Pole strength depends on cross-section, which is unchanged by cutting along the length &#8212; so it <strong>stays the same</strong>. Length halves, hence M = m&#215;l halves." },
+      { q:"For each half: new moment M&#8242; = M/2 and new moment of inertia I&#8242; = I/8 (mass &#189;, length &#189;: I &#8733; ml<sup>2</sup>). The ratio I&#8242;/M&#8242; is:",
+        opts:["(1/4)(I/M)","(1/2)(I/M)","(I/M)","(1/8)(I/M)"], ans:0,
+        sol:"I&#8242;/M&#8242; = (I/8)/(M/2) = <strong>(1/4)(I/M)</strong>." },
+      { q:"Since T &#8733; &#8730;(I/M), the new period T&#8242; compared with old T is:",
+        opts:["T/2","T","2T","T/&#8730;2"], ans:0,
+        sol:"T&#8242;/T = &#8730;(I&#8242;M/(M&#8242;I)) = &#8730;(1/4) = &#189;, so T&#8242; = <strong>T/2</strong>." },
+      { q:"&#9733; Original (JEE Main 2003): A thin rectangular magnet has period T. It is broken into two equal halves (each half the original length); one half oscillates in the same field with period T&#8242;. The ratio T&#8242;/T is:",
+        diagram:DIAGRAMS.cutMagnet(),
+        opts:["1/2","1/(2&#8730;2)","2","1/4"], ans:0,
+        sol:"I&#8242; = I/8, M&#8242; = M/2 &#8658; T&#8242;/T = &#8730;(I&#8242;M/M&#8242;I) = &#8730;(1/4) = <strong>1/2</strong>. (Answer key: option B &#8594; 1/2.)" }
+    ] },
+
+  { name:"A3 &#183; Oscillation + Dip &#8594; Field Ratio", tag:"A3 Oscillation",
+    questions:[
+      { q:"A compass needle oscillates in the HORIZONTAL plane, so the restoring field is B<sub>H</sub> = B cos(dip). Thus T &#8733;",
+        opts:["1/&#8730;(B cos&#966;)","&#8730;(B cos&#966;)","1/&#8730;(B sin&#966;)","B cos&#966;"], ans:0,
+        sol:"T = 2&#960;&#8730;(I/MB<sub>H</sub>) and B<sub>H</sub> = B cos&#966;, so T &#8733; <strong>1/&#8730;(B cos&#966;)</strong>." },
+      { q:"For two places, T<sub>1</sub>/T<sub>2</sub> = &#8730;[(B<sub>2</sub>cos&#966;<sub>2</sub>)/(B<sub>1</sub>cos&#966;<sub>1</sub>)]. Squaring this relation gives (T<sub>1</sub>/T<sub>2</sub>)<sup>2</sup> =",
+        opts:["(B<sub>2</sub>cos&#966;<sub>2</sub>)/(B<sub>1</sub>cos&#966;<sub>1</sub>)","(B<sub>1</sub>cos&#966;<sub>1</sub>)/(B<sub>2</sub>cos&#966;<sub>2</sub>)","B<sub>2</sub>/B<sub>1</sub>","cos&#966;<sub>2</sub>/cos&#966;<sub>1</sub>"], ans:0,
+        sol:"Just square: (T<sub>1</sub>/T<sub>2</sub>)<sup>2</sup> = <strong>(B<sub>2</sub>cos&#966;<sub>2</sub>)/(B<sub>1</sub>cos&#966;<sub>1</sub>)</strong>." },
+      { q:"Frequency &#8733; 1/T, so more oscillations/min means a shorter T. A needle doing 30/min vs 40/min means T<sub>1</sub>/T<sub>2</sub> =",
+        opts:["40/30 = 4/3","30/40 = 3/4","1","30/60"], ans:0,
+        sol:"T &#8733; 1/(oscillations per minute), so T<sub>1</sub>/T<sub>2</sub> = 40/30 = <strong>4/3</strong>." },
+      { q:"&#9733; Original (JEE Main 2019, 12 Apr): A needle makes 30/min where dip is 45&#176; and 40/min where dip is 30&#176;. With B<sub>1</sub>, B<sub>2</sub> the total fields, B<sub>1</sub>/B<sub>2</sub> is best given by:",
+        opts:["0.46","1.8","3.6","2.2"], ans:0,
+        sol:"(4/3)<sup>2</sup> = (B<sub>2</sub>cos45&#176;)/(B<sub>1</sub>cos30&#176;) &#8658; 16/9 = (B<sub>2</sub>&#215;2)/(&#8730;2&#215;B<sub>1</sub>&#215;&#8730;3) &#8658; B<sub>1</sub>/B<sub>2</sub> = 9/(8&#8730;6) &#8776; <strong>0.46</strong>. (Answer key: option B.)" }
+    ] },
+
+  // ─────────────────────────── B1 · Dip & Components ───────────────────────────
+  { name:"B1 &#183; Dip + B<sub>H</sub> &#8594; Total Field", tag:"B1 Dip",
+    questions:[
+      { q:"The horizontal and vertical components of Earth's field relate to the total B and dip &#966; by:",
+        diagram:DIAGRAMS.dipTriangle('&#966;'),
+        opts:["B<sub>H</sub> = B cos&#966;, B<sub>V</sub> = B sin&#966;","B<sub>H</sub> = B sin&#966;, B<sub>V</sub> = B cos&#966;","B<sub>H</sub> = B tan&#966;","B<sub>H</sub> = B<sub>V</sub>"], ans:0,
+        sol:"<strong>B<sub>H</sub> = B cos&#966;</strong> and <strong>B<sub>V</sub> = B sin&#966;</strong>; dividing gives tan&#966; = B<sub>V</sub>/B<sub>H</sub>." },
+      { q:"To get the total field from B<sub>H</sub> and dip, rearrange B<sub>H</sub> = B cos&#966;:",
+        opts:["B = B<sub>H</sub>/cos&#966;","B = B<sub>H</sub> cos&#966;","B = B<sub>H</sub> sin&#966;","B = B<sub>H</sub> tan&#966;"], ans:0,
+        sol:"B = <strong>B<sub>H</sub>/cos&#966;</strong>." },
+      { q:"With B<sub>H</sub> = 0.5 G and &#966; = 30&#176; (cos30&#176; = &#8730;3/2), the total field B is:",
+        opts:["1/&#8730;3 G","2 G","&#8730;3 G","1 G"], ans:0,
+        sol:"B = 0.5/(&#8730;3/2) = 1/&#8730;3 G &#8776; <strong>1/&#8730;3 G</strong>." },
+      { q:"&#9733; Original (JEE Main 2022, 29 Jun): At a place the dip is 30&#176; and B<sub>H</sub> = 0.5 G. The Earth's total field (in G) is:",
+        diagram:DIAGRAMS.dipTriangle('30&#176;'),
+        opts:["1/&#8730;3","1/2","&#8730;3","1"], ans:0,
+        sol:"B = B<sub>H</sub>/cos30&#176; = 0.5/(&#8730;3/2) = <strong>1/&#8730;3 G</strong>. (Answer key: option A.)" }
+    ] },
+
+  { name:"B1 &#183; Vertical Component + Dip &#8594; Total", tag:"B1 Dip",
+    questions:[
+      { q:"The vertical component of Earth's field is B<sub>V</sub> = B sin&#966;. To find total B from B<sub>V</sub> and dip:",
+        diagram:DIAGRAMS.dipTriangle('&#966;'),
+        opts:["B = B<sub>V</sub>/sin&#966;","B = B<sub>V</sub> sin&#966;","B = B<sub>V</sub>/cos&#966;","B = B<sub>V</sub> tan&#966;"], ans:0,
+        sol:"B<sub>V</sub> = B sin&#966; &#8658; B = <strong>B<sub>V</sub>/sin&#966;</strong>." },
+      { q:"Given tan37&#176; = 3/4, the value of sin37&#176; is:",
+        opts:["3/5","4/5","3/4","5/3"], ans:0,
+        sol:"With opposite 3, adjacent 4, hypotenuse 5: sin37&#176; = <strong>3/5</strong>." },
+      { q:"With B<sub>V</sub> = 6&#215;10<sup>&#8722;5</sup> T and sin37&#176; = 3/5, B = B<sub>V</sub>/sin37&#176; is:",
+        opts:["1 &#215; 10<sup>&#8722;4</sup> T","6 &#215; 10<sup>&#8722;5</sup> T","8 &#215; 10<sup>&#8722;5</sup> T","5 &#215; 10<sup>&#8722;4</sup> T"], ans:0,
+        sol:"B = (6&#215;10<sup>&#8722;5</sup>)/(3/5) = 10&#215;10<sup>&#8722;5</sup> = <strong>1 &#215; 10<sup>&#8722;4</sup> T</strong>." },
+      { q:"&#9733; Original (JEE Main 2022, 29 Jul): The vertical component of Earth's field is 6&#215;10<sup>&#8722;5</sup> T where dip is 37&#176; (tan37&#176; = 3/4). The resultant field is:",
+        opts:["1 &#215; 10<sup>&#8722;4</sup> T","8 &#215; 10<sup>&#8722;5</sup> T","6 &#215; 10<sup>&#8722;5</sup> T","5 &#215; 10<sup>&#8722;4</sup> T"], ans:0,
+        sol:"B = B<sub>V</sub>/sin37&#176; = (6&#215;10<sup>&#8722;5</sup>)/(3/5) = <strong>1 &#215; 10<sup>&#8722;4</sup> T</strong>. (Answer key: option D &#8594; 1&#215;10<sup>&#8722;4</sup> T.)" }
+    ] },
+
+  // ─────────────────────────── B2 · Apparent Dip ───────────────────────────
+  { name:"B2 &#183; Apparent Dip &#8594; True Dip", tag:"B2 Apparent Dip",
+    questions:[
+      { q:"When the dip circle is turned to a vertical plane at angle &#946; to the magnetic meridian, B<sub>V</sub> is unchanged but the horizontal part becomes B<sub>H</sub>cos&#946;. The apparent dip &#966;<sub>a</sub> satisfies:",
+        diagram:DIAGRAMS.apparentDip(),
+        opts:["tan&#966;<sub>a</sub> = tan&#966;/cos&#946;","tan&#966;<sub>a</sub> = tan&#966;&#183;cos&#946;","tan&#966;<sub>a</sub> = cos&#946;/tan&#966;","tan&#966;<sub>a</sub> = tan&#966;"], ans:0,
+        sol:"tan&#966;<sub>a</sub> = B<sub>V</sub>/(B<sub>H</sub>cos&#946;) = <strong>tan&#966;/cos&#946;</strong>. Since cos&#946; &#8804; 1, apparent dip &#8805; true dip." },
+      { q:"So to get TRUE dip from an apparent dip &#966;<sub>a</sub> measured at plane angle &#946;:",
+        opts:["tan&#966; = tan&#966;<sub>a</sub>&#183;cos&#946;","tan&#966; = tan&#966;<sub>a</sub>/cos&#946;","tan&#966; = tan&#966;<sub>a</sub>&#183;sin&#946;","tan&#966; = cos&#946;"], ans:0,
+        sol:"Invert the relation: tan&#966; = <strong>tan&#966;<sub>a</sub>&#183;cos&#946;</strong>." },
+      { q:"With apparent dip 45&#176; and &#946; = 30&#176;: tan&#966; = tan45&#176;&#183;cos30&#176; equals:",
+        opts:["&#8730;3/2","&#8730;3","1/&#8730;3","2/&#8730;3"], ans:0,
+        sol:"tan&#966; = 1 &#215; (&#8730;3/2) = <strong>&#8730;3/2</strong>, so &#966; = tan<sup>&#8722;1</sup>(&#8730;3/2)." },
+      { q:"&#9733; Original (JEE Main 2021, 20 Jul): At 30&#176; to the magnetic meridian the apparent dip is 45&#176;. The true dip is:",
+        diagram:DIAGRAMS.apparentDip(),
+        opts:["tan<sup>&#8722;1</sup>(&#8730;3/2)","tan<sup>&#8722;1</sup>(&#8730;3)","tan<sup>&#8722;1</sup>(1/&#8730;3)","tan<sup>&#8722;1</sup>(2/&#8730;3)"], ans:0,
+        sol:"tan&#966; = tan45&#176;&#183;cos30&#176; = &#8730;3/2 &#8658; &#966; = <strong>tan<sup>&#8722;1</sup>(&#8730;3/2)</strong>. (Answer key: option D.)" }
+    ] },
+
+  { name:"B2 &#183; Magnet at 45&#176; to Meridian", tag:"B2 Apparent Dip",
+    questions:[
+      { q:"A magnet hung in a vertical plane at angle &#945; to the magnetic meridian shows an apparent dip &#966;&#8242; where tan&#966;&#8242; = tan&#966;/cos&#945;. Rearranged for true dip:",
+        opts:["tan&#966; = tan&#966;&#8242;&#183;cos&#945;","tan&#966; = tan&#966;&#8242;/cos&#945;","tan&#966; = cos&#945;/tan&#966;&#8242;","tan&#966; = tan&#966;&#8242;"], ans:0,
+        sol:"tan&#966; = <strong>tan&#966;&#8242;&#183;cos&#945;</strong>." },
+      { q:"'Makes 60&#176; with the horizontal' means the APPARENT dip &#966;&#8242; is:",
+        opts:["60&#176;","30&#176;","45&#176;","90&#176;"], ans:0,
+        sol:"The angle with the horizontal IS the apparent dip, so &#966;&#8242; = <strong>60&#176;</strong>." },
+      { q:"With &#966;&#8242; = 60&#176; and &#945; = 45&#176;: tan&#966; = tan60&#176;&#183;cos45&#176; = &#8730;3 &#215; (1/&#8730;2) equals:",
+        opts:["&#8730;(3/2)","&#8730;(2/3)","&#8730;6","1/2"], ans:0,
+        sol:"tan&#966; = &#8730;3/&#8730;2 = <strong>&#8730;(3/2)</strong>." },
+      { q:"&#9733; Original (JEE Main 2022, 27 Jul): A magnet hung at 45&#176; with the magnetic meridian makes 60&#176; with the horizontal. The actual (true) angle of dip is:",
+        opts:["tan<sup>&#8722;1</sup>&#8730;(3/2)","tan<sup>&#8722;1</sup>(&#8730;6)","tan<sup>&#8722;1</sup>&#8730;(2/3)","tan<sup>&#8722;1</sup>&#8730;(1/2)"], ans:0,
+        sol:"tan&#966; = tan60&#176;&#183;cos45&#176; = &#8730;3&#215;(1/&#8730;2) = &#8730;(3/2) &#8658; &#966; = <strong>tan<sup>&#8722;1</sup>&#8730;(3/2)</strong>. (Answer key: option A.)" }
+    ] },
+
+  // ─────────────────────────── B3 · Neutral Points ───────────────────────────
+  { name:"B3 &#183; Neutral Points (N pole North)", tag:"B3 Neutral Pt",
+    questions:[
+      { q:"A magnet is placed with its N pole pointing geographic North. Neutral points appear where the magnet's field cancels B<sub>H</sub>. These lie on the:",
+        diagram:DIAGRAMS.neutralEW(),
+        opts:["East&#8211;West (equatorial) line","North&#8211;South (axial) line","axis, on the North side","axis, on the South side"], ans:0,
+        sol:"With N pointing North the magnet's field points North on its equator, opposite to B<sub>H</sub>; so neutral points lie on the <strong>East&#8211;West equatorial line</strong>." },
+      { q:"On the equatorial line the magnet's field is B<sub>e</sub> = (&#956;<sub>0</sub>/4&#960;)(M/r<sup>3</sup>). At a neutral point this equals:",
+        opts:["B<sub>H</sub>","B<sub>V</sub>","2B<sub>H</sub>","zero"], ans:0,
+        sol:"A neutral point is where the magnet's field exactly cancels the horizontal component: B<sub>e</sub> = <strong>B<sub>H</sub></strong>." },
+      { q:"So the magnetic moment is M = (4&#960;/&#956;<sub>0</sub>)&#183;B<sub>H</sub>&#183;r<sup>3</sup>. With (&#956;<sub>0</sub>/4&#960;) = 10<sup>&#8722;7</sup>, B<sub>H</sub> = 3.6&#215;10<sup>&#8722;5</sup> T, r = 0.30 m:",
+        opts:["&#8776; 9.7 A&#183;m<sup>2</sup>","&#8776; 19.4 A&#183;m<sup>2</sup>","&#8776; 4.9 A&#183;m<sup>2</sup>","&#8776; 14.6 A&#183;m<sup>2</sup>"], ans:0,
+        sol:"M = (3.6&#215;10<sup>&#8722;5</sup>/10<sup>&#8722;7</sup>)&#215;(0.3)<sup>3</sup> = 360&#215;0.027 = <strong>9.7 A&#183;m<sup>2</sup></strong>." },
+      { q:"&#9733; Original (JEE Main 2015, 11 Apr): A short magnet in the magnetic meridian (N pole North) gives neutral points 30 cm away on the E&#8211;W line. With (&#956;<sub>0</sub>/4&#960;)=10<sup>&#8722;7</sup>, B<sub>H</sub>=3.6&#215;10<sup>&#8722;5</sup> T, the moment (A&#183;m<sup>2</sup>) is close to:",
+        diagram:DIAGRAMS.neutralEW(),
+        opts:["9.7","14.6","19.4","4.9"], ans:0,
+        sol:"Equatorial neutral point: (&#956;<sub>0</sub>/4&#960;)(M/r<sup>3</sup>) = B<sub>H</sub> &#8658; M = 10<sup>7</sup>&#215;3.6&#215;10<sup>&#8722;5</sup>&#215;0.027 = <strong>9.7 A&#183;m<sup>2</sup></strong>. (Answer key: option C.)" }
+    ] },
+
+  // ─────────────────────────── B4 · Earth as a Dipole ───────────────────────────
+  { name:"B4 &#183; Earth as a Giant Dipole", tag:"B4 Earth Dipole",
+    questions:[
+      { q:"Earth's field near the equator resembles the EQUATORIAL field of a dipole at its centre:",
+        diagram:DIAGRAMS.earthDipole(),
+        opts:["B<sub>e</sub> = (&#956;<sub>0</sub>/4&#960;)(M/R<sup>3</sup>)","B<sub>e</sub> = (&#956;<sub>0</sub>/4&#960;)(2M/R<sup>3</sup>)","B<sub>e</sub> = (&#956;<sub>0</sub>/4&#960;)(M/R<sup>2</sup>)","B<sub>e</sub> = &#956;<sub>0</sub>M R<sup>3</sup>"], ans:0,
+        sol:"The equator sits on the dipole's equatorial line: B<sub>e</sub> = <strong>(&#956;<sub>0</sub>/4&#960;)(M/R<sup>3</sup>)</strong>." },
+      { q:"Rearranged for the dipole moment: M = (4&#960;/&#956;<sub>0</sub>)&#183;B&#183;R<sup>3</sup>. Note (4&#960;/&#956;<sub>0</sub>) = 1/(10<sup>&#8722;7</sup>) = ",
+        opts:["10<sup>7</sup>","10<sup>&#8722;7</sup>","4&#960;","10<sup>&#8722;4</sup>"], ans:0,
+        sol:"Since &#956;<sub>0</sub>/4&#960; = 10<sup>&#8722;7</sup>, its reciprocal 4&#960;/&#956;<sub>0</sub> = <strong>10<sup>7</sup></strong>." },
+      { q:"For R = 6.4&#215;10<sup>6</sup> m, R<sup>3</sup> &#8776; 2.6&#215;10<sup>20</sup> m<sup>3</sup>. With B &#8776; 4&#215;10<sup>&#8722;5</sup> T, the order of M = 10<sup>7</sup>&#183;B&#183;R<sup>3</sup> is about:",
+        opts:["10<sup>23</sup> A&#183;m<sup>2</sup>","10<sup>16</sup> A&#183;m<sup>2</sup>","10<sup>20</sup> A&#183;m<sup>2</sup>","10<sup>10</sup> A&#183;m<sup>2</sup>"], ans:0,
+        sol:"M &#8776; 10<sup>7</sup> &#215; 4&#215;10<sup>&#8722;5</sup> &#215; 2.6&#215;10<sup>20</sup> &#8776; 10<sup>23</sup>. Order <strong>10<sup>23</sup> A&#183;m<sup>2</sup></strong>." },
+      { q:"&#9733; Original (JEE Main 2014, 9 Apr): Earth's field at the equator is &#8776; 4&#215;10<sup>&#8722;5</sup> T and R = 6.4&#215;10<sup>6</sup> m. The order of Earth's dipole moment is:",
+        diagram:DIAGRAMS.earthDipole(),
+        opts:["10<sup>23</sup> A&#183;m<sup>2</sup>","10<sup>20</sup> A&#183;m<sup>2</sup>","10<sup>16</sup> A&#183;m<sup>2</sup>","10<sup>10</sup> A&#183;m<sup>2</sup>"], ans:0,
+        sol:"B = (&#956;<sub>0</sub>/4&#960;)(M/R<sup>3</sup>) &#8658; M = B R<sup>3</sup>/10<sup>&#8722;7</sup> &#8776; <strong>10<sup>23</sup> A&#183;m<sup>2</sup></strong>. (Answer key: option A.)" }
+    ] }
+
+];
+const STORAGE_KEY = 'padipucast_magmatter_ab_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    const tag=topic.tag?`<span class="tc-tag">${topic.tag}</span>`:'';
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}${tag}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
