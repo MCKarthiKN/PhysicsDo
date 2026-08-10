@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder &#183; Electromagnetic Induction (JEE Advanced PYQ)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> NLM Contact, Pulley &amp; Rope</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Ladders
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Electromagnetic Induction<br>Question Ladders</h1></div>
+    <p id="home-sub">Every source question becomes a ladder: 4 build-up rungs (very easy &#8594; a bit harder) leading to the original archive question (&#9733;). Source: ALLEN &#183; JEE Advanced Physics 10 Years Topicwise &#8212; Electromagnetic Induction &amp; Alternating Current. Rebuilt questions: 2020 Q11 &amp; Q12, 2019 Q14, 2023 Q2 &amp; Q3, 2022 Q4, 2021 Q9 &amp; Q10 (Lenz &amp; eddy currents, motional emf, LR growth, terminal velocity, flux near a wire, LC oscillation, mutual inductance, flux freezing).</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Electromagnetic Induction  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const DIAGRAMS = {
+
+  // Bar magnet moving towards a closed conducting ring
+  magnetRing:(lbl)=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('mr1','#dc2626')}</defs>
+      <ellipse cx="222" cy="75" rx="16" ry="46" fill="none" stroke="#b45309" stroke-width="3.2"/>
+      <rect x="55" y="60" width="45" height="30" rx="2" fill="#e5e7eb" stroke="#374151" stroke-width="1.4"/>
+      <rect x="100" y="60" width="45" height="30" rx="2" fill="#fecaca" stroke="#374151" stroke-width="1.4"/>
+      <text x="77" y="81" font-size="13" fill="#374151" text-anchor="middle" ${FS} font-weight="700">S</text>
+      <text x="122" y="81" font-size="13" fill="#b91c1c" text-anchor="middle" ${FS} font-weight="700">N</text>
+      <line x1="155" y1="75" x2="196" y2="75" stroke="#dc2626" stroke-width="2.2" marker-end="url(#mr1)"/>
+      <text x="175" y="66" font-size="10.5" fill="#dc2626" text-anchor="middle" ${FS}>${lbl||'v'}</text>
+      <text x="222" y="138" font-size="10" fill="#b45309" text-anchor="middle" ${FS}>closed conducting ring</text>
+      <text x="100" y="118" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>bar magnet</text>
+    </svg>`,
+
+  // Magnet held above a horizontal disc, revolved about the disc axis (Arago)
+  aragoDisc:()=>`
+    <svg viewBox="0 0 300 190" width="300" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ad1','#dc2626')}${AR('ad2','#2563eb')}</defs>
+      <line x1="150" y1="8" x2="150" y2="175" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 4"/>
+      <rect x="192" y="28" width="26" height="30" rx="2" fill="#e5e7eb" stroke="#374151" stroke-width="1.4"/>
+      <rect x="192" y="58" width="26" height="30" rx="2" fill="#fecaca" stroke="#374151" stroke-width="1.4"/>
+      <text x="205" y="48" font-size="12" fill="#374151" text-anchor="middle" ${FS} font-weight="700">S</text>
+      <text x="205" y="78" font-size="12" fill="#b91c1c" text-anchor="middle" ${FS} font-weight="700">N</text>
+      <path d="M228 62 A 78 26 0 0 1 150 36" fill="none" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#ad1)"/>
+      <text x="196" y="22" font-size="10" fill="#dc2626" text-anchor="middle" ${FS}>magnet revolved</text>
+      <ellipse cx="150" cy="132" rx="102" ry="27" fill="#f0ede8" stroke="#374151" stroke-width="1.6"/>
+      <path d="M48 132 v10 a102 27 0 0 0 204 0 v-10" fill="#e9e5dd" stroke="#374151" stroke-width="1.6"/>
+      <path d="M100 128 A 52 14 0 0 1 196 124" fill="none" stroke="#2563eb" stroke-width="1.6" marker-end="url(#ad2)"/>
+      <text x="150" y="180" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>light aluminium disc, free to rotate about its axis</text>
+    </svg>`,
+
+  // Horizontal rails, rod PQ moving right, inductor L + resistance R + key S on the left
+  railRodH:()=>`
+    <svg viewBox="0 0 320 175" width="320" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rh1','#dc2626')}</defs>
+      ${[0,1,2,3].map(r=>[0,1,2,3,4,5].map(c=>`<text x="${58+c*45}" y="${34+r*36}" font-size="11" fill="#9ca3af" text-anchor="middle" ${FS}>&#215;</text>`).join('')).join('')}
+      <line x1="45" y1="45" x2="300" y2="45" stroke="#374151" stroke-width="2"/>
+      <line x1="45" y1="140" x2="300" y2="140" stroke="#374151" stroke-width="2"/>
+      <line x1="45" y1="45" x2="45" y2="72" stroke="#374151" stroke-width="2"/>
+      <path d="M45 72 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12" fill="none" stroke="#7c3aed" stroke-width="2"/>
+      <text x="26" y="90" font-size="10" fill="#7c3aed" ${FS}>L</text>
+      <line x1="45" y1="108" x2="45" y2="112" stroke="#374151" stroke-width="2"/>
+      <path d="M45 112 l-6 4 l12 6 l-12 6 l12 6 l-6 4" fill="none" stroke="#16a34a" stroke-width="2"/>
+      <text x="26" y="130" font-size="10" fill="#16a34a" ${FS}>R</text>
+      <line x1="45" y1="138" x2="45" y2="140" stroke="#374151" stroke-width="2"/>
+      <circle cx="80" cy="140" r="3" fill="#374151"/>
+      <line x1="80" y1="140" x2="98" y2="130" stroke="#374151" stroke-width="2"/>
+      <circle cx="102" cy="140" r="3" fill="#374151"/>
+      <text x="88" y="156" font-size="10" fill="#374151" text-anchor="middle" ${FS}>S</text>
+      <line x1="215" y1="42" x2="215" y2="143" stroke="#2563eb" stroke-width="3.4"/>
+      <text x="215" y="34" font-size="11" fill="#2563eb" text-anchor="middle" ${FS} font-weight="700">P</text>
+      <text x="215" y="158" font-size="11" fill="#2563eb" text-anchor="middle" ${FS} font-weight="700">Q</text>
+      <line x1="222" y1="92" x2="266" y2="92" stroke="#dc2626" stroke-width="2.2" marker-end="url(#rh1)"/>
+      <text x="248" y="84" font-size="10" fill="#dc2626" text-anchor="middle" ${FS}>1 cm/s</text>
+      <text x="286" y="20" font-size="10.5" fill="#6b7280" text-anchor="end" ${FS}>B = 1 T into page (&#215;)</text>
+    </svg>`,
+
+  // Vertical rails, rod MN sliding down, B out of the page
+  railRodV:()=>`
+    <svg viewBox="0 0 300 205" width="300" height="205" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rv1','#dc2626')}</defs>
+      ${[0,1,2,3,4].map(r=>[0,1,2,3].map(c=>(r===2&&(c===1||c===2))?'':`<g><circle cx="${72+c*50}" cy="${32+r*32}" r="5" fill="none" stroke="#9ca3af" stroke-width="1"/><circle cx="${72+c*50}" cy="${32+r*32}" r="1.5" fill="#9ca3af"/></g>`).join('')).join('')}
+      <line x1="100" y1="14" x2="100" y2="176" stroke="#374151" stroke-width="2.2"/>
+      <line x1="200" y1="14" x2="200" y2="176" stroke="#374151" stroke-width="2.2"/>
+      <rect x="98" y="58" width="104" height="13" rx="2" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+      <text x="92" y="69" font-size="11" fill="#2563eb" text-anchor="end" ${FS} font-weight="700">M</text>
+      <text x="208" y="69" font-size="11" fill="#2563eb" text-anchor="start" ${FS} font-weight="700">N</text>
+      <line x1="100" y1="86" x2="200" y2="86" stroke="#374151" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="150" y="99" font-size="10" fill="#374151" text-anchor="middle" ${FS}>25 cm</text>
+      <line x1="243" y1="58" x2="243" y2="106" stroke="#dc2626" stroke-width="2" marker-end="url(#rv1)"/>
+      <text x="254" y="86" font-size="11" fill="#dc2626" ${FS} font-style="italic">g</text>
+      <text x="150" y="190" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>B&#8320; = 4 T, out of the page (&#8857;)</text>
+      <text x="150" y="202" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>rails frictionless and resistanceless</text>
+    </svg>`,
+
+  // Long straight wire with a point P a distance d away
+  wirePoint:()=>`
+    <svg viewBox="0 0 300 130" width="300" height="130" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('wp1','#16a34a')}${AR('wp2','#374151')}</defs>
+      <line x1="20" y1="100" x2="280" y2="100" stroke="#16a34a" stroke-width="2.6"/>
+      <line x1="180" y1="100" x2="232" y2="100" stroke="#16a34a" stroke-width="2.6" marker-end="url(#wp1)"/>
+      <text x="248" y="115" font-size="11" fill="#16a34a" ${FS} font-weight="700">I = 10 A</text>
+      <circle cx="150" cy="42" r="4" fill="#2563eb"/>
+      <text x="160" y="40" font-size="11" fill="#2563eb" ${FS} font-weight="700">P</text>
+      <line x1="150" y1="98" x2="150" y2="46" stroke="#374151" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#wp2)"/>
+      <text x="128" y="74" font-size="10.5" fill="#374151" text-anchor="end" ${FS}>d = 4 cm</text>
+    </svg>`,
+
+  // Rectangular loop near a long current-carrying wire; optional velocity arrow
+  loopWire:(mode)=>{
+    const arrows = {
+      none:'',
+      up:`<line x1="168" y1="46" x2="168" y2="16" stroke="#dc2626" stroke-width="2.2" marker-end="url(#lw1)"/><text x="176" y="26" font-size="10.5" fill="#dc2626" ${FS}>v<tspan baseline-shift="sub" font-size="8">y</tspan></text>`,
+      along:`<line x1="176" y1="70" x2="222" y2="70" stroke="#dc2626" stroke-width="2.2" marker-end="url(#lw1)"/><text x="200" y="62" font-size="10.5" fill="#dc2626" text-anchor="middle" ${FS}>v</text>`,
+      tilt:`<line x1="172" y1="48" x2="216" y2="22" stroke="#dc2626" stroke-width="2.2" marker-end="url(#lw1)"/><text x="228" y="20" font-size="10.5" fill="#dc2626" text-anchor="middle" ${FS}>v</text>`
+    };
+    return `
+    <svg viewBox="0 0 300 175" width="300" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('lw1','#dc2626')}${AR('lw2','#374151')}${AR('lw3','#16a34a')}</defs>
+      <line x1="20" y1="150" x2="280" y2="150" stroke="#16a34a" stroke-width="2.6"/>
+      <line x1="185" y1="150" x2="240" y2="150" stroke="#16a34a" stroke-width="2.6" marker-end="url(#lw3)"/>
+      <text x="252" y="166" font-size="10.5" fill="#16a34a" ${FS} font-weight="700">I = 10 A</text>
+      <rect x="128" y="48" width="44" height="62" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <text x="150" y="42" font-size="10" fill="#2563eb" text-anchor="middle" ${FS}>2 cm</text>
+      <text x="120" y="82" font-size="10" fill="#2563eb" text-anchor="end" ${FS}>4 cm</text>
+      <line x1="150" y1="148" x2="150" y2="112" stroke="#374151" stroke-width="1.1" stroke-dasharray="3 3" marker-end="url(#lw2)"/>
+      <text x="158" y="134" font-size="10" fill="#374151" ${FS}>d</text>
+      ${arrows[mode||'none']}
+      <line x1="42" y1="120" x2="42" y2="92" stroke="#6b7280" stroke-width="1.2" marker-end="url(#lw2)"/>
+      <line x1="42" y1="120" x2="70" y2="120" stroke="#6b7280" stroke-width="1.2" marker-end="url(#lw2)"/>
+      <text x="34" y="94" font-size="10" fill="#6b7280" ${FS} font-style="italic">y</text>
+      <text x="72" y="132" font-size="10" fill="#6b7280" ${FS} font-style="italic">x</text>
+    </svg>`;
+  },
+
+  // Series L-C loop of area 1 m^2 sitting in a field that grows with time
+  lcField:()=>`
+    <svg viewBox="0 0 300 175" width="300" height="175" xmlns="http://www.w3.org/2000/svg">
+      ${[0,1,2,3].map(r=>[0,1,2,3].map(c=>`<g><circle cx="${96+c*36}" cy="${52+r*30}" r="5" fill="none" stroke="#9ca3af" stroke-width="1"/><circle cx="${96+c*36}" cy="${52+r*30}" r="1.5" fill="#9ca3af"/></g>`).join('')).join('')}
+      <rect x="72" y="34" width="156" height="120" fill="none" stroke="#374151" stroke-width="2.2"/>
+      <rect x="118" y="26" width="64" height="16" fill="#f7f6f3"/>
+      <path d="M118 34 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0" fill="none" stroke="#7c3aed" stroke-width="2.2"/>
+      <text x="150" y="18" font-size="10.5" fill="#7c3aed" text-anchor="middle" ${FS}>L = 0.1 H</text>
+      <rect x="220" y="80" width="16" height="30" fill="#f7f6f3"/>
+      <line x1="216" y1="88" x2="232" y2="88" stroke="#0d9488" stroke-width="2.4"/>
+      <line x1="216" y1="100" x2="232" y2="100" stroke="#0d9488" stroke-width="2.4"/>
+      <text x="240" y="98" font-size="10.5" fill="#0d9488" ${FS}>C = 10&#8315;&#179; F</text>
+      <text x="150" y="170" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>area = 1 m&#178; &#183; B = B&#8320; + &#946;t, out of the page</text>
+    </svg>`,
+
+  // Two LR circuits placed side by side, coupled by mutual inductance M
+  twoLR:()=>{
+    const res=(x,y)=>`<path d="M${x} ${y} l7 -9 l13 18 l13 -18 l13 18 l7 -9" fill="none" stroke="#16a34a" stroke-width="2"/>`;
+    const coil=(x,y,dir)=>`<path d="M${x} ${y} a7 7 0 0 ${dir} 0 14 a7 7 0 0 ${dir} 0 14 a7 7 0 0 ${dir} 0 14 a7 7 0 0 ${dir} 0 14" fill="none" stroke="#7c3aed" stroke-width="2.2"/>`;
+    const batt=(x,y)=>`<rect x="${x-11}" y="${y-4}" width="22" height="22" fill="#f7f6f3"/><line x1="${x-10}" y1="${y}" x2="${x+10}" y2="${y}" stroke="#374151" stroke-width="2.6"/><line x1="${x-5}" y1="${y+9}" x2="${x+5}" y2="${y+9}" stroke="#374151" stroke-width="2.6"/>`;
+    return `
+    <svg viewBox="0 0 340 185" width="340" height="185" xmlns="http://www.w3.org/2000/svg">
+      <rect x="24" y="46" width="130" height="100" fill="none" stroke="#374151" stroke-width="2"/>
+      <rect x="186" y="46" width="130" height="100" fill="none" stroke="#374151" stroke-width="2"/>
+      <rect x="62" y="34" width="56" height="24" fill="#f7f6f3"/>${res(62,46)}
+      <text x="90" y="28" font-size="10.5" fill="#16a34a" text-anchor="middle" ${FS}>R&#8321; = 5 &#937;</text>
+      <rect x="224" y="34" width="56" height="24" fill="#f7f6f3"/>${res(224,46)}
+      <text x="252" y="28" font-size="10.5" fill="#16a34a" text-anchor="middle" ${FS}>R&#8322; = 10 &#937;</text>
+      <rect x="147" y="68" width="14" height="58" fill="#f7f6f3"/>${coil(154,68,1)}
+      <text x="140" y="140" font-size="10" fill="#7c3aed" text-anchor="end" ${FS}>L&#8321; = 10 mH</text>
+      <rect x="179" y="68" width="14" height="58" fill="#f7f6f3"/>${coil(186,68,0)}
+      <text x="200" y="140" font-size="10" fill="#7c3aed" text-anchor="start" ${FS}>L&#8322; = 20 mH</text>
+      <line x1="163" y1="97" x2="177" y2="97" stroke="#b45309" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <text x="170" y="62" font-size="10" fill="#b45309" text-anchor="middle" ${FS}>M = 5 mH</text>
+      ${batt(24,88)}
+      <text x="34" y="112" font-size="10" fill="#374151" text-anchor="start" ${FS}>V&#8321; = 5 V</text>
+      ${batt(316,88)}
+      <text x="306" y="112" font-size="10" fill="#374151" text-anchor="end" ${FS}>V&#8322; = 20 V</text>
+      <text x="170" y="176" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>both keys closed together &#183; fluxes of L&#8321; and L&#8322; aid each other</text>
+    </svg>`;
+  },
+
+  // Superconducting loop of radius a on the axis; dipole m brought from infinity
+  loopDipole:()=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ld1','#374151')}${AR('ld2','#b91c1c')}</defs>
+      <line x1="20" y1="70" x2="285" y2="70" stroke="#9ca3af" stroke-width="1" stroke-dasharray="5 4"/>
+      <ellipse cx="70" cy="70" rx="13" ry="34" fill="none" stroke="#2563eb" stroke-width="2.6"/>
+      <text x="52" y="34" font-size="10.5" fill="#2563eb" text-anchor="middle" ${FS}>loop, radius a</text>
+      <text x="70" y="122" font-size="10" fill="#2563eb" text-anchor="middle" ${FS}>zero resistance</text>
+      <circle cx="224" cy="70" r="4" fill="#b91c1c"/>
+      <line x1="224" y1="70" x2="182" y2="70" stroke="#b91c1c" stroke-width="2.4" marker-end="url(#ld2)"/>
+      <text x="228" y="58" font-size="11.5" fill="#b91c1c" ${FS} font-style="italic" font-weight="700">m</text>
+      <text x="224" y="122" font-size="10" fill="#b91c1c" text-anchor="middle" ${FS}>N pole faces the loop</text>
+      <line x1="70" y1="20" x2="224" y2="20" stroke="#374151" stroke-width="1.1" marker-end="url(#ld1)"/>
+      <text x="147" y="14" font-size="10.5" fill="#374151" text-anchor="middle" ${FS} font-style="italic">r  (r &#8811; a)</text>
+    </svg>`
+
+};
+
+const TOPICS = [
+
+  { name:"Q11 (2020) &#183; Eddy Currents &amp; Arago's Disc",
+    questions:[
+      { q:"A bar magnet is pushed towards a closed conducting ring. The current induced in the ring flows in such a sense that it:",
+        diagram:DIAGRAMS.magnetRing('v'),
+        opts:["opposes the approach of the magnet","helps the magnet come in faster","is always clockwise, whatever the magnet does","is zero, because the ring has no battery"], ans:0,
+        sol:"Lenz's law: the induced effect always <strong>opposes the change that produced it</strong>. Here the change is the growing flux due to the approaching magnet, so the ring's current makes a face that repels the magnet. (No battery is needed &#8212; the changing flux itself is the source of emf.)" },
+      { q:"The same ring is now free to slide. As the magnet is pushed towards it, the ring will:",
+        diagram:DIAGRAMS.magnetRing('v'),
+        opts:["move away, in the same direction as the magnet","move towards the magnet","stay exactly where it is","start spinning about its own axis"], ans:0,
+        sol:"The induced current opposes the <strong>relative</strong> motion. The ring cannot stop the magnet, so it does the next best thing &#8212; it <strong>runs away</strong>, reducing the rate at which the gap closes. Opposing relative motion is the key idea for every eddy-current question." },
+      { q:"Aluminium is <em>not</em> attracted by a magnet. If a magnet is moved near a solid aluminium plate:",
+        diagram:DIAGRAMS.aragoDisc(),
+        opts:["eddy currents are still induced, because aluminium conducts","nothing at all happens, since aluminium is non-magnetic","the plate becomes a permanent magnet","currents are induced only if the plate is iron"], ans:0,
+        sol:"Induction needs a <strong>conductor</strong>, not a magnetic material. The changing flux drives circulating (eddy) currents in the aluminium. Being non-magnetic only means the plate is not <em>attracted</em> when everything is at rest." },
+      { q:"A magnet is dragged horizontally, just above a large aluminium sheet that rests on a frictionless table. The sheet:",
+        diagram:DIAGRAMS.aragoDisc(),
+        opts:["is dragged along, in the direction the magnet moves","is pushed in the opposite direction","stays still and stays cold","stays still but gets slightly hotter"], ans:0,
+        sol:"Eddy currents oppose relative sliding, so the sheet is dragged along behind the magnet &#8212; a magnetic 'clutch'. It also warms up (I&#178;R heating), but the sheet <strong>does</strong> move, so 'stays still' is wrong." },
+      { q:"&#9733; Original (JEE Advanced 2020): A light aluminium disc is kept horizontally, free to rotate about its axis. A strong magnet is held vertically above the disc, away from its axis, and is then revolved about the disc's axis. The disc will:",
+        diagram:DIAGRAMS.aragoDisc(),
+        opts:["rotate in the same direction as the magnet's motion","rotate opposite to the magnet's motion","not rotate, and its temperature will stay unchanged","not rotate, but its temperature will slowly rise"], ans:0,
+        sol:"The moving magnet changes the flux through the disc, so eddy currents appear; by Lenz's law they oppose the <strong>relative</strong> motion between magnet and disc. The disc reduces that relative motion by <strong>chasing the magnet</strong>, i.e. rotating the same way (a little slower). This is Arago's disc &#8212; the same idea behind an induction motor. (Answer key: option B in the source.)" }
+    ] },
+
+  { name:"Q14 (2019) &#183; Moving Rod with L and R (LR Growth)",
+    questions:[
+      { q:"A perfectly conducting wire PQ of length 10 cm slides on frictionless rails at a constant 1 cm/s, in a uniform field B = 1 T perpendicular to the plane. The emf across PQ is:",
+        diagram:DIAGRAMS.railRodH(),
+        opts:["1 &#215; 10&#8315;&#179; V","1 &#215; 10&#8315;&#178; V","1 &#215; 10&#8315;&#8309; V","10 V"], ans:0,
+        sol:"Motional emf &#949; = B&#8467;v = (1)(0.10)(0.01) = <strong>10&#8315;&#179; V = 1 mV</strong>. Since v is constant, this emf stays constant for all time &#8212; that is what makes the rest of the problem a clean LR growth problem." },
+      { q:"The rails are joined through L = 1 mH and R = 1 &#937;. A very long time after the key S is closed, the current in the circuit settles at:",
+        diagram:DIAGRAMS.railRodH(),
+        opts:["1 mA","0.63 mA","0.37 mA","zero"], ans:0,
+        sol:"In the steady state the current is no longer changing, so the inductor's back-emf L(di/dt) is zero and it behaves like a plain wire. Then i = &#949;/R = 10&#8315;&#179;/1 = <strong>1 mA</strong>." },
+      { q:"For this circuit (L = 1 mH, R = 1 &#937;), the time constant &#964; = L/R is:",
+        diagram:DIAGRAMS.railRodH(),
+        opts:["1 millisecond","1 second","1 microsecond","1 &#215; 10&#179; s"], ans:0,
+        sol:"&#964; = L/R = (1 &#215; 10&#8315;&#179; H)/(1 &#937;) = <strong>10&#8315;&#179; s = 1 ms</strong>. Check the unit: H/&#937; = (V&#183;s/A)/(V/A) = s." },
+      { q:"The current grows as i = (&#949;/R)(1 &#8722; e&#8315;<sup>t/&#964;</sup>). Exactly one time constant after the key is closed, the current is (take e&#8315;&#185; = 0.37):",
+        diagram:DIAGRAMS.railRodH(),
+        opts:["0.63 mA","0.37 mA","1.00 mA","0.50 mA"], ans:0,
+        sol:"At t = &#964;: i = (1 mA)(1 &#8722; e&#8315;&#185;) = (1 mA)(1 &#8722; 0.37) = <strong>0.63 mA</strong>. Useful landmark to remember: one time constant gets you 63% of the way to the final current." },
+      { q:"&#9733; Original (JEE Advanced 2019): A 10 cm long perfectly conducting wire PQ moves at 1 cm/s on resistanceless rails, with L = 1 mH and R = 1 &#937; on one side and B = 1 T perpendicular to the plane. The key S is closed at some instant. The current 1 millisecond later is x &#215; 10&#8315;&#179; A. The value of x is:",
+        diagram:DIAGRAMS.railRodH(),
+        opts:["0.63","0.37","1.00","6.30"], ans:0,
+        sol:"&#949; = B&#8467;v = 10&#8315;&#179; V (constant, since v is constant). Final current &#949;/R = 10&#8315;&#179; A, and &#964; = L/R = 10&#8315;&#179; s. The given time t = 1 ms is exactly one &#964;, so<br>i = 10&#8315;&#179;(1 &#8722; e&#8315;&#185;) = 10&#8315;&#179;(1 &#8722; 0.37) = 0.63 &#215; 10&#8315;&#179; A &#8658; <strong>x = 0.63</strong>." }
+    ] },
+
+  { name:"Q2 (2023) &#183; Rod Falling on Vertical Rails",
+    questions:[
+      { q:"A rod of length 25 cm slides with speed 2 m/s, perpendicular to a uniform field B&#8320; = 4 T. The emf induced across its ends is:",
+        diagram:DIAGRAMS.railRodV(),
+        opts:["2.0 V","1.0 V","0.5 V","8.0 V"], ans:0,
+        sol:"&#949; = B&#8320;&#8467;v = (4)(0.25)(2) = <strong>2 V</strong>. Every part of this problem comes back to this one formula &#8212; only v keeps changing as the rod falls." },
+      { q:"The rod (m = 20 g, &#8467; = 25 cm, R = 10 &#937;, B&#8320; = 4 T) is released from rest and falls along the rails. At terminal velocity the net force is zero. Taking g = 10 m/s&#178;, v<sub>T</sub> is:",
+        diagram:DIAGRAMS.railRodV(),
+        opts:["2.00 m/s","1.20 m/s","0.50 m/s","4.00 m/s"], ans:0,
+        sol:"At terminal speed: mg = B&#8320;i&#8467; = B&#8320;&#8467;(B&#8320;&#8467;v<sub>T</sub>/R) &#8658; v<sub>T</sub> = mgR/(B&#8320;&#178;&#8467;&#178;).<br>B&#8320;&#178;&#8467;&#178; = 16 &#215; 0.0625 = 1, and mgR = (0.02)(10)(10) = 2, so v<sub>T</sub> = <strong>2.00 m/s</strong>." },
+      { q:"Newton's second law gives m(dv/dt) = mg &#8722; B&#8320;&#178;&#8467;&#178;v/R, whose solution is v = v<sub>T</sub>(1 &#8722; e&#8315;<sup>t/&#964;</sup>) with &#964; = mR/(B&#8320;&#178;&#8467;&#178;). With the numbers above, &#964; and the speed at t = 0.2 s are (e&#8315;&#185; = 0.4):",
+        diagram:DIAGRAMS.railRodV(),
+        opts:["&#964; = 0.2 s, v = 1.20 m/s","&#964; = 0.2 s, v = 0.80 m/s","&#964; = 0.4 s, v = 1.20 m/s","&#964; = 0.1 s, v = 2.00 m/s"], ans:0,
+        sol:"&#964; = mR/(B&#8320;&#178;&#8467;&#178;) = (0.02)(10)/1 = <strong>0.2 s</strong>. So t = 0.2 s is exactly one time constant:<br>v = 2(1 &#8722; e&#8315;&#185;) = 2(1 &#8722; 0.4) = <strong>1.2 m/s</strong>." },
+      { q:"At that instant (v = 1.2 m/s), the magnetic force on the rod and the power dissipated as heat are:",
+        diagram:DIAGRAMS.railRodV(),
+        opts:["0.12 N and 0.14 W","0.12 N and 1.20 W","1.20 N and 0.14 W","0.07 N and 0.12 W"], ans:0,
+        sol:"&#949; = B&#8320;&#8467;v = 4(0.25)(1.2) = 1.2 V &#8658; i = &#949;/R = 0.12 A.<br>Force F = B&#8320;i&#8467; = 4(0.12)(0.25) = <strong>0.12 N</strong> (upward, opposing the fall).<br>Heat P = i&#178;R = (0.12)&#178;(10) = 0.144 &#8776; <strong>0.14 W</strong>." },
+      { q:"&#9733; Original (JEE Advanced 2023): For the rod MN (m = 20 g, &#8467; = 25 cm, R = 10 &#937;, B&#8320; = 4 T, g = 10 m/s&#178;, e&#8315;&#185; = 0.4) released from rest, match:<br>(P) emf at t = 0.2 s in V &#183; (Q) magnetic force at t = 0.2 s in N &#183; (R) heat power at t = 0.2 s in W &#183; (S) terminal velocity in m/s<br>with List-II: (1) 0.07 &#183; (2) 0.14 &#183; (3) 1.20 &#183; (4) 0.12 &#183; (5) 2.00",
+        diagram:DIAGRAMS.railRodV(),
+        opts:["P&#8594;3, Q&#8594;4, R&#8594;2, S&#8594;5","P&#8594;5, Q&#8594;2, R&#8594;3, S&#8594;1","P&#8594;3, Q&#8594;1, R&#8594;4, S&#8594;5","P&#8594;4, Q&#8594;3, R&#8594;1, S&#8594;2"], ans:0,
+        sol:"v<sub>T</sub> = 2.00 m/s and &#964; = 0.2 s, so at t = 0.2 s, v = 1.2 m/s.<br>(P) &#949; = B&#8320;&#8467;v = 1.20 V &#8594; 3<br>(Q) F = B&#8320;i&#8467; = 0.12 N &#8594; 4<br>(R) P = i&#178;R = 0.144 &#8776; 0.14 W &#8594; 2<br>(S) v<sub>T</sub> = 2.00 m/s &#8594; 5<br>So <strong>P&#8594;3, Q&#8594;4, R&#8594;2, S&#8594;5</strong> &#8212; option D in the source." }
+    ] },
+
+  { name:"Q3 (2023) &#183; Loop Moving Away from a Long Wire",
+    questions:[
+      { q:"A long straight wire carries I = 10 A. The magnetic field at a point 4 cm from it is (&#956;&#8320; = 4&#960; &#215; 10&#8315;&#8311; N/A&#178;):",
+        diagram:DIAGRAMS.wirePoint(),
+        opts:["5 &#215; 10&#8315;&#8309; T","2.5 &#215; 10&#8315;&#8309; T","5 &#215; 10&#8315;&#8310; T","1 &#215; 10&#8315;&#8308; T"], ans:0,
+        sol:"B = &#956;&#8320;I/2&#960;d = (2 &#215; 10&#8315;&#8311;)(10)/(0.04) = <strong>5 &#215; 10&#8315;&#8309; T</strong>. Remember &#956;&#8320;/2&#960; = 2 &#215; 10&#8315;&#8311; SI &#8212; it saves time in every wire problem. At 8 cm the field would be half of this, 2.5 &#215; 10&#8315;&#8309; T." },
+      { q:"The rectangular loop is slid <em>parallel</em> to the wire (straight along the x-direction), staying at the same distance d. The induced emf is:",
+        diagram:DIAGRAMS.loopWire('along'),
+        opts:["zero, because the flux through the loop never changes","B&#8467;v, as for any moving conductor","maximum, because the loop cuts field lines fastest this way","&#956;&#8320;Iv/2&#960;d"], ans:0,
+        sol:"The field pattern around a long wire looks identical everywhere along the wire. Sliding the loop parallel to it therefore leaves the flux <strong>unchanged</strong>, so &#949; = &#8722;d&#966;/dt = <strong>0</strong>. Only motion that changes the distance from the wire produces an emf &#8212; that is why only v<sub>y</sub> will matter." },
+      { q:"Now the loop (side parallel to the wire b = 2 cm, other side 4 cm) moves <em>directly away</em> from the wire with speed v<sub>y</sub> = 2 m/s, its near side at d = 4 cm and far side at 8 cm. With R = 0.1 &#937;, the induced current is:",
+        diagram:DIAGRAMS.loopWire('up'),
+        opts:["10 &#956;A","20 &#956;A","5 &#956;A","1 &#956;A"], ans:0,
+        sol:"Treat the two sides parallel to the wire as two rods moving in different fields:<br>&#949; = (B<sub>near</sub> &#8722; B<sub>far</sub>) b v<sub>y</sub> = (5 &#215; 10&#8315;&#8309; &#8722; 2.5 &#215; 10&#8315;&#8309;)(0.02)(2) = 1 &#215; 10&#8315;&#8310; V.<br>i = &#949;/R = 10&#8315;&#8310;/0.1 = <strong>10 &#956;A</strong>. (The two sides perpendicular to the wire give equal and opposite contributions, so they cancel.)" },
+      { q:"The loop actually moves along the direction (&#8730;3/2)x&#770; + (1/2)y&#770; with speed v, the wire lying along x. If the away-from-the-wire component must be v<sub>y</sub> = 2 m/s, then v is:",
+        diagram:DIAGRAMS.loopWire('tilt'),
+        opts:["4 m/s","2&#8730;3 m/s","2 m/s","1 m/s"], ans:0,
+        sol:"The y-component of the velocity is v<sub>y</sub> = v(1/2). Setting v/2 = 2 gives v = <strong>4 m/s</strong>. The (&#8730;3/2)v along the wire contributes nothing to the emf, as rung 2 showed." },
+      { q:"&#9733; Original (JEE Advanced 2023): A rectangular loop (4 cm &#215; 2 cm, R = 0.1 &#937;) in the xy-plane moves away from a long wire carrying I = 10 A along +x, in the direction (&#8730;3/2)x&#770; + (1/2)y&#770; at constant speed v. When it is at d = 4 cm from the wire, a current of 10 &#956;A flows in it. The value of v is:",
+        diagram:DIAGRAMS.loopWire('tilt'),
+        opts:["4 m/s","2 m/s","8 m/s","6 m/s"], ans:0,
+        sol:"Only v<sub>y</sub> changes the flux. With the near side at 4 cm and far side at 8 cm,<br>&#949; = (&#956;&#8320;I/2&#960;)(1/d &#8722; 1/(d+a)) b v<sub>y</sub> = (2 &#215; 10&#8315;&#8310;)(25 &#8722; 12.5)(0.02) v<sub>y</sub>.<br>Setting i = &#949;/R = 10 &#956;A gives v<sub>y</sub> = 2 m/s, and since v<sub>y</sub> = v/2, <strong>v = 4 m/s</strong>." }
+    ] },
+
+  { name:"Q4 (2022) &#183; LC Circuit in a Ramping Field",
+    questions:[
+      { q:"A circuit of area 1 m&#178; lies in a field perpendicular to its plane that grows as B = B&#8320; + &#946;t with &#946; = 0.04 T/s. The emf driving the circuit is:",
+        diagram:DIAGRAMS.lcField(),
+        opts:["0.04 V, constant in time","0.04 V, but only at t = 0","zero, because B&#8320; is constant","0.04t V, growing with time"], ans:0,
+        sol:"&#966; = BA = (B&#8320; + &#946;t)A, so &#949; = |d&#966;/dt| = A&#946; = (1)(0.04) = <strong>0.04 V</strong>. Since B rises at a steady rate, this emf is a <strong>constant</strong> &#8212; the circuit behaves exactly like an L-C loop connected to a 0.04 V battery at t = 0." },
+      { q:"For L = 0.1 H and C = 10&#8315;&#179; F, the natural angular frequency &#969; = 1/&#8730;(LC) is:",
+        diagram:DIAGRAMS.lcField(),
+        opts:["100 rad/s","10 rad/s","1000 rad/s","0.01 rad/s"], ans:0,
+        sol:"LC = (0.1)(10&#8315;&#179;) = 10&#8315;&#8308;, so &#8730;(LC) = 10&#8315;&#178; s and &#969; = <strong>100 rad/s</strong>." },
+      { q:"With a constant emf V across a series L-C, the charge oscillates about the value q = CV. The current in the loop is largest when:",
+        diagram:DIAGRAMS.lcField(),
+        opts:["the capacitor voltage has just become equal to the emf V","the capacitor is fully uncharged","the capacitor voltage is twice the emf V","the current is never large; it stays at V/R"], ans:0,
+        sol:"Write the loop equation: V &#8722; q/C = L(d&#178;q/dt&#178;). This is SHM in q about the equilibrium point q = CV. In SHM the speed &#8212; here the current dq/dt &#8212; is maximum <strong>at the equilibrium position</strong>, i.e. when q = CV. (There is no resistance here, so V/R has no meaning.)" },
+      { q:"Using energy from t = 0 (q = 0, i = 0) up to the moment q = CV: work done by the emf = energy in C + energy in L. This gives i<sub>max</sub> equal to:",
+        diagram:DIAGRAMS.lcField(),
+        opts:["V&#8730;(C/L)","V&#8730;(L/C)","V/&#8730;(LC)","VC&#8730;L"], ans:0,
+        sol:"Vq &#8722; q&#178;/2C = &#189;Li&#178; with q = CV &#8658; CV&#178; &#8722; &#189;CV&#178; = &#189;Li<sub>max</sub>&#178; &#8658; i<sub>max</sub> = <strong>V&#8730;(C/L)</strong>. Equivalently i<sub>max</sub> = &#969;CV, which is the same thing." },
+      { q:"&#9733; Original (JEE Advanced 2022): An LC circuit with L = 0.1 H, C = 10&#8315;&#179; F and area 1 m&#178; sits in a field perpendicular to its plane. From t = 0 the field increases as B = B&#8320; + &#946;t with &#946; = 0.04 T/s. The maximum magnitude of the current in the circuit is:",
+        diagram:DIAGRAMS.lcField(),
+        opts:["4 mA","40 mA","0.4 mA","400 mA"], ans:0,
+        sol:"&#949; = A&#946; = 0.04 V, constant. The charge does SHM, q = CV(1 &#8722; cos&#969;t), so i = &#969;CV sin&#969;t and<br>i<sub>max</sub> = &#969;CV = (100)(10&#8315;&#179;)(0.04) = 4 &#215; 10&#8315;&#179; A = <strong>4 mA</strong>." }
+    ] },
+
+  { name:"Q12 (2020) &#183; Mutual Inductance &amp; Stored Energy",
+    questions:[
+      { q:"In circuit 1 (V&#8321; = 5 V, R&#8321; = 5 &#937;, L&#8321; = 10 mH) and circuit 2 (V&#8322; = 20 V, R&#8322; = 10 &#937;, L&#8322; = 20 mH), the steady-state currents I&#8321; and I&#8322; are:",
+        diagram:DIAGRAMS.twoLR(),
+        opts:["1 A and 2 A","5 A and 20 A","2 A and 1 A","0.2 A and 0.5 A"], ans:0,
+        sol:"Once the currents stop changing, di/dt = 0 and each inductor is just a piece of wire. So I&#8321; = V&#8321;/R&#8321; = 5/5 = <strong>1 A</strong> and I&#8322; = V&#8322;/R&#8322; = 20/10 = <strong>2 A</strong>." },
+      { q:"The energy stored in an isolated inductor carrying a steady current is &#189;LI&#178;. For L&#8321; = 10 mH at 1 A and L&#8322; = 20 mH at 2 A, these energies are:",
+        diagram:DIAGRAMS.twoLR(),
+        opts:["5 mJ and 40 mJ","5 mJ and 20 mJ","10 mJ and 40 mJ","5 mJ and 80 mJ"], ans:0,
+        sol:"&#189;L&#8321;I&#8321;&#178; = &#189;(10 mH)(1)&#178; = <strong>5 mJ</strong>; &#189;L&#8322;I&#8322;&#178; = &#189;(20 mH)(2)&#178; = <strong>40 mJ</strong>. Note how the 'square' makes the second one eight times larger." },
+      { q:"The two coils sit next to each other with M = 5 mH, their fluxes aiding. The extra (mutual) energy stored, MI&#8321;I&#8322;, is:",
+        diagram:DIAGRAMS.twoLR(),
+        opts:["10 mJ","5 mJ","20 mJ","zero, since M is not a self-inductance"], ans:0,
+        sol:"MI&#8321;I&#8322; = (5 &#215; 10&#8315;&#179;)(1)(2) = <strong>10 mJ</strong>. It carries a + sign because the fluxes aid each other; if one battery were reversed the same term would appear with a &#8722; sign." },
+      { q:"Each battery does work against the back-emf of the inductors. By the time both currents are steady, that total work has become:",
+        diagram:DIAGRAMS.twoLR(),
+        opts:["the magnetic energy stored in the coupled coils","heat in the resistors","zero, because the back-emf disappears at the end","the work done against gravity"], ans:0,
+        sol:"Work against the induced emf is exactly the energy pushed into the magnetic field: U = &#189;L&#8321;I&#8321;&#178; + &#189;L&#8322;I&#8322;&#178; + MI&#8321;I&#8322;. Heat in the resistors is separate &#8212; it is work done against the <strong>resistive</strong> drop, not against the induced emf, so it is not counted here." },
+      { q:"&#9733; Original (JEE Advanced 2020): Two LR circuits (V&#8321; = 5 V, R&#8321; = 5 &#937;, L&#8321; = 10 mH; V&#8322; = 20 V, R&#8322; = 10 &#937;, L&#8322; = 20 mH) are placed next to each other with mutual inductance M = 5 mH. Both switches are closed together. The total work done by the batteries against the induced emf, by the time the currents reach their steady values, is:",
+        diagram:DIAGRAMS.twoLR(),
+        opts:["55 mJ","45 mJ","35 mJ","65 mJ"], ans:0,
+        sol:"I&#8321; = 1 A, I&#8322; = 2 A. Then<br>U = &#189;(10 mH)(1)&#178; + &#189;(20 mH)(2)&#178; + (5 mH)(1)(2) = 5 + 40 + 10 = <strong>55 mJ</strong>.<br>Forgetting the mutual term gives 45 mJ &#8212; the trap in this question." }
+    ] },
+
+  { name:"Q9 &amp; Q10 (2021) &#183; Superconducting Loop &amp; a Dipole",
+    questions:[
+      { q:"A closed loop made of a material with exactly zero resistance encloses zero flux to begin with. As a magnet is brought near it, the total flux through the loop:",
+        diagram:DIAGRAMS.loopDipole(),
+        opts:["stays zero &#8212; the induced current cancels the incoming flux exactly","grows just as it would for an ordinary copper loop","grows, but only half as fast","becomes infinite"], ans:0,
+        sol:"For any loop, &#949; = &#8722;d&#966;/dt = iR. With R = 0 the emf must be zero for a finite current, so d&#966;/dt = 0 and the <strong>total flux is frozen</strong> at its initial value (zero here). The induced current is exactly the one needed to cancel the magnet's flux, and it never decays." },
+      { q:"The dipole m sits on the axis at distance r (r &#8811; a), and its axial field is &#956;&#8320;m/2&#960;r&#179;. Treating that field as uniform over the small loop of area &#960;a&#178;, the external flux through the loop is:",
+        diagram:DIAGRAMS.loopDipole(),
+        opts:["&#956;&#8320;ma&#178;/2r&#179;","&#956;&#8320;m/2&#960;r&#179;","&#956;&#8320;ma&#178;/2r&#8308;","&#956;&#8320;m&#960;a&#178;/r&#178;"], ans:0,
+        sol:"&#966;<sub>ext</sub> = B &#215; (area) = (&#956;&#8320;m/2&#960;r&#179;)(&#960;a&#178;) = <strong>&#956;&#8320;ma&#178;/2r&#179;</strong>. The r&#8315;&#179; of a dipole field is the fact that carries through the whole problem." },
+      { q:"&#9733; Original (JEE Advanced 2021, Q9): With the dipole at distance r, the current induced in the superconducting loop is proportional to:",
+        diagram:DIAGRAMS.loopDipole(),
+        opts:["m/r&#179;","m&#178;/r&#178;","m/r&#178;","m&#178;/r"], ans:0,
+        sol:"Total flux stays zero: Li + &#966;<sub>ext</sub> = 0 &#8658; i = &#8722;&#966;<sub>ext</sub>/L. The loop's self-inductance L is a fixed number, so<br>i &#8733; &#966;<sub>ext</sub> &#8733; <strong>m/r&#179;</strong> &#8212; option A in the source." },
+      { q:"That current gives the loop its own moment m&#8242; = i(&#960;a&#178;) &#8733; m/r&#179;. Using the given force law F = km&#8321;m&#8322;/r&#8308; between two axial dipoles, the force between magnet and loop varies as:",
+        diagram:DIAGRAMS.loopDipole(),
+        opts:["m&#178;/r&#8311;","m&#178;/r&#8309;","m/r&#8311;","m&#178;/r&#8310;"], ans:0,
+        sol:"F &#8733; (m)(m&#8242;)/r&#8308; &#8733; m &#183; (m/r&#179;)/r&#8308; = <strong>m&#178;/r&#8311;</strong>. It is repulsive, since the loop's induced moment faces the magnet's north pole." },
+      { q:"&#9733; Original (JEE Advanced 2021, Q10): The work done in bringing the dipole from infinity to a distance r from the centre of the loop by this process is proportional to:",
+        diagram:DIAGRAMS.loopDipole(),
+        opts:["m&#178;/r&#8310;","m&#178;/r&#8309;","m/r&#8309;","m&#178;/r&#8311;"], ans:0,
+        sol:"W = &#8747;F dr &#8733; &#8747; (m&#178;/r&#8311;) dr &#8733; <strong>m&#178;/r&#8310;</strong> &#8212; option C in the source. Note the force is repulsive throughout, so this work is done by the external agent, and it is stored as magnetic energy of the persistent current." }
+    ] }
+
+];
+
+const STORAGE_KEY = 'padipucast_emi_jeeadv_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original archive question</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; Build-up`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
