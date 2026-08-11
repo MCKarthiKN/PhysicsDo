@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Vectors (NEET) &#183; Question Ladders &#183; Session 2A</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Vectors &#183; NEET</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Vectors &#183; NEET Level<br>Question Ladders</h1></div>
+    <p id="home-sub">Vector <strong>concept</strong> questions only &#8212; the pure maths items (graphs, series, arc-minutes) have been dropped. Every source question from the ALLEN module becomes a <strong>ladder</strong>: 3 build-up variations, easy &#8594; a bit harder, leading to the original module question (&#9733;). Climb the rungs and the original stops feeling new. Each ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. <br><br><strong>Session 2, Part A &#8212; How few vectors can add to zero, how many pieces one vector splits into, and the range a resultant is allowed to take.</strong> 10 ladders &#215; 4 rungs = 40 questions. Part B (subtraction, equal-magnitude results and the Beginner Box) follows next. <br><br><em>Notation: <strong>bold</strong> letters are vectors. Unit vectors are written &#238;, &#309;, k&#770;.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Vectors, Session 2A  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const DIAGRAMS = {
+
+  // Two equal arrows pointing opposite ways
+  oppositePair:()=>`
+    <svg viewBox="0 0 300 120" width="300" height="120" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('op1','#1a7a4a')}${AR('op2','#c0392b')}</defs>
+      <circle cx="150" cy="60" r="4" fill="#1a1916"/>
+      <line x1="150" y1="60" x2="268" y2="60" stroke="#1a7a4a" stroke-width="2.6" marker-end="url(#op1)"/>
+      <line x1="150" y1="60" x2="32" y2="60" stroke="#c0392b" stroke-width="2.6" marker-end="url(#op2)"/>
+      <text x="212" y="48" font-size="12" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">A</text>
+      <text x="88" y="48" font-size="12" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">&#8722;A</text>
+      <text x="150" y="102" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>same length, opposite directions</text>
+    </svg>`,
+
+  // Closed triangle of three vectors, tip to tail
+  closedTriangle:(l1,l2,l3)=>`
+    <svg viewBox="0 0 280 165" width="280" height="165" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ct1','#1a1916')}</defs>
+      <line x1="45" y1="130" x2="200" y2="130" stroke="#1a1916" stroke-width="2.2" marker-end="url(#ct1)"/>
+      <line x1="208" y1="130" x2="152" y2="35" stroke="#1a1916" stroke-width="2.2" marker-end="url(#ct1)"/>
+      <line x1="146" y1="30" x2="48" y2="123" stroke="#1a1916" stroke-width="2.2" marker-end="url(#ct1)"/>
+      <text x="125" y="148" font-size="12" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">${l1||'A'}</text>
+      <text x="196" y="80" font-size="12" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">${l2||'B'}</text>
+      <text x="82" y="72" font-size="12" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">${l3||'C'}</text>
+      <text x="140" y="160" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>tip to tail, back to the start &#8212; sum is zero</text>
+    </svg>`,
+
+  // A skew (non-flat) closed path of four vectors
+  skewQuad:()=>`
+    <svg viewBox="0 0 280 175" width="280" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('sq1','#1a7a4a')}</defs>
+      <rect x="55" y="60" width="105" height="80" fill="none" stroke="#e8e6e0" stroke-width="1.2"/>
+      <rect x="105" y="28" width="105" height="80" fill="none" stroke="#e8e6e0" stroke-width="1.2"/>
+      <line x1="55" y1="60" x2="105" y2="28" stroke="#e8e6e0" stroke-width="1.2"/>
+      <line x1="160" y1="140" x2="210" y2="108" stroke="#e8e6e0" stroke-width="1.2"/>
+      <line x1="55" y1="140" x2="152" y2="140" stroke="#1a7a4a" stroke-width="2.4" marker-end="url(#sq1)"/>
+      <line x1="160" y1="140" x2="204" y2="112" stroke="#1a7a4a" stroke-width="2.4" marker-end="url(#sq1)"/>
+      <line x1="210" y1="108" x2="210" y2="36" stroke="#1a7a4a" stroke-width="2.4" marker-end="url(#sq1)"/>
+      <line x1="205" y1="28" x2="62" y2="132" stroke="#1a7a4a" stroke-width="2.4" marker-end="url(#sq1)"/>
+      <text x="140" y="168" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>four vectors closing a path that is not flat</text>
+    </svg>`,
+
+  // One vector split into a zig-zag chain of many pieces
+  zigzagSplit:()=>`
+    <svg viewBox="0 0 320 150" width="320" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('zz1','#c0392b')}${AR('zz2','#b45309')}</defs>
+      <line x1="30" y1="112" x2="282" y2="112" stroke="#c0392b" stroke-width="2.6" marker-end="url(#zz1)"/>
+      <text x="155" y="132" font-size="12" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">the original vector</text>
+      <polyline points="30,112 78,66 128,90 176,40 228,78 282,52" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="1 0"/>
+      <line x1="228" y1="78" x2="278" y2="55" stroke="#b45309" stroke-width="2" marker-end="url(#zz2)"/>
+      <line x1="282" y1="52" x2="282" y2="106" stroke="#d4d1c8" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <text x="150" y="26" font-size="10.5" fill="#b45309" text-anchor="middle" ${FS}>any broken path with the same start and end works</text>
+    </svg>`,
+
+  // Three mutually perpendicular axes
+  axes3D:()=>`
+    <svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ax1','#1a1916')}</defs>
+      <line x1="80" y1="112" x2="216" y2="112" stroke="#1a1916" stroke-width="1.8" marker-end="url(#ax1)"/>
+      <line x1="80" y1="112" x2="80" y2="22" stroke="#1a1916" stroke-width="1.8" marker-end="url(#ax1)"/>
+      <line x1="80" y1="112" x2="24" y2="148" stroke="#1a1916" stroke-width="1.8" marker-end="url(#ax1)"/>
+      <text x="224" y="116" font-size="12" fill="#1a1916" ${FS} font-weight="700">x</text>
+      <text x="72" y="18" font-size="12" fill="#1a1916" ${FS} font-weight="700">y</text>
+      <text x="14" y="156" font-size="12" fill="#1a1916" ${FS} font-weight="700">z</text>
+      <rect x="80" y="98" width="14" height="14" fill="none" stroke="#a09d97" stroke-width="1.1"/>
+      <text x="150" y="148" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>only three mutually perpendicular directions exist</text>
+    </svg>`,
+
+  // Number line showing the allowed range of a resultant
+  rangeLine:(lo,hi,mark)=>`
+    <svg viewBox="0 0 340 120" width="340" height="120" xmlns="http://www.w3.org/2000/svg">
+      <line x1="25" y1="70" x2="320" y2="70" stroke="#d4d1c8" stroke-width="1.6"/>
+      <line x1="90" y1="70" x2="270" y2="70" stroke="#1a7a4a" stroke-width="7" stroke-linecap="round" opacity="0.28"/>
+      <line x1="90" y1="56" x2="90" y2="84" stroke="#1a7a4a" stroke-width="2.4"/>
+      <line x1="270" y1="56" x2="270" y2="84" stroke="#1a7a4a" stroke-width="2.4"/>
+      <text x="90" y="48" font-size="11.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">${lo||'|A &#8722; B|'}</text>
+      <text x="270" y="48" font-size="11.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">${hi||'A + B'}</text>
+      <text x="90" y="100" font-size="10" fill="#6b6760" text-anchor="middle" ${FS}>at 180&#176;</text>
+      <text x="270" y="100" font-size="10" fill="#6b6760" text-anchor="middle" ${FS}>at 0&#176;</text>
+      <text x="180" y="100" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>${mark||'every value in between is reachable'}</text>
+    </svg>`
+};
+
+// ===============================================================================
+//  QUESTION LADDERS  -  Vectors (NEET)  -  SESSION 2, PART A
+//  How few vectors add to zero | splitting a vector | the resultant range
+//  Each ladder = 3 build-up rungs + the original module question (star).
+// ===============================================================================
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "How few <em>equal</em> vectors can add to zero",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Two vectors have the same magnitude but point in exactly opposite directions. Their sum is:",
+   "diagram": DIAGRAMS.oppositePair(),
+   "opts": ["zero","twice either one","equal to either one","cannot be found without the angle"],
+   "ans": 0,
+   "sol": "<strong>A</strong> + (&#8722;<strong>A</strong>) = <strong>0</strong>. Same length, opposite arrows, so they wipe each other out completely."
+  },
+  {
+   "q": "Two vectors of equal magnitude <em>a</em> act at 90&#176; to each other. Can their resultant be zero?",
+   "opts": ["No &#8212; the resultant is a&#8730;2","Yes","Yes, but only if a = 1","It depends on which one is drawn first"],
+   "ans": 0,
+   "sol": "R = &#8730;(a<sup>2</sup> + a<sup>2</sup>) = <strong>a&#8730;2</strong>, which is never zero for a real vector.<br><br>Two equal vectors cancel at <strong>one angle only</strong>: 180&#176;. At any other angle something survives."
+  },
+  {
+   "q": "Three vectors of equal magnitude are placed at 120&#176; to one another. Their sum is:",
+   "diagram": DIAGRAMS.closedTriangle('a','a','a'),
+   "opts": ["zero","three times either one","equal to either one","a&#8730;3"],
+   "ans": 0,
+   "sol": "Drawn tip to tail they close an <strong>equilateral triangle</strong>, so the sum is <strong>zero</strong>.<br><br>So 3 equal vectors <em>can</em> do the job &#8212; but the question below asks for the <strong>fewest</strong>, and 2 already worked in rung 1."
+  },
+  {
+   "tag": "Ex-I Q25 &#183; MNVE0025",
+   "q": "&#9733; <strong>Original:</strong> The minimum number of vectors of <strong>equal magnitude</strong> required to produce a zero resultant is:",
+   "opts": ["2","3","4","more than 4"],
+   "ans": 0,
+   "sol": "Two equal vectors pointing opposite ways already give zero: <strong>A</strong> + (&#8722;<strong>A</strong>) = <strong>0</strong>. So the answer is <strong>2</strong>.<br><br>Three at 120&#176; also works, and four at 90&#176; also works &#8212; but the question wants the <em>minimum</em>, and nothing beats 2.<br><br><em>Carry this forward:</em> the very next two questions change one small phrase and the answer moves to 3, then to 4. Read the small print, not the shape of the question."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Unequal vectors need a third one",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Two forces of 3 N and 5 N act at a point. Can they alone give a zero resultant?",
+   "opts": ["No &#8212; the smallest they can give is 2 N","Yes, if they act at 90&#176;","Yes, if they act at 180&#176;","Yes, at some angle between 90&#176; and 180&#176;"],
+   "ans": 0,
+   "sol": "The smallest resultant comes at 180&#176;, and even then R = 5 &#8722; 3 = <strong>2 N</strong>. It never reaches zero.<br><br>Two vectors cancel only when they are equal in size."
+  },
+  {
+   "q": "Why can two vectors of <em>different</em> magnitudes never cancel?",
+   "opts": ["The longer one always leaves a leftover piece","Because they are not perpendicular","Because they lie in the same plane","They can cancel, if the angle is chosen correctly"],
+   "ans": 0,
+   "sol": "Put them head to tail. To return to the starting point the second arrow must be exactly as long as the first and exactly reversed. If it is shorter, <strong>a gap is left over</strong> &#8212; and that gap is the resultant."
+  },
+  {
+   "q": "Three forces of 3 N, 4 N and 5 N (all different) act at a point. Can they be in equilibrium?",
+   "diagram": DIAGRAMS.closedTriangle('3 N','4 N','5 N'),
+   "opts": ["Yes &#8212; they can close a triangle","No, because all three are different","Only if two of them are equal","Only if all three are perpendicular"],
+   "ans": 0,
+   "sol": "3, 4 and 5 satisfy the triangle rule (the largest, 5, is less than 3 + 4 = 7), so they close a triangle. <strong>A closed figure means zero resultant</strong>, so yes, equilibrium is possible.<br><br>This is the key point: what two unequal vectors cannot do, three unequal vectors can."
+  },
+  {
+   "tag": "Ex-I Q26 &#183; MNVE0026",
+   "q": "&#9733; <strong>Original:</strong> How many minimum number of <strong>coplanar</strong> vectors having <strong>different magnitudes</strong> can be added to give zero resultant?",
+   "opts": ["3","2","4","5"],
+   "ans": 0,
+   "sol": "Two vectors of different sizes can never cancel (rungs 1 and 2). Three of different sizes <em>can</em> close a triangle (rung 3). So the minimum is <strong>3</strong>.<br><br><em>Compare with Ladder 01:</em> the phrase changed from 'equal magnitude' to 'different magnitudes', and the answer moved from 2 to 3. One word, one whole mark."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Three vectors that cancel are always flat",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Three vectors add to zero. Drawn tip to tail they form:",
+   "opts": ["a closed triangle","an open zig-zag","a closed square","a straight line, always"],
+   "ans": 0,
+   "sol": "Sum zero means you finish where you started. With three arrows the only closed figure possible is a <strong>triangle</strong>."
+  },
+  {
+   "q": "Is a triangle always a flat figure?",
+   "opts": ["Yes &#8212; any three points always lie in one plane","No, a triangle can be bent out of a plane","Only if it is equilateral","Only if one angle is 90&#176;"],
+   "ans": 0,
+   "sol": "Three points always define exactly one plane, so <strong>every triangle is flat</strong>. You cannot bend a triangle out of its plane without breaking a side."
+  },
+  {
+   "q": "Putting rungs 1 and 2 together: three vectors whose sum is zero must be:",
+   "opts": ["coplanar &#8212; always","non-coplanar &#8212; always","sometimes coplanar, sometimes not","perpendicular to each other"],
+   "ans": 0,
+   "sol": "Sum zero &#8594; closed triangle &#8594; flat figure &#8594; the three vectors are <strong>always coplanar</strong>.<br><br>So if you want vectors that add to zero <em>and</em> are genuinely not all in one plane, three will never be enough."
+  },
+  {
+   "tag": "Ex-I Q27 &#183; MNVE0027",
+   "q": "&#9733; <strong>Original:</strong> How many minimum number of vectors <strong>in different planes</strong> can be added to give zero resultant?",
+   "diagram": DIAGRAMS.skewQuad(),
+   "opts": ["4","2","3","5"],
+   "ans": 0,
+   "sol": "Any three vectors that add to zero are forced to be coplanar (rung 3). So you need at least <strong>4</strong> &#8212; four arrows can close a path that twists out of the plane, as in the figure.<br><br><em>The set to remember:</em><br>&#8226; equal magnitudes &#8594; <strong>2</strong><br>&#8226; different magnitudes, coplanar &#8594; <strong>3</strong><br>&#8226; different planes &#8594; <strong>4</strong><br>Three questions, one line each. Learn them together or they will keep swapping in your head."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "How many pieces can one vector be cut into?",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Is it correct to write 5&#238; = 2&#238; + 3&#238;, and call 2&#238; and 3&#238; components of 5&#238;?",
+   "opts": ["Yes &#8212; they add back to the original","No, components must be perpendicular","No, components must be equal","Only if we also add a k&#770; term"],
+   "ans": 0,
+   "sol": "<strong>Yes.</strong> A component is simply a piece that adds back to the original. There is no rule saying components must be perpendicular &#8212; that extra condition applies only to <em>rectangular</em> components."
+  },
+  {
+   "q": "A vector is split into a broken chain of pieces laid tip to tail. The chain is a valid split as long as:",
+   "diagram": DIAGRAMS.zigzagSplit(),
+   "opts": ["the chain starts and ends at the same two points as the original","every piece has the same length","every piece is perpendicular to the next","there are exactly two pieces"],
+   "ans": 0,
+   "sol": "Only the start and the end matter. Any zig-zag from the tail to the head adds up to the original vector.<br><br>And you may put as many kinks in that path as you please."
+  },
+  {
+   "q": "In how many ways can a 10 N force be split into pieces that add back to it?",
+   "opts": ["An unlimited number of ways","Exactly 2 ways","Exactly 3 ways","Only 1 way"],
+   "ans": 0,
+   "sol": "Draw <em>any</em> broken path from the tail to the head &#8212; each one is a valid split, and there is no limit on how many kinks you use. So the number of ways is <strong>unlimited</strong>."
+  },
+  {
+   "tag": "Ex-I Q28 &#183; MNVE0028",
+   "q": "&#9733; <strong>Original:</strong> What is the maximum number of components into which a vector can be split?",
+   "opts": ["Infinite","2","3","4"],
+   "ans": 0,
+   "sol": "There is no limit, so the answer is <strong>infinite</strong>. Any broken path from tail to head is a valid set of components.<br><br><em>The word to watch:</em> this question does <strong>not</strong> say <em>rectangular</em>. The next two questions put that word in, and the answers immediately become 2 and 3."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Rectangular components inside a plane",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "'Rectangular components' means components that are:",
+   "opts": ["mutually perpendicular","equal in magnitude","drawn as rectangles","always positive"],
+   "ans": 0,
+   "sol": "<strong>Rectangular = mutually perpendicular</strong> (at right angles). The name comes from the rectangle you draw when you drop the two perpendiculars."
+  },
+  {
+   "q": "How many mutually perpendicular directions can be drawn <em>within</em> a flat plane?",
+   "opts": ["2","1","3","Infinite"],
+   "ans": 0,
+   "sol": "Only <strong>2</strong> &#8212; the pair we usually call x and y. You may rotate that pair anywhere you like, but you can never fit in a third line perpendicular to both while staying in the plane."
+  },
+  {
+   "q": "In the x-y plane, is there a third direction perpendicular to <em>both</em> x and y?",
+   "opts": ["Yes, but it is the z-direction, which leaves the plane","Yes, and it stays inside the plane","No such direction exists anywhere","Yes, the direction along &#238; + &#309;"],
+   "ans": 0,
+   "sol": "The direction perpendicular to both x and y is <strong>z</strong> &#8212; and z sticks out of the plane. So inside the plane, 2 is the ceiling.<br><br>Note that &#238; + &#309; is at 45&#176; to both axes, not perpendicular to either."
+  },
+  {
+   "tag": "Ex-I Q29 &#183; MNVE0029",
+   "q": "&#9733; <strong>Original:</strong> What is the maximum number of <strong>rectangular</strong> components into which a vector can be split <strong>in its own plane</strong>?",
+   "opts": ["2","3","4","Infinite"],
+   "ans": 0,
+   "sol": "A plane holds only <strong>2</strong> mutually perpendicular directions, so a vector in that plane has at most 2 rectangular components: a cos&#945; and a sin&#945;.<br><br>Compare with Ladder 04: drop the word 'rectangular' and the answer jumps back to infinite."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Rectangular components in space",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "The three axes x, y and z are drawn so that each is perpendicular to the other two. How many such directions are there in space?",
+   "diagram": DIAGRAMS.axes3D(),
+   "opts": ["3","2","4","Infinite"],
+   "ans": 0,
+   "sol": "Exactly <strong>3</strong>. Space is three-dimensional, and that is precisely what the number 3 here means."
+  },
+  {
+   "q": "The vector <strong>A</strong> = 2&#238; + 3&#309; + 6k&#770; is written with how many rectangular components?",
+   "opts": ["3","2","6","11"],
+   "ans": 0,
+   "sol": "<strong>3</strong> &#8212; one along each axis: 2&#238;, 3&#309; and 6k&#770;. They are mutually perpendicular, so they are rectangular components.<br><br>(For interest, |<strong>A</strong>| = &#8730;(4 + 9 + 36) = 7.)"
+  },
+  {
+   "q": "Can a fourth direction be found in space that is perpendicular to x, y and z all at once?",
+   "opts": ["No &#8212; our space has only three dimensions","Yes, the direction of &#238; + &#309; + k&#770;","Yes, but only for unit vectors","Yes, if the vector is very large"],
+   "ans": 0,
+   "sol": "<strong>No.</strong> Three is the hard ceiling in three-dimensional space.<br><br>Check the tempting option: &#238; + &#309; + k&#770; makes an angle of about 54.7&#176; with each axis, not 90&#176;. Its dot product with &#238; is 1, not 0."
+  },
+  {
+   "tag": "Ex-I Q30 &#183; MNVE0030",
+   "q": "&#9733; <strong>Original:</strong> What is the maximum number of <strong>rectangular</strong> components into which a vector can be split <strong>in space</strong>?",
+   "opts": ["3","2","4","Infinite"],
+   "ans": 0,
+   "sol": "Space offers only <strong>3</strong> mutually perpendicular directions, so a vector splits into at most 3 rectangular components: A<sub>x</sub>, A<sub>y</sub>, A<sub>z</sub>.<br><br><em>The trio, side by side:</em><br>&#8226; components, no other condition &#8594; <strong>infinite</strong><br>&#8226; rectangular, in a plane &#8594; <strong>2</strong><br>&#8226; rectangular, in space &#8594; <strong>3</strong><br>The only things that changed were the words 'rectangular' and 'in space'."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "The largest and smallest a resultant can be",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Two forces of 10 N and 6 N act at a point. Their resultant is <strong>largest</strong> when the angle between them is:",
+   "opts": ["0&#176;, giving 16 N","90&#176;, giving 11.7 N","180&#176;, giving 4 N","60&#176;, giving 14 N"],
+   "ans": 0,
+   "sol": "R<sup>2</sup> = A<sup>2</sup> + B<sup>2</sup> + 2AB cos&#952; is biggest when cos&#952; is biggest, that is cos&#952; = 1 at <strong>&#952; = 0&#176;</strong>.<br>Then R = A + B = <strong>16 N</strong> &#8212; the two simply line up."
+  },
+  {
+   "q": "For the same 10 N and 6 N, the resultant is <strong>smallest</strong> when the angle is:",
+   "opts": ["180&#176;, giving 4 N","0&#176;, giving 16 N","90&#176;, giving 8 N","270&#176;, giving 0 N"],
+   "ans": 0,
+   "sol": "Smallest when cos&#952; = &#8722;1, that is <strong>&#952; = 180&#176;</strong>. Then R = |A &#8722; B| = 10 &#8722; 6 = <strong>4 N</strong>."
+  },
+  {
+   "q": "So the resultant of 10 N and 6 N can be any value from 4 N to 16 N. Is 12 N a possible resultant?",
+   "diagram": DIAGRAMS.rangeLine('4 N','16 N'),
+   "opts": ["Yes &#8212; it lies inside the range","No, only 4 N and 16 N are possible","No, the resultant must be 8 N","Only if the forces are perpendicular"],
+   "ans": 0,
+   "sol": "<strong>Yes.</strong> As the angle slides from 0&#176; to 180&#176;, cos&#952; slides smoothly from +1 to &#8722;1, so the resultant takes <em>every</em> value between 16 N and 4 N.<br><br>Rule to carry: <strong>|A &#8722; B| &#8804; R &#8804; A + B</strong>."
+  },
+  {
+   "tag": "Ex-I Q31 &#183; MNVE0031",
+   "q": "&#9733; <strong>Original:</strong> The vector sum of the forces of 10 newton and 6 newton can be:",
+   "opts": ["8 N","2 N","18 N","20 N"],
+   "ans": 0,
+   "sol": "The range is 4 N to 16 N.<br>&#8226; 8 N &#8594; inside &#10003;<br>&#8226; 2 N &#8594; below 4, impossible<br>&#8226; 18 N and 20 N &#8594; above 16, impossible<br><br>Answer: <strong>8 N</strong>.<br><br>Do not compute anything. Work out the two ends, then just look at the options."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "The same range, asked the other way round",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "For two forces of 10 N and 6 N, the allowed range of the resultant is:",
+   "opts": ["4 N to 16 N","0 N to 16 N","6 N to 10 N","4 N to 10 N"],
+   "ans": 0,
+   "sol": "|10 &#8722; 6| = 4 N at the low end, 10 + 6 = 16 N at the high end. So <strong>4 N &#8804; R &#8804; 16 N</strong>.<br><br>It cannot reach 0 N &#8212; that would need the two forces to be equal."
+  },
+  {
+   "q": "Is a resultant of exactly 4 N possible for these two forces?",
+   "opts": ["Yes &#8212; when they are opposite, at 180&#176;","No, 4 N is below the range","Yes, when they are perpendicular","Only if a third force is added"],
+   "ans": 0,
+   "sol": "<strong>Yes.</strong> 4 N is the lower end of the range, and the end values are reachable &#8212; at exactly 180&#176;.<br><br>The range is written with &#8804;, not &lt;. The two ends are included."
+  },
+  {
+   "q": "Is a resultant of exactly 16 N possible?",
+   "opts": ["Yes &#8212; when they act along the same line, at 0&#176;","No, 16 N is above the range","Only if both forces are increased","Only at 90&#176;"],
+   "ans": 0,
+   "sol": "<strong>Yes</strong> &#8212; the upper end, reached at 0&#176;, when both point the same way and the magnitudes simply add.<br><br>So both 4 N and 16 N are allowed. Anything outside them is not."
+  },
+  {
+   "tag": "Ex-I Q32 &#183; MNVE0032",
+   "q": "&#9733; <strong>Original:</strong> Vector sum of two forces of 10 N and 6 N <strong>cannot</strong> be:",
+   "opts": ["2 N","4 N","8 N","12 N"],
+   "ans": 0,
+   "sol": "Range: 4 N to 16 N. Now check each option &#8212; 4, 8 and 12 all sit inside it. Only <strong>2 N</strong> falls below the minimum, so it is impossible.<br><br><em>Watch out:</em> this is the same physics as Ladder 07, but the word is <strong>cannot</strong>. There you picked the value inside the range; here you pick the one outside it. Circle that word before you look at the options."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "Testing several pairs against one target value",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Two forces of 1 N and 1 N act at a point. Can they give a resultant of 2 N?",
+   "opts": ["Yes &#8212; at 0&#176;, since the range is 0 N to 2 N","No, the maximum is 1 N","No, the maximum is &#8730;2 N","Only at 90&#176;"],
+   "ans": 0,
+   "sol": "Range = |1 &#8722; 1| to 1 + 1 = <strong>0 N to 2 N</strong>. The value 2 N is the top end, reached at 0&#176;. So yes."
+  },
+  {
+   "q": "Two forces of 1 N and 3 N act at a point. Can they give a resultant of 2 N?",
+   "opts": ["Yes &#8212; at 180&#176;, since the range is 2 N to 4 N","No, the minimum is 3 N","No, the minimum is 4 N","Only at 60&#176;"],
+   "ans": 0,
+   "sol": "Range = |1 &#8722; 3| to 1 + 3 = <strong>2 N to 4 N</strong>. Here 2 N is the <em>bottom</em> end, reached at 180&#176;. So yes again.<br><br>Notice 2 N was the top end in rung 1 and the bottom end here. Always work out both ends before deciding."
+  },
+  {
+   "q": "What is the range of the resultant for forces of 1 N and 4 N?",
+   "diagram": DIAGRAMS.rangeLine('3 N','5 N','2 N is not in here'),
+   "opts": ["3 N to 5 N","1 N to 4 N","0 N to 5 N","2 N to 5 N"],
+   "ans": 0,
+   "sol": "|1 &#8722; 4| = 3 N and 1 + 4 = 5 N, so the range is <strong>3 N to 5 N</strong>.<br><br>2 N lies below 3 N &#8212; outside the range. This pair can never make 2 N."
+  },
+  {
+   "tag": "Ex-I Q33 &#183; MNVE0033",
+   "q": "&#9733; <strong>Original:</strong> Which of the following pairs of forces will <strong>never</strong> give a resultant force of 2 N?",
+   "opts": ["1 N and 4 N","2 N and 2 N","1 N and 1 N","1 N and 3 N"],
+   "ans": 0,
+   "sol": "Write the range for each pair and check whether 2 N sits inside:<br>&#8226; 2 &amp; 2 &#8594; 0 to 4 &#10003;<br>&#8226; 1 &amp; 1 &#8594; 0 to 2 &#10003; (at the top end)<br>&#8226; 1 &amp; 3 &#8594; 2 to 4 &#10003; (at the bottom end)<br>&#8226; <strong>1 &amp; 4 &#8594; 3 to 5 &#10007;</strong><br><br>Answer: <strong>1 N and 4 N</strong>.<br><br>Four pairs, four ranges, one glance each. This is a 20-second question once the method is a habit."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "When the magnitudes add up exactly",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "The resultant of two vectors takes its maximum value when the angle between them is:",
+   "opts": ["0&#176;","90&#176;","180&#176;","45&#176;"],
+   "ans": 0,
+   "sol": "R<sup>2</sup> = A<sup>2</sup> + B<sup>2</sup> + 2AB cos&#952;. This is largest when cos&#952; = 1, that is at <strong>&#952; = 0&#176;</strong> &#8212; the two vectors pointing the same way."
+  },
+  {
+   "q": "Two vectors of magnitude 3 and 4 give a resultant of magnitude 7. The angle between them is:",
+   "opts": ["0&#176;","90&#176;","180&#176;","60&#176;"],
+   "ans": 0,
+   "sol": "7 is exactly 3 + 4, the largest the resultant can be. That happens only at <strong>&#952; = 0&#176;</strong>.<br><br>Check it: 49 = 9 + 16 + 24cos&#952; &#8594; 24cos&#952; = 24 &#8594; cos&#952; = 1. &#10003;"
+  },
+  {
+   "q": "If the magnitudes of two vectors add up exactly to the magnitude of their resultant, the two vectors must be:",
+   "opts": ["pointing in the same direction","perpendicular","opposite","equal in magnitude"],
+   "ans": 0,
+   "sol": "Magnitudes only add plainly when the vectors line up, so they point in the <strong>same direction</strong> (&#952; = 0&#176;).<br><br>Compare: if the <em>squares</em> add up (C<sup>2</sup> = A<sup>2</sup> + B<sup>2</sup>), the vectors are perpendicular. Sizes adding &#8594; parallel. Squares adding &#8594; perpendicular. Keep the two apart."
+  },
+  {
+   "tag": "Ex-I Q34 &#183; MNVE0034",
+   "q": "&#9733; <strong>Original:</strong> If <strong>A</strong> + <strong>B</strong> = <strong>C</strong> and A + B = C (the magnitudes), then the angle between <strong>A</strong> and <strong>B</strong> is:",
+   "opts": ["0","&#960;/4","&#960;/2","&#960;"],
+   "ans": 0,
+   "sol": "Substitute C = A + B into C<sup>2</sup> = A<sup>2</sup> + B<sup>2</sup> + 2AB cos&#952;:<br>(A + B)<sup>2</sup> = A<sup>2</sup> + B<sup>2</sup> + 2AB cos&#952;<br>A<sup>2</sup> + 2AB + B<sup>2</sup> = A<sup>2</sup> + B<sup>2</sup> + 2AB cos&#952;<br>&#8594; 2AB = 2AB cos&#952; &#8594; cos&#952; = 1 &#8594; <strong>&#952; = 0</strong>.<br><br>Read the statement carefully: the first line is a <em>vector</em> equation, the second is about <em>magnitudes</em>. It is the second one that pins the angle down."
+  }
+ ]
+}
+
+];
+
+
+
+const STORAGE_KEY = 'padipucast_vectors_neet_ladder_s2a_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original module question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
