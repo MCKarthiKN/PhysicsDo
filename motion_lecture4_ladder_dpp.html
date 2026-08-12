@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motion · Lecture 4 · Ladder DPP · Class 9</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+  --star-bg:#fdf6ec;--star:#b45309;--star-border:#f0dcc0;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:14px;}
+.ladder-note{font-size:12.5px;color:var(--text2);background:var(--star-bg);border:1px solid var(--star-border);border-radius:10px;padding:10px 14px;margin-bottom:20px;}
+.ladder-note b{color:var(--star);}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.q-pill.star{box-shadow:0 0 0 2px var(--star-border);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.lvl{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.04em;color:var(--text2);background:var(--tag-bg);border-radius:20px;padding:2px 10px;text-transform:none;font-weight:500;}
+.lvl.lvl-star{background:var(--star-bg);color:var(--star);border:1px solid var(--star-border);font-weight:600;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> Class 9 · Lecture 4 Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Ladders
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Motion &mdash; Lecture 4</h1></div>
+    <p id="home-sub">Acceleration &amp; Retardation · ICSE Class 9</p>
+    <div class="ladder-note">Each ladder has <b>5 rungs</b>. You start with an easy warm-up and climb one step at a time up to the <b>original textbook question (&#9733;)</b>. Do the rungs in order &mdash; each one gets you ready for the next.</div>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+const DIAGRAMS = {
+  accelUp: () => `
+    <svg viewBox="0 0 320 118" width="320" height="118" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="au_a" markerWidth="7" markerHeight="6" refX="3.5" refY="5.5" orient="auto"><polygon points="0 6,3.5 0,7 6" fill="#2563eb"/></marker></defs>
+      <line x1="20" y1="90" x2="305" y2="90" stroke="#374151" stroke-width="1.4"/>
+      ${[[55,24],[120,40],[190,56],[260,72]].map(([x,h])=>`<line x1="${x}" y1="90" x2="${x}" y2="${90-h}" stroke="#2563eb" stroke-width="3" marker-end="url(#au_a)"/>`).join('')}
+      ${['0 s','1 s','2 s','3 s'].map((t,i)=>`<text x="${[55,120,190,260][i]}" y="106" font-size="11" fill="#374151" font-family="sans-serif" text-anchor="middle">${t}</text>`).join('')}
+      <text x="162" y="14" font-size="11" fill="#2563eb" font-family="sans-serif" text-anchor="middle">velocity grows each second &rarr; acceleration</text>
+    </svg>`,
+  accelDown: () => `
+    <svg viewBox="0 0 320 118" width="320" height="118" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ad_a" markerWidth="7" markerHeight="6" refX="3.5" refY="5.5" orient="auto"><polygon points="0 6,3.5 0,7 6" fill="#dc2626"/></marker></defs>
+      <line x1="20" y1="90" x2="305" y2="90" stroke="#374151" stroke-width="1.4"/>
+      ${[[55,72],[120,56],[190,40],[260,24]].map(([x,h])=>`<line x1="${x}" y1="90" x2="${x}" y2="${90-h}" stroke="#dc2626" stroke-width="3" marker-end="url(#ad_a)"/>`).join('')}
+      ${['0 s','1 s','2 s','3 s'].map((t,i)=>`<text x="${[55,120,190,260][i]}" y="106" font-size="11" fill="#374151" font-family="sans-serif" text-anchor="middle">${t}</text>`).join('')}
+      <text x="162" y="14" font-size="11" fill="#dc2626" font-family="sans-serif" text-anchor="middle">velocity falls each second &rarr; retardation (slowing down)</text>
+    </svg>`
+};
+
+// ── LADDER DATA ────────────────────────────────────────────────────────────────
+// Each "topic" = one Exercise-2(A) question turned into a 5-rung ladder (easy -> original*).
+const TOPICS = [
+
+  { name:"What is acceleration?",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"Acceleration happens when a body's ______ changes.",
+        opts:["velocity","colour","mass","name"], ans:0,
+        sol:"Acceleration is about a change in <strong>velocity</strong> over time." },
+      { level:"Rung 2 \u00b7 Easy", q:"Acceleration is the rate of change of:",
+        opts:["velocity with time","distance with time","mass with time","direction only"], ans:0,
+        sol:"Acceleration = change in velocity \u00f7 time taken." },
+      { level:"Rung 3 \u00b7 Build", q:"The SI unit of acceleration is:",
+        opts:["m/s\u00b2","m/s","m","s"], ans:0,
+        sol:"Velocity (m/s) changing every second gives <strong>m/s\u00b2</strong> (metre per second squared)." },
+      { level:"Rung 4 \u00b7 Stretch", q:"A car in a crowded street keeps changing how fast it speeds up and slows down. This is an example of:",
+        opts:["variable (non-uniform) acceleration","uniform acceleration","no acceleration","uniform velocity"], ans:0,
+        sol:"The acceleration itself keeps changing, so it is <strong>variable (non-uniform) acceleration</strong>." },
+      { level:"Rung 5 \u00b7 Original \u2605 (textbook)", q:"Acceleration is best defined as:",
+        diagram: DIAGRAMS.accelUp(),
+        opts:["the rate of change of velocity with time","the total distance travelled","the speed in a fixed direction","the change of position"], ans:0,
+        sol:"Acceleration = <strong>rate of change of velocity with time</strong>. Its SI unit is m/s\u00b2." }
+    ]},
+
+  { name:"Acceleration = (v \u2212 u) \u00f7 t",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"To find acceleration, use:",
+        opts:["(final velocity \u2212 initial velocity) \u00f7 time","distance \u00f7 time","time \u00f7 velocity","velocity \u00d7 time"], ans:0,
+        sol:"a = (v \u2212 u) \u00f7 t, where u = starting velocity and v = final velocity." },
+      { level:"Rung 2 \u00b7 Easy", q:"A body speeds up from 0 to 6 m/s in 2 s. Its acceleration is:",
+        opts:["3 m/s\u00b2","12 m/s\u00b2","2 m/s\u00b2","0.3 m/s\u00b2"], ans:0,
+        sol:"a = (6 \u2212 0) \u00f7 2 = <strong>3 m/s\u00b2</strong>." },
+      { level:"Rung 3 \u00b7 Build", q:"A body speeds up from 4 m/s to 10 m/s in 3 s. Its acceleration is:",
+        opts:["2 m/s\u00b2","6 m/s\u00b2","14 m/s\u00b2","3 m/s\u00b2"], ans:0,
+        sol:"a = (10 \u2212 4) \u00f7 3 = 6 \u00f7 3 = <strong>2 m/s\u00b2</strong>." },
+      { level:"Rung 4 \u00b7 Stretch", q:"A body starts from rest and reaches 20 m/s in 4 s. Its acceleration is:",
+        opts:["5 m/s\u00b2","4 m/s\u00b2","20 m/s\u00b2","80 m/s\u00b2"], ans:0,
+        sol:"a = (20 \u2212 0) \u00f7 4 = <strong>5 m/s\u00b2</strong>." },
+      { level:"Rung 5 \u00b7 Original \u2605 (textbook)", q:"A body starts from rest and reaches a velocity of 10 m/s in 2 s. Its acceleration is:",
+        opts:["5 m/s\u00b2","10 m/s\u00b2","2 m/s\u00b2","20 m/s\u00b2"], ans:0,
+        sol:"a = (10 \u2212 0) \u00f7 2 = <strong>5 m/s\u00b2</strong>." }
+    ]},
+
+  { name:"Increase in velocity = a \u00d7 t",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"Rearranging a = (v \u2212 u) \u00f7 t, the change in velocity (v \u2212 u) equals:",
+        opts:["a \u00d7 t","a \u00f7 t","t \u00f7 a","a + t"], ans:0,
+        sol:"Change in velocity = acceleration \u00d7 time  (v \u2212 u = a \u00d7 t)." },
+      { level:"Rung 2 \u00b7 Easy", q:"A car accelerates at 2 m/s\u00b2. In 3 s its velocity increases by:",
+        opts:["6 m/s","5 m/s","1.5 m/s","2 m/s"], ans:0,
+        sol:"increase = a \u00d7 t = 2 \u00d7 3 = <strong>6 m/s</strong>." },
+      { level:"Rung 3 \u00b7 Build", q:"A car accelerates at 4 m/s\u00b2. In 5 s its velocity increases by:",
+        opts:["20 m/s","9 m/s","1.25 m/s","4 m/s"], ans:0,
+        sol:"increase = 4 \u00d7 5 = <strong>20 m/s</strong>." },
+      { level:"Rung 4 \u00b7 Stretch", q:"A car accelerates at 5 m/s\u00b2 for 3 s. The increase in its velocity is:",
+        opts:["15 m/s","8 m/s","1.67 m/s","5 m/s"], ans:0,
+        sol:"increase = 5 \u00d7 3 = <strong>15 m/s</strong>." },
+      { level:"Rung 5 \u00b7 Original \u2605 (textbook)", q:"A car accelerates at 5 m/s\u00b2. Find the increase in its velocity in 2 s:",
+        opts:["10 m/s","7 m/s","2.5 m/s","5 m/s"], ans:0,
+        sol:"increase = a \u00d7 t = 5 \u00d7 2 = <strong>10 m/s</strong>." }
+    ]},
+
+  { name:"v = u + at  (speeding up)",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"The equation that gives the final velocity is:",
+        opts:["v = u + at","v = u \u2212 at always","v = u \u00d7 t","v = a \u00f7 t"], ans:0,
+        sol:"v = u + at, where u = starting velocity, a = acceleration, t = time." },
+      { level:"Rung 2 \u00b7 Easy", q:"A body starts at 2 m/s and accelerates at 3 m/s\u00b2 for 2 s. Its final velocity is:",
+        opts:["8 m/s","5 m/s","6 m/s","2 m/s"], ans:0,
+        sol:"v = 2 + 3 \u00d7 2 = 2 + 6 = <strong>8 m/s</strong>." },
+      { level:"Rung 3 \u00b7 Build", q:"A body starts at 10 m/s and accelerates at 2 m/s\u00b2 for 4 s. Its final velocity is:",
+        opts:["18 m/s","12 m/s","8 m/s","20 m/s"], ans:0,
+        sol:"v = 10 + 2 \u00d7 4 = <strong>18 m/s</strong>." },
+      { level:"Rung 4 \u00b7 Stretch", q:"A body starts at 5 m/s and accelerates at 2 m/s\u00b2 for 3 s. Its final velocity is:",
+        opts:["11 m/s","10 m/s","7 m/s","6 m/s"], ans:0,
+        sol:"v = 5 + 2 \u00d7 3 = <strong>11 m/s</strong>." },
+      { level:"Rung 5 \u00b7 Original \u2605 (textbook)", q:"A bicycle moving at 5 m/s accelerates at 2 m/s\u00b2 for 5 s. Its final velocity is:",
+        opts:["15 m/s","10 m/s","12 m/s","7 m/s"], ans:0,
+        sol:"v = u + at = 5 + 2 \u00d7 5 = <strong>15 m/s</strong>." }
+    ]},
+
+  { name:"Retardation \u2014 velocity decreasing",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"When a body slows down, its acceleration is:",
+        diagram: DIAGRAMS.accelDown(),
+        opts:["negative (called retardation)","positive","always zero","the same as its speed"], ans:0,
+        sol:"Slowing down means <strong>negative acceleration</strong>, which we call retardation." },
+      { level:"Rung 2 \u00b7 Easy", q:"For slowing motion we use v = u + at with a negative a. A body at 10 m/s slows at 2 m/s\u00b2 for 2 s. Its final velocity is:",
+        opts:["6 m/s","14 m/s","12 m/s","2 m/s"], ans:0,
+        sol:"v = 10 + (\u22122)(2) = 10 \u2212 4 = <strong>6 m/s</strong>." },
+      { level:"Rung 3 \u00b7 Build", q:"A car at 20 m/s slows at 2 m/s\u00b2 for 3 s. Its final velocity is:",
+        opts:["14 m/s","26 m/s","6 m/s","17 m/s"], ans:0,
+        sol:"v = 20 \u2212 2 \u00d7 3 = <strong>14 m/s</strong>." },
+      { level:"Rung 4 \u00b7 Stretch", q:"A car at 20 m/s slows at 2 m/s\u00b2 for 4 s. Its final velocity is:",
+        opts:["12 m/s","28 m/s","8 m/s","18 m/s"], ans:0,
+        sol:"v = 20 \u2212 2 \u00d7 4 = <strong>12 m/s</strong>." },
+      { level:"Rung 5 \u00b7 Original \u2605 (textbook)", q:"A car moving at 20 m/s is braked to retard at 2 m/s\u00b2. Its velocity after 5 s is:",
+        opts:["10 m/s","30 m/s","5 m/s","0 m/s"], ans:0,
+        sol:"v = u + at = 20 + (\u22122)(5) = 20 \u2212 10 = <strong>10 m/s</strong>." }
+    ]},
+
+  { name:"Finding the retardation",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"Retardation is simply acceleration that is:",
+        opts:["negative (the body slows down)","very large","in a circle","zero"], ans:0,
+        sol:"Retardation = negative acceleration; the body slows down." },
+      { level:"Rung 2 \u00b7 Easy", q:"A body slows from 10 m/s to 0 in 2 s. Its retardation is:",
+        opts:["5 m/s\u00b2","2 m/s\u00b2","10 m/s\u00b2","20 m/s\u00b2"], ans:0,
+        sol:"a = (0 \u2212 10) \u00f7 2 = \u22125 m/s\u00b2, so the retardation is <strong>5 m/s\u00b2</strong>." },
+      { level:"Rung 3 \u00b7 Build", q:"First convert the speed: 18 km/h in m/s is:",
+        opts:["5 m/s","18 m/s","1.8 m/s","10 m/s"], ans:0,
+        sol:"18 \u00d7 5/18 = <strong>5 m/s</strong>." },
+      { level:"Rung 4 \u00b7 Stretch", q:"A body slows from 5 m/s to 0 in 2 s. Its retardation is:",
+        opts:["2.5 m/s\u00b2","5 m/s\u00b2","10 m/s\u00b2","1 m/s\u00b2"], ans:0,
+        sol:"a = (0 \u2212 5) \u00f7 2 = \u22122.5 m/s\u00b2, so the retardation is <strong>2.5 m/s\u00b2</strong>." },
+      { level:"Rung 5 \u00b7 Original \u2605 (textbook)", q:"A toy car moving at 18 km/h comes to a stop in 2 s. Its retardation (in SI units) is:",
+        opts:["2.5 m/s\u00b2","9 m/s\u00b2","5 m/s\u00b2","1.25 m/s\u00b2"], ans:0,
+        sol:"18 km/h = 5 m/s; a = (0 \u2212 5) \u00f7 2 = \u22122.5 m/s\u00b2, so retardation = <strong>2.5 m/s\u00b2</strong>." }
+    ]},
+
+  { name:"The minus sign in acceleration",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A positive acceleration means the body is ______; a negative one means it is ______.",
+        opts:["speeding up; slowing down","slowing down; speeding up","at rest; moving","turning left; turning right"], ans:0,
+        sol:"+ acceleration = speeding up; \u2212 acceleration = slowing down (retardation)." },
+      { level:"Rung 2 \u00b7 Easy", q:"A body slows from 30 m/s to 10 m/s in 2 s. Its acceleration is:",
+        opts:["\u221210 m/s\u00b2","10 m/s\u00b2","20 m/s\u00b2","\u221220 m/s\u00b2"], ans:0,
+        sol:"a = (10 \u2212 30) \u00f7 2 = \u221220 \u00f7 2 = <strong>\u221210 m/s\u00b2</strong>. The minus sign shows it is slowing." },
+      { level:"Rung 3 \u00b7 Build", q:"A minus sign in an acceleration answer tells us the velocity is:",
+        opts:["decreasing with time","increasing with time","constant","zero"], ans:0,
+        sol:"A negative acceleration means the velocity is <strong>decreasing</strong> (retardation)." },
+      { level:"Rung 4 \u00b7 Stretch", q:"Moving up, a body slows from 40 m/s to 10 m/s in 3 s. Its acceleration is:",
+        opts:["\u221210 m/s\u00b2","10 m/s\u00b2","\u221230 m/s\u00b2","30 m/s\u00b2"], ans:0,
+        sol:"a = (10 \u2212 40) \u00f7 3 = \u221230 \u00f7 3 = <strong>\u221210 m/s\u00b2</strong>." },
+      { level:"Rung 5 \u00b7 Original \u2605 (textbook)", q:"Moving vertically up, a body's velocity changes steadily from 50 m/s to 20 m/s in 3 s. Its acceleration is:",
+        opts:["\u221210 m/s\u00b2","10 m/s\u00b2","\u221230 m/s\u00b2","\u221290 m/s\u00b2"], ans:0,
+        sol:"a = (20 \u2212 50) \u00f7 3 = \u221230 \u00f7 3 = <strong>\u221210 m/s\u00b2</strong>. The minus sign shows the velocity is decreasing." }
+    ]},
+
+  { name:"Capstone \u2014 braking in three parts",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"18 km/h in m/s is:",
+        opts:["5 m/s","18 m/s","10 m/s","1.8 m/s"], ans:0,
+        sol:"18 \u00d7 5/18 = <strong>5 m/s</strong>." },
+      { level:"Rung 2 \u00b7 Easy", q:"A car at 5 m/s stops in 5 s. Its retardation is:",
+        opts:["1 m/s\u00b2","5 m/s\u00b2","25 m/s\u00b2","0.2 m/s\u00b2"], ans:0,
+        sol:"a = (0 \u2212 5) \u00f7 5 = \u22121 m/s\u00b2, so retardation = <strong>1 m/s\u00b2</strong>." },
+      { level:"Rung 3 \u00b7 Build", q:"Using v = u + at with u = 5 m/s and a = \u22121 m/s\u00b2, the velocity after 2 s is:",
+        opts:["3 m/s","7 m/s","2 m/s","5 m/s"], ans:0,
+        sol:"v = 5 + (\u22121)(2) = 5 \u2212 2 = <strong>3 m/s</strong>." },
+      { level:"Rung 4 \u00b7 Stretch", q:"For the same car, its velocity after 4 s of braking is:",
+        opts:["1 m/s","9 m/s","4 m/s","0 m/s"], ans:0,
+        sol:"v = 5 + (\u22121)(4) = 5 \u2212 4 = <strong>1 m/s</strong>." },
+      { level:"Rung 5 \u00b7 Original \u2605 (textbook)", q:"A car moving at 18 km/h is stopped in 5 s by braking. Find (i) the speed in m/s, (ii) the retardation, (iii) the speed after 2 s of braking:",
+        opts:["5 m/s, 1 m/s\u00b2, 3 m/s","5 m/s, 5 m/s\u00b2, 3 m/s","10 m/s, 2 m/s\u00b2, 6 m/s","5 m/s, 1 m/s\u00b2, 1 m/s"], ans:0,
+        sol:"18 km/h = 5 m/s; retardation = (5 \u2212 0) \u00f7 5 = 1 m/s\u00b2; after 2 s: v = 5 \u2212 1 \u00d7 2 = <strong>3 m/s</strong>." }
+    ]}
+];
+
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'padipucast_motion_l4_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(()=>Array(5).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Shuffle option order within each rung; keep rung order (easy -> original).
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, level:raw.level||'', diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===5&&done===5?' all-done':'');
+    const dots=Array(5).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/5 rungs</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.length*5} rungs cleared`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=5;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((qq,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'')+(i===4?' star':'');
+    pill.textContent=(i===4?'\u2605':(i+1));
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  const isStar=q.level.indexOf('\u2605')!==-1;
+  qLabel.innerHTML=`Rung ${curQ+1} of 5 <span class="lvl${isStar?' lvl-star':''}">${q.level}</span>`;
+  qText.textContent=q.q;
+  if(q.diagram){ qDiagram.style.display='flex'; qDiagram.innerHTML=q.diagram; }
+  else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open'); solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &mdash;</strong> ${q.sol}`;
+    solWrap.classList.add('open'); showFeedback(a.correct); showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0; nextBtn.disabled=false;
+  if(curQ===4){ nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`; }
+  else { nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`; }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct}; saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &mdash;</strong> ${q.sol}`;
+  solWrap.classList.add('open'); showFeedback(correct); showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w'); pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Not quite \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false}; saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct'); else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &mdash;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show'; feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  if(newQ<0||newQ>4){if(newQ>4) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(()=>Array(5).fill(null)); saveAnswers();
+  clearModal.classList.remove('show'); buildHome(); showToast('All progress cleared');
+}
+function showToast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); setTimeout(()=>toastEl.classList.remove('show'), 2400); }
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){ ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible'); ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value=''; }
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0; const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]); return t;
+}
+function extractYTData(url){
+  if(!url)return null; let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null; const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]); return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block'; ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
