@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Moving Charges, Magnetism &amp; Magnetic Materials &#183; Timed Test (10 Q &#183; 2:00 each)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --amber:#b45309;--amber-bg:#fdf6ec;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 90px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:26px 0 24px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;}
+.brand span{color:var(--text3);}
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ---------- start screen ---------- */
+#start-heading h1{font-family:'LemonMilk',sans-serif;font-size:23px;font-weight:700;letter-spacing:0.03em;line-height:1.3;margin-bottom:10px;}
+#start-sub{font-size:14.5px;color:var(--text2);margin-bottom:22px;}
+.meta-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;}
+.meta-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:9px 15px;color:var(--text2);}
+.rules{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:24px;}
+.rules h3{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+.rules ul{list-style:none;}
+.rules li{font-size:14px;color:var(--text2);padding:5px 0 5px 20px;position:relative;}
+.rules li::before{content:'';position:absolute;left:4px;top:14px;width:5px;height:5px;border-radius:50%;background:var(--border2);}
+.rules li strong{color:var(--text);font-weight:600;}
+.bigbtn{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;background:var(--text);color:var(--bg);border:none;border-radius:10px;padding:15px 34px;cursor:pointer;transition:opacity 0.15s;}
+.bigbtn:hover{opacity:0.85;}
+.ghostbtn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:10px;padding:13px 24px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.ghostbtn:hover{border-color:var(--border2);color:var(--text);}
+#best-line{margin-top:16px;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+#best-line b{color:var(--correct);}
+
+/* ---------- timer bar ---------- */
+#timerbar{position:sticky;top:0;z-index:40;background:var(--bg);padding:12px 0 14px;margin-bottom:18px;border-bottom:1px solid var(--border);}
+.tb-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+.tb-q{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);}
+#tb-clock{font-family:'LemonMilk',sans-serif;font-size:17px;font-weight:700;letter-spacing:0.06em;color:var(--text);font-variant-numeric:tabular-nums;}
+#timerbar.low #tb-clock{color:var(--wrong);animation:pulse 0.9s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.42;}}
+.tb-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+#tb-fill{height:100%;width:100%;background:var(--text);border-radius:3px;transition:width 0.25s linear;}
+#timerbar.low #tb-fill{background:var(--wrong);}
+
+/* ---------- question card ---------- */
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px 26px 22px;animation:fadein 0.25s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.q-tag{display:inline-block;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:3px 8px;margin-bottom:13px;}
+.q-text{font-size:15.5px;line-height:1.75;margin-bottom:16px;}
+.q-text sup{font-size:0.72em;}.q-text sub{font-size:0.72em;}
+.q-diagram{margin-bottom:18px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 15px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14.5px;color:var(--text2);transition:all 0.13s;text-align:left;}
+.opt sup{font-size:0.72em;}.opt sub{font-size:0.72em;}
+.opt:hover{border-color:var(--text);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;color:var(--text3);flex-shrink:0;background:var(--surface);}
+.opt:hover .opt-letter{border-color:var(--text);color:var(--text);}
+.skip-row{margin-top:16px;display:flex;justify-content:flex-end;}
+#skip-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--text3);}
+#skip-btn:hover{border-color:var(--border2);color:var(--text2);}
+
+/* ---------- result ---------- */
+#ring-wrap{display:flex;flex-direction:column;align-items:center;margin:20px 0 8px;}
+#ring{transform:rotate(-90deg);}
+#ring-num{font-family:'LemonMilk',sans-serif;font-size:34px;font-weight:700;}
+#ring-of{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text3);margin-top:2px;}
+#res-msg{text-align:center;font-size:15px;color:var(--text2);max-width:520px;margin:16px auto 6px;}
+.stat-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0 26px;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 20px;text-align:center;min-width:104px;}
+.stat b{display:block;font-family:'LemonMilk',sans-serif;font-size:19px;font-weight:700;}
+.stat span{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);}
+.res-actions{display:flex;gap:10px;justify-content:center;margin-bottom:34px;flex-wrap:wrap;}
+.rev-head{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin:0 0 14px;}
+.rev{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:18px 20px;margin-bottom:12px;}
+.rev.ok{border-color:var(--correct-border);}
+.rev.no{border-color:var(--wrong-border);}
+.rev.sk{border-color:var(--border2);}
+.rev-top{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.rev-n{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);}
+.rev-mark{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;border-radius:5px;padding:3px 8px;}
+.rev-mark.ok{background:var(--correct-bg);color:var(--correct);}
+.rev-mark.no{background:var(--wrong-bg);color:var(--wrong);}
+.rev-mark.sk{background:var(--tag-bg);color:var(--text2);}
+.rev-q{font-size:14.5px;margin-bottom:10px;}
+.rev-q sup{font-size:0.72em;}.rev-q sub{font-size:0.72em;}
+.rev-ans{font-size:13.5px;margin-bottom:4px;}
+.rev-ans .lbl{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-right:6px;}
+.rev-ans.you{color:var(--wrong);}
+.rev-ans.cor{color:var(--correct);}
+.rev-why{margin-top:10px;border-left:2px solid var(--border2);padding-left:12px;font-size:13.5px;color:var(--text2);line-height:1.7;}
+.rev-why sup{font-size:0.72em;}.rev-why sub{font-size:0.72em;}
+.rev-why b,.rev-why strong{color:var(--text);}
+.flagbox{margin-top:10px;background:var(--amber-bg);border:1px solid #f0dfc4;border-radius:8px;padding:10px 12px;font-size:13px;color:#8a5a1a;line-height:1.65;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Magnetism &#183; Short Timed Test</div>
+  </div>
+
+  <!-- ===================== START ===================== -->
+  <div id="start-screen" class="screen active">
+    <div id="start-heading"><h1>Moving Charges &amp; Magnetism<br>+ Magnetic Materials<br>Timed Test &#183; 10 Questions</h1></div>
+    <p id="start-sub">A short, sharp paper. Ten questions, medium to hard, split evenly between <strong>Moving Charges and Magnetism</strong> (helical pitch, field at the centre of a square loop, perpendicular coils, cyclotron energy, magnetic moment) and <strong>Magnetic Materials</strong> (Curie&#8217;s law, Curie&#8211;Weiss, magnetisation from &#956;<sub>r</sub>, hysteresis loss). Most need two or three lines of working &#8212; none are one-line recall.</p>
+    <div class="meta-row">
+      <div class="meta-chip">10 questions</div>
+      <div class="meta-chip">2:00 per question</div>
+      <div class="meta-chip">20 min total</div>
+      <div class="meta-chip">Medium &#8594; Hard</div>
+    </div>
+    <div class="rules">
+      <h3>How this test runs</h3>
+      <ul>
+        <li>Each question gets its <strong>own fresh 2 minutes</strong>. It is not one clock for the whole paper.</li>
+        <li>Tap an option and it <strong>locks and moves on</strong>. No going back, no answer shown mid-test.</li>
+        <li>If the 2 minutes run out, the question is <strong>left blank</strong> and the next one starts automatically.</li>
+        <li>The clock <strong>turns red under 30 seconds</strong>.</li>
+        <li>Question order and option order are <strong>shuffled every attempt</strong>.</li>
+        <li>Full review with the working comes at the end. Your best score is saved on this device.</li>
+      </ul>
+    </div>
+    <button class="bigbtn" onclick="startTest()">Start the test</button>
+    <div id="best-line"></div>
+  </div>
+
+  <!-- ===================== TEST ===================== -->
+  <div id="test-screen" class="screen">
+    <div id="timerbar">
+      <div class="tb-top">
+        <div class="tb-q" id="tb-label">Question 1 of 10</div>
+        <div id="tb-clock">2:00</div>
+      </div>
+      <div class="tb-track"><div id="tb-fill"></div></div>
+    </div>
+    <div id="q-card">
+      <div class="q-tag" id="q-tag"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div class="skip-row"><button id="skip-btn" onclick="skipQ()">Skip &#8594;</button></div>
+    </div>
+  </div>
+
+  <!-- ===================== RESULT ===================== -->
+  <div id="result-screen" class="screen">
+    <div id="ring-wrap">
+      <svg width="150" height="150" viewBox="0 0 150 150">
+        <circle cx="75" cy="75" r="64" fill="none" stroke="#e8e6e0" stroke-width="10"/>
+        <circle id="ring" cx="75" cy="75" r="64" fill="none" stroke="#1a7a4a" stroke-width="10" stroke-linecap="round"
+                stroke-dasharray="402" stroke-dashoffset="402" style="transform-origin:75px 75px;transition:stroke-dashoffset 1s ease"/>
+        <text id="ring-num" x="75" y="76" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 75 75)">0</text>
+      </svg>
+      <div id="ring-of">out of 10</div>
+    </div>
+    <p id="res-msg"></p>
+    <div class="stat-row">
+      <div class="stat"><b id="st-cor">0</b><span>Correct</span></div>
+      <div class="stat"><b id="st-wr">0</b><span>Wrong</span></div>
+      <div class="stat"><b id="st-sk">0</b><span>Skipped</span></div>
+      <div class="stat"><b id="st-mk">0</b><span>NEET marks</span></div>
+    </div>
+    <div class="res-actions">
+      <button class="bigbtn" onclick="location.reload()">Take it again</button>
+      <button class="ghostbtn" onclick="clearBest()">Clear best score</button>
+    </div>
+    <div class="rev-head">Full review &#8212; every question, with the working</div>
+    <div id="review"></div>
+  </div>
+</div>
+<script>
+// ==========================================================================
+//  SVG DIAGRAMS  (PADIPUCAST)
+// ==========================================================================
+const AR=(id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS='font-family="sans-serif"';
+const CU='#2563eb', RD='#c0392b', GN='#1a7a4a', IK='#1a1916';
+
+const D = {
+
+ // helical path of a charge entering B at an angle
+ helix:()=>`<svg viewBox="0 0 300 172" width="300" height="172" xmlns="http://www.w3.org/2000/svg">
+  <defs>${AR('hx','#c0392b')}${AR('hb','#1a7a4a')}</defs>
+  <line x1="30" y1="84" x2="276" y2="84" stroke="${GN}" stroke-width="1.6" marker-end="url(#hb)"/>
+  <text x="264" y="76" font-size="11" fill="${GN}" ${FS} font-weight="700">B</text>
+  <g fill="none" stroke="${CU}" stroke-width="2">
+   <ellipse cx="74" cy="84" rx="12" ry="30"/><ellipse cx="118" cy="84" rx="12" ry="30"/>
+   <ellipse cx="162" cy="84" rx="12" ry="30"/><ellipse cx="206" cy="84" rx="12" ry="30"/>
+  </g>
+  <line x1="62" y1="144" x2="106" y2="144" stroke="${RD}" stroke-width="1.2"/>
+  <line x1="62" y1="140" x2="62" y2="148" stroke="${RD}" stroke-width="1.2"/>
+  <line x1="106" y1="140" x2="106" y2="148" stroke="${RD}" stroke-width="1.2"/>
+  <text x="84" y="160" font-size="11" fill="${RD}" text-anchor="middle" ${FS}>pitch</text>
+  <line x1="40" y1="118" x2="70" y2="92" stroke="${RD}" stroke-width="1.6" marker-end="url(#hx)"/>
+  <text x="24" y="126" font-size="11" fill="${RD}" ${FS}>v</text>
+  <text x="52" y="100" font-size="10" fill="${IK}" ${FS}>60&#176;</text>
+ </svg>`,
+
+ // square loop, field at the centre
+ sqLoop:()=>`<svg viewBox="0 0 250 160" width="250" height="160" xmlns="http://www.w3.org/2000/svg">
+  <defs>${AR('sl','#c0392b')}</defs>
+  <rect x="72" y="26" width="106" height="106" fill="none" stroke="${CU}" stroke-width="2.2"/>
+  <line x1="108" y1="26" x2="140" y2="26" stroke="${RD}" stroke-width="1.5" marker-end="url(#sl)"/>
+  <text x="118" y="18" font-size="11" fill="${RD}" ${FS}>I</text>
+  <circle cx="125" cy="79" r="3" fill="${RD}"/>
+  <text x="132" y="76" font-size="12" fill="${IK}" ${FS}>O</text>
+  <line x1="125" y1="79" x2="178" y2="79" stroke="${GN}" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="146" y="94" font-size="11" fill="${GN}" ${FS}>a/2</text>
+  <text x="118" y="150" font-size="11" fill="${IK}" ${FS}>side a</text>
+ </svg>`,
+
+ // two coplanar-centred coils in perpendicular planes
+ perpCoils:()=>`<svg viewBox="0 0 260 165" width="260" height="165" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="130" cy="82" r="54" fill="none" stroke="${CU}" stroke-width="2.2"/>
+  <ellipse cx="130" cy="82" rx="16" ry="54" fill="none" stroke="${RD}" stroke-width="2.2"/>
+  <circle cx="130" cy="82" r="3" fill="${IK}"/>
+  <text x="188" y="52" font-size="11" fill="${CU}" ${FS} font-weight="700">coil 1: I</text>
+  <text x="150" y="152" font-size="11" fill="${RD}" ${FS} font-weight="700">coil 2: &#8730;3 I</text>
+  <text x="60" y="76" font-size="11" fill="${IK}" ${FS}>R</text>
+  <line x1="76" y1="82" x2="128" y2="82" stroke="${IK}" stroke-width="0.9" stroke-dasharray="4 3"/>
+ </svg>`,
+
+ // same wire bent into a circle and into a square
+ circleVsSquare:()=>`<svg viewBox="0 0 280 150" width="280" height="150" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="80" cy="72" r="42" fill="none" stroke="${CU}" stroke-width="2.2"/>
+  <rect x="164" y="30" width="84" height="84" fill="none" stroke="${CU}" stroke-width="2.2"/>
+  <text x="80" y="136" font-size="11" fill="${IK}" text-anchor="middle" ${FS}>one circular turn</text>
+  <text x="206" y="136" font-size="11" fill="${IK}" text-anchor="middle" ${FS}>one square turn</text>
+  <text x="122" y="76" font-size="15" fill="${RD}" text-anchor="middle" ${FS}>vs</text>
+ </svg>`,
+
+ // hysteresis loop, area shaded
+ loopArea:()=>`<svg viewBox="0 0 280 180" width="280" height="180" xmlns="http://www.w3.org/2000/svg">
+  <g ${FS} font-size="10" fill="#6b6760">
+   <line x1="140" y1="14" x2="140" y2="166" stroke="${IK}" stroke-width="1.2"/>
+   <line x1="26" y1="90" x2="262" y2="90" stroke="${IK}" stroke-width="1.2"/>
+   <text x="146" y="22" font-size="12" fill="${IK}" font-weight="700">B</text>
+   <text x="254" y="82" font-size="12" fill="${IK}" font-weight="700">H</text>
+   <path d="M240 42 C 205 42 185 44 168 48 C 152 52 146 60 140 70 C 132 84 122 108 104 122 C 88 134 68 138 46 138 C 78 138 100 136 116 132 C 132 128 138 120 144 110 C 152 96 162 72 180 58 C 196 46 216 42 240 42 Z" fill="#f5c6c2" fill-opacity="0.55" stroke="${RD}" stroke-width="2"/>
+   <text x="270" y="168" font-size="11" fill="${RD}" font-weight="700" text-anchor="end">shaded area = energy lost per cycle</text>
+  </g>
+ </svg>`
+};
+
+// ==========================================================================
+//  10 QUESTIONS  -  correct option is always written first, shuffled at runtime
+// ==========================================================================
+const QUESTIONS = [
+
+/* ================= MOVING CHARGES AND MAGNETISM ================= */
+{
+ tag:"Moving Charges &#183; helical motion",
+ dia:"helix",
+ q:"A proton enters a uniform magnetic field of 0.3 T with a speed of 4 &#215; 10<sup>5</sup> m/s, making an angle of 60&#176; with the field. Taking m<sub>p</sub> = 1.67 &#215; 10<sup>&#8722;27</sup> kg, the pitch of its helical path is closest to:",
+ opts:["4.4 cm","8.7 cm","2.2 cm","0.44 cm"],
+ sol:"Split the velocity. The <strong>perpendicular</strong> part bends the proton into a circle; the <strong>parallel</strong> part carries it forward. The pitch is the forward distance covered in one full revolution.<br><br>T = 2&#960;m/qB = (2&#960; &#215; 1.67 &#215; 10<sup>&#8722;27</sup>) / (1.6 &#215; 10<sup>&#8722;19</sup> &#215; 0.3) &#8776; 2.19 &#215; 10<sup>&#8722;7</sup> s<br>v<sub>&#8741;</sub> = v cos60&#176; = 4 &#215; 10<sup>5</sup> &#215; 0.5 = 2 &#215; 10<sup>5</sup> m/s<br>pitch = v<sub>&#8741;</sub>T = 2 &#215; 10<sup>5</sup> &#215; 2.19 &#215; 10<sup>&#8722;7</sup> &#8776; <strong>4.4 cm</strong><br><br>Two standard slips: using sin60&#176; instead of cos60&#176; for the pitch (the perpendicular part is what sets the <em>radius</em>, not the pitch), and forgetting that T does not depend on the speed at all."
+},
+{
+ tag:"Moving Charges &#183; field at a centre",
+ dia:"sqLoop",
+ q:"A square loop of side a carries a current I. The magnitude of the magnetic field at the centre of the loop is:",
+ opts:["2&#8730;2 &#956;<sub>0</sub>I / &#960;a","&#8730;2 &#956;<sub>0</sub>I / &#960;a","&#956;<sub>0</sub>I / 2a","4&#956;<sub>0</sub>I / &#960;a"],
+ sol:"Use the finite-wire result for one side. The centre is a perpendicular distance a/2 from each side, and each side subtends 45&#176; on either side of the foot of the perpendicular:<br><br>B<sub>side</sub> = (&#956;<sub>0</sub>I / 4&#960;(a/2))(sin45&#176; + sin45&#176;) = (&#956;<sub>0</sub>I / 2&#960;a)(&#8730;2)<br><br>All four sides push the field the same way, so multiply by 4:<br>B = 4 &#215; &#8730;2&#956;<sub>0</sub>I/2&#960;a = <strong>2&#8730;2 &#956;<sub>0</sub>I / &#960;a</strong><br><br>Do not reach for &#956;<sub>0</sub>I/2R &#8212; that formula is for a <em>circular</em> loop only. The give-away that a square is different is the &#960; sitting in the denominator."
+},
+{
+ tag:"Moving Charges &#183; superposition",
+ dia:"perpCoils",
+ q:"Two circular coils of the same radius R share a common centre but lie in <strong>mutually perpendicular</strong> planes. They carry currents I and &#8730;3 I. The magnitude of the resultant magnetic field at the common centre is:",
+ opts:["&#956;<sub>0</sub>I / R","&#956;<sub>0</sub>I / 2R","&#8730;3 &#956;<sub>0</sub>I / 2R","2&#956;<sub>0</sub>I / R"],
+ sol:"Each coil produces a field along its own axis, and the two axes are perpendicular. So add by Pythagoras, not arithmetically.<br><br>B<sub>1</sub> = &#956;<sub>0</sub>I/2R, B<sub>2</sub> = &#8730;3 &#956;<sub>0</sub>I/2R<br>B = &#8730;(B<sub>1</sub>&#178; + B<sub>2</sub>&#178;) = (&#956;<sub>0</sub>I/2R)&#8730;(1 + 3) = (&#956;<sub>0</sub>I/2R) &#215; 2 = <strong>&#956;<sub>0</sub>I / R</strong><br><br>Worth noting for the class: the resultant makes an angle tan&#952; = &#8730;3, that is 60&#176;, with the axis of the first coil. Adding the two magnitudes directly gives (1 + &#8730;3)&#956;<sub>0</sub>I/2R, which is not on the list &#8212; but the individual fields are, which is the real trap."
+},
+{
+ tag:"Moving Charges &#183; cyclotron",
+ q:"In a cyclotron with a fixed magnetic field and a fixed dee radius, a proton emerges with kinetic energy K. If a deuteron (charge e, mass 2m<sub>p</sub>) is accelerated in the same cyclotron and also emerges at the rim, its kinetic energy is:",
+ opts:["K/2","K","2K","4K"],
+ sol:"At the rim, R = &#8730;(2mK)/qB. Rearranging for the energy:<br><strong>K = q&#178;B&#178;R&#178; / 2m</strong><br><br>With B and R fixed, K &#8733; q&#178;/m.<br>&#8226; proton: e&#178;/m<sub>p</sub><br>&#8226; deuteron: e&#178;/2m<sub>p</sub><br><br>The deuteron carries the same charge but twice the mass, so it comes out with <strong>K/2</strong>.<br><br>Contrast with the &#945;-particle, where q doubles <em>and</em> m quadruples, so q&#178;/m is unchanged and the energy comes out the same as the proton's. NEET has asked both versions."
+},
+{
+ tag:"Moving Charges &#183; magnetic moment",
+ dia:"circleVsSquare",
+ q:"A wire of fixed length L carrying a current I is bent first into a single circular turn and then into a single square turn. The ratio of the magnetic moment of the circular loop to that of the square loop is:",
+ opts:["4 : &#960;","&#960; : 4","16 : &#960;","1 : 1"],
+ sol:"The wire length fixes the perimeter in both cases; only the enclosed area changes.<br><br><strong>Circle:</strong> 2&#960;r = L &#8594; r = L/2&#960; &#8594; A = &#960;r&#178; = L&#178;/4&#960;<br><strong>Square:</strong> side = L/4 &#8594; A = L&#178;/16<br><br>M = IA, so the ratio is (L&#178;/4&#960;) &#247; (L&#178;/16) = 16/4&#960; = <strong>4/&#960;</strong> &#8776; 1.27.<br><br>Sanity check the direction of the answer before you commit: for a fixed perimeter the circle always encloses the most area, so the circle's moment must be the <em>larger</em> one. That alone kills the &#960; : 4 option."
+},
+
+/* ================= MAGNETIC MATERIALS ================= */
+{
+ tag:"Magnetic Materials &#183; Curie&#8217;s law",
+ q:"A paramagnetic sample has a susceptibility of 1.2 &#215; 10<sup>&#8722;5</sup> at 300 K. Its susceptibility when the sample is cooled to &#8722;73&#176;C is:",
+ opts:["1.8 &#215; 10<sup>&#8722;5</sup>","0.8 &#215; 10<sup>&#8722;5</sup>","1.2 &#215; 10<sup>&#8722;5</sup>","2.4 &#215; 10<sup>&#8722;5</sup>"],
+ sol:"Convert first: &#8722;73&#176;C = 200 K. Curie's law is &#967; = C/T, so <strong>&#967;T is a constant</strong>:<br><br>&#967;<sub>1</sub>T<sub>1</sub> = &#967;<sub>2</sub>T<sub>2</sub><br>1.2 &#215; 10<sup>&#8722;5</sup> &#215; 300 = &#967;<sub>2</sub> &#215; 200<br>&#967;<sub>2</sub> = <strong>1.8 &#215; 10<sup>&#8722;5</sup></strong><br><br>Check the direction before the arithmetic: cooling means less thermal jostling, better alignment, so &#967; must go <em>up</em>. Anyone who answers 0.8 &#215; 10<sup>&#8722;5</sup> has flipped the ratio. And anyone who plugs in &#8722;73 without converting to kelvin gets a negative susceptibility, which is impossible for a paramagnet."
+},
+{
+ tag:"Magnetic Materials &#183; Curie&#8211;Weiss law",
+ q:"A ferromagnetic material has a Curie temperature of 500 K. Its susceptibility at 600 K is 0.02. Its susceptibility at 750 K is:",
+ opts:["0.008","0.016","0.025","0.04"],
+ sol:"Above the Curie temperature the material is paramagnetic and obeys the <strong>Curie&#8211;Weiss law</strong>:<br>&#967; = C / (T &#8722; T<sub>c</sub>)<br><br>At 600 K: 0.02 = C/(600 &#8722; 500) = C/100 &#8594; C = 2<br>At 750 K: &#967; = 2/(750 &#8722; 500) = 2/250 = <strong>0.008</strong><br><br>The whole question turns on using (T &#8722; T<sub>c</sub>) rather than plain T. If you use ordinary Curie's law you get 0.02 &#215; 600/750 = 0.016 &#8212; and that value is sitting right there in the options."
+},
+{
+ tag:"Magnetic Materials &#183; magnetisation from &#956;<sub>r</sub>",
+ q:"A rod of relative permeability 1200 is placed inside a long solenoid in which the field would be 2 &#215; 10<sup>&#8722;3</sup> T if the rod were absent. The magnitude of the magnetisation of the rod is nearest to:",
+ opts:["1.9 &#215; 10<sup>6</sup> A/m","1.6 &#215; 10<sup>3</sup> A/m","2.4 A/m","1.9 &#215; 10<sup>9</sup> A/m"],
+ sol:"Two steps.<br><br><strong>Step 1 &#8212; get H.</strong> The magnetising field comes from the solenoid alone:<br>H = B<sub>0</sub>/&#956;<sub>0</sub> = (2 &#215; 10<sup>&#8722;3</sup>) / (4&#960; &#215; 10<sup>&#8722;7</sup>) &#8776; 1.6 &#215; 10<sup>3</sup> A/m<br><br><strong>Step 2 &#8212; get M.</strong> &#967; = &#956;<sub>r</sub> &#8722; 1 = 1199 &#8776; 1200<br>M = &#967;H &#8776; 1200 &#215; 1.6 &#215; 10<sup>3</sup> &#8776; <strong>1.9 &#215; 10<sup>6</sup> A/m</strong><br><br>The distractor 1.6 &#215; 10<sup>3</sup> is H itself &#8212; the answer to step 1, offered as if it were the answer to the question. Read what is being asked: <em>magnetisation</em>, not magnetising field."
+},
+{
+ tag:"Magnetic Materials &#183; hysteresis loss",
+ dia:"loopArea",
+ q:"The area of the B&#8211;H hysteresis loop for a certain magnetic material is 0.1 J/m&#179; per cycle. A core of volume 10<sup>&#8722;3</sup> m&#179; made of this material is taken through 50 cycles per second. The energy dissipated as heat in one hour is:",
+ opts:["18 J","5 &#215; 10<sup>&#8722;3</sup> J","0.3 J","1080 J"],
+ sol:"The loop area is the energy lost <strong>per unit volume per cycle</strong>. Multiply by volume, by cycles per second, and by the number of seconds:<br><br>W = (area) &#215; V &#215; f &#215; t<br>= 0.1 &#215; 10<sup>&#8722;3</sup> &#215; 50 &#215; 3600<br>= 0.1 &#215; 10<sup>&#8722;3</sup> &#215; 1.8 &#215; 10<sup>5</sup> = <strong>18 J</strong><br><br>Track the units as you go and the formula assembles itself: J/m&#179; &#215; m&#179; = J per cycle; &#215; cycles/s &#215; s = J. The 0.3 J distractor is what you get if you use one minute instead of one hour."
+},
+{
+ tag:"Magnetic Materials &#183; reading &#956;<sub>r</sub>",
+ q:"A specimen placed in a magnetising field of H = 10<sup>4</sup> A/m is found to have a relative permeability of 0.9996. The magnetisation of the specimen is:",
+ opts:["4 A/m, opposite to H","4 A/m, along H","4 &#215; 10<sup>4</sup> A/m, opposite to H","0.4 A/m, along H"],
+ sol:"&#967; = &#956;<sub>r</sub> &#8722; 1 = 0.9996 &#8722; 1 = <strong>&#8722;4 &#215; 10<sup>&#8722;4</sup></strong><br>M = &#967;H = (&#8722;4 &#215; 10<sup>&#8722;4</sup>)(10<sup>4</sup>) = <strong>&#8722;4 A/m</strong><br><br>The magnitude is 4 A/m and the minus sign means the magnetisation points <strong>opposite</strong> to the applied field &#8212; so this specimen is <strong>diamagnetic</strong>.<br><br>&#956;<sub>r</sub> just below 1 is the single clearest signature of a diamagnet, and it is easy to misread 0.9996 as 'about 1, so nothing happens'. The tiny shortfall of 4 &#215; 10<sup>&#8722;4</sup> is the entire answer."
+}
+
+];
+
+// ==========================================================================
+//  TIMED TEST ENGINE  -  90 s per question, forward only
+// ==========================================================================
+const PER_Q = 120;                                  // seconds per question
+const BEST_KEY = 'padipucast_magnetism_short10_best_v1';
+
+const startScreen  = document.getElementById('start-screen');
+const testScreen   = document.getElementById('test-screen');
+const resultScreen = document.getElementById('result-screen');
+const timerbar = document.getElementById('timerbar');
+const tbLabel  = document.getElementById('tb-label');
+const tbClock  = document.getElementById('tb-clock');
+const tbFill   = document.getElementById('tb-fill');
+const qTag = document.getElementById('q-tag');
+const qText = document.getElementById('q-text');
+const qDia = document.getElementById('q-diagram');
+const optionsDiv = document.getElementById('options');
+
+let work = [], idx = 0, answers = [], tick = null, left = PER_Q;
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function showBest(){
+  const el = document.getElementById('best-line');
+  let b = null;
+  try{ b = localStorage.getItem(BEST_KEY); }catch(e){}
+  el.innerHTML = b ? `Best so far on this device: <b>${b} / ${QUESTIONS.length}</b>` : '';
+}
+function clearBest(){
+  try{ localStorage.removeItem(BEST_KEY); }catch(e){}
+  showBest();
+  alert('Best score cleared.');
+}
+
+function startTest(){
+  work = shuffle(QUESTIONS.map(q=>{
+    const idxed = q.opts.map((o,i)=>({text:o, correct:i===0}));
+    shuffle(idxed);
+    return {
+      tag:q.tag||'', q:q.q, dia:q.dia||null, sol:q.sol, flag:q.flag||'',
+      opts:idxed.map(o=>o.text),
+      ans:idxed.findIndex(o=>o.correct)
+    };
+  }));
+  answers = Array(work.length).fill(null);
+  idx = 0;
+  startScreen.classList.remove('active');
+  testScreen.classList.add('active');
+  window.scrollTo(0,0);
+  renderQ();
+}
+
+function renderQ(){
+  const q = work[idx];
+  tbLabel.textContent = `Question ${idx+1} of ${work.length}`;
+  qTag.innerHTML = q.tag;
+  qTag.style.display = q.tag ? 'inline-block' : 'none';
+  qText.innerHTML = q.q;
+  if(q.dia && D[q.dia]){ qDia.style.display='flex'; qDia.innerHTML = D[q.dia](); }
+  else { qDia.style.display='none'; qDia.innerHTML=''; }
+  optionsDiv.innerHTML = '';
+  q.opts.forEach((o,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = `<span class="opt-letter">${'ABCD'[i]}</span><span>${o}</span>`;
+    b.onclick = ()=>choose(i);
+    optionsDiv.appendChild(b);
+  });
+  const card = document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  window.scrollTo({top:0, behavior:'smooth'});
+  startClock();
+}
+
+function startClock(){
+  clearInterval(tick);
+  left = PER_Q;
+  paintClock();
+  tick = setInterval(()=>{
+    left--;
+    paintClock();
+    if(left <= 0){ clearInterval(tick); advance(); }
+  }, 1000);
+}
+function paintClock(){
+  const m = Math.floor(left/60), s = left % 60;
+  tbClock.textContent = `${m}:${String(s).padStart(2,'0')}`;
+  tbFill.style.width = (left/PER_Q*100) + '%';
+  timerbar.classList.toggle('low', left <= 30);
+}
+
+function choose(i){
+  clearInterval(tick);
+  answers[idx] = { chosen:i, correct: i === work[idx].ans, time: PER_Q - left };
+  advance();
+}
+function skipQ(){
+  clearInterval(tick);
+  advance();
+}
+function advance(){
+  idx++;
+  if(idx >= work.length){ finish(); return; }
+  renderQ();
+}
+
+function finish(){
+  clearInterval(tick);
+  testScreen.classList.remove('active');
+  resultScreen.classList.add('active');
+  window.scrollTo(0,0);
+
+  const N = work.length;
+  const cor = answers.filter(a=>a && a.correct).length;
+  const wr  = answers.filter(a=>a && !a.correct).length;
+  const sk  = answers.filter(a=>a === null).length;
+  const marks = cor*4 - wr;
+
+  document.getElementById('st-cor').textContent = cor;
+  document.getElementById('st-wr').textContent  = wr;
+  document.getElementById('st-sk').textContent  = sk;
+  document.getElementById('st-mk').textContent  = marks + ' / ' + (N*4);
+
+  const ring = document.getElementById('ring');
+  const num  = document.getElementById('ring-num');
+  document.getElementById('ring-of').textContent = 'out of ' + N;
+  num.textContent = cor;
+  const pct = cor / N;
+  const colour = pct >= 0.7 ? '#1a7a4a' : pct >= 0.45 ? '#b45309' : '#c0392b';
+  ring.setAttribute('stroke', colour);
+  num.setAttribute('fill', colour);
+  setTimeout(()=>{ ring.style.strokeDashoffset = 402 * (1 - pct); }, 120);
+
+  let msg;
+  if(pct >= 0.85)      msg = 'Excellent. This paper is medium-to-hard and you have cleared it comfortably. Read the review anyway &#8212; check that the ones you got right were reasoned, not guessed.';
+  else if(pct >= 0.7)  msg = 'Strong. The core is solid. Go through the ones you missed and look for a pattern &#8212; it is usually one or two ideas, not fifteen separate mistakes.';
+  else if(pct >= 0.45) msg = 'A fair attempt on a hard paper. Work through the full review below, then come back to this test after a couple of days rather than immediately.';
+  else                 msg = 'This paper is pitched hard, so do not read too much into the number. Work through the review slowly, one question at a time, and rebuild from the formulas up.';
+  if(sk >= 3) msg += '<br><br>You left ' + sk + ' blank. On a real paper the clock is the second examiner &#8212; practise finishing the routine ones fast so the hard ones get the time they need.';
+  document.getElementById('res-msg').innerHTML = msg;
+
+  try{
+    const prev = parseInt(localStorage.getItem(BEST_KEY) || '-1', 10);
+    if(cor > prev) localStorage.setItem(BEST_KEY, String(cor));
+  }catch(e){}
+
+  const rev = document.getElementById('review');
+  rev.innerHTML = '';
+  work.forEach((q,i)=>{
+    const a = answers[i];
+    const state = a === null ? 'sk' : (a.correct ? 'ok' : 'no');
+    const mark  = a === null ? 'Not attempted' : (a.correct ? '&#10003; Correct' : '&#10007; Wrong');
+    const box = document.createElement('div');
+    box.className = 'rev ' + state;
+    let html = `<div class="rev-top">
+        <span class="rev-n">Q${i+1}${q.tag ? ' &#183; ' + q.tag : ''}</span>
+        <span class="rev-mark ${state}">${mark}</span>
+      </div>
+      <div class="rev-q">${q.q}</div>`;
+    if(q.dia && D[q.dia]) html += `<div class="q-diagram">${D[q.dia]()}</div>`;
+    if(a && !a.correct) html += `<div class="rev-ans you"><span class="lbl">Your answer</span>${q.opts[a.chosen]}</div>`;
+    html += `<div class="rev-ans cor"><span class="lbl">Correct</span>${q.opts[q.ans]}</div>`;
+    html += `<div class="rev-why"><strong>Why &#8212;</strong> ${q.sol}</div>`;
+    if(q.flag) html += `<div class="flagbox">${q.flag}</div>`;
+    box.innerHTML = html;
+    rev.appendChild(box);
+  });
+}
+
+showBest();
+</script>
+</body>
+</html>
