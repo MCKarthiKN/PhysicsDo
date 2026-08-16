@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physics Ladder &#183; Para, Dia &amp; Ferromagnetic Substances</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-tag{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:8.5px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:var(--tag-bg);color:var(--text2);margin-left:8px;vertical-align:middle;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:900px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Magnetic Materials Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Ladders
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Para, Dia &amp; Ferromagnetic<br>Substances</h1></div>
+    <p id="home-sub">One ladder for each idea in the theory. Every ladder has 5 rungs and climbs gently: <strong>very easy &#8594; easy &#8594; medium &#8594; a bit harder &#8594; exam level (&#9733;)</strong>. Topics: magnetic intensity H, intensity of magnetisation I, magnetic induction B, susceptibility &#967;, permeability &#956;, Curie&#8217;s law, the I&#8211;H graphs for dia and para, and the hysteresis loop. 8 ladders &#183; 40 questions.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — MAGNETISM & MATTER set (PADIPUCAST)
+// ═══════════════════════════════════════════════════════════════════════════════
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+
+// ── small drawing helpers ─────────────────────────────────────────────────
+const _coil=(x0,x1,yc,ry,n,col)=>{
+  let s=''; const dx=(x1-x0)/n;
+  for(let k=0;k<n;k++){ const x=x0+k*dx+dx/2;
+    s+=`<ellipse cx="${x.toFixed(1)}" cy="${yc}" rx="${(dx*0.40).toFixed(1)}" ry="${ry}" fill="none" stroke="${col}" stroke-width="1.7"/>`; }
+  return s; };
+
+// I-H axes with origin at (ox,oy)
+const _ihAxes=(ox,oy,xL,xR,yT,yB,il)=>`
+  <line x1="${xL}" y1="${oy}" x2="${xR}" y2="${oy}" stroke="#374151" stroke-width="1.4" marker-end="url(#ihx)"/>
+  <line x1="${ox}" y1="${yB}" x2="${ox}" y2="${yT}" stroke="#374151" stroke-width="1.4" marker-end="url(#ihy)"/>
+  <text x="${xR-2}" y="${oy+17}" font-size="11" fill="#374151" ${FS} text-anchor="end" font-weight="700">H</text>
+  <text x="${ox+8}" y="${yT+10}" font-size="11" fill="#374151" ${FS} font-weight="700">${il||'I'}</text>`;
+
+// hysteresis loop path (tanh generated). Hc = coercivity in H-units, a = softness
+const _hpath=(Hc,a,cx,cy,sx,sy)=>{
+  const p=[];
+  for(let H=100;H>=-100;H-=4) p.push([cx+H*sx, cy-Math.tanh((H+Hc)/a)*sy]);
+  for(let H=-100;H<=100;H+=4) p.push([cx+H*sx, cy-Math.tanh((H-Hc)/a)*sy]);
+  return p.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')+' Z'; };
+const _vpath=(a,cx,cy,sx,sy)=>{
+  const p=[];
+  for(let H=0;H<=100;H+=4) p.push([cx+H*sx, cy-Math.tanh(H/a)*sy]);
+  return p.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+','+q[1].toFixed(1)).join(' '); };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SVG DIAGRAM LIBRARY — PARA, DIA & FERRO set (PADIPUCAST)
+// ═══════════════════════════════════════════════════════════════════════════════
+const DIAGRAMS = {
+
+  // long solenoid, optional core inside  →  H = n i
+  solenoid:(coreText)=>`
+    <svg viewBox="0 0 320 148" width="320" height="148" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('sl1','#c0392b')}</defs>
+      <rect x="52" y="56" width="216" height="34" rx="3" fill="${coreText?'#f3e8d8':'#ffffff'}" stroke="${coreText?'#b45309':'#d4d1c8'}" stroke-width="1.4"/>
+      ${_coil(52,268,73,26,12,'#2563eb')}
+      <line x1="20" y1="120" x2="52" y2="120" stroke="#c0392b" stroke-width="1.6"/>
+      <line x1="52" y1="120" x2="52" y2="99" stroke="#c0392b" stroke-width="1.6"/>
+      <line x1="268" y1="120" x2="300" y2="120" stroke="#c0392b" stroke-width="1.6" marker-end="url(#sl1)"/>
+      <line x1="268" y1="99" x2="268" y2="120" stroke="#c0392b" stroke-width="1.6"/>
+      <text x="160" y="138" font-size="10" fill="#c0392b" ${FS} text-anchor="middle">current i</text>
+      <text x="160" y="26" font-size="10.5" fill="#374151" ${FS} text-anchor="middle" font-weight="700">n turns per metre</text>
+      ${coreText?`<text x="160" y="112" font-size="10" fill="#b45309" ${FS} text-anchor="middle" font-weight="700">${coreText}</text>`:''}
+      <text x="160" y="42" font-size="9.5" fill="#6b7280" ${FS} text-anchor="middle">inside: B&#8320; = &#956;&#8320;ni&#160;&#160;&#8658;&#160;&#160;H = ni</text>
+    </svg>`,
+
+  // bar magnet showing M = m x l and V = A x l
+  magnetMV:()=>`
+    <svg viewBox="0 0 320 156" width="320" height="156" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('mv1','#374151')}${AR('mv2','#374151')}</defs>
+      <rect x="70" y="44" width="90" height="40" fill="#fee2e2" stroke="#c0392b" stroke-width="1.5"/>
+      <rect x="160" y="44" width="90" height="40" fill="#dbeafe" stroke="#c0392b" stroke-width="1.5"/>
+      <text x="115" y="70" font-size="13" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+      <text x="205" y="70" font-size="13" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+      <text x="115" y="36" font-size="10" fill="#6b7280" ${FS} text-anchor="middle">pole strength m</text>
+      <line x1="70" y1="102" x2="250" y2="102" stroke="#374151" stroke-width="1.1" marker-end="url(#mv1)"/>
+      <text x="160" y="118" font-size="10.5" fill="#374151" ${FS} text-anchor="middle">length l</text>
+      <line x1="262" y1="84" x2="262" y2="44" stroke="#374151" stroke-width="1.1" marker-end="url(#mv2)"/>
+      <text x="272" y="68" font-size="10.5" fill="#374151" ${FS}>area A</text>
+      <text x="160" y="142" font-size="10.5" fill="#1a7a4a" ${FS} text-anchor="middle" font-weight="700">M = m &#215; l&#160;&#160;&#160;V = A &#215; l&#160;&#160;&#160;&#8658;&#160;&#160;I = M/V = m/A</text>
+    </svg>`,
+
+  // magnet cut into two equal halves, perpendicular to its length
+  cutPerp:()=>`
+    <svg viewBox="0 0 330 150" width="330" height="150" xmlns="http://www.w3.org/2000/svg">
+      <rect x="16" y="44" width="56" height="30" fill="#fee2e2" stroke="#c0392b" stroke-width="1.4"/>
+      <rect x="72" y="44" width="56" height="30" fill="#dbeafe" stroke="#c0392b" stroke-width="1.4"/>
+      <text x="44" y="64" font-size="11" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+      <text x="100" y="64" font-size="11" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+      <line x1="72" y1="34" x2="72" y2="84" stroke="#6b7280" stroke-width="1.4" stroke-dasharray="4,3"/>
+      <text x="72" y="28" font-size="9" fill="#6b7280" ${FS} text-anchor="middle">cut here</text>
+      <text x="72" y="102" font-size="10" fill="#374151" ${FS} text-anchor="middle">moment M, volume V</text>
+      <text x="152" y="66" font-size="20" fill="#a09d97" ${FS}>&#8594;</text>
+      <rect x="188" y="44" width="28" height="30" fill="#fee2e2" stroke="#c0392b" stroke-width="1.4"/>
+      <rect x="216" y="44" width="28" height="30" fill="#dbeafe" stroke="#c0392b" stroke-width="1.4"/>
+      <text x="202" y="64" font-size="10" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+      <text x="230" y="64" font-size="10" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+      <rect x="260" y="44" width="28" height="30" fill="#fee2e2" stroke="#c0392b" stroke-width="1.4"/>
+      <rect x="288" y="44" width="28" height="30" fill="#dbeafe" stroke="#c0392b" stroke-width="1.4"/>
+      <text x="274" y="64" font-size="10" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">S</text>
+      <text x="302" y="64" font-size="10" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">N</text>
+      <text x="252" y="102" font-size="10" fill="#374151" ${FS} text-anchor="middle">each: moment M/2, volume V/2</text>
+      <text x="165" y="134" font-size="10.5" fill="#1a7a4a" ${FS} text-anchor="middle" font-weight="700">I = (M/2) &#247; (V/2) = M/V &#8212; same as before</text>
+    </svg>`,
+
+  // B = B0 + mu0 I  inside a magnetised rod
+  bInside:()=>`
+    <svg viewBox="0 0 330 168" width="330" height="168" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('bi1','#2563eb')}${AR('bi2','#16a34a')}</defs>
+      <line x1="20" y1="32" x2="300" y2="32" stroke="#2563eb" stroke-width="1.8" marker-end="url(#bi1)"/>
+      <line x1="20" y1="148" x2="300" y2="148" stroke="#2563eb" stroke-width="1.8" marker-end="url(#bi1)"/>
+      <text x="150" y="24" font-size="10.5" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">applied field B&#8320; = &#956;&#8320;H</text>
+      <rect x="60" y="62" width="210" height="56" rx="4" fill="#f0ede8" stroke="#374151" stroke-width="1.5"/>
+      <line x1="78" y1="80" x2="128" y2="80" stroke="#16a34a" stroke-width="1.6" marker-end="url(#bi2)"/>
+      <line x1="146" y1="80" x2="196" y2="80" stroke="#16a34a" stroke-width="1.6" marker-end="url(#bi2)"/>
+      <line x1="214" y1="80" x2="256" y2="80" stroke="#16a34a" stroke-width="1.6" marker-end="url(#bi2)"/>
+      <line x1="78" y1="104" x2="128" y2="104" stroke="#16a34a" stroke-width="1.6" marker-end="url(#bi2)"/>
+      <line x1="146" y1="104" x2="196" y2="104" stroke="#16a34a" stroke-width="1.6" marker-end="url(#bi2)"/>
+      <line x1="214" y1="104" x2="256" y2="104" stroke="#16a34a" stroke-width="1.6" marker-end="url(#bi2)"/>
+      <text x="165" y="58" font-size="10" fill="#16a34a" ${FS} text-anchor="middle" font-weight="700">material magnetises &#8594; extra field &#956;&#8320;I</text>
+      <text x="165" y="162" font-size="11" fill="#1a1916" ${FS} text-anchor="middle" font-weight="700">B = B&#8320; + &#956;&#8320;I = &#956;&#8320;(H + I)</text>
+    </svg>`,
+
+  // I vs H straight line, diamagnetic
+  diaLine:()=>`
+    <svg viewBox="0 0 260 176" width="260" height="176" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ihx','#374151')}${AR('ihy','#374151')}</defs>
+      ${_ihAxes(56,88,26,244,20,160,'I')}
+      <line x1="56" y1="88" x2="222" y2="142" stroke="#c0392b" stroke-width="2.2"/>
+      <text x="196" y="162" font-size="10.5" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">diamagnetic</text>
+      <text x="46" y="102" font-size="10" fill="#6b7280" ${FS} text-anchor="end">O</text>
+      <text x="130" y="34" font-size="9.5" fill="#a09d97" ${FS} text-anchor="middle">I is small and opposite to H</text>
+    </svg>`,
+
+  // I vs H straight line, paramagnetic
+  paraLine:()=>`
+    <svg viewBox="0 0 260 176" width="260" height="176" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ihx','#374151')}${AR('ihy','#374151')}</defs>
+      ${_ihAxes(56,88,26,244,20,160,'I')}
+      <line x1="56" y1="88" x2="222" y2="40" stroke="#2563eb" stroke-width="2.2"/>
+      <text x="188" y="32" font-size="10.5" fill="#2563eb" ${FS} text-anchor="middle" font-weight="700">paramagnetic</text>
+      <text x="46" y="102" font-size="10" fill="#6b7280" ${FS} text-anchor="end">O</text>
+      <text x="140" y="152" font-size="9.5" fill="#a09d97" ${FS} text-anchor="middle">I is small and along H</text>
+    </svg>`,
+
+  // two unnamed specimens X and Y on one set of axes
+  bothLines:()=>`
+    <svg viewBox="0 0 260 176" width="260" height="176" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ihx','#374151')}${AR('ihy','#374151')}</defs>
+      ${_ihAxes(56,88,26,244,20,160,'I')}
+      <line x1="56" y1="88" x2="222" y2="142" stroke="#c0392b" stroke-width="2.2"/>
+      <text x="232" y="146" font-size="11" fill="#c0392b" ${FS} font-weight="700">X</text>
+      <line x1="56" y1="88" x2="222" y2="40" stroke="#2563eb" stroke-width="2.2"/>
+      <text x="230" y="38" font-size="11" fill="#2563eb" ${FS} font-weight="700">Y</text>
+      <text x="46" y="102" font-size="10" fill="#6b7280" ${FS} text-anchor="end">O</text>
+    </svg>`,
+
+  // three specimens A (small down), B (small up), C (steep, saturating)
+  threeSlopes:()=>`
+    <svg viewBox="0 0 280 186" width="280" height="186" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ihx','#374151')}${AR('ihy','#374151')}</defs>
+      ${_ihAxes(56,112,26,264,18,172,'I')}
+      <line x1="56" y1="112" x2="238" y2="140" stroke="#c0392b" stroke-width="2"/>
+      <text x="248" y="144" font-size="11" fill="#c0392b" ${FS} font-weight="700">A</text>
+      <line x1="56" y1="112" x2="238" y2="88" stroke="#2563eb" stroke-width="2"/>
+      <text x="248" y="88" font-size="11" fill="#2563eb" ${FS} font-weight="700">B</text>
+      <path d="M56,112 C82,110 96,46 132,38 C168,31 200,30 238,30" fill="none" stroke="#16a34a" stroke-width="2.2"/>
+      <text x="248" y="34" font-size="11" fill="#16a34a" ${FS} font-weight="700">C</text>
+      <text x="150" y="182" font-size="9.5" fill="#a09d97" ${FS} text-anchor="middle">slope of the I&#8211;H line = susceptibility &#967;</text>
+    </svg>`,
+
+  // chi vs T  and  chi vs 1/T
+  curieCurve:()=>`
+    <svg viewBox="0 0 340 168" width="340" height="168" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('cc1','#374151')}${AR('cc2','#374151')}</defs>
+      <line x1="34" y1="126" x2="150" y2="126" stroke="#374151" stroke-width="1.4" marker-end="url(#cc1)"/>
+      <line x1="34" y1="126" x2="34" y2="26" stroke="#374151" stroke-width="1.4" marker-end="url(#cc2)"/>
+      <text x="146" y="142" font-size="10.5" fill="#374151" ${FS} text-anchor="end" font-weight="700">T</text>
+      <text x="40" y="34" font-size="10.5" fill="#374151" ${FS} font-weight="700">&#967;</text>
+      <path d="M48,38 C70,88 92,110 142,118" fill="none" stroke="#2563eb" stroke-width="2.2"/>
+      <text x="92" y="160" font-size="9.5" fill="#6b7280" ${FS} text-anchor="middle">&#967; falls as T rises</text>
+      <line x1="204" y1="126" x2="320" y2="126" stroke="#374151" stroke-width="1.4" marker-end="url(#cc1)"/>
+      <line x1="204" y1="126" x2="204" y2="26" stroke="#374151" stroke-width="1.4" marker-end="url(#cc2)"/>
+      <text x="316" y="142" font-size="10.5" fill="#374151" ${FS} text-anchor="end" font-weight="700">1/T</text>
+      <text x="210" y="34" font-size="10.5" fill="#374151" ${FS} font-weight="700">&#967;</text>
+      <line x1="204" y1="126" x2="308" y2="38" stroke="#16a34a" stroke-width="2.2"/>
+      <text x="262" y="160" font-size="9.5" fill="#6b7280" ${FS} text-anchor="middle">straight line through O</text>
+    </svg>`,
+
+  // full hysteresis loop with A B C D E F marked
+  hysteresisMarked:()=>{
+    const cx=150, cy=112, sx=1.08, sy=64, Hc=25, a=30;
+    const yB=cy-Math.tanh(Hc/a)*sy, yE=cy+Math.tanh(Hc/a)*sy;
+    const xA=cx+100*sx, yA=cy-Math.tanh((100+Hc)/a)*sy;
+    const xD=cx-100*sx, yD=cy+Math.tanh((100+Hc)/a)*sy;
+    const xC=cx-Hc*sx, xF=cx+Hc*sx;
+    const dot=(x,y)=>`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#1a1916"/>`;
+    const lab=(x,y,t,dx,dy)=>`<text x="${(x+dx).toFixed(1)}" y="${(y+dy).toFixed(1)}" font-size="11" fill="#1a1916" ${FS} font-weight="700">${t}</text>`;
+    return `
+    <svg viewBox="0 0 300 240" width="300" height="240" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ihx','#374151')}${AR('ihy','#374151')}</defs>
+      ${_ihAxes(cx,cy,24,288,18,212,'I')}
+      <path d="${_hpath(Hc,a,cx,cy,sx,sy)}" fill="none" stroke="#1a1916" stroke-width="2"/>
+      <path d="${_vpath(34,cx,cy,sx,sy)}" fill="none" stroke="#a09d97" stroke-width="1.4" stroke-dasharray="4,3"/>
+      ${dot(xA,yA)}${lab(xA,yA,'A',-14,-6)}
+      ${dot(cx,yB)}${lab(cx,yB,'B',-16,-2)}
+      ${dot(xC,cy)}${lab(xC,cy,'C',-6,-8)}
+      ${dot(xD,yD)}${lab(xD,yD,'D',4,14)}
+      ${dot(cx,yE)}${lab(cx,yE,'E',8,12)}
+      ${dot(xF,cy)}${lab(xF,cy,'F',-2,16)}
+      ${lab(cx,cy,'O',-14,16)}
+      <text x="150" y="222" font-size="9.5" fill="#a09d97" ${FS} text-anchor="middle">OB = retentivity&#160;&#160;&#183;&#160;&#160;OC = coercivity</text>
+      <text x="150" y="232" font-size="9.5" fill="#a09d97" ${FS} text-anchor="middle">area of the loop = energy lost per cycle</text>
+    </svg>`; },
+
+  // steel (wide loop) vs soft iron (narrow loop)
+  steelVsIron:()=>{
+    const sy=44, sx=0.62;
+    return `
+    <svg viewBox="0 0 340 190" width="340" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ihx','#374151')}${AR('ihy','#374151')}</defs>
+      <g>
+        ${_ihAxes(88,96,20,164,18,176,'I')}
+        <path d="${_hpath(52,26,88,96,sx,sy)}" fill="none" stroke="#c0392b" stroke-width="2"/>
+        <text x="88" y="188" font-size="10.5" fill="#c0392b" ${FS} text-anchor="middle" font-weight="700">Steel &#8212; wide loop</text>
+      </g>
+      <g>
+        ${_ihAxes(258,96,190,334,18,176,'I')}
+        <path d="${_hpath(9,30,258,96,sx,sy)}" fill="none" stroke="#1a7a4a" stroke-width="2"/>
+        <text x="258" y="188" font-size="10.5" fill="#1a7a4a" ${FS} text-anchor="middle" font-weight="700">Soft iron &#8212; narrow loop</text>
+      </g>
+    </svg>`; }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  LADDERS — 8 theory topics, 5 rungs each (very easy → exam level)
+// ═══════════════════════════════════════════════════════════════════════════════
+const TOPICS = [
+
+  // ───────────────────────── 1 · Magnetic Intensity H ─────────────────────────
+  { name:"Magnetic Intensity H (magnetising force)", tag:"H = B&#8320;/&#956;&#8320;",
+    questions:[
+      { q:"The SI unit of magnetic intensity H (magnetising force) is:",
+        opts:["A/m","tesla","weber","A&#183;m<sup>2</sup>"], ans:0,
+        sol:"H = B<sub>0</sub>/&#956;<sub>0</sub>, so its unit is tesla &#247; (T&#183;m/A) = <strong>A/m</strong>. Remember: <strong>H and I share the same unit, A/m</strong>. Tesla is for B, weber is for flux, A&#183;m<sup>2</sup> is for magnetic moment." },
+      { q:"If B<sub>0</sub> is the magnetic field the coil would produce in vacuum, the magnetising force H is:",
+        opts:["B<sub>0</sub>/&#956;<sub>0</sub>","&#956;<sub>0</sub>B<sub>0</sub>","B<sub>0</sub> &#8722; &#956;<sub>0</sub>","&#956;<sub>0</sub>/B<sub>0</sub>"], ans:0,
+        sol:"H = <strong>B<sub>0</sub>/&#956;<sub>0</sub></strong>. Think of H as the <strong>cause</strong> &#8212; what the current is trying to do. B is the <strong>result</strong> you finally get inside the material." },
+      { q:"A coil produces B<sub>0</sub> = 4&#960; &#215; 10<sup>&#8722;4</sup> T in vacuum. The magnetising force H is:",
+        opts:["10<sup>3</sup> A/m","10<sup>4</sup> A/m","10<sup>2</sup> A/m","4&#960; &#215; 10<sup>3</sup> A/m"], ans:0,
+        sol:"H = B<sub>0</sub>/&#956;<sub>0</sub> = (4&#960; &#215; 10<sup>&#8722;4</sup>) / (4&#960; &#215; 10<sup>&#8722;7</sup>). The 4&#960; cancels: <strong>H = 10<sup>3</sup> A/m</strong>. Whenever you see 4&#960; in the data, expect it to cancel with &#956;<sub>0</sub>." },
+      { q:"Inside a long solenoid B<sub>0</sub> = &#956;<sub>0</sub>ni, so H = ni. For n = 500 turns/m carrying i = 2 A, H is:",
+        diagram:DIAGRAMS.solenoid(''),
+        opts:["1000 A/m","500 A/m","250 A/m","2000 A/m"], ans:0,
+        sol:"H = ni = 500 &#215; 2 = <strong>1000 A/m</strong>. This is the most useful form of H in problems: <strong>H = ni</strong> for a solenoid &#8212; no &#956;<sub>0</sub> needed." },
+      { q:"&#9733; A long solenoid of 1000 turns/m carries 0.5 A. An iron core of relative permeability 400 is now pushed inside. Inside the core:",
+        diagram:DIAGRAMS.solenoid('iron core, relative permeability 400'),
+        opts:["H = 500 A/m and B &#8776; 0.25 T","H = 2 &#215; 10<sup>5</sup> A/m and B &#8776; 0.25 T","H = 500 A/m and B = 6.28 &#215; 10<sup>&#8722;4</sup> T","H = 200 A/m and B &#8776; 0.1 T"], ans:0,
+        sol:"H = ni = 1000 &#215; 0.5 = <strong>500 A/m</strong> &#8212; and it does <strong>not</strong> change when you push the core in, because H depends only on the coil current. What changes is B: B = &#956;<sub>0</sub>&#956;<sub>r</sub>H = (4&#960; &#215; 10<sup>&#8722;7</sup>)(400)(500) = 8&#960; &#215; 10<sup>&#8722;2</sup> &#8776; <strong>0.25 T</strong>. Without the core it was only &#956;<sub>0</sub>H = 6.28 &#215; 10<sup>&#8722;4</sup> T &#8212; the iron multiplied it 400 times." }
+    ] },
+
+  // ─────────────────── 2 · Intensity of Magnetisation I ───────────────────
+  { name:"Intensity of Magnetisation I", tag:"I = M/V",
+    questions:[
+      { q:"Intensity of magnetisation I of a specimen means:",
+        opts:["magnetic moment per unit volume","magnetic moment per unit area","pole strength per unit length","magnetic moment &#215; volume"], ans:0,
+        sol:"I = M/V &#8212; <strong>magnetic moment developed per unit volume</strong>. It tells you how strongly the material itself has become a magnet. Unit: A&#183;m<sup>2</sup> / m<sup>3</sup> = <strong>A/m</strong>." },
+      { q:"Using M = m &#215; l and V = A &#215; l, the formula I = M/V can also be written as:",
+        diagram:DIAGRAMS.magnetMV(),
+        opts:["pole strength / area","pole strength &#215; area","pole strength / length","pole strength &#215; length"], ans:0,
+        sol:"I = M/V = (m &#215; l)/(A &#215; l). The length l cancels, leaving I = <strong>m/A = pole strength per unit area</strong>. Both forms give A/m, so use whichever the question feeds you." },
+      { q:"A bar magnet of magnetic moment 0.6 A&#183;m<sup>2</sup> has volume 10 cm<sup>3</sup>. Its intensity of magnetisation is: (1 cm<sup>3</sup> = 10<sup>&#8722;6</sup> m<sup>3</sup>)",
+        opts:["6 &#215; 10<sup>4</sup> A/m","6 &#215; 10<sup>3</sup> A/m","6 &#215; 10<sup>5</sup> A/m","0.06 A/m"], ans:0,
+        sol:"First the volume in SI: V = 10 cm<sup>3</sup> = 10 &#215; 10<sup>&#8722;6</sup> = 10<sup>&#8722;5</sup> m<sup>3</sup>. Then I = M/V = 0.6 / 10<sup>&#8722;5</sup> = <strong>6 &#215; 10<sup>4</sup> A/m</strong>. The cm<sup>3</sup> &#8594; m<sup>3</sup> step is where most marks are lost." },
+      { q:"A bar magnet has pole strength 20 A&#183;m and cross-sectional area 2 cm<sup>2</sup>. Its intensity of magnetisation is:",
+        opts:["1 &#215; 10<sup>5</sup> A/m","10 A/m","1 &#215; 10<sup>3</sup> A/m","4 &#215; 10<sup>4</sup> A/m"], ans:0,
+        sol:"Area A = 2 cm<sup>2</sup> = 2 &#215; 10<sup>&#8722;4</sup> m<sup>2</sup>. Using I = m/A = 20 / (2 &#215; 10<sup>&#8722;4</sup>) = <strong>10<sup>5</sup> A/m</strong>." },
+      { q:"&#9733; A bar magnet whose intensity of magnetisation is 8 &#215; 10<sup>4</sup> A/m is cut into two equal pieces perpendicular to its length. For each piece, I is:",
+        diagram:DIAGRAMS.cutPerp(),
+        opts:["8 &#215; 10<sup>4</sup> A/m (unchanged)","4 &#215; 10<sup>4</sup> A/m","16 &#215; 10<sup>4</sup> A/m","2 &#215; 10<sup>4</sup> A/m"], ans:0,
+        sol:"Cutting perpendicular to the length halves the moment (M &#8594; M/2) but it also halves the volume (V &#8594; V/2). The ratio is untouched: I = (M/2)/(V/2) = M/V = <strong>8 &#215; 10<sup>4</sup> A/m</strong>. <strong>I is a property of the state of magnetisation, not of the size of the piece</strong> &#8212; the same is true if you cut it lengthwise (m/2 and A/2). Do not halve it out of habit." }
+    ] },
+
+  // ──────────────── 3 · Magnetic Induction / Flux Density B ────────────────
+  { name:"Magnetic Induction B (flux density)", tag:"B = &#956;&#8320;(H+I)",
+    questions:[
+      { q:"Magnetic induction (magnetic flux density) B inside a magnetic substance is:",
+        opts:["the number of field lines crossing unit area normally","the magnetic moment per unit volume","the pole strength per unit area","the force on unit north pole in vacuum"], ans:0,
+        sol:"B = <strong>field lines crossing per unit area, normally, through the substance</strong>. Unit: tesla. The other options describe I (magnetic moment per volume = pole strength per area)." },
+      { q:"Inside a magnetised material B = B<sub>0</sub> + &#956;<sub>0</sub>I. Here the two terms are:",
+        diagram:DIAGRAMS.bInside(),
+        opts:["the applied field, and the field due to magnetisation","the field due to magnetisation, and the applied field","both due to the coil","both due to the material"], ans:0,
+        sol:"<strong>B<sub>0</sub> = the applied field</strong> (from the coil or magnet outside) and <strong>&#956;<sub>0</sub>I = the extra field the material itself makes</strong> after it gets magnetised. Total inside = sum of the two." },
+      { q:"Writing B<sub>0</sub> = &#956;<sub>0</sub>H, the relation B = B<sub>0</sub> + &#956;<sub>0</sub>I becomes:",
+        opts:["B = &#956;<sub>0</sub>(H + I)","B = &#956;<sub>0</sub>(H &#8722; I)","B = &#956;<sub>0</sub>HI","B = (H + I)/&#956;<sub>0</sub>"], ans:0,
+        sol:"B = &#956;<sub>0</sub>H + &#956;<sub>0</sub>I = <strong>&#956;<sub>0</sub>(H + I)</strong>. This one line is the master equation of the chapter &#8212; susceptibility and permeability both come out of it." },
+      { q:"A material sits in a magnetising field H = 2000 A/m and becomes magnetised to I = 8000 A/m. The flux density inside it is:",
+        opts:["4&#960; &#215; 10<sup>&#8722;3</sup> T (&#8776; 1.26 &#215; 10<sup>&#8722;2</sup> T)","4&#960; &#215; 10<sup>&#8722;4</sup> T","8&#960; &#215; 10<sup>&#8722;3</sup> T","2&#960; &#215; 10<sup>&#8722;3</sup> T"], ans:0,
+        sol:"B = &#956;<sub>0</sub>(H + I) = (4&#960; &#215; 10<sup>&#8722;7</sup>)(2000 + 8000) = (4&#960; &#215; 10<sup>&#8722;7</sup>)(10<sup>4</sup>) = <strong>4&#960; &#215; 10<sup>&#8722;3</sup> T &#8776; 1.26 &#215; 10<sup>&#8722;2</sup> T</strong>. Add H and I <strong>first</strong>, then multiply by &#956;<sub>0</sub>." },
+      { q:"&#9733; A specimen in a magnetising field H = 1000 A/m shows a flux density B = 4&#960; &#215; 10<sup>&#8722;3</sup> T inside it. Its intensity of magnetisation and susceptibility are:",
+        opts:["I = 9000 A/m, &#967; = 9","I = 10<sup>4</sup> A/m, &#967; = 10","I = 9000 A/m, &#967; = 9000","I = 1000 A/m, &#967; = 1"], ans:0,
+        sol:"Work backwards from B = &#956;<sub>0</sub>(H + I): H + I = B/&#956;<sub>0</sub> = (4&#960; &#215; 10<sup>&#8722;3</sup>)/(4&#960; &#215; 10<sup>&#8722;7</sup>) = 10<sup>4</sup> A/m. So I = 10<sup>4</sup> &#8722; 1000 = <strong>9000 A/m</strong>, and &#967; = I/H = 9000/1000 = <strong>9</strong>. Common slip: taking B/&#956;<sub>0</sub> as I itself &#8212; it is (H + I), so you must subtract H." }
+    ] },
+
+  // ───────────────────── 4 · Magnetic Susceptibility ─────────────────────
+  { name:"Magnetic Susceptibility &#967;<sub>m</sub>", tag:"&#967; = I/H",
+    questions:[
+      { q:"Magnetic susceptibility is defined as:",
+        opts:["&#967;<sub>m</sub> = I/H","&#967;<sub>m</sub> = H/I","&#967;<sub>m</sub> = B/H","&#967;<sub>m</sub> = I &#215; H"], ans:0,
+        sol:"&#967;<sub>m</sub> = <strong>I/H</strong> &#8212; how much magnetisation you get out for the magnetising force you put in. (B/H is permeability &#956;, a different quantity.)" },
+      { q:"The unit of magnetic susceptibility is:",
+        opts:["it has no unit","A/m","tesla","T&#183;m/A"], ans:0,
+        sol:"Both I and H are in A/m, so the ratio is a <strong>pure number with no unit</strong>. If your answer to a &#967; question comes out with a unit, you have made a mistake somewhere." },
+      { q:"For a specimen, a field H = 500 A/m produces I = 0.6 A/m. Its susceptibility is:",
+        opts:["1.2 &#215; 10<sup>&#8722;3</sup>","1.2 &#215; 10<sup>3</sup>","8.3 &#215; 10<sup>2</sup>","0.6"], ans:0,
+        sol:"&#967; = I/H = 0.6/500 = <strong>1.2 &#215; 10<sup>&#8722;3</sup></strong>. Small and positive &#8594; the specimen is <strong>paramagnetic</strong>." },
+      { q:"A material of susceptibility &#967; = &#8722;2.5 &#215; 10<sup>&#8722;5</sup> is placed in a field H = 4 &#215; 10<sup>3</sup> A/m. Its intensity of magnetisation is:",
+        opts:["&#8722;0.1 A/m (opposite to H)","+0.1 A/m (along H)","&#8722;10 A/m","&#8722;2.5 &#215; 10<sup>&#8722;5</sup> A/m"], ans:0,
+        sol:"I = &#967;H = (&#8722;2.5 &#215; 10<sup>&#8722;5</sup>)(4 &#215; 10<sup>3</sup>) = <strong>&#8722;0.1 A/m</strong>. The minus sign is the whole story: the magnetisation points <strong>opposite</strong> to the applied field, so this is a <strong>diamagnetic</strong> material." },
+      { q:"&#9733; A paramagnetic rod of volume 2 &#215; 10<sup>&#8722;5</sup> m<sup>3</sup> and susceptibility 3 &#215; 10<sup>&#8722;4</sup> is placed in a magnetising field of 10<sup>5</sup> A/m. The magnetic moment developed in the rod is:",
+        opts:["6 &#215; 10<sup>&#8722;4</sup> A&#183;m<sup>2</sup>","6 &#215; 10<sup>&#8722;9</sup> A&#183;m<sup>2</sup>","30 A&#183;m<sup>2</sup>","1.5 &#215; 10<sup>&#8722;3</sup> A&#183;m<sup>2</sup>"], ans:0,
+        sol:"Two steps. <strong>Step 1:</strong> I = &#967;H = (3 &#215; 10<sup>&#8722;4</sup>)(10<sup>5</sup>) = 30 A/m. <strong>Step 2:</strong> I = M/V, so M = I &#215; V = 30 &#215; 2 &#215; 10<sup>&#8722;5</sup> = <strong>6 &#215; 10<sup>&#8722;4</sup> A&#183;m<sup>2</sup></strong>. The chain &#967; &#8594; I &#8594; M is a very common exam route." }
+    ] },
+
+  // ───────────────────── 5 · Magnetic Permeability ─────────────────────
+  { name:"Magnetic Permeability &#956; and &#956;<sub>r</sub>", tag:"&#956; = B/H",
+    questions:[
+      { q:"Magnetic permeability is defined as:",
+        opts:["&#956; = B/H","&#956; = H/B","&#956; = I/H","&#956; = B &#215; H"], ans:0,
+        sol:"&#956; = <strong>B/H</strong>, so B = &#956;H. It measures how easily the material lets the field build up inside it." },
+      { q:"Relative permeability is &#956;<sub>r</sub> = &#956;/&#956;<sub>0</sub>. Its unit is:",
+        opts:["it has no unit","T&#183;m/A","A/m","tesla"], ans:0,
+        sol:"It is a ratio of two permeabilities, so it is a <strong>pure number</strong>. For vacuum &#956;<sub>r</sub> = 1; for soft iron it can be a few thousand." },
+      { q:"From B = &#956;H and B = &#956;<sub>0</sub>(H + I) we get &#956;/&#956;<sub>0</sub> = 1 + I/H, which means:",
+        opts:["&#956;<sub>r</sub> = 1 + &#967;<sub>m</sub>","&#956;<sub>r</sub> = 1 &#8722; &#967;<sub>m</sub>","&#956;<sub>r</sub> = &#967;<sub>m</sub>","&#956;<sub>r</sub> = &#967;<sub>m</sub> &#8722; 1"], ans:0,
+        sol:"&#956;H = &#956;<sub>0</sub>(H + I) &#8658; &#956;/&#956;<sub>0</sub> = 1 + I/H &#8658; <strong>&#956;<sub>r</sub> = 1 + &#967;<sub>m</sub></strong>. This is the bridge between the two constants &#8212; know it both ways: &#967; = &#956;<sub>r</sub> &#8722; 1." },
+      { q:"An iron core of relative permeability 5000 is placed in a magnetising field H = 200 A/m. The flux density inside is:",
+        opts:["&#8776; 1.26 T","&#8776; 0.126 T","&#8776; 12.6 T","&#8776; 2.5 &#215; 10<sup>&#8722;4</sup> T"], ans:0,
+        sol:"B = &#956;H = &#956;<sub>0</sub>&#956;<sub>r</sub>H = (4&#960; &#215; 10<sup>&#8722;7</sup>)(5000)(200) = 4&#960; &#215; 10<sup>&#8722;7</sup> &#215; 10<sup>6</sup> = 4&#960; &#215; 10<sup>&#8722;1</sup> &#8776; <strong>1.26 T</strong>. Group the numbers as 5000 &#215; 200 = 10<sup>6</sup> first &#8212; it keeps the powers of ten clean." },
+      { q:"&#9733; A rod of relative permeability 1001 is placed in a magnetising field H = 500 A/m. Its susceptibility and intensity of magnetisation are:",
+        opts:["&#967; = 1000, I = 5 &#215; 10<sup>5</sup> A/m","&#967; = 1001, I = 5 &#215; 10<sup>5</sup> A/m","&#967; = 1000, I = 500 A/m","&#967; = 999, I = 4.995 &#215; 10<sup>5</sup> A/m"], ans:0,
+        sol:"&#967; = &#956;<sub>r</sub> &#8722; 1 = 1001 &#8722; 1 = <strong>1000</strong>. Then I = &#967;H = 1000 &#215; 500 = <strong>5 &#215; 10<sup>5</sup> A/m</strong>. Quick check with the master equation: B = &#956;<sub>0</sub>(H + I) = (4&#960; &#215; 10<sup>&#8722;7</sup>)(5.005 &#215; 10<sup>5</sup>) &#8776; 0.63 T, and &#956;<sub>0</sub>&#956;<sub>r</sub>H gives the same &#8212; consistent." }
+    ] },
+
+  // ───────────────────────────── 6 · Curie Law ─────────────────────────────
+  { name:"Curie's Law (&#967; and temperature)", tag:"&#967; &#8733; 1/T",
+    questions:[
+      { q:"Curie's law says the magnetic susceptibility of a paramagnetic material is:",
+        opts:["inversely proportional to its absolute temperature","directly proportional to its absolute temperature","independent of temperature","proportional to T<sup>2</sup>"], ans:0,
+        sol:"&#967;<sub>m</sub> &#8733; 1/T &#8212; <strong>inversely proportional to absolute temperature</strong>. Physically: heat shakes the atomic magnets about, so they line up less well and the material magnetises less." },
+      { q:"If the absolute temperature of a paramagnetic sample is doubled, its susceptibility becomes:",
+        diagram:DIAGRAMS.curieCurve(),
+        opts:["half","double","four times","unchanged"], ans:0,
+        sol:"&#967; &#8733; 1/T, so doubling T <strong>halves &#967;</strong>. Useful form: <strong>&#967;<sub>1</sub>T<sub>1</sub> = &#967;<sub>2</sub>T<sub>2</sub></strong>. Note the graph shapes: &#967; against T is a falling curve, but &#967; against 1/T is a straight line through the origin." },
+      { q:"A paramagnetic salt has &#967; = 4 &#215; 10<sup>&#8722;4</sup> at 300 K. At 600 K its susceptibility is:",
+        opts:["2 &#215; 10<sup>&#8722;4</sup>","8 &#215; 10<sup>&#8722;4</sup>","4 &#215; 10<sup>&#8722;4</sup>","1 &#215; 10<sup>&#8722;4</sup>"], ans:0,
+        sol:"&#967;<sub>1</sub>T<sub>1</sub> = &#967;<sub>2</sub>T<sub>2</sub> &#8658; &#967;<sub>2</sub> = (4 &#215; 10<sup>&#8722;4</sup>)(300/600) = <strong>2 &#215; 10<sup>&#8722;4</sup></strong>." },
+      { q:"At 27&#176;C a paramagnetic sample has &#967; = 3.6 &#215; 10<sup>&#8722;4</sup>. At what temperature will &#967; fall to 2.4 &#215; 10<sup>&#8722;4</sup>?",
+        opts:["177&#176;C (450 K)","450&#176;C","200 K","127&#176;C"], ans:0,
+        sol:"First convert: 27&#176;C = 300 K. Then T<sub>2</sub> = T<sub>1</sub>&#967;<sub>1</sub>/&#967;<sub>2</sub> = 300 &#215; (3.6/2.4) = 450 K = <strong>177&#176;C</strong>. Curie's law uses <strong>absolute</strong> temperature &#8212; always convert &#176;C to K before you divide." },
+      { q:"&#9733; A paramagnetic sample at 300 K reaches a certain magnetisation I in a field H = 1.6 &#215; 10<sup>4</sup> A/m. To reach the <strong>same</strong> magnetisation at 450 K, the magnetising field must be:",
+        opts:["2.4 &#215; 10<sup>4</sup> A/m","1.6 &#215; 10<sup>4</sup> A/m","1.07 &#215; 10<sup>4</sup> A/m","3.2 &#215; 10<sup>4</sup> A/m"], ans:0,
+        sol:"I = &#967;H = (C/T)H. For the same I, H/T must stay constant: H<sub>2</sub> = H<sub>1</sub>(T<sub>2</sub>/T<sub>1</sub>) = 1.6 &#215; 10<sup>4</sup> &#215; (450/300) = <strong>2.4 &#215; 10<sup>4</sup> A/m</strong>. In words: the hotter sample fights you more, so you need a stronger field for the same result. (Above its Curie temperature a ferromagnetic material also becomes paramagnetic and starts obeying this law.)" }
+    ] },
+
+  // ───────────────── 7 · Variation of I with H (dia & para) ─────────────────
+  { name:"Variation of I with H &#8212; dia &amp; para graphs", tag:"I&#8211;H graph",
+    questions:[
+      { q:"For a diamagnetic substance, the graph of I against H is:",
+        diagram:DIAGRAMS.diaLine(),
+        opts:["a straight line with a small negative slope","a straight line with a small positive slope","a steep curve that saturates","a closed loop"], ans:0,
+        sol:"Diamagnetic: I comes out <strong>small and opposite to H</strong>, so the line goes downwards into the fourth quadrant &#8212; a <strong>small negative slope</strong>." },
+      { q:"For a paramagnetic substance, the graph of I against H is:",
+        diagram:DIAGRAMS.paraLine(),
+        opts:["a straight line with a small positive slope","a straight line with a small negative slope","a closed loop","a horizontal line"], ans:0,
+        sol:"Paramagnetic: I is <strong>small and along H</strong>, so it is a straight line rising gently &#8212; a <strong>small positive slope</strong>. Both dia and para graphs are straight lines; only the sign of the slope differs." },
+      { q:"Two specimens X and Y give the straight lines shown. Identify them:",
+        diagram:DIAGRAMS.bothLines(),
+        opts:["X is diamagnetic, Y is paramagnetic","X is paramagnetic, Y is diamagnetic","both are paramagnetic","X is ferromagnetic, Y is diamagnetic"], ans:0,
+        sol:"X slopes <strong>down</strong> (I opposite to H) &#8594; <strong>diamagnetic</strong>. Y slopes <strong>up</strong> (I along H) &#8594; <strong>paramagnetic</strong>. Neither can be ferromagnetic, because a ferromagnetic sample would not give a plain straight line &#8212; it bends over and saturates." },
+      { q:"The slope of the I&#8211;H straight line is the susceptibility &#967;. A specimen shows I = 0.3 A/m at H = 1000 A/m. Its &#967; and its type are:",
+        opts:["3 &#215; 10<sup>&#8722;4</sup>, paramagnetic","3 &#215; 10<sup>&#8722;4</sup>, diamagnetic","3.3 &#215; 10<sup>3</sup>, ferromagnetic","0.3, paramagnetic"], ans:0,
+        sol:"Slope = I/H = 0.3/1000 = <strong>3 &#215; 10<sup>&#8722;4</sup></strong>. Small and <strong>positive</strong> &#8594; <strong>paramagnetic</strong>. (Do not flip the fraction: H/I would give 3333, which is not &#967;.)" },
+      { q:"&#9733; Three specimens A, B and C give I&#8211;H slopes of &#8722;1.2 &#215; 10<sup>&#8722;5</sup>, +3.0 &#215; 10<sup>&#8722;4</sup> and +2500 respectively. Which identification is correct?",
+        diagram:DIAGRAMS.threeSlopes(),
+        opts:["A diamagnetic (&#956;<sub>r</sub> &#8776; 0.999988), B paramagnetic (&#956;<sub>r</sub> &#8776; 1.0003), C ferromagnetic (&#956;<sub>r</sub> &#8776; 2501)","A paramagnetic, B diamagnetic, C ferromagnetic","A diamagnetic, B ferromagnetic, C paramagnetic","all three are paramagnetic"], ans:0,
+        sol:"The slope <strong>is</strong> &#967;, and &#956;<sub>r</sub> = 1 + &#967; each time. <strong>A:</strong> small negative &#8594; diamagnetic, &#956;<sub>r</sub> = 1 &#8722; 1.2 &#215; 10<sup>&#8722;5</sup> = 0.999988 (just under 1). <strong>B:</strong> small positive &#8594; paramagnetic, &#956;<sub>r</sub> = 1.0003 (just over 1). <strong>C:</strong> huge positive &#8594; ferromagnetic, &#956;<sub>r</sub> = 2501. For C the &#8220;line&#8221; is only the beginning of the curve &#8212; it soon bends over and saturates, and on the way back it does not retrace itself (that is hysteresis)." }
+    ] },
+
+  // ─────────────────── 8 · Ferromagnetic — Hysteresis ───────────────────
+  { name:"Ferromagnetic materials &#8212; Hysteresis", tag:"Hysteresis",
+    questions:[
+      { q:"In the hysteresis loop shown, OB is the magnetisation still left when the magnetising field is brought back to zero. It is called:",
+        diagram:DIAGRAMS.hysteresisMarked(),
+        opts:["retentivity (residual magnetism)","coercivity","permeability","susceptibility"], ans:0,
+        sol:"OB = <strong>retentivity</strong> (also called remanence or residual magnetism) &#8212; the magnetism the specimen keeps after H is switched off. Read it on the <strong>I-axis</strong>." },
+      { q:"In the same loop, OC is the reverse field needed to bring the residual magnetism down to zero. It is called:",
+        diagram:DIAGRAMS.hysteresisMarked(),
+        opts:["coercivity","retentivity","saturation magnetisation","Curie temperature"], ans:0,
+        sol:"OC = <strong>coercivity</strong> &#8212; how much <strong>reverse H</strong> you must apply to wipe out the leftover magnetism. Read it on the <strong>H-axis</strong>. Easy way to remember: <strong>retentivity is on the I-axis, coercivity is on the H-axis</strong>." },
+      { q:"The area enclosed by the loop ABCDEFA represents:",
+        diagram:DIAGRAMS.hysteresisMarked(),
+        opts:["the energy lost per cycle (per unit volume) in magnetising and demagnetising","the retentivity of the specimen","the magnetic moment of the specimen","the permeability of the specimen"], ans:0,
+        sol:"Area of the loop = <strong>energy lost per cycle per unit volume</strong>, given out as heat. A fat loop means a lot of heat wasted every cycle; a thin loop means very little. Unit of the area: J/m<sup>3</sup> per cycle." },
+      { q:"Steel has a wide loop (high coercivity, high retentivity) and soft iron a narrow loop (low coercivity, low retentivity). Therefore:",
+        diagram:DIAGRAMS.steelVsIron(),
+        opts:["steel is used for permanent magnets, soft iron for electromagnets and transformer cores","soft iron is used for permanent magnets, steel for electromagnets","both are equally good for permanent magnets","steel is used for transformer cores because of its low energy loss"], ans:0,
+        sol:"<strong>Permanent magnet:</strong> you want it to keep its magnetism and resist being demagnetised &#8594; high retentivity and high coercivity &#8594; <strong>steel</strong>. <strong>Electromagnet / transformer core:</strong> you want it to magnetise and demagnetise easily, thousands of times a second, without wasting heat &#8594; narrow loop &#8594; <strong>soft iron</strong>." },
+      { q:"&#9733; A transformer core of volume 1.2 &#215; 10<sup>&#8722;3</sup> m<sup>3</sup> is taken round a hysteresis loop of area 300 J/m<sup>3</sup> per cycle by 50 Hz mains. The heat produced in the core in one minute is:",
+        diagram:DIAGRAMS.steelVsIron(),
+        opts:["1080 J","18 J","0.36 J","64800 J"], ans:0,
+        sol:"Three clean steps. <strong>Per cycle:</strong> 300 J/m<sup>3</sup> &#215; 1.2 &#215; 10<sup>&#8722;3</sup> m<sup>3</sup> = 0.36 J. <strong>Per second:</strong> 0.36 &#215; 50 = 18 J (that is 18 W of waste heat). <strong>In 60 s:</strong> 18 &#215; 60 = <strong>1080 J</strong>. The distractor 64800 J comes from multiplying by 60 one extra time. This calculation is exactly why cores are made of soft iron &#8212; a thinner loop means a smaller area and less heat." }
+    ] }
+];
+
+const LEVELS=['Very easy','Easy','Medium','A bit harder','Exam level'];
+const STORAGE_KEY = 'padipucast_magnetic_materials_theory_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    const tag=topic.tag?`<span class="tc-tag">${topic.tag}</span>`:'';
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}${tag}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  if(curQ===n-1){
+    qLabel.innerHTML=`Rung ${n} of ${n} &#183; <span class="orig">&#9733; Exam level</span>`;
+  } else {
+    qLabel.innerHTML=`Rung ${curQ+1} of ${n} &#183; ${LEVELS[curQ]||'Build-up'}`;
+  }
+  qText.innerHTML=q.q;
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
