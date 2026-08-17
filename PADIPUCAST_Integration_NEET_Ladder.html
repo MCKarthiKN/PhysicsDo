@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Integration (NEET) &#183; Question Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Integration &#183; NEET</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Integration &#183; NEET Level<br>Question Ladders</h1></div>
+    <p id="home-sub">Basic Mathematics used in Physics &#8212; <strong>Integration</strong>, the companion to the differentiation lecture. Every source question becomes a <strong>ladder</strong>: 3 build-up rungs, then the original module question (&#9733;). Each ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 10 ladders &#215; 4 rungs = 40 questions, built on <strong>Beginner&#8217;s Box-4</strong> (indefinite integrals) and <strong>Beginner&#8217;s Box-5</strong> (definite integrals and physics applications). <br><br><em>Note: the uploaded PDF contained the Box-4 and Box-5 <strong>answer keys</strong> but not the question pages, so the &#9733; questions have been reconstructed from those answers. Every reconstructed integral evaluates to exactly the printed answer &#8212; send the question pages if you want the wording matched exactly.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Integration  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const DIAGRAMS = {
+
+  // Area under a curve between two limits
+  areaUnder:()=>`
+    <svg viewBox="0 0 300 190" width="300" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('au1','#6b7280')}</defs>
+      <path d="M 95 152 L 95 96 Q 140 78 180 58 L 225 44 L 225 152 Z" fill="#1a7a4a" fill-opacity="0.16"/>
+      <line x1="45" y1="152" x2="285" y2="152" stroke="#6b7280" stroke-width="1.4" marker-end="url(#au1)"/>
+      <line x1="45" y1="152" x2="45" y2="26" stroke="#6b7280" stroke-width="1.4" marker-end="url(#au1)"/>
+      <text x="284" y="170" font-size="11" fill="#6b7280" text-anchor="end" ${FS}>x</text>
+      <text x="34" y="28" font-size="11" fill="#6b7280" ${FS}>y</text>
+      <path d="M 50 150 Q 130 112 200 52 T 268 30" fill="none" stroke="#1a7a4a" stroke-width="2.4"/>
+      <line x1="95" y1="152" x2="95" y2="96" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="4 3"/>
+      <line x1="225" y1="152" x2="225" y2="44" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="4 3"/>
+      <text x="95" y="168" font-size="11" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">a</text>
+      <text x="225" y="168" font-size="11" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">b</text>
+      <text x="158" y="126" font-size="11.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">area</text>
+      <text x="160" y="186" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>a definite integral is the area under the curve</text>
+    </svg>`,
+
+  // Differentiation and integration as opposite arrows
+  inverseOps:()=>`
+    <svg viewBox="0 0 320 130" width="320" height="130" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('io1','#c0392b')}${AR('io2','#1a7a4a')}</defs>
+      <rect x="24" y="46" width="88" height="42" rx="5" fill="#f0ede8" stroke="#1a1916" stroke-width="1.4"/>
+      <text x="68" y="72" font-size="14" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">x&#8308;</text>
+      <rect x="208" y="46" width="88" height="42" rx="5" fill="#f0ede8" stroke="#1a1916" stroke-width="1.4"/>
+      <text x="252" y="72" font-size="14" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">4x&#179;</text>
+      <path d="M 118 58 L 202 58" stroke="#c0392b" stroke-width="2" fill="none" marker-end="url(#io1)"/>
+      <text x="160" y="48" font-size="10.5" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">differentiate</text>
+      <path d="M 202 80 L 118 80" stroke="#1a7a4a" stroke-width="2" fill="none" marker-end="url(#io2)"/>
+      <text x="160" y="98" font-size="10.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">integrate</text>
+      <text x="160" y="122" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>each undoes the other &#8212; but integrating adds a constant c</text>
+    </svg>`,
+
+  // The family of curves differing by c
+  familyC:()=>`
+    <svg viewBox="0 0 280 170" width="280" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('fc1','#6b7280')}</defs>
+      <line x1="45" y1="140" x2="265" y2="140" stroke="#6b7280" stroke-width="1.3" marker-end="url(#fc1)"/>
+      <line x1="45" y1="140" x2="45" y2="20" stroke="#6b7280" stroke-width="1.3" marker-end="url(#fc1)"/>
+      <path d="M 50 132 Q 130 122 200 70 T 250 34" fill="none" stroke="#1a7a4a" stroke-width="2"/>
+      <path d="M 50 108 Q 130 98 200 46 T 250 12" fill="none" stroke="#b45309" stroke-width="2"/>
+      <path d="M 62 152 Q 138 142 208 90 T 254 58" fill="none" stroke="#c0392b" stroke-width="2"/>
+      <text x="266" y="36" font-size="10.5" fill="#1a7a4a" ${FS}>c = 0</text>
+      <text x="266" y="14" font-size="10.5" fill="#b45309" ${FS}>c &gt; 0</text>
+      <text x="262" y="62" font-size="10.5" fill="#c0392b" ${FS}>c &lt; 0</text>
+      <text x="140" y="164" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>same slope everywhere &#8212; only shifted up or down</text>
+    </svg>`,
+
+  // Force-displacement graph, work = area
+  workArea:()=>`
+    <svg viewBox="0 0 300 180" width="300" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('wa1','#6b7280')}</defs>
+      <path d="M 90 145 L 90 60 Q 140 78 190 100 L 225 112 L 225 145 Z" fill="#b45309" fill-opacity="0.18"/>
+      <line x1="45" y1="145" x2="285" y2="145" stroke="#6b7280" stroke-width="1.4" marker-end="url(#wa1)"/>
+      <line x1="45" y1="145" x2="45" y2="24" stroke="#6b7280" stroke-width="1.4" marker-end="url(#wa1)"/>
+      <text x="284" y="163" font-size="11" fill="#6b7280" text-anchor="end" ${FS}>displacement x</text>
+      <text x="34" y="26" font-size="11" fill="#6b7280" ${FS}>F</text>
+      <path d="M 60 40 Q 130 74 200 104 T 272 128" fill="none" stroke="#b45309" stroke-width="2.4"/>
+      <line x1="90" y1="145" x2="90" y2="60" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <line x1="225" y1="145" x2="225" y2="112" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="90" y="161" font-size="11" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">x&#8321;</text>
+      <text x="225" y="161" font-size="11" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">x&#8322;</text>
+      <text x="152" y="132" font-size="11" fill="#b45309" text-anchor="middle" ${FS} font-weight="700">W = &#8747;F dx</text>
+      <text x="160" y="177" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>work done by a varying force is the area under the F&#8211;x graph</text>
+    </svg>`,
+
+  // Mass brought from infinity to a planet
+  fromInfinity:()=>`
+    <svg viewBox="0 0 320 150" width="320" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('fi1','#c0392b')}</defs>
+      <circle cx="58" cy="78" r="32" fill="#1a7a4a" fill-opacity="0.2" stroke="#1a7a4a" stroke-width="1.8"/>
+      <text x="58" y="83" font-size="12" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">M</text>
+      <line x1="58" y1="78" x2="90" y2="78" stroke="#1a1916" stroke-width="1.4"/>
+      <text x="76" y="70" font-size="11" fill="#1a1916" text-anchor="middle" ${FS}>R</text>
+      <circle cx="94" cy="78" r="6" fill="#c0392b"/>
+      <text x="94" y="102" font-size="11" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">m</text>
+      <line x1="288" y1="78" x2="112" y2="78" stroke="#c0392b" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#fi1)"/>
+      <text x="296" y="82" font-size="14" fill="#c0392b" ${FS} font-weight="700">&#8734;</text>
+      <text x="200" y="62" font-size="10.5" fill="#6b6760" text-anchor="middle" ${FS}>brought in from very far away</text>
+      <text x="170" y="140" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>the pull GMm/x&#178; changes at every point &#8212; so integrate</text>
+    </svg>`,
+
+  // Sine curve with two shaded regions
+  sineArea:(full)=>`
+    <svg viewBox="0 0 310 170" width="310" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('sa1','#6b7280')}</defs>
+      ${full
+        ? `<path d="M 55 120 Q 105 20 155 20 Q 205 20 255 120 Z" fill="#7B1E3A" fill-opacity="0.16"/>`
+        : `<path d="M 55 120 Q 90 34 155 26 L 155 120 Z" fill="#1a7a4a" fill-opacity="0.18"/>`}
+      <line x1="35" y1="120" x2="292" y2="120" stroke="#6b7280" stroke-width="1.4" marker-end="url(#sa1)"/>
+      <line x1="55" y1="120" x2="55" y2="14" stroke="#6b7280" stroke-width="1.4" marker-end="url(#sa1)"/>
+      <path d="M 55 120 Q 105 20 155 20 Q 205 20 255 120" fill="none" stroke="#1a1916" stroke-width="2.2"/>
+      <text x="55" y="138" font-size="11" fill="#6b7280" text-anchor="middle" ${FS}>0</text>
+      <text x="155" y="138" font-size="11" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">&#960;/2</text>
+      <text x="255" y="138" font-size="11" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">&#960;</text>
+      <text x="272" y="16" font-size="11.5" fill="#1a1916" ${FS} font-weight="700">y = sin x</text>
+      <line x1="155" y1="120" x2="155" y2="24" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <text x="165" y="162" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>${full?'the whole arch from 0 to &#960;':'the first half, 0 to &#960;/2'}</text>
+    </svg>`
+};
+
+// ===============================================================================
+//  QUESTION LADDERS  -  INTEGRATION  (Basic Mathematics used in Physics)
+//  Built on Beginner's Box-4 (indefinite) and Box-5 (definite + applications).
+//  NOTE: the uploaded PDF held the ANSWER KEYS but not the question pages, so
+//  each star question is reconstructed to evaluate to exactly the printed answer.
+// ===============================================================================
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "Integration is differentiation run backwards",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "We know d/dx(x<sup>4</sup>) = 4x<sup>3</sup>. So what is &#8747;4x<sup>3</sup> dx?",
+   "diagram": DIAGRAMS.inverseOps(),
+   "opts": ["x<sup>4</sup> + c","4x<sup>4</sup> + c","12x<sup>2</sup> + c","x<sup>3</sup>/3 + c"],
+   "ans": 0,
+   "sol": "Integration undoes differentiation, so &#8747;4x<sup>3</sup> dx = <strong>x<sup>4</sup> + c</strong>.<br><br>Whenever you are unsure of an integral, <strong>differentiate your answer</strong> &#8212; you should land back on what you started with."
+  },
+  {
+   "q": "Why does every indefinite integral carry a '+ c'?",
+   "diagram": DIAGRAMS.familyC(),
+   "opts": ["because any constant differentiates to zero, so it cannot be recovered","because integrals are always positive","because c makes the answer neater","because c stands for the variable"],
+   "ans": 0,
+   "sol": "x<sup>4</sup>, x<sup>4</sup> + 7 and x<sup>4</sup> &#8722; 3 all have the same derivative 4x<sup>3</sup>. Differentiating <strong>destroys</strong> the constant, so integrating cannot bring it back.<br><br>You get a whole <em>family</em> of curves, all with the same slope, stacked above and below each other. That is what c represents."
+  },
+  {
+   "q": "The power rule for integration is &#8747;x<sup>n</sup> dx =",
+   "opts": ["x<sup>n+1</sup>/(n+1) + c","x<sup>n&#8722;1</sup>/(n&#8722;1) + c","n x<sup>n&#8722;1</sup> + c","x<sup>n</sup>/n + c"],
+   "ans": 0,
+   "sol": "<strong>Raise the power by one, then divide by the new power.</strong><br><br>Exactly the reverse of differentiating, where you brought the power down and reduced it by one. Here you raise it and divide.<br><br>Check: &#8747;x<sup>3</sup> dx = x<sup>4</sup>/4 + c, and differentiating x<sup>4</sup>/4 gives 4x<sup>3</sup>/4 = x<sup>3</sup>. &#10003;"
+  },
+  {
+   "tag": "Beginner Box-4 Q1(i)",
+   "q": "&#9733; <strong>Original:</strong> Evaluate &#8747;x<sup>15</sup> dx.",
+   "opts": ["x<sup>16</sup>/16 + c","x<sup>16</sup> + c","15x<sup>14</sup> + c","x<sup>15</sup>/15 + c"],
+   "ans": 0,
+   "sol": "n = 15, so the new power is 16 and you divide by 16:<br>&#8747;x<sup>15</sup> dx = <strong>x<sup>16</sup>/16 + c</strong>.<br><br>Option (3) is what you get by <em>differentiating</em> instead. Read the sign &#8747; carefully &#8212; the two operations move the power in opposite directions.<br><br><em>The check that never fails:</em> differentiate x<sup>16</sup>/16 &#8594; 16x<sup>15</sup>/16 = x<sup>15</sup>. &#10003;"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Negative and fractional powers",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Rewrite 1/x<sup>3/2</sup> as a power of x.",
+   "opts": ["x<sup>&#8722;3/2</sup>","x<sup>3/2</sup>","x<sup>&#8722;2/3</sup>","&#8722;x<sup>3/2</sup>"],
+   "ans": 0,
+   "sol": "1/x<sup>n</sup> = <strong>x<sup>&#8722;n</sup></strong>, so 1/x<sup>3/2</sup> = x<sup>&#8722;3/2</sup>.<br><br>Do this rewriting <strong>first</strong>. The power rule cannot be applied while x is sitting in a denominator or under a root sign."
+  },
+  {
+   "q": "For n = &#8722;3/2, what is n + 1?",
+   "opts": ["&#8722;1/2","&#8722;5/2","1/2","3/2"],
+   "ans": 0,
+   "sol": "&#8722;3/2 + 1 = &#8722;3/2 + 2/2 = <strong>&#8722;1/2</strong>.<br><br>Adding 1 to a negative number moves it <em>towards</em> zero. This is the opposite of what happened in differentiation, where you subtracted 1 and moved further away."
+  },
+  {
+   "q": "Now divide by that new power: what is 1 &#247; (&#8722;1/2)?",
+   "opts": ["&#8722;2","&#8722;1/2","2","1/2"],
+   "ans": 0,
+   "sol": "Dividing by a fraction means multiplying by its reciprocal: 1 &#247; (&#8722;1/2) = <strong>&#8722;2</strong>.<br><br>So the coefficient of the answer will be &#8722;2. Both the minus sign and the 2 come from this single step."
+  },
+  {
+   "tag": "Beginner Box-4 Q1(ii)",
+   "q": "&#9733; <strong>Original:</strong> Evaluate &#8747;dx/x<sup>3/2</sup>, that is &#8747;x<sup>&#8722;3/2</sup> dx.",
+   "opts": ["&#8722;2x<sup>&#8722;1/2</sup> + c","2x<sup>&#8722;1/2</sup> + c","&#8722;2x<sup>&#8722;5/2</sup> + c","x<sup>&#8722;1/2</sup>/2 + c"],
+   "ans": 0,
+   "sol": "New power = &#8722;3/2 + 1 = &#8722;1/2. Divide by it:<br>x<sup>&#8722;1/2</sup>/(&#8722;1/2) + c = <strong>&#8722;2x<sup>&#8722;1/2</sup> + c</strong>, which is also written &#8722;2/&#8730;x + c.<br><br>Check by differentiating: d/dx(&#8722;2x<sup>&#8722;1/2</sup>) = &#8722;2 &#215; (&#8722;1/2)x<sup>&#8722;3/2</sup> = x<sup>&#8722;3/2</sup>. &#10003;<br><br><em>Two places to slip:</em> the sign (the answer is negative even though the integrand is positive), and dividing by a fraction rather than multiplying by it."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "The one case the power rule cannot do",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Try the power rule on &#8747;x<sup>&#8722;1</sup> dx. What goes wrong?",
+   "opts": ["the new power is 0, so you divide by zero","the answer becomes negative","x<sup>&#8722;1</sup> cannot be integrated at all","nothing goes wrong"],
+   "ans": 0,
+   "sol": "n + 1 = &#8722;1 + 1 = <strong>0</strong>, and dividing by zero is meaningless.<br><br>So <strong>n = &#8722;1 is the single exception</strong> to the power rule. It needs its own separate result."
+  },
+  {
+   "q": "So what is &#8747;(1/x) dx?",
+   "opts": ["log<sub>e</sub>x + c","x<sup>0</sup>/0 + c","&#8722;1/x<sup>2</sup> + c","x<sup>&#8722;2</sup> + c"],
+   "ans": 0,
+   "sol": "<strong>&#8747;(1/x)dx = log<sub>e</sub>x + c</strong> (also written ln x + c).<br><br>Why: the derivative of log<sub>e</sub>x is 1/x, so running that backwards gives the logarithm. Memorise this one separately from the power rule."
+  },
+  {
+   "q": "Evaluate &#8747;x dx.",
+   "opts": ["x<sup>2</sup>/2 + c","x<sup>2</sup> + c","1 + c","2x + c"],
+   "ans": 0,
+   "sol": "n = 1, so the new power is 2 and you divide by 2: <strong>x<sup>2</sup>/2 + c</strong>.<br><br>Ordinary power rule here &#8212; n = 1, not &#8722;1, so nothing special happens."
+  },
+  {
+   "tag": "Beginner Box-4 Q1(v)",
+   "q": "&#9733; <strong>Original:</strong> Evaluate &#8747;(x + 1/x) dx.",
+   "opts": ["x<sup>2</sup>/2 + log<sub>e</sub>x + c","x<sup>2</sup>/2 + x<sup>0</sup>/0 + c","x<sup>2</sup>/2 &#8722; 1/x<sup>2</sup> + c","x<sup>2</sup> + log<sub>e</sub>x + c"],
+   "ans": 0,
+   "sol": "Split into two integrals and treat each separately:<br>&#8226; &#8747;x dx = x<sup>2</sup>/2<br>&#8226; &#8747;(1/x) dx = log<sub>e</sub>x<br>Total: <strong>x<sup>2</sup>/2 + log<sub>e</sub>x + c</strong>.<br><br><em>The single most important thing in this lecture:</em> the two terms look similar but obey completely different rules. x is a power-rule term; 1/x is the logarithm exception.<br><br>Only <strong>one</strong> c is written at the end, not one per term."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "Several terms at once",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Integrating a sum means:",
+   "opts": ["integrate each term separately and add","multiply the integrals together","integrate only the first term","find the average of the terms"],
+   "ans": 0,
+   "sol": "<strong>Term by term</strong>, exactly as in differentiation. Long expressions are just several short problems side by side."
+  },
+  {
+   "q": "What is &#8747;2 dx?",
+   "opts": ["2x + c","2 + c","x<sup>2</sup> + c","0 + c"],
+   "ans": 0,
+   "sol": "Write 2 as 2x<sup>0</sup>. The new power is 1, and you divide by 1: <strong>2x + c</strong>.<br><br>Check: d/dx(2x) = 2. &#10003; A constant integrates into a term with an x in it &#8212; the reverse of a constant differentiating to zero."
+  },
+  {
+   "q": "Which of these three terms needs the logarithm rule: x, 2, or 1/x?",
+   "opts": ["only 1/x","only x","only 2","all three"],
+   "ans": 0,
+   "sol": "Only <strong>1/x</strong>, because it is x<sup>&#8722;1</sup>. The other two are handled by the plain power rule.<br><br>Scan every integral for a 1/x term before starting. It is the one term that behaves differently."
+  },
+  {
+   "tag": "Beginner Box-4 Q1(iv)",
+   "q": "&#9733; <strong>Original:</strong> Evaluate &#8747;(x + 2 + 1/x) dx.",
+   "opts": ["x<sup>2</sup>/2 + 2x + log<sub>e</sub>x + c","x<sup>2</sup>/2 + 2 + log<sub>e</sub>x + c","x<sup>2</sup>/2 + 2x &#8722; 1/x<sup>2</sup> + c","x<sup>2</sup> + 2x + log<sub>e</sub>x + c"],
+   "ans": 0,
+   "sol": "Three terms, three separate jobs:<br>&#8226; &#8747;x dx = x<sup>2</sup>/2<br>&#8226; &#8747;2 dx = 2x<br>&#8226; &#8747;(1/x) dx = log<sub>e</sub>x<br>Total: <strong>x<sup>2</sup>/2 + 2x + log<sub>e</sub>x + c</strong>.<br><br>Option (2) leaves the constant term as '2' &#8212; the mistake of not integrating it at all. Option (3) <em>differentiates</em> the 1/x instead of integrating it.<br><br>Verify by differentiating the whole answer: x + 2 + 1/x. &#10003; Back where you started."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "High negative powers",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Rewrite 3/x<sup>7</sup> as a power of x.",
+   "opts": ["3x<sup>&#8722;7</sup>","3x<sup>7</sup>","x<sup>&#8722;21</sup>","&#8722;3x<sup>7</sup>"],
+   "ans": 0,
+   "sol": "<strong>3x<sup>&#8722;7</sup></strong>. The coefficient 3 stays in front; only the x moves up from the denominator and takes a negative index."
+  },
+  {
+   "q": "For n = &#8722;7, what is n + 1, and what do you divide by?",
+   "opts": ["&#8722;6, and you divide by &#8722;6","&#8722;8, and you divide by &#8722;8","6, and you divide by 6","&#8722;6, and you divide by 7"],
+   "ans": 0,
+   "sol": "&#8722;7 + 1 = <strong>&#8722;6</strong>, and the rule says divide by the <em>new</em> power, so divide by &#8722;6.<br><br>So &#8747;3x<sup>&#8722;7</sup> dx = 3x<sup>&#8722;6</sup>/(&#8722;6) = &#8722;x<sup>&#8722;6</sup>/2. The 3 and the 6 simplify to give the &#189;."
+  },
+  {
+   "q": "Simplify 3/(&#8722;6).",
+   "opts": ["&#8722;1/2","&#8722;2","&#8722;3/6, which cannot be simplified","1/2"],
+   "ans": 0,
+   "sol": "3/(&#8722;6) = <strong>&#8722;1/2</strong>. Always cancel the fraction down &#8212; the printed options are given in simplest form."
+  },
+  {
+   "tag": "Beginner Box-4 Q1(iii)",
+   "q": "&#9733; <strong>Original:</strong> Evaluate &#8747;(3/x<sup>7</sup> + 1/x) dx.",
+   "opts": ["&#8722;x<sup>&#8722;6</sup>/2 + log<sub>e</sub>x + c","x<sup>&#8722;6</sup>/2 + log<sub>e</sub>x + c","&#8722;x<sup>&#8722;6</sup>/2 &#8722; 1/x<sup>2</sup> + c","&#8722;3x<sup>&#8722;6</sup> + log<sub>e</sub>x + c"],
+   "ans": 0,
+   "sol": "Two terms:<br>&#8226; &#8747;3x<sup>&#8722;7</sup> dx = 3x<sup>&#8722;6</sup>/(&#8722;6) = <strong>&#8722;x<sup>&#8722;6</sup>/2</strong><br>&#8226; &#8747;(1/x) dx = <strong>log<sub>e</sub>x</strong><br>Total: <strong>&#8722;x<sup>&#8722;6</sup>/2 + log<sub>e</sub>x + c</strong>.<br><br><em>Notice the pattern in this box:</em> almost every question pairs one power-rule term with one 1/x term. The module is drilling the distinction on purpose.<br><br>Check: d/dx(&#8722;x<sup>&#8722;6</sup>/2) = &#8722;(1/2)(&#8722;6)x<sup>&#8722;7</sup> = 3x<sup>&#8722;7</sup>. &#10003;"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Letters standing in for numbers",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In &#8747;(a/x<sup>2</sup>) dx, what role does the letter a play?",
+   "opts": ["a constant multiplier &#8212; it comes outside the integral","a second variable","a power of x","it must be set to 1"],
+   "ans": 0,
+   "sol": "<strong>a is just a number wearing a letter.</strong> Constant multipliers slide straight out: &#8747;a f(x)dx = a&#8747;f(x)dx.<br><br>Deciding which symbol is the variable is the whole skill. Here it is x; everything else is a constant."
+  },
+  {
+   "q": "Evaluate &#8747;x<sup>&#8722;2</sup> dx.",
+   "opts": ["&#8722;x<sup>&#8722;1</sup> + c, that is &#8722;1/x + c","x<sup>&#8722;1</sup> + c","&#8722;x<sup>&#8722;3</sup>/3 + c","log<sub>e</sub>x + c"],
+   "ans": 0,
+   "sol": "New power = &#8722;2 + 1 = &#8722;1, divide by &#8722;1:<br>x<sup>&#8722;1</sup>/(&#8722;1) = <strong>&#8722;1/x + c</strong>.<br><br><em>Do not confuse this with the exception.</em> Here n = &#8722;2, so the power rule works fine. Only n = &#8722;1 gives the logarithm."
+  },
+  {
+   "q": "What is &#8747;(b/x) dx?",
+   "opts": ["b log<sub>e</sub>x + c","log<sub>e</sub>(bx) + c","b/x<sup>2</sup> + c","bx + c"],
+   "ans": 0,
+   "sol": "Pull the b outside: b&#8747;(1/x)dx = <strong>b log<sub>e</sub>x + c</strong>.<br><br>The constant multiplies the whole logarithm; it does not go inside it."
+  },
+  {
+   "tag": "Beginner Box-4 Q1(vi)",
+   "q": "&#9733; <strong>Original:</strong> Evaluate &#8747;(a/x<sup>2</sup> + b/x) dx.",
+   "opts": ["&#8722;a/x + b log<sub>e</sub>x + c","a/x + b log<sub>e</sub>x + c","&#8722;a/x &#8722; b/x<sup>2</sup> + c","&#8722;a/x + log<sub>e</sub>(bx) + c"],
+   "ans": 0,
+   "sol": "Two terms, both with a constant in front:<br>&#8226; &#8747;a x<sup>&#8722;2</sup> dx = a &#215; (&#8722;x<sup>&#8722;1</sup>) = <strong>&#8722;a/x</strong><br>&#8226; &#8747;(b/x) dx = <strong>b log<sub>e</sub>x</strong><br>Total: <strong>&#8722;a/x + b log<sub>e</sub>x + c</strong>.<br><br>The two terms look almost identical on the page &#8212; a over x squared, b over x &#8212; yet one gives a power and the other gives a logarithm. That one difference in the index changes everything.<br><br>Check: d/dx(&#8722;a/x) = +a/x<sup>2</sup>, and d/dx(b log<sub>e</sub>x) = b/x. &#10003;"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "Definite integrals and limits",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "What does a <strong>definite</strong> integral give you?",
+   "diagram": DIAGRAMS.areaUnder(),
+   "opts": ["a number &#8212; the area under the curve between the two limits","a family of functions","the slope at a point","the same as an indefinite integral"],
+   "ans": 0,
+   "sol": "A definite integral has limits, so it gives a single <strong>number</strong>: the area under the curve from x = a to x = b.<br><br>And because it is a number, <strong>no + c is written</strong> &#8212; the constant cancels when you subtract."
+  },
+  {
+   "q": "To evaluate &#8747; from a to b, you compute:",
+   "opts": ["F(b) &#8722; F(a), where F is the integral","F(a) &#8722; F(b)","F(b) + F(a)","F(b) &#215; F(a)"],
+   "ans": 0,
+   "sol": "<strong>Upper limit minus lower limit:</strong> F(b) &#8722; F(a).<br><br>Getting them the wrong way round flips the sign of your whole answer &#8212; which is where most definite-integral marks are lost."
+  },
+  {
+   "q": "The integral of sin x is &#8722;cos x. So what are cos0&#176; and cos90&#176;?",
+   "opts": ["1 and 0","0 and 1","1 and 1","0 and 0"],
+   "ans": 0,
+   "sol": "cos0&#176; = <strong>1</strong> and cos90&#176; = <strong>0</strong>.<br><br>Note the minus sign already sitting in &#8722;cos x. It will combine with the subtraction of limits, so go slowly &#8212; two minus signs are about to meet."
+  },
+  {
+   "tag": "Beginner Box-5",
+   "q": "&#9733; <strong>Original:</strong> Evaluate &#8747; sin x dx from 0 to &#960;/2.",
+   "diagram": DIAGRAMS.sineArea(false),
+   "opts": ["1","0","2","&#960;/2"],
+   "ans": 0,
+   "sol": "&#8747;sin x dx = &#8722;cos x, so evaluate between the limits:<br>[&#8722;cos x]<sub>0</sub><sup>&#960;/2</sup> = (&#8722;cos90&#176;) &#8722; (&#8722;cos0&#176;) = (&#8722;0) &#8722; (&#8722;1) = <strong>1</strong>.<br><br><em>Watch the double negative.</em> Subtracting (&#8722;1) adds 1. Miss it and you get &#8722;1, which is not even sensible &#8212; the curve is above the axis here, so the area must be positive.<br><br>Sanity check: the arch reaches a height of 1 over a width of &#960;/2 &#8776; 1.57, so an area of 1 looks right for that shape."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "Changing the limits changes the area",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "What is cos180&#176;?",
+   "opts": ["&#8722;1","0","1","1/2"],
+   "ans": 0,
+   "sol": "cos180&#176; = <strong>&#8722;1</strong>. The cosine has swung all the way from +1 at 0&#176; to &#8722;1 at 180&#176;."
+  },
+  {
+   "q": "Is the sine curve above or below the x-axis between 0 and &#960;?",
+   "opts": ["above throughout","below throughout","above then below","it touches zero everywhere"],
+   "ans": 0,
+   "sol": "sin x is <strong>positive throughout</strong> from 0 to &#960;, reaching a peak of 1 at &#960;/2 and returning to 0 at &#960;.<br><br>So the area over this range is positive, and it should be roughly double the half-arch from the previous ladder."
+  },
+  {
+   "q": "By symmetry, how does the area from 0 to &#960; compare with the area from 0 to &#960;/2?",
+   "opts": ["exactly twice as big","the same","half as big","four times as big"],
+   "ans": 0,
+   "sol": "The arch is <strong>symmetric about &#960;/2</strong>, so the second half matches the first exactly. The full area is <strong>twice</strong> the half.<br><br>Since the half was 1, the full arch must be 2 &#8212; you can predict the answer before doing any algebra."
+  },
+  {
+   "tag": "Beginner Box-5",
+   "q": "&#9733; <strong>Original:</strong> Evaluate &#8747; sin x dx from 0 to &#960;.",
+   "diagram": DIAGRAMS.sineArea(true),
+   "opts": ["2","1","0","&#960;"],
+   "ans": 0,
+   "sol": "[&#8722;cos x]<sub>0</sub><sup>&#960;</sup> = (&#8722;cos180&#176;) &#8722; (&#8722;cos0&#176;) = (+1) &#8722; (&#8722;1) = <strong>2</strong>.<br><br>Matches the symmetry prediction: twice the half-arch value of 1. &#10003;<br><br><em>Where the 0 distractor comes from:</em> students think of a full sine <em>wave</em> from 0 to 2&#960;, where the positive and negative halves cancel to zero. But the limit here is &#960;, not 2&#960; &#8212; only the positive arch is included.<br><br><strong>Always sketch the curve and check which parts lie below the axis before trusting a definite integral.</strong>"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "Work done by a force that keeps changing",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For a <strong>constant</strong> force along the motion, work = F &#215; x. What if F changes with position?",
+   "diagram": DIAGRAMS.workArea(),
+   "opts": ["W = &#8747;F dx &#8212; the area under the F&#8211;x graph","W = F<sub>max</sub> &#215; x","W = 0","you cannot find the work at all"],
+   "ans": 0,
+   "sol": "Chop the path into slices so small that F is nearly constant across each, find F&#215;dx for every slice, and add them all up. That sum is the integral: <strong>W = &#8747;F dx</strong>.<br><br><em>This is why integration is taught in a physics course</em> &#8212; multiplication only works when the quantity stays constant. Integration is multiplication for things that change."
+  },
+  {
+   "q": "The gravitational pull on a mass m at distance x from a planet of mass M is F = GMm/x<sup>2</sup>. As x grows, the force:",
+   "diagram": DIAGRAMS.fromInfinity(),
+   "opts": ["gets weaker, following an inverse-square law","stays constant","gets stronger","becomes zero immediately"],
+   "ans": 0,
+   "sol": "F &#8733; 1/x<sup>2</sup>, so doubling the distance makes the pull <strong>four times weaker</strong>.<br><br>Because the force is different at every point along the path, F &#215; distance would be meaningless here. Integration is the only way."
+  },
+  {
+   "q": "Evaluate &#8747;(1/x<sup>2</sup>) dx from R to &#8734;.",
+   "opts": ["1/R","&#8722;1/R","&#8734;","0"],
+   "ans": 0,
+   "sol": "&#8747;x<sup>&#8722;2</sup> dx = &#8722;1/x, so evaluate:<br>[&#8722;1/x]<sub>R</sub><sup>&#8734;</sup> = (&#8722;1/&#8734;) &#8722; (&#8722;1/R) = 0 + 1/R = <strong>1/R</strong>.<br><br>As x &#8594; &#8734;, the term 1/x &#8594; 0. That is what makes an infinite limit workable here &#8212; the function dies away fast enough."
+  },
+  {
+   "tag": "Beginner Box-5",
+   "q": "&#9733; <strong>Original:</strong> Find the work done by the gravitational force in bringing a mass m from infinity to a distance R from a planet of mass M, given F = GMm/x<sup>2</sup>.",
+   "diagram": DIAGRAMS.fromInfinity(),
+   "opts": ["GMm/R","GMm/R<sup>2</sup>","GMmR","zero"],
+   "ans": 0,
+   "sol": "W = &#8747;<sub>R</sub><sup>&#8734;</sup> (GMm/x<sup>2</sup>) dx = GMm[&#8722;1/x]<sub>R</sub><sup>&#8734;</sup> = GMm(0 + 1/R) = <strong>GMm/R</strong>.<br><br><em>Check the shape of the answer.</em> The force went as 1/R<sup>2</sup>, but the work goes as 1/R &#8212; integrating with respect to distance raises the power by one. Option (2) is the answer you get by forgetting to integrate at all and just quoting the force.<br><br>This single result becomes the gravitational potential energy formula, U = &#8722;GMm/R, later in the course."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "Integrating with respect to velocity",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In the integral &#8747;Mv dv, which symbol is the variable?",
+   "opts": ["v &#8212; M is a constant","M","both M and v","neither"],
+   "ans": 0,
+   "sol": "The 'dv' tells you: the variable is <strong>v</strong>. The mass M is a constant and slides outside.<br><br><strong>Always read the d-symbol first.</strong> It names the variable, and everything else in the expression is a constant."
+  },
+  {
+   "q": "So &#8747;Mv dv equals:",
+   "opts": ["Mv<sup>2</sup>/2 + c","Mv + c","M<sup>2</sup>v/2 + c","Mv<sup>2</sup> + c"],
+   "ans": 0,
+   "sol": "M&#8747;v dv = M &#215; v<sup>2</sup>/2 = <strong>Mv<sup>2</sup>/2 + c</strong>.<br><br>Exactly the same power rule as &#8747;x dx &#8212; only the letter has changed. Do not let a new symbol make a familiar problem look unfamiliar."
+  },
+  {
+   "q": "Evaluate Mv<sup>2</sup>/2 between the limits u and v.",
+   "opts": ["&#189;M(v<sup>2</sup> &#8722; u<sup>2</sup>)","&#189;M(u<sup>2</sup> &#8722; v<sup>2</sup>)","&#189;M(v &#8722; u)<sup>2</sup>","&#189;M(v<sup>2</sup> + u<sup>2</sup>)"],
+   "ans": 0,
+   "sol": "Upper minus lower: Mv<sup>2</sup>/2 &#8722; Mu<sup>2</sup>/2 = <strong>&#189;M(v<sup>2</sup> &#8722; u<sup>2</sup>)</strong>.<br><br><em>Note carefully:</em> v<sup>2</sup> &#8722; u<sup>2</sup> is <strong>not</strong> the same as (v &#8722; u)<sup>2</sup>. Option (3) is that error, and it is a common one."
+  },
+  {
+   "tag": "Beginner Box-5",
+   "q": "&#9733; <strong>Original:</strong> Evaluate &#8747;Mv dv with limits from u to v.",
+   "opts": ["&#189;M(v<sup>2</sup> &#8722; u<sup>2</sup>)","&#189;Mv<sup>2</sup>","M(v &#8722; u)","&#189;M(v<sup>2</sup> + u<sup>2</sup>)"],
+   "ans": 0,
+   "sol": "M[v<sup>2</sup>/2] from u to v = <strong>&#189;M(v<sup>2</sup> &#8722; u<sup>2</sup>)</strong>.<br><br><em>You have just derived the work&#8211;energy theorem.</em> That expression is (final kinetic energy) &#8722; (initial kinetic energy), and it equals the work done by the net force:<br>W = &#189;Mv<sup>2</sup> &#8722; &#189;Mu<sup>2</sup><br><br>The route is worth seeing once: W = &#8747;F dx = &#8747;Ma dx = &#8747;M(dv/dt)dx = &#8747;Mv dv, since dx/dt = v. Integration is what turns Newton's second law into an energy statement.<br><br><em>Take away from this lecture:</em> integration is not new mathematics bolted on. It is the tool for adding up something that keeps changing &#8212; a force over distance, a velocity over time, an area under a curve."
+  }
+ ]
+}
+
+];
+
+
+
+const STORAGE_KEY = 'padipucast_integration_neet_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original module question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
