@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Mathematical Tools &amp; Vectors (NEET) &#183; Question Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Maths Tools &#183; NEET</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Mathematical Tools &#183; NEET Level<br>Question Ladders</h1></div>
+    <p id="home-sub">Built on the Physics section of <strong>PRE-MEDICAL : LEADER (Phase 5 &amp; 6) IT-02</strong>, 19-08-2026 &#8212; topic <strong>Mathematical Tools &amp; Vectors</strong>. Eleven questions from that paper (Q1, 2, 3, 4, 5, 6, 7, 8, 12, 44, 45) have each been turned into a <strong>ladder</strong>: 3 easier build-up variations, then the original paper question (&#9733;). Each ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 11 ladders &#215; 4 rungs = 44 questions.<br><br><em>One to argue about: Q4 (quarter sphere). The key counts only the curved share. A real solid quarter also has two flat faces &#8212; the note inside that ladder spells it out.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Mathematical Tools & Vectors  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const DIAGRAMS = {
+
+  // Pascal's triangle up to row 5, with C(5,2) ringed
+  pascal:()=>`
+    <svg viewBox="0 0 310 195" width="310" height="195" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="137" cy="150" r="15" fill="#1a7a4a" fill-opacity="0.15" stroke="#1a7a4a" stroke-width="1.8"/>
+      <text x="150" y="32" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>1</text>
+      <text x="137" y="56" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>1</text>
+      <text x="163" y="56" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>1</text>
+      <text x="124" y="80" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>1</text>
+      <text x="150" y="80" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>2</text>
+      <text x="176" y="80" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>1</text>
+      <text x="111" y="104" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>1</text>
+      <text x="137" y="104" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>3</text>
+      <text x="163" y="104" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>3</text>
+      <text x="189" y="104" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>1</text>
+      <text x="98" y="128" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>1</text>
+      <text x="124" y="128" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>4</text>
+      <text x="150" y="128" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>6</text>
+      <text x="176" y="128" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>4</text>
+      <text x="202" y="128" font-size="12" fill="#6b6760" text-anchor="middle" ${FS}>1</text>
+      <text x="85" y="155" font-size="13" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">1</text>
+      <text x="111" y="155" font-size="13" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">5</text>
+      <text x="137" y="155" font-size="13" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">10</text>
+      <text x="163" y="155" font-size="13" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">10</text>
+      <text x="189" y="155" font-size="13" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">5</text>
+      <text x="215" y="155" font-size="13" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">1</text>
+      <text x="240" y="155" font-size="10.5" fill="#1a1916" ${FS}>&#8592; row n = 5</text>
+      <text x="150" y="182" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>start counting at r = 0, so the x&#178; place is the third number</text>
+    </svg>`,
+
+  // Partial sums of a GP creeping up to 3/2
+  gpBar:()=>`
+    <svg viewBox="0 0 300 150" width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('gp1','#6b7280')}</defs>
+      <line x1="30" y1="95" x2="285" y2="95" stroke="#6b7280" stroke-width="1.4" marker-end="url(#gp1)"/>
+      <line x1="40" y1="90" x2="40" y2="100" stroke="#6b7280" stroke-width="1.2"/>
+      <line x1="150" y1="90" x2="150" y2="100" stroke="#6b7280" stroke-width="1.2"/>
+      <line x1="260" y1="90" x2="260" y2="100" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="40" y="113" font-size="10.5" fill="#6b6760" text-anchor="middle" ${FS}>0</text>
+      <text x="150" y="113" font-size="10.5" fill="#6b6760" text-anchor="middle" ${FS}>1</text>
+      <text x="260" y="113" font-size="10.5" fill="#6b6760" text-anchor="middle" ${FS}>2</text>
+      <line x1="205" y1="40" x2="205" y2="102" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="5 3"/>
+      <text x="205" y="34" font-size="11.5" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">S = 3/2</text>
+      <circle cx="150" cy="95" r="4" fill="#1a7a4a"/>
+      <circle cx="187" cy="95" r="4" fill="#1a7a4a"/>
+      <circle cx="199" cy="95" r="4" fill="#1a7a4a"/>
+      <circle cx="203" cy="95" r="4" fill="#1a7a4a"/>
+      <text x="150" y="72" font-size="10" fill="#1a7a4a" text-anchor="middle" ${FS}>1</text>
+      <text x="187" y="60" font-size="10" fill="#1a7a4a" text-anchor="middle" ${FS}>1.33</text>
+      <text x="215" y="72" font-size="10" fill="#1a7a4a" ${FS}>1.44 ...</text>
+      <text x="150" y="138" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>the running total never crosses 1.5 &#8212; it only gets nearer</text>
+    </svg>`,
+
+  // Upward parabola with the lowest point marked
+  parabolaMin:()=>`
+    <svg viewBox="0 0 290 190" width="290" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('pm1','#6b7280')}</defs>
+      <line x1="40" y1="155" x2="275" y2="155" stroke="#6b7280" stroke-width="1.4" marker-end="url(#pm1)"/>
+      <line x1="120" y1="155" x2="120" y2="22" stroke="#6b7280" stroke-width="1.4" marker-end="url(#pm1)"/>
+      <text x="272" y="172" font-size="11" fill="#6b7280" text-anchor="end" ${FS}>x</text>
+      <text x="106" y="28" font-size="11" fill="#6b7280" ${FS}>y</text>
+      <path d="M 66 34 Q 143 210 228 34" fill="none" stroke="#1a7a4a" stroke-width="2.4"/>
+      <circle cx="147" cy="122" r="4.5" fill="#c0392b"/>
+      <line x1="120" y1="122" x2="147" y2="122" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <line x1="147" y1="122" x2="147" y2="155" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <text x="160" y="118" font-size="11" fill="#c0392b" ${FS} font-weight="700">lowest point</text>
+      <text x="160" y="132" font-size="10" fill="#c0392b" ${FS}>here dy/dx = 0</text>
+      <text x="145" y="182" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>a &gt; 0: the arms go up, so the turning point is a minimum</text>
+    </svg>`,
+
+  // Sphere with one quarter shaded
+  quarterSphere:()=>`
+    <svg viewBox="0 0 300 180" width="300" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('qs1','#1a1916')}</defs>
+      <circle cx="105" cy="88" r="58" fill="#f0ede8" stroke="#6b6760" stroke-width="1.6"/>
+      <path d="M 105 88 L 163 88 A 58 58 0 0 0 105 30 Z" fill="#1a7a4a" fill-opacity="0.18" stroke="#1a7a4a" stroke-width="2"/>
+      <ellipse cx="105" cy="88" rx="58" ry="18" fill="none" stroke="#6b6760" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="105" y1="30" x2="105" y2="146" stroke="#6b6760" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="105" y1="88" x2="150" y2="124" stroke="#1a1916" stroke-width="1.8" marker-end="url(#qs1)"/>
+      <text x="134" y="120" font-size="12" fill="#1a1916" ${FS} font-weight="700">R</text>
+      <text x="180" y="58" font-size="11" fill="#1a7a4a" ${FS} font-weight="700">one quarter</text>
+      <text x="180" y="74" font-size="10.5" fill="#6b6760" ${FS}>curved part</text>
+      <text x="180" y="88" font-size="10.5" fill="#6b6760" ${FS}>= &#188; &#215; 4&#960;R&#178; = &#960;R&#178;</text>
+      <text x="180" y="110" font-size="10" fill="#c0392b" ${FS}>the two flat cut faces</text>
+      <text x="180" y="123" font-size="10" fill="#c0392b" ${FS}>are not counted here</text>
+    </svg>`,
+
+  // Four candidate graphs
+  fourGraphs:()=>`
+    <svg viewBox="0 0 310 220" width="310" height="220" xmlns="http://www.w3.org/2000/svg">
+      <text x="22" y="18" font-size="11" fill="#1a1916" ${FS} font-weight="700">(1)</text>
+      <line x1="18" y1="92" x2="145" y2="92" stroke="#6b7280" stroke-width="1.2"/>
+      <line x1="34" y1="102" x2="34" y2="16" stroke="#6b7280" stroke-width="1.2"/>
+      <path d="M 34 92 Q 74 22 114 92" fill="none" stroke="#1a7a4a" stroke-width="2.2"/>
+      <text x="172" y="18" font-size="11" fill="#1a1916" ${FS} font-weight="700">(2)</text>
+      <line x1="168" y1="92" x2="295" y2="92" stroke="#6b7280" stroke-width="1.2"/>
+      <line x1="184" y1="102" x2="184" y2="16" stroke="#6b7280" stroke-width="1.2"/>
+      <path d="M 288 20 Q 186 56 288 90" fill="none" stroke="#6b6760" stroke-width="2.2"/>
+      <text x="22" y="128" font-size="11" fill="#1a1916" ${FS} font-weight="700">(3)</text>
+      <line x1="18" y1="200" x2="145" y2="200" stroke="#6b7280" stroke-width="1.2"/>
+      <line x1="34" y1="210" x2="34" y2="124" stroke="#6b7280" stroke-width="1.2"/>
+      <path d="M 44 128 Q 84 226 124 128" fill="none" stroke="#6b6760" stroke-width="2.2"/>
+      <text x="172" y="128" font-size="11" fill="#1a1916" ${FS} font-weight="700">(4)</text>
+      <line x1="168" y1="200" x2="295" y2="200" stroke="#6b7280" stroke-width="1.2"/>
+      <line x1="238" y1="210" x2="238" y2="124" stroke="#6b7280" stroke-width="1.2"/>
+      <path d="M 190 128 Q 292 162 190 198" fill="none" stroke="#6b6760" stroke-width="2.2"/>
+    </svg>`,
+
+  // 75 degrees split as 45 + 30
+  angleSum:()=>`
+    <svg viewBox="0 0 290 175" width="290" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('as1','#6b7280')}${AR('as2','#1a7a4a')}${AR('as3','#c0392b')}</defs>
+      <line x1="45" y1="140" x2="270" y2="140" stroke="#6b7280" stroke-width="1.4" marker-end="url(#as1)"/>
+      <line x1="45" y1="140" x2="45" y2="24" stroke="#6b7280" stroke-width="1.4" marker-end="url(#as1)"/>
+      <line x1="45" y1="140" x2="160" y2="25" stroke="#1a7a4a" stroke-width="2" marker-end="url(#as2)"/>
+      <line x1="45" y1="140" x2="85" y2="30" stroke="#c0392b" stroke-width="2" marker-end="url(#as3)"/>
+      <path d="M 105 140 A 60 60 0 0 0 87 98" fill="none" stroke="#1a7a4a" stroke-width="1.4"/>
+      <path d="M 87 98 A 60 60 0 0 0 61 84" fill="none" stroke="#c0392b" stroke-width="1.4"/>
+      <text x="112" y="128" font-size="11" fill="#1a7a4a" ${FS} font-weight="700">45&#176;</text>
+      <text x="82" y="86" font-size="11" fill="#c0392b" ${FS} font-weight="700">30&#176;</text>
+      <text x="150" y="52" font-size="11.5" fill="#1a1916" ${FS} font-weight="700">75&#176; = 45&#176; + 30&#176;</text>
+      <text x="145" y="166" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>a non-standard angle built from two standard ones</text>
+    </svg>`,
+
+  // 15 degrees as 45 - 30
+  angleDiff:()=>`
+    <svg viewBox="0 0 290 175" width="290" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ad1','#6b7280')}${AR('ad2','#1a7a4a')}${AR('ad3','#c0392b')}</defs>
+      <line x1="45" y1="140" x2="270" y2="140" stroke="#6b7280" stroke-width="1.4" marker-end="url(#ad1)"/>
+      <line x1="45" y1="140" x2="45" y2="24" stroke="#6b7280" stroke-width="1.4" marker-end="url(#ad1)"/>
+      <line x1="45" y1="140" x2="160" y2="25" stroke="#1a7a4a" stroke-width="2" marker-end="url(#ad2)"/>
+      <line x1="45" y1="140" x2="185" y2="59" stroke="#c0392b" stroke-width="2" marker-end="url(#ad3)"/>
+      <line x1="45" y1="140" x2="225" y2="93" stroke="#b45309" stroke-width="2" stroke-dasharray="5 3"/>
+      <path d="M 115 140 A 70 70 0 0 0 95 91" fill="none" stroke="#1a7a4a" stroke-width="1.4"/>
+      <text x="122" y="126" font-size="11" fill="#1a7a4a" ${FS} font-weight="700">45&#176;</text>
+      <text x="196" y="56" font-size="11" fill="#c0392b" ${FS} font-weight="700">30&#176;</text>
+      <text x="232" y="92" font-size="11" fill="#b45309" ${FS} font-weight="700">15&#176;</text>
+      <text x="150" y="166" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>15&#176; = 45&#176; &#8722; 30&#176;, so use the subtraction formula</text>
+    </svg>`,
+
+  // Right triangle with hypotenuse 1
+  triangleIdentity:()=>`
+    <svg viewBox="0 0 280 170" width="280" height="170" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,135 210,135 210,45" fill="#1a7a4a" fill-opacity="0.10" stroke="#1a7a4a" stroke-width="2"/>
+      <rect x="196" y="121" width="14" height="14" fill="none" stroke="#6b6760" stroke-width="1.2"/>
+      <path d="M 82 135 A 32 32 0 0 0 76 118" fill="none" stroke="#c0392b" stroke-width="1.4"/>
+      <text x="88" y="128" font-size="11" fill="#c0392b" ${FS} font-weight="700">&#952;</text>
+      <text x="118" y="82" font-size="11.5" fill="#1a1916" ${FS} font-weight="700">1</text>
+      <text x="228" y="95" font-size="11.5" fill="#1a1916" ${FS} font-weight="700">sin &#952;</text>
+      <text x="130" y="152" font-size="11.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">cos &#952;</text>
+      <text x="140" y="24" font-size="11.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">sin&#178;&#952; + cos&#178;&#952; = 1</text>
+      <text x="140" y="166" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>true for every angle &#8212; Pythagoras on a hypotenuse of 1</text>
+    </svg>`,
+
+  // Perpendicular vectors with both diagonals
+  perpVectors:()=>`
+    <svg viewBox="0 0 300 190" width="300" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('pv1','#1a1916')}${AR('pv2','#1a7a4a')}${AR('pv3','#c0392b')}</defs>
+      <rect x="60" y="50" width="130" height="90" fill="none" stroke="#d4d1c8" stroke-width="1.3" stroke-dasharray="5 3"/>
+      <line x1="60" y1="140" x2="190" y2="140" stroke="#1a1916" stroke-width="2.4" marker-end="url(#pv1)"/>
+      <line x1="60" y1="140" x2="60" y2="50" stroke="#1a1916" stroke-width="2.4" marker-end="url(#pv1)"/>
+      <line x1="60" y1="140" x2="190" y2="50" stroke="#1a7a4a" stroke-width="2.2" marker-end="url(#pv2)"/>
+      <line x1="60" y1="50" x2="190" y2="140" stroke="#c0392b" stroke-width="2.2" marker-end="url(#pv3)"/>
+      <rect x="60" y="126" width="14" height="14" fill="none" stroke="#6b6760" stroke-width="1.2"/>
+      <text x="125" y="158" font-size="12" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">a</text>
+      <text x="44" y="96" font-size="12" fill="#1a1916" ${FS} font-weight="700">b</text>
+      <text x="205" y="48" font-size="11.5" fill="#1a7a4a" ${FS} font-weight="700">a + b</text>
+      <text x="205" y="140" font-size="11.5" fill="#c0392b" ${FS} font-weight="700">a &#8722; b</text>
+      <text x="150" y="180" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>with a &#8869; b the two sums are the diagonals of a rectangle</text>
+    </svg>`,
+
+  // Circle centred at (2, -1)
+  circleCentre:()=>`
+    <svg viewBox="0 0 300 200" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('cc1','#6b7280')}${AR('cc2','#c0392b')}</defs>
+      <line x1="30" y1="95" x2="285" y2="95" stroke="#6b7280" stroke-width="1.3" marker-end="url(#cc1)"/>
+      <line x1="120" y1="185" x2="120" y2="14" stroke="#6b7280" stroke-width="1.3" marker-end="url(#cc1)"/>
+      <text x="282" y="88" font-size="11" fill="#6b7280" text-anchor="end" ${FS}>x</text>
+      <text x="106" y="22" font-size="11" fill="#6b7280" ${FS}>y</text>
+      <circle cx="156" cy="113" r="54" fill="#1a7a4a" fill-opacity="0.10" stroke="#1a7a4a" stroke-width="2.2"/>
+      <circle cx="156" cy="113" r="3.8" fill="#1a1916"/>
+      <line x1="156" y1="113" x2="210" y2="113" stroke="#c0392b" stroke-width="1.8" marker-end="url(#cc2)"/>
+      <text x="182" y="107" font-size="11.5" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">r = 3</text>
+      <text x="150" y="136" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">(2, &#8722;1)</text>
+      <text x="150" y="192" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>centre sits right of the y-axis and below the x-axis</text>
+    </svg>`,
+
+  // AP steps of +4 starting from 7
+  apSteps:()=>`
+    <svg viewBox="0 0 310 150" width="310" height="150" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ap1','#6b7280')}</defs>
+      <line x1="25" y1="105" x2="295" y2="105" stroke="#6b7280" stroke-width="1.4" marker-end="url(#ap1)"/>
+      <circle cx="40" cy="105" r="4" fill="#1a7a4a"/>
+      <circle cx="88" cy="105" r="4" fill="#6b6760"/>
+      <circle cx="136" cy="105" r="4" fill="#6b6760"/>
+      <circle cx="184" cy="105" r="4" fill="#6b6760"/>
+      <circle cx="232" cy="105" r="4" fill="#6b6760"/>
+      <circle cx="272" cy="105" r="5" fill="#c0392b"/>
+      <text x="40" y="124" font-size="11" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">7</text>
+      <text x="88" y="124" font-size="11" fill="#6b6760" text-anchor="middle" ${FS}>11</text>
+      <text x="136" y="124" font-size="11" fill="#6b6760" text-anchor="middle" ${FS}>15</text>
+      <text x="184" y="124" font-size="11" fill="#6b6760" text-anchor="middle" ${FS}>19</text>
+      <text x="232" y="124" font-size="11" fill="#6b6760" text-anchor="middle" ${FS}>23</text>
+      <text x="272" y="124" font-size="11.5" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">27</text>
+      <text x="40" y="140" font-size="9.5" fill="#a09d97" text-anchor="middle" ${FS}>1st</text>
+      <text x="272" y="140" font-size="9.5" fill="#c0392b" text-anchor="middle" ${FS}>6th</text>
+      <path d="M 40 100 Q 64 78 88 100" fill="none" stroke="#b45309" stroke-width="1.4"/>
+      <path d="M 88 100 Q 112 78 136 100" fill="none" stroke="#b45309" stroke-width="1.4"/>
+      <path d="M 136 100 Q 160 78 184 100" fill="none" stroke="#b45309" stroke-width="1.4"/>
+      <path d="M 184 100 Q 208 78 232 100" fill="none" stroke="#b45309" stroke-width="1.4"/>
+      <path d="M 232 100 Q 252 80 272 100" fill="none" stroke="#b45309" stroke-width="1.4"/>
+      <text x="155" y="66" font-size="11" fill="#b45309" text-anchor="middle" ${FS} font-weight="700">five jumps of +4, not six</text>
+    </svg>`
+};
+
+// ===============================================================================
+//  QUESTION LADDERS  -  Mathematical Tools & Vectors
+//  Source: ALLEN PRE-MEDICAL LEADER (Phase 5 & 6) IT-02, 19-08-2026
+//  Physics Qs 1, 2, 3, 4, 5, 6, 7, 8, 12, 44, 45
+// ===============================================================================
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "Binomial expansion: picking one coefficient",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In the expansion of (1 + x)<sup>n</sup>, the coefficient of x<sup>r</sup> is <sup>n</sup>C<sub>r</sub>. What is <sup>5</sup>C<sub>1</sub>?",
+   "opts": ["5","1","10","25"],
+   "ans": 0,
+   "sol": "<sup>n</sup>C<sub>r</sub> = n! / [ r! (n &#8722; r)! ].<br>So <sup>5</sup>C<sub>1</sub> = 5! / (1! &#215; 4!) = <strong>5</strong>.<br><br>Worth memorising: <sup>n</sup>C<sub>1</sub> is always n, and <sup>n</sup>C<sub>0</sub> is always 1."
+  },
+  {
+   "q": "Expand (1 + x)<sup>3</sup> fully. What is the coefficient of x<sup>2</sup>?",
+   "opts": ["3","2","1","6"],
+   "ans": 0,
+   "sol": "(1 + x)<sup>3</sup> = 1 + 3x + 3x<sup>2</sup> + x<sup>3</sup>.<br>The coefficient of x<sup>2</sup> is <strong>3</strong>, which is <sup>3</sup>C<sub>2</sub>.<br><br>Notice the coefficients 1, 3, 3, 1 are a row of Pascal's triangle."
+  },
+  {
+   "q": "In the binomial expansion of (1 + x)<sup>4</sup>, the coefficient of x<sup>2</sup> is",
+   "opts": ["6","4","8","12"],
+   "ans": 0,
+   "sol": "<sup>4</sup>C<sub>2</sub> = (4 &#215; 3) / (2 &#215; 1) = <strong>6</strong>.<br><br>Short way for <sup>n</sup>C<sub>2</sub>: multiply the top two numbers going down (4 &#215; 3) and divide by 2."
+  },
+  {
+   "tag": "IT-02 Physics Q1",
+   "q": "&#9733; <strong>Original:</strong> In the binomial expansion of (1 + x)<sup>5</sup>, the coefficient of x<sup>2</sup> is",
+   "diagram": DIAGRAMS.pascal(),
+   "opts": ["10","5","15","20"],
+   "ans": 0,
+   "sol": "<sup>5</sup>C<sub>2</sub> = (5 &#215; 4) / (2 &#215; 1) = <strong>10</strong>.<br>Row 5 of Pascal's triangle is 1, 5, 10, 10, 5, 1 &#8212; and the x<sup>2</sup> place is the third entry.<br><br><em>Where physics uses this:</em> for small x you keep only the first two terms, (1 + x)<sup>n</sup> &#8776; 1 + nx. Question 18 of the same paper is exactly that idea."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Sum of an infinite GP",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In the series 1 + 1/3 + 1/9 + 1/27 + ..., each term is obtained from the one before it by multiplying by",
+   "opts": ["1/3","3","1/9","&#8722;1/3"],
+   "ans": 0,
+   "sol": "Divide any term by the one before it: (1/3) &#247; 1 = 1/3, and (1/9) &#247; (1/3) = <strong>1/3</strong>.<br><br>That fixed multiplier is the <strong>common ratio r</strong>. A constant ratio (not a constant difference) is what makes it a GP."
+  },
+  {
+   "q": "An infinite GP a + ar + ar<sup>2</sup> + ... adds up to a finite number only when",
+   "opts": ["|r| &lt; 1","r &gt; 1","r = 1","every r &#8212; it always adds up"],
+   "ans": 0,
+   "sol": "If |r| &lt; 1 the terms shrink towards zero fast enough for the total to settle down, and S<sub>&#8734;</sub> = <strong>a / (1 &#8722; r)</strong>.<br><br>If |r| &#8805; 1 the terms do not shrink and the sum runs away to infinity."
+  },
+  {
+   "q": "Find the sum 1 + 1/2 + 1/4 + 1/8 + ... to infinity.",
+   "opts": ["2","3/2","1","infinite"],
+   "ans": 0,
+   "sol": "Here a = 1 and r = 1/2.<br>S = a / (1 &#8722; r) = 1 / (1 &#8722; 1/2) = 1 / (1/2) = <strong>2</strong>.<br><br>Sensible check: the running total is 1, 1.5, 1.75, 1.875 ... always creeping up to 2 but never reaching it."
+  },
+  {
+   "tag": "IT-02 Physics Q2",
+   "q": "&#9733; <strong>Original:</strong> S = 1 + 1/3 + 1/9 + 1/27 + ... to infinity. Then S =",
+   "diagram": DIAGRAMS.gpBar(),
+   "opts": ["3/2","2/3","infinite","2"],
+   "ans": 0,
+   "sol": "a = 1, r = 1/3.<br>S = 1 / (1 &#8722; 1/3) = 1 / (2/3) = <strong>3/2</strong>.<br><br><em>The trap:</em> option 2/3 is what you get if you stop at (1 &#8722; r) and forget to divide. Always finish the division."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Maximum or minimum of a quadratic",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For y = ax<sup>2</sup> + bx + c with a &gt; 0, the parabola opens",
+   "opts": ["upward, so y has a minimum value","downward, so y has a maximum value","upward, so y has a maximum value","neither &#8212; it is a straight line"],
+   "ans": 0,
+   "sol": "A positive a makes both arms rise, so the curve has a lowest point: a <strong>minimum</strong>.<br><br>A negative a flips it over and gives a maximum instead. Check the sign of a first, before doing any calculation."
+  },
+  {
+   "q": "For y = 4x<sup>2</sup> &#8722; 4x + 7, the turning point is where dy/dx = 0. Find that x.",
+   "opts": ["1/2","2","1/4","4"],
+   "ans": 0,
+   "sol": "dy/dx = 8x &#8722; 4.<br>Set it to zero: 8x = 4, so x = <strong>1/2</strong>.<br><br>Same thing without calculus: x = &#8722;b/2a = &#8722;(&#8722;4)/(2 &#215; 4) = 1/2."
+  },
+  {
+   "q": "Find the minimum value of y = x<sup>2</sup> &#8722; 4x + 7.",
+   "opts": ["3","7","4","&#8722;3"],
+   "ans": 0,
+   "sol": "x = &#8722;b/2a = 4/2 = 2.<br>Put x = 2 back in: y = 4 &#8722; 8 + 7 = <strong>3</strong>.<br><br><em>Do not stop at x = 2.</em> The question asks for the value of y, not the x where it happens."
+  },
+  {
+   "tag": "IT-02 Physics Q3",
+   "q": "&#9733; <strong>Original:</strong> Find the maximum / minimum value of y = 4x<sup>2</sup> &#8722; 4x + 7.",
+   "diagram": DIAGRAMS.parabolaMin(),
+   "opts": ["6","7","8","10"],
+   "ans": 0,
+   "sol": "a = 4 is positive, so we are looking for a <strong>minimum</strong>.<br>Turning point at x = 1/2.<br>y = 4(1/2)<sup>2</sup> &#8722; 4(1/2) + 7 = 1 &#8722; 2 + 7 = <strong>6</strong>.<br><br><em>The trap:</em> putting x = 0 gives 7, which is sitting there as an option. x = 0 is not the turning point."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "Surface area of a part of a sphere",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "The surface area of a full solid sphere of radius R is",
+   "opts": ["4&#960;R<sup>2</sup>","&#960;R<sup>2</sup>","2&#960;R<sup>2</sup>","(4/3)&#960;R<sup>3</sup>"],
+   "ans": 0,
+   "sol": "Surface area = <strong>4&#960;R<sup>2</sup></strong>.<br><br>(4/3)&#960;R<sup>3</sup> is the <em>volume</em>. Area has R<sup>2</sup>, volume has R<sup>3</sup> &#8212; check the power before you pick."
+  },
+  {
+   "q": "A sphere is cut into two equal halves. The curved surface of one half is",
+   "opts": ["2&#960;R<sup>2</sup>","4&#960;R<sup>2</sup>","&#960;R<sup>2</sup>","3&#960;R<sup>2</sup>"],
+   "ans": 0,
+   "sol": "Half of the curved surface: (1/2) &#215; 4&#960;R<sup>2</sup> = <strong>2&#960;R<sup>2</sup></strong>.<br><br>The flat circular face of area &#960;R<sup>2</sup> is separate. Total surface of a solid hemisphere would be 3&#960;R<sup>2</sup>."
+  },
+  {
+   "q": "A sphere is cut into four equal parts. The curved surface of each part is",
+   "opts": ["&#960;R<sup>2</sup>","2&#960;R<sup>2</sup>","4&#960;R<sup>2</sup>","&#960;R<sup>2</sup>/4"],
+   "ans": 0,
+   "sol": "(1/4) &#215; 4&#960;R<sup>2</sup> = <strong>&#960;R<sup>2</sup></strong>.<br><br>The 4 in the formula and the 4 parts cancel neatly, which is why this one is quick if you spot it."
+  },
+  {
+   "tag": "IT-02 Physics Q4",
+   "q": "&#9733; <strong>Original:</strong> Surface area of one-fourth of a solid sphere is (radius is R)",
+   "diagram": DIAGRAMS.quarterSphere(),
+   "opts": ["&#960;R<sup>2</sup>","4&#960;R<sup>2</sup>","2&#960;R<sup>2</sup>","&#960;R<sup>2</sup>/4"],
+   "ans": 0,
+   "sol": "The key wants one quarter of the curved surface: (1/4) &#215; 4&#960;R<sup>2</sup> = <strong>&#960;R<sup>2</sup></strong>.<br><br><span style=\"color:#b45309\"><strong>Worth arguing about in class:</strong></span> a genuine solid quarter-sphere also has <em>two flat semicircular faces</em>, each of area &#960;R<sup>2</sup>/2. Counting those, the whole surface would be &#960;R<sup>2</sup> + &#960;R<sup>2</sup> = 2&#960;R<sup>2</sup>, which is option (3). The paper is only asking for the <strong>curved share</strong>. Read this type of question as \"curved surface\" unless it clearly says total."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Sketching y = 4x &#8722; 2x&#178;",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For y = 4x &#8722; 2x<sup>2</sup>, what is y when x = 0?",
+   "opts": ["0, so the curve passes through the origin","4","2","&#8722;2"],
+   "ans": 0,
+   "sol": "Put x = 0: y = 0 &#8722; 0 = <strong>0</strong>.<br><br>There is no constant term, so the curve must pass through the <strong>origin</strong>. That one fact already rules out several graph options."
+  },
+  {
+   "q": "In y = 4x &#8722; 2x<sup>2</sup> the coefficient of x<sup>2</sup> is &#8722;2. So the parabola",
+   "opts": ["opens downward and has a maximum","opens downward and has a minimum","opens upward and has a minimum","opens sideways"],
+   "ans": 0,
+   "sol": "A negative x<sup>2</sup> coefficient turns the parabola upside down, so it rises, peaks, and comes back: <strong>a maximum</strong>.<br><br>Also, y is a function of x here (one y for each x), so it can never open sideways."
+  },
+  {
+   "q": "Where does the curve y = 4x &#8722; 2x<sup>2</sup> cut the x-axis?",
+   "opts": ["at x = 0 and x = 2","at x = 0 and x = 4","at x = 2 only","it never cuts the x-axis"],
+   "ans": 0,
+   "sol": "Set y = 0: 4x &#8722; 2x<sup>2</sup> = 0, so 2x(2 &#8722; x) = 0.<br>That gives x = <strong>0</strong> and x = <strong>2</strong>.<br><br>The peak sits midway between the two roots, at x = 1, where y = 4 &#8722; 2 = 2."
+  },
+  {
+   "tag": "IT-02 Physics Q5",
+   "q": "&#9733; <strong>Original:</strong> For y = 4x &#8722; 2x<sup>2</sup>, the graph is:",
+   "diagram": DIAGRAMS.fourGraphs(),
+   "opts": ["Graph (1)","Graph (2)","Graph (3)","Graph (4)"],
+   "ans": 0,
+   "sol": "Three checks settle it:<br>&#8226; passes through the origin,<br>&#8226; opens <strong>downward</strong> (a maximum of y = 2 at x = 1),<br>&#8226; comes back to the x-axis at x = 2.<br><br>Only <strong>graph (1)</strong> does all three. Graph (3) is an upward parabola (wrong sign), and (2) and (4) are sideways curves &#8212; those are x as a function of y, not y as a function of x."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "cos 75&#176; from standard angles",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "The compound angle formula for cos(A + B) is",
+   "opts": ["cos A cos B &#8722; sin A sin B","cos A cos B + sin A sin B","sin A cos B + cos A sin B","cos A + cos B"],
+   "ans": 0,
+   "sol": "cos(A + B) = <strong>cos A cos B &#8722; sin A sin B</strong>.<br><br>Memory hook: for <strong>cos</strong> the sign <em>flips</em> (plus inside, minus outside). For sin it stays the same."
+  },
+  {
+   "q": "75&#176; is not a standard angle. Which pair of standard angles adds up to it?",
+   "opts": ["45&#176; + 30&#176;","60&#176; + 30&#176;","45&#176; + 45&#176;","90&#176; &#8722; 30&#176;"],
+   "ans": 0,
+   "sol": "45&#176; + 30&#176; = <strong>75&#176;</strong>, and both are angles whose sin and cos you already know.<br><br>60&#176; + 30&#176; = 90&#176; and 45&#176; + 45&#176; = 90&#176; &#8212; both miss. 90&#176; &#8722; 30&#176; = 60&#176;, also wrong."
+  },
+  {
+   "q": "Find sin 75&#176; = sin(45&#176; + 30&#176;).",
+   "opts": ["(&#8730;3 + 1) / 2&#8730;2","(&#8730;3 &#8722; 1) / 2&#8730;2","&#8730;3 / 2","1 / 2&#8730;2"],
+   "ans": 0,
+   "sol": "sin(A + B) = sin A cos B + cos A sin B<br>= (1/&#8730;2)(&#8730;3/2) + (1/&#8730;2)(1/2)<br>= <strong>(&#8730;3 + 1) / 2&#8730;2</strong> &#8776; 0.966.<br><br>Sensible: 75&#176; is close to 90&#176;, so its sine should be close to 1."
+  },
+  {
+   "tag": "IT-02 Physics Q6",
+   "q": "&#9733; <strong>Original:</strong> cos 75&#176; =",
+   "diagram": DIAGRAMS.angleSum(),
+   "opts": ["(&#8730;3 &#8722; 1) / 2&#8730;2","(&#8730;3 + 1) / 2&#8730;2","&#8730;3 / 2","&#8730;3"],
+   "ans": 0,
+   "sol": "cos 75&#176; = cos(45&#176; + 30&#176;) = cos45 cos30 &#8722; sin45 sin30<br>= (1/&#8730;2)(&#8730;3/2) &#8722; (1/&#8730;2)(1/2)<br>= <strong>(&#8730;3 &#8722; 1) / 2&#8730;2</strong> &#8776; 0.259.<br><br><em>Check before you tick:</em> 75&#176; is near 90&#176;, so its cosine must be <strong>small</strong>. Option (&#8730;3 + 1)/2&#8730;2 &#8776; 0.97 is far too big, and &#8730;3 &#8776; 1.73 is impossible &#8212; no cosine can exceed 1."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "The identity sin&#178; + cos&#178; = 1",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "For any angle &#952;, sin<sup>2</sup>&#952; + cos<sup>2</sup>&#952; =",
+   "opts": ["1","0","2","depends on &#952;"],
+   "ans": 0,
+   "sol": "<strong>1</strong>, for every angle without exception.<br><br>It is just Pythagoras on a right triangle whose hypotenuse is 1."
+  },
+  {
+   "q": "1 &#8722; cos<sup>2</sup>15&#176; is the same as",
+   "opts": ["sin<sup>2</sup>15&#176;","cos<sup>2</sup>15&#176;","tan<sup>2</sup>15&#176;","1"],
+   "ans": 0,
+   "sol": "From sin<sup>2</sup> + cos<sup>2</sup> = 1, shifting cos<sup>2</sup> across gives 1 &#8722; cos<sup>2</sup>&#952; = <strong>sin<sup>2</sup>&#952;</strong>.<br><br>Same idea the other way: 1 &#8722; sin<sup>2</sup>&#952; = cos<sup>2</sup>&#952;."
+  },
+  {
+   "q": "Evaluate (1 &#8722; sin<sup>2</sup>40&#176;) + (1 &#8722; cos<sup>2</sup>40&#176;).",
+   "opts": ["1","2","0","cannot be found without a table"],
+   "ans": 0,
+   "sol": "1 &#8722; sin<sup>2</sup>40 = cos<sup>2</sup>40, and 1 &#8722; cos<sup>2</sup>40 = sin<sup>2</sup>40.<br>Adding: cos<sup>2</sup>40 + sin<sup>2</sup>40 = <strong>1</strong>.<br><br>The 40&#176; never mattered. Any angle gives the same answer."
+  },
+  {
+   "tag": "IT-02 Physics Q7",
+   "q": "&#9733; <strong>Original:</strong> (1 &#8722; cos<sup>2</sup>15&#176;) + (1 &#8722; sin<sup>2</sup>15&#176;) =",
+   "diagram": DIAGRAMS.triangleIdentity(),
+   "opts": ["1","2","&#8722;1","(&#8730;3 &#8722; 1)/(&#8730;3 + 1)"],
+   "ans": 0,
+   "sol": "1 &#8722; cos<sup>2</sup>15 = sin<sup>2</sup>15<br>1 &#8722; sin<sup>2</sup>15 = cos<sup>2</sup>15<br>Adding: sin<sup>2</sup>15 + cos<sup>2</sup>15 = <strong>1</strong>.<br><br><em>The trap is the 2.</em> Students see \"1 + 1\" at the front and tick 2, forgetting that something is being subtracted from each. The 15&#176; is only there to scare you &#8212; it never enters the working."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "sin 15&#176; from standard angles",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "The compound angle formula for sin(A &#8722; B) is",
+   "opts": ["sin A cos B &#8722; cos A sin B","sin A cos B + cos A sin B","cos A cos B + sin A sin B","sin A &#8722; sin B"],
+   "ans": 0,
+   "sol": "sin(A &#8722; B) = <strong>sin A cos B &#8722; cos A sin B</strong>.<br><br>For sin, the sign inside the bracket is the sign in the middle. For cos, it flips."
+  },
+  {
+   "q": "Without calculating, sin 15&#176; must be a number that is",
+   "opts": ["less than 0.5, because 15&#176; is less than 30&#176;","more than 0.5","more than 1","negative"],
+   "ans": 0,
+   "sol": "Sine grows steadily from 0&#176; to 90&#176;. Since sin 30&#176; = 0.5, <strong>sin 15&#176; must be below 0.5</strong> (it is about 0.26).<br><br>This one check throws out any option bigger than a half before you calculate anything."
+  },
+  {
+   "q": "Find cos 15&#176; = cos(45&#176; &#8722; 30&#176;).",
+   "opts": ["(&#8730;3 + 1) / 2&#8730;2","(&#8730;3 &#8722; 1) / 2&#8730;2","1/2","&#8730;3/2"],
+   "ans": 0,
+   "sol": "cos(A &#8722; B) = cos A cos B + sin A sin B<br>= (1/&#8730;2)(&#8730;3/2) + (1/&#8730;2)(1/2) = <strong>(&#8730;3 + 1) / 2&#8730;2</strong> &#8776; 0.966.<br><br>15&#176; is a small angle, so its cosine should be close to 1. It is."
+  },
+  {
+   "tag": "IT-02 Physics Q8",
+   "q": "&#9733; <strong>Original:</strong> sin 15&#176; = ?",
+   "diagram": DIAGRAMS.angleDiff(),
+   "opts": ["(1/2&#8730;2)(&#8730;3 &#8722; 1)","(1/&#8730;2)(&#8730;3 &#8722; 1)","&#8730;3 &#8722; 1","(1/2&#8730;2)(&#8730;3 + 1)"],
+   "ans": 0,
+   "sol": "sin 15&#176; = sin(45&#176; &#8722; 30&#176;) = sin45 cos30 &#8722; cos45 sin30<br>= (1/&#8730;2)(&#8730;3/2) &#8722; (1/&#8730;2)(1/2)<br>= <strong>(&#8730;3 &#8722; 1) / 2&#8730;2</strong> &#8776; 0.259.<br><br>Now check the wrong options with the size rule: &#8730;3 &#8722; 1 &#8776; 0.73 and (1/&#8730;2)(&#8730;3 &#8722; 1) &#8776; 0.52 are both above 0.5, so both are out on sight.<br><br><em>Nice link:</em> this is exactly the same number as cos 75&#176; from Ladder 06 &#8212; because sin &#952; = cos(90&#176; &#8722; &#952;)."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "Component of one vector along another",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "If vector <strong>a</strong> is perpendicular to vector <strong>b</strong>, then <strong>a</strong> &#183; <strong>b</strong> =",
+   "opts": ["0","ab","a + b","1"],
+   "ans": 0,
+   "sol": "<strong>a</strong> &#183; <strong>b</strong> = ab cos&#952;, and at &#952; = 90&#176; the cosine is zero.<br>So the dot product is <strong>0</strong>.<br><br>Whenever you read \"perpendicular\", write a &#183; b = 0 on your rough sheet straight away."
+  },
+  {
+   "q": "For perpendicular vectors <strong>a</strong> and <strong>b</strong>, the magnitude |<strong>a</strong> + <strong>b</strong>| is",
+   "opts": ["&#8730;(a<sup>2</sup> + b<sup>2</sup>)","a + b","&#8730;(a<sup>2</sup> &#8722; b<sup>2</sup>)","a &#8722; b"],
+   "ans": 0,
+   "sol": "|a + b|<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup> + 2ab cos&#952;, and cos90&#176; = 0.<br>So |a + b| = <strong>&#8730;(a<sup>2</sup> + b<sup>2</sup>)</strong> &#8212; plain Pythagoras.<br><br>|a &#8722; b| works out to the same value here, since the two diagonals of a rectangle are equal."
+  },
+  {
+   "q": "Expand (<strong>a</strong> &#8722; <strong>b</strong>) &#183; (<strong>a</strong> + <strong>b</strong>) given that <strong>a</strong> &#183; <strong>b</strong> = 0.",
+   "opts": ["a<sup>2</sup> &#8722; b<sup>2</sup>","a<sup>2</sup> + b<sup>2</sup>","0","2ab"],
+   "ans": 0,
+   "sol": "(a &#8722; b) &#183; (a + b) = a&#183;a + a&#183;b &#8722; b&#183;a &#8722; b&#183;b.<br>Now a&#183;a = a<sup>2</sup>, b&#183;b = b<sup>2</sup>, and the two middle terms are each zero.<br>Result: <strong>a<sup>2</sup> &#8722; b<sup>2</sup></strong>.<br><br>The dot product obeys the ordinary algebra of brackets, so (x &#8722; y)(x + y) = x<sup>2</sup> &#8722; y<sup>2</sup> carries over."
+  },
+  {
+   "tag": "IT-02 Physics Q12",
+   "q": "&#9733; <strong>Original:</strong> Vector <strong>a</strong> is perpendicular to <strong>b</strong>. The component of (<strong>a</strong> &#8722; <strong>b</strong>) along (<strong>a</strong> + <strong>b</strong>) will be",
+   "diagram": DIAGRAMS.perpVectors(),
+   "opts": ["(a<sup>2</sup> &#8722; b<sup>2</sup>) / &#8730;(a<sup>2</sup> + b<sup>2</sup>)","zero","a &#8722; b","&#8730;(a<sup>2</sup> + b<sup>2</sup>)"],
+   "ans": 0,
+   "sol": "The component of <strong>P</strong> along <strong>Q</strong> is <strong>P &#183; Q / |Q|</strong> &#8212; dot product on top, magnitude of the direction vector below.<br><br>Top: (a &#8722; b) &#183; (a + b) = a<sup>2</sup> &#8722; b<sup>2</sup><br>Bottom: |a + b| = &#8730;(a<sup>2</sup> + b<sup>2</sup>)<br>Component = <strong>(a<sup>2</sup> &#8722; b<sup>2</sup>) / &#8730;(a<sup>2</sup> + b<sup>2</sup>)</strong>.<br><br><em>Two things to keep straight:</em> a component is a <strong>number</strong>, not a vector, and you divide by the magnitude of the vector you are projecting <em>onto</em>. Dividing by |a &#8722; b| instead is the usual slip. Note also that the answer becomes zero only in the special case a = b."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "Equation of a circle",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A circle with centre (h, k) and radius r has the equation",
+   "opts": ["(x &#8722; h)<sup>2</sup> + (y &#8722; k)<sup>2</sup> = r<sup>2</sup>","(x + h)<sup>2</sup> + (y + k)<sup>2</sup> = r<sup>2</sup>","(x &#8722; h)<sup>2</sup> + (y &#8722; k)<sup>2</sup> = r","x<sup>2</sup> + y<sup>2</sup> = r<sup>2</sup>"],
+   "ans": 0,
+   "sol": "<strong>(x &#8722; h)<sup>2</sup> + (y &#8722; k)<sup>2</sup> = r<sup>2</sup></strong>.<br><br>It is just the distance formula: every point (x, y) on the circle sits a distance r from the centre. The last option is the special case of a centre at the origin."
+  },
+  {
+   "q": "Write the equation of the circle with centre (3, 4) and radius 5.",
+   "opts": ["(x &#8722; 3)<sup>2</sup> + (y &#8722; 4)<sup>2</sup> = 25","(x + 3)<sup>2</sup> + (y + 4)<sup>2</sup> = 25","(x &#8722; 3)<sup>2</sup> + (y &#8722; 4)<sup>2</sup> = 5","(x &#8722; 4)<sup>2</sup> + (y &#8722; 3)<sup>2</sup> = 25"],
+   "ans": 0,
+   "sol": "h = 3, k = 4, r = 5, so r<sup>2</sup> = 25:<br><strong>(x &#8722; 3)<sup>2</sup> + (y &#8722; 4)<sup>2</sup> = 25</strong>.<br><br>The right side is r <em>squared</em>. Leaving 5 there is the most common error in this question type."
+  },
+  {
+   "q": "What is the centre of the circle (x &#8722; 2)<sup>2</sup> + (y + 1)<sup>2</sup> = 9?",
+   "opts": ["(2, &#8722;1)","(&#8722;2, 1)","(2, 1)","(&#8722;2, &#8722;1)"],
+   "ans": 0,
+   "sol": "Read off the number that makes each bracket zero.<br>x &#8722; 2 = 0 gives x = 2; y + 1 = 0 gives y = &#8722;1.<br>Centre = <strong>(2, &#8722;1)</strong>.<br><br>The signs in the equation are always the <strong>opposite</strong> of the signs of the centre."
+  },
+  {
+   "tag": "IT-02 Physics Q44",
+   "q": "&#9733; <strong>Original:</strong> The equation of a circle with centre (2, &#8722;1) and radius 3 is",
+   "diagram": DIAGRAMS.circleCentre(),
+   "opts": ["(x &#8722; 2)<sup>2</sup> + (y + 1)<sup>2</sup> = 9","(x + 2)<sup>2</sup> + (y &#8722; 1)<sup>2</sup> = 9","(x &#8722; 2)<sup>2</sup> + (y &#8722; 1)<sup>2</sup> = 9","(x + 2)<sup>2</sup> + (y + 1)<sup>2</sup> = 3"],
+   "ans": 0,
+   "sol": "h = 2, k = &#8722;1, r = 3.<br>(x &#8722; 2)<sup>2</sup> + (y &#8722; (&#8722;1))<sup>2</sup> = 3<sup>2</sup><br>= <strong>(x &#8722; 2)<sup>2</sup> + (y + 1)<sup>2</sup> = 9</strong>.<br><br>Two separate traps sit in the other options: flipped signs, and a right side of 3 instead of 9. Subtracting a negative k is what turns (y &#8722; k) into (y + 1)."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ "name": "n-th term of an A.P.",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "In an arithmetic progression with first term a and common difference d, the n-th term is",
+   "opts": ["a + (n &#8722; 1)d","a + nd","a &#8722; (n &#8722; 1)d","an + d"],
+   "ans": 0,
+   "sol": "T<sub>n</sub> = <strong>a + (n &#8722; 1)d</strong>.<br><br>Reason it out: the first term needs no jump, the second needs one jump, the third needs two. So the n-th needs (n &#8722; 1)."
+  },
+  {
+   "q": "Starting from the first term, how many steps of d do you take to reach the 6th term?",
+   "opts": ["5","6","7","4"],
+   "ans": 0,
+   "sol": "<strong>5</strong> steps: 1st &#8594; 2nd &#8594; 3rd &#8594; 4th &#8594; 5th &#8594; 6th.<br><br>Always one less than the term number. This single idea is the whole (n &#8722; 1)."
+  },
+  {
+   "q": "An A.P. has first term 3 and common difference 5. Find the 4th term.",
+   "opts": ["18","20","23","15"],
+   "ans": 0,
+   "sol": "T<sub>4</sub> = a + 3d = 3 + 3(5) = <strong>18</strong>.<br><br>Cross-check by writing the list: 3, 8, 13, 18. It matches."
+  },
+  {
+   "tag": "IT-02 Physics Q45",
+   "q": "&#9733; <strong>Original:</strong> If the common difference of an A.P. is 4 and the first term is 7, what is the 6th term?",
+   "diagram": DIAGRAMS.apSteps(),
+   "opts": ["27","31","32","35"],
+   "ans": 0,
+   "sol": "T<sub>6</sub> = a + 5d = 7 + 5(4) = 7 + 20 = <strong>27</strong>.<br>List check: 7, 11, 15, 19, 23, 27.<br><br><em>The trap is option 31.</em> That is 7 + 6 &#215; 4 &#8212; six jumps instead of five. Count the arrows in the diagram, not the dots."
+  }
+ ]
+}
+
+];
+
+
+
+const STORAGE_KEY = 'padipucast_neet_it02_mathtools_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original module question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
