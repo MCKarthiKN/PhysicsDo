@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST · Free Body Diagrams — DPP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;
+  --correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --blue:#2563eb;--blue-bg:#eef4fe;--blue-border:#cfe0f5;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#wrap{max-width:780px;margin:0 auto;padding:0 22px 90px;}
+header{padding:30px 0 4px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;margin-bottom:16px;}
+.brand span{color:var(--text3);}
+header h1{font-family:'LemonMilk',sans-serif;font-size:23px;font-weight:700;letter-spacing:0.02em;line-height:1.25;}
+header .sub{font-size:14px;color:var(--text2);margin-top:6px;}
+
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:24px 0 26px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.chips{display:flex;gap:10px;flex-wrap:wrap;}
+.chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 13px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.chip b{color:var(--text);}
+.btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btns button{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 15px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.btns button:hover{border-color:var(--border2);color:var(--text);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 26px 20px;margin-bottom:14px;}
+.q-top{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+.q-no{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.16em;color:var(--text3);text-transform:uppercase;}
+.vchip{font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 9px;border-radius:5px;background:#f0ede8;color:var(--text2);}
+.vchip.var{background:var(--blue-bg);color:var(--blue);}
+.prac{margin-left:auto;font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.q-text{font-size:15.5px;line-height:1.7;margin-bottom:14px;}
+.q-text sup,.q-text sub{font-size:.75em;}
+.q-diagram{margin:0 0 18px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.opts{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.opt{display:flex;align-items:center;gap:12px;padding:11px 15px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all .15s;}
+.opt sup,.opt sub{font-size:.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt .lt{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;color:var(--text3);flex-shrink:0;background:var(--surface);}
+.opt.correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.correct .lt{border-color:var(--correct-border);color:var(--correct);}
+.opt.wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.wrong .lt{border-color:var(--wrong-border);color:var(--wrong);}
+.opt.locked{pointer-events:none;}
+.sol{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .3s ease;}
+.sol.open{max-height:900px;opacity:1;margin-top:12px;}
+.sol-in{border-left:2px solid var(--text3);padding:10px 15px;font-size:13.5px;line-height:1.7;color:var(--text2);}
+.sol-in strong{color:var(--text);font-weight:600;}
+.sol-in sup,.sol-in sub{font-size:.75em;}
+.sol-in svg{display:block;margin:10px auto 2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;}
+.act{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.act .fb{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 11px;border-radius:20px;display:none;}
+.act .fb.c{display:inline-block;background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+.act .fb.w{display:inline-block;background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+.act .showsol{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:8px 13px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.act .showsol:hover{border-color:var(--border2);color:var(--text);}
+.act .varbtn{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--blue-border);border-radius:8px;padding:8px 13px;cursor:pointer;color:var(--blue);transition:all .15s;margin-left:auto;}
+.act .varbtn:hover{background:var(--blue-bg);border-color:var(--blue);}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--border);font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);text-align:center;}
+@media print{
+  body{background:#fff;} .toolbar .btns,.act .showsol,.act .varbtn{display:none;}
+  .opt{background:#fff;} .sol{max-height:none!important;opacity:1!important;margin-top:12px;}
+  .card{break-inside:avoid;border-color:#ccc;}
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <header>
+    <div class="brand">PADIPUCAST <span>·</span> Daily Practice</div>
+    <h1>Free Body Diagrams — DPP</h1>
+    <p class="sub">9 questions on isolating a body and drawing every force. Tap <b>Try a variation</b> for a fresh version of the same idea.</p>
+  </header>
+  <div class="toolbar">
+    <div class="chips">
+      <span class="chip">Score <b id="sc">0</b>/<b id="tot">9</b></span>
+      <span class="chip">Attempted <b id="att">0</b></span>
+    </div>
+    <div class="btns">
+      <button id="revealBtn">Reveal all</button>
+      <button id="resetBtn">Reset</button>
+      <button id="printBtn">Print</button>
+    </div>
+  </div>
+  <div id="paper"></div>
+  <footer>PADIPUCAST · Prepared for Allen · base questions are scored · variations are free practice</footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  ACCURATE FORCE-DIAGRAM LIBRARY
+//  angle convention: degrees, measured CCW from +x, "up" = 90°
+//  (weight = 270°/down, up = 90°, right = 0°, left = 180°)
+// ═══════════════════════════════════════════════════════════════════
+const FS='font-family="DM Sans,sans-serif"';
+const C={w:'#dc2626',n:'#2563eb',t:'#16a34a',f:'#ea580c',ap:'#7c3aed',g:'#9ca3af',
+         body:'#eef2ff',bs:'#475569',ink:'#334155',dim:'#64748b'};
+const AR=(id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const MK={};MK[C.w]='mW';MK[C.n]='mN';MK[C.t]='mT';MK[C.f]='mF';MK[C.ap]='mA';
+const MARKERS=[['mW',C.w],['mN',C.n],['mT',C.t],['mF',C.f],['mA',C.ap]].map(([i,c])=>AR(i,c)).join('');
+
+function hatch(x1,x2,y){let s=`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${C.g}" stroke-width="2"/>`;
+  for(let x=x1;x<x2;x+=9)s+=`<line x1="${x}" y1="${y}" x2="${x-7}" y2="${y+8}" stroke="${C.g}" stroke-width="1"/>`;return s;}
+function vhatch(y1,y2,x){let s=`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${C.g}" stroke-width="2"/>`;
+  for(let y=y1;y<y2;y+=9)s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y+7}" stroke="${C.g}" stroke-width="1"/>`;return s;}
+function block(x,y,w,h,label,fill){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="${fill||C.body}" stroke="${C.bs}" stroke-width="1.5"/>`+
+  (label?`<text x="${x+w/2}" y="${y+h/2+4.5}" font-size="12.5" fill="${C.ink}" text-anchor="middle" ${FS}>${label}</text>`:'');}
+function vspring(x,y1,y2,coils){coils=coils||6;const len=y2-y1,seg=len/(coils+1);let d=`M ${x} ${y1} L ${x} ${(y1+seg*0.5).toFixed(1)}`;
+  for(let i=0;i<coils;i++){const yy=y1+seg*(i+0.5);d+=` L ${x-8} ${(yy+seg*0.25).toFixed(1)} L ${x+8} ${(yy+seg*0.75).toFixed(1)}`;}
+  d+=` L ${x} ${(y2-seg*0.5).toFixed(1)} L ${x} ${y2}`;return `<path d="${d}" fill="none" stroke="#64748b" stroke-width="1.6"/>`;}
+
+// force arrow from a point at exact math-angle
+function farrow(cx,cy,ang,len,color){const r=ang*Math.PI/180,x2=cx+len*Math.cos(r),y2=cy-len*Math.sin(r);
+  return `<line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${color}" stroke-width="2.4" marker-end="url(#${MK[color]})"/>`;}
+function flabel(cx,cy,ang,len,text,color){const a=((ang%360)+360)%360,r=ang*Math.PI/180,gap=15;
+  let x=cx+(len+gap)*Math.cos(r),y=cy-(len+gap)*Math.sin(r),anchor='middle';
+  if(a<25||a>335)anchor='start'; else if(a>155&&a<205)anchor='end';
+  return `<text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" font-size="11.5" fill="${color}" text-anchor="${anchor}" ${FS}>${text}</text>`;}
+function force(cx,cy,ang,len,text,color){return farrow(cx,cy,ang,len,color)+flabel(cx,cy,ang,len,text,color);}
+
+// incline geometry — exact 30°: base 40..250 (y=155), apex (250, 33.8)
+const INC={ax:40,ay:155,bx:250,by:155,px:250,py:33.8, up:30, norm:120, down:210, // math angles
+           bcx:120.7, bcy:91.2, rot:-30};
+function inclineScene(theta,rough){
+  const t=theta||'θ';
+  let surf = rough ? [0.18,0.3,0.42,0.54,0.66].map(k=>{const x=INC.ax+k*210,y=INC.ay-k*121.2;
+      return `<circle cx="${(x-0.5).toFixed(1)}" cy="${(y-0.9).toFixed(1)}" r="1.6" fill="${C.dim}"/>`;}).join('') : '';
+  return `<svg viewBox="0 0 290 175" width="290" height="175" xmlns="http://www.w3.org/2000/svg">
+    ${hatch(40,250,155)}
+    <polygon points="40,155 250,155 250,33.8" fill="#f1f5f9" stroke="${C.bs}" stroke-width="1.5"/>
+    ${surf}
+    <g transform="rotate(${INC.rot} ${INC.bcx} ${INC.bcy})">${block(INC.bcx-23,INC.bcy-13,46,26,'m')}</g>
+    <path d="M 70 155 A 30 30 0 0 0 66 140" fill="none" stroke="${C.dim}" stroke-width="1.2"/>
+    <text x="76" y="149" font-size="12" fill="${C.dim}" ${FS}>${t}</text>
+    <text x="228" y="150" font-size="10" fill="${C.dim}" text-anchor="middle" ${FS}>${rough?'rough':'smooth'}</text>
+  </svg>`;
+}
+
+const D={
+  ground:(label,opts)=>{opts=opts||{};return `<svg viewBox="0 0 280 160" width="280" height="160" xmlns="http://www.w3.org/2000/svg">
+    ${hatch(30,260,140)}
+    ${opts.round?`<circle cx="145" cy="116" r="24" fill="${C.body}" stroke="${C.bs}" stroke-width="1.5"/><text x="145" y="120" font-size="12" fill="${C.ink}" text-anchor="middle" ${FS}>${label}</text>`
+      :block(108,98,74,42,label)}
+  </svg>`;},
+
+  hang:(label)=>`<svg viewBox="0 0 240 180" width="240" height="180" xmlns="http://www.w3.org/2000/svg">
+    ${hatch(60,180,24)}<line x1="120" y1="24" x2="120" y2="86" stroke="${C.ink}" stroke-width="1.6"/>
+    ${block(96,86,48,40,label)}</svg>`,
+
+  hangSpring:(label)=>`<svg viewBox="0 0 240 185" width="240" height="185" xmlns="http://www.w3.org/2000/svg">
+    ${hatch(60,180,24)}${vspring(120,24,88)}${block(96,88,48,40,label)}</svg>`,
+
+  incline:(theta,opts)=>inclineScene(theta,opts&&opts.rough),
+
+  wallPress:(label)=>`<svg viewBox="0 0 260 175" width="260" height="175" xmlns="http://www.w3.org/2000/svg">
+    <defs>${MARKERS}</defs>${vhatch(38,150,55)}
+    ${block(55,86,62,52,label)}
+    <line x1="180" y1="112" x2="123" y2="112" stroke="${C.ap}" stroke-width="2.8" marker-end="url(#mA)"/>
+    <text x="152" y="104" font-size="11" fill="${C.ap}" ${FS}>push</text></svg>`,
+
+  anglePull:(theta)=>{const t=theta||'θ';return `<svg viewBox="0 0 280 165" width="280" height="165" xmlns="http://www.w3.org/2000/svg">
+    <defs>${MARKERS}</defs>${hatch(30,262,150)}
+    ${block(94,108,72,42,'')}
+    <line x1="166" y1="108" x2="223" y2="65" stroke="${C.bs}" stroke-width="1.6"/>
+    <line x1="212" y1="73" x2="235" y2="56" stroke="${C.ap}" stroke-width="2.4" marker-end="url(#mA)"/>
+    <path d="M 196 108 A 30 30 0 0 0 190 92" fill="none" stroke="${C.dim}" stroke-width="1.2"/>
+    <text x="202" y="100" font-size="12" fill="${C.dim}" ${FS}>${t}</text>
+    <text x="238" y="52" font-size="10" fill="${C.ap}" ${FS}>pull</text></svg>`;},
+
+  twoContact:(a,b,F)=>`<svg viewBox="0 0 285 160" width="285" height="160" xmlns="http://www.w3.org/2000/svg">
+    <defs>${MARKERS}</defs>${hatch(28,272,144)}
+    ${block(96,98,58,46,a,'#eef2ff')}${block(154,98,64,46,b,'#e6effd')}
+    <line x1="46" y1="121" x2="92" y2="121" stroke="${C.ap}" stroke-width="2.8" marker-end="url(#mA)"/>
+    <text x="52" y="113" font-size="12" fill="${C.ap}" ${FS}>${F}</text>
+    <line x1="154" y1="98" x2="154" y2="144" stroke="${C.dim}" stroke-width="1" stroke-dasharray="3,2"/></svg>`,
+
+  ballWall:()=>`<svg viewBox="0 0 250 185" width="250" height="185" xmlns="http://www.w3.org/2000/svg">
+    ${vhatch(40,172,70)}
+    <circle cx="70" cy="50" r="2.6" fill="${C.ink}"/>
+    <line x1="70" y1="50" x2="87" y2="96" stroke="${C.ink}" stroke-width="1.5"/>
+    <circle cx="96" cy="120" r="26" fill="${C.body}" stroke="${C.bs}" stroke-width="1.6"/></svg>`,
+
+  blockOnBlock:()=>`<svg viewBox="0 0 260 170" width="260" height="170" xmlns="http://www.w3.org/2000/svg">
+    ${hatch(40,245,160)}
+    ${block(92,115,112,45,'B','#e6effd')}${block(117,80,62,35,'A','#eef2ff')}</svg>`,
+
+  // ── the fully-correct free-body diagram (arrows computed from exact angles)
+  fbd:(list,opts)=>{opts=opts||{};const cx=115,cy=90;
+    let s=`<svg viewBox="0 0 250 178" width="250" height="178" xmlns="http://www.w3.org/2000/svg"><defs>${MARKERS}</defs>`;
+    if(opts.surface!==undefined){const r=opts.surface*Math.PI/180,dx=Math.cos(r),dy=-Math.sin(r);
+      s+=`<line x1="${(cx-72*dx).toFixed(1)}" y1="${(cy-72*dy).toFixed(1)}" x2="${(cx+72*dx).toFixed(1)}" y2="${(cy+72*dy).toFixed(1)}" stroke="${C.dim}" stroke-width="1.2" stroke-dasharray="5,3"/>`;}
+    s+= opts.body==='circle'
+        ? `<circle cx="${cx}" cy="${cy}" r="14" fill="${C.body}" stroke="${C.bs}" stroke-width="1.5"/>`
+        : `<rect x="${cx-15}" y="${cy-15}" width="30" height="30" rx="3" fill="${C.body}" stroke="${C.bs}" stroke-width="1.5"/>`;
+    list.forEach(f=>s+=force(cx,cy,f.a,f.len||44,f.t,f.c));
+    s+=`<text x="125" y="170" font-size="9.5" fill="${C.dim}" text-anchor="middle" ${FS}>correct free-body diagram</text></svg>`;return s;},
+
+  // bottom block of a stack — three vertical forces, arrows offset so they don't overlap
+  fbdBottom:()=>{const cx=115,cy=92;let s=`<svg viewBox="0 0 250 178" width="250" height="178" xmlns="http://www.w3.org/2000/svg"><defs>${MARKERS}</defs>`;
+    s+=`<rect x="${cx-20}" y="${cy-16}" width="40" height="32" rx="3" fill="${C.body}" stroke="${C.bs}" stroke-width="1.5"/>`;
+    // A presses down (left of centre)
+    s+=`<line x1="${cx-12}" y1="${cy-16}" x2="${cx-12}" y2="${cy-58}" stroke="${C.n}" stroke-width="2.4" marker-start="url(#mN)"/>`;
+    s+=`<text x="${cx-12}" y="${cy-64}" font-size="11" fill="${C.n}" text-anchor="middle" ${FS}>N from A</text>`;
+    // its own weight (down, right of centre)
+    s+=`<line x1="${cx+14}" y1="${cy}" x2="${cx+14}" y2="${cy+46}" stroke="${C.w}" stroke-width="2.4" marker-end="url(#mW)"/>`;
+    s+=`<text x="${cx+40}" y="${cy+30}" font-size="11" fill="${C.w}" text-anchor="middle" ${FS}>m<tspan baseline-shift="sub" font-size="8">B</tspan>g</text>`;
+    // floor normal up (from base centre)
+    s+=`<line x1="${cx-40}" y1="${cy+16}" x2="${cx-40}" y2="${cy-32}" stroke="${C.n}" stroke-width="2.4" marker-end="url(#mN)"/>`;
+    s+=`<text x="${cx-40}" y="${cy-40}" font-size="11" fill="${C.n}" text-anchor="middle" ${FS}>N floor</text>`;
+    s+=`<text x="125" y="170" font-size="9.5" fill="${C.dim}" text-anchor="middle" ${FS}>FBD of the lower block</text></svg>`;return s;}
+};
+
+// shorthand force objects
+const W=(t)=>({a:270,t:t||'mg',c:C.w});
+const N=(a,t)=>({a:a,t:t||'N',c:C.n});
+const T=(a,t)=>({a:a,t:t||'T',c:C.t});
+const Fr=(a,t)=>({a:a,t:t||'f',c:C.f});
+const Ap=(a,t)=>({a:a,t:t,c:C.ap});
+
+// ═══════════════════════════════════════════════════════════════════
+//  QUESTION BANK — 9 base questions, each with 3 variations
+// ═══════════════════════════════════════════════════════════════════
+const QUESTIONS=[
+ // 1 ── body at rest on a horizontal surface
+ {q:"A wooden block lies at rest on a horizontal floor. Nothing pushes it sideways. Which forces act on the block?",
+  diagram:D.ground("Block"),
+  opts:["Two — its weight (down) and the floor's normal reaction (up)","One — only its weight","Three — weight, normal and friction","Four — weight, normal and two side forces"],
+  ans:0,sol:"At rest on a flat floor with no sideways push, only two forces act — <strong>weight mg down</strong> and the <strong>normal reaction N up</strong>. They balance, so N = mg."+D.fbd([N(90),W()]),
+  variants:[
+   {q:"A steel ball is placed on a horizontal table and stays at rest. Its free-body diagram has:",
+    diagram:D.ground("Ball",{round:true}),
+    opts:["Weight down and normal up, equal in size","Only weight, pulling it down","Weight, normal and a rolling force","Normal up only"],
+    ans:0,sol:"Two balanced forces: weight down, normal up, equal in size."+D.fbd([N(90),W()],{body:'circle'})},
+   {q:"A book rests on a level shelf. The normal reaction from the shelf on the book is:",
+    diagram:D.ground("Book"),
+    opts:["Greater than the weight","Zero, because the book is not moving","Equal to the book's weight","Half the weight"],
+    ans:2,sol:"Vertical equilibrium: N = mg. The shelf pushes up exactly as hard as gravity pulls down."},
+   {q:"Which arrow diagram correctly shows the forces on a block sitting still on the floor?",
+    diagram:D.ground("Block"),
+    opts:["One arrow down only","One arrow up (normal) and one equal arrow down (weight)","Two arrows up and one down","Arrows in all four directions"],
+    ans:1,sol:"Just two equal, opposite vertical arrows: normal up, weight down."+D.fbd([N(90),W()])}
+  ]},
+
+ // 2 ── hanging body
+ {q:"A lamp hangs at rest from the ceiling by one string. Which forces act on the lamp?",
+  diagram:D.hang("Lamp"),
+  opts:["Tension up and weight down, equal (T = mg)","Only the tension in the string","Tension up, weight down and a normal force","Weight down only"],
+  ans:0,sol:"A hanging body at rest feels the string's <strong>tension T up</strong> and <strong>weight mg down</strong>. Balance gives T = mg."+D.fbd([T(90),W()]),
+  variants:[
+   {q:"A ball hangs at rest from a spring. Its free-body diagram shows:",
+    diagram:D.hangSpring("Ball"),
+    opts:["Only the weight","The spring's pull up and the weight down, equal","Two spring forces, up and down","The spring force only"],
+    ans:1,sol:"At rest the spring force balances the weight: kx = mg. FBD = spring force up, weight down."+D.fbd([{a:90,t:'kx',c:C.t},W()],{body:'circle'})},
+   {q:"A chandelier of weight W hangs at rest from a single chain. The tension in the chain is:",
+    diagram:D.hang("W"),
+    opts:["2W","W","W/2","zero"],
+    ans:1,sol:"Equilibrium of the hanging chandelier: T = W."},
+   {q:"For a bob hanging still from a thread, which is the correct FBD?",
+    diagram:D.hang("bob"),
+    opts:["Tension along the thread (up) and weight (down)","Weight down and a horizontal push","Tension down and weight down","Only the tension"],
+    ans:0,sol:"Two forces along the vertical: tension up along the thread, weight down."+D.fbd([T(90),W()],{body:'circle'})}
+  ]},
+
+ // 3 ── block on a smooth incline
+ {q:"A block is placed on a smooth (frictionless) inclined plane. Which forces act on the block?",
+  diagram:D.incline("θ"),
+  opts:["Weight (straight down) and the normal reaction (perpendicular to the incline)","Weight, normal and friction along the incline","Weight and a normal reaction pointing straight up","Only the normal reaction"],
+  ans:0,sol:"Smooth ⇒ no friction. Two forces: <strong>weight mg vertically down</strong> and <strong>normal N perpendicular to the incline surface</strong> — note N is <em>not</em> vertical."+D.fbd([N(INC.norm),W()],{surface:INC.up}),
+  variants:[
+   {q:"On a smooth incline, the normal reaction on the block points:",
+    diagram:D.incline("θ"),
+    opts:["Perpendicular to the inclined surface","Vertically upward","Along the incline, up the slope","Vertically downward"],
+    ans:0,sol:"A normal reaction is always perpendicular to the surface of contact — here, ⊥ to the incline (tilted, not vertical)."+D.fbd([N(INC.norm),W()],{surface:INC.up})},
+   {q:"A block slides down a smooth incline. How many forces act on it while sliding?",
+    diagram:D.incline("θ"),
+    opts:["Two — weight and normal","Three — weight, normal and friction","One — only its weight","Three — weight, normal and a driving force"],
+    ans:0,sol:"Smooth means friction is zero. Only weight and normal act; the block speeds up because the along-slope part of gravity is unbalanced."},
+   {q:"Which is the correct free-body diagram of a block on a smooth incline?",
+    diagram:D.incline("θ"),
+    opts:["Weight down; normal straight up","Weight down; normal tilted, perpendicular to the surface","Weight down; normal and friction up the slope","Weight along the slope; normal up"],
+    ans:1,sol:"Weight is vertical; the normal is tilted so it stays ⊥ to the incline. No friction on a smooth surface."+D.fbd([N(INC.norm),W()],{surface:INC.up})}
+  ]},
+
+ // 4 ── block at rest on a rough incline
+ {q:"A block stays at rest on a rough inclined plane (it does not slide). How many forces act on it, and what are they?",
+  diagram:D.incline("θ",{rough:true}),
+  opts:["Three — weight, normal (⊥ surface) and friction (up the slope)","Two — weight and normal","Three — weight, normal and friction down the slope","Four — weight, normal, friction and a driving force"],
+  ans:0,sol:"Gravity's along-slope part points down the slope, so <strong>static friction acts up the slope</strong> to hold the block. Three forces: weight (down), normal (⊥ surface), friction (up the slope)."+D.fbd([N(INC.norm),W(),Fr(INC.up)],{surface:INC.up}),
+  variants:[
+   {q:"A block rests on a rough incline without sliding. The friction force on it acts:",
+    diagram:D.incline("θ",{rough:true}),
+    opts:["Up the slope","Down the slope","Perpendicular to the slope","Vertically upward"],
+    ans:0,sol:"The block tends to slide down, so static friction opposes that tendency and points up the slope."+D.fbd([N(INC.norm),W(),Fr(INC.up)],{surface:INC.up})},
+   {q:"A block is pushed and moves up a rough incline. While it moves up, the kinetic friction on it acts:",
+    diagram:D.incline("θ",{rough:true}),
+    opts:["Down the slope (opposing the motion)","Up the slope","Perpendicular to the slope","Vertically downward"],
+    ans:0,sol:"Kinetic friction always opposes the motion. Moving up ⇒ friction points down the slope."+D.fbd([N(INC.norm),W(),Fr(INC.down)],{surface:INC.up})},
+   {q:"For a block at rest on a rough incline, which two forces are perpendicular to each other?",
+    diagram:D.incline("θ",{rough:true}),
+    opts:["The normal reaction and the friction","Weight and normal","Weight and friction","None of them"],
+    ans:0,sol:"Normal is ⊥ to the surface and friction is along the surface, so normal ⊥ friction. (Weight is vertical and, in general, not ⊥ to either.)"}
+  ]},
+
+ // 5 ── block pressed against a vertical wall
+ {q:"A block is pressed against a vertical wall by a horizontal push and does not slide down. How many forces act on the block?",
+  diagram:D.wallPress("Block"),
+  opts:["Four — the push, the wall's normal, weight and friction (up)","Three — push, weight and normal","Two — push and weight","Three — push, normal and friction"],
+  ans:0,sol:"Horizontal: the push (into the wall) is balanced by the wall's <strong>normal</strong> (out of the wall). Vertical: <strong>friction up</strong> balances the weight. Four forces in all."+D.fbd([Ap(180,'push'),N(0),W(),Fr(90)]),
+  variants:[
+   {q:"What holds the block up so it does not slide down the wall?",
+    diagram:D.wallPress("Block"),
+    opts:["Friction, acting upward","The normal reaction, acting upward","The push, acting upward","Nothing — it must slide"],
+    ans:0,sol:"The wall's normal is horizontal and cannot support weight. Friction (up) balances the weight."+D.fbd([Ap(180,'push'),N(0),W(),Fr(90)])},
+   {q:"The normal reaction from the wall on the block points:",
+    diagram:D.wallPress("Block"),
+    opts:["Horizontally, away from the wall","Vertically up","Along the wall, downward","Toward the wall"],
+    ans:0,sol:"A normal reaction is ⊥ to the surface. The wall is vertical, so its normal is horizontal, pushing the block away from the wall."},
+   {q:"If the horizontal push is F and the block just stays up, the friction force on it equals:",
+    diagram:D.wallPress("Block"),
+    opts:["The weight, mg","The push, F","Zero","μF, unrelated to the weight"],
+    ans:0,sol:"Vertical balance gives friction = mg. (It must also satisfy friction ≤ μN = μF for the block not to slip.)"}
+  ]},
+
+ // 6 ── block pulled by a rope at an angle
+ {q:"A block on the floor is pulled by a rope that makes an angle θ above the horizontal. Which forces act on the block?",
+  diagram:D.anglePull("θ"),
+  opts:["Weight, normal, rope tension (at angle θ) and friction","Weight, normal and tension only","Weight and tension only","Tension and friction only"],
+  ans:0,sol:"Four forces: <strong>weight</strong> (down), <strong>normal</strong> (up, from the floor), the rope's <strong>tension</strong> (up along the rope) and <strong>friction</strong> (along the floor)."+D.fbd([N(90),W(),T(37),Fr(180)]),
+  variants:[
+   {q:"When the block is pulled by a rope at an angle above the horizontal, the normal reaction from the floor is:",
+    diagram:D.anglePull("θ"),
+    opts:["Less than mg (the tension lifts part of the weight)","Equal to mg","More than mg","Zero"],
+    ans:0,sol:"Vertical balance: N + T sinθ = mg ⇒ N = mg − T sinθ < mg. The upward part of the pull reduces how hard the floor must push."},
+   {q:"The tension in the slanted rope acts on the block:",
+    diagram:D.anglePull("θ"),
+    opts:["Along the rope, away from the block","Straight up","Horizontally only","Straight down"],
+    ans:0,sol:"Tension always acts along the string, directed away from the body."},
+   {q:"How many forces act on a block dragged along the floor by a rope held at an angle?",
+    diagram:D.anglePull("θ"),
+    opts:["Four","Two","Three","Five"],
+    ans:0,sol:"Weight, floor normal, rope tension and friction — four forces."+D.fbd([N(90),W(),T(37),Fr(180)])}
+  ]},
+
+ // 7 ── two blocks in contact (isolate one)
+ {q:"Blocks A and B rest in contact on a smooth floor. A horizontal force F pushes on A, so A pushes B forward. Taking block B alone, what horizontal force acts on it?",
+  diagram:D.twoContact("A","B","F"),
+  opts:["Only the contact push from A, directed forward","The applied force F directly","F forward and a contact force backward","No horizontal force"],
+  ans:0,sol:"F is applied to A, not to B. B feels only the <strong>contact push from A</strong> (forward). Vertically it also has its weight and the floor's normal."+D.fbd([N(90),W(),N(0,'N from A')],{body:'circle'}),
+  variants:[
+   {q:"Now take block A alone (F pushes A, and A touches B). The horizontal forces on A are:",
+    diagram:D.twoContact("A","B","F"),
+    opts:["The applied F forward, and B's contact push backward","Only the applied F","Only B's push","No horizontal force"],
+    ans:0,sol:"By Newton's third law B pushes back on A. So A feels F forward and B's contact force backward."+D.fbd([N(90),W(),Ap(0,'F'),N(180,'from B')],{body:'circle'})},
+   {q:"The contact force between the two blocks is a:",
+    diagram:D.twoContact("A","B","F"),
+    opts:["Normal (push) force, perpendicular to the touching faces","Tension","Friction","Weight"],
+    ans:0,sol:"Blocks push on each other through a normal (contact) force ⊥ to the touching faces — surfaces can push but never pull."},
+   {q:"How many forces act on block B (smooth floor)?",
+    diagram:D.twoContact("A","B","F"),
+    opts:["Three — weight, floor normal and the push from A","Two — weight and the push from A","One — the push from A","Four"],
+    ans:0,sol:"Weight down, floor normal up, and A's horizontal push — three forces."+D.fbd([N(90),W(),N(0,'from A')],{body:'circle'})}
+  ]},
+
+ // 8 ── ball on a string, resting against a wall
+ {q:"A smooth ball hangs by a string tied to a wall above it and rests against the wall. Which forces act on the ball?",
+  diagram:D.ballWall(),
+  opts:["Weight (down), string tension (along the string) and the wall's normal (horizontal)","Weight and tension only","Weight and the wall's normal only","Weight, tension and friction from the wall"],
+  ans:0,sol:"Smooth wall ⇒ no friction. Three forces: <strong>weight down</strong>, <strong>tension along the string</strong>, and the wall's <strong>normal, horizontal</strong>, pushing the ball away from the wall."+D.fbd([W(),T(115),N(0)],{body:'circle'}),
+  variants:[
+   {q:"The wall pushes on the ball in which direction?",
+    diagram:D.ballWall(),
+    opts:["Horizontally, away from the wall","Vertically up","Along the string","Toward the wall"],
+    ans:0,sol:"The smooth wall's reaction is ⊥ to the wall. A vertical wall ⇒ a horizontal normal, directed away from the wall."},
+   {q:"How many forces act on the ball?",
+    diagram:D.ballWall(),
+    opts:["Three","Two","Four","One"],
+    ans:0,sol:"Weight, tension and the wall's normal — three concurrent forces (solve them with Lami's theorem)."+D.fbd([W(),T(115),N(0)],{body:'circle'})},
+   {q:"Because the wall is smooth, the force it does NOT exert on the ball is:",
+    diagram:D.ballWall(),
+    opts:["Friction (along the wall)","The normal reaction","Any push at all","A horizontal force"],
+    ans:0,sol:"A smooth surface exerts only a normal (⊥) force — there is no friction along it."}
+  ]},
+
+ // 9 ── block resting on another block
+ {q:"Block A rests on top of block B, and B rests on the floor. Taking the top block A alone, which forces act on it?",
+  diagram:D.blockOnBlock(),
+  opts:["Two — its weight (down) and the normal from B (up)","One — only its weight","Three — weight, normal from B and normal from the floor","Two — weight and friction"],
+  ans:0,sol:"A touches only B. Two forces: <strong>A's weight down</strong> and the <strong>normal from B up</strong>. A does not touch the floor, so the floor exerts nothing on A."+D.fbd([N(90,'N from B'),W('m<tspan baseline-shift=\"sub\" font-size=\"8\">A</tspan>g')]),
+  variants:[
+   {q:"Now take the bottom block B alone. How many (vertical) forces act on it?",
+    diagram:D.blockOnBlock(),
+    opts:["Three — its own weight, the floor's normal (up) and A pressing down on it","Two — its weight and the floor's normal","Two — A's weight and the floor's normal","Four"],
+    ans:0,sol:"B feels its own weight down, A pushing down on its top, and the floor's normal up — three vertical forces."+D.fbdBottom()},
+   {q:"The force the bottom block B exerts on the floor equals:",
+    diagram:D.blockOnBlock(),
+    opts:["The combined weight, (m<sub>A</sub> + m<sub>B</sub>)g","Only m<sub>B</sub>g","Only m<sub>A</sub>g","Zero"],
+    ans:0,sol:"The floor supports both blocks, so B presses on the floor with (m<sub>A</sub> + m<sub>B</sub>)g (Newton's third law with the floor's normal)."},
+   {q:"The normal force between blocks A and B equals:",
+    diagram:D.blockOnBlock(),
+    opts:["The weight of the top block, m<sub>A</sub>g","The weight of the bottom block, m<sub>B</sub>g","The total weight, (m<sub>A</sub>+m<sub>B</sub>)g","Zero"],
+    ans:0,sol:"From block A's equilibrium, the normal from B = A's weight = m<sub>A</sub>g."}
+  ]}
+];
+
+// ═══════════════════════════════════════════════════════════════════
+//  APP
+// ═══════════════════════════════════════════════════════════════════
+const LETT=['A','B','C','D'];
+const state={};
+QUESTIONS.forEach((_,i)=>state[i]={cur:0,ans:{}});
+try{const s=localStorage.getItem('padi_fbd_dpp');if(s){const o=JSON.parse(s);Object.keys(o).forEach(k=>{if(state[k])state[k]=o[k];});}}catch(e){}
+function save(){try{localStorage.setItem('padi_fbd_dpp',JSON.stringify(state));}catch(e){}}
+
+const paper=document.getElementById('paper');
+function versionOf(i){const q=QUESTIONS[i];return state[i].cur===0?q:q.variants[state[i].cur-1];}
+
+function buildCard(i){
+  const card=document.createElement('div');card.className='card';card.dataset.i=i;
+  paper.appendChild(card);
+  renderCard(i);
+}
+function renderCard(i){
+  const card=paper.querySelector(`.card[data-i="${i}"]`);
+  const q=QUESTIONS[i];const cur=state[i].cur;const data=versionOf(i);const nv=q.variants.length;
+  const isBase=cur===0;
+  let optHtml='';
+  data.opts.forEach((o,oi)=>{optHtml+=`<button class="opt" data-oi="${oi}"><span class="lt">${LETT[oi]}</span><span>${o}</span></button>`;});
+  card.innerHTML=`
+    <div class="q-top">
+      <span class="q-no">Q${i+1}</span>
+      <span class="vchip ${isBase?'':'var'}">${isBase?'Base':'Variation '+cur+' / '+nv}</span>
+      ${isBase?'':'<span class="prac">practice · not scored</span>'}
+    </div>
+    <div class="q-text">${data.q}</div>
+    <div class="q-diagram">${data.diagram}</div>
+    <div class="opts">${optHtml}</div>
+    <div class="act">
+      <span class="fb"></span>
+      <button class="showsol">Show solution</button>
+      <button class="varbtn">&#8635; Try a variation</button>
+    </div>
+    <div class="sol"><div class="sol-in"><strong>Answer: ${LETT[data.ans]}.</strong> ${data.sol}</div></div>`;
+  const opts=card.querySelectorAll('.opt');
+  const fb=card.querySelector('.fb');
+  const sol=card.querySelector('.sol');
+  function lockIn(chosen){
+    opts.forEach(op=>{op.classList.add('locked');const oi=+op.dataset.oi;
+      if(oi===data.ans)op.classList.add('correct');
+      if(oi===chosen&&chosen!==data.ans)op.classList.add('wrong');});
+    const ok=chosen===data.ans;fb.className='fb '+(ok?'c':'w');fb.textContent=ok?'Correct':'Review';
+    sol.classList.add('open');
+  }
+  opts.forEach(op=>op.addEventListener('click',()=>{
+    if(op.classList.contains('locked'))return;
+    const chosen=+op.dataset.oi;state[i].ans[cur]=chosen;save();lockIn(chosen);updateScore();
+  }));
+  card.querySelector('.showsol').addEventListener('click',()=>sol.classList.toggle('open'));
+  card.querySelector('.varbtn').addEventListener('click',()=>{
+    state[i].cur=(state[i].cur+1)%(nv+1);save();renderCard(i);
+  });
+  if(state[i].ans[cur]!==undefined)lockIn(state[i].ans[cur]);
+}
+function updateScore(){
+  let att=0,sc=0;
+  QUESTIONS.forEach((q,i)=>{const v=state[i].ans[0];if(v!==undefined){att++;if(v===q.ans)sc++;}});
+  document.getElementById('att').textContent=att;
+  document.getElementById('sc').textContent=sc;
+  document.getElementById('tot').textContent=QUESTIONS.length;
+}
+document.getElementById('revealBtn').addEventListener('click',()=>{
+  QUESTIONS.forEach((q,i)=>{const data=versionOf(i);
+    const card=paper.querySelector(`.card[data-i="${i}"]`);
+    card.querySelectorAll('.opt').forEach(op=>{op.classList.add('locked');if(+op.dataset.oi===data.ans)op.classList.add('correct');});
+    card.querySelector('.sol').classList.add('open');});
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  QUESTIONS.forEach((_,i)=>state[i]={cur:0,ans:{}});save();
+  paper.innerHTML='';QUESTIONS.forEach((_,i)=>buildCard(i));updateScore();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+QUESTIONS.forEach((_,i)=>buildCard(i));
+updateScore();
+</script>
+</body>
+</html>
