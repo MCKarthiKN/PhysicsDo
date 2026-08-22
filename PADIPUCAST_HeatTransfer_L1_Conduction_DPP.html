@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST · Heat Transfer L1 — Conduction &amp; Convection DPP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;
+  --correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --blue:#2563eb;--blue-bg:#eef4fe;--blue-border:#cfe0f5;
+  --amber:#b45309;--amber-bg:#fdf6e7;--amber-border:#f0dcae;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#wrap{max-width:780px;margin:0 auto;padding:0 22px 90px;}
+header{padding:30px 0 4px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;margin-bottom:16px;}
+.brand span{color:var(--text3);}
+header h1{font-family:'LemonMilk',sans-serif;font-size:23px;font-weight:700;letter-spacing:0.02em;line-height:1.25;}
+header .sub{font-size:14px;color:var(--text2);margin-top:6px;}
+
+.note{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:12px;padding:13px 16px;margin-top:16px;font-size:13.5px;color:#7a4d09;line-height:1.65;}
+.note b{color:#5c3a06;}
+
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:24px 0 26px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.chips{display:flex;gap:10px;flex-wrap:wrap;}
+.chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 13px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.chip b{color:var(--text);}
+.btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btns button{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 15px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.btns button:hover{border-color:var(--border2);color:var(--text);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 26px 20px;margin-bottom:14px;}
+.q-top{display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;}
+.q-no{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.16em;color:var(--text3);text-transform:uppercase;}
+.vchip{font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 9px;border-radius:5px;background:#f0ede8;color:var(--text2);}
+.vchip.var{background:var(--blue-bg);color:var(--blue);}
+.tag{font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 9px;border-radius:5px;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border);}
+.prac{margin-left:auto;font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.q-text{font-size:15.5px;line-height:1.7;margin-bottom:14px;}
+.q-text sup,.q-text sub{font-size:.75em;}
+.q-diagram{margin:0 0 18px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.opts{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.opt{display:flex;align-items:center;gap:12px;padding:11px 15px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all .15s;text-align:left;}
+.opt sup,.opt sub{font-size:.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt .lt{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;color:var(--text3);flex-shrink:0;background:var(--surface);}
+.opt.correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.correct .lt{border-color:var(--correct-border);color:var(--correct);}
+.opt.wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.wrong .lt{border-color:var(--wrong-border);color:var(--wrong);}
+.opt.locked{pointer-events:none;}
+.sol{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .3s ease;}
+.sol.open{max-height:1400px;opacity:1;margin-top:12px;}
+.sol-in{border-left:2px solid var(--text3);padding:10px 15px;font-size:13.5px;line-height:1.7;color:var(--text2);}
+.sol-in strong{color:var(--text);font-weight:600;}
+.sol-in sup,.sol-in sub{font-size:.75em;}
+.sol-in svg{display:block;margin:10px auto 2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;max-width:100%;height:auto;}
+.act{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.act .fb{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 11px;border-radius:20px;display:none;}
+.act .fb.c{display:inline-block;background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+.act .fb.w{display:inline-block;background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+.act .showsol{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:8px 13px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.act .showsol:hover{border-color:var(--border2);color:var(--text);}
+.act .varbtn{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--blue-border);border-radius:8px;padding:8px 13px;cursor:pointer;color:var(--blue);transition:all .15s;margin-left:auto;}
+.act .varbtn:hover{background:var(--blue-bg);border-color:var(--blue);}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--border);font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);text-align:center;}
+@media print{
+  body{background:#fff;} .toolbar .btns,.act .showsol,.act .varbtn{display:none;}
+  .opt{background:#fff;} .sol{max-height:none!important;opacity:1!important;margin-top:12px;}
+  .card{break-inside:avoid;border-color:#ccc;}
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <header>
+    <div class="brand">PADIPUCAST <span>·</span> Daily Practice</div>
+    <h1>Heat Transfer — Lecture 1<br>Conduction &amp; Convection</h1>
+    <p class="sub">10 base questions from the ALLEN Pre-Medical Thermal Physics module. Tap <b>Try a variation</b> for three more versions of the same idea.</p>
+    <div class="note"><b>How to use this sheet.</b> Do the 10 base questions first — only these are scored. Then open the variations. Every variation is a real question from Exercise-I, II or III of the same module, so by the end you have covered the full conduction set.</div>
+  </header>
+  <div class="toolbar">
+    <div class="chips">
+      <span class="chip">Score <b id="sc">0</b>/<b id="tot">10</b></span>
+      <span class="chip">Attempted <b id="att">0</b></span>
+    </div>
+    <div class="btns">
+      <button id="revealBtn">Reveal all</button>
+      <button id="resetBtn">Reset</button>
+      <button id="printBtn">Print</button>
+    </div>
+  </div>
+  <div id="paper"></div>
+  <footer>PADIPUCAST · Heat Transfer L1 · base questions are scored · variations are free practice</footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  DIAGRAM LIBRARY — conduction
+// ═══════════════════════════════════════════════════════════════════
+const FS='font-family="DM Sans,sans-serif"';
+const C={hot:'#dc2626',cold:'#2563eb',ink:'#334155',dim:'#64748b',g:'#9ca3af',
+         bs:'#475569',amber:'#ea580c',grn:'#16a34a',vio:'#7c3aed'};
+const AR=(id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const MARKERS=[['aH',C.hot],['aC',C.cold],['aA',C.amber],['aI',C.ink]].map(([i,c])=>AR(i,c)).join('');
+let _uid=0;
+function svg(w,h,inner){return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg"><defs>${MARKERS}</defs>${inner}</svg>`;}
+function T(x,y,s,size,col,anc){return `<text x="${x}" y="${y}" font-size="${size||12}" fill="${col||C.ink}" text-anchor="${anc||'middle'}" ${FS}>${s}</text>`;}
+function dim(x1,x2,y,label){ // horizontal dimension line
+  return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${C.dim}" stroke-width="1"/>`+
+    `<line x1="${x1}" y1="${y-4}" x2="${x1}" y2="${y+4}" stroke="${C.dim}" stroke-width="1"/>`+
+    `<line x1="${x2}" y1="${y-4}" x2="${x2}" y2="${y+4}" stroke="${C.dim}" stroke-width="1"/>`+
+    T((x1+x2)/2,y+14,label,10.5,C.dim);
+}
+const FILLS=['#eef2ff','#fdf0e6','#eafaf1','#f3edfd','#fdeaea'];
+
+const D={};
+
+// horizontal rod / slab made of segments, hot on the left
+D.rod=function(segs,left,right,o){
+  o=o||{};const x0=78,y=o.y||48,h=o.h||44;let x=x0,s='';
+  segs.forEach((sg,i)=>{
+    s+=`<rect x="${x}" y="${y}" width="${sg.w}" height="${h}" fill="${sg.fill||FILLS[i%5]}" stroke="${C.bs}" stroke-width="1.4"/>`;
+    if(sg.label)s+=T(x+sg.w/2,y+h/2+4.5,sg.label,12.5,C.ink);
+    if(sg.sub)s+=dim(x+2,x+sg.w-2,y+h+14,sg.sub);
+    x+=sg.w;
+  });
+  s+=T(x0-10,y+h/2+4.5,left,12.5,C.hot,'end');
+  s+=T(x+10,y+h/2+4.5,right,12.5,C.cold,'start');
+  if(o.flow)s+=`<line x1="${x0+14}" y1="${y-16}" x2="${x-14}" y2="${y-16}" stroke="${C.amber}" stroke-width="1.8" marker-end="url(#aA)"/>`+T((x0+x)/2,y-22,'heat flow',10.5,C.amber);
+  if(o.mark!==undefined){const mx=x0+o.mark;
+    s+=`<line x1="${mx}" y1="${y-6}" x2="${mx}" y2="${y+h+6}" stroke="${C.vio}" stroke-width="1.4" stroke-dasharray="4 3"/>`+T(mx,y-11,o.markLabel||'',11,C.vio);}
+  return svg(x+78,y+h+34,s);
+};
+
+// vertical layered slab with face temperatures written on top
+D.slabV=function(layers,faces){
+  const x0=52,y=52,h=86;let x=x0,s='';
+  layers.forEach((L,i)=>{
+    s+=`<rect x="${x}" y="${y}" width="${L.w}" height="${h}" fill="${L.fill||FILLS[i%5]}" stroke="${C.bs}" stroke-width="1.4"/>`;
+    s+=T(x+L.w/2,y+h/2+5,L.label,13,C.ink);
+    x+=L.w;
+  });
+  let fx=x0;
+  faces.forEach((f,i)=>{
+    s+=T(fx,y-12,f,11.5,i===0?C.hot:(i===faces.length-1?C.cold:C.vio));
+    if(i<layers.length)fx+=layers[i].w;
+  });
+  return svg(x+52,y+h+26,s);
+};
+
+// two rods welded side by side (parallel path)
+D.parallel=function(a,b,left,right){
+  const x0=80,y=44,w=150,h=34;let s='';
+  s+=`<rect x="${x0}" y="${y}" width="${w}" height="${h}" fill="${FILLS[0]}" stroke="${C.bs}" stroke-width="1.4"/>`+T(x0+w/2,y+h/2+5,a,12.5,C.ink);
+  s+=`<rect x="${x0}" y="${y+h}" width="${w}" height="${h}" fill="${FILLS[1]}" stroke="${C.bs}" stroke-width="1.4"/>`+T(x0+w/2,y+h+h/2+5,b,12.5,C.ink);
+  s+=T(x0-10,y+h+5,left,12.5,C.hot,'end')+T(x0+w+10,y+h+5,right,12.5,C.cold,'start');
+  s+=dim(x0,x0+w,y+2*h+16,'d');
+  return svg(x0+w+80,y+2*h+40,s);
+};
+
+// tapered rod, wide at the left, with two thin slices AB and CD
+D.taper=function(){
+  let s=`<polygon points="70,32 268,58 268,112 70,138" fill="${FILLS[0]}" stroke="${C.bs}" stroke-width="1.4"/>`;
+  const sl=(x,w,l1,l2)=>{const f=(x-70)/198,g=(x+w-70)/198;
+    const y1=32+26*f,y2=138-26*f,y3=32+26*g,y4=138-26*g;
+    return `<polygon points="${x},${y1} ${x+w},${y3} ${x+w},${y4} ${x},${y2}" fill="#ffffff" stroke="${C.bs}" stroke-width="1.2"/>`+
+      T(x-4,(y1+y2)/2+4,l1,11.5,C.vio,'end')+T(x+w+4,(y3+y4)/2+4,l2,11.5,C.vio,'start');};
+  s+=sl(110,16,'A','B')+sl(214,16,'C','D');
+  s+=T(60,88,'200&#176;C',12,C.hot,'end')+T(278,88,'0&#176;C',12,C.cold,'start');
+  return svg(340,168,s);
+};
+
+// n rods meeting at a junction O
+D.star=function(arms,centre){
+  const cx=168,cy=98,R=64;let s='';
+  arms.forEach(a=>{
+    const r=a.ang*Math.PI/180,x2=cx+R*Math.cos(r),y2=cy-R*Math.sin(r);
+    s+=`<line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${C.bs}" stroke-width="8" stroke-linecap="round" opacity="0.5"/>`;
+    const lx=cx+(R+18)*Math.cos(r),ly=cy-(R+18)*Math.sin(r),ad=((a.ang%360)+360)%360;
+    let anc='middle';if(ad<60||ad>300)anc='start';else if(ad>120&&ad<240)anc='end';
+    s+=T(lx,ly+4,a.label,11.5,a.col||C.hot,anc);
+  });
+  s+=`<circle cx="${cx}" cy="${cy}" r="13" fill="#fff" stroke="${C.bs}" stroke-width="1.4"/>`+T(cx,cy+4,centre||'O',11,C.ink);
+  return svg(336,196,s);
+};
+
+// cylinders drawn side by side for length / radius comparison
+D.cyls=function(list){
+  let x=46,s='';
+  list.forEach(o=>{
+    const w=o.L,h=o.r;
+    s+=`<rect x="${x}" y="${70-h/2}" width="${w}" height="${h}" rx="6" fill="${FILLS[0]}" stroke="${C.bs}" stroke-width="1.4"/>`;
+    s+=T(x+w/2,70+h/2+20,o.label,10,C.dim);
+    x+=w+46;
+  });
+  return svg(x+10,124,s);
+};
+
+// glass window pane seen from the side
+D.pane=function(){
+  let s=`<rect x="150" y="26" width="24" height="104" fill="#e8f2fb" stroke="${C.bs}" stroke-width="1.4"/>`;
+  s+=T(140,74,'outside 60&#176;C',12,C.hot,'end')+T(184,74,'inside 40&#176;C',12,C.cold,'start');
+  s+=T(162,146,'4 mm',10.5,C.dim)+T(162,18,'area 10 m&#178;',10.5,C.dim);
+  s+=`<line x1="150" y1="136" x2="174" y2="136" stroke="${C.dim}" stroke-width="1"/>`;
+  return svg(330,156,s);
+};
+
+// stone slab with steam below and ice above
+D.stone=function(){
+  let s=`<rect x="80" y="62" width="180" height="26" fill="#efece6" stroke="${C.bs}" stroke-width="1.4"/>`+T(170,79,'stone slab',11.5,C.ink);
+  s+=`<rect x="110" y="30" width="120" height="30" rx="5" fill="#e8f4fd" stroke="${C.cold}" stroke-width="1.3"/>`+T(170,50,'ice at 0&#176;C',11.5,C.cold);
+  for(let i=0;i<5;i++)s+=`<path d="M ${105+i*30} 118 q 6 -8 0 -16 q -6 -8 0 -14" fill="none" stroke="${C.hot}" stroke-width="1.4"/>`;
+  s+=T(170,136,'steam at 100&#176;C',11.5,C.hot);
+  s+=T(272,79,'0.1 m',10.5,C.dim,'start');
+  return svg(340,152,s);
+};
+
+// beaker of water heated from below — convection currents
+D.pot=function(o){
+  o=o||{};
+  let s=`<path d="M 100 34 L 100 118 Q 100 128 112 128 L 216 128 Q 228 128 228 118 L 228 34" fill="none" stroke="${C.bs}" stroke-width="1.8"/>`;
+  s+=`<path d="M 102 52 L 102 118 Q 102 126 113 126 L 215 126 Q 226 126 226 118 L 226 52 Z" fill="#e8f4fd"/>`;
+  s+=`<path d="M 122 112 C 118 76 128 62 152 60" fill="none" stroke="${C.hot}" stroke-width="1.6" marker-end="url(#aH)"/>`;
+  s+=`<path d="M 206 112 C 210 76 200 62 176 60" fill="none" stroke="${C.hot}" stroke-width="1.6" marker-end="url(#aH)"/>`;
+  s+=`<path d="M 164 66 C 186 70 196 86 192 108" fill="none" stroke="${C.cold}" stroke-width="1.6" marker-end="url(#aC)"/>`;
+  if(o.flame!==false){for(let i=0;i<4;i++)s+=`<path d="M ${128+i*24} 154 q 7 -10 0 -20 q -7 -9 0 -12" fill="none" stroke="${C.amber}" stroke-width="1.6"/>`;
+    s+=T(164,170,'heated from below',10.5,C.amber);}
+  s+=T(164,46,'water',10.5,C.dim);
+  return svg(330,182,s);
+};
+
+// thermal network: two equal branches between the same two junctions
+D.network=function(){
+  let s='';
+  s+=`<line x1="66" y1="118" x2="130" y2="118" stroke="${C.bs}" stroke-width="7" stroke-linecap="round" opacity="0.5"/>`;
+  s+=`<polyline points="130,118 200,56 270,118" fill="none" stroke="${C.bs}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" opacity="0.5"/>`;
+  s+=`<path d="M 130 118 Q 200 196 270 118" fill="none" stroke="${C.bs}" stroke-width="7" stroke-linecap="round" opacity="0.5"/>`;
+  s+=`<line x1="270" y1="118" x2="334" y2="118" stroke="${C.bs}" stroke-width="7" stroke-linecap="round" opacity="0.5"/>`;
+  s+=T(60,122,'A',12,C.hot,'end')+T(340,122,'B',12,C.cold,'start');
+  s+=T(60,138,'100&#176;C',10.5,C.hot,'end')+T(340,138,'0&#176;C',10.5,C.cold,'start');
+  s+=T(98,110,'30 cm',10,C.dim)+T(302,110,'30 cm',10,C.dim);
+  s+=T(152,74,'45 cm',10,C.dim)+T(248,74,'45 cm',10,C.dim)+T(200,186,'90 cm (curved)',10,C.dim);
+  return svg(396,200,s);
+};
+
+// two rods of different area, same material
+D.areas=function(){
+  let s='';
+  s+=`<rect x="70" y="30" width="170" height="18" fill="${FILLS[0]}" stroke="${C.bs}" stroke-width="1.3"/>`+T(155,26,'area A',10.5,C.dim);
+  s+=`<rect x="70" y="76" width="170" height="36" fill="${FILLS[1]}" stroke="${C.bs}" stroke-width="1.3"/>`+T(155,72,'area 2A',10.5,C.dim);
+  s+=T(62,44,'T&#8321;',12,C.hot,'end')+T(248,44,'T&#8322;',12,C.cold,'start');
+  s+=T(62,98,'T&#8321;',12,C.hot,'end')+T(248,98,'T&#8322;',12,C.cold,'start');
+  s+=dim(70,240,130,'same length L');
+  return svg(320,152,s);
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  QUESTIONS  —  10 base + 3 variations each
+// ═══════════════════════════════════════════════════════════════════
+const QUESTIONS=[
+
+// 1 ─────────── convection
+{tag:'Convection',
+ q:"When fluids are heated from the bottom, convection currents are produced because:",
+ diagram:D.pot(),
+ opts:["Heated fluid becomes less dense than the cold fluid above it",
+       "Molecular motion of the fluid becomes aligned",
+       "Molecular collisions take place within the fluid",
+       "Heated fluid becomes more dense than the cold fluid above it"],
+ ans:0,
+ sol:"Heating makes the bottom layer <strong>expand</strong>, so its density falls. Lighter fluid floats up, the cooler heavier fluid sinks to take its place, and this circulation is <strong>convection</strong>. Note: the matter itself moves here — that is what makes convection different from conduction.",
+ variants:[
+  {q:"Gravitational force is required for:",
+   opts:["Stirring of liquid","Convection","Conduction","Radiation"],
+   ans:1,
+   sol:"Convection works because the lighter hot fluid <em>floats up</em>. Floating needs gravity. In a gravity-free room there is no natural convection. Conduction and radiation do not need gravity."},
+  {q:"The layers of the atmosphere are heated mainly through:",
+   opts:["Convection","Conduction","Radiation","Conduction and radiation both"],
+   ans:0,
+   sol:"The ground is heated by the Sun, the air touching the ground gets hot, becomes lighter and rises. Whole masses of air move up and down — that is <strong>convection</strong>. (The Sun's heat reaches the earth by radiation, but the air layers themselves get heated by convection.)"},
+  {q:"In which of the following does heat convection <em>not</em> take place?",
+   opts:["Land and sea breeze","Boiling of water","Heating of the glass surface by the filament of a bulb","Air around a furnace"],
+   ans:2,
+   sol:"Inside a bulb there is vacuum or a very thin gas, so no fluid can circulate. The filament heats the glass by <strong>radiation</strong>, not convection. The other three are all moving air or water."}
+ ]},
+
+// 2 ─────────── everyday conduction
+{tag:'Conduction · daily life',
+ q:"On a cold morning, a metal surface feels colder to touch than a wooden surface because:",
+ diagram:'',
+ opts:["Metal has high specific heat","Metal has high thermal conductivity","Metal has low specific heat","Metal has low thermal conductivity"],
+ ans:1,
+ sol:"Both are at the same room temperature. But metal has a <strong>high thermal conductivity</strong>, so it carries heat away from your finger very fast. Wood is a poor conductor, it takes very little heat from the skin. Your skin only senses the <em>rate</em> of heat loss, so the metal feels colder.",
+ variants:[
+  {q:"Woollen clothes are used in the winter season because woollen clothes:",
+   opts:["Are good sources for producing heat","Absorb heat from the surroundings","Are bad conductors of heat","Provide heat to the body continuously"],
+   ans:2,
+   sol:"Wool traps a lot of air in its fibres, and both wool and air are <strong>bad conductors</strong>. So the body heat cannot escape easily. Clothes never <em>give</em> heat — they only stop heat from leaving."},
+  {q:"Mud houses are cooler in summer and warmer in winter because:",
+   opts:["Mud is a super conductor of heat","Mud is a good conductor of heat","Mud is a bad conductor of heat","None of these"],
+   ans:2,
+   sol:"A bad conductor blocks heat in <em>both</em> directions — outside heat cannot come in during summer, inside heat cannot go out during winter."},
+  {q:"The material used in making a cooker must have (K = thermal conductivity, S = specific heat):",
+   opts:["High K and low S","Low K and low S","High K and high S","Low K and high S"],
+   ans:0,
+   sol:"<strong>High K</strong> so that heat passes quickly from the flame into the food. <strong>Low S</strong> so that the vessel itself does not eat up much heat before it gets hot."}
+ ]},
+
+// 3 ─────────── what k depends on / steady state
+{tag:'Conduction · basics',
+ q:"The coefficient of thermal conductivity depends upon:",
+ diagram:'',
+ opts:["Temperature difference of the two ends","Area of the plate","Thickness of the plate","Material of the plate"],
+ ans:3,
+ sol:"k is a <strong>property of the material</strong> only (copper has one value, glass another). Area, thickness and temperature difference decide <em>how much</em> heat flows, but they do not change k itself.",
+ variants:[
+  {q:"Under steady state, the temperature of a body:",
+   opts:["Increases with time","Decreases with time","Does not change with time and is the same at all points of the body",
+         "Does not change with time but is different at different points of the body"],
+   ans:3,
+   sol:"Steady state means: at any one point the temperature has stopped changing with <strong>time</strong>. But along the rod the temperature still <strong>falls from the hot end to the cold end</strong> — that fall is what keeps the heat flowing."},
+  {q:"The SI unit of thermal conductivity is:",
+   opts:["J m K<sup>&#8211;1</sup>","J m<sup>&#8211;1</sup> K<sup>&#8211;1</sup>","W m K<sup>&#8211;1</sup>","W m<sup>&#8211;1</sup> K<sup>&#8211;1</sup>"],
+   ans:3,
+   sol:"From dQ/dt = kA&#916;T/L we get k = (dQ/dt)&#183;L/(A&#183;&#916;T) = (W &#215; m)/(m&#178; &#215; K) = <strong>W m<sup>&#8211;1</sup> K<sup>&#8211;1</sup></strong>."},
+  {q:"Why are metals good conductors of heat?",
+   opts:["Their surfaces are good reflectors of heat","Their atoms move very violently",
+         "They contain a large number of free electrons","None of these"],
+   ans:2,
+   sol:"In a metal the <strong>free electrons</strong> pick up energy at the hot end and carry it right across to the cold end very fast. In non-metals heat can only pass slowly, by atoms vibrating and nudging their neighbours."}
+ ]},
+
+// 4 ─────────── Fourier's law
+{tag:'Fourier law',
+ q:"The two ends of a rod of length L and uniform cross-section A are kept at temperatures T<sub>1</sub> and T<sub>2</sub> (T<sub>1</sub> &gt; T<sub>2</sub>). In the steady state the rate of heat flow dQ/dt through the rod is:",
+ diagram:D.rod([{w:170,label:'k, A'}],'T&#8321;','T&#8322;',{flow:true,mark:undefined}),
+ opts:["kA(T<sub>1</sub> &#8211; T<sub>2</sub>) / L","kL(T<sub>1</sub> &#8211; T<sub>2</sub>) / A","k(T<sub>1</sub> &#8211; T<sub>2</sub>) / LA","kLA(T<sub>1</sub> &#8211; T<sub>2</sub>)"],
+ ans:0,
+ sol:"This is the basic law of conduction: <strong>dQ/dt = kA&#916;T/L</strong>. Read it as: more area &#8594; more heat, bigger temperature difference &#8594; more heat, longer rod &#8594; less heat. Remember the shape — it is exactly like current = voltage / resistance.",
+ variants:[
+  {q:"A window glass has area 10 m<sup>2</sup> and thickness 4 mm. The outer and inner temperatures are 60&#176;C and 40&#176;C. If k of glass is 0.4 (MKS), the heat flowing into the room per second is:",
+   diagram:D.pane(),
+   opts:["3 &#215; 10<sup>4</sup> J","2 &#215; 10<sup>4</sup> J","30 J","45 J"],
+   ans:1,
+   sol:"dQ/dt = kA&#916;T/L = (0.4 &#215; 10 &#215; 20) / (4 &#215; 10<sup>&#8211;3</sup>) = 80 / 0.004 = <strong>2 &#215; 10<sup>4</sup> J/s</strong>. Careful: change 4 mm into 0.004 m first."},
+  {q:"A heat flux of 2000 J/s is to be passed through a copper rod of length 10 cm and cross-section 100 cm<sup>2</sup>. Taking k = 200 W/m&#176;C, the two ends must be kept at a temperature difference of:",
+   diagram:D.rod([{w:150,label:'copper',sub:'10 cm'}],'T&#8321;','T&#8322;',{flow:true}),
+   opts:["1&#176;C","10&#176;C","100&#176;C","1000&#176;C"],
+   ans:2,
+   sol:"A = 100 cm<sup>2</sup> = 10<sup>&#8211;2</sup> m<sup>2</sup>, L = 0.1 m. kA/L = (200 &#215; 10<sup>&#8211;2</sup>)/0.1 = 20 W/&#176;C. So &#916;T = 2000/20 = <strong>100&#176;C</strong>."},
+  {q:"The two ends of a metal rod are maintained at 100&#176;C and 110&#176;C and the heat flow is 4.0 J/s. If the ends are now kept at 200&#176;C and 210&#176;C, the rate of heat flow will be: <span style=\"color:#b45309\">[AIPMT]</span>",
+   diagram:D.rod([{w:160,label:'same rod'}],'110&#176;C &#8594; 210&#176;C','100&#176;C &#8594; 200&#176;C',{}),
+   opts:["16.8 J/s","8.0 J/s","4.0 J/s","44.0 J/s"],
+   ans:2,
+   sol:"Conduction depends on the <strong>difference</strong>, not on how hot the rod is. &#916;T was 10&#176;C, it is still 10&#176;C, so the rate stays <strong>4.0 J/s</strong>. (This is the standard trap in this question.)"}
+ ]},
+
+// 5 ─────────── thermal resistance
+{tag:'Thermal resistance',
+ q:"The ratio of the coefficients of thermal conductivity of two different materials is 25 : 9. If rods of the same area made of these materials have the same thermal resistance, the ratio of their lengths is:",
+ diagram:D.rod([{w:150,label:'k&#8321;',sub:'L&#8321;'}],'hot','cold',{}),
+ opts:["3 : 5","5 : 3","25 : 9","9 : 25"],
+ ans:2,
+ sol:"Thermal resistance <strong>R = L / kA</strong>. Same R and same A means L must be proportional to k. So L<sub>1</sub> : L<sub>2</sub> = k<sub>1</sub> : k<sub>2</sub> = <strong>25 : 9</strong> — the better conductor is allowed to be longer.",
+ variants:[
+  {q:"The dimensional formula for thermal resistance is:",
+   opts:["M<sup>&#8211;1</sup>L<sup>&#8211;2</sup>T<sup>3</sup>&#952;","M<sup>&#8211;1</sup>L<sup>&#8211;2</sup>T<sup>&#8211;3</sup>&#952;","ML<sup>2</sup>T<sup>&#8211;2</sup>&#952;","ML<sup>2</sup>T<sup>2</sup>&#952;<sup>&#8211;1</sup>"],
+   ans:0,
+   sol:"R = &#916;T / (dQ/dt) = temperature / power. Power = ML<sup>2</sup>T<sup>&#8211;3</sup>, so R = &#952; / (ML<sup>2</sup>T<sup>&#8211;3</sup>) = <strong>M<sup>&#8211;1</sup>L<sup>&#8211;2</sup>T<sup>3</sup>&#952;</strong>."},
+  {q:"Two metal rods 1 and 2 of the same length have the same temperature difference between their ends. Their thermal conductivities are K<sub>1</sub>, K<sub>2</sub> and cross-sections A<sub>1</sub>, A<sub>2</sub>. The condition for the same rate of heat conduction is:",
+   opts:["K<sub>1</sub> = K<sub>2</sub>","K<sub>1</sub>A<sub>1</sub> = K<sub>2</sub>A<sub>2</sub>","K<sub>1</sub>/A<sub>1</sub> = K<sub>2</sub>/A<sub>2</sub>","K<sub>1</sub>/&#8467;<sub>1</sub><sup>2</sup> = K<sub>2</sub>/&#8467;<sub>2</sub><sup>2</sup>"],
+   ans:1,
+   sol:"Rate = KA&#916;T/L. Same L and same &#916;T, so equal rates need <strong>K<sub>1</sub>A<sub>1</sub> = K<sub>2</sub>A<sub>2</sub></strong>. A poor conductor can carry the same heat if it is made fatter."},
+  {q:"Two rods of the same material and same length are kept between the same two temperatures. One has cross-section area A, the other 2A. The heat conducted per second by the second rod compared to the first is:",
+   diagram:D.areas(),
+   opts:["Half","The same","Twice","Four times"],
+   ans:2,
+   sol:"Rate &#8733; A when k, L and &#916;T are fixed. Doubling the area <strong>doubles</strong> the heat flow (two lanes instead of one)."}
+ ]},
+
+// 6 ─────────── geometry
+{tag:'Geometry of the rod',
+ q:"Which of the following cylindrical rods (same material) will conduct maximum heat when their ends are maintained at the same steady temperatures?",
+ diagram:D.cyls([{L:50,r:18,label:'1 m &#183; 1 cm'},{L:100,r:18,label:'2 m &#183; 1 cm'},{L:100,r:34,label:'2 m &#183; 2 cm'},{L:50,r:34,label:'1 m &#183; 2 cm'}]),
+ opts:["Length 1 m, radius 1 cm","Length 2 m, radius 1 cm","Length 2 m, radius 2 cm","Length 1 m, radius 2 cm"],
+ ans:3,
+ sol:"Rate &#8733; A/L = &#960;r<sup>2</sup>/L, so compare <strong>r<sup>2</sup>/L</strong>: 1/1 = 1, 1/2 = 0.5, 4/2 = 2, 4/1 = <strong>4</strong>. The <strong>shortest and fattest</strong> rod wins.",
+ variants:[
+  {q:"The lengths and radii of two rods of the same material are in the ratios 2 : 3 and 1 : 2. If the temperature difference across the two rods is the same, the heat flowing per second through them is in the ratio:",
+   diagram:D.cyls([{L:56,r:20,label:'L , r'},{L:84,r:40,label:'1.5 L , 2r'}]),
+   opts:["1 : 3","4 : 3","8 : 9","3 : 8"],
+   ans:3,
+   sol:"Rate &#8733; r<sup>2</sup>/L. Ratio = (1<sup>2</sup>/2) &#247; (2<sup>2</sup>/3) = (1/2) &#247; (4/3) = 3/8, i.e. <strong>3 : 8</strong>."},
+  {q:"The rate of heat flow through a cylindrical rod is Q<sub>1</sub>. If all the linear dimensions of the rod become four times and the temperature difference stays the same, the new rate Q<sub>2</sub> is:",
+   diagram:D.cyls([{L:52,r:18,label:'original'},{L:104,r:44,label:'sizes &#215; 4'}]),
+   opts:["Q<sub>1</sub> = 2Q<sub>2</sub>","Q<sub>2</sub> = 2Q<sub>1</sub>","Q<sub>2</sub> = 4Q<sub>1</sub>","Q<sub>1</sub> = 4Q<sub>2</sub>"],
+   ans:2,
+   sol:"Area becomes 16 times, length becomes 4 times, so A/L becomes 16/4 = 4 times. Hence <strong>Q<sub>2</sub> = 4Q<sub>1</sub></strong>."},
+  {q:"A rod carries heat at a certain rate. If only its length is doubled (everything else the same), the rate of heat flow becomes:",
+   opts:["Double","Half","Four times","Unchanged"],
+   ans:1,
+   sol:"Rate &#8733; 1/L. Doubling the length doubles the thermal resistance, so the heat flow is <strong>halved</strong>."}
+ ]},
+
+// 7 ─────────── series junction temperature
+{tag:'Series · junction temperature',
+ q:"The thermal conductivity of copper is nine times that of steel. In the composite bar shown, the copper part is 60 cm long and the steel part 20 cm, with the outer ends at 100&#176;C and 0&#176;C. The temperature at the copper&#8211;steel junction is:",
+ diagram:D.rod([{w:132,label:'copper (9k)',sub:'60 cm'},{w:60,label:'steel (k)',sub:'20 cm'}],'100&#176;C','0&#176;C',{flow:true}),
+ opts:["75&#176;C","67&#176;C","33&#176;C","25&#176;C"],
+ ans:0,
+ sol:"In series the <strong>same heat</strong> passes through both parts.<br>9k&#183;A(100 &#8211; T)/60 = k&#183;A(T &#8211; 0)/20<br>&#8658; (100 &#8211; T)&#215;9/60 = T/20 &#8658; 9(100 &#8211; T) = 3T &#8658; T = <strong>75&#176;C</strong>.<br>Shortcut: the junction sits closer to the temperature of the <em>poorer</em> conductor's end — most of the temperature drop happens across the steel.",
+ variants:[
+  {q:"Two rods, one of copper and one of steel, of the same length and same cross-section, are joined end to end. k<sub>copper</sub> = 385 and k<sub>steel</sub> = 50 (SI). The free ends of copper and steel are held at 100&#176;C and 0&#176;C. The junction temperature is nearly: <span style=\"color:#b45309\">[NEET 2022]</span>",
+   diagram:D.rod([{w:96,label:'copper 385',sub:'L'},{w:96,label:'steel 50',sub:'L'}],'100&#176;C','0&#176;C',{flow:true}),
+   opts:["12&#176;C","50&#176;C","73&#176;C","88.5&#176;C"],
+   ans:3,
+   sol:"Equal lengths and areas, so T = (k<sub>1</sub>T<sub>1</sub> + k<sub>2</sub>T<sub>2</sub>)/(k<sub>1</sub> + k<sub>2</sub>) = (385&#215;100 + 50&#215;0)/435 = <strong>88.5&#176;C</strong>. The junction is pulled very close to the copper end, because copper offers hardly any resistance."},
+  {q:"Two <em>identical</em> rods (same material, same size) are joined end to end. The free ends are at 80&#176;C and 20&#176;C. The junction temperature is:",
+   diagram:D.rod([{w:96,label:'k',sub:'L'},{w:96,label:'k',sub:'L'}],'80&#176;C','20&#176;C',{flow:true}),
+   opts:["30&#176;C","40&#176;C","50&#176;C","60&#176;C"],
+   ans:2,
+   sol:"Equal resistances share the drop equally, so the junction is at the plain average = <strong>50&#176;C</strong>."},
+  {q:"Three identical rods are joined in series. The two side rods have conductivity 2K and the middle one K. The left end is at 3T and the right end at T. In the steady state, if T<sub>1</sub> and T<sub>2</sub> are the left and right junction temperatures, then T<sub>1</sub>/T<sub>2</sub> is: <span style=\"color:#b45309\">[NEET 2025]</span>",
+   diagram:D.rod([{w:76,label:'2K'},{w:76,label:'K'},{w:76,label:'2K'}],'3T','T',{flow:true}),
+   opts:["3/2","4/3","5/3","5/4"],
+   ans:2,
+   sol:"Resistance &#8733; 1/k, so the resistances are R, 2R, R &#8594; total 4R. Total drop = 3T &#8211; T = 2T, so the drop per unit R is 2T/4R = T/(2R).<br>Drop across the first rod = T/2 &#8658; T<sub>1</sub> = 3T &#8211; T/2 = 5T/2.<br>Drop across the last rod = T/2 &#8658; T<sub>2</sub> = T + T/2 = 3T/2.<br>T<sub>1</sub>/T<sub>2</sub> = <strong>5/3</strong>."}
+ ]},
+
+// 8 ─────────── compound slabs
+{tag:'Compound slab',
+ q:"A compound slab is made of two materials in series, having equal thickness and thermal conductivities 2K and 4K. The equivalent thermal conductivity of the slab is:",
+ diagram:D.slabV([{w:74,label:'2K'},{w:74,label:'4K'}],['T&#8321;','','T&#8322;']),
+ opts:["3K","8K/3","4K/3","&#8730;2 K"],
+ ans:1,
+ sol:"For two slabs of <strong>equal thickness in series</strong>: K<sub>eq</sub> = 2k<sub>1</sub>k<sub>2</sub>/(k<sub>1</sub> + k<sub>2</sub>) = 2(2K)(4K)/(6K) = <strong>8K/3</strong>.<br>Note K<sub>eq</sub> = 2.67K lies between 2K and 4K but closer to the <em>smaller</em> one — in series the weaker layer controls the flow.",
+ variants:[
+  {q:"The figure shows the face and interface temperatures of a composite slab of four layers of two materials, all of the same thickness and area. Under steady state, the value of &#952; is:",
+   diagram:D.slabV([{w:56,label:'k'},{w:56,label:'2k'},{w:56,label:'k'},{w:56,label:'2k'}],['20&#176;C','10&#176;C','&#952;','&#8211;5&#176;C','&#8211;10&#176;C']),
+   opts:["5&#176;C","10&#176;C","&#8211;15&#176;C","15&#176;C"],
+   ans:0,
+   sol:"Same heat current through every layer. Across the first layer (k) the drop is 20 &#8211; 10 = 10&#176;C. The second layer has conductivity 2k, so half the resistance, so <strong>half the drop</strong> = 5&#176;C. Hence &#952; = 10 &#8211; 5 = <strong>5&#176;C</strong>. (Check: the third layer, k again, drops 10&#176; &#8594; 5 &#8211; 10 = &#8211;5&#176;C. ✓)"},
+  {q:"A composite slab has three different materials a, b and c of equal thickness with k<sub>a</sub> &gt; k<sub>b</sub> &gt; k<sub>c</sub>. The heat transfer is steady. The temperature difference is greatest across:",
+   diagram:D.slabV([{w:66,label:'a'},{w:66,label:'b'},{w:66,label:'c'}],['hot','','','cold']),
+   opts:["a","b","c","a and c"],
+   ans:2,
+   sol:"Same heat current everywhere, so &#916;T &#8733; resistance = L/kA. Equal thickness, so the <strong>smallest k</strong> has the biggest resistance and takes the biggest temperature drop &#8594; <strong>c</strong>."},
+  {q:"Two rods A and B of different materials are welded together side by side as shown. Their thermal conductivities are K<sub>1</sub> and K<sub>2</sub>. The thermal conductivity of the composite rod is: <span style=\"color:#b45309\">[NEET 2017]</span>",
+   diagram:D.parallel('K&#8321;','K&#8322;','T&#8321;','T&#8322;'),
+   opts:["3(K<sub>1</sub> + K<sub>2</sub>)/2","K<sub>1</sub> + K<sub>2</sub>","2(K<sub>1</sub> + K<sub>2</sub>)","(K<sub>1</sub> + K<sub>2</sub>)/2"],
+   ans:3,
+   sol:"Here the two rods are <strong>parallel</strong> — both feel the same T<sub>1</sub> and T<sub>2</sub>, and the heats add up. With equal areas, K<sub>eq</sub> = <strong>(K<sub>1</sub> + K<sub>2</sub>)/2</strong>, the plain average. Compare with the base question: <em>series &#8594; harmonic type, parallel &#8594; simple average.</em>"}
+ ]},
+
+// 9 ─────────── temperature along a rod
+{tag:'Temperature profile',
+ q:"The hot and cold ends of a uniform 40 cm long rod in the steady state are at 80&#176;C and 20&#176;C. The temperature at the centre of the rod is:",
+ diagram:D.rod([{w:180,label:'uniform rod',sub:'40 cm'}],'80&#176;C','20&#176;C',{mark:90,markLabel:'centre'}),
+ opts:["50&#176;C","60&#176;C","40&#176;C","30&#176;C"],
+ ans:0,
+ sol:"For a <strong>uniform</strong> rod in the steady state, the temperature falls in a straight line from the hot end to the cold end. Half way along, the temperature is half way in value: (80 + 20)/2 = <strong>50&#176;C</strong>.",
+ variants:[
+  {q:"The two ends of a conducting rod of varying cross-section are kept at 200&#176;C and 0&#176;C. AB is a thin slice in the wide part and CD a thin slice of the same thickness in the narrow part. In the steady state:",
+   diagram:D.taper(),
+   opts:["The temperature differences across AB and CD are equal",
+         "The temperature difference across AB is greater than that across CD",
+         "The temperature difference across AB is less than that across CD",
+         "It may be equal or different depending on the conductivity"],
+   ans:2,
+   sol:"The same heat current passes through every slice. Resistance of a slice = L/kA, and CD has the <strong>smaller area</strong>, so the bigger resistance, so the bigger drop. Hence &#916;T<sub>AB</sub> is <strong>less</strong> than &#916;T<sub>CD</sub>. Narrow section = crowded traffic = steep fall."},
+  {q:"A stone slab of area 0.36 m<sup>2</sup> and thickness 0.1 m has steam at 100&#176;C below it and ice at 0&#176;C on top. In one hour 4.8 kg of ice melts (L<sub>f</sub> = 3.36 &#215; 10<sup>5</sup> J/kg). The thermal conductivity of the slab is:",
+   diagram:D.stone(),
+   opts:["2.05 J/s/&#176;C","1.02 J/s/&#176;C","1.24 J/s/&#176;C","1.29 J/s/&#176;C"],
+   ans:2,
+   sol:"Heat used per second = mL/t = (4.8 &#215; 3.36 &#215; 10<sup>5</sup>)/3600 = 448 W.<br>k = (dQ/dt)&#183;L /(A&#183;&#916;T) = (448 &#215; 0.1)/(0.36 &#215; 100) = <strong>1.24 J/s/&#176;C</strong> (i.e. W m<sup>&#8211;1</sup> &#176;C<sup>&#8211;1</sup>)."},
+  {q:"A uniform rod has its ends at 100&#176;C and 0&#176;C. The temperature at a point one quarter of the way from the hot end is:",
+   diagram:D.rod([{w:180,label:'uniform rod'}],'100&#176;C','0&#176;C',{mark:45,markLabel:'L/4'}),
+   opts:["25&#176;C","50&#176;C","75&#176;C","90&#176;C"],
+   ans:2,
+   sol:"The fall is linear: after one quarter of the length, one quarter of the total 100&#176;C drop has happened. Temperature = 100 &#8211; 25 = <strong>75&#176;C</strong>."}
+ ]},
+
+// 10 ─────────── junction of several rods
+{tag:'Rod networks',
+ q:"Three rods of the same material, same cross-section and same length are joined as shown. The left end is kept at 0&#176;C and the two right ends at 75&#176;C each. The temperature of the junction of the three rods is:",
+ diagram:D.star([{ang:180,label:'0&#176;C',col:C.cold},{ang:32,label:'75&#176;C'},{ang:-32,label:'75&#176;C'}]),
+ opts:["45&#176;C","50&#176;C","30&#176;C","20&#176;C"],
+ ans:1,
+ sol:"All rods are identical, so all have the same thermal resistance. Heat in = heat out at the junction:<br>(75 &#8211; T) + (75 &#8211; T) = (T &#8211; 0) &#8658; 150 = 3T &#8658; T = <strong>50&#176;C</strong>.<br>Handy rule for identical rods meeting at a point: <strong>T<sub>junction</sub> = average of all the end temperatures</strong> = (0 + 75 + 75)/3 = 50&#176;C.",
+ variants:[
+  {q:"Six identical rods are joined at a point O. Their far ends are held at 300&#176;C, 10&#176;C, 20&#176;C, 40&#176;C, 50&#176;C and 60&#176;C. The temperature of the junction O is:",
+   diagram:D.star([{ang:180,label:'300&#176;C'},{ang:120,label:'60&#176;C'},{ang:60,label:'50&#176;C'},{ang:0,label:'40&#176;C'},{ang:-60,label:'20&#176;C'},{ang:-120,label:'10&#176;C'}]),
+   opts:["60&#176;C","70&#176;C","80&#176;C","None of these"],
+   ans:2,
+   sol:"Identical rods &#8658; junction temperature = average of the end temperatures = (300 + 10 + 20 + 40 + 50 + 60)/6 = 480/6 = <strong>80&#176;C</strong>."},
+  {q:"Four similar rods are joined as a cross, with no heat loss from the sides. The end temperatures are shown. The temperature of the junction is:",
+   diagram:D.star([{ang:180,label:'100&#176;C'},{ang:90,label:'50&#176;C'},{ang:0,label:'0&#176;C',col:C.cold},{ang:270,label:'50&#176;C'}]),
+   opts:["50&#176;C","75&#176;C","66.6&#176;C","33.3&#176;C"],
+   ans:0,
+   sol:"Same rule: T = (100 + 50 + 0 + 50)/4 = <strong>50&#176;C</strong>. You can check it: the 100&#176;C rod pushes 50 units in, the 0&#176;C rod takes 50 units out, and the two 50&#176;C rods carry nothing."},
+  {q:"The figure shows a network of five metal rods of the same cross-section. The heat current entering at A and leaving at B is 180 W. The heat current through the curved (lower) part is:",
+   diagram:D.network(),
+   opts:["70 W","80 W","90 W","100 W"],
+   ans:2,
+   sol:"Between the two junctions there are two parallel paths: the upper one 45 + 45 = 90 cm and the lower curved one 90 cm. Same material, same area, <strong>same length &#8658; same resistance</strong>, so the 180 W splits equally: <strong>90 W</strong> through the curved part."}
+ ]}
+];
+
+// ═══════════════════════════════════════════════════════════════════
+//  APP
+// ═══════════════════════════════════════════════════════════════════
+const KEY='padipucast_heat_transfer_l1_dpp_v1';
+const LETT=['A','B','C','D'];
+const state={};
+QUESTIONS.forEach((_,i)=>state[i]={cur:0,ans:{}});
+try{const s=localStorage.getItem(KEY);if(s){const o=JSON.parse(s);Object.keys(o).forEach(k=>{if(state[k])state[k]=o[k];});}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+
+const paper=document.getElementById('paper');
+function versionOf(i){const q=QUESTIONS[i];return state[i].cur===0?q:q.variants[state[i].cur-1];}
+
+function buildCard(i){
+  const card=document.createElement('div');card.className='card';card.dataset.i=i;
+  paper.appendChild(card);renderCard(i);
+}
+function renderCard(i){
+  const card=paper.querySelector(`.card[data-i="${i}"]`);
+  const q=QUESTIONS[i];const cur=state[i].cur;const data=versionOf(i);const nv=q.variants.length;
+  const isBase=cur===0;
+  let optHtml='';
+  data.opts.forEach((o,oi)=>{optHtml+=`<button class="opt" data-oi="${oi}"><span class="lt">${LETT[oi]}</span><span>${o}</span></button>`;});
+  card.innerHTML=`
+    <div class="q-top">
+      <span class="q-no">Q${i+1}</span>
+      <span class="vchip ${isBase?'':'var'}">${isBase?'Base':'Variation '+cur+' / '+nv}</span>
+      <span class="tag">${q.tag}</span>
+      ${isBase?'':'<span class="prac">practice · not scored</span>'}
+    </div>
+    <div class="q-text">${data.q}</div>
+    ${data.diagram?`<div class="q-diagram">${data.diagram}</div>`:''}
+    <div class="opts">${optHtml}</div>
+    <div class="act">
+      <span class="fb"></span>
+      <button class="showsol">Show solution</button>
+      <button class="varbtn">&#8635; Try a variation</button>
+    </div>
+    <div class="sol"><div class="sol-in"><strong>Answer: ${LETT[data.ans]}.</strong> ${data.sol}</div></div>`;
+  const opts=card.querySelectorAll('.opt');
+  const fb=card.querySelector('.fb');
+  const sol=card.querySelector('.sol');
+  function lockIn(chosen){
+    opts.forEach(op=>{op.classList.add('locked');const oi=+op.dataset.oi;
+      if(oi===data.ans)op.classList.add('correct');
+      if(oi===chosen&&chosen!==data.ans)op.classList.add('wrong');});
+    const ok=chosen===data.ans;fb.className='fb '+(ok?'c':'w');fb.textContent=ok?'Correct':'Review';
+    sol.classList.add('open');
+  }
+  opts.forEach(op=>op.addEventListener('click',()=>{
+    if(op.classList.contains('locked'))return;
+    const chosen=+op.dataset.oi;state[i].ans[cur]=chosen;save();lockIn(chosen);updateScore();
+  }));
+  card.querySelector('.showsol').addEventListener('click',()=>sol.classList.toggle('open'));
+  card.querySelector('.varbtn').addEventListener('click',()=>{
+    state[i].cur=(state[i].cur+1)%(nv+1);save();renderCard(i);
+  });
+  if(state[i].ans[cur]!==undefined)lockIn(state[i].ans[cur]);
+}
+function updateScore(){
+  let att=0,sc=0;
+  QUESTIONS.forEach((q,i)=>{const v=state[i].ans[0];if(v!==undefined){att++;if(v===q.ans)sc++;}});
+  document.getElementById('att').textContent=att;
+  document.getElementById('sc').textContent=sc;
+  document.getElementById('tot').textContent=QUESTIONS.length;
+}
+document.getElementById('revealBtn').addEventListener('click',()=>{
+  QUESTIONS.forEach((q,i)=>{const data=versionOf(i);
+    const card=paper.querySelector(`.card[data-i="${i}"]`);
+    card.querySelectorAll('.opt').forEach(op=>{op.classList.add('locked');if(+op.dataset.oi===data.ans)op.classList.add('correct');});
+    card.querySelector('.sol').classList.add('open');});
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  QUESTIONS.forEach((_,i)=>state[i]={cur:0,ans:{}});save();
+  paper.innerHTML='';QUESTIONS.forEach((_,i)=>buildCard(i));updateScore();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+QUESTIONS.forEach((_,i)=>buildCard(i));
+updateScore();
+</script>
+</body>
+</html>
