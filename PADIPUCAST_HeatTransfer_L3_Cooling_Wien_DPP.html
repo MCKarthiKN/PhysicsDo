@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST · Heat Transfer L3 — Newton's Cooling &amp; Wien's Law DPP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;
+  --correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --blue:#2563eb;--blue-bg:#eef4fe;--blue-border:#cfe0f5;
+  --amber:#b45309;--amber-bg:#fdf6e7;--amber-border:#f0dcae;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#wrap{max-width:780px;margin:0 auto;padding:0 22px 90px;}
+header{padding:30px 0 4px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;margin-bottom:16px;}
+.brand span{color:var(--text3);}
+header h1{font-family:'LemonMilk',sans-serif;font-size:23px;font-weight:700;letter-spacing:0.02em;line-height:1.25;}
+header .sub{font-size:14px;color:var(--text2);margin-top:6px;}
+.note{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:12px;padding:13px 16px;margin-top:16px;font-size:13.5px;color:#7a4d09;line-height:1.65;}
+.note b{color:#5c3a06;}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:24px 0 26px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.chips{display:flex;gap:10px;flex-wrap:wrap;}
+.chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 13px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.chip b{color:var(--text);}
+.btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btns button{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 15px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.btns button:hover{border-color:var(--border2);color:var(--text);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 26px 20px;margin-bottom:14px;}
+.q-top{display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;}
+.q-no{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.16em;color:var(--text3);text-transform:uppercase;}
+.vchip{font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 9px;border-radius:5px;background:#f0ede8;color:var(--text2);}
+.vchip.var{background:var(--blue-bg);color:var(--blue);}
+.tag{font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 9px;border-radius:5px;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border);}
+.prac{margin-left:auto;font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.q-text{font-size:15.5px;line-height:1.7;margin-bottom:14px;}
+.q-text sup,.q-text sub{font-size:.75em;}
+.q-diagram{margin:0 0 18px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.opts{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.opt{display:flex;align-items:center;gap:12px;padding:11px 15px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all .15s;text-align:left;}
+.opt sup,.opt sub{font-size:.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt .lt{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;color:var(--text3);flex-shrink:0;background:var(--surface);}
+.opt.correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.correct .lt{border-color:var(--correct-border);color:var(--correct);}
+.opt.wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.wrong .lt{border-color:var(--wrong-border);color:var(--wrong);}
+.opt.locked{pointer-events:none;}
+.sol{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .3s ease;}
+.sol.open{max-height:1400px;opacity:1;margin-top:12px;}
+.sol-in{border-left:2px solid var(--text3);padding:10px 15px;font-size:13.5px;line-height:1.7;color:var(--text2);}
+.sol-in strong{color:var(--text);font-weight:600;}
+.sol-in sup,.sol-in sub{font-size:.75em;}
+.sol-in svg{display:block;margin:10px auto 2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;max-width:100%;height:auto;}
+.act{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.act .fb{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 11px;border-radius:20px;display:none;}
+.act .fb.c{display:inline-block;background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+.act .fb.w{display:inline-block;background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+.act .showsol{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:8px 13px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.act .showsol:hover{border-color:var(--border2);color:var(--text);}
+.act .varbtn{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--blue-border);border-radius:8px;padding:8px 13px;cursor:pointer;color:var(--blue);transition:all .15s;margin-left:auto;}
+.act .varbtn:hover{background:var(--blue-bg);border-color:var(--blue);}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--border);font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);text-align:center;}
+@media print{
+  body{background:#fff;} .toolbar .btns,.act .showsol,.act .varbtn{display:none;}
+  .opt{background:#fff;} .sol{max-height:none!important;opacity:1!important;margin-top:12px;}
+  .card{break-inside:avoid;border-color:#ccc;}
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <header>
+    <div class="brand">PADIPUCAST <span>·</span> Daily Practice</div>
+    <h1>Heat Transfer — Lecture 3<br>Newton's Cooling &amp; Wien's Law</h1>
+    <p class="sub">10 base questions from the ALLEN Pre-Medical Thermal Physics module, plus a mixed revision set at the end. Tap <b>Try a variation</b> for three more versions of the same idea.</p>
+    <div class="note"><b>How to use this sheet.</b> Do the 10 base questions first — only these are scored. Then open the variations. Q1–Q5 are Newton's law of cooling, Q6–Q9 are Wien's displacement law and star colours, and Q10 mixes the whole chapter for revision.</div>
+  </header>
+  <div class="toolbar">
+    <div class="chips">
+      <span class="chip">Score <b id="sc">0</b>/<b id="tot">10</b></span>
+      <span class="chip">Attempted <b id="att">0</b></span>
+    </div>
+    <div class="btns">
+      <button id="revealBtn">Reveal all</button>
+      <button id="resetBtn">Reset</button>
+      <button id="printBtn">Print</button>
+    </div>
+  </div>
+  <div id="paper"></div>
+  <footer>PADIPUCAST · Heat Transfer L3 · base questions are scored · variations are free practice</footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  DIAGRAM LIBRARY — cooling curves, spectra, stars
+// ═══════════════════════════════════════════════════════════════════
+const FS='font-family="DM Sans,sans-serif"';
+const C={hot:'#dc2626',cold:'#2563eb',ink:'#334155',dim:'#64748b',g:'#9ca3af',
+         bs:'#475569',amber:'#ea580c',grn:'#16a34a',vio:'#7c3aed'};
+const AR=(id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const MARKERS=[['aH',C.hot],['aC',C.cold],['aA',C.amber],['aI',C.ink],['aV',C.vio]].map(([i,c])=>AR(i,c)).join('');
+function svg(w,h,inner){return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg"><defs>${MARKERS}</defs>${inner}</svg>`;}
+function T(x,y,s,size,col,anc){return `<text x="${x}" y="${y}" font-size="${size||12}" fill="${col||C.ink}" text-anchor="${anc||'middle'}" ${FS}>${s}</text>`;}
+function rays(cx,cy,r,n,len,col){let s='';for(let i=0;i<n;i++){const a=(2*Math.PI*i)/n,
+  x1=cx+r*Math.cos(a),y1=cy+r*Math.sin(a),x2=cx+(r+len)*Math.cos(a),y2=cy+(r+len)*Math.sin(a);
+  s+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${col||C.hot}" stroke-width="1.3" opacity="0.7"/>`;}return s;}
+
+// Planck shape, T in kK (1 = 1000 K), l in micrometre
+const PL=(l,Tk)=>1/(Math.pow(l,5)*(Math.exp(14.388/(l*Tk))-1));
+
+// shapes for the small option graphs — u and value both run 0 → 1
+const SHAPES={
+  expdecay:u=>0.16+0.80*Math.exp(-3.4*u),
+  linflat:u=>u<0.32?0.96-(0.80/0.32)*u:0.16,
+  slowfast:u=>0.16+0.80*(1-Math.pow(u,3)),
+  linzero:u=>0.96-0.94*u,
+  straightdown:u=>0.94-0.84*u,
+  hyper:u=>0.94/(1+9*u),
+  sdecay:u=>0.94-0.86/(1+Math.exp(-(u-0.45)*11)),
+  convex:u=>0.94*Math.pow(1-u,2.2),
+  lineup:u=>0.06+0.86*u,
+  satur:u=>0.92*(1-Math.exp(-3.8*u)),
+  concaveup:u=>0.06+0.86*u*u,
+  falling:u=>0.92-0.82*u
+};
+
+const D={};
+
+// 2 × 2 grid of small option graphs
+D.grid=function(panels,o){
+  o=o||{};
+  const pw=118,ph=86,gx=52,gy=58,cols=2,x1=24,y1=30;
+  let s='';
+  panels.forEach((p,i)=>{
+    const ox=x1+(i%cols)*(pw+gx),oy=y1+Math.floor(i/cols)*(ph+gy);
+    s+=`<line x1="${ox}" y1="${oy+ph}" x2="${ox}" y2="${oy-8}" stroke="${C.ink}" stroke-width="1.1" marker-end="url(#aI)"/>`;
+    s+=`<line x1="${ox}" y1="${oy+ph}" x2="${ox+pw+8}" y2="${oy+ph}" stroke="${C.ink}" stroke-width="1.1"/>`;
+    s+=T(ox+6,oy-12,o.ylab||'',9.5,C.dim,'start')+T(ox+pw+12,oy+ph+4,o.xlab||'',9.5,C.dim,'start');
+    if(p.hline!==undefined){const yh=oy+ph-ph*p.hline;
+      s+=`<line x1="${ox}" y1="${yh}" x2="${ox+pw}" y2="${yh}" stroke="${C.dim}" stroke-width="1" stroke-dasharray="4 3"/>`+
+         T(ox-5,yh+4,o.hlab||'',9,C.dim,'end');}
+    let pts=[];
+    for(let k=0;k<=60;k++){const u=k/60,v=Math.max(0,Math.min(1,SHAPES[p.shape](u)));
+      pts.push((ox+pw*u).toFixed(1)+','+(oy+ph-ph*v).toFixed(1));}
+    s+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${C.hot}" stroke-width="1.8"/>`;
+    s+=T(ox+pw/2,oy+ph+20,p.label,11,C.ink);
+  });
+  return svg(x1+cols*pw+(cols-1)*gx+44,y1+Math.ceil(panels.length/cols)*(ph+gy),s);
+};
+
+// 2 × 2 grid of small black-body spectra (for "which plot is correct")
+D.spectraGrid=function(panels){
+  const pw=118,ph=86,gx=56,gy=44,cols=2,x1=24,y1=26,lmax=8;
+  let peak=0;for(let i=1;i<=300;i++)peak=Math.max(peak,PL(lmax*i/300,1.2));
+  let s='';
+  panels.forEach((p,i)=>{
+    const ox=x1+(i%cols)*(pw+gx),oy=y1+Math.floor(i/cols)*(ph+gy);
+    s+=`<line x1="${ox}" y1="${oy+ph}" x2="${ox}" y2="${oy-8}" stroke="${C.ink}" stroke-width="1.1" marker-end="url(#aI)"/>`;
+    s+=`<line x1="${ox}" y1="${oy+ph}" x2="${ox+pw+8}" y2="${oy+ph}" stroke="${C.ink}" stroke-width="1.1"/>`;
+    s+=T(ox+6,oy-12,'I',9.5,C.dim,'start')+T(ox+pw+12,oy+ph+4,'&#955;',10,C.dim,'start');
+    p.curves.forEach(c=>{
+      let pts=[],lx=0,ly=1e9;
+      for(let k=1;k<=90;k++){const l=lmax*k/90,v=Math.min(1,c.amp*PL(l,c.T)/peak);
+        const X=ox+pw*k/90,Y=oy+ph-(ph-6)*v;pts.push(X.toFixed(1)+','+Y.toFixed(1));
+        if(Y<ly){ly=Y;lx=X;}}
+      s+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${c.col||C.hot}" stroke-width="1.7"/>`;
+      s+=T(Math.min(lx+16,ox+pw+8),ly+2,c.label,10,c.col||C.hot,'start');
+    });
+    s+=T(ox+pw/2,oy+ph+24,p.label,11,C.ink);
+  });
+  return svg(x1+cols*pw+(cols-1)*gx+44,y1+Math.ceil(panels.length/cols)*(ph+gy),s);
+};
+
+// full-size black body spectrum, T in kK
+D.curves=function(list,o){
+  o=o||{};
+  const x0=58,yB=150,w=248,hMax=110,lmax=o.lmax||6;
+  let peak=0;list.forEach(c=>{for(let i=1;i<=400;i++){const v=PL(lmax*i/400,c.T);if(v>peak)peak=v;}});
+  let s=`<line x1="${x0}" y1="${yB}" x2="${x0+w+10}" y2="${yB}" stroke="${C.ink}" stroke-width="1.2" marker-end="url(#aI)"/>`+
+        `<line x1="${x0}" y1="${yB}" x2="${x0}" y2="${yB-hMax-18}" stroke="${C.ink}" stroke-width="1.2" marker-end="url(#aI)"/>`+
+        T(x0+w/2,yB+((o.marks&&o.marks.length)?42:24),o.xlab||'wavelength &#955; &#8594;',10.5,C.dim)+
+        `<text x="${x0-16}" y="${yB-hMax/2}" font-size="10.5" fill="${C.dim}" text-anchor="middle" ${FS} transform="rotate(-90 ${x0-16} ${yB-hMax/2})">intensity</text>`;
+  list.forEach(c=>{
+    let pts=[];
+    for(let i=1;i<=200;i++){const l=lmax*i/200,y=Math.max(yB-hMax*PL(l,c.T)/peak,yB-hMax-2);
+      pts.push((x0+w*i/200).toFixed(1)+','+y.toFixed(1));}
+    s+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${c.col}" stroke-width="1.9"/>`;
+    if(c.label){const lp=2.8977/c.T,xp=x0+w*lp/lmax,yp=yB-hMax*PL(lp,c.T)/peak;
+      s+=T(Math.min(xp+18,x0+w-8),yp-6,c.label,11,c.col,'start');
+      if(c.drop)s+=`<line x1="${xp}" y1="${yB}" x2="${xp}" y2="${yp}" stroke="${c.col}" stroke-width="1" stroke-dasharray="4 3"/>`;}
+  });
+  (o.marks||[]).forEach((m,mi)=>{
+    const xm=x0+w*m.l/lmax;
+    s+=`<line x1="${xm}" y1="${yB}" x2="${xm}" y2="${yB-hMax-8}" stroke="${C.vio}" stroke-width="1" stroke-dasharray="4 3"/>`;
+    s+=T(xm,yB-hMax-14,m.label,10.5,C.vio)+T(xm,yB+(mi%2?26:13),m.x,9.5,C.dim);
+  });
+  return svg(x0+w+34,yB+((o.marks&&o.marks.length)?54:34),s);
+};
+
+// cooling curve with equal 5° steps marked
+D.coolCurve=function(){
+  const x0=62,yB=156,w=236,h=112,Ts=80,T0=60,drop=[75,70,65];
+  const y=(t)=>yB-h*((T0+(Ts-T0)*Math.exp(-t))-55)/30;
+  const tmax=1.9;
+  let s=`<line x1="${x0}" y1="${yB}" x2="${x0+w+10}" y2="${yB}" stroke="${C.ink}" stroke-width="1.2" marker-end="url(#aI)"/>`+
+        `<line x1="${x0}" y1="${yB}" x2="${x0}" y2="${yB-h-16}" stroke="${C.ink}" stroke-width="1.2" marker-end="url(#aI)"/>`+
+        T(x0+w/2,yB+40,'time &#8594;',10.5,C.dim)+
+        `<text x="${x0-34}" y="${yB-h/2}" font-size="10.5" fill="${C.dim}" text-anchor="middle" ${FS} transform="rotate(-90 ${x0-34} ${yB-h/2})">temperature</text>`;
+  let pts=[];
+  for(let i=0;i<=120;i++){const t=tmax*i/120;pts.push((x0+w*t/tmax).toFixed(1)+','+y(t).toFixed(1));}
+  s+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${C.hot}" stroke-width="2"/>`;
+  s+=`<line x1="${x0}" y1="${y(99)}" x2="${x0+w}" y2="${y(99)}" stroke="${C.dim}" stroke-width="1" stroke-dasharray="4 3"/>`+
+     T(x0-6,y(99)+4,'room',9.5,C.dim,'end');
+  let prev=0;
+  const names=['T&#8321;','T&#8322;','T&#8323;'];
+  drop.forEach((Td,i)=>{
+    const t=Math.log((Ts-T0)/(Td-T0)),X=x0+w*t/tmax;
+    s+=`<line x1="${x0}" y1="${y(t)}" x2="${X}" y2="${y(t)}" stroke="${C.dim}" stroke-width="0.9" stroke-dasharray="3 3"/>`;
+    s+=`<line x1="${X}" y1="${y(t)}" x2="${X}" y2="${yB}" stroke="${C.dim}" stroke-width="0.9" stroke-dasharray="3 3"/>`;
+    s+=T(x0-6,y(t)+4,Td+'&#176;',9.5,C.dim,'end');
+    const Xp=x0+w*prev/tmax;
+    s+=`<line x1="${Xp+2}" y1="${yB+14}" x2="${X-2}" y2="${yB+14}" stroke="${C.vio}" stroke-width="1"/>`;
+    s+=T((Xp+X)/2,yB+26,names[i],10,C.vio);
+    prev=t;
+  });
+  s+=T(x0-6,y(0)+4,'80&#176;',9.5,C.dim,'end');
+  return svg(x0+w+30,yB+52,s);
+};
+
+// two straight lines: rate of cooling vs (θ − θ₀)
+D.lines2=function(){
+  const x0=64,yB=142,w=210,h=104;
+  let s=`<line x1="${x0}" y1="${yB}" x2="${x0+w+10}" y2="${yB}" stroke="${C.ink}" stroke-width="1.2" marker-end="url(#aI)"/>`+
+        `<line x1="${x0}" y1="${yB}" x2="${x0}" y2="${yB-h-16}" stroke="${C.ink}" stroke-width="1.2" marker-end="url(#aI)"/>`+
+        T(x0+w/2,yB+26,'(&#952; &#8211; &#952;&#8320;) &#8594;',10.5,C.dim)+
+        `<text x="${x0-24}" y="${yB-h/2}" font-size="10.5" fill="${C.dim}" text-anchor="middle" ${FS} transform="rotate(-90 ${x0-24} ${yB-h/2})">rate of cooling R</text>`;
+  s+=`<line x1="${x0}" y1="${yB}" x2="${x0+w*0.62}" y2="${yB-h}" stroke="${C.hot}" stroke-width="1.9"/>`+T(x0+w*0.62+10,yB-h+4,'A',11.5,C.hot,'start');
+  s+=`<line x1="${x0}" y1="${yB}" x2="${x0+w}" y2="${yB-h*0.62}" stroke="${C.cold}" stroke-width="1.9"/>`+T(x0+w+12,yB-h*0.62+4,'B',11.5,C.cold,'start');
+  return svg(x0+w+34,yB+36,s);
+};
+
+// coloured stars
+D.stars=function(list){
+  let x=30,s='';
+  list.forEach(o=>{
+    s+=rays(x+20,74,20,10,10,o.col);
+    s+=`<circle cx="${x+20}" cy="74" r="20" fill="${o.col}" stroke="${C.bs}" stroke-width="1.2"/>`;
+    s+=T(x+20,120,o.label,10.5,C.dim);
+    if(o.label2)s+=T(x+20,134,o.label2,10.5,C.dim);
+    x+=90;
+  });
+  return svg(x-30,148,s);
+};
+
+// spheres side by side
+D.spheres=function(list){
+  let x=30,s='',hMax=0;
+  list.forEach(o=>{
+    const r=o.r,cy=80;
+    s+=rays(x+r,cy,r,10,9,C.hot);
+    s+=`<circle cx="${x+r}" cy="${cy}" r="${r}" fill="#fde8e8" stroke="${C.bs}" stroke-width="1.4"/>`;
+    s+=T(x+r,cy+4,o.name||'',12,C.ink);
+    s+=T(x+r,cy+r+28,o.label,10.5,C.dim);
+    if(o.label2)s+=T(x+r,cy+r+42,o.label2,10.5,C.dim);
+    hMax=Math.max(hMax,cy+r+(o.label2?52:38));
+    x+=2*r+56;
+  });
+  return svg(x-26,hMax,s);
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  QUESTIONS — 10 base + 3 variations each
+// ═══════════════════════════════════════════════════════════════════
+const QUESTIONS=[
+
+// 1 ─────────── statement and graphs
+{tag:"Newton's cooling · basics",
+ q:"According to Newton's law of cooling, the rate of cooling of a body is proportional to:",
+ diagram:'',
+ opts:["Temperature of the body","Temperature of the surroundings","Fourth power of the temperature of the body",
+       "Difference of the temperature of the body and the surroundings"],
+ ans:3,
+ sol:"Newton's law: <strong>&#8211;d&#952;/dt = k(&#952; &#8211; &#952;&#8320;)</strong>. Only the <strong>difference</strong> matters, and the law holds when this difference is small. It is really Stefan's law simplified for a small temperature gap.",
+ variants:[
+  {q:"Newton's law of cooling is used in the laboratory for the determination of the:",
+   opts:["Specific heat of gases","Latent heat of gases","Specific heat of liquids","Latent heat of liquids"],
+   ans:2,
+   sol:"Two liquids of equal volume are cooled through the same range in the same calorimeter. The times taken are compared, which gives the <strong>specific heat of the liquid</strong>."},
+  {q:"If a piece of metal is heated to temperature &#952; and then allowed to cool in a room at temperature &#952;<sub>0</sub>, the graph between the temperature T of the metal and time t will be closest to:",
+   diagram:D.grid([{shape:'linflat',label:'(1)',hline:0.16},{shape:'expdecay',label:'(2)',hline:0.16},
+                   {shape:'slowfast',label:'(3)',hline:0.16},{shape:'linzero',label:'(4)'}],
+                  {ylab:'T',xlab:'t',hlab:'&#952;&#8320;'}),
+   opts:["Graph (1)","Graph (2)","Graph (3)","Graph (4)"],
+   ans:1,
+   sol:"Cooling is fastest at the start (big difference) and slows down as the body approaches the room temperature. So the curve is an <strong>exponential decay that flattens towards &#952;<sub>0</sub></strong> and never goes below it &#8212; graph (2)."},
+  {q:"A liquid in a beaker has temperature &#952; at time t and &#952;<sub>0</sub> is the temperature of the surroundings. According to Newton's law of cooling, the correct graph between log<sub>e</sub>(&#952; &#8211; &#952;<sub>0</sub>) and t is:",
+   diagram:D.grid([{shape:'sdecay',label:'(1)'},{shape:'hyper',label:'(2)'},
+                   {shape:'straightdown',label:'(3)'},{shape:'convex',label:'(4)'}],
+                  {ylab:'log(&#952;&#8211;&#952;&#8320;)',xlab:'t'}),
+   opts:["Graph (1)","Graph (2)","Graph (3)","Graph (4)"],
+   ans:2,
+   sol:"Solving &#8211;d&#952;/dt = k(&#952;&#8211;&#952;<sub>0</sub>) gives &#952; &#8211; &#952;<sub>0</sub> = (&#952;<sub>i</sub>&#8211;&#952;<sub>0</sub>)e<sup>&#8211;kt</sup>, so log<sub>e</sub>(&#952;&#8211;&#952;<sub>0</sub>) = constant &#8211; kt. That is a <strong>straight line with negative slope</strong> &#8212; graph (3)."}
+ ]},
+
+// 2 ─────────── time for equal temperature drops
+{tag:'Time to cool',
+ q:"A bucket full of hot water cools from 80&#176;C to 75&#176;C in time T<sub>1</sub>, from 75&#176;C to 70&#176;C in time T<sub>2</sub>, and from 70&#176;C to 65&#176;C in time T<sub>3</sub>. Then:",
+ diagram:D.coolCurve(),
+ opts:["T<sub>1</sub> = T<sub>2</sub> = T<sub>3</sub>","T<sub>1</sub> &gt; T<sub>2</sub> &gt; T<sub>3</sub>","T<sub>1</sub> &lt; T<sub>2</sub> &lt; T<sub>3</sub>","T<sub>1</sub> &gt; T<sub>2</sub> &lt; T<sub>3</sub>"],
+ ans:2,
+ sol:"As the water cools, the difference (&#952; &#8211; &#952;<sub>0</sub>) becomes smaller, so the cooling becomes slower. The <strong>same 5&#176;C drop therefore takes longer and longer</strong>: T<sub>1</sub> &lt; T<sub>2</sub> &lt; T<sub>3</sub>.",
+ variants:[
+  {q:"A liquid takes 10 minutes to cool from 60&#176;C to 30&#176;C. How much time will it take to cool from 50&#176;C to 20&#176;C? The temperature of the surroundings is 15&#176;C.",
+   opts:["15 min","20 min","100 min","9 min"],
+   ans:0,
+   sol:"Use the average-temperature form: (&#952;&#8321;&#8211;&#952;&#8322;)/t = k[(&#952;&#8321;+&#952;&#8322;)/2 &#8211; &#952;<sub>0</sub>].<br>First: 30/10 = k(45 &#8211; 15) = 30k &#8658; k = 0.1.<br>Second: 30/t = 0.1(35 &#8211; 15) = 2 &#8658; t = <strong>15 min</strong>."},
+  {q:"An object kept in a large room having air temperature 25&#176;C takes 12 minutes to cool from 80&#176;C to 70&#176;C. The time taken for the same object to cool from 70&#176;C to 60&#176;C would be nearly: <span style=\"color:#b45309\">[NEET 2019]</span>",
+   opts:["10 min","12 min","20 min","15 min"],
+   ans:3,
+   sol:"First: 10/12 = k(75 &#8211; 25) = 50k &#8658; k = 1/60.<br>Second: 10/t = k(65 &#8211; 25) = 40/60 = 2/3 &#8658; t = <strong>15 min</strong>."},
+  {q:"A cup of coffee cools from 90&#176;C to 80&#176;C in t minutes when the room temperature is 20&#176;C. The time taken by a similar cup of coffee to cool from 80&#176;C to 60&#176;C at the same room temperature is: <span style=\"color:#b45309\">[NEET 2021]</span>",
+   opts:["13t/10","13t/5","10t/13","5t/13"],
+   ans:1,
+   sol:"First: 10/t = k(85 &#8211; 20) = 65k.<br>Second: 20/t&#8242; = k(70 &#8211; 20) = 50k.<br>Dividing: t&#8242; = 20/(50k) and t = 10/(65k) &#8658; t&#8242; = t &#215; (20/50) &#215; (65/10) = <strong>13t/5</strong>."}
+ ]},
+
+// 3 ─────────── temperature after the next interval
+{tag:'Next interval',
+ q:"A body cools from 60&#176;C to 50&#176;C in 5 minutes. If the room temperature is 25&#176;C and Newton's cooling law holds good, the temperature of the body at the end of the next 5 minutes is:",
+ diagram:'',
+ opts:["45&#176;C","42.85&#176;C","40&#176;C","38.5&#176;C"],
+ ans:1,
+ sol:"First 5 min: 10/5 = k(55 &#8211; 25) = 30k &#8658; k = 1/15.<br>Next 5 min, let the final temperature be T:<br>(50 &#8211; T)/5 = (1/15)[(50+T)/2 &#8211; 25] = (1/15)(T/2) = T/30<br>&#8658; 30(50 &#8211; T) = 5T &#8658; 1500 = 35T &#8658; T = <strong>42.85&#176;C</strong>.",
+ variants:[
+  {q:"The temperature of a body falls from 52&#176;C to 36&#176;C in 10 minutes when placed in a surrounding of constant temperature 20&#176;C. What will be the temperature of the body after another 10 minutes?",
+   opts:["28&#176;C","20&#176;C","32&#176;C","24&#176;C"],
+   ans:0,
+   sol:"First: 16/10 = k(44 &#8211; 20) = 24k &#8658; k = 1/15.<br>Next: (36 &#8211; T)/10 = (1/15)[(36+T)/2 &#8211; 20] = (T &#8211; 4)/30<br>&#8658; 3(36 &#8211; T) = T &#8211; 4 &#8658; 112 = 4T &#8658; T = <strong>28&#176;C</strong>."},
+  {q:"A body cools from a temperature 3T to 2T in 10 minutes. The room temperature is T. Assuming Newton's law of cooling is applicable, the temperature of the body at the end of the next 10 minutes will be: <span style=\"color:#b45309\">[NEET-II 2016]</span>",
+   opts:["4T/3","T","7T/4","3T/2"],
+   ans:3,
+   sol:"First: (3T &#8211; 2T)/10 = k(2.5T &#8211; T) = 1.5kT &#8658; k = 1/15.<br>Next: (2T &#8211; x)/10 = k[(2T+x)/2 &#8211; T] = (1/15)(x/2)<br>&#8658; 3(2T &#8211; x) = x &#8658; 6T = 4x &#8658; x = <strong>3T/2</strong>."},
+  {q:"Why do we use the <em>average</em> of the initial and final temperatures while solving these cooling problems? <span style=\"color:#b45309\">[concept drill]</span>",
+   opts:["Because the body's temperature stays constant during the interval",
+         "Because the temperature keeps falling during the interval, so we take a mean value as an approximation",
+         "Because the surroundings heat up during the interval",
+         "Because Newton's law is exact only at high temperatures"],
+   ans:1,
+   sol:"The exact answer needs the exponential solution. For a small drop over a short time we simply replace the changing temperature by its <strong>average</strong> over the interval &#8212; a good approximation and the standard method for these NEET questions."}
+ ]},
+
+// 4 ─────────── find the surroundings / rate of cooling
+{tag:'Rate of cooling',
+ q:"If a liquid takes 30 s in cooling from 95&#176;C to 90&#176;C and 70 s in cooling from 55&#176;C to 50&#176;C, then the temperature of the room is:",
+ diagram:'',
+ opts:["16.5&#176;C","22.5&#176;C","28.5&#176;C","32.5&#176;C"],
+ ans:1,
+ sol:"5/30 = k(92.5 &#8211; &#952;<sub>0</sub>) and 5/70 = k(52.5 &#8211; &#952;<sub>0</sub>).<br>Dividing: 70/30 = (92.5 &#8211; &#952;<sub>0</sub>)/(52.5 &#8211; &#952;<sub>0</sub>)<br>&#8658; 7(52.5 &#8211; &#952;<sub>0</sub>) = 3(92.5 &#8211; &#952;<sub>0</sub>) &#8658; 367.5 &#8211; 7&#952;<sub>0</sub> = 277.5 &#8211; 3&#952;<sub>0</sub> &#8658; &#952;<sub>0</sub> = <strong>22.5&#176;C</strong>.",
+ variants:[
+  {q:"A certain quantity of water cools from 70&#176;C to 60&#176;C in the first 5 minutes and to 54&#176;C in the next 5 minutes. The temperature of the surroundings is: <span style=\"color:#b45309\">[AIPMT 2014]</span>",
+   opts:["45&#176;C","20&#176;C","42&#176;C","10&#176;C"],
+   ans:0,
+   sol:"10/5 = k(65 &#8211; &#952;<sub>0</sub>) and 6/5 = k(57 &#8211; &#952;<sub>0</sub>).<br>Dividing: 10/6 = (65 &#8211; &#952;<sub>0</sub>)/(57 &#8211; &#952;<sub>0</sub>) &#8658; 570 &#8211; 10&#952;<sub>0</sub> = 390 &#8211; 6&#952;<sub>0</sub> &#8658; &#952;<sub>0</sub> = <strong>45&#176;C</strong>."},
+  {q:"The cooling rate of a sphere at 600 K in an external environment at 200 K is R. When the temperature of the sphere is reduced to 400 K, the cooling rate of the sphere becomes:",
+   opts:["3R/16","16R/3","9R/27","None"],
+   ans:0,
+   sol:"Here the gap is large, so use Stefan's form: rate &#8733; (T<sup>4</sup> &#8211; T&#8320;<sup>4</sup>).<br>At 600 K: 600<sup>4</sup> &#8211; 200<sup>4</sup> = (1296 &#8211; 16)&#215;10<sup>8</sup> = 1280&#215;10<sup>8</sup>.<br>At 400 K: 400<sup>4</sup> &#8211; 200<sup>4</sup> = (256 &#8211; 16)&#215;10<sup>8</sup> = 240&#215;10<sup>8</sup>.<br>Ratio = 240/1280 = 3/16 &#8658; <strong>3R/16</strong>."},
+  {q:"Two circular discs A and B with equal radii and mass are blackened. They are heated to the same temperature and cooled under identical conditions. From their cooling curves (rate of cooling R against &#952; &#8211; &#952;<sub>0</sub>) shown, what do you infer?",
+   diagram:D.lines2(),
+   opts:["A and B have the same specific heats","The specific heat of A is less","The specific heat of B is less","Nothing can be said"],
+   ans:1,
+   sol:"Rate of cooling d&#952;/dt = e&#963;A(&#8230;)/(mc). Same mass and same area, so a <strong>steeper line means a smaller mc</strong>. Line A is steeper, so the <strong>specific heat of A is less</strong>."}
+ ]},
+
+// 5 ─────────── which body cools faster
+{tag:'Which body cools faster',
+ q:"The thermal capacities of two bodies are in the ratio 1 : 8. If the rates of loss of heat are equal for the two bodies under identical conditions of surroundings, then the ratio of the rates of fall of temperature of the two bodies is:",
+ diagram:'',
+ opts:["1 : 4","4 : 1","1 : 8","8 : 1"],
+ ans:3,
+ sol:"d&#952;/dt = (dQ/dt) / (thermal capacity). Same dQ/dt, so the rate of fall of temperature is <strong>inversely proportional to the thermal capacity</strong>: 1/1 : 1/8 = <strong>8 : 1</strong>. The small-capacity body cools faster.",
+ variants:[
+  {q:"The radii of two spheres made of the same metal are r and 4r. These are heated to the same temperature and placed in the same surroundings. The ratio of the rates of decrease of their temperature will be:",
+   diagram:D.spheres([{r:16,label:'radius r'},{r:48,label:'radius 4r'}]),
+   opts:["1 : 1","4 : 1","1 : 4","16 : 1"],
+   ans:1,
+   sol:"d&#952;/dt &#8733; A/(mc) &#8733; r<sup>2</sup>/r<sup>3</sup> = 1/r. So the ratio = (1/r) : (1/4r) = <strong>4 : 1</strong> &#8212; the small sphere cools 4 times faster."},
+  {q:"Two spheres of radii in the ratio 1 : 3 and densities in the ratio 3 : 1, and of the same specific heat, are heated to the same temperature and left in the same surroundings. Their rates of falling temperature will be in the ratio:",
+   opts:["3 : 1","1 : 1","1 : 3","1 : 9"],
+   ans:1,
+   sol:"d&#952;/dt &#8733; A/(mc) &#8733; r<sup>2</sup>/(&#961;r<sup>3</sup>c) = 1/(&#961;rc).<br>For sphere 1: &#961;r = 3 &#215; 1 = 3. For sphere 2: &#961;r = 1 &#215; 3 = 3. Equal &#8658; ratio = <strong>1 : 1</strong>."},
+  {q:"Two spheres of radii R<sub>1</sub> and R<sub>2</sub> have densities &#961;<sub>1</sub>, &#961;<sub>2</sub> and specific heats S<sub>1</sub>, S<sub>2</sub>. If they are heated to the same temperature, the ratio of their rates of falling temperature will be:",
+   opts:["R<sub>2</sub>/R<sub>1</sub>","R<sub>1</sub>&#961;<sub>2</sub>S<sub>2</sub> / R<sub>2</sub>&#961;<sub>1</sub>S<sub>1</sub>","R<sub>2</sub>&#961;<sub>2</sub>S<sub>2</sub> / R<sub>1</sub>&#961;<sub>1</sub>S<sub>1</sub>","(R<sub>1</sub>/R<sub>2</sub>)<sup>2</sup>"],
+   ans:2,
+   sol:"d&#952;/dt &#8733; 1/(R&#961;S). So the ratio for 1 : 2 is (1/R<sub>1</sub>&#961;<sub>1</sub>S<sub>1</sub>) : (1/R<sub>2</sub>&#961;<sub>2</sub>S<sub>2</sub>) = <strong>R<sub>2</sub>&#961;<sub>2</sub>S<sub>2</sub> / R<sub>1</sub>&#961;<sub>1</sub>S<sub>1</sub></strong>."}
+ ]},
+
+// 6 ─────────── Wien's law statement
+{tag:"Wien's law",
+ q:"Wien's displacement law expresses the relation between:",
+ diagram:'',
+ opts:["Wavelength corresponding to maximum energy and temperature","Radiation energy and wavelength",
+       "Temperature and wavelength","Colour of light and temperature"],
+ ans:0,
+ sol:"<strong>&#955;<sub>m</sub>T = b</strong>, where &#955;<sub>m</sub> is the wavelength at which the emitted energy is <em>maximum</em> and b = 2.898 &#215; 10<sup>&#8211;3</sup> m K. It links only that peak wavelength with the absolute temperature, not any wavelength.",
+ variants:[
+  {q:"If &#955;<sub>m</sub> denotes the wavelength at which the radiation emission from a black body at temperature T K is maximum, then:",
+   opts:["&#955;<sub>m</sub> &#8733; T","&#955;<sub>m</sub> &#8733; T<sup>2</sup>","&#955;<sub>m</sub> &#8733; T<sup>&#8211;1</sup>","&#955;<sub>m</sub> &#8733; T<sup>&#8211;2</sup>"],
+   ans:2,
+   sol:"&#955;<sub>m</sub> = b/T, so <strong>&#955;<sub>m</sub> &#8733; 1/T</strong> &#8212; hotter body, shorter peak wavelength."},
+  {q:"On increasing the temperature of a black body, the wavelength for maximum emission:",
+   diagram:D.curves([{T:0.9,col:'#2563eb',label:'T&#8321;',drop:true},{T:1.4,col:'#dc2626',label:'T&#8322; &gt; T&#8321;',drop:true}],{lmax:12}),
+   opts:["Shifts towards smaller wavelength","Shifts towards greater wavelength","Does not shift","Depends on the shape of the source"],
+   ans:0,
+   sol:"Since &#955;<sub>m</sub> = b/T, raising T <strong>shifts the peak to a smaller wavelength</strong> (towards the blue side). Notice in the figure that the hotter curve is both taller and shifted to the left."},
+  {q:"The colour of a star is an indication of its:",
+   diagram:D.stars([{col:'#f87171',label:'red star'},{col:'#fde047',label:'yellow star'},{col:'#93c5fd',label:'blue star'}]),
+   opts:["Weight","Distance","Temperature","Size"],
+   ans:2,
+   sol:"The colour we see comes from the peak wavelength, and &#955;<sub>m</sub> depends only on T. So a star's colour tells us its <strong>surface temperature</strong> &#8212; blue is hottest, red is coolest."}
+ ]},
+
+// 7 ─────────── Wien numericals
+{tag:"Wien · numericals",
+ q:"A black body at 300 K is found to emit maximum energy at a wavelength 15 &#956;m. When its temperature is raised to 500 K, the wavelength at which maximum energy is emitted is:",
+ diagram:D.curves([{T:0.3,col:'#2563eb',label:'300 K',drop:true},{T:0.5,col:'#dc2626',label:'500 K',drop:true}],{lmax:30}),
+ opts:["27 &#956;m","9 &#956;m","3 &#956;m","1 &#956;m"],
+ ans:1,
+ sol:"&#955;<sub>1</sub>T<sub>1</sub> = &#955;<sub>2</sub>T<sub>2</sub> &#8658; 15 &#215; 300 = &#955;<sub>2</sub> &#215; 500 &#8658; &#955;<sub>2</sub> = <strong>9 &#956;m</strong>. Temperature went up, so the peak wavelength came down.",
+ variants:[
+  {q:"The temperature of a furnace is 2607&#176;C and the intensity is maximum in its radiation spectrum nearly at 12000 &#197;. If the intensity in the spectrum of a star is maximum nearly at 4800 &#197;, then the surface temperature of the star is:",
+   opts:["8400&#176;C","6927&#176;C","6219.5&#176;C","5900&#176;C"],
+   ans:1,
+   sol:"T<sub>furnace</sub> = 2607 + 273 = 2880 K.<br>T<sub>star</sub> = 2880 &#215; (12000/4800) = 7200 K = 7200 &#8211; 273 = <strong>6927&#176;C</strong>. Watch the units &#8212; the options are in &#176;C."},
+  {q:"Star S<sub>1</sub> emits maximum radiation of wavelength 540 nm and star S<sub>2</sub> emits maximum radiation of wavelength 720 nm. What is the ratio of the temperatures of S<sub>1</sub> and S<sub>2</sub>?",
+   opts:["4/3","(4/3)<sup>1/4</sup>","3/4","(3/4)<sup>1/2</sup>"],
+   ans:0,
+   sol:"T &#8733; 1/&#955;<sub>m</sub>, so T<sub>1</sub>/T<sub>2</sub> = &#955;<sub>2</sub>/&#955;<sub>1</sub> = 720/540 = <strong>4/3</strong>."},
+  {q:"At temperature T, the value of the spectral energy density is maximum at wavelength &#955;<sub>0</sub>. At temperature 2T, it will be maximum at wavelength:",
+   opts:["4&#955;<sub>0</sub>","2&#955;<sub>0</sub>","&#955;<sub>0</sub>/2","&#955;<sub>0</sub>/4"],
+   ans:2,
+   sol:"&#955;<sub>m</sub> &#8733; 1/T. Doubling the temperature halves the peak wavelength &#8658; <strong>&#955;<sub>0</sub>/2</strong>."}
+ ]},
+
+// 8 ─────────── star colours
+{tag:'Star colours',
+ q:"Two stars appear to be red and blue. What is true about them?",
+ diagram:D.stars([{col:'#f87171',label:'red star'},{col:'#93c5fd',label:'blue star'}]),
+ opts:["The red star is nearer","The blue star is nearer","The temperature of the red star is less","The temperature of the blue star is less"],
+ ans:2,
+ sol:"Red light has a longer wavelength, and &#955;<sub>m</sub> = b/T, so a larger &#955;<sub>m</sub> means a <strong>lower temperature</strong>. Colour says nothing about distance.",
+ variants:[
+  {q:"On observing light from three different stars P, Q and R, it was found that the intensity of violet colour is maximum in the spectrum of P, the intensity of green colour is maximum in the spectrum of R, and the intensity of red colour is maximum in the spectrum of Q. If T<sub>P</sub>, T<sub>Q</sub>, T<sub>R</sub> are the respective absolute temperatures, then: <span style=\"color:#b45309\">[AIPMT 2015]</span>",
+   diagram:D.stars([{col:'#c4b5fd',label:'P',label2:'violet peak'},{col:'#86efac',label:'R',label2:'green peak'},{col:'#f87171',label:'Q',label2:'red peak'}]),
+   opts:["T<sub>P</sub> &gt; T<sub>R</sub> &gt; T<sub>Q</sub>","T<sub>P</sub> &lt; T<sub>R</sub> &lt; T<sub>Q</sub>","T<sub>P</sub> &lt; T<sub>Q</sub> &lt; T<sub>R</sub>","T<sub>P</sub> &gt; T<sub>Q</sub> &gt; T<sub>R</sub>"],
+   ans:0,
+   sol:"Wavelength order: violet &lt; green &lt; red. Since T &#8733; 1/&#955;<sub>m</sub>, the temperature order is the reverse: <strong>T<sub>P</sub> &gt; T<sub>R</sub> &gt; T<sub>Q</sub></strong>."},
+  {q:"Three stars A, B, C have surface temperatures T<sub>A</sub>, T<sub>B</sub>, T<sub>C</sub>. Star A appears bluish, star B appears reddish and star C yellowish. Hence: <span style=\"color:#b45309\">[NEET 2021]</span>",
+   opts:["T<sub>A</sub> &gt; T<sub>B</sub> &gt; T<sub>C</sub>","T<sub>B</sub> &gt; T<sub>C</sub> &gt; T<sub>A</sub>","T<sub>C</sub> &gt; T<sub>B</sub> &gt; T<sub>A</sub>","T<sub>A</sub> &gt; T<sub>C</sub> &gt; T<sub>B</sub>"],
+   ans:3,
+   sol:"Wavelength: blue &lt; yellow &lt; red, so temperature: blue &gt; yellow &gt; red &#8658; <strong>T<sub>A</sub> &gt; T<sub>C</sub> &gt; T<sub>B</sub></strong>."},
+  {q:"A piece of iron is heated in a flame. It first becomes dull red, then reddish yellow, and finally white hot. The correct explanation for this observation is possible by using:",
+   opts:["Newton's law of cooling","Stefan's law","Wien's displacement law","Kirchhoff's law"],
+   ans:2,
+   sol:"As the iron gets hotter, &#955;<sub>m</sub> keeps shifting to shorter wavelengths &#8212; red, then yellow, then a mixture of all colours which looks white. That shift is <strong>Wien's displacement law</strong>."}
+ ]},
+
+// 9 ─────────── Wien + Stefan together
+{tag:'Wien + Stefan',
+ q:"Two spherical bodies A (radius 5 cm) and B (radius 15 cm) are at temperatures T<sub>1</sub> and T<sub>2</sub>. The maximum intensity in the emission spectrum of A is at 400 nm and that of B is at 1200 nm. Considering them to be black bodies, what is the ratio of the rate of total energy radiated by A to that of B?",
+ diagram:D.spheres([{r:18,name:'A',label:'r = 5 cm',label2:'&#955;m = 400 nm'},{r:48,name:'B',label:'r = 15 cm',label2:'&#955;m = 1200 nm'}]),
+ opts:["9","6","12","3"],
+ ans:0,
+ sol:"From Wien: T<sub>A</sub>/T<sub>B</sub> = &#955;<sub>B</sub>/&#955;<sub>A</sub> = 1200/400 = 3.<br>From Stefan: P &#8733; r<sup>2</sup>T<sup>4</sup>.<br>P<sub>A</sub>/P<sub>B</sub> = (5/15)<sup>2</sup> &#215; 3<sup>4</sup> = (1/9) &#215; 81 = <strong>9</strong>.",
+ variants:[
+  {q:"When the temperature of a black body is increased, it is observed that the wavelength corresponding to maximum energy changes from 0.26 &#956;m to 0.13 &#956;m. The ratio of the emissive powers of the body at the respective temperatures is:",
+   opts:["16/1","4/1","1/4","1/16"],
+   ans:0,
+   sol:"&#955;<sub>m</sub> halved &#8658; temperature doubled. Emissive power &#8733; T<sup>4</sup> &#8658; ratio = 2<sup>4</sup> = <strong>16 : 1</strong> (final to initial)."},
+  {q:"The power radiated by a black body is P and it radiates maximum energy at wavelength &#955;<sub>0</sub>. If the temperature of the black body is now changed so that it radiates maximum energy at wavelength (3/4)&#955;<sub>0</sub>, the power radiated by it becomes nP. The value of n is: <span style=\"color:#b45309\">[NEET 2018]</span>",
+   opts:["3/4","4/3","256/81","81/256"],
+   ans:2,
+   sol:"&#955;<sub>m</sub> becomes 3/4, so T becomes 4/3 times.<br>n = (4/3)<sup>4</sup> = <strong>256/81</strong>."},
+  {q:"The &#957;<sub>m</sub> &#8211; T curve for a perfect black body is (&#957;<sub>m</sub> is the frequency corresponding to maximum emission):",
+   diagram:D.grid([{shape:'satur',label:'A'},{shape:'lineup',label:'B'},
+                   {shape:'concaveup',label:'C'},{shape:'falling',label:'D'}],
+                  {ylab:'&#957;m',xlab:'T'}),
+   opts:["Curve A","Curve B","Curve C","Curve D"],
+   ans:1,
+   sol:"&#955;<sub>m</sub> = b/T and &#957;<sub>m</sub> = c/&#955;<sub>m</sub> = (c/b)T. So <strong>&#957;<sub>m</sub> &#8733; T</strong> &#8212; a straight line passing through the origin, curve <strong>B</strong>. (Remember: &#955;<sub>m</sub> falls with T, but &#957;<sub>m</sub> rises with T.)"}
+ ]},
+
+// 10 ─────────── mixed revision
+{tag:'Mixed revision',
+ q:"Shown below are the black body radiation curves at temperatures T<sub>1</sub> and T<sub>2</sub> (T<sub>2</sub> &gt; T<sub>1</sub>). Which of the following plots is correct?",
+ diagram:D.spectraGrid([
+   {label:'(1)',curves:[{T:1.25,amp:1,label:'T&#8322;',col:'#dc2626'},{T:0.8,amp:1,label:'T&#8321;',col:'#2563eb'}]},
+   {label:'(2)',curves:[{T:1.25,amp:1,label:'T&#8321;',col:'#2563eb'},{T:0.8,amp:1,label:'T&#8322;',col:'#dc2626'}]},
+   {label:'(3)',curves:[{T:0.8,amp:1.7,label:'T&#8322;',col:'#dc2626'},{T:1.25,amp:0.45,label:'T&#8321;',col:'#2563eb'}]},
+   {label:'(4)',curves:[{T:1.25,amp:0.5,label:'T&#8322;',col:'#dc2626'},{T:0.8,amp:1.6,label:'T&#8321;',col:'#2563eb'}]}
+ ]),
+ opts:["Plot (1)","Plot (2)","Plot (3)","Plot (4)"],
+ ans:0,
+ sol:"Two things must be true together for the hotter body: its peak is at a <strong>shorter wavelength</strong> (Wien) and its curve lies <strong>completely above</strong> the cooler curve, with a bigger area (Stefan). Only plot (1) satisfies both &#8212; the T<sub>2</sub> curve is taller and shifted to the left, and the curves do not cross.",
+ variants:[
+  {q:"A hot metal ball is cooling in a room. Which of these statements is correct? <span style=\"color:#b45309\">[concept drill]</span>",
+   opts:["It only radiates and does not absorb, until it reaches room temperature",
+         "Its rate of loss of heat depends on its mass",
+         "Its rate of fall of temperature depends on its mass, but its rate of loss of heat does not",
+         "It cools at a constant number of degrees per minute"],
+   ans:2,
+   sol:"Rate of loss of <strong>heat</strong> = e&#963;A(T<sup>4</sup>&#8211;T&#8320;<sup>4</sup>) &#8212; only surface area, emissivity and temperature. Rate of fall of <strong>temperature</strong> = that quantity divided by mc, so mass comes in only here. This one distinction settles a large number of questions in this chapter."},
+  {q:"Two rods of the same length and area, one of conductivity 2K and the other K, are joined end to end. The ends are at 100&#176;C and 0&#176;C, with the good conductor on the hot side. The junction temperature is: <span style=\"color:#b45309\">[concept drill · conduction revision]</span>",
+   opts:["50&#176;C","33.3&#176;C","66.7&#176;C","75&#176;C"],
+   ans:2,
+   sol:"Same length and area, so T = (k<sub>1</sub>T<sub>1</sub> + k<sub>2</sub>T<sub>2</sub>)/(k<sub>1</sub>+k<sub>2</sub>) = (2K&#215;100 + K&#215;0)/(3K) = <strong>66.7&#176;C</strong>. The bigger temperature drop always happens across the poorer conductor."},
+  {q:"A black body and a body of emissivity 0.5, both of the same surface area, are at the same temperature T in the same surroundings. Compared with the black body, the second body has: <span style=\"color:#b45309\">[concept drill · radiation revision]</span>",
+   opts:["Half the rate of emission and the same rate of absorption",
+         "Half the rate of emission and half the rate of absorption",
+         "The same rate of emission and half the rate of absorption",
+         "Double the rate of emission and half the rate of absorption"],
+   ans:1,
+   sol:"By Kirchhoff's law a body's absorptive power equals its emissivity, so e = a = 0.5. Hence <strong>both emission and absorption are halved</strong>, and the two bodies still stay in step with the surroundings."}
+ ]}
+];
+
+// ═══════════════════════════════════════════════════════════════════
+//  APP
+// ═══════════════════════════════════════════════════════════════════
+const KEY='padipucast_heat_transfer_l3_dpp_v1';
+const LETT=['A','B','C','D'];
+const state={};
+QUESTIONS.forEach((_,i)=>state[i]={cur:0,ans:{}});
+try{const s=localStorage.getItem(KEY);if(s){const o=JSON.parse(s);Object.keys(o).forEach(k=>{if(state[k])state[k]=o[k];});}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+
+const paper=document.getElementById('paper');
+function versionOf(i){const q=QUESTIONS[i];return state[i].cur===0?q:q.variants[state[i].cur-1];}
+
+function buildCard(i){
+  const card=document.createElement('div');card.className='card';card.dataset.i=i;
+  paper.appendChild(card);renderCard(i);
+}
+function renderCard(i){
+  const card=paper.querySelector(`.card[data-i="${i}"]`);
+  const q=QUESTIONS[i];const cur=state[i].cur;const data=versionOf(i);const nv=q.variants.length;
+  const isBase=cur===0;
+  let optHtml='';
+  data.opts.forEach((o,oi)=>{optHtml+=`<button class="opt" data-oi="${oi}"><span class="lt">${LETT[oi]}</span><span>${o}</span></button>`;});
+  card.innerHTML=`
+    <div class="q-top">
+      <span class="q-no">Q${i+1}</span>
+      <span class="vchip ${isBase?'':'var'}">${isBase?'Base':'Variation '+cur+' / '+nv}</span>
+      <span class="tag">${q.tag}</span>
+      ${isBase?'':'<span class="prac">practice · not scored</span>'}
+    </div>
+    <div class="q-text">${data.q}</div>
+    ${data.diagram?`<div class="q-diagram">${data.diagram}</div>`:''}
+    <div class="opts">${optHtml}</div>
+    <div class="act">
+      <span class="fb"></span>
+      <button class="showsol">Show solution</button>
+      <button class="varbtn">&#8635; Try a variation</button>
+    </div>
+    <div class="sol"><div class="sol-in"><strong>Answer: ${LETT[data.ans]}.</strong> ${data.sol}</div></div>`;
+  const opts=card.querySelectorAll('.opt');
+  const fb=card.querySelector('.fb');
+  const sol=card.querySelector('.sol');
+  function lockIn(chosen){
+    opts.forEach(op=>{op.classList.add('locked');const oi=+op.dataset.oi;
+      if(oi===data.ans)op.classList.add('correct');
+      if(oi===chosen&&chosen!==data.ans)op.classList.add('wrong');});
+    const ok=chosen===data.ans;fb.className='fb '+(ok?'c':'w');fb.textContent=ok?'Correct':'Review';
+    sol.classList.add('open');
+  }
+  opts.forEach(op=>op.addEventListener('click',()=>{
+    if(op.classList.contains('locked'))return;
+    const chosen=+op.dataset.oi;state[i].ans[cur]=chosen;save();lockIn(chosen);updateScore();
+  }));
+  card.querySelector('.showsol').addEventListener('click',()=>sol.classList.toggle('open'));
+  card.querySelector('.varbtn').addEventListener('click',()=>{
+    state[i].cur=(state[i].cur+1)%(nv+1);save();renderCard(i);
+  });
+  if(state[i].ans[cur]!==undefined)lockIn(state[i].ans[cur]);
+}
+function updateScore(){
+  let att=0,sc=0;
+  QUESTIONS.forEach((q,i)=>{const v=state[i].ans[0];if(v!==undefined){att++;if(v===q.ans)sc++;}});
+  document.getElementById('att').textContent=att;
+  document.getElementById('sc').textContent=sc;
+  document.getElementById('tot').textContent=QUESTIONS.length;
+}
+document.getElementById('revealBtn').addEventListener('click',()=>{
+  QUESTIONS.forEach((q,i)=>{const data=versionOf(i);
+    const card=paper.querySelector(`.card[data-i="${i}"]`);
+    card.querySelectorAll('.opt').forEach(op=>{op.classList.add('locked');if(+op.dataset.oi===data.ans)op.classList.add('correct');});
+    card.querySelector('.sol').classList.add('open');});
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  QUESTIONS.forEach((_,i)=>state[i]={cur:0,ans:{}});save();
+  paper.innerHTML='';QUESTIONS.forEach((_,i)=>buildCard(i));updateScore();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+QUESTIONS.forEach((_,i)=>buildCard(i));
+updateScore();
+</script>
+</body>
+</html>
