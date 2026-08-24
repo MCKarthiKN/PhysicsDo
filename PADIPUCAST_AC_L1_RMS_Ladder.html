@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Alternating Current &#183; Lecture 1 Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Integration &#183; NEET</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Alternating Current &#183; Lecture 1<br>rms, Peak &amp; Timing</h1></div>
+    <p id="home-sub">Alternating Current, <strong>Lecture 1</strong> &#8212; rms, peak and average values, and the time-to-reach problems that go with them. Every source question is a real <strong>JEE Main PYQ</strong> from the chapter bank, turned into a <strong>ladder</strong>: 3 build-up rungs, then the original exam question (&#9733;). Each ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 10 ladders &#215; 4 rungs = 40 questions.<br><br><em>Years covered: 2004, 2021, 2022, 2024, 2025 and 2026. Three of these &#9733; questions are word-for-word repeats of earlier papers &#8212; the repeat is named inside the solution.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Alternating Current, Lecture 1  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+
+// --- shared sine helper: returns a polyline point string ---
+function _sine(x0,x1,ymid,amp,cycles,phase){
+  let p=[];
+  for(let i=0;i<=240;i++){
+    const f=i/240, x=x0+f*(x1-x0);
+    const y=ymid-amp*Math.sin(2*Math.PI*cycles*f+(phase||0));
+    p.push(x.toFixed(1)+','+y.toFixed(1));
+  }
+  return p.join(' ');
+}
+function _axes(x0,x1,ymid,top,bot,id){
+  return `<line x1="${x0-12}" y1="${ymid}" x2="${x1+14}" y2="${ymid}" stroke="#6b7280" stroke-width="1.3" marker-end="url(#${id})"/>
+  <line x1="${x0-12}" y1="${bot}" x2="${x0-12}" y2="${top}" stroke="#6b7280" stroke-width="1.3" marker-end="url(#${id})"/>`;
+}
+
+const DIAGRAMS = {
+
+  // one full cycle, + half and - half shaded: average over a cycle is zero
+  avgZero:()=>`
+    <svg viewBox="0 0 320 190" width="320" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('az1','#6b7280')}</defs>
+      <path d="M 40 100 ${_sine(40,170,100,52,0.5,0).split(' ').map(s=>'L '+s.replace(',',' ')).join(' ')} L 170 100 Z" fill="#1a7a4a" fill-opacity="0.18"/>
+      <path d="M 170 100 ${_sine(170,300,100,52,0.5,Math.PI).split(' ').map(s=>'L '+s.replace(',',' ')).join(' ')} L 300 100 Z" fill="#c0392b" fill-opacity="0.16"/>
+      ${_axes(40,300,100,30,168,'az1')}
+      <polyline points="${_sine(40,300,100,52,1,0)}" fill="none" stroke="#1a1916" stroke-width="2.2"/>
+      <text x="105" y="76" font-size="12" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">+ area</text>
+      <text x="235" y="132" font-size="12" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">&#8722; area</text>
+      <text x="170" y="185" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>over one full cycle the two areas cancel, average = 0</text>
+      <text x="20" y="36" font-size="11" fill="#6b7280" ${FS}>i</text>
+      <text x="312" y="118" font-size="11" fill="#6b7280" ${FS}>t</text>
+    </svg>`,
+
+  // peak vs rms line on a sine
+  peakRms:()=>`
+    <svg viewBox="0 0 320 190" width="320" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('pr1','#6b7280')}</defs>
+      ${_axes(40,300,105,28,170,'pr1')}
+      <polyline points="${_sine(40,300,105,56,1,0)}" fill="none" stroke="#1a1916" stroke-width="2.2"/>
+      <line x1="40" y1="49" x2="300" y2="49" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <line x1="40" y1="65" x2="300" y2="65" stroke="#1a7a4a" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text x="292" y="42" font-size="11" fill="#c0392b" text-anchor="end" ${FS} font-weight="700">I&#8320;</text>
+      <text x="292" y="80" font-size="10.5" fill="#1a7a4a" text-anchor="end" ${FS} font-weight="700">I&#8320;/&#8730;2</text>
+      <text x="170" y="186" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>rms sits at about 0.707 of the peak</text>
+    </svg>`,
+
+  // straight ramp i = i0 t/T over 0 to T
+  rampWave:()=>`
+    <svg viewBox="0 0 320 190" width="320" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rw1','#6b7280')}</defs>
+      ${_axes(48,290,155,28,168,'rw1')}
+      <line x1="48" y1="155" x2="250" y2="45" stroke="#1a1916" stroke-width="2.4"/>
+      <line x1="250" y1="155" x2="250" y2="45" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <line x1="48" y1="45" x2="250" y2="45" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <text x="250" y="172" font-size="11.5" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">T</text>
+      <text x="27" y="49" font-size="11.5" fill="#c0392b" ${FS} font-weight="700">i&#8320;</text>
+      <text x="150" y="88" font-size="11" fill="#1a1916" ${FS} font-weight="600">i = i&#8320;t/T</text>
+      <text x="160" y="186" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>not a sine, so I&#8320;/&#8730;2 does not apply</text>
+    </svg>`,
+
+  // sine riding on a DC level
+  dcPlusAc:()=>`
+    <svg viewBox="0 0 320 190" width="320" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('da1','#6b7280')}</defs>
+      ${_axes(40,300,150,26,166,'da1')}
+      <line x1="40" y1="98" x2="300" y2="98" stroke="#1a7a4a" stroke-width="1.8" stroke-dasharray="6 4"/>
+      <line x1="252" y1="52" x2="266" y2="94" stroke="#1a7a4a" stroke-width="1" stroke-dasharray="3 2"/>
+      <polyline points="${_sine(40,300,98,40,2,0)}" fill="none" stroke="#1a1916" stroke-width="2.1"/>
+      <line x1="62" y1="150" x2="62" y2="98" stroke="#1a7a4a" stroke-width="1.4"/>
+      <text x="298" y="46" font-size="10.5" fill="#1a7a4a" text-anchor="end" ${FS} font-weight="700">the steady d.c. level</text>
+      <text x="169" y="184" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>an a.c. sitting on top of a steady d.c.</text>
+    </svg>`,
+
+  // two perpendicular components adding to a resultant
+  phasorSum:()=>`
+    <svg viewBox="0 0 300 180" width="300" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ps1','#1a1916')}${AR('ps2','#c0392b')}</defs>
+      <line x1="70" y1="140" x2="200" y2="140" stroke="#1a1916" stroke-width="2.2" marker-end="url(#ps1)"/>
+      <line x1="70" y1="140" x2="70" y2="50" stroke="#1a1916" stroke-width="2.2" marker-end="url(#ps1)"/>
+      <line x1="70" y1="140" x2="205" y2="50" stroke="#c0392b" stroke-width="2.4" marker-end="url(#ps2)"/>
+      <line x1="200" y1="140" x2="200" y2="50" stroke="#a09d97" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="70" y1="50" x2="200" y2="50" stroke="#a09d97" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <rect x="70" y="128" width="12" height="12" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <text x="135" y="158" font-size="11.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">I&#8321; (sin part)</text>
+      <text x="60" y="94" font-size="11.5" fill="#1a1916" text-anchor="end" ${FS} font-weight="700">I&#8322;</text>
+      <text x="60" y="110" font-size="10.5" fill="#6b7280" text-anchor="end" ${FS}>(cos part)</text>
+      <text x="212" y="42" font-size="11" fill="#c0392b" ${FS} font-weight="700">&#8730;(I&#8321;&#178;+I&#8322;&#178;)</text>
+      <text x="150" y="176" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>90&#176; apart, so they add like perpendicular arrows</text>
+    </svg>`,
+
+  // hot wire ammeter
+  hotWire:()=>`
+    <svg viewBox="0 0 300 160" width="300" height="160" xmlns="http://www.w3.org/2000/svg">
+      <line x1="24" y1="80" x2="90" y2="80" stroke="#1a1916" stroke-width="2"/>
+      <line x1="210" y1="80" x2="276" y2="80" stroke="#1a1916" stroke-width="2"/>
+      <path d="M 90 80 L 105 66 L 120 94 L 135 66 L 150 94 L 165 66 L 180 94 L 195 66 L 210 80" fill="none" stroke="#c0392b" stroke-width="2.6"/>
+      <text x="150" y="46" font-size="11.5" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">wire heats up</text>
+      <text x="150" y="122" font-size="11" fill="#1a1916" text-anchor="middle" ${FS}>heating &#8733; i&#178; &#8594; it does not care about direction</text>
+      <text x="150" y="146" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>so a hot-wire ammeter reads the rms value</text>
+    </svg>`,
+
+  // bulb on an ac source
+  bulb:()=>`
+    <svg viewBox="0 0 300 165" width="300" height="165" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="34" width="240" height="96" fill="none" stroke="#1a1916" stroke-width="1.8" rx="6"/>
+      <circle cx="30" cy="82" r="17" fill="#f7f6f3" stroke="#1a1916" stroke-width="1.8"/>
+      <path d="M 20 82 Q 25 72 30 82 T 40 82" fill="none" stroke="#1a1916" stroke-width="1.6"/>
+      <circle cx="150" cy="34" r="15" fill="#fff8e1" stroke="#b45309" stroke-width="1.8"/>
+      <path d="M 144 40 L 156 40" stroke="#b45309" stroke-width="1.6"/>
+      <line x1="150" y1="14" x2="150" y2="6" stroke="#b45309" stroke-width="1.4"/>
+      <line x1="132" y1="20" x2="126" y2="14" stroke="#b45309" stroke-width="1.4"/>
+      <line x1="168" y1="20" x2="174" y2="14" stroke="#b45309" stroke-width="1.4"/>
+      <text x="150" y="72" font-size="11.5" fill="#b45309" text-anchor="middle" ${FS} font-weight="700">100 W &#8211; 220 V</text>
+      <text x="150" y="152" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>ratings on a bulb are always rms values</text>
+      <text x="150" y="112" font-size="11" fill="#1a1916" text-anchor="middle" ${FS}>a.c. source at 220 V (rms)</text>
+    </svg>`,
+
+  // peak to rms time gap
+  peakToRms:()=>`
+    <svg viewBox="0 0 320 190" width="320" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('pt1','#6b7280')}</defs>
+      ${_axes(40,300,110,26,172,'pt1')}
+      <polyline points="${_sine(40,300,110,60,1,Math.PI/2)}" fill="none" stroke="#1a1916" stroke-width="2.2"/>
+      <line x1="40" y1="50" x2="120" y2="50" stroke="#c0392b" stroke-width="1.3" stroke-dasharray="4 3"/>
+      <line x1="40" y1="68" x2="120" y2="68" stroke="#1a7a4a" stroke-width="1.3" stroke-dasharray="4 3"/>
+      <circle cx="40" cy="50" r="4" fill="#c0392b"/>
+      <circle cx="72.5" cy="68" r="4" fill="#1a7a4a"/>
+      <line x1="40" y1="152" x2="72.5" y2="152" stroke="#b45309" stroke-width="2"/>
+      <line x1="40" y1="146" x2="40" y2="158" stroke="#b45309" stroke-width="1.6"/>
+      <line x1="72.5" y1="146" x2="72.5" y2="158" stroke="#b45309" stroke-width="1.6"/>
+      <text x="82" y="168" font-size="11.5" fill="#b45309" ${FS} font-weight="700">&#916;t = T/8</text>
+      <text x="292" y="46" font-size="11" fill="#c0392b" text-anchor="end" ${FS} font-weight="700">I&#8320;</text>
+      <text x="292" y="82" font-size="10.5" fill="#1a7a4a" text-anchor="end" ${FS} font-weight="700">I&#8320;/&#8730;2</text>
+      <text x="170" y="186" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>peak &#8594; rms is a phase turn of &#960;/4</text>
+    </svg>`,
+
+  // half peak to peak
+  halfToPeak:()=>`
+    <svg viewBox="0 0 320 190" width="320" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('hp1','#6b7280')}</defs>
+      ${_axes(40,300,120,26,176,'hp1')}
+      <polyline points="${_sine(40,300,120,66,1,0)}" fill="none" stroke="#1a1916" stroke-width="2.2"/>
+      <line x1="40" y1="54" x2="130" y2="54" stroke="#c0392b" stroke-width="1.3" stroke-dasharray="4 3"/>
+      <line x1="40" y1="87" x2="130" y2="87" stroke="#1a7a4a" stroke-width="1.3" stroke-dasharray="4 3"/>
+      <circle cx="61.7" cy="87" r="4" fill="#1a7a4a"/>
+      <circle cx="105" cy="54" r="4" fill="#c0392b"/>
+      <line x1="61.7" y1="159" x2="105" y2="159" stroke="#b45309" stroke-width="2"/>
+      <line x1="61.7" y1="153" x2="61.7" y2="165" stroke="#b45309" stroke-width="1.6"/>
+      <line x1="105" y1="153" x2="105" y2="165" stroke="#b45309" stroke-width="1.6"/>
+      <text x="115" y="164" font-size="11.5" fill="#b45309" ${FS} font-weight="700">&#916;t = T/6</text>
+      <text x="292" y="50" font-size="11" fill="#c0392b" text-anchor="end" ${FS} font-weight="700">I&#8320;</text>
+      <text x="292" y="102" font-size="10.5" fill="#1a7a4a" text-anchor="end" ${FS} font-weight="700">I&#8320;/2</text>
+      <text x="170" y="188" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>&#960;/6 up to &#960;/2, that is T/4 &#8722; T/12 = T/6</text>
+    </svg>`,
+
+  // zero to peak = T/4
+  quarterT:()=>`
+    <svg viewBox="0 0 320 190" width="320" height="190" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('qt1','#6b7280')}</defs>
+      ${_axes(40,300,115,26,174,'qt1')}
+      <polyline points="${_sine(40,300,115,58,1,0)}" fill="none" stroke="#1a1916" stroke-width="2.2"/>
+      <circle cx="40" cy="115" r="4" fill="#1a7a4a"/>
+      <circle cx="105" cy="57" r="4" fill="#c0392b"/>
+      <line x1="105" y1="57" x2="105" y2="115" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="40" y1="152" x2="105" y2="152" stroke="#b45309" stroke-width="2"/>
+      <line x1="40" y1="146" x2="40" y2="158" stroke="#b45309" stroke-width="1.6"/>
+      <line x1="105" y1="146" x2="105" y2="158" stroke="#b45309" stroke-width="1.6"/>
+      <text x="132" y="157" font-size="11.5" fill="#b45309" ${FS} font-weight="700">T/4</text>
+      <text x="170" y="186" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>zero &#8594; peak is always a quarter of a full cycle</text>
+    </svg>`,
+
+  // dc ammeter needle sitting at zero on ac
+  dcMeter:()=>`
+    <svg viewBox="0 0 300 165" width="300" height="165" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 40 118 A 110 110 0 0 1 260 118" fill="none" stroke="#d4d1c8" stroke-width="2"/>
+      <path d="M 150 118 L 150 40" stroke="#c0392b" stroke-width="2.6"/>
+      <circle cx="150" cy="118" r="6" fill="#1a1916"/>
+      <text x="150" y="36" font-size="11" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">0</text>
+      <text x="44" y="112" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>&#8722;</text>
+      <text x="256" y="112" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>+</text>
+      <text x="150" y="142" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">D.C. ammeter on an a.c. line</text>
+      <text x="150" y="159" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>it follows the average, and the average is zero</text>
+    </svg>`
+};
+
+// ===============================================================================
+//  QUESTION LADDERS  -  ALTERNATING CURRENT, LECTURE 1
+//  rms / peak / average values + time-to-reach problems
+//  Every star question is a real JEE Main PYQ from the chapter question bank.
+// ===============================================================================
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "Why the average of an a.c. is useless, and rms is not",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For a current i = i<sub>0</sub> sin &#969;t, what is the average value over one <strong>complete</strong> cycle?",
+   "diagram": DIAGRAMS.avgZero(),
+   "opts": ["zero","i<sub>0</sub>","i<sub>0</sub>/&#8730;2","2i<sub>0</sub>/&#960;"],
+   "ans": 0,
+   "sol": "In the first half the current is positive, in the second half it is negative, and the two halves are exactly equal in size.<br><br>They cancel. So the average over a <strong>full</strong> cycle is <strong>zero</strong>.<br><br>Careful: 2i<sub>0</sub>/&#960; is the average over <em>half</em> a cycle, not a full one."
+  },
+  {
+   "q": "The average current over a full cycle is zero. But a wire carrying a.c. still gets hot. Why?",
+   "opts": ["heating depends on i&#178;, and i&#178; is positive in both halves","heat is produced only in the positive half","the wire stores the heat from the first half","heat does not depend on current"],
+   "ans": 0,
+   "sol": "Heat produced is i&#178;R. <strong>Squaring kills the minus sign</strong>, so both halves of the cycle heat the wire equally.<br><br>This is the whole reason we invented the rms value &#8212; we want a number that tells us about <em>heating</em>, and heating goes with i&#178;."
+  },
+  {
+   "q": "The word 'rms' tells you the order of the three steps. Which order is right?",
+   "opts": ["square it, take the mean, then take the root","take the root, then the mean, then square","take the mean, then square, then root","square it, take the root, then the mean"],
+   "ans": 0,
+   "sol": "Read <strong>r-m-s backwards</strong>: <strong>S</strong>quare &#8594; <strong>M</strong>ean &#8594; <strong>R</strong>oot.<br><br>i<sub>rms</sub> = &#8730;( mean of i&#178; )<br><br>That is the definition. Every rms question in this chapter is just this definition applied to a different i(t)."
+  },
+  {
+   "tag": "JEE Main 2004",
+   "q": "&#9733; <strong>Original:</strong> Alternating current cannot be measured by a D.C. ammeter because",
+   "diagram": DIAGRAMS.dcMeter(),
+   "opts": ["average value of current for a complete cycle is zero","A.C. changes direction","A.C. cannot pass through a D.C. ammeter","the D.C. ammeter will get damaged"],
+   "ans": 0,
+   "sol": "A D.C. (moving-coil) ammeter deflects in proportion to the <strong>average</strong> current. For a.c. that average is zero over a cycle, so the needle simply sits at zero.<br><br>Option 2 is a true statement but it is not the <em>reason</em> the meter reads nothing &#8212; the reason is the zero average. Option 3 is wrong; the current does flow through.<br><br>This is exactly why we use a <strong>hot-wire</strong> ammeter for a.c. instead."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Reading I&#8320;, &#969; and f straight off the equation",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For i = 20 sin(100&#960;t) A, what is the peak current?",
+   "opts": ["20 A","20&#8730;2 A","100&#960; A","10 A"],
+   "ans": 0,
+   "sol": "In i = I<sub>0</sub> sin &#969;t, whatever number sits <strong>in front of the sine</strong> is the peak value.<br><br>So I<sub>0</sub> = <strong>20 A</strong>. Nothing to calculate here &#8212; just read it."
+  },
+  {
+   "q": "In i = I<sub>0</sub> sin(100&#960;t), the frequency f is",
+   "opts": ["50 Hz","100 Hz","100&#960; Hz","25 Hz"],
+   "ans": 0,
+   "sol": "The number multiplying t is &#969;, so &#969; = 100&#960; rad/s.<br><br>&#969; = 2&#960;f &#8658; f = &#969;/2&#960; = 100&#960;/2&#960; = <strong>50 Hz</strong>.<br><br><em>Shortcut worth memorising:</em> &#969; = 100&#960; always means 50 Hz &#8212; that is our mains supply, and it appears in dozens of questions."
+  },
+  {
+   "q": "If the peak current is 10&#8730;2 A, the rms current is",
+   "diagram": DIAGRAMS.peakRms(),
+   "opts": ["10 A","10&#8730;2 A","20 A","5&#8730;2 A"],
+   "ans": 0,
+   "sol": "I<sub>rms</sub> = I<sub>0</sub>/&#8730;2 = 10&#8730;2 / &#8730;2 = <strong>10 A</strong>.<br><br>Notice how neatly the &#8730;2 cancels. Examiners write peaks as 'something &#215; &#8730;2' <em>on purpose</em>, so the rms comes out as a clean number. If you see a &#8730;2 in the amplitude, expect it to disappear."
+  },
+  {
+   "tag": "JEE Main 2025 &#183; 4 Apr Morning",
+   "q": "&#9733; <strong>Original:</strong> An alternating current is represented by i = 100&#8730;2 sin(100&#960;t) ampere. The rms value of current and the frequency are",
+   "opts": ["100 A, 50 Hz","100/&#8730;2 A, 100 Hz","50&#8730;2 A, 50 Hz","100&#8730;2 A, 100 Hz"],
+   "ans": 0,
+   "sol": "Two independent readings, done separately:<br><br><strong>rms:</strong> I<sub>0</sub> = 100&#8730;2, so I<sub>rms</sub> = 100&#8730;2/&#8730;2 = <strong>100 A</strong>.<br><br><strong>frequency:</strong> &#969; = 100&#960; &#8658; f = &#969;/2&#960; = <strong>50 Hz</strong>.<br><br>The favourite mistake is reporting f = 100 Hz by reading the 100 and forgetting to divide by 2. Always finish with &#969;/2&#960;."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Going the other way &#8212; ratings are rms, answers may want peak",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A bulb is marked '220 V'. This 220 V is the",
+   "diagram": DIAGRAMS.bulb(),
+   "opts": ["rms voltage","peak voltage","average voltage","instantaneous voltage"],
+   "ans": 0,
+   "sol": "Every rating printed on an appliance, and every reading on a household meter, is an <strong>rms</strong> value.<br><br>So 220 V mains actually swings up to a peak of 220&#8730;2 &#8776; 311 V. Good to know when you buy a capacitor for a mains circuit."
+  },
+  {
+   "q": "A 60 W appliance runs on 120 V (rms). Its rms current is",
+   "opts": ["0.5 A","0.25 A","2 A","0.7 A"],
+   "ans": 0,
+   "sol": "For a resistive appliance, P = V<sub>rms</sub> I<sub>rms</sub>.<br><br>I<sub>rms</sub> = P/V<sub>rms</sub> = 60/120 = <strong>0.5 A</strong>.<br><br>Note that the P = VI formula uses <strong>rms</strong> values on both sides &#8212; that is the point of rms. It lets you keep using your D.C. power formulas."
+  },
+  {
+   "q": "If a device draws an rms current of 2 A, its peak current is about",
+   "opts": ["2.83 A","1.41 A","4 A","2 A"],
+   "ans": 0,
+   "sol": "I<sub>0</sub> = I<sub>rms</sub> &#215; &#8730;2 = 2 &#215; 1.414 = <strong>2.83 A</strong>.<br><br>Going rms &#8594; peak you <strong>multiply</strong> by &#8730;2. Going peak &#8594; rms you <strong>divide</strong>. Students flip this under time pressure &#8212; sanity check: the peak is always the bigger number."
+  },
+  {
+   "tag": "JEE Main 2025 &#183; 3 Apr Evening",
+   "q": "&#9733; <strong>Original:</strong> An electric bulb rated 100 W &#8211; 220 V is connected to an a.c. source of rms voltage 220 V. The peak value of current through the bulb is",
+   "diagram": DIAGRAMS.bulb(),
+   "opts": ["0.64 A","0.32 A","0.45 A","2.2 A"],
+   "ans": 0,
+   "sol": "Two steps, in this order:<br><br><strong>Step 1 &#8212; rms current.</strong> I<sub>rms</sub> = P/V<sub>rms</sub> = 100/220 &#8776; 0.455 A.<br><br><strong>Step 2 &#8212; convert to peak.</strong> I<sub>0</sub> = 0.455 &#215; &#8730;2 &#8776; <strong>0.64 A</strong>.<br><br>Option 0.45 A is the trap &#8212; it is the answer if you stop after Step 1. The question asked for the <em>peak</em>. Underline the word 'peak' in the question before you start."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "rms of I<sub>A</sub> sin &#969;t + I<sub>B</sub> cos &#969;t",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "sin &#969;t and cos &#969;t are separated in phase by",
+   "diagram": DIAGRAMS.phasorSum(),
+   "opts": ["90&#176;","0&#176;","180&#176;","45&#176;"],
+   "ans": 0,
+   "sol": "cos &#969;t = sin(&#969;t + 90&#176;). So the two terms are <strong>a quarter cycle apart</strong>.<br><br>Because they are 90&#176; apart, they behave like two <strong>perpendicular</strong> arrows. You cannot add them straight; you add them by Pythagoras."
+  },
+  {
+   "q": "A sin &#969;t + B cos &#969;t can be rewritten as a single sine wave. Its amplitude is",
+   "opts": ["&#8730;(A&#178; + B&#178;)","A + B","(A + B)/2","&#8730;(A&#178; &#8722; B&#178;)"],
+   "ans": 0,
+   "sol": "This is the standard trigonometric result: A sin&#969;t + B cos&#969;t = R sin(&#969;t + &#966;) with <strong>R = &#8730;(A&#178; + B&#178;)</strong>.<br><br>Same as finding the resultant of two perpendicular vectors of size A and B. The phase &#966; = tan<sup>&#8722;1</sup>(B/A), but for rms questions you only need R."
+  },
+  {
+   "q": "The combined wave has amplitude &#8730;(A&#178; + B&#178;). So its rms value is",
+   "opts": ["&#8730;((A&#178; + B&#178;)/2)","&#8730;(A&#178; + B&#178;)","(A&#178; + B&#178;)/2","(A + B)/&#8730;2"],
+   "ans": 0,
+   "sol": "It is now a single ordinary sine wave, so the usual rule applies: divide the amplitude by &#8730;2.<br><br>I<sub>rms</sub> = &#8730;(A&#178;+B&#178;) / &#8730;2 = <strong>&#8730;((A&#178;+B&#178;)/2)</strong>.<br><br>Two moves, always the same two: <em>combine into one wave, then divide by &#8730;2.</em>"
+  },
+  {
+   "tag": "JEE Main 2025 &#183; 24 Jan Morning",
+   "q": "&#9733; <strong>Original:</strong> An alternating current is given by I = I<sub>A</sub> sin &#969;t + I<sub>B</sub> cos &#969;t. The r.m.s. current will be",
+   "diagram": DIAGRAMS.phasorSum(),
+   "opts": ["&#8730;((I<sub>A</sub>&#178; + I<sub>B</sub>&#178;)/2)","&#8730;(I<sub>A</sub>&#178; + I<sub>B</sub>&#178;)/2","|I<sub>A</sub> + I<sub>B</sub>|/&#8730;2","&#8730;(I<sub>A</sub>&#178; + I<sub>B</sub>&#178;)"],
+   "ans": 0,
+   "sol": "Amplitude of the combined wave = &#8730;(I<sub>A</sub>&#178; + I<sub>B</sub>&#178;). Divide by &#8730;2:<br><br>I<sub>rms</sub> = <strong>&#8730;((I<sub>A</sub>&#178; + I<sub>B</sub>&#178;)/2)</strong>, which is the same thing as (1/&#8730;2)(I<sub>A</sub>&#178; + I<sub>B</sub>&#178;)<sup>1/2</sup>.<br><br>The trap is |I<sub>A</sub> + I<sub>B</sub>|/&#8730;2 &#8212; that is what you get if you wrongly add the two amplitudes directly. They are 90&#176; apart, so they never add like that.<br><br><em>This exact question has appeared three times: 2025 (this one), 2021 (26 Feb) and again in 2021 (17 Mar, worded as a hot-wire ammeter). Learn it once, collect the marks three times.</em>"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "What a hot-wire ammeter actually reads",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A hot-wire ammeter works by",
+   "diagram": DIAGRAMS.hotWire(),
+   "opts": ["the heating produced by the current","the magnetic force on a coil","the charge collected on a plate","the chemical effect of the current"],
+   "ans": 0,
+   "sol": "The current heats a fine wire, the wire expands, and that expansion moves the pointer.<br><br>Heating is <strong>i&#178;R</strong>, and i&#178; is positive whichever way the current flows. So the instrument works perfectly well on a.c."
+  },
+  {
+   "q": "Because heating goes as i&#178;, a hot-wire ammeter reads the",
+   "opts": ["rms value","peak value","average value over a cycle","instantaneous value"],
+   "ans": 0,
+   "sol": "The pointer settles at a position set by the <strong>mean of i&#178;</strong>. Take the square root of that and you have exactly the rms value.<br><br>The definition of rms and the working of this meter are the same idea, seen from two sides."
+  },
+  {
+   "q": "If the current is 6 sin &#969;t + 8 cos &#969;t A, the amplitude of the combined wave is",
+   "opts": ["10 A","14 A","2 A","7 A"],
+   "ans": 0,
+   "sol": "&#8730;(6&#178; + 8&#178;) = &#8730;(36 + 64) = &#8730;100 = <strong>10 A</strong>.<br><br>A 6&#8211;8&#8211;10 right triangle. Examiners love these numbers because the arithmetic is clean &#8212; if you spot 3&#8211;4&#8211;5 or 6&#8211;8&#8211;10 or 5&#8211;12&#8211;13 inside a question, you are on the right track."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 17 Mar Shift 1",
+   "q": "&#9733; <strong>Original:</strong> An a.c. current is given by I = I<sub>1</sub> sin &#969;t + I<sub>2</sub> cos &#969;t. A hot-wire ammeter will give a reading",
+   "diagram": DIAGRAMS.hotWire(),
+   "opts": ["&#8730;((I<sub>1</sub>&#178; + I<sub>2</sub>&#178;)/2)","&#8730;((I<sub>1</sub>&#178; &#8722; I<sub>2</sub>&#178;)/2)","(I<sub>1</sub> + I<sub>2</sub>)/&#8730;2","&#8730;(I<sub>1</sub>&#178; + I<sub>2</sub>&#178;)"],
+   "ans": 0,
+   "sol": "A hot-wire ammeter reads <strong>rms</strong>. And we already know the rms of I<sub>1</sub>sin&#969;t + I<sub>2</sub>cos&#969;t is &#8730;((I<sub>1</sub>&#178;+I<sub>2</sub>&#178;)/2).<br><br>So the answer is <strong>&#8730;((I<sub>1</sub>&#178; + I<sub>2</sub>&#178;)/2)</strong>.<br><br>This is Ladder 04 in disguise. The words 'hot-wire ammeter' are just a way of saying 'find the rms'. Once you notice that, the question takes five seconds."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "When a d.c. is sitting under the a.c.",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For a steady d.c. of 6 A, the rms value is",
+   "diagram": DIAGRAMS.dcPlusAc(),
+   "opts": ["6 A","6/&#8730;2 A","6&#8730;2 A","0"],
+   "ans": 0,
+   "sol": "A d.c. never changes, so squaring it, averaging and rooting brings you right back to <strong>6 A</strong>.<br><br>The &#8730;2 rule belongs to sine waves only. Do not sprinkle it on a d.c."
+  },
+  {
+   "q": "A current is i = 8 + 6 sin&#969;t. The two parts of it are",
+   "opts": ["a d.c. part of 8 and an a.c. part of peak 6","a d.c. part of 6 and an a.c. part of 8","one a.c. wave of peak 14","one a.c. wave of peak 2"],
+   "ans": 0,
+   "sol": "The term with no t in it is the <strong>d.c. part</strong> (8 A). The term with sin&#969;t is the <strong>a.c. part</strong>, and its peak is 6 A.<br><br>Split first, always. Then handle each part with its own rule."
+  },
+  {
+   "q": "For i = i<sub>dc</sub> + i<sub>0</sub> sin&#969;t, the overall rms current is",
+   "opts": ["&#8730;( i<sub>dc</sub>&#178; + (i<sub>0</sub>/&#8730;2)&#178; )","i<sub>dc</sub> + i<sub>0</sub>/&#8730;2","(i<sub>dc</sub> + i<sub>0</sub>)/&#8730;2","&#8730;( i<sub>dc</sub>&#178; + i<sub>0</sub>&#178; )"],
+   "ans": 0,
+   "sol": "Square the whole thing and average. The cross term 2 i<sub>dc</sub> i<sub>0</sub> sin&#969;t averages to <strong>zero</strong> over a cycle, so it vanishes.<br><br>What is left is I<sub>rms</sub>&#178; = i<sub>dc</sub>&#178; + (i<sub>0</sub>/&#8730;2)&#178;.<br><br>So the two rms values add <strong>in quadrature</strong> &#8212; squares add, not the values themselves."
+  },
+  {
+   "tag": "JEE Main 2025 &#183; 7 Apr Morning",
+   "q": "&#9733; <strong>Original:</strong> An a.c. current is represented as i = 5&#8730;2 + 10 cos(650&#960;t + &#960;/6) A. The r.m.s. value of the current is",
+   "diagram": DIAGRAMS.dcPlusAc(),
+   "opts": ["10 A","5&#8730;2 A","100 A","50 A"],
+   "ans": 0,
+   "sol": "<strong>Split it.</strong> d.c. part = 5&#8730;2 A. a.c. part has peak 10 A.<br><br>rms of the a.c. part = 10/&#8730;2 = 5&#8730;2 A.<br><br>Add in quadrature:<br>I<sub>rms</sub>&#178; = (5&#8730;2)&#178; + (5&#8730;2)&#178; = 50 + 50 = 100<br>I<sub>rms</sub> = <strong>10 A</strong>.<br><br>Two things to notice. First, the phase &#960;/6 is completely useless here &#8212; shifting a wave in time does not change its rms. Second, cos works exactly like sin for rms purposes."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "The same d.c.-plus-a.c. rule, with numbers",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "The rms value of the a.c. part of i = 10 + &#8730;42 sin(2&#960;t/T) is",
+   "opts": ["&#8730;21 A","&#8730;42 A","21 A","&#8730;42/2 A"],
+   "ans": 0,
+   "sol": "The a.c. peak is &#8730;42, so its rms is &#8730;42/&#8730;2 = <strong>&#8730;21 A</strong>.<br><br>Handy trick with surds: &#8730;42/&#8730;2 = &#8730;(42/2) = &#8730;21. Divide <em>inside</em> the root and you avoid ugly decimals."
+  },
+  {
+   "q": "If the d.c. part is 10 A and the a.c. rms part is &#8730;21 A, then I<sub>rms</sub>&#178; equals",
+   "opts": ["121","31","10&#8730;21","141"],
+   "ans": 0,
+   "sol": "I<sub>rms</sub>&#178; = 10&#178; + (&#8730;21)&#178; = 100 + 21 = <strong>121</strong>.<br><br>Squares add. This is why the surd &#8730;21 was actually a friendly number &#8212; squaring wipes the root away."
+  },
+  {
+   "q": "&#8730;121 =",
+   "opts": ["11","12.1","10.5","11.5"],
+   "ans": 0,
+   "sol": "<strong>11</strong>. Whenever an rms question lands on 121, 169, 144 or 100, that is the setter telling you the answer is a whole number &#8212; and that you are on the right path."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 27 Aug Shift 1",
+   "q": "&#9733; <strong>Original:</strong> The alternating current is given by i = [ &#8730;42 sin(2&#960;t/T) + 10 ] A. The rms value of this current is ____ A.",
+   "diagram": DIAGRAMS.dcPlusAc(),
+   "opts": ["11","10","&#8730;52","21"],
+   "ans": 0,
+   "sol": "Split: a.c. peak = &#8730;42, d.c. = 10.<br><br>a.c. rms = &#8730;42/&#8730;2 = &#8730;21<br>I<sub>rms</sub> = &#8730;( 10&#178; + (&#8730;21)&#178; ) = &#8730;(100 + 21) = &#8730;121 = <strong>11 A</strong><br><br>The wrong answer &#8730;52 comes from adding the peak and the d.c. carelessly. And 10 comes from ignoring the a.c. altogether.<br><br>Same rule as the previous ladder, only the numbers changed. That is a good sign &#8212; this pattern repeats."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "rms when the wave is not a sine at all",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "For a current that is <strong>not</strong> a sine wave, which of these is still true?",
+   "diagram": DIAGRAMS.rampWave(),
+   "opts": ["i<sub>rms</sub> = &#8730;( mean of i&#178; )","i<sub>rms</sub> = i<sub>0</sub>/&#8730;2","i<sub>rms</sub> = 2i<sub>0</sub>/&#960;","i<sub>rms</sub> = i<sub>0</sub>/2"],
+   "ans": 0,
+   "sol": "<strong>i<sub>rms</sub> = &#8730;(mean of i&#178;)</strong> is the definition. It works for every waveform ever drawn.<br><br>i<sub>0</sub>/&#8730;2 is only a <em>result</em>, obtained by feeding a sine into that definition. Change the wave and the result changes. The definition never does."
+  },
+  {
+   "q": "For i = i<sub>0</sub>(t/T) over 0 to T, what is i&#178;?",
+   "opts": ["i<sub>0</sub>&#178; t&#178;/T&#178;","i<sub>0</sub>&#178; t/T","i<sub>0</sub> t&#178;/T&#178;","i<sub>0</sub>&#178; T&#178;/t&#178;"],
+   "ans": 0,
+   "sol": "Square everything inside the bracket: ( i<sub>0</sub> t/T )&#178; = <strong>i<sub>0</sub>&#178; t&#178;/T&#178;</strong>.<br><br>Square the constant too. Half the errors in this ladder come from writing i<sub>0</sub>t&#178;/T&#178; and forgetting to square i<sub>0</sub>."
+  },
+  {
+   "q": "The mean of t&#178; over the interval t = 0 to t = T is",
+   "opts": ["T&#178;/3","T&#178;/2","T&#178;","T&#178;/4"],
+   "ans": 0,
+   "sol": "Mean of t&#178; = (1/T) &#8747;<sub>0</sub><sup>T</sup> t&#178; dt = (1/T)(T&#179;/3) = <strong>T&#178;/3</strong>.<br><br>The integral raises the power to 3 and divides by 3, then the 1/T out front knocks one power of T back off. This is the integration you practised in the maths lecture, now doing real work."
+  },
+  {
+   "tag": "JEE Main 2026 &#183; 28 Jan Morning",
+   "q": "&#9733; <strong>Original:</strong> The electric current in a circuit is given as i = i<sub>0</sub>(t/T). The r.m.s. current for the period t = 0 to t = T is",
+   "diagram": DIAGRAMS.rampWave(),
+   "opts": ["i<sub>0</sub>/&#8730;3","i<sub>0</sub>/&#8730;2","i<sub>0</sub>","i<sub>0</sub>/&#8730;6"],
+   "ans": 0,
+   "sol": "Follow S&#8211;M&#8211;R.<br><br><strong>Square:</strong> i&#178; = i<sub>0</sub>&#178;t&#178;/T&#178;<br><strong>Mean:</strong> &#9001;i&#178;&#9002; = (i<sub>0</sub>&#178;/T&#178;) &#215; (T&#178;/3) = i<sub>0</sub>&#178;/3<br><strong>Root:</strong> i<sub>rms</sub> = <strong>i<sub>0</sub>/&#8730;3</strong><br><br>The trap answer is i<sub>0</sub>/&#8730;2 &#8212; students see 'rms' and fire the sine formula without checking the waveform. This one is a <strong>straight ramp</strong>, not a sine, so &#8730;3 is what comes out.<br><br><em>Whenever the current is given as anything other than sin or cos, go back to the integral. It is never more than three lines of work.</em>"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "Time taken to go from the peak to the rms value",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For a 50 Hz supply, the time period T is",
+   "opts": ["20 ms","50 ms","0.5 ms","2 ms"],
+   "ans": 0,
+   "sol": "T = 1/f = 1/50 = 0.02 s = <strong>20 ms</strong>.<br><br>Worth memorising: <strong>50 Hz &#8594; T = 20 ms</strong>. It appears in nearly every timing question in this chapter."
+  },
+  {
+   "q": "In i = I<sub>0</sub> sin&#969;t, at what phase angle &#969;t does the current first equal I<sub>0</sub>/&#8730;2?",
+   "opts": ["&#960;/4","&#960;/6","&#960;/3","&#960;/2"],
+   "ans": 0,
+   "sol": "sin&#969;t = 1/&#8730;2 &#8658; &#969;t = <strong>&#960;/4</strong> (that is 45&#176;).<br><br>Keep these three at your fingertips: sin&#966; = 1/2 at &#960;/6, sin&#966; = 1/&#8730;2 at &#960;/4, sin&#966; = 1 at &#960;/2. Every timing question uses two of them."
+  },
+  {
+   "q": "The peak is at phase &#960;/2 and the rms value at &#960;/4. The phase gap between them is",
+   "diagram": DIAGRAMS.peakToRms(),
+   "opts": ["&#960;/4","&#960;/2","&#960;/3","&#960;"],
+   "ans": 0,
+   "sol": "&#960;/2 &#8722; &#960;/4 = <strong>&#960;/4</strong>.<br><br>Now turn phase into time using &#969;&#8710;t = &#8710;&#966;, so &#8710;t = &#8710;&#966;/&#969;.<br><br>Since a full cycle is 2&#960;, a gap of &#960;/4 is one-eighth of a cycle, i.e. <strong>T/8</strong>."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 24 Jun Shift 1",
+   "q": "&#9733; <strong>Original:</strong> A resistance of 40&#937; is connected to an a.c. source rated 220 V, 50 Hz. Find the time taken by the current to change from its maximum value to the rms value.",
+   "diagram": DIAGRAMS.peakToRms(),
+   "opts": ["2.5 ms","1.25 ms","2.5 s","0.25 s"],
+   "ans": 0,
+   "sol": "The 40&#937; and the 220 V are <strong>decoys</strong> &#8212; timing depends only on the frequency.<br><br>&#8710;&#966; = &#960;/2 &#8722; &#960;/4 = &#960;/4<br>&#969; = 2&#960;f = 100&#960; rad/s<br>&#8710;t = &#8710;&#966;/&#969; = (&#960;/4)/(100&#960;) = 1/400 s = <strong>2.5 ms</strong><br><br>Or straight from the shortcut: &#8710;t = T/8 = 20 ms / 8 = 2.5 ms.<br><br><em>This identical question also appeared in 2021 (18 Mar) with 220 V, 50 Hz and no resistor at all &#8212; same answer, 2.5 ms.</em>"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "Time from half the peak up to the peak",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For i = 5 sin(120&#960;t), how long does the current take to go from zero to its peak?",
+   "diagram": DIAGRAMS.quarterT(),
+   "opts": ["1/240 s","1/60 s","1/120 s","60 s"],
+   "ans": 0,
+   "sol": "&#969; = 120&#960; &#8658; f = 60 Hz &#8658; T = 1/60 s.<br><br>Zero to peak is always a <strong>quarter cycle</strong>:<br>t = T/4 = <strong>1/240 s</strong>.<br><br>(JEE Main 2022, 27 Jun &#8212; a real question in its own right.)"
+  },
+  {
+   "q": "In i = I<sub>0</sub> sin&#969;t, the current equals I<sub>0</sub>/2 at phase",
+   "opts": ["&#960;/6","&#960;/4","&#960;/3","&#960;/2"],
+   "ans": 0,
+   "sol": "sin&#969;t = 1/2 &#8658; &#969;t = <strong>&#960;/6</strong> (30&#176;).<br><br>Do not confuse this with &#960;/4, which is where the current equals I<sub>0</sub>/&#8730;2. Half the peak and the rms value are <em>different</em> points on the wave."
+  },
+  {
+   "q": "So the phase gap from half the peak up to the peak is",
+   "diagram": DIAGRAMS.halfToPeak(),
+   "opts": ["&#960;/3","&#960;/4","&#960;/6","&#960;/2"],
+   "ans": 0,
+   "sol": "&#960;/2 &#8722; &#960;/6 = 3&#960;/6 &#8722; &#960;/6 = 2&#960;/6 = <strong>&#960;/3</strong>.<br><br>In time that is &#8710;t = (&#960;/3)/&#969;, which is one-sixth of a cycle, i.e. <strong>T/6</strong>."
+  },
+  {
+   "tag": "JEE Main 2024 &#183; 30 Jan Shift 2",
+   "q": "&#9733; <strong>Original:</strong> An alternating voltage V(t) = 220 sin(100&#960;t) volt is applied to a purely resistive load of 50&#937;. The time taken for the current to rise from half of the peak value to the peak value is",
+   "diagram": DIAGRAMS.halfToPeak(),
+   "opts": ["3.3 ms","5 ms","7.2 ms","2.2 ms"],
+   "ans": 0,
+   "sol": "The load is purely resistive, so current and voltage are in step &#8212; the 50&#937; changes nothing about the <em>timing</em>.<br><br>&#969; = 100&#960; &#8658; T = 20 ms<br>&#8710;&#966; = &#960;/2 &#8722; &#960;/6 = &#960;/3<br>&#8710;t = (&#960;/3)/(100&#960;) = 1/300 s &#8776; <strong>3.3 ms</strong><br><br>Or: &#8710;t = T/6 = 20/6 &#8776; 3.3 ms.<br><br>The 2.5 ms answer belongs to the <em>previous</em> ladder (peak to rms). Read carefully whether the question says <strong>rms</strong> or <strong>half</strong> &#8212; that one word decides between T/8 and T/6.<br><br><em>Word-for-word repeat of JEE Main 2019 (8 April Shift I).</em>"
+  }
+ ]
+},
+
+];
+
+
+
+const STORAGE_KEY = 'padipucast_ac_l1_rms_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original exam question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
