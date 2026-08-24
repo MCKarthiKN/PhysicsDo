@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST · Friction — DPP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;
+  --correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --blue:#2563eb;--blue-bg:#eef4fe;--blue-border:#cfe0f5;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#wrap{max-width:780px;margin:0 auto;padding:0 22px 90px;}
+header{padding:30px 0 4px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;margin-bottom:16px;}
+.brand span{color:var(--text3);}
+header h1{font-family:'LemonMilk',sans-serif;font-size:23px;font-weight:700;letter-spacing:0.02em;line-height:1.25;}
+header .sub{font-size:14px;color:var(--text2);margin-top:6px;}
+
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:24px 0 26px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.chips{display:flex;gap:10px;flex-wrap:wrap;}
+.chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 13px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.chip b{color:var(--text);}
+.btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btns button{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 15px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.btns button:hover{border-color:var(--border2);color:var(--text);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 26px 20px;margin-bottom:14px;}
+.q-top{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+.q-no{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.16em;color:var(--text3);text-transform:uppercase;}
+.vchip{font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 9px;border-radius:5px;background:#f0ede8;color:var(--text2);}
+.vchip.var{background:var(--blue-bg);color:var(--blue);}
+.prac{margin-left:auto;font-family:'LemonMilk',sans-serif;font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.q-text{font-size:15.5px;line-height:1.7;margin-bottom:14px;}
+.q-text sup,.q-text sub{font-size:.75em;}
+.q-diagram{margin:0 0 18px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.opts{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.opt{display:flex;align-items:center;gap:12px;padding:11px 15px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all .15s;}
+.opt sup,.opt sub{font-size:.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt .lt{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;color:var(--text3);flex-shrink:0;background:var(--surface);}
+.opt.correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.correct .lt{border-color:var(--correct-border);color:var(--correct);}
+.opt.wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.wrong .lt{border-color:var(--wrong-border);color:var(--wrong);}
+.opt.locked{pointer-events:none;}
+.sol{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .3s ease;}
+.sol.open{max-height:900px;opacity:1;margin-top:12px;}
+.sol-in{border-left:2px solid var(--text3);padding:10px 15px;font-size:13.5px;line-height:1.7;color:var(--text2);}
+.sol-in strong{color:var(--text);font-weight:600;}
+.sol-in sup,.sol-in sub{font-size:.75em;}
+.sol-in svg{display:block;margin:10px auto 2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;}
+.act{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.act .fb{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 11px;border-radius:20px;display:none;}
+.act .fb.c{display:inline-block;background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+.act .fb.w{display:inline-block;background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+.act .showsol{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:8px 13px;cursor:pointer;color:var(--text2);transition:all .15s;}
+.act .showsol:hover{border-color:var(--border2);color:var(--text);}
+.act .varbtn{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.09em;text-transform:uppercase;background:none;border:1px solid var(--blue-border);border-radius:8px;padding:8px 13px;cursor:pointer;color:var(--blue);transition:all .15s;margin-left:auto;}
+.act .varbtn:hover{background:var(--blue-bg);border-color:var(--blue);}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--border);font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);text-align:center;}
+@media print{
+  body{background:#fff;} .toolbar .btns,.act .showsol,.act .varbtn{display:none;}
+  .opt{background:#fff;} .sol{max-height:none!important;opacity:1!important;margin-top:12px;}
+  .card{break-inside:avoid;border-color:#ccc;}
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <header>
+    <div class="brand">PADIPUCAST <span>·</span> Daily Practice</div>
+    <h1>Friction — DPP</h1>
+    <p class="sub">9 questions on friction — static vs kinetic, limiting friction, angle of repose, and motion on rough surfaces. Tap <b>Try a variation</b> for a fresh version of the same idea.</p>
+  </header>
+  <div class="toolbar">
+    <div class="chips">
+      <span class="chip">Score <b id="sc">0</b>/<b id="tot">9</b></span>
+      <span class="chip">Attempted <b id="att">0</b></span>
+    </div>
+    <div class="btns">
+      <button id="revealBtn">Reveal all</button>
+      <button id="resetBtn">Reset</button>
+      <button id="printBtn">Print</button>
+    </div>
+  </div>
+  <div id="paper"></div>
+  <footer>PADIPUCAST · Prepared for Allen · base questions are scored · variations are free practice</footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  ACCURATE FORCE-DIAGRAM LIBRARY
+//  angle convention: degrees, measured CCW from +x, "up" = 90°
+//  (weight = 270°/down, up = 90°, right = 0°, left = 180°)
+// ═══════════════════════════════════════════════════════════════════
+const FS='font-family="DM Sans,sans-serif"';
+const C={w:'#dc2626',n:'#2563eb',t:'#16a34a',f:'#ea580c',ap:'#7c3aed',g:'#9ca3af',
+         body:'#eef2ff',bs:'#475569',ink:'#334155',dim:'#64748b'};
+const AR=(id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const MK={};MK[C.w]='mW';MK[C.n]='mN';MK[C.t]='mT';MK[C.f]='mF';MK[C.ap]='mA';
+const MARKERS=[['mW',C.w],['mN',C.n],['mT',C.t],['mF',C.f],['mA',C.ap]].map(([i,c])=>AR(i,c)).join('');
+
+function hatch(x1,x2,y){let s=`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${C.g}" stroke-width="2"/>`;
+  for(let x=x1;x<x2;x+=9)s+=`<line x1="${x}" y1="${y}" x2="${x-7}" y2="${y+8}" stroke="${C.g}" stroke-width="1"/>`;return s;}
+function vhatch(y1,y2,x){let s=`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${C.g}" stroke-width="2"/>`;
+  for(let y=y1;y<y2;y+=9)s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y+7}" stroke="${C.g}" stroke-width="1"/>`;return s;}
+function block(x,y,w,h,label,fill){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="${fill||C.body}" stroke="${C.bs}" stroke-width="1.5"/>`+
+  (label?`<text x="${x+w/2}" y="${y+h/2+4.5}" font-size="12.5" fill="${C.ink}" text-anchor="middle" ${FS}>${label}</text>`:'');}
+function vspring(x,y1,y2,coils){coils=coils||6;const len=y2-y1,seg=len/(coils+1);let d=`M ${x} ${y1} L ${x} ${(y1+seg*0.5).toFixed(1)}`;
+  for(let i=0;i<coils;i++){const yy=y1+seg*(i+0.5);d+=` L ${x-8} ${(yy+seg*0.25).toFixed(1)} L ${x+8} ${(yy+seg*0.75).toFixed(1)}`;}
+  d+=` L ${x} ${(y2-seg*0.5).toFixed(1)} L ${x} ${y2}`;return `<path d="${d}" fill="none" stroke="#64748b" stroke-width="1.6"/>`;}
+
+// force arrow from a point at exact math-angle
+function farrow(cx,cy,ang,len,color){const r=ang*Math.PI/180,x2=cx+len*Math.cos(r),y2=cy-len*Math.sin(r);
+  return `<line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${color}" stroke-width="2.4" marker-end="url(#${MK[color]})"/>`;}
+function flabel(cx,cy,ang,len,text,color){const a=((ang%360)+360)%360,r=ang*Math.PI/180,gap=15;
+  let x=cx+(len+gap)*Math.cos(r),y=cy-(len+gap)*Math.sin(r),anchor='middle';
+  if(a<25||a>335)anchor='start'; else if(a>155&&a<205)anchor='end';
+  return `<text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" font-size="11.5" fill="${color}" text-anchor="${anchor}" ${FS}>${text}</text>`;}
+function force(cx,cy,ang,len,text,color){return farrow(cx,cy,ang,len,color)+flabel(cx,cy,ang,len,text,color);}
+
+// incline geometry — exact 30°: base 40..250 (y=155), apex (250, 33.8)
+const INC={ax:40,ay:155,bx:250,by:155,px:250,py:33.8, up:30, norm:120, down:210, // math angles
+           bcx:120.7, bcy:91.2, rot:-30};
+function inclineScene(theta,rough){
+  const t=theta||'θ';
+  let surf = rough ? [0.18,0.3,0.42,0.54,0.66].map(k=>{const x=INC.ax+k*210,y=INC.ay-k*121.2;
+      return `<circle cx="${(x-0.5).toFixed(1)}" cy="${(y-0.9).toFixed(1)}" r="1.6" fill="${C.dim}"/>`;}).join('') : '';
+  return `<svg viewBox="0 0 290 175" width="290" height="175" xmlns="http://www.w3.org/2000/svg">
+    ${hatch(40,250,155)}
+    <polygon points="40,155 250,155 250,33.8" fill="#f1f5f9" stroke="${C.bs}" stroke-width="1.5"/>
+    ${surf}
+    <g transform="rotate(${INC.rot} ${INC.bcx} ${INC.bcy})">${block(INC.bcx-23,INC.bcy-13,46,26,'m')}</g>
+    <path d="M 70 155 A 30 30 0 0 0 66 140" fill="none" stroke="${C.dim}" stroke-width="1.2"/>
+    <text x="76" y="149" font-size="12" fill="${C.dim}" ${FS}>${t}</text>
+    <text x="228" y="150" font-size="10" fill="${C.dim}" text-anchor="middle" ${FS}>${rough?'rough':'smooth'}</text>
+  </svg>`;
+}
+
+const D={
+  ground:(label,opts)=>{opts=opts||{};return `<svg viewBox="0 0 280 160" width="280" height="160" xmlns="http://www.w3.org/2000/svg">
+    ${hatch(30,260,140)}
+    ${opts.round?`<circle cx="145" cy="116" r="24" fill="${C.body}" stroke="${C.bs}" stroke-width="1.5"/><text x="145" y="120" font-size="12" fill="${C.ink}" text-anchor="middle" ${FS}>${label}</text>`
+      :block(108,98,74,42,label)}
+  </svg>`;},
+
+  hang:(label)=>`<svg viewBox="0 0 240 180" width="240" height="180" xmlns="http://www.w3.org/2000/svg">
+    ${hatch(60,180,24)}<line x1="120" y1="24" x2="120" y2="86" stroke="${C.ink}" stroke-width="1.6"/>
+    ${block(96,86,48,40,label)}</svg>`,
+
+  hangSpring:(label)=>`<svg viewBox="0 0 240 185" width="240" height="185" xmlns="http://www.w3.org/2000/svg">
+    ${hatch(60,180,24)}${vspring(120,24,88)}${block(96,88,48,40,label)}</svg>`,
+
+  incline:(theta,opts)=>inclineScene(theta,opts&&opts.rough),
+
+  wallPress:(label)=>`<svg viewBox="0 0 260 175" width="260" height="175" xmlns="http://www.w3.org/2000/svg">
+    <defs>${MARKERS}</defs>${vhatch(38,150,55)}
+    ${block(55,86,62,52,label)}
+    <line x1="180" y1="112" x2="123" y2="112" stroke="${C.ap}" stroke-width="2.8" marker-end="url(#mA)"/>
+    <text x="152" y="104" font-size="11" fill="${C.ap}" ${FS}>push</text></svg>`,
+
+  anglePull:(theta)=>{const t=theta||'θ';return `<svg viewBox="0 0 280 165" width="280" height="165" xmlns="http://www.w3.org/2000/svg">
+    <defs>${MARKERS}</defs>${hatch(30,262,150)}
+    ${block(94,108,72,42,'')}
+    <line x1="166" y1="108" x2="223" y2="65" stroke="${C.bs}" stroke-width="1.6"/>
+    <line x1="212" y1="73" x2="235" y2="56" stroke="${C.ap}" stroke-width="2.4" marker-end="url(#mA)"/>
+    <path d="M 196 108 A 30 30 0 0 0 190 92" fill="none" stroke="${C.dim}" stroke-width="1.2"/>
+    <text x="202" y="100" font-size="12" fill="${C.dim}" ${FS}>${t}</text>
+    <text x="238" y="52" font-size="10" fill="${C.ap}" ${FS}>pull</text></svg>`;},
+
+  twoContact:(a,b,F)=>`<svg viewBox="0 0 285 160" width="285" height="160" xmlns="http://www.w3.org/2000/svg">
+    <defs>${MARKERS}</defs>${hatch(28,272,144)}
+    ${block(96,98,58,46,a,'#eef2ff')}${block(154,98,64,46,b,'#e6effd')}
+    <line x1="46" y1="121" x2="92" y2="121" stroke="${C.ap}" stroke-width="2.8" marker-end="url(#mA)"/>
+    <text x="52" y="113" font-size="12" fill="${C.ap}" ${FS}>${F}</text>
+    <line x1="154" y1="98" x2="154" y2="144" stroke="${C.dim}" stroke-width="1" stroke-dasharray="3,2"/></svg>`,
+
+  ballWall:()=>`<svg viewBox="0 0 250 185" width="250" height="185" xmlns="http://www.w3.org/2000/svg">
+    ${vhatch(40,172,70)}
+    <circle cx="70" cy="50" r="2.6" fill="${C.ink}"/>
+    <line x1="70" y1="50" x2="87" y2="96" stroke="${C.ink}" stroke-width="1.5"/>
+    <circle cx="96" cy="120" r="26" fill="${C.body}" stroke="${C.bs}" stroke-width="1.6"/></svg>`,
+
+  blockOnBlock:()=>`<svg viewBox="0 0 260 170" width="260" height="170" xmlns="http://www.w3.org/2000/svg">
+    ${hatch(40,245,160)}
+    ${block(92,115,112,45,'B','#e6effd')}${block(117,80,62,35,'A','#eef2ff')}</svg>`,
+
+  // ── the fully-correct free-body diagram (arrows computed from exact angles)
+  fbd:(list,opts)=>{opts=opts||{};const cx=115,cy=90;
+    let s=`<svg viewBox="0 0 250 178" width="250" height="178" xmlns="http://www.w3.org/2000/svg"><defs>${MARKERS}</defs>`;
+    if(opts.surface!==undefined){const r=opts.surface*Math.PI/180,dx=Math.cos(r),dy=-Math.sin(r);
+      s+=`<line x1="${(cx-72*dx).toFixed(1)}" y1="${(cy-72*dy).toFixed(1)}" x2="${(cx+72*dx).toFixed(1)}" y2="${(cy+72*dy).toFixed(1)}" stroke="${C.dim}" stroke-width="1.2" stroke-dasharray="5,3"/>`;}
+    s+= opts.body==='circle'
+        ? `<circle cx="${cx}" cy="${cy}" r="14" fill="${C.body}" stroke="${C.bs}" stroke-width="1.5"/>`
+        : `<rect x="${cx-15}" y="${cy-15}" width="30" height="30" rx="3" fill="${C.body}" stroke="${C.bs}" stroke-width="1.5"/>`;
+    list.forEach(f=>s+=force(cx,cy,f.a,f.len||44,f.t,f.c));
+    s+=`<text x="125" y="170" font-size="9.5" fill="${C.dim}" text-anchor="middle" ${FS}>correct free-body diagram</text></svg>`;return s;},
+
+  // bottom block of a stack — three vertical forces, arrows offset so they don't overlap
+  fbdBottom:()=>{const cx=115,cy=92;let s=`<svg viewBox="0 0 250 178" width="250" height="178" xmlns="http://www.w3.org/2000/svg"><defs>${MARKERS}</defs>`;
+    s+=`<rect x="${cx-20}" y="${cy-16}" width="40" height="32" rx="3" fill="${C.body}" stroke="${C.bs}" stroke-width="1.5"/>`;
+    // A presses down (left of centre)
+    s+=`<line x1="${cx-12}" y1="${cy-16}" x2="${cx-12}" y2="${cy-58}" stroke="${C.n}" stroke-width="2.4" marker-start="url(#mN)"/>`;
+    s+=`<text x="${cx-12}" y="${cy-64}" font-size="11" fill="${C.n}" text-anchor="middle" ${FS}>N from A</text>`;
+    // its own weight (down, right of centre)
+    s+=`<line x1="${cx+14}" y1="${cy}" x2="${cx+14}" y2="${cy+46}" stroke="${C.w}" stroke-width="2.4" marker-end="url(#mW)"/>`;
+    s+=`<text x="${cx+40}" y="${cy+30}" font-size="11" fill="${C.w}" text-anchor="middle" ${FS}>m<tspan baseline-shift="sub" font-size="8">B</tspan>g</text>`;
+    // floor normal up (from base centre)
+    s+=`<line x1="${cx-40}" y1="${cy+16}" x2="${cx-40}" y2="${cy-32}" stroke="${C.n}" stroke-width="2.4" marker-end="url(#mN)"/>`;
+    s+=`<text x="${cx-40}" y="${cy-40}" font-size="11" fill="${C.n}" text-anchor="middle" ${FS}>N floor</text>`;
+    s+=`<text x="125" y="170" font-size="9.5" fill="${C.dim}" text-anchor="middle" ${FS}>FBD of the lower block</text></svg>`;return s;}
+};
+
+// shorthand force objects
+const W=(t)=>({a:270,t:t||'mg',c:C.w});
+const N=(a,t)=>({a:a,t:t||'N',c:C.n});
+const T=(a,t)=>({a:a,t:t||'T',c:C.t});
+const Fr=(a,t)=>({a:a,t:t||'f',c:C.f});
+const Ap=(a,t)=>({a:a,t:t,c:C.ap});
+
+// ═══════════════════════════════════════════════════════════════════
+//  QUESTION BANK — 9 base questions, each with 3 variations
+// ═══════════════════════════════════════════════════════════════════
+
+// ── small drawing helpers (equilibrium set) ───────────────────────────────
+function svg(w,h,inner){return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" xmlns="http://www.w3.org/2000/svg"><defs>'+MARKERS+'</defs>'+inner+'</svg>';}
+function line(x1,y1,x2,y2,color,w,dash){return '<line x1="'+(+x1).toFixed(1)+'" y1="'+(+y1).toFixed(1)+'" x2="'+(+x2).toFixed(1)+'" y2="'+(+y2).toFixed(1)+'" stroke="'+(color||C.bs)+'" stroke-width="'+(w||1.6)+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>';}
+function rot(deg,cx,cy,inner){return '<g transform="rotate('+deg+' '+cx+' '+cy+')">'+inner+'</g>';}
+function txt(x,y,t,color,size,anchor){return '<text x="'+x+'" y="'+y+'" font-size="'+(size||11)+'" fill="'+(color||C.dim)+'" text-anchor="'+(anchor||'start')+'" '+FS+'>'+t+'</text>';}
+function farrowP(x1,y1,x2,y2,color){return '<line x1="'+(+x1).toFixed(1)+'" y1="'+(+y1).toFixed(1)+'" x2="'+(+x2).toFixed(1)+'" y2="'+(+y2).toFixed(1)+'" stroke="'+color+'" stroke-width="2.6" marker-end="url(#'+MK[color]+')"/>';}
+
+function inclineGeom(th){var r=th*Math.PI/180, H=116, ay=155, bx=250, apex=ay-H, L=H/Math.tan(r), ax=bx-L;
+  var t=0.44, px=ax+t*L, py=ay-t*H, s=Math.sin(r), c=Math.cos(r);
+  return {ax:ax,ay:ay,bx:bx,apex:apex,L:L,th:th,up:th,norm:90+th,down:180+th,bcx:px-14*s,bcy:py-14*c,rot:-th};}
+function inclineTri(g){return '<polygon points="'+g.ax.toFixed(1)+','+g.ay+' '+g.bx+','+g.ay+' '+g.bx+','+g.apex.toFixed(1)+'" fill="#f1f5f9" stroke="'+C.bs+'" stroke-width="1.5"/>';}
+function inclineArc(g){var r=g.th*Math.PI/180,R=27,x2=g.ax+R*Math.cos(r),y2=g.ay-R*Math.sin(r);
+  return '<path d="M '+(g.ax+R)+' '+g.ay+' A '+R+' '+R+' 0 0 0 '+x2.toFixed(1)+' '+y2.toFixed(1)+'" fill="none" stroke="'+C.dim+'" stroke-width="1.2"/>'+txt(g.ax+R+7,g.ay-7,g.th+'\u00b0',C.dim,11,'start');}
+
+const EQ={
+ inclineString:function(th){var g=inclineGeom(th);var r=th*Math.PI/180;
+   var sx=g.bcx+23*Math.cos(r), sy=g.bcy-23*Math.sin(r);
+   return svg(300,175, hatch(g.ax,g.bx,g.ay)+inclineTri(g)+
+     rot(g.rot,g.bcx,g.bcy, block(g.bcx-22,g.bcy-13,44,26,'m'))+
+     line(sx,sy,g.bx-5,g.apex+7,C.t,2)+ inclineArc(g)+
+     txt(g.bx-4,g.ay-8,'smooth',C.dim,10,'end')+txt(g.bx-96,g.apex+30,'string along slope',C.t,10,'start')); },
+
+ inclineHorizForce:function(th){var g=inclineGeom(th);
+   return svg(300,175, hatch(g.ax,g.bx,g.ay)+inclineTri(g)+
+     rot(g.rot,g.bcx,g.bcy, block(g.bcx-22,g.bcy-13,44,26,'m'))+
+     farrowP(g.bcx-72,g.bcy,g.bcx-26,g.bcy,C.ap)+txt(g.bcx-49,g.bcy-8,'F',C.ap,12,'middle')+
+     inclineArc(g)+txt(g.bx-4,g.ay-8,'smooth',C.dim,10,'end')); },
+
+ twoRopes:function(beta){var r=beta*Math.PI/180,Bx=150,By=112,cy=46,rise=By-cy,d=rise/Math.tan(r);
+   var Lx=Bx-d,Rx=Bx+d;
+   return svg(300,178, hatch(Math.max(16,Lx-16),Math.min(284,Rx+16),cy)+
+     line(Lx,cy,Bx,By,C.bs,1.6)+line(Rx,cy,Bx,By,C.bs,1.6)+
+     block(Bx-24,By,48,34,'W')+
+     farrowP(Bx,By+34,Bx,By+62,C.w)+txt(Bx+7,By+56,'weight',C.w,10,'start')+
+     txt(Bx+11,By-5,beta+'\u00b0',C.dim,10,'start')); },
+
+ pendulumPush:function(){var A=[150,42],B=[210,122],th=0.6435;
+   return svg(300,178, hatch(120,182,34)+
+     line(A[0],A[1],A[0],B[1],C.dim,1,'4,3')+ line(A[0],B[1],B[0],B[1],C.dim,1,'4,3')+
+     line(A[0],A[1],B[0],B[1],C.bs,1.6)+
+     '<circle cx="'+B[0]+'" cy="'+B[1]+'" r="15" fill="'+C.body+'" stroke="'+C.bs+'" stroke-width="1.5"/>'+
+     farrowP(B[0]+15,B[1],B[0]+54,B[1],C.ap)+txt(B[0]+34,B[1]-8,'F',C.ap,12,'middle')+
+     farrowP(B[0],B[1]+15,B[0],B[1]+50,C.w)+txt(B[0]+8,B[1]+42,'W',C.w,11,'start')+
+     '<path d="M '+A[0]+' '+(A[1]+26)+' A 26 26 0 0 0 '+(A[0]+26*Math.sin(th)).toFixed(1)+' '+(A[1]+26*Math.cos(th)).toFixed(1)+'" fill="none" stroke="'+C.dim+'" stroke-width="1.1"/>'+
+     txt(A[0]+9,A[1]+23,'\u03b8',C.dim,11,'start')+
+     txt((A[0]+B[0])/2+7,(A[1]+B[1])/2-3,'0.5 m',C.dim,9,'start')+
+     txt((A[0]+B[0])/2,B[1]+14,'0.3 m',C.dim,9,'middle')+
+     txt(A[0]-6,(A[1]+B[1])/2,'0.4 m',C.dim,9,'end')); },
+
+ vGroove:function(phi){phi=phi||60;var r=phi*Math.PI/180,V=[150,150],Lw=118;
+   var lt=[V[0]-Lw*Math.cos(r),V[1]-Lw*Math.sin(r)],rt=[V[0]+Lw*Math.cos(r),V[1]-Lw*Math.sin(r)];
+   var rad=38,cy=V[1]-rad/Math.cos(r);
+   return svg(300,180, line(lt[0],lt[1],V[0],V[1],C.bs,2)+line(rt[0],rt[1],V[0],V[1],C.bs,2)+
+     '<circle cx="'+V[0]+'" cy="'+cy.toFixed(1)+'" r="'+rad+'" fill="'+C.body+'" stroke="'+C.bs+'" stroke-width="1.5"/>'+
+     txt(V[0],(cy+4).toFixed(1),'W',C.ink,11,'middle')+
+     txt(V[0],V[1]+18,'each face '+phi+'\u00b0',C.dim,10,'middle')); },
+
+ twoInclines:function(t1,t2){var r1=t1*Math.PI/180,r2=t2*Math.PI/180,V=[152,152],dxL=112,dxR=74;
+   var lt=[V[0]-dxL,V[1]-dxL*Math.tan(r1)],rt=[V[0]+dxR,V[1]-dxR*Math.tan(r2)];
+   return svg(300,180, line(lt[0],lt[1],V[0],V[1],C.bs,2)+line(rt[0],rt[1],V[0],V[1],C.bs,2)+
+     '<circle cx="'+(V[0]-4)+'" cy="'+(V[1]-46)+'" r="30" fill="'+C.body+'" stroke="'+C.bs+'" stroke-width="1.5"/>'+
+     txt(lt[0]+16,lt[1]+18,t1+'\u00b0',C.dim,10,'start')+txt(rt[0]-16,rt[1]+18,t2+'\u00b0',C.dim,10,'end')); },
+
+ stack3:function(){return svg(300,180, hatch(40,250,162)+
+   block(96,120,110,42,'5 kg','#e6effd')+block(114,86,74,34,'3 kg','#eef2ff')+block(130,58,42,28,'2 kg','#f5f8ff')); },
+
+ forces2:function(){var P=[140,98];return svg(300,175,
+   '<circle cx="'+P[0]+'" cy="'+P[1]+'" r="4" fill="'+C.ink+'"/>'+
+   farrowP(P[0],P[1],P[0]+74,P[1],C.ap)+txt(P[0]+40,P[1]-9,'3 N',C.ap,11,'middle')+
+   farrowP(P[0],P[1],P[0],P[1]-74,C.ap)+txt(P[0]-8,P[1]-46,'4 N',C.ap,11,'end')); },
+
+ bracket:function(){var A=[105,52],B=[176,122],D=[250,122];
+   return svg(300,175, hatch(78,138,52)+ vhatch(62,162,250)+
+     line(A[0],A[1],B[0],B[1],C.bs,1.6)+line(B[0],B[1],D[0],D[1],C.bs,1.6)+
+     '<circle cx="'+B[0]+'" cy="'+B[1]+'" r="7" fill="'+C.ink+'"/>'+
+     farrowP(B[0],B[1]+8,B[0],B[1]+48,C.w)+txt(B[0]+8,B[1]+42,'W',C.w,11,'start')+
+     txt(B[0]-40,B[1]-7,'45\u00b0',C.dim,10,'start')+
+     txt(A[0]+6,A[1]+30,'string',C.t,9,'start')+txt(206,B[1]-6,'string',C.t,9,'start')); }
+};
+
+
+// ── friction-specific diagram generators ──────────────────────────────────
+const FR={
+ floorBlock:function(label,Fval){var y=140,bx=108,bw=74,bh=42,cy=y-bh/2;
+   var s=hatch(30,262,y)+block(bx,y-bh,bw,bh,label||'m')+txt(252,y+20,'rough',C.dim,10,'end');
+   if(Fval){s+=farrowP(bx+bw,cy,bx+bw+54,cy,C.ap)+txt(bx+bw+27,cy-8,Fval,C.ap,12,'middle');}
+   return svg(300,168,s); },
+
+ incline:function(th,o){o=o||{};var g=inclineGeom(th),r=th*Math.PI/180;
+   var s=hatch(g.ax,g.bx,g.ay)+inclineTri(g);
+   for(var k=0.12;k<0.9;k+=0.13){var x=g.ax+k*g.L,y=g.ay-k*116;s+='<circle cx="'+(x-0.5).toFixed(1)+'" cy="'+(y-0.9).toFixed(1)+'" r="1.5" fill="'+C.dim+'"/>';}
+   s+=rot(g.rot,g.bcx,g.bcy,block(g.bcx-22,g.bcy-13,44,26,'m'));
+   if(o.F){var sx=g.bcx+23*Math.cos(r),sy=g.bcy-23*Math.sin(r),ex=sx+42*Math.cos(r),ey=sy-42*Math.sin(r);
+     s+=farrowP(sx,sy,ex,ey,C.ap)+txt(ex+5,ey-4,'F',C.ap,12,'start');}
+   s+=inclineArc(g)+txt(g.bx-4,g.ay-8,'rough',C.dim,10,'end');
+   return svg(300,175,s); },
+
+ truckBlock:function(){var bedX=44,bedY=126,bedW=212,bedH=14,bx=118,by=bedY-40,bw=64,bh=40;
+   return svg(300,182,
+     '<rect x="'+bedX+'" y="'+bedY+'" width="'+bedW+'" height="'+bedH+'" rx="3" fill="#e2e8f0" stroke="'+C.bs+'" stroke-width="1.4"/>'+
+     '<circle cx="'+(bedX+34)+'" cy="'+(bedY+bedH+10)+'" r="10" fill="#cbd5e1" stroke="'+C.bs+'" stroke-width="1.2"/>'+
+     '<circle cx="'+(bedX+bedW-34)+'" cy="'+(bedY+bedH+10)+'" r="10" fill="#cbd5e1" stroke="'+C.bs+'" stroke-width="1.2"/>'+
+     block(bx,by,bw,bh,'m')+
+     farrowP(bedX+bedW-4,bedY-3,bedX+bedW+42,bedY-3,C.ap)+txt(bedX+bedW+20,bedY-11,'a',C.ap,13,'middle')+
+     hatch(18,282,bedY+bedH+20)+txt(150,bedY+bedH+38,'truck accelerating',C.dim,10,'middle')); },
+
+ skid:function(){var y=142,cx=98,cw=96,ch=32;
+   var marks='';for(var i=0;i<3;i++){var mx=cx-14-i*16;marks+=line(mx,y+2,mx-10,y+2,C.dim,2,'2,3');}
+   return svg(300,172,
+     hatch(18,282,y+11)+
+     '<circle cx="'+(cx+22)+'" cy="'+(y+2)+'" r="9" fill="#334155"/><circle cx="'+(cx+cw-22)+'" cy="'+(y+2)+'" r="9" fill="#334155"/>'+
+     block(cx,y-ch,cw,ch,'m')+
+     '<rect x="'+(cx+24)+'" y="'+(y-ch-15)+'" width="46" height="17" rx="4" fill="#dbe4f5" stroke="'+C.bs+'" stroke-width="1.2"/>'+
+     farrowP(cx+cw+4,y-ch+2,cx+cw+52,y-ch+2,C.t)+txt(cx+cw+28,y-ch-6,'v',C.t,12,'middle')+
+     farrowP(cx-4,y+9,cx-46,y+9,C.f)+txt(cx-25,y+2,'f',C.f,11,'middle')+
+     txt(258,y+26,'rough',C.dim,10,'end')); }
+};
+
+const QUESTIONS=[
+ // 1 static friction is self-adjusting
+ {q:"A 10 kg block sits on a rough floor (\u03bc\u209b = 0.4). You push it horizontally with 20 N, but it does not move. What is the friction force on it? (g = 10)",
+  diagram:FR.floorBlock("10 kg","20 N"),opts:["4 N","20 N","40 N","zero"],ans:1,
+  sol:"Static friction is self-adjusting \u2014 it grows only as much as needed, up to the limiting value \u03bc\u209bN = 0.4\u00d7100 = 40 N. Since the 20 N push is below that, friction simply matches it: <strong>f = 20 N</strong> (not 40 N)."+D.fbd([N(90),W("mg"),Ap(0,"20 N"),Fr(180,"f")]),
+  variants:[
+   {q:"The same 10 kg block (\u03bc\u209b = 0.4) is pushed with 35 N and still does not move. The friction force is: (g = 10)",diagram:FR.floorBlock("10 kg","35 N"),opts:["35 N","40 N","25 N","zero"],ans:0,sol:"Still below the limiting 40 N, so friction matches the push: f = 35 N."+D.fbd([N(90),W("mg"),Ap(0,"35 N"),Fr(180,"f")])},
+   {q:"For that block (10 kg, \u03bc\u209b = 0.4), the largest friction the surface can provide (limiting friction) is: (g = 10)",diagram:FR.floorBlock("10 kg","F"),opts:["40 N","20 N","100 N","4 N"],ans:0,sol:"Limiting friction = \u03bc\u209bN = 0.4 \u00d7 (10\u00d710) = 40 N."},
+   {q:"For a stationary block, the static friction force is:",diagram:FR.floorBlock("m","F"),opts:["Exactly equal to the applied push (up to \u03bc\u209bN)","Always \u03bc\u209bN","Always zero","Always mg"],ans:0,sol:"Static friction adjusts itself to match the applied force, only up to a maximum of \u03bc\u209bN."}
+  ]},
+
+ // 2 minimum force to start moving
+ {q:"A 10 kg block rests on a rough floor (\u03bc\u209b = 0.5). What is the minimum horizontal force needed to just start it moving? (g = 10)",
+  diagram:FR.floorBlock("10 kg","F"),opts:["5 N","50 N","100 N","25 N"],ans:1,
+  sol:"The block starts to move when the push reaches the limiting friction: F = \u03bc\u209bN = 0.5 \u00d7 (10\u00d710) = <strong>50 N</strong>."+D.fbd([N(90),W("mg"),Ap(0,"F"),Fr(180,"f")]),
+  variants:[
+   {q:"A 10 kg block on a rough floor with \u03bc\u209b = 0.3. The minimum horizontal force to start it moving is: (g = 10)",diagram:FR.floorBlock("10 kg","F"),opts:["30 N","3 N","60 N","10 N"],ans:0,sol:"F = \u03bc\u209bN = 0.3 \u00d7 100 = 30 N."},
+   {q:"A block of weight 200 N just starts to move when a 60 N horizontal force is applied. The coefficient of static friction is:",diagram:FR.floorBlock("W = 200 N","60 N"),opts:["0.3","0.6","3","0.03"],ans:0,sol:"At slipping, F = \u03bc\u209bN \u2192 \u03bc\u209b = 60/200 = 0.3."},
+   {q:"The minimum horizontal force to start a block of mass m moving on a rough floor is:",diagram:FR.floorBlock("m","F"),opts:["\u03bc\u209b m g","\u03bc\u209b m","m g","\u03bc\u209b g"],ans:0,sol:"F = \u03bc\u209bN = \u03bc\u209b mg."}
+  ]},
+
+ // 3 kinetic friction and acceleration
+ {q:"A 5 kg block is already sliding on a rough floor (\u03bc\u2096 = 0.2) and is pulled by a steady 20 N horizontal force. Find its acceleration. (g = 10)",
+  diagram:FR.floorBlock("5 kg","20 N"),opts:["4 m/s\u00b2","2 m/s\u00b2","6 m/s\u00b2","1 m/s\u00b2"],ans:1,
+  sol:"Kinetic friction f = \u03bc\u2096N = 0.2\u00d750 = 10 N, opposing motion. Net force = 20 \u2212 10 = 10 N. a = F\u2099\u2091\u209c/m = 10/5 = <strong>2 m/s\u00b2</strong>."+D.fbd([N(90),W("mg"),Ap(0,"20 N"),Fr(180,"f")]),
+  variants:[
+   {q:"For that sliding 5 kg block (\u03bc\u2096 = 0.2), the kinetic friction force is: (g = 10)",diagram:FR.floorBlock("5 kg","20 N"),opts:["10 N","20 N","1 N","50 N"],ans:0,sol:"f = \u03bc\u2096N = 0.2 \u00d7 (5\u00d710) = 10 N."},
+   {q:"The same block slides while pulled by 30 N (\u03bc\u2096 = 0.2, m = 5 kg). Its acceleration is: (g = 10)",diagram:FR.floorBlock("5 kg","30 N"),opts:["4 m/s\u00b2","2 m/s\u00b2","6 m/s\u00b2","5 m/s\u00b2"],ans:0,sol:"f = 10 N; net = 30 \u2212 10 = 20 N; a = 20/5 = 4 m/s\u00b2."},
+   {q:"While the 5 kg block is sliding, the 20 N pull is suddenly removed. The block then: (\u03bc\u2096 = 0.2, g = 10)",diagram:FR.floorBlock("5 kg","F"),opts:["Slows down at 2 m/s\u00b2","Keeps the same speed","Speeds up","Stops at once"],ans:0,sol:"Only kinetic friction acts: deceleration = \u03bc\u2096g = 0.2\u00d710 = 2 m/s\u00b2 until it stops."}
+  ]},
+
+ // 4 find the coefficient
+ {q:"A block weighing 100 N just begins to slide when a horizontal force of 30 N is applied. Find the coefficient of static friction.",
+  diagram:FR.floorBlock("W = 100 N","30 N"),opts:["0.7","0.3","3","0.03"],ans:1,
+  sol:"At the point of slipping, the applied force equals the limiting friction: \u03bc\u209b = f/N = 30/100 = <strong>0.3</strong>."+D.fbd([N(90),W("W"),Ap(0,"30 N"),Fr(180,"f")]),
+  variants:[
+   {q:"A 100 N block then slides at constant speed under a 25 N horizontal force. The coefficient of kinetic friction is:",diagram:FR.floorBlock("W = 100 N","25 N"),opts:["0.25","0.4","2.5","0.75"],ans:0,sol:"Constant speed \u21d2 force = kinetic friction: \u03bc\u2096 = 25/100 = 0.25."},
+   {q:"A block just begins to slide on an incline at 45\u00b0 (angle of repose). Its coefficient of static friction is:",diagram:FR.incline(45),opts:["1","0.5","\u221a2","0.7"],ans:0,sol:"\u03bc\u209b = tan(angle of repose) = tan45\u00b0 = 1."},
+   {q:"The coefficient of friction is:",diagram:FR.floorBlock("m","F"),opts:["A pure number with no units","Measured in newtons","Measured in kg","Measured in m/s\u00b2"],ans:0,sol:"\u03bc = f/N is a ratio of two forces, so it is dimensionless (no units)."}
+  ]},
+
+ // 5 angle of repose
+ {q:"A block is placed on a rough incline whose angle is slowly increased. The block just begins to slide when the angle reaches 30\u00b0. Find the coefficient of static friction.",
+  diagram:FR.incline(30),opts:["sin30\u00b0 = 0.5","cos30\u00b0 \u2248 0.87","tan30\u00b0 \u2248 0.58","tan60\u00b0 \u2248 1.73"],ans:2,
+  sol:"The angle at which sliding just begins is the angle of repose, and \u03bc\u209b = tan(that angle) = tan30\u00b0 = 1/\u221a3 \u2248 <strong>0.58</strong>."+D.fbd([{a:120,t:'N',c:C.n},W("mg"),Fr(30,"f")],{surface:30}),
+  variants:[
+   {q:"A block just starts to slide on a rough incline when its angle is 45\u00b0. The coefficient of static friction is:",diagram:FR.incline(45),opts:["1","0.5","0.87","1.7"],ans:0,sol:"\u03bc\u209b = tan45\u00b0 = 1."},
+   {q:"A block on a rough incline stays at rest as long as:",diagram:FR.incline(30),opts:["The angle is not more than the angle of repose","The angle is more than the angle of repose","The incline is smooth","The block is heavy"],ans:0,sol:"It slides only when tan\u03b8 > \u03bc\u209b, i.e. when the angle exceeds the angle of repose."},
+   {q:"If the coefficient of static friction is \u03bc\u209b = 1/\u221a3, the angle of repose is:",diagram:FR.incline(30),opts:["30\u00b0","45\u00b0","60\u00b0","15\u00b0"],ans:0,sol:"tan\u03b8 = \u03bc\u209b = 1/\u221a3 \u2192 \u03b8 = 30\u00b0."}
+  ]},
+
+ // 6 static friction on an incline (below repose)
+ {q:"A 10 kg block rests on a rough 30\u00b0 incline and does not slide. What is the friction force on it? (g = 10)",
+  diagram:FR.incline(30),opts:["86.6 N","50 N","40 N","100 N"],ans:1,
+  sol:"The block is in equilibrium, so friction just balances the along-slope pull of gravity: f = mg sin30\u00b0 = 100\u00d70.5 = <strong>50 N</strong>. This is static friction (self-adjusting), <em>not</em> \u03bcN."+D.fbd([{a:120,t:'N',c:C.n},W("mg"),Fr(30,"f")],{surface:30}),
+  variants:[
+   {q:"For the same block on the rough 30\u00b0 incline, the normal reaction is: (g = 10)",diagram:FR.incline(30),opts:["\u2248 86.6 N","50 N","100 N","40 N"],ans:0,sol:"N = mg cos30\u00b0 = 100 \u00d7 (\u221a3/2) \u2248 86.6 N."},
+   {q:"For a block resting (not sliding) on a rough incline, the friction force equals:",diagram:FR.incline(30),opts:["mg sin\u03b8 (the along-slope pull of gravity)","\u03bcN always","mg cos\u03b8","mg"],ans:0,sol:"While at rest, static friction = mg sin\u03b8, which is \u2264 \u03bcN. It only equals \u03bcN at the point of slipping."},
+   {q:"The smallest coefficient of static friction that keeps a block from sliding on a 30\u00b0 incline is:",diagram:FR.incline(30),opts:["tan30\u00b0 \u2248 0.58","sin30\u00b0 = 0.5","cos30\u00b0 \u2248 0.87","1"],ans:0,sol:"It stays put if \u03bc\u209b \u2265 tan\u03b8 = tan30\u00b0 \u2248 0.58."}
+  ]},
+
+ // 7 rough incline: force to move up
+ {q:"A 10 kg block is on a rough 37\u00b0 incline (\u03bc\u2096 = 0.5). Find the force, applied up along the incline, needed to move it up at a steady speed. (sin37\u00b0 = 0.6, cos37\u00b0 = 0.8, g = 10)",
+  diagram:FR.incline(37,{F:true}),opts:["60 N","40 N","100 N","20 N"],ans:2,
+  sol:"Moving up, both gravity's slope part and kinetic friction act down the slope: F = mg sin\u03b8 + \u03bc\u2096 mg cos\u03b8 = 60 + 40 = <strong>100 N</strong>."+D.fbd([{a:37,t:'F',c:C.ap},{a:127,t:'N',c:C.n},W("mg"),{a:217,t:'f',c:C.f}],{surface:37}),
+  variants:[
+   {q:"While that block moves up the 37\u00b0 incline, the kinetic friction on it is: (\u03bc\u2096 = 0.5, g = 10)",diagram:FR.incline(37,{F:true}),opts:["40 N","60 N","100 N","50 N"],ans:0,sol:"f = \u03bc\u2096 mg cos37\u00b0 = 0.5 \u00d7 100 \u00d7 0.8 = 40 N."},
+   {q:"While the block is moving up the rough incline, the kinetic friction on it points:",diagram:FR.incline(37,{F:true}),opts:["Down the slope","Up the slope","Perpendicular to the slope","Vertically down"],ans:0,sol:"Kinetic friction opposes the motion, so it points down the slope."},
+   {q:"For the same block, the smallest force (up the incline) needed to just stop it sliding down is: (g = 10)",diagram:FR.incline(37,{F:true}),opts:["20 N","100 N","60 N","40 N"],ans:0,sol:"Now friction helps, acting up: F = mg sin\u03b8 \u2212 \u03bc mg cos\u03b8 = 60 \u2212 40 = 20 N."}
+  ]},
+
+ // 8 friction as the accelerating force
+ {q:"A block rests on the floor of a truck (\u03bc\u209b = 0.4). What is the maximum acceleration the truck can have so the block does not slide? (g = 10)",
+  diagram:FR.truckBlock(),opts:["10 m/s\u00b2","2.5 m/s\u00b2","4 m/s\u00b2","40 m/s\u00b2"],ans:2,
+  sol:"The only horizontal force on the block is friction from the floor, and it is what accelerates the block. The most it can give is \u03bc\u209b mg, so the largest acceleration is a = \u03bc\u209b g = 0.4\u00d710 = <strong>4 m/s\u00b2</strong> (the mass cancels)."+D.fbd([N(90),W("mg"),{a:0,t:'f',c:C.f}]),
+  variants:[
+   {q:"While the truck carries the block along (without slipping), the friction on the block points:",diagram:FR.truckBlock(),opts:["In the direction of the truck's acceleration","Backward, opposite the acceleration","Straight down","Straight up"],ans:0,sol:"Friction is the only forward force on the block, so it points the way the truck accelerates \u2014 it is what speeds the block up."},
+   {q:"The truck accelerates at 3 m/s\u00b2 and a 2 kg block on its floor does not slide. The friction on the block is: (g = 10)",diagram:FR.truckBlock(),opts:["6 N","20 N","8 N","3 N"],ans:0,sol:"Friction supplies the block's acceleration: f = ma = 2 \u00d7 3 = 6 N (well under \u03bc\u209bmg)."},
+   {q:"The maximum acceleration a block can be carried at without sliding depends on:",diagram:FR.truckBlock(),opts:["\u03bc\u209b and g only (not the mass)","The mass only","The mass and \u03bc\u209b","Nothing \u2014 it is fixed"],ans:0,sol:"a_max = \u03bc\u209b g; the mass cancels out."}
+  ]},
+
+ // 9 stopping distance
+ {q:"A car moving at 10 m/s brakes and skids to a stop on a road with \u03bc\u2096 = 0.5. How far does it travel before stopping? (g = 10)",
+  diagram:FR.skid(),opts:["5 m","20 m","10 m","2 m"],ans:2,
+  sol:"Friction gives a deceleration a = \u03bc\u2096 g = 0.5\u00d710 = 5 m/s\u00b2. Using v\u00b2 = 2as: s = v\u00b2/(2a) = 100/10 = <strong>10 m</strong>. The mass does not matter."+D.fbd([N(90),W("mg"),{a:180,t:'f',c:C.f}]),
+  variants:[
+   {q:"For that skidding car (\u03bc\u2096 = 0.5), the deceleration is: (g = 10)",diagram:FR.skid(),opts:["5 m/s\u00b2","10 m/s\u00b2","2.5 m/s\u00b2","0.5 m/s\u00b2"],ans:0,sol:"a = \u03bc\u2096 g = 0.5 \u00d7 10 = 5 m/s\u00b2."},
+   {q:"If the car's speed is doubled to 20 m/s (same road, \u03bc\u2096 = 0.5), the skidding distance becomes: (g = 10)",diagram:FR.skid(),opts:["40 m","20 m","10 m","80 m"],ans:0,sol:"Stopping distance \u221d v\u00b2. Doubling the speed makes it 4\u00d7 larger: 10 \u2192 40 m."},
+   {q:"A heavy lorry and a light car skid on the same road at the same speed. Which stops in the shorter distance?",diagram:FR.skid(),opts:["Both stop in the same distance","The car","The lorry","The heavier one always"],ans:0,sol:"Deceleration = \u03bc\u2096 g and stopping distance = v\u00b2/(2\u03bc\u2096g) \u2014 the mass cancels, so both stop in the same distance."}
+  ]}
+];
+
+
+const LETT=['A','B','C','D'];
+const state={};
+QUESTIONS.forEach((_,i)=>state[i]={cur:0,ans:{}});
+try{const s=localStorage.getItem('padi_fric_dpp');if(s){const o=JSON.parse(s);Object.keys(o).forEach(k=>{if(state[k])state[k]=o[k];});}}catch(e){}
+function save(){try{localStorage.setItem('padi_fric_dpp',JSON.stringify(state));}catch(e){}}
+
+const paper=document.getElementById('paper');
+function versionOf(i){const q=QUESTIONS[i];return state[i].cur===0?q:q.variants[state[i].cur-1];}
+
+function buildCard(i){
+  const card=document.createElement('div');card.className='card';card.dataset.i=i;
+  paper.appendChild(card);
+  renderCard(i);
+}
+function renderCard(i){
+  const card=paper.querySelector(`.card[data-i="${i}"]`);
+  const q=QUESTIONS[i];const cur=state[i].cur;const data=versionOf(i);const nv=q.variants.length;
+  const isBase=cur===0;
+  let optHtml='';
+  data.opts.forEach((o,oi)=>{optHtml+=`<button class="opt" data-oi="${oi}"><span class="lt">${LETT[oi]}</span><span>${o}</span></button>`;});
+  card.innerHTML=`
+    <div class="q-top">
+      <span class="q-no">Q${i+1}</span>
+      <span class="vchip ${isBase?'':'var'}">${isBase?'Base':'Variation '+cur+' / '+nv}</span>
+      ${isBase?'':'<span class="prac">practice · not scored</span>'}
+    </div>
+    <div class="q-text">${data.q}</div>
+    <div class="q-diagram">${data.diagram}</div>
+    <div class="opts">${optHtml}</div>
+    <div class="act">
+      <span class="fb"></span>
+      <button class="showsol">Show solution</button>
+      <button class="varbtn">&#8635; Try a variation</button>
+    </div>
+    <div class="sol"><div class="sol-in"><strong>Answer: ${LETT[data.ans]}.</strong> ${data.sol}</div></div>`;
+  const opts=card.querySelectorAll('.opt');
+  const fb=card.querySelector('.fb');
+  const sol=card.querySelector('.sol');
+  function lockIn(chosen){
+    opts.forEach(op=>{op.classList.add('locked');const oi=+op.dataset.oi;
+      if(oi===data.ans)op.classList.add('correct');
+      if(oi===chosen&&chosen!==data.ans)op.classList.add('wrong');});
+    const ok=chosen===data.ans;fb.className='fb '+(ok?'c':'w');fb.textContent=ok?'Correct':'Review';
+    sol.classList.add('open');
+  }
+  opts.forEach(op=>op.addEventListener('click',()=>{
+    if(op.classList.contains('locked'))return;
+    const chosen=+op.dataset.oi;state[i].ans[cur]=chosen;save();lockIn(chosen);updateScore();
+  }));
+  card.querySelector('.showsol').addEventListener('click',()=>sol.classList.toggle('open'));
+  card.querySelector('.varbtn').addEventListener('click',()=>{
+    state[i].cur=(state[i].cur+1)%(nv+1);save();renderCard(i);
+  });
+  if(state[i].ans[cur]!==undefined)lockIn(state[i].ans[cur]);
+}
+function updateScore(){
+  let att=0,sc=0;
+  QUESTIONS.forEach((q,i)=>{const v=state[i].ans[0];if(v!==undefined){att++;if(v===q.ans)sc++;}});
+  document.getElementById('att').textContent=att;
+  document.getElementById('sc').textContent=sc;
+  document.getElementById('tot').textContent=QUESTIONS.length;
+}
+document.getElementById('revealBtn').addEventListener('click',()=>{
+  QUESTIONS.forEach((q,i)=>{const data=versionOf(i);
+    const card=paper.querySelector(`.card[data-i="${i}"]`);
+    card.querySelectorAll('.opt').forEach(op=>{op.classList.add('locked');if(+op.dataset.oi===data.ans)op.classList.add('correct');});
+    card.querySelector('.sol').classList.add('open');});
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  QUESTIONS.forEach((_,i)=>state[i]={cur:0,ans:{}});save();
+  paper.innerHTML='';QUESTIONS.forEach((_,i)=>buildCard(i));updateScore();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+QUESTIONS.forEach((_,i)=>buildCard(i));
+updateScore();
+</script>
+</body>
+</html>
