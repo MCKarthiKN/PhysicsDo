@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Alternating Current &#183; Lecture 2 Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Integration &#183; NEET</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Alternating Current &#183; Lecture 2<br>Pure R, Pure L, Pure C</h1></div>
+    <p id="home-sub">Alternating Current, <strong>Lecture 2</strong> &#8212; one element at a time. Reactance, phase, phasors, and what happens when the frequency changes. Every source question is a real <strong>JEE Main PYQ</strong> from the chapter bank, turned into a <strong>ladder</strong>: 3 build-up rungs, then the original exam question (&#9733;). Each ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 12 ladders &#215; 4 rungs = 48 questions.<br><br><em>Years covered: 2005, 2014, 2020, 2021, 2022 and 2023 &#8212; all 13 single-element PYQs in the bank are here. Two of them printed their options as images; those are written out in words and flagged inside the solution.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Alternating Current, Lecture 2  (PADIPUCAST)
+//  Pure resistor, pure inductor, pure capacitor
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+
+function _sine(x0,x1,ymid,amp,cycles,phase){
+  let p=[];
+  for(let i=0;i<=240;i++){
+    const f=i/240, x=x0+f*(x1-x0);
+    const y=ymid-amp*Math.sin(2*Math.PI*cycles*f+(phase||0));
+    p.push(x.toFixed(1)+','+y.toFixed(1));
+  }
+  return p.join(' ');
+}
+function _axes(x0,x1,ymid,top,bot,id){
+  return `<line x1="${x0-12}" y1="${ymid}" x2="${x1+14}" y2="${ymid}" stroke="#6b7280" stroke-width="1.3" marker-end="url(#${id})"/>
+  <line x1="${x0-12}" y1="${bot}" x2="${x0-12}" y2="${top}" stroke="#6b7280" stroke-width="1.3" marker-end="url(#${id})"/>`;
+}
+// a.c. source symbol
+function _src(cx,cy,r){
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--surface)" stroke="#1a1916" stroke-width="1.7"/>
+  <path d="M ${cx-r*0.6} ${cy} Q ${cx-r*0.3} ${cy-r*0.55} ${cx} ${cy} T ${cx+r*0.6} ${cy}" fill="none" stroke="#1a1916" stroke-width="1.6"/>`;
+}
+
+const DIAGRAMS = {
+
+  // resistor on a.c. - v and i on top of each other
+  resistorAC:()=>`
+    <svg viewBox="0 0 330 210" width="330" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ra1','#6b7280')}</defs>
+      <rect x="52" y="22" width="90" height="52" fill="none" stroke="#1a1916" stroke-width="1.7" rx="4"/>
+      ${_src(52,48,15)}
+      <rect x="82" y="15" width="34" height="14" fill="var(--surface)" stroke="#1a1916" stroke-width="1.7"/>
+      <text x="99" y="11" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">R</text>
+      ${_axes(180,300,120,92,160,'ra1')}
+      <polyline points="${_sine(180,300,120,26,1,0)}" fill="none" stroke="#c0392b" stroke-width="2.6"/>
+      <polyline points="${_sine(180,300,120,20,1,0)}" fill="none" stroke="#1a7a4a" stroke-width="2" stroke-dasharray="5 3"/>
+      <text x="308" y="100" font-size="10.5" fill="#c0392b" ${FS} font-weight="700">v</text>
+      <text x="308" y="146" font-size="10.5" fill="#1a7a4a" ${FS} font-weight="700">i</text>
+      <text x="165" y="188" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">they peak together and cross zero together</text>
+      <text x="165" y="204" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>pure resistor: phase difference = 0</text>
+    </svg>`,
+
+  // inductor on a.c. - i lags v by 90
+  inductorLag:()=>`
+    <svg viewBox="0 0 330 210" width="330" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('il1','#6b7280')}</defs>
+      <rect x="52" y="22" width="90" height="52" fill="none" stroke="#1a1916" stroke-width="1.7" rx="4"/>
+      ${_src(52,48,15)}
+      <rect x="78" y="15" width="42" height="14" fill="var(--surface)" stroke="none"/>
+      <path d="M 78 22 q 5 -12 10 0 q 5 -12 10 0 q 5 -12 10 0 q 5 -12 10 0" fill="none" stroke="#1a1916" stroke-width="1.7"/>
+      <text x="99" y="8" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">L</text>
+      ${_axes(180,300,120,88,164,'il1')}
+      <polyline points="${_sine(180,300,120,28,1,0)}" fill="none" stroke="#c0392b" stroke-width="2.4"/>
+      <polyline points="${_sine(180,300,120,28,1,-Math.PI/2)}" fill="none" stroke="#1a7a4a" stroke-width="2.4"/>
+      <text x="308" y="100" font-size="10.5" fill="#c0392b" ${FS} font-weight="700">v</text>
+      <text x="308" y="150" font-size="10.5" fill="#1a7a4a" ${FS} font-weight="700">i</text>
+      <text x="165" y="188" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">the current peaks a quarter cycle later</text>
+      <text x="165" y="204" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>pure inductor: current lags voltage by 90&#176;</text>
+    </svg>`,
+
+  // capacitor on a.c. - i leads v by 90
+  capacitorLead:()=>`
+    <svg viewBox="0 0 330 210" width="330" height="210" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('cl1','#6b7280')}</defs>
+      <rect x="52" y="22" width="90" height="52" fill="none" stroke="#1a1916" stroke-width="1.7" rx="4"/>
+      ${_src(52,48,15)}
+      <rect x="88" y="15" width="22" height="14" fill="var(--surface)" stroke="none"/>
+      <line x1="95" y1="12" x2="95" y2="32" stroke="#1a1916" stroke-width="1.9"/>
+      <line x1="103" y1="12" x2="103" y2="32" stroke="#1a1916" stroke-width="1.9"/>
+      <text x="99" y="8" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">C</text>
+      ${_axes(180,300,120,88,164,'cl1')}
+      <polyline points="${_sine(180,300,120,28,1,0)}" fill="none" stroke="#c0392b" stroke-width="2.4"/>
+      <polyline points="${_sine(180,300,120,28,1,Math.PI/2)}" fill="none" stroke="#1a7a4a" stroke-width="2.4"/>
+      <text x="308" y="100" font-size="10.5" fill="#c0392b" ${FS} font-weight="700">v</text>
+      <text x="308" y="150" font-size="10.5" fill="#1a7a4a" ${FS} font-weight="700">i</text>
+      <text x="165" y="188" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">the current peaks a quarter cycle earlier</text>
+      <text x="165" y="204" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>pure capacitor: current leads voltage by 90&#176;</text>
+    </svg>`,
+
+  // phasor for inductor: V up, I right
+  phasorL:()=>`
+    <svg viewBox="0 0 300 175" width="300" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('pl1','#c0392b')}${AR('pl2','#1a7a4a')}</defs>
+      <line x1="110" y1="128" x2="110" y2="38" stroke="#c0392b" stroke-width="2.6" marker-end="url(#pl1)"/>
+      <line x1="110" y1="128" x2="212" y2="128" stroke="#1a7a4a" stroke-width="2.6" marker-end="url(#pl2)"/>
+      <path d="M 110 106 A 22 22 0 0 0 132 128" fill="none" stroke="#b45309" stroke-width="1.5"/>
+      <text x="141" y="108" font-size="11" fill="#b45309" ${FS} font-weight="700">90&#176;</text>
+      <text x="110" y="30" font-size="12" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">V<tspan font-size="9">L</tspan></text>
+      <text x="222" y="132" font-size="12" fill="#1a7a4a" ${FS} font-weight="700">I</text>
+      <text x="150" y="160" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>inductor &#8212; the voltage phasor is ahead</text>
+    </svg>`,
+
+  // phasor for capacitor: I up, V right
+  phasorC:()=>`
+    <svg viewBox="0 0 300 175" width="300" height="175" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('pc1','#c0392b')}${AR('pc2','#1a7a4a')}</defs>
+      <line x1="110" y1="128" x2="110" y2="38" stroke="#1a7a4a" stroke-width="2.6" marker-end="url(#pc2)"/>
+      <line x1="110" y1="128" x2="212" y2="128" stroke="#c0392b" stroke-width="2.6" marker-end="url(#pc1)"/>
+      <path d="M 110 106 A 22 22 0 0 0 132 128" fill="none" stroke="#b45309" stroke-width="1.5"/>
+      <text x="141" y="108" font-size="11" fill="#b45309" ${FS} font-weight="700">90&#176;</text>
+      <text x="110" y="30" font-size="12" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">I<tspan font-size="9">C</tspan></text>
+      <text x="222" y="132" font-size="12" fill="#c0392b" ${FS} font-weight="700">V<tspan font-size="9">C</tspan></text>
+      <text x="150" y="160" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>capacitor &#8212; the current phasor is ahead</text>
+    </svg>`,
+
+  // X_L rises with f, X_C falls with f
+  reactVsFreq:()=>{
+    let pc=[];
+    for(let i=0;i<=120;i++){
+      const f=0.12+ (i/120)*0.88, x=48+f*230, y=160-(11/f);
+      if(y>18) pc.push(x.toFixed(1)+','+y.toFixed(1));
+    }
+    return `
+    <svg viewBox="0 0 330 200" width="330" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rf1','#6b7280')}</defs>
+      ${_axes(48,278,160,24,168,'rf1')}
+      <line x1="48" y1="160" x2="272" y2="42" stroke="#1a7a4a" stroke-width="2.6"/>
+      <polyline points="${pc.join(' ')}" fill="none" stroke="#c0392b" stroke-width="2.6"/>
+      <text x="252" y="34" font-size="11.5" fill="#1a7a4a" ${FS} font-weight="700">X<tspan font-size="9">L</tspan> = &#969;L</text>
+      <text x="122" y="46" font-size="11.5" fill="#c0392b" ${FS} font-weight="700">X<tspan font-size="9">C</tspan> = 1/&#969;C</text>
+      <text x="292" y="176" font-size="11" fill="#6b7280" text-anchor="end" ${FS}>f</text>
+      <text x="22" y="34" font-size="11" fill="#6b7280" ${FS}>X</text>
+      <text x="165" y="192" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>one climbs, the other falls, so they must cross</text>
+    </svg>`;
+  },
+
+  // the graph shown in the 2023 paper: curve A falling, curve B rising
+  curveAB:()=>{
+    let pa=[];
+    for(let i=0;i<=120;i++){
+      const f=0.12+(i/120)*0.88, x=48+f*220, y=158-(10/f);
+      if(y>22) pa.push(x.toFixed(1)+','+y.toFixed(1));
+    }
+    return `
+    <svg viewBox="0 0 330 200" width="330" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ab1','#6b7280')}</defs>
+      ${_axes(48,268,158,24,166,'ab1')}
+      <polyline points="${pa.join(' ')}" fill="none" stroke="#1a1916" stroke-width="2.6"/>
+      <line x1="48" y1="158" x2="262" y2="46" stroke="#1a1916" stroke-width="2.6"/>
+      <text x="112" y="44" font-size="12" fill="#1a1916" ${FS} font-weight="700">A</text>
+      <text x="248" y="40" font-size="12" fill="#1a1916" ${FS} font-weight="700">B</text>
+      <text x="282" y="174" font-size="11" fill="#6b7280" text-anchor="end" ${FS}>frequency</text>
+      <text x="22" y="34" font-size="11" fill="#6b7280" ${FS}>X</text>
+      <text x="165" y="192" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>which curve is which?</text>
+    </svg>`;
+  },
+
+  // v = 0 at the instant i is maximum, in a pure inductor
+  zeroVpeakI:()=>`
+    <svg viewBox="0 0 330 195" width="330" height="195" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('zv1','#6b7280')}</defs>
+      ${_axes(48,290,110,36,168,'zv1')}
+      <polyline points="${_sine(48,290,110,50,1,0)}" fill="none" stroke="#c0392b" stroke-width="2.3"/>
+      <polyline points="${_sine(48,290,110,50,1,-Math.PI/2)}" fill="none" stroke="#1a7a4a" stroke-width="2.3"/>
+      <line x1="108.5" y1="60" x2="108.5" y2="150" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <circle cx="108.5" cy="110" r="4.5" fill="#c0392b"/>
+      <circle cx="108.5" cy="60" r="4.5" fill="#1a7a4a"/>
+      <text x="118" y="56" font-size="10" fill="#1a7a4a" ${FS} font-weight="700">i at peak</text>
+      <text x="118" y="126" font-size="10" fill="#c0392b" ${FS} font-weight="700">v = 0 here</text>
+      <text x="165" y="188" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>in a pure inductor, both happen at the same instant</text>
+    </svg>`,
+
+  // a real coil = pure L in series with a small resistance r
+  realCoil:()=>`
+    <svg viewBox="0 0 330 212" width="330" height="212" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rc1','#c0392b')}</defs>
+      <line x1="24" y1="44" x2="52" y2="44" stroke="#1a1916" stroke-width="1.7"/>
+      <path d="M 52 44 q 6 -14 12 0 q 6 -14 12 0 q 6 -14 12 0 q 6 -14 12 0" fill="none" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="100" y1="44" x2="120" y2="44" stroke="#1a1916" stroke-width="1.7"/>
+      <rect x="120" y="37" width="34" height="14" fill="#f7f6f3" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="154" y1="44" x2="182" y2="44" stroke="#1a1916" stroke-width="1.7"/>
+      <text x="76" y="26" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">L</text>
+      <text x="137" y="30" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">R</text>
+      <rect x="14" y="18" width="178" height="44" fill="none" stroke="#a09d97" stroke-width="1.2" stroke-dasharray="5 4" rx="6"/>
+      <text x="258" y="48" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>one real coil</text>
+      <line x1="76" y1="176" x2="176" y2="176" stroke="#1a1916" stroke-width="2.2"/>
+      <line x1="176" y1="176" x2="176" y2="108" stroke="#1a1916" stroke-width="2.2"/>
+      <line x1="76" y1="176" x2="176" y2="108" stroke="#c0392b" stroke-width="2.6" marker-end="url(#rc1)"/>
+      <path d="M 104 176 A 28 28 0 0 0 96 158" fill="none" stroke="#b45309" stroke-width="1.4"/>
+      <text x="110" y="168" font-size="10.5" fill="#b45309" ${FS} font-weight="700">&#966;</text>
+      <text x="126" y="192" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">R</text>
+      <text x="184" y="146" font-size="11" fill="#1a1916" ${FS} font-weight="700">X<tspan font-size="8">L</tspan></text>
+      <text x="212" y="122" font-size="11" fill="#c0392b" ${FS} font-weight="700">Z</text>
+      <text x="252" y="192" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>tan&#966; = X_L / R</text>
+    </svg>`,
+
+  // R and L in series, equal reactance and resistance
+  seriesRL:()=>`
+    <svg viewBox="0 0 320 200" width="320" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('sr1','#c0392b')}</defs>
+      <line x1="60" y1="148" x2="180" y2="148" stroke="#1a7a4a" stroke-width="2.6"/>
+      <line x1="180" y1="148" x2="180" y2="28" stroke="#1a1916" stroke-width="2.6"/>
+      <line x1="60" y1="148" x2="180" y2="28" stroke="#c0392b" stroke-width="2.8" marker-end="url(#sr1)"/>
+      <path d="M 96 148 A 36 36 0 0 0 88 123" fill="none" stroke="#b45309" stroke-width="1.5"/>
+      <text x="104" y="138" font-size="11" fill="#b45309" ${FS} font-weight="700">45&#176;</text>
+      <text x="120" y="167" font-size="11.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">R = 20&#937;</text>
+      <text x="190" y="92" font-size="11.5" fill="#1a1916" ${FS} font-weight="700">X<tspan font-size="9">L</tspan> = 20&#937;</text>
+      <text x="98" y="76" font-size="11.5" fill="#c0392b" ${FS} font-weight="700">Z = 20&#8730;2 &#937;</text>
+      <text x="160" y="192" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>equal R and X_L give a 45&#176; triangle</text>
+    </svg>`,
+
+  // ac ammeter in circuit
+  acAmmeter:()=>`
+    <svg viewBox="0 0 300 175" width="300" height="175" xmlns="http://www.w3.org/2000/svg">
+      <rect x="46" y="40" width="200" height="76" fill="none" stroke="#1a1916" stroke-width="1.7" rx="6"/>
+      ${_src(46,78,16)}
+      <rect x="118" y="33" width="48" height="14" fill="#f7f6f3" stroke="none"/>
+      <path d="M 120 40 q 6 -13 12 0 q 6 -13 12 0 q 6 -13 12 0 q 6 -13 12 0" fill="none" stroke="#1a1916" stroke-width="1.7"/>
+      <text x="142" y="22" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">L</text>
+      <circle cx="196" cy="116" r="15" fill="#f7f6f3" stroke="#1a1916" stroke-width="1.7"/>
+      <text x="196" y="121" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">A</text>
+      <text x="150" y="152" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">an a.c. ammeter reads the rms value</text>
+      <text x="150" y="167" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>never the peak &#8212; divide by &#8730;2 first</text>
+    </svg>`,
+
+  // sin shifted by +90 becomes cos, -90 becomes -cos
+  sinToCos:()=>`
+    <svg viewBox="0 0 330 200" width="330" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('sc1','#6b7280')}</defs>
+      ${_axes(48,290,104,32,160,'sc1')}
+      <polyline points="${_sine(48,290,104,48,1,0)}" fill="none" stroke="#a09d97" stroke-width="2" stroke-dasharray="5 3"/>
+      <polyline points="${_sine(48,290,104,48,1,-Math.PI/2)}" fill="none" stroke="#c0392b" stroke-width="2.6"/>
+      <text x="150" y="48" font-size="10.5" fill="#a09d97" ${FS} font-weight="700">sin &#969;t</text>
+      <text x="58" y="172" font-size="11" fill="#c0392b" ${FS} font-weight="700">sin(&#969;t &#8722; &#960;/2) = &#8722;cos &#969;t</text>
+      <text x="165" y="194" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>a 90&#176; lag turns a sine into minus a cosine</text>
+    </svg>`
+};
+
+// ===============================================================================
+//  QUESTION LADDERS  -  ALTERNATING CURRENT, LECTURE 2
+//  Pure resistor, pure inductor, pure capacitor: reactance and phase
+//  Every star rung is a real JEE Main PYQ from the chapter question bank.
+// ===============================================================================
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "Who leads, who lags &#8212; the phase table",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A resistor alone is connected to an a.c. source. The phase difference between the voltage across it and the current through it is",
+   "diagram": DIAGRAMS.resistorAC(),
+   "opts": ["zero","&#960;/2, current leading","&#960;/2, current lagging","&#960;"],
+   "ans": 0,
+   "sol": "For a resistor, v = iR at <strong>every instant</strong>. If v is zero the current is zero, if v is at its peak the current is at its peak.<br><br>So they move in perfect step &#8212; phase difference <strong>zero</strong>. A resistor behaves on a.c. exactly as it does on d.c."
+  },
+  {
+   "q": "In a pure inductor, the current",
+   "diagram": DIAGRAMS.inductorLag(),
+   "opts": ["lags the voltage by &#960;/2","leads the voltage by &#960;/2","is in phase with the voltage","is opposite to the voltage"],
+   "ans": 0,
+   "sol": "An inductor <strong>opposes any change</strong> in current. So the current cannot rise the moment the voltage does &#8212; it always arrives late.<br><br>Current <strong>lags</strong> by &#960;/2, a quarter of a cycle.<br><br><em>Memory hook &#8212; ELI:</em> in an <strong>L</strong>, <strong>E</strong> comes before <strong>I</strong>."
+  },
+  {
+   "q": "In a pure capacitor, the current",
+   "diagram": DIAGRAMS.capacitorLead(),
+   "opts": ["leads the voltage by &#960;/2","lags the voltage by &#960;/2","is in phase with the voltage","is zero"],
+   "ans": 0,
+   "sol": "Charge has to flow <em>into</em> the plates before a voltage can appear across them. So the current runs ahead.<br><br>Current <strong>leads</strong> by &#960;/2.<br><br><em>Memory hook &#8212; ICE:</em> in a <strong>C</strong>, <strong>I</strong> comes before <strong>E</strong>. Put the two hooks together and you get <strong>ELI the ICE man</strong>."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 17 Mar Shift 2",
+   "q": "&#9733; <strong>Original (matching):</strong> Match List-I with List-II.<br><br><strong>List-I</strong> &#8212; (A) pure resistive circuit &nbsp;(B) pure inductive circuit &nbsp;(C) pure capacitive circuit &nbsp;(D) series LCR circuit<br><br><strong>List-II</strong> &#8212; (1) current leads voltage by &#960;/2 &nbsp;(2) current and voltage in phase &nbsp;(3) current lags voltage by &#960;/2 &nbsp;(4) &#966; = tan<sup>&#8722;1</sup>[(X<sub>C</sub> &#8722; X<sub>L</sub>)/R]",
+   "opts": ["A-2, B-3, C-1, D-4","A-2, B-3, C-4, D-1","A-1, B-3, C-4, D-2","A-2, B-4, C-3, D-1"],
+   "ans": 0,
+   "sol": "Straight off the three rungs above:<br><br>A &#8594; resistive &#8594; <strong>in phase</strong> &#8594; (2)<br>B &#8594; inductive &#8594; <strong>current lags</strong> &#8594; (3)<br>C &#8594; capacitive &#8594; <strong>current leads</strong> &#8594; (1)<br>D &#8594; LCR &#8594; the general formula &#8594; (4)<br><br>So <strong>A-2, B-3, C-1, D-4</strong>.<br><br>Matching questions like this are free marks. Build the table once in your notes and never rebuild it.<br><br><em>The two lists here are written out from the official solution, since the printed lists were images.</em>"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Inductive reactance, X<sub>L</sub> = &#969;L",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In X<sub>L</sub> = &#969;L, the quantity X<sub>L</sub> has the unit",
+   "opts": ["ohm","henry","farad","ampere"],
+   "ans": 0,
+   "sol": "Reactance is the inductor's version of resistance, so its unit is the <strong>ohm</strong>.<br><br>It is not resistance though &#8212; a pure reactance consumes no power. It only limits how much current flows. That difference becomes important in Lecture 5."
+  },
+  {
+   "q": "For V = 260 sin(628t), the angular frequency &#969; is",
+   "opts": ["628 rad/s","260 rad/s","100 rad/s","628/2&#960; rad/s"],
+   "ans": 0,
+   "sol": "The number sitting with t inside the sine is <strong>&#969;</strong>. So &#969; = <strong>628 rad/s</strong>.<br><br>Do not convert to frequency unless the question asks for it. X<sub>L</sub> = &#969;L needs &#969;, not f. Converting and then converting back is where students waste time and drop factors of 2&#960;."
+  },
+  {
+   "q": "5 mH written in henry is",
+   "opts": ["5 &#215; 10<sup>&#8722;3</sup> H","5 &#215; 10<sup>&#8722;6</sup> H","5 &#215; 10<sup>3</sup> H","0.5 H"],
+   "ans": 0,
+   "sol": "milli means 10<sup>&#8722;3</sup>, so 5 mH = <strong>5 &#215; 10<sup>&#8722;3</sup> H</strong>.<br><br>Convert every quantity to SI <em>before</em> substituting. mH, &#956;F and pF cause more lost marks in this chapter than any concept does."
+  },
+  {
+   "tag": "JEE Main 2023 &#183; 31 Jan Shift 2",
+   "q": "&#9733; <strong>Original:</strong> An alternating voltage source V = 260 sin(628t) is connected across a pure inductor of 5 mH. The inductive reactance in the circuit is",
+   "diagram": DIAGRAMS.inductorLag(),
+   "opts": ["3.14 &#937;","6.28 &#937;","0.5 &#937;","0.318 &#937;"],
+   "ans": 0,
+   "sol": "X<sub>L</sub> = &#969;L = 628 &#215; 5 &#215; 10<sup>&#8722;3</sup> = <strong>3.14 &#937;</strong><br><br>The 260 V is not needed at all &#8212; reactance depends only on &#969; and L, never on the voltage.<br><br><em>Spot the setter's game:</em> 628 = 200&#960;, and 200&#960; &#215; 0.005 = &#960; = 3.14. They chose 628 so the answer would land exactly on &#960;. When you see 314, 628 or 100&#960; in a question, expect &#960; to appear in the answer."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Current in a pure inductor, and what the meter shows",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For a pure inductor, the peak current is given by",
+   "opts": ["I&#8320; = V&#8320;/X<sub>L</sub>","I&#8320; = V&#8320; X<sub>L</sub>","I&#8320; = V&#8320;/(&#8730;2 X<sub>L</sub>)","I&#8320; = V&#8320;/L"],
+   "ans": 0,
+   "sol": "Ohm's law still works, with X<sub>L</sub> playing the part of R:<br><br><strong>I&#8320; = V&#8320;/X<sub>L</sub></strong><br><br>Peak with peak, rms with rms. Never mix a peak voltage with an rms current in the same line."
+  },
+  {
+   "q": "If L = &#8730;2/&#960; H and &#969; = 100&#960; rad/s, then X<sub>L</sub> is",
+   "opts": ["100&#8730;2 &#937;","100/&#8730;2 &#937;","&#8730;2 &#937;","100&#960;&#8730;2 &#937;"],
+   "ans": 0,
+   "sol": "X<sub>L</sub> = &#969;L = 100&#960; &#215; (&#8730;2/&#960;) = <strong>100&#8730;2 &#937;</strong><br><br>The &#960; cancels neatly. That is exactly why the setter chose such an odd-looking inductance &#8212; the ugly value is a gift, not a threat."
+  },
+  {
+   "q": "An a.c. ammeter in a circuit shows a reading of 5 A. This means the",
+   "diagram": DIAGRAMS.acAmmeter(),
+   "opts": ["rms current is 5 A","peak current is 5 A","average current is 5 A","instantaneous current is 5 A"],
+   "ans": 0,
+   "sol": "Every a.c. ammeter and voltmeter reads <strong>rms</strong>.<br><br>So if a question asks for the meter reading, you must finish by dividing the peak by &#8730;2. If it gives you the meter reading, that number is already rms &#8212; do not divide it again."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 29 Jul Shift 1",
+   "q": "&#9733; <strong>Original:</strong> An alternating emf E = 440 sin(100&#960;t) is applied to a circuit containing an inductance of &#8730;2/&#960; H. If an a.c. ammeter is connected in the circuit, its reading will be",
+   "diagram": DIAGRAMS.acAmmeter(),
+   "opts": ["2.2 A","4.4 A","1.55 A","3.11 A"],
+   "ans": 0,
+   "sol": "<strong>Step 1 &#8212; reactance.</strong> X<sub>L</sub> = 100&#960; &#215; &#8730;2/&#960; = 100&#8730;2 &#937;<br><br><strong>Step 2 &#8212; peak current.</strong> I&#8320; = 440/(100&#8730;2) = 4.4/&#8730;2 = 2.2&#8730;2 A<br><br><strong>Step 3 &#8212; the meter reads rms.</strong> I<sub>rms</sub> = I&#8320;/&#8730;2 = <strong>2.2 A</strong><br><br>The trap answer 4.4 A comes from forgetting Step 3 and from dropping the &#8730;2. Three steps, and the last one is the one people skip.<br><br>Notice this is Lecture 1's peak-to-rms move, reappearing inside a Lecture 2 question. The chapter builds on itself."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "The instant when v = 0 in a pure inductor",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "In a pure inductor, at the instant the source voltage is zero, the current is",
+   "diagram": DIAGRAMS.zeroVpeakI(),
+   "opts": ["at its peak value","zero","half its peak value","at its rms value"],
+   "ans": 0,
+   "sol": "The two waves are a quarter cycle apart. So when one is at zero, the other is at its <strong>peak</strong>.<br><br>This is the 90&#176; phase difference stated in a different language. Whenever a question says 'at the instant the voltage is zero', it is really telling you 'take the peak current'."
+  },
+  {
+   "q": "For L = 200 mH at 50 Hz, X<sub>L</sub> equals",
+   "opts": ["20&#960; &#937;","10&#960; &#937;","200&#960; &#937;","2&#960; &#937;"],
+   "ans": 0,
+   "sol": "X<sub>L</sub> = 2&#960;fL = 2&#960;(50)(0.2) = <strong>20&#960; &#937;</strong> &#8776; 62.8 &#937;<br><br>Leave it as 20&#960;. Do not turn it into 62.8 yet &#8212; in this ladder the &#960; is going to cancel later, and decimals would hide that."
+  },
+  {
+   "q": "If I<sub>rms</sub> = 11/&#960; A, then the peak current is",
+   "opts": ["11&#8730;2/&#960; A","11/(&#960;&#8730;2) A","22/&#960; A","11/&#960; A"],
+   "ans": 0,
+   "sol": "I&#8320; = &#8730;2 &#215; I<sub>rms</sub> = <strong>11&#8730;2/&#960; A</strong><br><br>Now write it as a single square root: 11&#8730;2 = &#8730;(121 &#215; 2) = &#8730;242. So I&#8320; = &#8730;242/&#960;.<br><br>That trick &#8212; pulling a number inside a root &#8212; is exactly what the next question needs."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 24 Jun Shift 1",
+   "q": "&#9733; <strong>Original:</strong> An inductor of inductance 200 mH is connected to an a.c. source of emf 220 V and frequency 50 Hz. The instantaneous voltage of the source is 0 V when the peak value of current is &#8730;a/&#960; A. The value of a is ____",
+   "diagram": DIAGRAMS.zeroVpeakI(),
+   "opts": ["242","121","484","220"],
+   "ans": 0,
+   "sol": "The phrase 'when the instantaneous voltage is 0' is decoration &#8212; in a pure inductor that <em>is</em> the moment of peak current. So the question just asks for I&#8320;.<br><br>X<sub>L</sub> = 20&#960; &#937;<br>I<sub>rms</sub> = 220/20&#960; = 11/&#960; A<br>I&#8320; = &#8730;2 &#215; 11/&#960; = &#8730;242/&#960; A<br><br>So <strong>a = 242</strong>.<br><br>The answer 121 is what you get if you stop at the rms value and forget the &#8730;2. Compare with 11&#178; = 121 and 242 = 2 &#215; 121 &#8212; the setter built both traps into the same number."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Writing the voltage across an inductor",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "If the current in an inductor is i = I&#8320; sin(&#969;t + &#966;), the voltage across it is",
+   "diagram": DIAGRAMS.phasorL(),
+   "opts": ["V&#8320; sin(&#969;t + &#966; + 90&#176;)","V&#8320; sin(&#969;t + &#966; &#8722; 90&#176;)","V&#8320; sin(&#969;t + &#966;)","V&#8320; cos(&#969;t + &#966; &#8722; 90&#176;)"],
+   "ans": 0,
+   "sol": "Voltage <strong>leads</strong> the current in an inductor, so you <strong>add</strong> 90&#176; to whatever phase the current has.<br><br>Whichever quantity is given, ask yourself one question: am I moving towards the leading one (add 90&#176;) or the lagging one (subtract 90&#176;)?"
+  },
+  {
+   "tag": "JEE Main 2014 &#183; Online 12 Apr",
+   "q": "A sinusoidal voltage V(t) = 100 sin(500t) is applied across a pure inductance L = 0.02 H. The current through the coil is",
+   "diagram": DIAGRAMS.sinToCos(),
+   "opts": ["&#8722;10 cos(500t)","10 cos(500t)","10 sin(500t)","&#8722;10 sin(500t)"],
+   "ans": 0,
+   "sol": "X<sub>L</sub> = 500 &#215; 0.02 = 10 &#937;, so I&#8320; = 100/10 = 10 A.<br><br>Here the <em>voltage</em> is given, so the current must <strong>lag</strong>: i = 10 sin(500t &#8722; &#960;/2).<br><br>And sin(&#952; &#8722; &#960;/2) = <strong>&#8722;cos &#952;</strong>. So i = <strong>&#8722;10 cos(500t)</strong>.<br><br>Learn these two conversions cold:<br>sin(&#952; &#8722; 90&#176;) = &#8722;cos &#952; &nbsp;&nbsp;&nbsp; sin(&#952; + 90&#176;) = +cos &#952;<br><br><em>This build-up rung is itself a real exam question &#8212; JEE Main 2014.</em>"
+  },
+  {
+   "q": "With &#960; = 22/7, the value of 49&#960; &#215; 0.03 is about",
+   "opts": ["4.62","1.47","23.1","14.7"],
+   "ans": 0,
+   "sol": "49 &#215; (22/7) = 7 &#215; 22 = 154. Then 154 &#215; 0.03 = <strong>4.62</strong>.<br><br>The setter chose 49 precisely because 49/7 = 7 comes out whole. Whenever a question hands you &#960; = 22/7, look for the multiple of 7 hiding in the numbers."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 28 Jul Shift 1",
+   "q": "&#9733; <strong>Original:</strong> The equation of current in a purely inductive circuit is i = 5 sin(49&#960;t &#8722; 30&#176;). If the inductance is 30 mH, the equation for the voltage across the inductor is (take &#960; = 22/7)",
+   "diagram": DIAGRAMS.phasorL(),
+   "opts": ["23.1 sin(49&#960;t + 60&#176;)","23.1 sin(49&#960;t &#8722; 30&#176;)","1.47 sin(49&#960;t + 60&#176;)","1.47 sin(49&#960;t &#8722; 30&#176;)"],
+   "ans": 0,
+   "sol": "<strong>Amplitude.</strong> X<sub>L</sub> = 49&#960; &#215; 0.03 = 4.62 &#937;, so V&#8320; = I&#8320;X<sub>L</sub> = 5 &#215; 4.62 = <strong>23.1 V</strong><br><br><strong>Phase.</strong> Here the <em>current</em> is given, so the voltage <strong>leads</strong>: &#8722;30&#176; + 90&#176; = <strong>+60&#176;</strong><br><br>So V = <strong>23.1 sin(49&#960;t + 60&#176;)</strong>.<br><br>Two separate traps in the wrong options. 1.47 comes from dividing by X<sub>L</sub> instead of multiplying. And &#8722;30&#176; comes from forgetting the phase shift entirely.<br><br><em>Direction check every time:</em> current given &#8594; voltage &#8594; add 90&#176;. Voltage given &#8594; current &#8594; subtract 90&#176;. Get the direction wrong and you land on the other trap answer, which is always on the option list."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Change the frequency, watch the reactance move",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "X<sub>L</sub> = &#969;L. So if the frequency is halved, X<sub>L</sub>",
+   "diagram": DIAGRAMS.reactVsFreq(),
+   "opts": ["is halved","is doubled","stays the same","becomes one quarter"],
+   "ans": 0,
+   "sol": "X<sub>L</sub> is <strong>directly proportional</strong> to frequency. Halve f and you halve X<sub>L</sub>.<br><br>Picture it physically: a slower a.c. gives the inductor less change to fight against, so it lets more current through."
+  },
+  {
+   "q": "With the voltage unchanged, if the reactance is halved, the current",
+   "opts": ["doubles","halves","stays the same","becomes one quarter"],
+   "ans": 0,
+   "sol": "I = V/X. Reactance is in the <strong>denominator</strong>, so halving it <strong>doubles</strong> the current.<br><br>Reactance and current always move in opposite directions. That inverse relation is the whole answer to this ladder."
+  },
+  {
+   "q": "For a capacitor, X<sub>C</sub> = 1/&#969;C. If the frequency is halved, X<sub>C</sub>",
+   "diagram": DIAGRAMS.reactVsFreq(),
+   "opts": ["is doubled","is halved","stays the same","becomes zero"],
+   "ans": 0,
+   "sol": "X<sub>C</sub> is <strong>inversely</strong> proportional to frequency. Halve f and X<sub>C</sub> <strong>doubles</strong>.<br><br>So L and C respond in opposite ways to a change in frequency. Hold on to that &#8212; it is the seed of resonance in Lecture 6."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 17 Mar Shift 2",
+   "q": "&#9733; <strong>Original:</strong> What happens to the inductive reactance and the current in a purely inductive circuit if the frequency is halved?",
+   "diagram": DIAGRAMS.reactVsFreq(),
+   "opts": ["reactance halved, current doubled","both halved","reactance doubled, current halved","both doubled"],
+   "ans": 0,
+   "sol": "X<sub>L</sub> = 2&#960;fL, so halving f <strong>halves</strong> X<sub>L</sub>.<br><br>Then I = V/X<sub>L</sub>, so the current <strong>doubles</strong>.<br><br>The tempting wrong answer is 'both halved' &#8212; students halve the reactance correctly and then carry that same 'halved' feeling over to the current. But current sits in the denominator relationship, so it must move the <em>opposite</em> way.<br><br>Say it out loud while you solve: <em>reactance down, current up.</em>"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "Capacitive reactance and the peak current",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "The capacitive reactance is",
+   "diagram": DIAGRAMS.capacitorLead(),
+   "opts": ["X<sub>C</sub> = 1/&#969;C","X<sub>C</sub> = &#969;C","X<sub>C</sub> = &#969;/C","X<sub>C</sub> = C/&#969;"],
+   "ans": 0,
+   "sol": "<strong>X<sub>C</sub> = 1/&#969;C</strong>, in ohms.<br><br>Note what it says at the extremes. At very low frequency X<sub>C</sub> is huge, so a capacitor <strong>blocks d.c.</strong> At very high frequency X<sub>C</sub> is tiny, so a capacitor acts almost like a plain wire. That single sentence solves several questions later in the chapter."
+  },
+  {
+   "q": "For a capacitor, the peak current is I&#8320; = V&#8320;/X<sub>C</sub>. Written out in full, that is",
+   "opts": ["I&#8320; = V&#8320; &#969;C","I&#8320; = V&#8320;/(&#969;C)","I&#8320; = V&#8320;C/&#969;","I&#8320; = V&#8320;&#969;/C"],
+   "ans": 0,
+   "sol": "I&#8320; = V&#8320;/X<sub>C</sub> = V&#8320; &#247; (1/&#969;C) = <strong>V&#8320;&#969;C</strong><br><br>Dividing by 1/&#969;C is the same as multiplying by &#969;C. Worth memorising in this form &#8212; for capacitor questions it saves you a reciprocal every time."
+  },
+  {
+   "q": "150 &#956;F written in farad is",
+   "opts": ["150 &#215; 10<sup>&#8722;6</sup> F","150 &#215; 10<sup>&#8722;3</sup> F","150 &#215; 10<sup>&#8722;12</sup> F","1.5 F"],
+   "ans": 0,
+   "sol": "micro means 10<sup>&#8722;6</sup>, so 150 &#956;F = <strong>150 &#215; 10<sup>&#8722;6</sup> F</strong> = 1.5 &#215; 10<sup>&#8722;4</sup> F.<br><br>Keep the prefixes straight: m = 10<sup>&#8722;3</sup>, &#956; = 10<sup>&#8722;6</sup>, n = 10<sup>&#8722;9</sup>, p = 10<sup>&#8722;12</sup>. Capacitors in this chapter appear in &#956;F, nF and pF, and mixing them up costs a whole question."
+  },
+  {
+   "tag": "JEE Main 2023 &#183; 6 Apr Shift 2",
+   "q": "&#9733; <strong>Original:</strong> A capacitor of capacitance 150.0 &#956;F is connected to an alternating source of emf E = 36 sin(120&#960;t) V. The maximum value of current in the circuit is approximately",
+   "diagram": DIAGRAMS.capacitorLead(),
+   "opts": ["2 A","&#8730;2 A","2&#8730;2 A","1/&#8730;2 A"],
+   "ans": 0,
+   "sol": "Use the shortcut form directly:<br><br>I&#8320; = E&#8320; &#969; C = 36 &#215; 120&#960; &#215; 150 &#215; 10<sup>&#8722;6</sup><br>= 36 &#215; 0.0565 &#8776; <strong>2.03 A &#8776; 2 A</strong><br><br>The question says <em>maximum</em> value, so no dividing by &#8730;2 here. Every wrong option carries a &#8730;2 &#8212; they are all there to catch someone who converts to rms out of habit.<br><br><strong>Read the word first, calculate second.</strong> Maximum and peak mean the same thing; reading and ammeter mean rms."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "The capacitor phasor diagram",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "In a phasor diagram, two quantities 90&#176; apart are drawn",
+   "diagram": DIAGRAMS.phasorC(),
+   "opts": ["at right angles to each other","along the same line","opposite to each other","at 45&#176; to each other"],
+   "ans": 0,
+   "sol": "The angle between the arrows <em>is</em> the phase difference. So 90&#176; apart on the wave means <strong>perpendicular</strong> on the diagram.<br><br>The phasors all rotate together anticlockwise, holding their angles fixed. Whatever is <strong>ahead</strong> in that rotation is the leading quantity."
+  },
+  {
+   "q": "The phasor drawn <strong>ahead</strong> in the anticlockwise direction represents the quantity that",
+   "opts": ["leads","lags","is larger","is smaller"],
+   "ans": 0,
+   "sol": "Ahead in the rotation means it reaches its peak <strong>earlier in time</strong>, which is exactly what leading means.<br><br>Careful: the <em>length</em> of a phasor gives the magnitude, and its <em>angle</em> gives the phase. Two different pieces of information in one arrow."
+  },
+  {
+   "q": "For a pure capacitor, which phasor sits ahead?",
+   "diagram": DIAGRAMS.phasorC(),
+   "opts": ["the current I<sub>C</sub>","the voltage V<sub>C</sub>","both are along the same line","neither, they are opposite"],
+   "ans": 0,
+   "sol": "ICE &#8212; in a <strong>C</strong>, <strong>I</strong> comes before <strong>E</strong>. So <strong>I<sub>C</sub> leads</strong> and its arrow is drawn 90&#176; ahead of V<sub>C</sub>.<br><br>For an inductor the picture is flipped: V<sub>L</sub> sits ahead instead."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 22 Jul Shift 2",
+   "q": "&#9733; <strong>Original:</strong> In a circuit consisting of a capacitance and a generator with alternating emf E<sub>g</sub> = E<sub>g0</sub> sin &#969;t, V<sub>C</sub> and I<sub>C</sub> are the voltage and current. The correct phasor diagram for such a circuit is the one showing",
+   "diagram": DIAGRAMS.phasorC(),
+   "opts": ["I<sub>C</sub> ahead of V<sub>C</sub> by 90&#176;","V<sub>C</sub> ahead of I<sub>C</sub> by 90&#176;","I<sub>C</sub> and V<sub>C</sub> along the same direction","I<sub>C</sub> and V<sub>C</sub> exactly opposite"],
+   "ans": 0,
+   "sol": "In a capacitor the current leads the voltage by &#960;/2. So the correct diagram is the one with <strong>I<sub>C</sub> drawn 90&#176; ahead of V<sub>C</sub></strong>.<br><br>In the actual paper the four options were pictures. When a phasor diagram comes up, do not squint at the arrows &#8212; decide the answer <em>first</em> from ELI the ICE man, then look for the picture that matches it. Much faster, and no chance of misreading which way is anticlockwise.<br><br><em>The options here are written out in words, since the printed ones were images.</em>"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "Reading X<sub>L</sub> and X<sub>C</sub> off a graph",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Plotted against frequency, X<sub>L</sub> = 2&#960;fL gives",
+   "diagram": DIAGRAMS.reactVsFreq(),
+   "opts": ["a straight line through the origin","a falling curve","a horizontal line","a parabola"],
+   "ans": 0,
+   "sol": "X<sub>L</sub> &#8733; f, so the graph is a <strong>straight line through the origin</strong> with slope 2&#960;L.<br><br>At f = 0, meaning d.c., X<sub>L</sub> = 0. An inductor is just a piece of wire to steady d.c."
+  },
+  {
+   "q": "Plotted against frequency, X<sub>C</sub> = 1/(2&#960;fC) gives",
+   "diagram": DIAGRAMS.reactVsFreq(),
+   "opts": ["a curve falling steeply, then flattening","a rising straight line","a horizontal line","a rising curve"],
+   "ans": 0,
+   "sol": "X<sub>C</sub> &#8733; 1/f, so it is a <strong>rectangular hyperbola</strong> &#8212; very high at low frequency, dropping fast and then flattening out towards zero.<br><br>As f &#8594; 0 the curve shoots up: a capacitor blocks d.c. completely."
+  },
+  {
+   "q": "For a pure resistor, a plot of R against frequency is",
+   "opts": ["a horizontal line","a rising line","a falling curve","a parabola"],
+   "ans": 0,
+   "sol": "Resistance does not care about frequency at all. The graph is a <strong>flat horizontal line</strong>.<br><br>So on one set of axes you can tell all three apart at a glance: <strong>flat = R, rising line = X<sub>L</sub>, falling curve = X<sub>C</sub></strong>."
+  },
+  {
+   "tag": "JEE Main 2023 &#183; 11 Apr Shift 1",
+   "q": "&#9733; <strong>Original:</strong> As per the given graph, choose the correct representation for curve A and curve B. (X<sub>C</sub> = reactance of a pure capacitive circuit, X<sub>L</sub> = reactance of a pure inductive circuit, R = impedance of a pure resistive circuit, Z = impedance of a series LCR circuit.)",
+   "diagram": DIAGRAMS.curveAB(),
+   "opts": ["A = X<sub>C</sub>, B = X<sub>L</sub>","A = X<sub>L</sub>, B = R","A = X<sub>L</sub>, B = Z","A = X<sub>C</sub>, B = R"],
+   "ans": 0,
+   "sol": "Curve <strong>A falls</strong> as frequency rises &#8212; only X<sub>C</sub> = 1/2&#960;fC does that.<br><br>Curve <strong>B is a rising straight line</strong> &#8212; that is X<sub>L</sub> = 2&#960;fL.<br><br>So <strong>A = X<sub>C</sub>, B = X<sub>L</sub></strong>.<br><br>R is ruled out immediately because neither curve is horizontal. Z is ruled out because the impedance of a series LCR circuit is V-shaped &#8212; it comes <em>down</em> to a minimum at resonance and then rises again, which neither curve does.<br><br>Graph questions like this take ten seconds if you know the shape of each curve. Draw all four shapes on one page of your notes tonight."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "Which circuits can give exactly 90&#176;?",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A circuit made of R and L in series gives a phase difference &#966; where",
+   "diagram": DIAGRAMS.realCoil(),
+   "opts": ["0 &lt; &#966; &lt; 90&#176;","&#966; = 90&#176; always","&#966; = 0 always","&#966; &gt; 90&#176;"],
+   "ans": 0,
+   "sol": "tan&#966; = X<sub>L</sub>/R. Since both R and X<sub>L</sub> are non-zero and finite, &#966; sits <strong>strictly between 0 and 90&#176;</strong>.<br><br>It can get very close to 90&#176; if R is tiny, but it can never actually reach it. The moment any resistance is present, a full 90&#176; is impossible."
+  },
+  {
+   "q": "For an L and C together in series with no resistance, the phase difference is",
+   "opts": ["90&#176;","0&#176;","45&#176;","between 0 and 90&#176;"],
+   "ans": 0,
+   "sol": "Both X<sub>L</sub> and X<sub>C</sub> give a 90&#176; shift, just in opposite senses. With R = 0 there is nothing in phase with the current at all, so the total is still <strong>90&#176;</strong>.<br><br>Whether the current leads or lags depends on which of X<sub>L</sub> and X<sub>C</sub> is larger, but the size stays 90&#176;."
+  },
+  {
+   "q": "A phase difference of exactly 90&#176; means the power consumed is",
+   "opts": ["zero","maximum","half the maximum","V<sub>rms</sub>I<sub>rms</sub>"],
+   "ans": 0,
+   "sol": "P = V<sub>rms</sub>I<sub>rms</sub>cos&#966;, and cos 90&#176; = 0. So the power is <strong>zero</strong>.<br><br>This is the <strong>wattless</strong> case &#8212; current flows, but no energy is consumed. Any circuit made only of pure L and pure C consumes nothing. We come back to this properly in Lecture 5."
+  },
+  {
+   "tag": "AIEEE 2005",
+   "q": "&#9733; <strong>Original:</strong> The phase difference between the alternating current and emf is &#960;/2. Which of the following cannot be the constituent of the circuit?",
+   "opts": ["R, L","C alone","L alone","L, C"],
+   "ans": 0,
+   "sol": "Check each one:<br><br>&#8226; <strong>C alone</strong> &#8594; 90&#176; &#10003;<br>&#8226; <strong>L alone</strong> &#8594; 90&#176; &#10003;<br>&#8226; <strong>L and C</strong> &#8594; no resistance present, still 90&#176; &#10003;<br>&#8226; <strong>R and L</strong> &#8594; tan&#966; = X<sub>L</sub>/R, which lies strictly between 0 and 90&#176; &#10007;<br><br>So the answer is <strong>R, L</strong>.<br><br><strong>The rule in one line:</strong> the moment a resistance enters the circuit, a phase difference of exactly 90&#176; becomes impossible. Resistance is the only element that pulls the phase back towards zero."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ "name": "A real coil carries resistance too",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A real inductor coil is best modelled as",
+   "diagram": DIAGRAMS.realCoil(),
+   "opts": ["a pure inductance L in series with a resistance R","a pure inductance only","a resistance only","an inductance in parallel with a capacitance"],
+   "ans": 0,
+   "sol": "The coil is made of many metres of wire, and that wire has resistance. So a real coil is <strong>L in series with R</strong>, both inside the same component.<br><br>This is why a real coil never gives a clean 90&#176; phase shift &#8212; the very point of the previous ladder."
+  },
+  {
+   "q": "If the applied voltage leads the current by 45&#176; in an R&#8211;L circuit, then",
+   "diagram": DIAGRAMS.seriesRL(),
+   "opts": ["X<sub>L</sub> = R","X<sub>L</sub> = 2R","X<sub>L</sub> = R/2","X<sub>L</sub> = R&#8730;2"],
+   "ans": 0,
+   "sol": "tan 45&#176; = 1, and tan&#966; = X<sub>L</sub>/R. So <strong>X<sub>L</sub> = R</strong>.<br><br>Any time you see 45&#176; in this chapter, immediately write down 'reactance equals resistance'. It appears again and again, and it saves you a full line of algebra."
+  },
+  {
+   "q": "If X<sub>L</sub> = R, then the impedance Z = &#8730;(R&#178; + X<sub>L</sub>&#178;) equals",
+   "diagram": DIAGRAMS.seriesRL(),
+   "opts": ["R&#8730;2","2R","R","R/&#8730;2"],
+   "ans": 0,
+   "sol": "Z = &#8730;(R&#178; + R&#178;) = &#8730;(2R&#178;) = <strong>R&#8730;2</strong><br><br>Turned round: if you know Z, then R = Z/&#8730;2 and X<sub>L</sub> = Z/&#8730;2 as well. A 45&#176; problem is always an isosceles right triangle."
+  },
+  {
+   "tag": "JEE Main 2020 &#183; 2 Sep Shift 2",
+   "q": "&#9733; <strong>Original:</strong> An inductance coil has a reactance of 100 &#937;. When an a.c. signal of frequency 1000 Hz is applied to the coil, the applied voltage leads the current by 45&#176;. The self-inductance of the coil is",
+   "diagram": DIAGRAMS.realCoil(),
+   "opts": ["1.1 &#215; 10<sup>&#8722;2</sup> H","1.1 &#215; 10<sup>&#8722;1</sup> H","5.5 &#215; 10<sup>&#8722;5</sup> H","6.7 &#215; 10<sup>&#8722;7</sup> H"],
+   "ans": 0,
+   "sol": "The 45&#176; tells you X<sub>L</sub> = R, so Z = R&#8730;2.<br><br>Take the 100 &#937; as the coil's total <strong>impedance</strong>:<br>100 = R&#8730;2 &#8658; R = 50&#8730;2 &#937;, and so X<sub>L</sub> = 50&#8730;2 &#937;<br><br>Then L = X<sub>L</sub>/&#969; = 50&#8730;2 / (2&#960; &#215; 1000) &#8776; <strong>1.1 &#215; 10<sup>&#8722;2</sup> H</strong><br><br><em>A note on the wording:</em> the paper says 'reactance of 100 &#937;' but the official solution treats the 100 &#937; as the whole impedance of the coil. Follow the official reading &#8212; taking X<sub>L</sub> = 100 directly would give 1.6 &#215; 10<sup>&#8722;2</sup> H, which is not on the option list. When a JEE wording is loose like this, let the options tell you which reading was intended."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 12 ---------------------------------- */
+{
+ "name": "Two elements together &#8212; a look ahead to Lecture 3",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "An element carries a peak current of 5 A <strong>in phase</strong> with a peak voltage of 100 V. That element is",
+   "opts": ["a resistor of 20 &#937;","an inductor of reactance 20 &#937;","a capacitor of reactance 20 &#937;","an inductor of reactance 500 &#937;"],
+   "ans": 0,
+   "sol": "In phase means zero phase difference, and only a <strong>resistor</strong> does that.<br><br>Its value: R = V&#8320;/I&#8320; = 100/5 = <strong>20 &#937;</strong>.<br><br>You can use peak with peak here because both are peaks. The ratio is what matters, and the ratio is the same for rms."
+  },
+  {
+   "q": "A second element gives the same 5 A peak, but the current <strong>lags</strong> the voltage by &#960;/2. That element is",
+   "opts": ["an inductor of reactance 20 &#937;","a capacitor of reactance 20 &#937;","a resistor of 20 &#937;","an inductor of reactance 5 &#937;"],
+   "ans": 0,
+   "sol": "Current lagging by 90&#176; is the signature of an <strong>inductor</strong> (ELI).<br><br>Its reactance: X<sub>L</sub> = V&#8320;/I&#8320; = 100/5 = <strong>20 &#937;</strong>.<br><br>Both elements happen to be 20 &#937;, but they are completely different in behaviour. Same size, different direction &#8212; that is the whole point of the next question."
+  },
+  {
+   "q": "A 20 &#937; resistance and a 20 &#937; inductive reactance are put in series. The impedance is",
+   "diagram": DIAGRAMS.seriesRL(),
+   "opts": ["20&#8730;2 &#937;","40 &#937;","20 &#937;","0 &#937;"],
+   "ans": 0,
+   "sol": "They do <strong>not</strong> add to 40 &#937;. They are 90&#176; apart, so you must use Pythagoras:<br><br>Z = &#8730;(20&#178; + 20&#178;) = <strong>20&#8730;2 &#937;</strong> &#8776; 28.3 &#937;<br><br>The 40 &#937; answer is the single most common mistake in this whole chapter, and Lecture 3 is built around not making it."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 29 Jul Shift 2",
+   "q": "&#9733; <strong>Original:</strong> A circuit element X connected to an a.c. supply of peak voltage 100 V gives a peak current of 5 A in phase with the voltage. A second element Y connected to the same supply also gives the same peak current but lagging the voltage by &#960;/2. If X and Y are connected in series to the same supply, the rms value of the current in ampere is",
+   "diagram": DIAGRAMS.seriesRL(),
+   "opts": ["5/2","10/&#8730;2","5/&#8730;2","5&#8730;2"],
+   "ans": 0,
+   "sol": "<strong>Identify.</strong> X is a resistor, R = 100/5 = 20 &#937;. Y is an inductor, X<sub>L</sub> = 100/5 = 20 &#937;.<br><br><strong>Combine.</strong> Z = &#8730;(20&#178; + 20&#178;) = 20&#8730;2 &#937;<br><br><strong>Peak current.</strong> I&#8320; = 100/(20&#8730;2) = 5/&#8730;2 A<br><br><strong>Convert to rms.</strong> I<sub>rms</sub> = I&#8320;/&#8730;2 = 5/2 = <strong>2.5 A</strong><br><br>Look at the option list &#8212; 5/&#8730;2 is the peak, sitting right there waiting for anyone who forgets the last step. The question asked for <strong>rms</strong>.<br><br>Four steps, and every one of them came from this lecture. That is the whole of Lecture 2 in a single question, and it is exactly where Lecture 3 picks up."
+  }
+ ]
+},
+
+];
+
+
+
+const STORAGE_KEY = 'padipucast_ac_l2_rlc_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original exam question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
