@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Friction &#183; Block on Block Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> NLM &#183; Friction</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Friction &#183; Block on Block<br>One force, then four blocks</h1></div>
+    <p id="home-sub">Every question from your friction notes, put in <strong>one climbing order</strong>. The sequence goes: push the top block &#8594; push the bottom block &#8594; add friction under the floor &#8594; the block that will not move &#8594; maximum-force questions &#8594; slipping with &#956;<sub>k</sub> &#8594; the a&#8211;t graph &#8594; three blocks &#8594; four blocks with a string.<br><br>Each source question is a <strong>ladder</strong>: 3 build-up rungs, then the original question (&#9733;). Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 13 ladders &#215; 4 rungs = 52 questions. Take g = 10 m/s<sup>2</sup> throughout.<br><br><em>One method runs through all 13: assume they move together &#8594; find the friction NEEDED &#8594; compare it with &#956;N. If it fits, they go together and friction is the value you found. If it does not fit, they slip and friction is &#956;N.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - NLM / Friction, block on block  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309';
+const FILL_T='#e6f1f4', FILL_B='#c9e2e9', FILL_C='#b3d6df';
+
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+
+// hatched ground line
+function _hatch(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y+9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+// a labelled block
+function _blk(x,y,w,h,label,fill){
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${INK}" stroke-width="1.7" rx="2"/>
+  <text x="${x+w/2}" y="${y+h/2+4.5}" font-size="11.5" text-anchor="middle" fill="${INK}" ${FS} font-weight="700">${label}</text>`;
+}
+// horizontal arrow
+function _arr(x0,x1,y,c,mid,label,above){
+  const id=_nid();
+  return `<defs>${AR(id,c)}</defs>
+  <line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${c}" stroke-width="2.2" marker-end="url(#${id})"/>
+  ${label?`<text x="${mid}" y="${above?y-11:y+17}" font-size="11" text-anchor="middle" fill="${c}" ${FS} font-weight="700">${label}</text>`:''}`;
+}
+// leader line + text pointing at the block-block interface
+function _mu(x,y,txt,side){
+  const tx = side==='right' ? x+52 : x-52;
+  return `<line x1="${x}" y1="${y}" x2="${tx}" y2="${y-16}" stroke="${GREY}" stroke-width="1"/>
+  <text x="${tx}" y="${y-21}" font-size="11" text-anchor="middle" fill="${GREY}" ${FS} font-weight="700">${txt}</text>`;
+}
+
+const DIAGRAMS = {
+
+// ---- two blocks, force on the top or on the bottom block -------------------
+stack2:(o)=>{
+  const W=380, gy=158, bx=104, bw=152, bh=38, tw=92, th=34;
+  const by=gy-bh, ty=by-th, tx=bx+(bw-tw)/2;
+  let s='';
+  s+=_hatch(52,W-40,gy);
+  s+=_blk(bx,by,bw,bh,o.bot,FILL_B);
+  s+=_blk(tx,ty,tw,th,o.top,FILL_T);
+  s+=_mu(tx+6,ty+th,o.mu,'left');
+  if(o.on==='top') s+=_arr(tx+tw,tx+tw+68,ty+th/2,RED,tx+tw+34,o.F,true);
+  else             s+=_arr(bx+bw,bx+bw+68,by+bh/2,RED,bx+bw+34,o.F,true);
+  s+=`<text x="${W/2}" y="${gy+30}" font-size="11" text-anchor="middle" fill="${o.rough?INK:GREY}" ${FS} font-weight="${o.rough?700:400}">${o.rough?o.rough:'smooth floor'}</text>`;
+  return `<svg viewBox="0 0 ${W} 200" width="${W}" height="200" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- free body diagrams of the two blocks, drawn apart ---------------------
+fbd2:(o)=>{
+  const W=380, top=o.on==='top';
+  let s='';
+  // ---- top block ----
+  s+=`<text x="160" y="18" font-size="10.5" text-anchor="middle" fill="${GREY}" ${FS}>top block</text>`;
+  s+=_blk(110,26,100,40,o.top,FILL_T);
+  if(top){
+    s+=_arr(210,282,46,RED,246,o.F,true);
+    s+=_arr(110,38,46,GRN,74,o.fTop,true);
+  } else {
+    s+=_arr(210,282,46,GRN,246,o.fTop,true);
+  }
+  // ---- bottom block ----
+  s+=`<text x="160" y="106" font-size="10.5" text-anchor="middle" fill="${GREY}" ${FS}>bottom block</text>`;
+  s+=_blk(100,114,120,42,o.bot,FILL_B);
+  if(top){
+    s+=_arr(220,292,135,GRN,256,o.fBot,true);
+  } else {
+    s+=_arr(220,292,127,RED,256,o.F,true);
+    s+=_arr(100,28,127,GRN,64,o.fBot,true);
+  }
+  if(o.fG) s+=_arr(100,28,149,AMB,64,o.fG,false);
+  const nt=(o.note||'the two friction arrows are an action&#8211;reaction pair|equal in size, opposite in direction').split('|');
+  s+=`<text x="190" y="182" font-size="10" text-anchor="middle" fill="${GREY}" ${FS}>${nt[0]}</text>`;
+  if(nt[1]) s+=`<text x="190" y="196" font-size="10" text-anchor="middle" fill="${GREY}" ${FS}>${nt[1]}</text>`;
+  return `<svg viewBox="0 0 ${W} 204" width="${W}" height="204" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- three block stack -----------------------------------------------------
+stack3:(o)=>{
+  const W=380, gy=170;
+  const b3={x:96,w:184,h:34}, b2={x:118,w:140,h:32}, b1={x:142,w:92,h:30};
+  const y3=gy-b3.h, y2=y3-b2.h, y1=y2-b1.h;
+  let s='';
+  s+=_hatch(48,W-44,gy);
+  s+=_blk(b3.x,y3,b3.w,b3.h,o.b3,FILL_C);
+  s+=_blk(b2.x,y2,b2.w,b2.h,o.b2,FILL_B);
+  s+=_blk(b1.x,y1,b1.w,b1.h,o.b1,FILL_T);
+  s+=_mu(b1.x+6,y1+b1.h,o.mu1,'left');
+  s+=_mu(b2.x+6,y2+b2.h,o.mu2,'left');
+  const lv = o.on==='b1'?{x:b1.x+b1.w,y:y1+b1.h/2} : o.on==='b2'?{x:b2.x+b2.w,y:y2+b2.h/2} : {x:b3.x+b3.w,y:y3+b3.h/2};
+  s+=_arr(lv.x,lv.x+66,lv.y,RED,lv.x+33,o.F,true);
+  s+=`<text x="${W/2}" y="${gy+28}" font-size="11" text-anchor="middle" fill="${GREY}" ${FS}>floor is smooth (&#956; = 0)</text>`;
+  return `<svg viewBox="0 0 ${W} 200" width="${W}" height="200" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- four blocks joined by a string ----------------------------------------
+four:()=>{
+  const W=390, gy=158;
+  const D={x:34,w:118,h:36}, B={x:214,w:118,h:36};
+  const C={x:58,w:66,h:30},  A={x:238,w:66,h:30};
+  const yl=gy-D.h, yu=yl-C.h;
+  let s='';
+  s+=_hatch(18,W-24,gy);
+  s+=_blk(D.x,yl,D.w,D.h,'D &#183; 2m',FILL_B);
+  s+=_blk(B.x,yl,B.w,B.h,'B &#183; 2m',FILL_B);
+  s+=_blk(C.x,yu,C.w,C.h,'C &#183; m',FILL_T);
+  s+=_blk(A.x,yu,A.w,A.h,'A &#183; m',FILL_T);
+  s+=`<line x1="${C.x+C.w}" y1="${yu+C.h/2}" x2="${A.x}" y2="${yu+C.h/2}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<text x="${(C.x+C.w+A.x)/2}" y="${yu-8}" font-size="10.5" text-anchor="middle" fill="${GREY}" ${FS}>light string</text>`;
+  s+=_arr(B.x+B.w,B.x+B.w+52,yl+D.h/2,RED,B.x+B.w+26,'F',true);
+  s+=_mu(A.x+A.w-6,yu+C.h,'&#956;','right');
+  s+=_mu(C.x+6,yu+C.h,'&#956;','left');
+  s+=`<text x="${D.x+D.w/2}" y="${gy+18}" font-size="10.5" text-anchor="middle" fill="${GREY}" ${FS}>&#956; = 0</text>`;
+  s+=`<text x="${B.x+B.w/2}" y="${gy+18}" font-size="10.5" text-anchor="middle" fill="${GREY}" ${FS}>&#956; = 0</text>`;
+  s+=`<text x="${W/2}" y="${gy+36}" font-size="11" text-anchor="middle" fill="${INK}" ${FS} font-weight="600">all four move together</text>`;
+  return `<svg viewBox="0 0 ${W} 202" width="${W}" height="202" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- FBD of block A in the four-block problem ------------------------------
+fbdA:()=>{
+  const W=340;
+  let s='';
+  s+=_blk(120,44,100,42,'A &#183; m',FILL_T);
+  s+=_arr(120,50,58,GREY,84,'T',true);
+  s+=_arr(220,292,58,GRN,256,'f',true);
+  s+=`<text x="170" y="112" font-size="11" text-anchor="middle" fill="${INK}" ${FS} font-weight="600">f &#8722; T = ma</text>`;
+  s+=`<text x="170" y="132" font-size="10.5" text-anchor="middle" fill="${GREY}" ${FS}>friction from B drives A forward, the string holds it back</text>`;
+  return `<svg viewBox="0 0 ${W} 146" width="${W}" height="146" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- normal reaction between the blocks ------------------------------------
+normalN:()=>{
+  const W=340, gy=150;
+  let s='';
+  s+=_hatch(44,W-40,gy);
+  s+=_blk(96,112,148,38,'10 kg',FILL_B);
+  s+=_blk(122,78,96,34,'5 kg',FILL_T);
+  s+=`<defs>${AR('nn1',GRN)}${AR('nn2',RED)}</defs>`;
+  s+=`<line x1="170" y1="112" x2="170" y2="88" stroke="${GRN}" stroke-width="2.2" marker-end="url(#nn1)"/>`;
+  s+=`<text x="182" y="100" font-size="11" fill="${GRN}" ${FS} font-weight="700">N = 50 N</text>`;
+  s+=`<line x1="146" y1="88" x2="146" y2="116" stroke="${RED}" stroke-width="2.2" marker-end="url(#nn2)"/>`;
+  s+=`<text x="100" y="104" font-size="11" fill="${RED}" ${FS} font-weight="700">50 N</text>`;
+  s+=`<text x="${W/2}" y="182" font-size="10.5" text-anchor="middle" fill="${GREY}" ${FS}>the contact force between the blocks carries the weight of the TOP block only</text>`;
+  return `<svg viewBox="0 0 ${W} 192" width="${W}" height="192" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- ground normal uses the whole stack ------------------------------------
+normalG:()=>{
+  const W=340, gy=150;
+  let s='';
+  s+=_hatch(44,W-40,gy);
+  s+=_blk(96,112,148,38,'15 kg',FILL_B);
+  s+=_blk(122,78,96,34,'10 kg',FILL_T);
+  s+=`<defs>${AR('ng1',GRN)}</defs>`;
+  s+=`<line x1="170" y1="150" x2="170" y2="120" stroke="${GRN}" stroke-width="2.4" marker-end="url(#ng1)"/>`;
+  s+=`<text x="186" y="138" font-size="11" fill="${GRN}" ${FS} font-weight="700">N = 250 N</text>`;
+  s+=`<text x="${W/2}" y="180" font-size="10.5" text-anchor="middle" fill="${GREY}" ${FS}>the floor carries BOTH blocks &#8212; (10 + 15) &#215; 10 = 250 N</text>`;
+  return `<svg viewBox="0 0 ${W} 192" width="${W}" height="192" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- static friction graph: f vs applied force ------------------------------
+fVsP:()=>{
+  const W=340;
+  const x0=52,x1=300,yb=150,yt=34;
+  let s=`<defs>${AR('fp1',GREY)}</defs>`;
+  s+=`<line x1="${x0}" y1="${yb}" x2="${x1+12}" y2="${yb}" stroke="${GREY}" stroke-width="1.3" marker-end="url(#fp1)"/>`;
+  s+=`<line x1="${x0}" y1="${yb}" x2="${x0}" y2="${yt-10}" stroke="${GREY}" stroke-width="1.3" marker-end="url(#fp1)"/>`;
+  s+=`<line x1="${x0}" y1="${yb}" x2="190" y2="${yt+16}" stroke="${INK}" stroke-width="2.4"/>`;
+  s+=`<line x1="190" y1="${yt+16}" x2="${x1}" y2="${yt+16}" stroke="${RED}" stroke-width="2.4" stroke-dasharray="6 4"/>`;
+  s+=`<line x1="${x0}" y1="${yt+16}" x2="190" y2="${yt+16}" stroke="${GREY}" stroke-width="1" stroke-dasharray="3 3"/>`;
+  s+=`<text x="34" y="${yt+20}" font-size="10.5" fill="${GREY}" ${FS}>&#956;N</text>`;
+  s+=`<text x="${x1+4}" y="${yb+20}" font-size="10.5" fill="${GREY}" text-anchor="end" ${FS}>applied force</text>`;
+  s+=`<text x="${x0-6}" y="${yt-16}" font-size="10.5" fill="${GREY}" ${FS}>friction</text>`;
+  s+=`<text x="120" y="${yb+34}" font-size="10.5" fill="${INK}" text-anchor="middle" ${FS} font-weight="600">static: f = whatever is needed</text>`;
+  s+=`<text x="252" y="${yb+34}" font-size="10.5" fill="${RED}" text-anchor="middle" ${FS} font-weight="600">sliding: f = &#956;N, fixed</text>`;
+  return `<svg viewBox="0 0 ${W} 196" width="${W}" height="196" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- four candidate a-t graphs ---------------------------------------------
+atOptions:()=>{
+  const panel=(px,py,label,draw)=>{
+    const x0=px+34,x1=px+150,yb=py+92,yt=py+16;
+    let s=`<defs>${AR('ax'+label,GREY)}</defs>`;
+    s+=`<line x1="${x0}" y1="${yb}" x2="${x1+10}" y2="${yb}" stroke="${GREY}" stroke-width="1.2" marker-end="url(#ax${label})"/>`;
+    s+=`<line x1="${x0}" y1="${yb}" x2="${x0}" y2="${yt-8}" stroke="${GREY}" stroke-width="1.2" marker-end="url(#ax${label})"/>`;
+    s+=`<text x="${x1+12}" y="${yb+14}" font-size="9.5" fill="${GREY}" ${FS}>t</text>`;
+    s+=`<text x="${x0+6}" y="${yt-8}" font-size="9.5" fill="${GREY}" ${FS}>a</text>`;
+    s+=`<text x="${px+2}" y="${py+13}" font-size="10.5" fill="${INK}" ${FS} font-weight="700">(${label})</text>`;
+    s+=draw(x0,x1,yb,yt);
+    return s;
+  };
+  const LB=(x,y,t,c)=>`<text x="${x}" y="${y}" font-size="9.5" fill="${c}" ${FS} font-weight="700">a<tspan dy="3" font-size="7.5">${t}</tspan></text>`;
+  let s='';
+  // (1) together, then aA steeper than aB  - wrong
+  s+=panel(4,4,'1',(x0,x1,yb,yt)=>{
+    const kx=x0+46, ky=yb-26;
+    return `<line x1="${x0}" y1="${yb}" x2="${kx}" y2="${ky}" stroke="${INK}" stroke-width="2"/>
+    <line x1="${kx}" y1="${ky}" x2="${x1}" y2="${yt+4}" stroke="${RED}" stroke-width="2"/>
+    <line x1="${kx}" y1="${ky}" x2="${x1}" y2="${yb-44}" stroke="${GRN}" stroke-width="2"/>
+    ${LB(x1-30,yt+2,'A','#c0392b')}${LB(x1-30,yb-48,'B','#1a7a4a')}`;
+  });
+  // (2) two separate lines from the origin - wrong
+  s+=panel(192,4,'2',(x0,x1,yb,yt)=>{
+    return `<line x1="${x0}" y1="${yb}" x2="${x1}" y2="${yt+2}" stroke="${GRN}" stroke-width="2"/>
+    <line x1="${x0}" y1="${yb}" x2="${x1}" y2="${yb-38}" stroke="${RED}" stroke-width="2"/>
+    ${LB(x1-30,yt,'B','#1a7a4a')}${LB(x1-30,yb-42,'A','#c0392b')}`;
+  });
+  // (3) together, then both keep rising - wrong
+  s+=panel(4,124,'3',(x0,x1,yb,yt)=>{
+    const kx=x0+46, ky=yb-26;
+    return `<line x1="${x0}" y1="${yb}" x2="${kx}" y2="${ky}" stroke="${INK}" stroke-width="2"/>
+    <line x1="${kx}" y1="${ky}" x2="${x1}" y2="${yt+4}" stroke="${GRN}" stroke-width="2"/>
+    <line x1="${kx}" y1="${ky}" x2="${x1}" y2="${yb-44}" stroke="${RED}" stroke-width="2"/>
+    ${LB(x1-30,yt+2,'B','#1a7a4a')}${LB(x1-30,yb-48,'A','#c0392b')}`;
+  });
+  // (4) together, then aB rises and aA flat - CORRECT
+  s+=panel(192,124,'4',(x0,x1,yb,yt)=>{
+    const kx=x0+46, ky=yb-26;
+    return `<line x1="${x0}" y1="${yb}" x2="${kx}" y2="${ky}" stroke="${INK}" stroke-width="2"/>
+    <line x1="${kx}" y1="${ky}" x2="${x1}" y2="${yt+4}" stroke="${GRN}" stroke-width="2"/>
+    <line x1="${kx}" y1="${ky}" x2="${x1}" y2="${ky}" stroke="${RED}" stroke-width="2"/>
+    ${LB(x1-30,yt+2,'B','#1a7a4a')}${LB(x1-30,ky-6,'A','#c0392b')}`;
+  });
+  return `<svg viewBox="0 0 380 248" width="380" height="248" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- decision flow chart ----------------------------------------------------
+flow:()=>{
+  const W=376;
+  const box=(x,y,w,h,t1,t2,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="var(--surface)" stroke="${c}" stroke-width="1.6" rx="8"/>
+  <text x="${x+w/2}" y="${y+(t2?19:h/2+4)}" font-size="10.5" text-anchor="middle" fill="${INK}" ${FS} font-weight="700">${t1}</text>
+  ${t2?`<text x="${x+w/2}" y="${y+35}" font-size="10" text-anchor="middle" fill="${GREY}" ${FS}>${t2}</text>`:''}`;
+  const dn=(x,y0,y1,id)=>`<defs>${AR(id,GREY)}</defs><line x1="${x}" y1="${y0}" x2="${x}" y2="${y1}" stroke="${GREY}" stroke-width="1.4" marker-end="url(#${id})"/>`;
+  let s='';
+  s+=box(78,6,220,44,'1. Assume they move TOGETHER','a = F / (total mass)',INK);
+  s+=dn(188,50,68,'fl1');
+  s+=box(78,70,220,44,'2. Find the friction NEEDED','on the block friction has to drive',INK);
+  s+=dn(188,114,132,'fl2');
+  s+=box(78,134,220,44,'3. Compare with &#956;N','the limiting value',INK);
+  s+=`<defs>${AR('fl3',GRN)}${AR('fl4',RED)}</defs>
+  <line x1="140" y1="178" x2="86" y2="200" stroke="${GRN}" stroke-width="1.4" marker-end="url(#fl3)"/>
+  <line x1="236" y1="178" x2="290" y2="200" stroke="${RED}" stroke-width="1.4" marker-end="url(#fl4)"/>`;
+  s+=box(6,204,164,44,'needed &#8804; &#956;N',"they DO move together",GRN);
+  s+=box(206,204,164,44,'needed &gt; &#956;N','they SLIP, use f = &#956;N',RED);
+  return `<svg viewBox="0 0 ${W} 256" width="${W}" height="256" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+
+};
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "Push the TOP block &#8212; do they go together?",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A 5 kg block A rests on a 10 kg block B. The floor under B is smooth. Take g = 10 m/s<sup>2</sup>. The normal reaction between A and B is",
+   "diagram": DIAGRAMS.normalN(),
+   "opts": ["50 N","150 N","100 N","30 N"],
+   "ans": 0,
+   "sol": "The contact surface between A and B has to hold up <strong>only A</strong>. Nothing else presses on it.<br><br>N = m<sub>A</sub>g = 5 &#215; 10 = <strong>50 N</strong><br><br>The 150 N figure is the load on the <em>floor</em>, not on the surface between the blocks. Mixing up these two normals is the single most common mistake in this chapter. Always ask: which surface am I standing on, and what is sitting on top of it?"
+  },
+  {
+   "q": "For the same two blocks, the coefficient of friction between A and B is 0.4. The largest friction force the surface between them can supply is",
+   "opts": ["20 N","60 N","8 N","50 N"],
+   "ans": 0,
+   "sol": "f<sub>limiting</sub> = &#956;N = 0.4 &#215; 50 = <strong>20 N</strong><br><br>Use the normal for <em>that particular surface</em>. Here the surface is A-on-B, so N = 50 N.<br><br>This 20 N is a ceiling, not a value. Friction will be whatever the situation demands, up to 20 N, and no more."
+  },
+  {
+   "q": "A force F = 50 N is applied on the top block A. <em>Suppose</em> the two blocks moved together. The common acceleration would be 50/15 = 10/3 m/s<sup>2</sup>, and the friction needed to give B that acceleration would be 10 &#215; 10/3 = 100/3 &#8776; 33.3 N. What does this tell you?",
+   "diagram": DIAGRAMS.flow(),
+   "opts": ["They cannot move together &#8212; 33.3 N is more than the 20 N available, so A slides on B","They move together at 10/3 m/s<sup>2</sup>","Friction becomes 33.3 N","B accelerates faster than A"],
+   "ans": 0,
+   "sol": "This is the whole method of the chapter, in three steps.<br><br>1. Assume they move together and find a = F / (total mass).<br>2. Find the friction <strong>needed</strong> on the block that friction alone has to drive.<br>3. Compare that with &#956;N.<br><br>Here 33.3 N is needed but only 20 N is available. The surface cannot deliver it, so the assumption breaks: <strong>A slides on B</strong>.<br><br>Once they slide, friction sits at its maximum value 20 N and stays there."
+  },
+  {
+   "tag": "Illustration 1",
+   "q": "&#9733; <strong>Original:</strong> Calculate the accelerations of the blocks and the force of friction between them. A is 5 kg, B is 10 kg, &#956; between them is 0.4, the floor is smooth and F = 50 N acts on A.",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 5 kg',bot:'B &#183; 10 kg',mu:'&#956; = 0.4',F:'F = 50 N',on:'top'}),
+   "opts": ["a<sub>A</sub> = 6 m/s<sup>2</sup>, a<sub>B</sub> = 2 m/s<sup>2</sup>, f = 20 N","a<sub>A</sub> = a<sub>B</sub> = 10/3 m/s<sup>2</sup>, f = 20 N","a<sub>A</sub> = 10 m/s<sup>2</sup>, a<sub>B</sub> = 0, f = 0","a<sub>A</sub> = 2 m/s<sup>2</sup>, a<sub>B</sub> = 6 m/s<sup>2</sup>, f = 20 N"],
+   "ans": 0,
+   "sol": "From rung 3 we know they slip, so friction is fixed at <strong>f = 20 N</strong>.<br><br>Block A: 50 &#8722; 20 = 5a<sub>A</sub> &#8594; a<sub>A</sub> = <strong>6 m/s<sup>2</sup></strong><br>Block B: the only horizontal force on B is the 20 N friction from A, pushing it forward. 20 = 10a<sub>B</sub> &#8594; a<sub>B</sub> = <strong>2 m/s<sup>2</sup></strong><br><br>Sanity check: a<sub>A</sub> &gt; a<sub>B</sub>. A really is sliding forward over B, which is exactly what slipping means. If your answer ever gives the lower block a bigger acceleration than the pulled block, you have made a sign error."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "The largest F that still keeps them together (force on top)",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A 10 kg block A sits on a 15 kg block B, &#956; between them is 0.25 and the floor is smooth. The limiting friction between A and B is",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 10 kg',bot:'B &#183; 15 kg',mu:'&#956; = 0.25',F:'F',on:'top'}),
+   "opts": ["25 N","62.5 N","37.5 N","2.5 N"],
+   "ans": 0,
+   "sol": "N between the blocks = 10 &#215; 10 = 100 N.<br><br>f<sub>limiting</sub> = 0.25 &#215; 100 = <strong>25 N</strong><br><br>The 15 kg never enters this calculation. It is A that presses on the surface, not B."
+  },
+  {
+   "q": "If both blocks move together under a force F applied on A, their common acceleration is",
+   "opts": ["F/25","F/10","F/15","F/5"],
+   "ans": 0,
+   "sol": "Treat the two blocks as one body of mass 10 + 15 = 25 kg. The floor is smooth, so F is the only outside horizontal force.<br><br>a = <strong>F/25</strong><br><br>Friction between A and B is internal to this combined body, so it does not appear here. That is the point of the system approach."
+  },
+  {
+   "q": "In this setup, which force is the only thing pushing block B forward?",
+   "diagram": DIAGRAMS.fbd2({top:'A &#183; 10 kg',bot:'B &#183; 15 kg',F:'F',fTop:'f',fBot:'f',on:'top'}),
+   "opts": ["the friction from A acting on the top surface of B","the applied force F, transmitted through A","the normal reaction from A","the weight of A"],
+   "ans": 0,
+   "sol": "F is applied on A, not on B. The only way that push can reach B is through the rubbing surface between them &#8212; that is, through <strong>friction</strong>.<br><br>So for B: f = m<sub>B</sub>a = 15a.<br><br>The normal reaction and the weight are vertical; they can never accelerate B horizontally. Whenever a lower block is driven only by friction, that friction has a job to do, and there is a limit to how much it can do."
+  },
+  {
+   "tag": "Illustration 2",
+   "q": "&#9733; <strong>Original:</strong> In the figure shown m<sub>A</sub> = 10 kg, m<sub>B</sub> = 15 kg. Find the maximum value of F, below which the blocks move together.",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 10 kg',bot:'B &#183; 15 kg',mu:'&#956; = 0.25',F:'F',on:'top'}),
+   "opts": ["125/3 N &#8776; 41.7 N","25 N","62.5 N","100 N"],
+   "ans": 0,
+   "sol": "Friction on B: f = 15a = 15 &#215; (F/25) = 3F/5.<br><br>They stay together as long as this stays within the limit:<br>3F/5 &#8804; 25 &#8594; F &#8804; <strong>125/3 &#8776; 41.7 N</strong><br><br>Beyond this, friction is asked to do more than 25 N of work in driving B, and it simply cannot. A then slides forward over B.<br><br><em>Pattern to remember:</em> when the force is on the TOP block, the lower block is the weak link. Always test the lower block."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Push the BOTTOM block instead (smooth floor)",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "m<sub>A</sub> = 10 kg sits on m<sub>B</sub> = 20 kg, the floor is smooth and F = 90 N is applied on the <strong>lower</strong> block B. If the two move together, their common acceleration is",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 10 kg',bot:'B &#183; 20 kg',mu:'&#956; = 0.4',F:'F = 90 N',on:'bot'}),
+   "opts": ["3 m/s<sup>2</sup>","4.5 m/s<sup>2</sup>","9 m/s<sup>2</sup>","2 m/s<sup>2</sup>"],
+   "ans": 0,
+   "sol": "Combined mass = 10 + 20 = 30 kg, and the floor is smooth.<br><br>a = 90/30 = <strong>3 m/s<sup>2</sup></strong><br><br>It makes no difference to this first step whether F is applied on the top block or the bottom one. The system as a whole feels the same push."
+  },
+  {
+   "q": "Now that the push is on the bottom block, which block is driven only by friction?",
+   "opts": ["the top block A","the bottom block B","both of them","neither &#8212; the applied force reaches both directly"],
+   "ans": 0,
+   "sol": "The roles swap. F acts on B directly, so B is fine. But nothing touches <strong>A</strong> except the surface it rests on.<br><br>So for A: f = m<sub>A</sub>a = 10a.<br><br><em>The rule in one line:</em> whichever block does NOT receive the applied force is the one friction must carry &#8212; and that is the block you test."
+  },
+  {
+   "q": "Continuing: the friction needed on A is 10 &#215; 3 = 30 N, while the limiting friction is 0.4 &#215; 100 = 40 N. So",
+   "diagram": DIAGRAMS.fVsP(),
+   "opts": ["they move together, and the actual friction is 30 N","they slip, and the friction is 40 N","they move together, and the friction is 40 N","they slip, and the friction is 30 N"],
+   "ans": 0,
+   "sol": "30 N is needed and up to 40 N is available. The surface can comfortably supply it, so the blocks <strong>stay together</strong>.<br><br>And now the important part: friction takes the value it <em>needs</em>, which is <strong>30 N</strong>, not the maximum 40 N.<br><br>Static friction is like a person who lifts only as much as you ask. &#956;N tells you what they can lift at most, not what they are lifting right now. You only put f = &#956;N when the blocks are actually sliding over each other."
+  },
+  {
+   "tag": "Illustration 3",
+   "q": "&#9733; <strong>Original:</strong> For the figure shown m<sub>A</sub> = 10 kg, m<sub>B</sub> = 20 kg, F = 90 N. Find the acceleration of the two blocks and the frictional force between them.",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 10 kg',bot:'B &#183; 20 kg',mu:'&#956; = 0.4',F:'F = 90 N',on:'bot'}),
+   "opts": ["both 3 m/s<sup>2</sup>, friction = 30 N","both 3 m/s<sup>2</sup>, friction = 40 N","a<sub>A</sub> = 4 m/s<sup>2</sup>, a<sub>B</sub> = 2.5 m/s<sup>2</sup>, friction = 40 N","both 4.5 m/s<sup>2</sup>, friction = 30 N"],
+   "ans": 0,
+   "sol": "Both blocks: <strong>a = 3 m/s<sup>2</sup></strong>, friction between them = <strong>30 N</strong>.<br><br>Cross-check on B alone: 90 &#8722; 30 = 20 &#215; 3 = 60. &#10003;<br><br>Notice the friction on B points <em>backward</em> (A drags on B), while on A it points forward. Action and reaction &#8212; equal, opposite, on different bodies. Draw both arrows every single time; it costs five seconds and saves the whole question."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "Now the floor is rough as well",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "m<sub>A</sub> = 10 kg rests on m<sub>B</sub> = 15 kg. Between the blocks &#956;<sub>1</sub> = 0.4; between B and the floor &#956;<sub>2</sub> = 0.2. The friction from the floor on B, when the stack slides, is",
+   "diagram": DIAGRAMS.normalG(),
+   "opts": ["50 N","30 N","20 N","100 N"],
+   "ans": 0,
+   "sol": "The floor carries <strong>both</strong> blocks: N = (10 + 15) &#215; 10 = 250 N.<br><br>f<sub>floor</sub> = 0.2 &#215; 250 = <strong>50 N</strong><br><br>Two different surfaces, two different normals. Between the blocks N = 100 N; on the floor N = 250 N. Write the normal next to each surface in your figure before you touch &#956;."
+  },
+  {
+   "q": "F = 90 N is applied on the lower block B. Treating both blocks as one body, the acceleration is",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 10 kg',bot:'B &#183; 15 kg',mu:'&#956;&#8321; = 0.4',F:'F = 90 N',on:'bot',rough:'&#956;&#8322; = 0.2 with the floor'}),
+   "opts": ["1.6 m/s<sup>2</sup>","3.6 m/s<sup>2</sup>","2 m/s<sup>2</sup>","0.8 m/s<sup>2</sup>"],
+   "ans": 0,
+   "sol": "For the combined 25 kg body, the outside horizontal forces are F forward and the floor friction backward:<br><br>90 &#8722; 50 = 25a &#8594; a = 40/25 = <strong>1.6 m/s<sup>2</sup></strong><br><br>The friction between A and B is internal here, so it cancels out and does not appear. That is the whole reason we start with the system."
+  },
+  {
+   "q": "The friction needed to carry the top block A along at 1.6 m/s<sup>2</sup> is",
+   "opts": ["16 N, which is within the 40 N limit &#8212; so they move together","40 N, the limiting value","24 N, which exceeds the limit","zero, because A is not pushed"],
+   "ans": 0,
+   "sol": "f = m<sub>A</sub>a = 10 &#215; 1.6 = <strong>16 N</strong>.<br><br>The limit on that surface is &#956;<sub>1</sub>N = 0.4 &#215; 100 = 40 N. Since 16 &lt; 40, the surface can easily do it and the blocks <strong>move together</strong>.<br><br>The friction between the blocks is 16 N, not 40 N. Only when the assumption fails do you fall back on the maximum."
+  },
+  {
+   "tag": "Illustration 4",
+   "q": "&#9733; <strong>Original:</strong> For the figure shown m<sub>A</sub> = 10 kg, m<sub>B</sub> = 15 kg and F = 90 N. Find the accelerations of the blocks and the frictional forces acting.",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 10 kg',bot:'B &#183; 15 kg',mu:'&#956;&#8321; = 0.4',F:'F = 90 N',on:'bot',rough:'&#956;&#8322; = 0.2 with the floor'}),
+   "opts": ["both 1.6 m/s<sup>2</sup>; friction between blocks 16 N, from the floor 50 N","both 1.6 m/s<sup>2</sup>; friction between blocks 40 N, from the floor 50 N","a<sub>A</sub> = 4 m/s<sup>2</sup>, a<sub>B</sub> = 0; friction 40 N","both 3.6 m/s<sup>2</sup>; friction between blocks 36 N, from the floor 50 N"],
+   "ans": 0,
+   "sol": "Both blocks move at <strong>1.6 m/s<sup>2</sup></strong>. Friction between A and B = <strong>16 N</strong>. Friction from the floor on B = <strong>50 N</strong>.<br><br>Check block B on its own: 90 &#8722; 50 &#8722; 16 = 24 = 15 &#215; 1.6. &#10003; The 16 N appears here as a backward drag from A.<br><br>Three forces on B, and students routinely forget the 16 N. If your check does not close, a friction arrow is missing."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "When the bottom block refuses to move at all",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Blocks A (5 kg) and B (10 kg) are stacked. &#956; between A and B is 0.5, and A is pulled with 50 N. The limiting friction between A and B is",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 5 kg',bot:'B &#183; 10 kg',mu:'&#956; = 0.5',F:'F = 50 N',on:'top',rough:'&#956; = 0.4 with the ground'}),
+   "opts": ["25 N","50 N","75 N","20 N"],
+   "ans": 0,
+   "sol": "N between the blocks = 5 &#215; 10 = 50 N.<br><br>f<sub>AB</sub> = 0.5 &#215; 50 = <strong>25 N</strong>"
+  },
+  {
+   "q": "For the same stack, &#956; between B and the ground is 0.4. The largest friction the ground can supply on B is",
+   "opts": ["60 N","40 N","30 N","20 N"],
+   "ans": 0,
+   "sol": "The ground carries both blocks: N = (5 + 10) &#215; 10 = 150 N.<br><br>f<sub>ground</sub> = 0.4 &#215; 150 = <strong>60 N</strong><br><br>Two surfaces again. Notice how much bigger the ground's limit is &#8212; it is holding a heavier load."
+  },
+  {
+   "q": "The only forward force on B is the 25 N friction from A. The ground can resist up to 60 N. Therefore",
+   "diagram": DIAGRAMS.fbd2({top:'A &#183; 5 kg',bot:'B &#183; 10 kg',F:'50 N',fTop:'25 N',fBot:'25 N',fG:'holds',on:'top',note:'B is pulled forward with only 25 N; the ground can resist up to 60 N'}),
+   "opts": ["B stays at rest, and the ground friction on it is only 25 N","B moves, and the ground friction is 60 N","B moves, and the ground friction is 25 N","B stays at rest, and the ground friction is 60 N"],
+   "ans": 0,
+   "sol": "25 N of push against a possible 60 N of resistance &#8212; the ground wins easily, so <strong>B does not move</strong>.<br><br>And the ground friction is <strong>25 N, not 60 N</strong>. B is in equilibrium, so the friction on it must exactly balance the 25 N drag from A. Static friction only matches what it is given.<br><br>Writing 60 N here would give B a backward acceleration, which is nonsense &#8212; nothing is pushing it backward."
+  },
+  {
+   "tag": "Illustration 5",
+   "q": "&#9733; <strong>Original:</strong> Blocks A and B of masses 5 kg and 10 kg are placed as shown. Block A is pulled with 50 N. The coefficient of friction between A and B is 0.5, and between B and the ground is 0.4. Find the accelerations of A and B.",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 5 kg',bot:'B &#183; 10 kg',mu:'&#956; = 0.5',F:'F = 50 N',on:'top',rough:'&#956; = 0.4 with the ground'}),
+   "opts": ["a<sub>A</sub> = 5 m/s<sup>2</sup>, a<sub>B</sub> = 0","a<sub>A</sub> = a<sub>B</sub> = 10/3 m/s<sup>2</sup>","a<sub>A</sub> = 5 m/s<sup>2</sup>, a<sub>B</sub> = 2.5 m/s<sup>2</sup>","a<sub>A</sub> = 10 m/s<sup>2</sup>, a<sub>B</sub> = 0"],
+   "ans": 0,
+   "sol": "B is locked in place by the ground, so <strong>a<sub>B</sub> = 0</strong>.<br><br>A therefore slides over a stationary B, and the friction on A is kinetic, at its full value 25 N:<br>50 &#8722; 25 = 5a<sub>A</sub> &#8594; a<sub>A</sub> = <strong>5 m/s<sup>2</sup></strong><br><br>This problem looks like Illustration 1 but behaves completely differently, only because the ground was given friction. Never assume the floor is smooth &#8212; read the figure."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Find the friction between the blocks when the stack does move",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "An 8 kg block A is placed on a 2 kg block B resting on a table. &#956; between A and B is 0.5. The limiting friction between them is",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 8 kg',bot:'B &#183; 2 kg',mu:'&#956; = 0.5',F:'F = 60 N',on:'top',rough:'&#956; = 0.2 with the table'}),
+   "opts": ["40 N","10 N","50 N","20 N"],
+   "ans": 0,
+   "sol": "N between A and B = 8 &#215; 10 = 80 N.<br><br>f<sub>AB, limiting</sub> = 0.5 &#215; 80 = <strong>40 N</strong><br><br>Note the odd-looking arrangement: the heavy block sits on the light one. Nothing changes in the method."
+  },
+  {
+   "q": "&#956; between B and the table is 0.2. The friction from the table on B is at most",
+   "opts": ["20 N","4 N","16 N","40 N"],
+   "ans": 0,
+   "sol": "The table carries both blocks: N = (8 + 2) &#215; 10 = 100 N.<br><br>f<sub>table</sub> = 0.2 &#215; 100 = <strong>20 N</strong><br><br>A 60 N horizontal force is applied on A, so the system does move &#8212; 60 N easily beats 20 N. Since sliding on the table begins, this 20 N is the actual value there."
+  },
+  {
+   "q": "With F = 60 N applied on A, and the whole stack moving together, the common acceleration is",
+   "opts": ["4 m/s<sup>2</sup>","6 m/s<sup>2</sup>","2 m/s<sup>2</sup>","7.5 m/s<sup>2</sup>"],
+   "ans": 0,
+   "sol": "Combined 10 kg body, pushed by 60 N forward and held back by 20 N of table friction:<br><br>60 &#8722; 20 = 10a &#8594; a = <strong>4 m/s<sup>2</sup></strong>"
+  },
+  {
+   "tag": "Practice MCQ",
+   "q": "&#9733; <strong>Original:</strong> An 8 kg block (A) is placed on a 2 kg block (B) which rests on a table. The coefficient of friction between A and B is 0.5 and between B and the table is 0.2. A 60 N horizontal force is applied on block A. The friction force between blocks A and B is",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 8 kg',bot:'B &#183; 2 kg',mu:'&#956; = 0.5',F:'F = 60 N',on:'top',rough:'&#956; = 0.2 with the table'}),
+   "opts": ["28 N","zero","2.5 N","40 N"],
+   "ans": 0,
+   "sol": "Take block B alone. Forward: friction f from A on top. Backward: 20 N from the table.<br><br>f &#8722; 20 = 2 &#215; 4 &#8594; f = <strong>28 N</strong><br><br>Check it against the ceiling: 28 &lt; 40, so the surface can supply it and our &quot;they move together&quot; assumption holds. &#10003;<br><br>You can also do it from block A: 60 &#8722; f = 8 &#215; 4 &#8594; f = 28 N. Same answer, and a good habit &#8212; solving from the other block is a free check.<br><br><em>Trap in the options:</em> 40 N is the limiting value. It is not the answer, because the blocks are not slipping on each other."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "Largest F on the BOTTOM block with no relative sliding",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Block A (4 kg) rests on block B (6 kg) on a smooth horizontal plane, with &#956; = 0.3 between A and B. The limiting friction between them is",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 4 kg',bot:'B &#183; 6 kg',mu:'&#956; = 0.3',F:'F',on:'bot'}),
+   "opts": ["12 N","18 N","30 N","1.2 N"],
+   "ans": 0,
+   "sol": "N between them = 4 &#215; 10 = 40 N.<br><br>f<sub>limiting</sub> = 0.3 &#215; 40 = <strong>12 N</strong>"
+  },
+  {
+   "q": "F is now applied on the lower block B. If both move together, the common acceleration is",
+   "opts": ["F/10","F/6","F/4","F/24"],
+   "ans": 0,
+   "sol": "Combined mass = 4 + 6 = 10 kg on a smooth plane.<br><br>a = <strong>F/10</strong>"
+  },
+  {
+   "q": "In this arrangement, the friction needed on the top block A is",
+   "diagram": DIAGRAMS.fbd2({top:'A &#183; 4 kg',bot:'B &#183; 6 kg',F:'F',fTop:'f',fBot:'f',on:'bot',note:'F pushes B; only friction can carry A along'}),
+   "opts": ["4a = 0.4F","6a = 0.6F","10a = F","zero"],
+   "ans": 0,
+   "sol": "Nothing touches A except the surface of B. So friction alone has to give A its acceleration:<br><br>f = m<sub>A</sub>a = 4 &#215; F/10 = <strong>0.4F</strong><br><br>The bigger F gets, the more friction A demands. At some point the surface cannot keep up &#8212; and that is the maximum F."
+  },
+  {
+   "tag": "Practice MCQ",
+   "q": "&#9733; <strong>Original:</strong> Two blocks (A) 4 kg and (B) 6 kg rest one over the other on a smooth horizontal plane. The coefficient of static and dynamic friction between A and B is the same and equal to 0.3. The maximum horizontal force F that can be applied to B so that A and B have no relative motion is",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 4 kg',bot:'B &#183; 6 kg',mu:'&#956; = 0.3',F:'F',on:'bot'}),
+   "opts": ["30 N","12 N","20 N","40 N"],
+   "ans": 0,
+   "sol": "Set the needed friction equal to the maximum available:<br><br>0.4F = 12 &#8594; F = <strong>30 N</strong><br><br>Compare with Ladder 02, where the force was on the top block and the answer came out as 125/3 N. Same physics, different weak link:<br><br>&#8226; force on TOP &#8594; test the BOTTOM block<br>&#8226; force on BOTTOM &#8594; test the TOP block<br><br>The block that does not get the push is always the one to check."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "When nothing moves at all, the friction is not &#956;N",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Block A (2 kg) rests on block B (8 kg) on a horizontal floor. &#956; between B and the floor is 0.5. The maximum friction the floor can supply on B is",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 2 kg',bot:'B &#183; 8 kg',mu:'&#956; = 0.2',F:'25 N',on:'bot',rough:'&#956; = 0.5 with the floor'}),
+   "opts": ["50 N","40 N","10 N","25 N"],
+   "ans": 0,
+   "sol": "The floor carries both: N = (2 + 8) &#215; 10 = 100 N.<br><br>f<sub>floor, max</sub> = 0.5 &#215; 100 = <strong>50 N</strong>"
+  },
+  {
+   "q": "A horizontal force of 25 N is applied on B. Does the stack move?",
+   "opts": ["No &#8212; 25 N is less than the 50 N the floor can resist","Yes, at 2.5 m/s<sup>2</sup>","Yes, but only B moves","Yes, at 0.5 m/s<sup>2</sup>"],
+   "ans": 0,
+   "sol": "The floor can hold back up to 50 N and only 25 N is being applied. So <strong>nothing moves</strong> &#8212; the whole stack stays at rest, and the floor friction is 25 N (just enough to balance).<br><br>Before you compute any acceleration, always ask whether the thing moves at all. In a great many questions it does not, and every acceleration you write after that is wrong."
+  },
+  {
+   "q": "Since the stack is at rest, block A has zero acceleration. What net horizontal force does A need?",
+   "opts": ["zero &#8212; so the friction on A is zero","0.2 &#215; 20 = 4 N","25 N","5 N"],
+   "ans": 0,
+   "sol": "For A: &#931;F = m&#215;0 = <strong>zero</strong>.<br><br>Nothing else touches A horizontally, so the friction on it must be <strong>zero</strong> too.<br><br>Friction is not a force that switches on whenever two rough surfaces touch. It appears only when there is a push (or a tendency to slide) to oppose. Here A has no reason to slide, so there is nothing to oppose."
+  },
+  {
+   "tag": "Practice MCQ",
+   "q": "&#9733; <strong>Original:</strong> A block A of mass 2 kg rests on another block B of mass 8 kg which rests on a horizontal floor. The coefficient of friction between A and B is 0.2, while that between B and the floor is 0.5. When a horizontal force of 25 N is applied on B, the force of friction between A and B is (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.stack2({top:'A &#183; 2 kg',bot:'B &#183; 8 kg',mu:'&#956; = 0.2',F:'25 N',on:'bot',rough:'&#956; = 0.5 with the floor'}),
+   "opts": ["zero","4 N","10 N","5 N"],
+   "ans": 0,
+   "sol": "The answer is <strong>zero</strong>.<br><br>The 0.2 in the question is bait. It lets you compute 0.2 &#215; 20 = 4 N, which feels like an answer &#8212; but that is only the ceiling on a friction force that never gets called into service.<br><br><em>Read this question as a test of one idea:</em> static friction is only as large as the job it is asked to do. Here the job is nothing, so the friction is nothing."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "Once it slips, switch to &#956;<sub>k</sub>",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Block B (7 kg) rests on block A (35 kg), which is on a frictionless floor. &#956;<sub>s</sub> = 0.5 and &#956;<sub>k</sub> = 0.4 between them. The maximum static friction between the blocks is",
+   "diagram": DIAGRAMS.stack2({top:'B &#183; 7 kg',bot:'A &#183; 35 kg',mu:'&#956;s = 0.5, &#956;k = 0.4',F:'100 N',on:'top'}),
+   "opts": ["35 N","28 N","175 N","70 N"],
+   "ans": 0,
+   "sol": "N between the blocks = 7 &#215; 10 = 70 N.<br><br>f<sub>s, max</sub> = &#956;<sub>s</sub>N = 0.5 &#215; 70 = <strong>35 N</strong><br><br>Use &#956;<sub>s</sub> for this ceiling. &#956;<sub>k</sub> is for later, once things are actually sliding."
+  },
+  {
+   "q": "A horizontal force of 100 N is applied on the top block B. Do the blocks stay together?",
+   "opts": ["No &#8212; the friction needed far exceeds 35 N, so B slides on A","Yes, they share a common acceleration of 100/42 m/s<sup>2</sup>","Yes, because 100 N acts on B, not on A","It cannot be decided without the length of the blocks"],
+   "ans": 0,
+   "sol": "Test it. If they moved together, a = 100/42 &#8776; 2.38 m/s<sup>2</sup>, and the friction needed to drive the 35 kg block would be 35 &#215; 2.38 &#8776; 83 N.<br><br>That is far beyond the 35 N available, so the assumption fails: <strong>B slides on A</strong>.<br><br>Faster route for this kind of question: 100 N is already much bigger than 35 N, so slipping is obvious at a glance."
+  },
+  {
+   "q": "While B is sliding over A, the friction between them is",
+   "diagram": DIAGRAMS.fVsP(),
+   "opts": ["&#956;<sub>k</sub>N = 0.4 &#215; 70 = 28 N","&#956;<sub>s</sub>N = 35 N","100 N","whatever is needed, up to 35 N"],
+   "ans": 0,
+   "sol": "Once real sliding begins, friction drops to the kinetic value and stays fixed there:<br><br>f<sub>k</sub> = &#956;<sub>k</sub>N = 0.4 &#215; 70 = <strong>28 N</strong><br><br>This is the one place where you are allowed to write f = &#956;N and use it directly. Before sliding, friction is an unknown you solve for; after sliding, it is a number you calculate.<br><br><em>Side note:</em> when a question gives only one &#956;, use it for both. That is the standard assumption."
+  },
+  {
+   "tag": "Practice MCQ",
+   "q": "&#9733; <strong>Original:</strong> Block A of mass 35 kg is resting on a frictionless floor. Another block B of mass 7 kg is resting on it. The coefficients of static and kinetic friction are 0.5 and 0.4. If a horizontal force of 100 N is applied to block B, the acceleration of block A will be (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.stack2({top:'B &#183; 7 kg',bot:'A &#183; 35 kg',mu:'&#956;s = 0.5, &#956;k = 0.4',F:'100 N',on:'top'}),
+   "opts": ["0.8 m/s<sup>2</sup>","2.4 m/s<sup>2</sup>","0.4 m/s<sup>2</sup>","4.4 m/s<sup>2</sup>"],
+   "ans": 0,
+   "sol": "The only horizontal force on A is the 28 N of kinetic friction dragging forward from B:<br><br>a<sub>A</sub> = 28/35 = <strong>0.8 m/s<sup>2</sup></strong><br><br>The 100 N never appears in A's equation. It acts on B, and only the part that friction can transmit ever reaches A.<br><br>For interest: a<sub>B</sub> = (100 &#8722; 28)/7 &#8776; 10.3 m/s<sup>2</sup>, much larger &#8212; B really is racing forward over A."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "F grows with time &#8212; reading the a&#8211;t graph",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A block B is on a block A, with friction between them and a smooth floor under A. A horizontal force F, growing steadily with time, is applied on B. In the early stage, while they still move together,",
+   "opts": ["a<sub>A</sub> = a<sub>B</sub>, and both grow in a straight line with t","a<sub>B</sub> is larger from the very start","a<sub>A</sub> is larger from the very start","both stay constant"],
+   "ans": 0,
+   "sol": "&quot;Moving together&quot; means exactly one thing: the same acceleration.<br><br>a = F/(m<sub>A</sub> + m<sub>B</sub>), and since F &#8733; t, this is a <strong>straight line through the origin</strong> &#8212; one single line for both blocks.<br><br>So in the correct graph, the two curves must lie on top of each other at the start."
+  },
+  {
+   "q": "As F keeps growing, at some instant the blocks begin to slip. That instant is when",
+   "opts": ["the friction needed on A first reaches its limiting value &#956;m<sub>B</sub>g","F becomes equal to the weight of B","the blocks reach the same velocity","F becomes equal to &#956;(m<sub>A</sub> + m<sub>B</sub>)g"],
+   "ans": 0,
+   "sol": "F is applied on B, so friction alone is carrying A. As F grows, the friction A needs grows with it.<br><br>Slipping starts the moment that demand reaches the ceiling <strong>&#956;m<sub>B</sub>g</strong> (the normal on that surface comes from B's weight, since B is on top).<br><br>Up to that instant they share one line; after it, the graph must break into two."
+  },
+  {
+   "q": "After slipping starts, what happens to each acceleration?",
+   "opts": ["a<sub>A</sub> stays constant, while a<sub>B</sub> keeps rising and rises more steeply than before","both keep rising along the same line","a<sub>A</sub> keeps rising and a<sub>B</sub> becomes constant","both become constant"],
+   "ans": 0,
+   "sol": "Block A is now driven by a fixed kinetic friction &#956;m<sub>B</sub>g, so<br>a<sub>A</sub> = &#956;m<sub>B</sub>g/m<sub>A</sub> = a fixed number &#8594; a <strong>horizontal line</strong>.<br><br>Block B has a<sub>B</sub> = (F &#8722; &#956;m<sub>B</sub>g)/m<sub>B</sub>. F is still climbing, so a<sub>B</sub> climbs too &#8212; and with only m<sub>B</sub> in the denominator instead of (m<sub>A</sub> + m<sub>B</sub>), it climbs <strong>faster</strong> than before.<br><br>So the picture is: one line, then a break, then a flat branch and a steeper branch."
+  },
+  {
+   "tag": "Practice MCQ",
+   "q": "&#9733; <strong>Original:</strong> A block B is placed on block A. The mass of B is less than the mass of A. Friction exists between the blocks, while the ground under A is smooth. A horizontal force F, increasing linearly with time, begins to act on B. The accelerations a<sub>A</sub> and a<sub>B</sub> are plotted against t. The correctly plotted graph is",
+   "diagram": DIAGRAMS.atOptions(),
+   "opts": ["(4) &#8212; one common line at first, then a<sub>B</sub> rises steeply while a<sub>A</sub> goes flat","(1) &#8212; one common line, then a<sub>A</sub> rises more steeply than a<sub>B</sub>","(2) &#8212; two separate straight lines right from t = 0","(3) &#8212; one common line, then both keep rising with different slopes"],
+   "ans": 0,
+   "sol": "Graph <strong>(4)</strong>.<br><br>Two checks kill the other three at once:<br><br>&#8226; The graph must start as a <strong>single line</strong> &#8212; that rules out (2).<br>&#8226; After the break, a<sub>A</sub> must be <strong>flat</strong>, because a fixed friction on a fixed mass gives a fixed acceleration &#8212; that rules out (1) and (3).<br><br>Graph questions in this chapter are almost always solved by finding the one feature that must be true, instead of tracing every line. Ask: what has to be constant, and what has to be shared?"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ "name": "Three blocks &#8212; push the middle or the bottom one",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A 2 kg block sits on a 3 kg block, which sits on a 7 kg block on a smooth floor. &#956;<sub>1</sub> = 0.2 between 2 kg and 3 kg; &#956;<sub>2</sub> = 0.3 between 3 kg and 7 kg. The limiting friction on the upper surface is",
+   "diagram": DIAGRAMS.stack3({b1:'2 kg',b2:'3 kg',b3:'7 kg',mu1:'&#956;&#8321; = 0.2',mu2:'&#956;&#8322; = 0.3',F:'10 N',on:'b2'}),
+   "opts": ["4 N","6 N","0.4 N","10 N"],
+   "ans": 0,
+   "sol": "The upper surface (between 2 kg and 3 kg) carries only the 2 kg block: N = 20 N.<br><br>f<sub>1, limiting</sub> = 0.2 &#215; 20 = <strong>4 N</strong>"
+  },
+  {
+   "q": "For the same stack, the limiting friction on the lower surface (between 3 kg and 7 kg) is",
+   "opts": ["15 N","9 N","36 N","6 N"],
+   "ans": 0,
+   "sol": "That surface carries the 2 kg <em>and</em> the 3 kg: N = (2 + 3) &#215; 10 = 50 N.<br><br>f<sub>2, limiting</sub> = 0.3 &#215; 50 = <strong>15 N</strong><br><br>Work down the stack, adding the weight of everything above each surface. This step is where three-block problems are won or lost."
+  },
+  {
+   "q": "A 10 N force is applied on the middle 3 kg block. If all three moved together, a = 10/12 = 5/6 m/s<sup>2</sup>. The friction then needed on the top 2 kg block would be",
+   "opts": ["5/3 &#8776; 1.67 N, comfortably under the 4 N limit","4 N, exactly at the limit","10/3 N, over the limit","zero"],
+   "ans": 0,
+   "sol": "f = 2 &#215; 5/6 = <strong>5/3 &#8776; 1.67 N</strong>, and the limit is 4 N. Fine.<br><br>Now check the lower surface too: the 7 kg block needs 7 &#215; 5/6 = 35/6 &#8776; 5.83 N, and the limit there is 15 N. Also fine.<br><br>Both surfaces pass, so the whole stack really does move together. With three blocks you must check <strong>every</strong> surface, not just one."
+  },
+  {
+   "tag": "Practice problem, parts (b) and (c)",
+   "q": "&#9733; <strong>Original:</strong> Find a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub> of the three blocks (2 kg, 3 kg, 7 kg; &#956;<sub>1</sub> = 0.2, &#956;<sub>2</sub> = 0.3, smooth floor) when a horizontal force of 10 N is applied on <strong>(b)</strong> the 3 kg block, and <strong>(c)</strong> the 7 kg block.",
+   "diagram": DIAGRAMS.stack3({b1:'2 kg',b2:'3 kg',b3:'7 kg',mu1:'&#956;&#8321; = 0.2',mu2:'&#956;&#8322; = 0.3',F:'10 N',on:'b3'}),
+   "opts": ["In both cases all three move together: a<sub>1</sub> = a<sub>2</sub> = a<sub>3</sub> = 5/6 &#8776; 0.83 m/s<sup>2</sup>","(b) all 5/6 m/s<sup>2</sup>; (c) the 7 kg block slips, a<sub>3</sub> = 10/7 m/s<sup>2</sup>","(b) the 2 kg block slips; (c) all together","In both cases only the pushed block moves"],
+   "ans": 0,
+   "sol": "<strong>Both give a<sub>1</sub> = a<sub>2</sub> = a<sub>3</sub> = 5/6 &#8776; 0.83 m/s<sup>2</sup>.</strong><br><br>Case (c), push on the 7 kg: same a = 5/6. Friction needed on the 2 kg is 5/3 N (limit 4 N &#10003;), and on the 2 + 3 kg pair it is 5 &#215; 5/6 = 25/6 &#8776; 4.17 N (limit 15 N &#10003;). Both surfaces hold.<br><br>The floor is smooth and 10 N is a gentle push, so the stack simply glides along as one body. Ladder 12 shows the one case that behaves differently."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 12 ---------------------------------- */
+{
+ "name": "Same three blocks &#8212; but now push the TOP one",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "The same stack (2 kg on 3 kg on 7 kg, &#956;<sub>1</sub> = 0.2, &#956;<sub>2</sub> = 0.3, smooth floor), but the 10 N now acts on the <strong>top</strong> 2 kg block. If all three moved together at 5/6 m/s<sup>2</sup>, the friction needed to carry the lower 10 kg along would be",
+   "diagram": DIAGRAMS.stack3({b1:'2 kg',b2:'3 kg',b3:'7 kg',mu1:'&#956;&#8321; = 0.2',mu2:'&#956;&#8322; = 0.3',F:'10 N',on:'b1'}),
+   "opts": ["25/3 &#8776; 8.3 N, which is well beyond the 4 N limit &#8212; so the 2 kg slips","5/3 N, within the limit","4 N, exactly at the limit","zero"],
+   "ans": 0,
+   "sol": "The two lower blocks (3 + 7 = 10 kg) can only be driven through the upper surface:<br>f = 10 &#215; 5/6 = <strong>25/3 &#8776; 8.3 N</strong>.<br><br>But that surface can supply at most 4 N. The demand is more than double what is available, so the <strong>2 kg block slides forward</strong> over the 3 kg.<br><br>Same stack, same 10 N, completely different behaviour &#8212; only because the push moved to the top. A small top block cannot drag a big load along through a thin skin of friction."
+  },
+  {
+   "q": "With the 2 kg block sliding, the friction acting on it is 4 N. Its acceleration is",
+   "opts": ["3 m/s<sup>2</sup>","5 m/s<sup>2</sup>","0.83 m/s<sup>2</sup>","7 m/s<sup>2</sup>"],
+   "ans": 0,
+   "sol": "Now that it is sliding, friction sits at its maximum 4 N and stays there:<br><br>10 &#8722; 4 = 2a<sub>1</sub> &#8594; a<sub>1</sub> = <strong>3 m/s<sup>2</sup></strong><br><br>Only after you have proved slipping are you allowed to substitute f = &#956;N. Doing it earlier is the most common error in this chapter."
+  },
+  {
+   "q": "That 4 N of friction now acts forward on the 3 kg block. Do the 3 kg and 7 kg blocks move together?",
+   "opts": ["Yes &#8212; together they need 7 &#215; 0.4 = 2.8 N on the 7 kg, and up to 15 N is available","No, the 3 kg block also slips","No, only the 3 kg block moves","Yes, but at 4/3 m/s<sup>2</sup>"],
+   "ans": 0,
+   "sol": "The 3 kg and 7 kg together make 10 kg, driven by the 4 N passed down from above:<br>a = 4/10 = 0.4 m/s<sup>2</sup>.<br><br>Friction needed on the 7 kg = 7 &#215; 0.4 = <strong>2.8 N</strong>, against a limit of 15 N. Easily supplied, so they <strong>stay together</strong>.<br><br>One surface can slip while the one below it holds. Test each surface separately &#8212; never assume that a slip at the top means a slip everywhere."
+  },
+  {
+   "tag": "Practice problem, part (a)",
+   "q": "&#9733; <strong>Original:</strong> Find a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub> of the three blocks when the horizontal force of 10 N is applied on the <strong>2 kg</strong> block.",
+   "diagram": DIAGRAMS.stack3({b1:'2 kg',b2:'3 kg',b3:'7 kg',mu1:'&#956;&#8321; = 0.2',mu2:'&#956;&#8322; = 0.3',F:'10 N',on:'b1'}),
+   "opts": ["a<sub>1</sub> = 3 m/s<sup>2</sup>, a<sub>2</sub> = a<sub>3</sub> = 0.4 m/s<sup>2</sup>","a<sub>1</sub> = a<sub>2</sub> = a<sub>3</sub> = 5/6 m/s<sup>2</sup>","a<sub>1</sub> = 3 m/s<sup>2</sup>, a<sub>2</sub> = 1.33 m/s<sup>2</sup>, a<sub>3</sub> = 0","a<sub>1</sub> = 5 m/s<sup>2</sup>, a<sub>2</sub> = a<sub>3</sub> = 0"],
+   "ans": 0,
+   "sol": "<strong>a<sub>1</sub> = 3 m/s<sup>2</sup>, a<sub>2</sub> = a<sub>3</sub> = 0.4 m/s<sup>2</sup>.</strong><br><br>The stack breaks at the top surface and holds at the lower one.<br><br>Put the three parts side by side and the lesson is clear:<br>&#8226; push the 3 kg or the 7 kg &#8594; everything moves as one<br>&#8226; push the 2 kg &#8594; the top block runs away and the rest crawls<br><br>Same blocks, same force &#8212; the answer depends entirely on <em>where</em> you push."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 13 ---------------------------------- */
+{
+ "name": "Capstone &#8212; four blocks and a string",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Four blocks: C (m) rests on D (2m), and A (m) rests on B (2m). C and A are joined by a light string. The floor is smooth and a force F on B moves all four together. The common acceleration is",
+   "diagram": DIAGRAMS.four(),
+   "opts": ["F/6m","F/2m","F/3m","F/4m"],
+   "ans": 0,
+   "sol": "Total mass = m + 2m + m + 2m = 6m, and the floor is smooth, so F is the only outside horizontal force.<br><br>a = <strong>F/6m</strong><br><br>Always start a many-body problem with the whole system. All the internal tensions and frictions vanish and the acceleration falls out in one line."
+  },
+  {
+   "q": "Take C and D together as one body (total 3m). What is the only outside horizontal force acting on that pair?",
+   "opts": ["the string tension T &#8594; T = 3ma = F/2","the applied force F","the friction from the floor","nothing at all"],
+   "ans": 0,
+   "sol": "F acts on B, far away on the other side. The floor is smooth. The friction between C and D is internal to this pair.<br><br>That leaves only the <strong>string tension</strong>:<br>T = 3m &#215; (F/6m) = <strong>F/2</strong><br><br>Choosing the right sub-system is the whole skill here. Pick a group whose outside forces you actually want to find."
+  },
+  {
+   "q": "Now isolate block A alone (mass m). Friction f from B pushes it forward and the string pulls it back with T. So",
+   "diagram": DIAGRAMS.fbdA(),
+   "opts": ["f &#8722; T = ma &#8594; f = ma + F/2 = 4ma = 2F/3","f + T = ma &#8594; f = F/6 &#8722; F/2","f = ma = F/6","f = T = F/2"],
+   "ans": 0,
+   "sol": "f &#8722; T = ma<br>f = ma + T = m(F/6m) + F/2 = F/6 + F/2 = <strong>2F/3</strong><br><br>Or in one step: f = 4ma, since A has to supply its own ma plus the 3ma it drags along through the string.<br><br>Block A is the busiest block in the figure &#8212; it carries itself and the whole C+D pair. That is why it is the one that slips first."
+  },
+  {
+   "tag": "Practice problem",
+   "q": "&#9733; <strong>Original:</strong> Four blocks A, B, C, D are placed as shown on a smooth horizontal surface. A and C are joined by a light string, the coefficient of friction between each upper and lower block is &#956;, and the system is pulled by a constant force F so that all blocks move together. If &#956; is written as 2F/(a&#183;mg), find the maximum value of a.",
+   "diagram": DIAGRAMS.four(),
+   "opts": ["3","2","4","6"],
+   "ans": 0,
+   "sol": "The friction on A must be able to supply 2F/3, and the most it can supply is &#956;mg (A's own weight presses on that surface).<br><br>&#956;mg &#8805; 2F/3 &#8594; &#956; &#8805; 2F/3mg<br><br>Comparing with the given form &#956; = 2F/(a&#183;mg), the largest a that still works is <strong>a = 3</strong>.<br><br>Every idea from this whole sequence is in this one problem: system first, then the right sub-system, then the block that friction has to carry, then compare with &#956;N. If you can do this one cleanly, the chapter is yours."
+  }
+ ]
+},
+
+];
+
+
+const STORAGE_KEY = 'padipucast_friction_blockonblock_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
