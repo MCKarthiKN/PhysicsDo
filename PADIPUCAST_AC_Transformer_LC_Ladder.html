@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Transformers &amp; LC Oscillations &#183; Question Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Integration &#183; NEET</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Transformers &amp; LC Oscillations<br>Question Ladders</h1></div>
+    <p id="home-sub">Alternating Current &#8212; <strong>Transformers and LC Oscillations</strong>. Two short, self-contained topics in one file: <strong>Ladders 1&#8211;9</strong> cover transformers (turns ratio, loads, efficiency, losses) and <strong>Ladders 10&#8211;16</strong> cover LC oscillations (energy exchange, maximum current, timing, and the damped-oscillator analogy). Every source question is a real <strong>JEE Main PYQ</strong>, turned into a <strong>ladder</strong>: 3 build-up rungs, then the original exam question (&#9733;). Each ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 16 ladders &#215; 4 rungs = 64 questions.<br><br><em>Years covered: 2002 to 2026. All 20 transformer and LC PYQs in the chapter bank are here. One transformer question appears in three different papers &#8212; that repeat is pointed out inside Ladder 6.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Transformers and LC Oscillations  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+
+function _sine(x0,x1,ymid,amp,cycles,phase){
+  let p=[];
+  for(let i=0;i<=240;i++){
+    const f=i/240, x=x0+f*(x1-x0);
+    const y=ymid-amp*Math.sin(2*Math.PI*cycles*f+(phase||0));
+    p.push(x.toFixed(1)+','+y.toFixed(1));
+  }
+  return p.join(' ');
+}
+function _decay(x0,x1,ymid,amp,cycles,tau){
+  let p=[];
+  for(let i=0;i<=300;i++){
+    const f=i/300, x=x0+f*(x1-x0);
+    const y=ymid-amp*Math.exp(-f/tau)*Math.cos(2*Math.PI*cycles*f);
+    p.push(x.toFixed(1)+','+y.toFixed(1));
+  }
+  return p.join(' ');
+}
+function _axes(x0,x1,ymid,top,bot,id){
+  return `<line x1="${x0-12}" y1="${ymid}" x2="${x1+14}" y2="${ymid}" stroke="#6b7280" stroke-width="1.3" marker-end="url(#${id})"/>
+  <line x1="${x0-12}" y1="${bot}" x2="${x0-12}" y2="${top}" stroke="#6b7280" stroke-width="1.3" marker-end="url(#${id})"/>`;
+}
+function _src(cx,cy,r){
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#f7f6f3" stroke="#1a1916" stroke-width="1.7"/>
+  <path d="M ${cx-r*0.6} ${cy} Q ${cx-r*0.3} ${cy-r*0.55} ${cx} ${cy} T ${cx+r*0.6} ${cy}" fill="none" stroke="#1a1916" stroke-width="1.6"/>`;
+}
+function _res(x,y,lbl){
+  return `<rect x="${x}" y="${y-7}" width="34" height="14" fill="#f7f6f3" stroke="#1a1916" stroke-width="1.7"/>
+  <text x="${x+17}" y="${y-13}" font-size="10" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">${lbl}</text>`;
+}
+// vertical winding: n humps down the left (side=-1) or right (side=+1) of a core bar
+function _wind(x,y0,n,side){
+  let d=`M ${x} ${y0}`;
+  for(let i=0;i<n;i++){ d += ` q ${side*13} 6 0 12`; }
+  return `<path d="${d}" fill="none" stroke="#1a1916" stroke-width="1.9"/>`;
+}
+// the laminated core: two vertical bars joined top and bottom
+function _core(xl,xr,yt,yb){
+  return `<rect x="${xl-5}" y="${yt}" width="10" height="${yb-yt}" fill="#e8e5dd" stroke="#a09d97" stroke-width="1.3"/>
+  <rect x="${xr-5}" y="${yt}" width="10" height="${yb-yt}" fill="#e8e5dd" stroke="#a09d97" stroke-width="1.3"/>
+  <rect x="${xl-5}" y="${yt}" width="${xr-xl+10}" height="10" fill="#e8e5dd" stroke="#a09d97" stroke-width="1.3"/>
+  <rect x="${xl-5}" y="${yb-10}" width="${xr-xl+10}" height="10" fill="#e8e5dd" stroke="#a09d97" stroke-width="1.3"/>`;
+}
+
+const DIAGRAMS = {
+
+  // the basic transformer
+  transformer:()=>`
+    <svg viewBox="0 0 330 200" width="330" height="200" xmlns="http://www.w3.org/2000/svg">
+      ${_core(140,196,34,146)}
+      ${_wind(140,44,8,-1)}
+      ${_wind(196,44,5,1)}
+      <line x1="60" y1="44" x2="140" y2="44" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="60" y1="140" x2="140" y2="140" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="60" y1="44" x2="60" y2="140" stroke="#1a1916" stroke-width="1.7"/>
+      ${_src(60,92,15)}
+      <line x1="196" y1="44" x2="276" y2="44" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="196" y1="140" x2="276" y2="140" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="276" y1="44" x2="276" y2="140" stroke="#1a1916" stroke-width="1.7"/>
+      <text x="98" y="30" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">primary  N_p</text>
+      <text x="240" y="30" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">secondary  N_s</text>
+      <text x="168" y="164" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>iron core</text>
+      <text x="165" y="184" font-size="11.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">V_s / V_p = N_s / N_p = I_p / I_s</text>
+      <text x="165" y="197" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>voltage follows the turns, current does not</text>
+    </svg>`,
+
+  // step up vs step down
+  stepUpDown:()=>`
+    <svg viewBox="0 0 330 195" width="330" height="195" xmlns="http://www.w3.org/2000/svg">
+      <line x1="22" y1="52" x2="308" y2="52" stroke="#d4d1c8" stroke-width="1.4"/>
+      <line x1="22" y1="106" x2="308" y2="106" stroke="#d4d1c8" stroke-width="1.4"/>
+      <text x="165" y="26" font-size="11.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">which kind of transformer?</text>
+      <text x="28" y="44" font-size="11" fill="#1a7a4a" ${FS} font-weight="700">N_s &gt; N_p</text>
+      <text x="302" y="44" font-size="11" fill="#1a7a4a" text-anchor="end" ${FS} font-weight="700">STEP-UP: V rises, I falls</text>
+      <text x="28" y="98" font-size="11" fill="#c0392b" ${FS} font-weight="700">N_s &lt; N_p</text>
+      <text x="302" y="98" font-size="11" fill="#c0392b" text-anchor="end" ${FS} font-weight="700">STEP-DOWN: V falls, I rises</text>
+      <text x="165" y="132" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">power stays the same either way</text>
+      <text x="165" y="154" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>if you do not know the turns, compare the voltages</text>
+      <text x="165" y="176" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>V_s bigger than V_p always means step-up</text>
+    </svg>`,
+
+  // transformer feeding a load resistor
+  transformerLoad:()=>`
+    <svg viewBox="0 0 330 195" width="330" height="195" xmlns="http://www.w3.org/2000/svg">
+      ${_core(132,188,32,138)}
+      ${_wind(132,42,8,-1)}
+      ${_wind(188,42,4,1)}
+      <line x1="56" y1="42" x2="132" y2="42" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="56" y1="132" x2="132" y2="132" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="56" y1="42" x2="56" y2="132" stroke="#1a1916" stroke-width="1.7"/>
+      ${_src(56,87,14)}
+      <line x1="188" y1="42" x2="270" y2="42" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="188" y1="132" x2="270" y2="132" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="270" y1="42" x2="270" y2="80" stroke="#1a1916" stroke-width="1.7"/>
+      <line x1="270" y1="104" x2="270" y2="132" stroke="#1a1916" stroke-width="1.7"/>
+      <rect x="263" y="80" width="14" height="24" fill="#f7f6f3" stroke="#1a1916" stroke-width="1.7"/>
+      <text x="290" y="96" font-size="11" fill="#1a1916" ${FS} font-weight="700">R</text>
+      <text x="165" y="166" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">find V_s first, then treat R on its own</text>
+      <text x="165" y="184" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>P = V_s&#178;/R uses the SECONDARY voltage</text>
+    </svg>`,
+
+  // secondary feeding two series resistors
+  dividerSecondary:()=>`
+    <svg viewBox="0 0 330 185" width="330" height="185" xmlns="http://www.w3.org/2000/svg">
+      <text x="46" y="26" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">22 V</text>
+      <rect x="40" y="44" width="230" height="66" fill="none" stroke="#1a1916" stroke-width="1.7" rx="5"/>
+      ${_src(40,77,14)}
+      ${_res(96,44,'15 &#937;')}
+      ${_res(186,44,'7 &#937;')}
+      <line x1="186" y1="58" x2="186" y2="76" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="3 2"/>
+      <line x1="220" y1="58" x2="220" y2="76" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="3 2"/>
+      <line x1="186" y1="76" x2="220" y2="76" stroke="#b45309" stroke-width="2"/>
+      <text x="203" y="92" font-size="10.5" fill="#b45309" text-anchor="middle" ${FS} font-weight="700">V&#8320;</text>
+      <text x="165" y="140" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">one current through both, so it is a voltage divider</text>
+      <text x="165" y="160" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>I = 22/(15+7) = 1 A, so V&#8320; = 1 &#215; 7 = 7 V</text>
+      <text x="165" y="178" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>the transformer part ends once you have the 22 V</text>
+    </svg>`,
+
+  // power flow with losses
+  efficiency:()=>`
+    <svg viewBox="0 0 330 180" width="330" height="180" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ef1','#1a7a4a')}${AR('ef2','#c0392b')}</defs>
+      <rect x="118" y="46" width="92" height="52" fill="#f7f6f3" stroke="#1a1916" stroke-width="1.8" rx="5"/>
+      <text x="164" y="77" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">transformer</text>
+      <line x1="26" y1="72" x2="112" y2="72" stroke="#1a7a4a" stroke-width="3.4" marker-end="url(#ef1)"/>
+      <text x="66" y="62" font-size="10.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">P_in = V_p I_p</text>
+      <line x1="212" y1="72" x2="298" y2="72" stroke="#1a7a4a" stroke-width="2.6" marker-end="url(#ef1)"/>
+      <text x="256" y="62" font-size="10.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">P_out = V_s I_s</text>
+      <line x1="164" y1="100" x2="164" y2="128" stroke="#c0392b" stroke-width="2.4" marker-end="url(#ef2)"/>
+      <text x="176" y="124" font-size="10" fill="#c0392b" ${FS} font-weight="700">losses</text>
+      <text x="165" y="152" font-size="11.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">&#951; = P_out / P_in = V_s I_s / (V_p I_p)</text>
+      <text x="165" y="172" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>90% efficient: P_out is 0.9 of P_in</text>
+    </svg>`,
+
+  // laminated core cutting eddy currents
+  laminated:()=>`
+    <svg viewBox="0 0 330 180" width="330" height="180" xmlns="http://www.w3.org/2000/svg">
+      <rect x="42" y="36" width="80" height="76" fill="#e8e5dd" stroke="#a09d97" stroke-width="1.4"/>
+      <ellipse cx="82" cy="74" rx="22" ry="26" fill="none" stroke="#c0392b" stroke-width="2"/>
+      <text x="82" y="128" font-size="10.5" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">solid core</text>
+      <text x="82" y="144" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>big eddy loops</text>
+      <text x="152" y="78" font-size="15" fill="#6b7280" ${FS}>&#8594;</text>
+      <rect x="196" y="36" width="80" height="76" fill="#e8e5dd" stroke="#a09d97" stroke-width="1.4"/>
+      <line x1="212" y1="36" x2="212" y2="112" stroke="#a09d97" stroke-width="1.4"/>
+      <line x1="228" y1="36" x2="228" y2="112" stroke="#a09d97" stroke-width="1.4"/>
+      <line x1="244" y1="36" x2="244" y2="112" stroke="#a09d97" stroke-width="1.4"/>
+      <line x1="260" y1="36" x2="260" y2="112" stroke="#a09d97" stroke-width="1.4"/>
+      <ellipse cx="204" cy="74" rx="5" ry="24" fill="none" stroke="#1a7a4a" stroke-width="1.6"/>
+      <ellipse cx="220" cy="74" rx="5" ry="24" fill="none" stroke="#1a7a4a" stroke-width="1.6"/>
+      <ellipse cx="236" cy="74" rx="5" ry="24" fill="none" stroke="#1a7a4a" stroke-width="1.6"/>
+      <text x="236" y="128" font-size="10.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">laminated core</text>
+      <text x="236" y="144" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>loops squeezed thin</text>
+      <text x="165" y="170" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>thin sheets raise resistance, so eddies shrink</text>
+    </svg>`,
+
+  // the LC circuit
+  lcCircuit:()=>`
+    <svg viewBox="0 0 330 175" width="330" height="175" xmlns="http://www.w3.org/2000/svg">
+      <rect x="80" y="40" width="150" height="66" fill="none" stroke="#1a1916" stroke-width="1.8" rx="6"/>
+      <rect x="74" y="62" width="12" height="22" fill="#f7f6f3" stroke="none"/>
+      <line x1="74" y1="62" x2="86" y2="62" stroke="#1a1916" stroke-width="2"/>
+      <line x1="74" y1="84" x2="86" y2="84" stroke="#1a1916" stroke-width="2"/>
+      <text x="58" y="77" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">C</text>
+      <path d="M 130 40 q 6 -13 12 0 q 6 -13 12 0 q 6 -13 12 0 q 6 -13 12 0" fill="none" stroke="#1a1916" stroke-width="1.8"/>
+      <rect x="128" y="27" width="52" height="14" fill="#f7f6f3" stroke="none"/>
+      <path d="M 130 40 q 6 -13 12 0 q 6 -13 12 0 q 6 -13 12 0 q 6 -13 12 0" fill="none" stroke="#1a1916" stroke-width="1.8"/>
+      <text x="154" y="20" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">L</text>
+      <text x="252" y="66" font-size="10.5" fill="#6b7280" ${FS}>no resistor,</text>
+      <text x="252" y="82" font-size="10.5" fill="#6b7280" ${FS}>no source</text>
+      <text x="165" y="134" font-size="11.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">&#969; = 1/&#8730;(LC),  I_max = q_max &#8730;(1/LC)</text>
+      <text x="165" y="154" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">total energy is fixed &#8212; it just changes form</text>
+      <text x="165" y="170" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>&#189;q&#178;/C in C,  &#189;Li&#178; in L</text>
+    </svg>`,
+
+  // energy swapping between C and L
+  energySwap:()=>`
+    <svg viewBox="0 0 330 200" width="330" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('es1','#6b7280')}</defs>
+      ${_axes(50,282,150,34,158,'es1')}
+      <polyline points="${(()=>{let p=[];for(let i=0;i<=200;i++){const f=i/200,x=50+f*232,c=Math.cos(Math.PI*f*2);const y=150-92*c*c;p.push(x.toFixed(1)+','+y.toFixed(1));}return p.join(' ');})()}" fill="none" stroke="#c0392b" stroke-width="2.5"/>
+      <polyline points="${(()=>{let p=[];for(let i=0;i<=200;i++){const f=i/200,x=50+f*232,s=Math.sin(Math.PI*f*2);const y=150-92*s*s;p.push(x.toFixed(1)+','+y.toFixed(1));}return p.join(' ');})()}" fill="none" stroke="#1a7a4a" stroke-width="2.5"/>
+      <line x1="50" y1="58" x2="282" y2="58" stroke="#a09d97" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <text x="290" y="55" font-size="9.5" fill="#a09d97" ${FS}>U&#8320;</text>
+      <text x="72" y="48" font-size="10" fill="#c0392b" ${FS} font-weight="700">U_C</text>
+      <text x="118" y="48" font-size="10" fill="#1a7a4a" ${FS} font-weight="700">U_L</text>
+      <circle cx="79" cy="104" r="4" fill="#b45309"/>
+      <text x="86" y="118" font-size="9.5" fill="#b45309" ${FS} font-weight="700">shared equally</text>
+      <text x="165" y="180" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">U_C + U_L is constant at every instant</text>
+      <text x="165" y="195" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>they cross at half the total energy</text>
+    </svg>`,
+
+  // charge vs time with the key instants marked
+  chargeTiming:()=>`
+    <svg viewBox="0 0 330 200" width="330" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ct1','#6b7280')}</defs>
+      ${_axes(50,282,112,34,170,'ct1')}
+      <polyline points="${_sine(50,282,112,66,1,Math.PI/2)}" fill="none" stroke="#1a1916" stroke-width="2.4"/>
+      <line x1="50" y1="65" x2="130" y2="65" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="50" y1="65" x2="130" y2="65" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="50" y1="65" x2="90" y2="65" stroke="#c0392b" stroke-width="1.2"/>
+      <line x1="50" y1="79" x2="79" y2="79" stroke="#1a7a4a" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <circle cx="50" cy="46" r="4" fill="#c0392b"/>
+      <circle cx="79" cy="79" r="4" fill="#1a7a4a"/>
+      <text x="292" y="44" font-size="10" fill="#c0392b" text-anchor="end" ${FS} font-weight="700">q = Q at t = 0</text>
+      <text x="292" y="86" font-size="10" fill="#1a7a4a" text-anchor="end" ${FS} font-weight="700">q = Q/&#8730;2 here</text>
+      <line x1="50" y1="152" x2="79" y2="152" stroke="#b45309" stroke-width="2"/>
+      <line x1="50" y1="146" x2="50" y2="158" stroke="#b45309" stroke-width="1.5"/>
+      <line x1="79" y1="146" x2="79" y2="158" stroke="#b45309" stroke-width="1.5"/>
+      <text x="96" y="157" font-size="10.5" fill="#b45309" ${FS} font-weight="700">t = (&#960;/4)&#8730;(LC)</text>
+      <text x="165" y="190" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>q = Q cos&#969;t &#8212; solve for the phase &#969;t</text>
+    </svg>`,
+
+  // damped LCR: two decay envelopes
+  dampedLCR:()=>`
+    <svg viewBox="0 0 330 200" width="330" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('dl1','#6b7280')}</defs>
+      ${_axes(50,282,158,34,166,'dl1')}
+      <polyline points="${(()=>{let p=[];for(let i=0;i<=200;i++){const f=i/200,x=50+f*232;const y=158-108*Math.exp(-f*2.6);p.push(x.toFixed(1)+','+y.toFixed(1));}return p.join(' ');})()}" fill="none" stroke="#c0392b" stroke-width="2.5"/>
+      <polyline points="${(()=>{let p=[];for(let i=0;i<=200;i++){const f=i/200,x=50+f*232;const y=158-108*Math.exp(-f*1.1);p.push(x.toFixed(1)+','+y.toFixed(1));}return p.join(' ');})()}" fill="none" stroke="#1a7a4a" stroke-width="2.5"/>
+      <text x="112" y="70" font-size="10" fill="#c0392b" ${FS} font-weight="700">smaller L (L&#8322;)</text>
+      <text x="196" y="88" font-size="10" fill="#1a7a4a" ${FS} font-weight="700">larger L (L&#8321;)</text>
+      <text x="26" y="44" font-size="10.5" fill="#6b7280" ${FS}>Q&#178;</text>
+      <text x="292" y="174" font-size="10.5" fill="#6b7280" text-anchor="end" ${FS}>t</text>
+      <text x="165" y="188" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">both start at the same point and decay to zero</text>
+      <text x="165" y="199" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>bigger L decays slower, and they never cross</text>
+    </svg>`,
+
+  // spring-mass analogy
+  springAnalogy:()=>`
+    <svg viewBox="0 0 330 190" width="330" height="190" xmlns="http://www.w3.org/2000/svg">
+      <line x1="22" y1="46" x2="308" y2="46" stroke="#d4d1c8" stroke-width="1.4"/>
+      <line x1="22" y1="82" x2="308" y2="82" stroke="#d4d1c8" stroke-width="1.4"/>
+      <line x1="22" y1="118" x2="308" y2="118" stroke="#d4d1c8" stroke-width="1.4"/>
+      <text x="165" y="24" font-size="11.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">LCR circuit &#8596; damped spring-mass</text>
+      <text x="30" y="40" font-size="11" fill="#1a1916" ${FS} font-weight="700">L  (inductance)</text>
+      <text x="300" y="40" font-size="11" fill="#1a7a4a" text-anchor="end" ${FS} font-weight="700">m  (mass) &#8212; resists change</text>
+      <text x="30" y="76" font-size="11" fill="#1a1916" ${FS} font-weight="700">1/C</text>
+      <text x="300" y="76" font-size="11" fill="#1a7a4a" text-anchor="end" ${FS} font-weight="700">k  (spring constant)</text>
+      <text x="30" y="112" font-size="11" fill="#1a1916" ${FS} font-weight="700">R  (resistance)</text>
+      <text x="300" y="112" font-size="11" fill="#1a7a4a" text-anchor="end" ${FS} font-weight="700">b  (damping) &#8212; eats energy</text>
+      <text x="165" y="146" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">charge q behaves like displacement x</text>
+      <text x="165" y="166" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>&#969; = 1/&#8730;(LC) matches &#969; = &#8730;(k/m)</text>
+      <text x="165" y="184" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>note it is 1/C that pairs with k, not C itself</text>
+    </svg>`,
+
+  // LC driven by a source: reactances subtract
+  lcDriven:()=>`
+    <svg viewBox="0 0 330 185" width="330" height="185" xmlns="http://www.w3.org/2000/svg">
+      <rect x="46" y="38" width="200" height="62" fill="none" stroke="#1a1916" stroke-width="1.7" rx="6"/>
+      ${_src(46,69,15)}
+      <rect x="98" y="27" width="52" height="14" fill="#f7f6f3" stroke="none"/>
+      <path d="M 100 38 q 6 -13 12 0 q 6 -13 12 0 q 6 -13 12 0 q 6 -13 12 0" fill="none" stroke="#1a1916" stroke-width="1.8"/>
+      <text x="124" y="21" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">L</text>
+      <rect x="192" y="27" width="14" height="22" fill="#f7f6f3" stroke="none"/>
+      <line x1="194" y1="27" x2="194" y2="49" stroke="#1a1916" stroke-width="1.9"/>
+      <line x1="203" y1="27" x2="203" y2="49" stroke="#1a1916" stroke-width="1.9"/>
+      <text x="198" y="20" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">C</text>
+      <text x="288" y="62" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>R = 0</text>
+      <text x="288" y="78" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>here</text>
+      <text x="165" y="128" font-size="11.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">Z = |X_L &#8722; X_C|, a plain subtraction</text>
+      <text x="165" y="150" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>no R, so nothing to combine by Pythagoras</text>
+      <text x="165" y="172" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>and the phase is a full 90&#176; &#8212; sin turns into cos</text>
+    </svg>`,
+
+  // energy fractions on the swap curve
+  quarterEnergy:()=>`
+    <svg viewBox="0 0 330 200" width="330" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('qe1','#6b7280')}</defs>
+      ${_axes(50,282,152,34,160,'qe1')}
+      <polyline points="${(()=>{let p=[];for(let i=0;i<=200;i++){const f=i/200,x=50+f*232,s=Math.sin(Math.PI*f);const y=152-96*s*s;p.push(x.toFixed(1)+','+y.toFixed(1));}return p.join(' ');})()}" fill="none" stroke="#1a7a4a" stroke-width="2.6"/>
+      <line x1="50" y1="56" x2="282" y2="56" stroke="#a09d97" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <text x="290" y="53" font-size="9.5" fill="#a09d97" ${FS}>U&#8320;</text>
+      <line x1="50" y1="128" x2="89" y2="128" stroke="#c0392b" stroke-width="1.3" stroke-dasharray="4 3"/>
+      <circle cx="89" cy="128" r="4.5" fill="#c0392b"/>
+      <text x="98" y="124" font-size="10" fill="#c0392b" ${FS} font-weight="700">U_L = U&#8320;/4</text>
+      <line x1="50" y1="176" x2="89" y2="176" stroke="#b45309" stroke-width="2"/>
+      <line x1="50" y1="170" x2="50" y2="182" stroke="#b45309" stroke-width="1.5"/>
+      <line x1="89" y1="170" x2="89" y2="182" stroke="#b45309" stroke-width="1.5"/>
+      <text x="98" y="181" font-size="10.5" fill="#b45309" ${FS} font-weight="700">&#969;t = &#960;/6</text>
+      <text x="200" y="90" font-size="10" fill="#1a7a4a" ${FS} font-weight="700">U_L = U&#8320; sin&#178;&#969;t</text>
+      <text x="165" y="196" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>a quarter of the energy gives sin&#969;t = &#189;</text>
+    </svg>`
+};
+
+// ===============================================================================
+//  QUESTION LADDERS  -  TRANSFORMERS  and  LC OSCILLATIONS
+//  Ladders 1-9 : transformers.   Ladders 10-16 : LC oscillations.
+//  Every star rung is a real JEE Main PYQ from the chapter question bank.
+// ===============================================================================
+const TOPICS = [
+
+/* ============================ PART A : TRANSFORMERS ============================ */
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "Turns ratio &#8212; voltage up means current down",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In an ideal transformer, the secondary voltage is related to the turns by",
+   "diagram": DIAGRAMS.transformer(),
+   "opts": ["V_s/V_p = N_s/N_p","V_s/V_p = N_p/N_s","V_s V_p = N_s N_p","V_s/V_p = &#8730;(N_s/N_p)"],
+   "ans": 0,
+   "sol": "Each turn of wire picks up the same induced emf, so more turns means more voltage.<br><br><strong>V_s/V_p = N_s/N_p</strong><br><br>Voltage follows the turns directly. That part is easy to remember. The current is where students go wrong."
+  },
+  {
+   "q": "An ideal transformer wastes no power, so P_in = P_out. This means",
+   "diagram": DIAGRAMS.transformer(),
+   "opts": ["V_p I_p = V_s I_s","V_p I_s = V_s I_p","V_p I_p = &#8722;V_s I_s","I_p = I_s"],
+   "ans": 0,
+   "sol": "<strong>V_p I_p = V_s I_s</strong>. Power in equals power out.<br><br>Rearranged, that gives <strong>I_p/I_s = V_s/V_p = N_s/N_p</strong>.<br><br>So current runs <em>opposite</em> to voltage: if the voltage doubles, the current halves. A transformer never gives you something for nothing."
+  },
+  {
+   "q": "A transformer has N_p = 140 and N_s = 280. This is a",
+   "diagram": DIAGRAMS.stepUpDown(),
+   "opts": ["step-up transformer","step-down transformer","1:1 isolation transformer","an auto transformer"],
+   "ans": 0,
+   "sol": "N_s is larger than N_p, so the voltage goes <strong>up</strong> &#8212; a <strong>step-up</strong> transformer.<br><br>The turns doubled, so the voltage doubles and the current halves."
+  },
+  {
+   "tag": "AIEEE 2002",
+   "q": "&#9733; <strong>Original:</strong> In a transformer, the number of turns in the primary coil is 140 and in the secondary coil is 280. If the current in the primary coil is 4 A, then the current in the secondary coil is",
+   "diagram": DIAGRAMS.transformer(),
+   "opts": ["2 A","4 A","6 A","10 A"],
+   "ans": 0,
+   "sol": "I_s/I_p = N_p/N_s = 140/280 = 1/2<br><br>I_s = 4 &#215; &#189; = <strong>2 A</strong><br><br>The trap answer is 8 A &#8212; doubling the current because the turns doubled. But <strong>turns double &#8594; voltage doubles &#8594; current halves</strong>.<br><br><em>A check that never fails:</em> whichever side has more turns has the higher voltage and the smaller current. Say it out loud before you write the answer."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Finding the turns you need",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "To go from 220 V down to 12 V, the transformer must be",
+   "diagram": DIAGRAMS.stepUpDown(),
+   "opts": ["step-down, with more turns on the primary","step-up, with more turns on the secondary","1:1","step-down, with more turns on the secondary"],
+   "ans": 0,
+   "sol": "The voltage falls, so it is <strong>step-down</strong>, and the higher-voltage side (the primary) must have <strong>more turns</strong>.<br><br>Decide this before you calculate. If your answer comes out with fewer primary turns, you have flipped the ratio."
+  },
+  {
+   "q": "With V_p = 220 V, V_s = 12 V and N_s = 24, the equation to write is",
+   "opts": ["220/12 = N_p/24","220/12 = 24/N_p","220 &#215; 12 = N_p &#215; 24","N_p = 220 &#215; 12 &#215; 24"],
+   "ans": 0,
+   "sol": "V_p/V_s = N_p/N_s, so <strong>220/12 = N_p/24</strong>.<br><br>Keep the primaries together on both sides and the secondaries together. Cross-mixing them is the single most common transformer error."
+  },
+  {
+   "q": "Solving 220/12 = N_p/24 gives N_p =",
+   "opts": ["440","120","24","1.2"],
+   "ans": 0,
+   "sol": "N_p = 24 &#215; 220/12 = 24 &#215; 18.33 = <strong>440</strong><br><br>Neater: 220/12 &#215; 24 = 220 &#215; 2 = 440, since 24/12 = 2.<br><br>Cancel first, multiply second. It keeps the arithmetic in whole numbers."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 24 Feb Shift 1",
+   "q": "&#9733; <strong>Original:</strong> A common transistor radio set requires 12 V (d.c.) for its operation. The d.c. source is built using a transformer and a rectifier circuit, operated at 220 V (a.c.) on standard domestic supply. If the number of turns of the secondary coil is 24, then the number of turns of the primary is ____",
+   "diagram": DIAGRAMS.transformer(),
+   "opts": ["440","240","120","880"],
+   "ans": 0,
+   "sol": "N_p/N_s = V_p/V_s = 220/12<br><br>N_p = 24 &#215; 220/12 = <strong>440</strong><br><br>The rectifier is mentioned only to explain why d.c. is wanted &#8212; it plays no part in the calculation. <strong>A transformer only works on a.c.</strong>, so the rectifier must come <em>after</em> it.<br><br>Sanity check: 440 is larger than 24, as it must be for a step-down transformer. If you had got 1.2 turns, you would know the ratio was upside down."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Voltage, current and power in one question",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "The output power is 2.2 kW and the secondary current is 10 A. The secondary voltage is",
+   "diagram": DIAGRAMS.transformer(),
+   "opts": ["220 V","22 V","2200 V","110 V"],
+   "ans": 0,
+   "sol": "P = V_s I_s, so V_s = 2200/10 = <strong>220 V</strong><br><br>Always convert kW to W first. Leaving it as 2.2 gives 0.22 V, and a factor of a thousand is the easiest mark in the paper to throw away."
+  },
+  {
+   "q": "With N_p = 300 and N_s = 150, the ratio V_p/V_s is",
+   "opts": ["2","1/2","150","450"],
+   "ans": 0,
+   "sol": "V_p/V_s = N_p/N_s = 300/150 = <strong>2</strong><br><br>The primary has twice the turns, so it has twice the voltage. This is a <strong>step-down</strong> transformer."
+  },
+  {
+   "q": "So the input voltage and the primary current are",
+   "diagram": DIAGRAMS.transformer(),
+   "opts": ["440 V and 5 A","440 V and 20 A","220 V and 20 A","220 V and 10 A"],
+   "ans": 0,
+   "sol": "V_p = 2 &#215; 220 = <strong>440 V</strong><br><br>And since power is conserved, I_p = P/V_p = 2200/440 = <strong>5 A</strong>.<br><br>Check it the other way: I_p/I_s = N_s/N_p = &#189;, so I_p = 10 &#215; &#189; = 5 A. Both routes agree, which is a good sign."
+  },
+  {
+   "tag": "JEE Main 2019 &#183; 10 Apr Shift I",
+   "q": "&#9733; <strong>Original:</strong> A transformer with 300 turns in the primary and 150 turns in the secondary gives an output power of 2.2 kW. If the current in the secondary coil is 10 A, then the input voltage and the current in the primary coil are",
+   "diagram": DIAGRAMS.transformer(),
+   "opts": ["440 V and 5 A","440 V and 20 A","220 V and 20 A","220 V and 10 A"],
+   "ans": 0,
+   "sol": "V_s = 2200/10 = 220 V. Turns ratio 2:1, so V_p = <strong>440 V</strong> and I_p = <strong>5 A</strong>.<br><br>The wrong option '440 V and 20 A' is the one to watch. It gets the voltage right but doubles the current instead of halving it &#8212; and 440 &#215; 20 = 8800 W, four times the stated output. <strong>An ideal transformer cannot create power.</strong><br><br>That multiplication is a free check on any transformer answer: multiply V_p by I_p and see whether you get back the output power."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "A resistive load on the secondary",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "With a 230 V primary and a 10:1 turns ratio, the secondary voltage is",
+   "diagram": DIAGRAMS.transformerLoad(),
+   "opts": ["23 V","2300 V","230 V","46 V"],
+   "ans": 0,
+   "sol": "N_p : N_s = 10 : 1, so V_s = 230/10 = <strong>23 V</strong><br><br>Step-down, as expected from more turns on the primary. Get this number first &#8212; everything after it depends on it."
+  },
+  {
+   "q": "A 46 &#937; resistor across 23 V carries a current of",
+   "diagram": DIAGRAMS.transformerLoad(),
+   "opts": ["0.5 A","2 A","23 A","1058 A"],
+   "ans": 0,
+   "sol": "I = V_s/R = 23/46 = <strong>0.5 A</strong><br><br>Once you have the secondary voltage, the transformer is finished with. The load is just an ordinary resistor on a 23 V a.c. supply."
+  },
+  {
+   "q": "The power consumed in that resistor is",
+   "opts": ["11.5 W","23 W","1.15 W","46 W"],
+   "ans": 0,
+   "sol": "P = V_s&#178;/R = 23&#178;/46 = 529/46 = <strong>11.5 W</strong><br><br>Or P = V_s I_s = 23 &#215; 0.5 = 11.5 W. Same answer either way.<br><br>Note it uses <strong>23 V</strong>, the secondary voltage &#8212; not the 230 V supply. Using 230 V would give 1150 W, a hundred times too big."
+  },
+  {
+   "tag": "JEE Main 2024 &#183; 27 Jan Shift 2",
+   "q": "&#9733; <strong>Original:</strong> The primary side of a transformer is connected to a 230 V, 50 Hz supply. The turns ratio of primary to secondary winding is 10 : 1. A load resistance connected to the secondary side is 46 &#937;. The power consumed in it is",
+   "diagram": DIAGRAMS.transformerLoad(),
+   "opts": ["11.5 W","12.5 W","10.0 W","12.0 W"],
+   "ans": 0,
+   "sol": "V_s = 230/10 = 23 V, so P = 23&#178;/46 = <strong>11.5 W</strong><br><br>The 50 Hz is a decoy &#8212; frequency never changes across a transformer, and it plays no part here.<br><br>Notice the design: 46 = 2 &#215; 23, so 23&#178;/46 = 23/2 = 11.5 exactly. When the numbers cancel that neatly, you are on the right path.<br><br><strong>The habit to build:</strong> in every loaded-transformer question, find V_s first, then forget the transformer completely."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Output taken across part of the load",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "With a 220 V primary, 100 primary turns and 10 secondary turns, the secondary voltage is",
+   "diagram": DIAGRAMS.dividerSecondary(),
+   "opts": ["22 V","2200 V","110 V","44 V"],
+   "ans": 0,
+   "sol": "V_s = 220 &#215; (10/100) = <strong>22 V</strong><br><br>The turns ratio is 10:1 down, so the voltage falls by a factor of ten."
+  },
+  {
+   "q": "That 22 V is applied across a 15 &#937; and a 7 &#937; resistor in series. The current is",
+   "diagram": DIAGRAMS.dividerSecondary(),
+   "opts": ["1 A","1.47 A","3.14 A","22 A"],
+   "ans": 0,
+   "sol": "Total resistance = 15 + 7 = 22 &#937;, so I = 22/22 = <strong>1 A</strong><br><br>Series resistors add straight &#8212; no reactance here, so no Pythagoras. This part is Class 10 circuit work."
+  },
+  {
+   "q": "If the output V&#8320; is taken across the 7 &#937; resistor, it equals",
+   "diagram": DIAGRAMS.dividerSecondary(),
+   "opts": ["7 V","22 V","15 V","3.5 V"],
+   "ans": 0,
+   "sol": "V&#8320; = I &#215; 7 = 1 &#215; 7 = <strong>7 V</strong><br><br>The two resistors form a <strong>voltage divider</strong>: the 22 V splits as 15 V and 7 V, in proportion to the resistances.<br><br>15 + 7 = 22, which confirms the split is right."
+  },
+  {
+   "tag": "JEE Main 2024 &#183; 30 Jan Shift 1",
+   "q": "&#9733; <strong>Original:</strong> The primary coil of a transformer is connected to 220 V a.c. The primary and secondary turns are 100 and 10 respectively. The secondary coil is connected to two resistances in series (15 &#937; and 7 &#937;), and the output voltage V&#8320; is taken across the 7 &#937; resistor. V&#8320; is",
+   "diagram": DIAGRAMS.dividerSecondary(),
+   "opts": ["7 V","22 V","15 V","44 V"],
+   "ans": 0,
+   "sol": "V_s = 22 V &#8594; I = 1 A &#8594; V&#8320; = 1 &#215; 7 = <strong>7 V</strong><br><br>The trap answer 22 V is the full secondary voltage &#8212; correct if the output were taken across <em>both</em> resistors, but the question asks for the voltage across one of them.<br><br><strong>Two independent stages.</strong> Stage one is the transformer, and it ends the moment you write 22 V. Stage two is a plain resistor circuit. Do not let them blur together.<br><br><em>On the figure:</em> the resistor values in the original were shown in a diagram. The values 15 &#937; and 7 &#937; are consistent with the official answer of 7 V and a 22 V secondary; the method is what matters here, not the exact numbers."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Efficiency &#8212; when power is <em>not</em> conserved",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A transformer is 90% efficient. This means",
+   "diagram": DIAGRAMS.efficiency(),
+   "opts": ["P_out = 0.9 &#215; P_in","P_in = 0.9 &#215; P_out","V_s = 0.9 V_p","I_s = 0.9 I_p"],
+   "ans": 0,
+   "sol": "Efficiency &#951; = P_out/P_in, so <strong>P_out = 0.9 &#215; P_in</strong>.<br><br>The output is always the <em>smaller</em> one. If your working ever gives P_out greater than P_in, you have divided instead of multiplied.<br><br>Note that efficiency affects the <strong>power</strong>, not the voltage. V_s/V_p is still fixed by the turns ratio."
+  },
+  {
+   "q": "With V_p = 2300 V and I_p = 5 A, the input power is",
+   "diagram": DIAGRAMS.efficiency(),
+   "opts": ["11500 W","460 W","11.5 W","2305 W"],
+   "ans": 0,
+   "sol": "P_in = V_p I_p = 2300 &#215; 5 = <strong>11500 W</strong> = 11.5 kW<br><br>Straight multiplication. No efficiency yet &#8212; that comes in at the next step."
+  },
+  {
+   "tag": "JEE Main 2018 &#183; Online 16 Apr",
+   "q": "A power transmission line feeds input power at 2300 V to a step-down transformer with 4000 primary turns, giving output at 230 V. If the primary current is 5 A and the efficiency is 90%, the output current is",
+   "diagram": DIAGRAMS.efficiency(),
+   "opts": ["45 A","20 A","40 A","25 A"],
+   "ans": 0,
+   "sol": "P_in = 2300 &#215; 5 = 11500 W<br>P_out = 0.9 &#215; 11500 = 10350 W<br>I_s = P_out/V_s = 10350/230 = <strong>45 A</strong><br><br>The 4000 turns are never used. You already know both voltages, so the turns tell you nothing new.<br><br><em>This build-up rung is itself a real exam question &#8212; JEE Main 2018.</em>"
+  },
+  {
+   "tag": "JEE Main 2024 &#183; 30 Jan Shift 2",
+   "q": "&#9733; <strong>Original:</strong> A power transmission line feeds input power at 2.3 kV to a step-down transformer with its primary winding having 3000 turns. The output power is delivered at 230 V. The current in the primary is 5 A and its efficiency is 90%. The output current of the transformer is ____ A",
+   "diagram": DIAGRAMS.efficiency(),
+   "opts": ["45","50","40","55"],
+   "ans": 0,
+   "sol": "P_in = 2300 &#215; 5 = 11500 W<br>P_out = 0.9 &#215; 11500 = 10350 W<br>I_s = 10350/230 = <strong>45 A</strong><br><br>The trap answer is 50 A &#8212; what you get by ignoring the efficiency and assuming P_out = P_in. Since 90% of the power gets through, 90% of 50 is 45.<br><br><strong>Look at the two rungs above and below this one.</strong> The 2018 question said 4000 turns; this 2024 question says 3000 turns. Everything else &#8212; 2300 V, 230 V, 5 A, 90% &#8212; is identical, and so is the answer.<br><br>The turns number is a decoy in both, and changing it changes nothing. <em>The same question also appeared in JEE Main 2019 (9 January Shift II), again with 4000 turns and again answering 45 A. Three papers, one question.</em>"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "Efficiency worked from the other end",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A transformer works at 10 V and 4 kW on the primary side. Its input power is",
+   "diagram": DIAGRAMS.efficiency(),
+   "opts": ["4000 W","40 W","400 W","4 W"],
+   "ans": 0,
+   "sol": "The 4 kW <em>is</em> the input power: <strong>4000 W</strong>.<br><br>The 10 V tells you the primary current is 400 A, but you do not need it. Read carefully which power the question is naming &#8212; here it is stated directly."
+  },
+  {
+   "q": "At 80% efficiency, the output power is",
+   "diagram": DIAGRAMS.efficiency(),
+   "opts": ["3200 W","5000 W","4000 W","800 W"],
+   "ans": 0,
+   "sol": "P_out = 0.8 &#215; 4000 = <strong>3200 W</strong><br><br>The 5000 W option comes from dividing by 0.8 instead of multiplying. Guard against it with the rule: <strong>output is always less than input</strong>."
+  },
+  {
+   "q": "If the secondary voltage is 240 V, the secondary current is",
+   "opts": ["13.33 A","16.67 A","1.33 A","0.075 A"],
+   "ans": 0,
+   "sol": "I_s = P_out/V_s = 3200/240 = <strong>13.33 A</strong><br><br>Note the option 16.67 A &#8212; that is 4000/240, forgetting the efficiency. And 1.33 A is a decimal-point slip.<br><br>Since 3200/240 = 40/3, the answer is 13.33 recurring."
+  },
+  {
+   "tag": "JEE Main 2024 &#183; 1 Feb Shift 2",
+   "q": "&#9733; <strong>Original:</strong> A transformer has an efficiency of 80% and works at 10 V and 4 kW. If the secondary voltage is 240 V, then the current in the secondary coil is",
+   "diagram": DIAGRAMS.efficiency(),
+   "opts": ["13.33 A","1.59 A","1.33 A","15.1 A"],
+   "ans": 0,
+   "sol": "P_in = 4000 W &#8594; P_out = 0.8 &#215; 4000 = 3200 W &#8594; I_s = 3200/240 = <strong>13.33 A</strong><br><br>The 10 V primary is a decoy for this question. It does tell you something interesting though: the primary current is 4000/10 = 400 A, and the secondary carries only 13.33 A. A big step-up in voltage, a big step-down in current.<br><br><strong>Same three steps every efficiency question:</strong> input power, multiply by &#951;, divide by the secondary voltage. Only the numbers move around."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "Naming the type, and where the losses go",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "If you know the load power and the load current, the secondary voltage is",
+   "diagram": DIAGRAMS.stepUpDown(),
+   "opts": ["V_s = P / I_L","V_s = P &#215; I_L","V_s = I_L / P","V_s = &#8730;(P I_L)"],
+   "ans": 0,
+   "sol": "P = V_s I_L, so <strong>V_s = P/I_L</strong>.<br><br>This is how you identify a transformer type when the turns are not given. Work out V_s from the load, then compare it with V_p.<br><br>For P = 60 W and I_L = 0.11 A: V_s = 60/0.11 &#8776; 545 V."
+  },
+  {
+   "q": "If V_p = 220 V and the secondary works out to about 545 V, the transformer is",
+   "diagram": DIAGRAMS.stepUpDown(),
+   "opts": ["step-up","step-down","1:1","impossible"],
+   "ans": 0,
+   "sol": "545 V is larger than 220 V, so the voltage has gone <strong>up</strong> &#8212; a <strong>step-up</strong> transformer.<br><br>No turns were given, and none were needed. <strong>Comparing the two voltages is enough to name the type.</strong>"
+  },
+  {
+   "tag": "AIEEE 2003",
+   "q": "The core of any transformer is laminated so as to",
+   "diagram": DIAGRAMS.laminated(),
+   "opts": ["reduce the energy loss due to eddy currents","make it light weight","make it robust and strong","increase the secondary voltage"],
+   "ans": 0,
+   "sol": "The changing flux drives circulating <strong>eddy currents</strong> inside the iron core, and those currents heat it up and waste energy.<br><br>Cutting the core into thin insulated sheets gives each eddy loop a much smaller area and a much higher resistance, so the currents shrink and the losses fall.<br><br>Lamination has nothing to do with weight, strength, or the output voltage &#8212; it is purely about <strong>reducing losses</strong>.<br><br><em>This build-up rung is itself a real exam question &#8212; AIEEE 2003.</em>"
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 16 Mar Shift 2",
+   "q": "&#9733; <strong>Original:</strong> For the given circuit (primary at 220 V, load power 60 W, load current 0.11 A), comment on the type of transformer used.",
+   "diagram": DIAGRAMS.stepUpDown(),
+   "opts": ["Step-up transformer","Step-down transformer","Auto transformer","Auxiliary transformer"],
+   "ans": 0,
+   "sol": "V_s = P/I_L = 60/0.11 &#8776; 545 V<br><br>Since 545 V &gt; 220 V, this is a <strong>step-up transformer</strong>.<br><br>The route is worth noting: the question gives you no turns and no secondary voltage, so you have to <em>build</em> the secondary voltage out of the load's power and current. Once you have it, the comparison takes a second.<br><br><strong>A quick shortcut:</strong> the load current 0.11 A is much <em>smaller</em> than a 220 V, 60 W primary current would be (60/220 &#8776; 0.27 A). Less current on the secondary means more voltage &#8212; step-up. You can answer without dividing anything.<br><br><em>The original showed the circuit as a figure; the values above are those used in the official solution.</em>"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "The resistance the secondary actually sees",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "For an ideal transformer feeding houses at 120 V with 60 kW consumed, the secondary current is",
+   "diagram": DIAGRAMS.transformerLoad(),
+   "opts": ["500 A","5 A","7.2 A","0.002 A"],
+   "ans": 0,
+   "sol": "I_s = P/V_s = 60000/120 = <strong>500 A</strong><br><br>A large current, because the voltage on the house side is low. That is exactly why household wiring is thick and transmission lines are thin.<br><br>Convert 60 kW to 60000 W before dividing."
+  },
+  {
+   "q": "The resistive load on the secondary is then",
+   "opts": ["0.24 &#937;","4.17 &#937;","240 &#937;","2400 &#937;"],
+   "ans": 0,
+   "sol": "R_s = V_s/I_s = 120/500 = <strong>0.24 &#937;</strong><br><br>Or directly: R = V&#178;/P = 14400/60000 = 0.24 &#937;. Either route works.<br><br>A very small resistance, which is what a heavy load looks like &#8212; low resistance draws high current."
+  },
+  {
+   "q": "0.24 &#937; expressed in milliohm is",
+   "opts": ["240 m&#937;","0.24 m&#937;","2400 m&#937;","24 m&#937;"],
+   "ans": 0,
+   "sol": "1 &#937; = 1000 m&#937;, so 0.24 &#937; = <strong>240 m&#937;</strong>.<br><br>Multiply by 1000 when going from ohm to milliohm. The question asked for the answer in m&#937;, so this last step is not optional &#8212; writing 0.24 would be marked wrong."
+  },
+  {
+   "tag": "JEE Main 2023 &#183; 6 Apr Shift 1",
+   "q": "&#9733; <strong>Original:</strong> An ideal transformer with a purely resistive load operates at 12 kV on the primary side. It supplies electrical energy to nearby houses at 120 V. The average rate of energy consumption in those houses is 60 kW. The value of the resistive load R_s required in the secondary circuit is ____ m&#937;",
+   "diagram": DIAGRAMS.transformerLoad(),
+   "opts": ["240","24","2400","120"],
+   "ans": 0,
+   "sol": "I_s = 60000/120 = 500 A<br>R_s = 120/500 = 0.24 &#937; = <strong>240 m&#937;</strong><br><br>The 12 kV primary is a decoy for the load resistance. It does tell you the primary current is 60000/12000 = 5 A, and that the turns ratio is 100 : 1.<br><br><strong>Worth pausing on:</strong> the primary carries 5 A and the secondary carries 500 A, for the same 60 kW. That hundredfold difference is the whole reason electricity is transmitted at high voltage &#8212; less current means far less heating loss in the cables.<br><br>Watch the units at both ends: kV and kW going in, m&#937; coming out."
+  }
+ ]
+},
+
+/* ========================= PART B : LC OSCILLATIONS ========================= */
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "Energy sloshing between C and L",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A charged capacitor is connected to a pure inductor. What happens?",
+   "diagram": DIAGRAMS.lcCircuit(),
+   "opts": ["energy shuttles back and forth between the two, forever","the charge leaks away as heat","nothing, since there is no source","the capacitor stays charged"],
+   "ans": 0,
+   "sol": "With no resistance there is nothing to burn energy, so it <strong>shuttles back and forth forever</strong> &#8212; electric field in the capacitor, magnetic field in the inductor, and back again.<br><br>It is a pendulum made of electricity. Total energy is constant; only its form changes."
+  },
+  {
+   "q": "The energy stored in the capacitor when it carries charge q is",
+   "diagram": DIAGRAMS.energySwap(),
+   "opts": ["q&#178;/2C","q&#178;C/2","qC/2","q/2C"],
+   "ans": 0,
+   "sol": "<strong>U_C = q&#178;/2C</strong>, and the inductor stores U_L = &#189;Li&#178;.<br><br>Both are proportional to the <strong>square</strong> of their variable. That squaring is what makes 'half the energy' turn into '1/&#8730;2 of the charge' rather than 'half the charge'."
+  },
+  {
+   "q": "If the maximum charge is Q, the total energy in the circuit is",
+   "opts": ["Q&#178;/2C","Q&#178;C/2","&#189;LQ&#178;","QC/2"],
+   "ans": 0,
+   "sol": "At the instant the capacitor is fully charged, the current is zero, so <em>all</em> the energy is electric: <strong>Q&#178;/2C</strong>.<br><br>That total never changes. Every later question is about how it gets divided between the two.<br><br><strong>Always start an LC problem by writing down the total energy.</strong>"
+  },
+  {
+   "tag": "AIEEE 2003",
+   "q": "&#9733; <strong>Original:</strong> In an oscillating LC circuit the maximum charge on the capacitor is Q. The charge on the capacitor when the energy is stored equally between the electric and magnetic fields is",
+   "diagram": DIAGRAMS.energySwap(),
+   "opts": ["Q/&#8730;2","Q/2","Q/&#8730;3","Q"],
+   "ans": 0,
+   "sol": "Total energy = Q&#178;/2C. Shared equally means the capacitor holds half of it:<br><br>q&#178;/2C = &#189; &#215; Q&#178;/2C<br>q&#178; = Q&#178;/2<br>q = <strong>Q/&#8730;2</strong><br><br>The trap answer Q/2 comes from halving the charge instead of the energy. But energy goes as q&#178;, so halving the energy divides the charge by &#8730;2, not by 2.<br><br><strong>Remember the pattern:</strong> half the <em>energy</em> means 1/&#8730;2 of the <em>charge</em>. It is the same reason rms is peak over &#8730;2 &#8212; squares are involved in both."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ "name": "The maximum current in an LC circuit",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "The maximum current occurs at the instant when",
+   "diagram": DIAGRAMS.energySwap(),
+   "opts": ["the capacitor is fully discharged","the capacitor is fully charged","the energy is shared equally","the current is always constant"],
+   "ans": 0,
+   "sol": "When the capacitor is <strong>fully discharged</strong>, all the energy has moved into the inductor, so the current is at its largest.<br><br>The two extremes swap over: maximum charge means zero current, and maximum current means zero charge. They are a quarter cycle apart, exactly like a pendulum's highest point and fastest point."
+  },
+  {
+   "q": "Setting &#189;LI&#178;<sub>max</sub> = Q&#178;<sub>max</sub>/2C and solving for I<sub>max</sub> gives",
+   "diagram": DIAGRAMS.lcCircuit(),
+   "opts": ["I<sub>max</sub> = Q<sub>max</sub>/&#8730;(LC)","I<sub>max</sub> = Q<sub>max</sub>&#8730;(LC)","I<sub>max</sub> = Q<sub>max</sub>/LC","I<sub>max</sub> = Q<sub>max</sub>&#178;/&#8730;(LC)"],
+   "ans": 0,
+   "sol": "LI&#178; = Q&#178;/C, so I&#178; = Q&#178;/(LC) and <strong>I<sub>max</sub> = Q<sub>max</sub>/&#8730;(LC)</strong>.<br><br>Since &#969; = 1/&#8730;(LC), this is just <strong>I<sub>max</sub> = &#969;Q<sub>max</sub></strong> &#8212; exactly like v<sub>max</sub> = &#969;A for a pendulum. The analogy is not a coincidence."
+  },
+  {
+   "q": "A 500 &#956;F capacitor charged to 100 V holds a charge of",
+   "opts": ["0.05 C","5 C","50 C","0.0005 C"],
+   "ans": 0,
+   "sol": "q = CV = 500 &#215; 10<sup>&#8722;6</sup> &#215; 100 = 5 &#215; 10<sup>&#8722;2</sup> = <strong>0.05 C</strong><br><br>Get this first. In LC questions the charge is often not given directly &#8212; you build it from the capacitance and the charging voltage."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 29 Jul Shift 2",
+   "q": "&#9733; <strong>Original:</strong> A capacitor of capacitance 500 &#956;F is charged completely using a d.c. supply of 100 V. It is now connected to an inductor of inductance 50 mH to form an LC circuit. The maximum current in the LC circuit will be ____ A",
+   "diagram": DIAGRAMS.lcCircuit(),
+   "opts": ["10","5","100","1"],
+   "ans": 0,
+   "sol": "<strong>Charge:</strong> q = CV = 500 &#215; 10<sup>&#8722;6</sup> &#215; 100 = 0.05 C<br><br><strong>&#8730;(LC):</strong> &#8730;(50 &#215; 10<sup>&#8722;3</sup> &#215; 500 &#215; 10<sup>&#8722;6</sup>) = &#8730;(2.5 &#215; 10<sup>&#8722;5</sup>) = 5 &#215; 10<sup>&#8722;3</sup><br><br><strong>Current:</strong> I<sub>max</sub> = 0.05/(5 &#215; 10<sup>&#8722;3</sup>) = <strong>10 A</strong><br><br>Ten amps from a capacitor charged by a small d.c. supply. It only lasts a fraction of a millisecond, but while it flows it is a genuinely large current &#8212; which is how camera flashes and defibrillators work.<br><br><strong>Two steps, always in this order:</strong> find the charge, then divide by &#8730;(LC). Doing the powers of ten carefully is most of the battle here."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 12 ---------------------------------- */
+{
+ "name": "The same formula, charge given directly",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "For L = 75 mH and C = 1.2 &#956;F, the product LC is",
+   "opts": ["9 &#215; 10<sup>&#8722;8</sup>","9 &#215; 10<sup>&#8722;6</sup>","90 &#215; 10<sup>&#8722;8</sup>","9 &#215; 10<sup>&#8722;10</sup>"],
+   "ans": 0,
+   "sol": "LC = (75 &#215; 10<sup>&#8722;3</sup>)(1.2 &#215; 10<sup>&#8722;6</sup>) = 90 &#215; 10<sup>&#8722;9</sup> = <strong>9 &#215; 10<sup>&#8722;8</sup></strong><br><br>Rewrite 90 &#215; 10<sup>&#8722;9</sup> as 9 &#215; 10<sup>&#8722;8</sup> so the exponent is <strong>even</strong>. The next step is a square root, and an even exponent halves cleanly."
+  },
+  {
+   "q": "So &#8730;(LC) equals",
+   "opts": ["3 &#215; 10<sup>&#8722;4</sup>","3 &#215; 10<sup>&#8722;8</sup>","9 &#215; 10<sup>&#8722;4</sup>","3 &#215; 10<sup>&#8722;3</sup>"],
+   "ans": 0,
+   "sol": "&#8730;(9 &#215; 10<sup>&#8722;8</sup>) = 3 &#215; 10<sup>&#8722;4</sup><br><br>Square-root the 9 to get 3, and halve the exponent &#8722;8 to get &#8722;4. <strong>3 &#215; 10<sup>&#8722;4</sup></strong>.<br><br>This is why we rearranged to an even power first. Trying to root 10<sup>&#8722;9</sup> directly leads to a mess."
+  },
+  {
+   "q": "With q<sub>max</sub> = 2.7 &#956;C, the maximum current is",
+   "opts": ["9 mA","9 A","0.9 mA","90 mA"],
+   "ans": 0,
+   "sol": "I<sub>max</sub> = q<sub>max</sub>/&#8730;(LC) = (2.7 &#215; 10<sup>&#8722;6</sup>)/(3 &#215; 10<sup>&#8722;4</sup>) = 0.9 &#215; 10<sup>&#8722;2</sup> = <strong>9 &#215; 10<sup>&#8722;3</sup> A = 9 mA</strong><br><br>Divide the numbers (2.7/3 = 0.9) and subtract the exponents (&#8722;6 &#8722; (&#8722;4) = &#8722;2). Then tidy 0.9 &#215; 10<sup>&#8722;2</sup> into 9 &#215; 10<sup>&#8722;3</sup>."
+  },
+  {
+   "tag": "JEE Main 2023 &#183; 8 Apr Shift 1",
+   "q": "&#9733; <strong>Original:</strong> An oscillating LC circuit consists of a 75 mH inductor and a 1.2 &#956;F capacitor. If the maximum charge on the capacitor is 2.7 &#956;C, the maximum current in the circuit will be ____ mA",
+   "diagram": DIAGRAMS.lcCircuit(),
+   "opts": ["9","90","0.9","900"],
+   "ans": 0,
+   "sol": "I<sub>max</sub> = q<sub>max</sub>/&#8730;(LC) = 2.7 &#215; 10<sup>&#8722;6</sup> / (3 &#215; 10<sup>&#8722;4</sup>) = 9 &#215; 10<sup>&#8722;3</sup> A = <strong>9 mA</strong><br><br>Compare this with the previous ladder: the same single formula, but there you had to build q from CV first, and here it is handed to you.<br><br><strong>The whole difficulty in this question is the powers of ten.</strong> The physics is one line. So work in scientific notation from the very first step and never convert to decimals &#8212; 0.000075 &#215; 0.0000012 is where marks get lost.<br><br>Every wrong option here is a factor of ten away from the right one, which tells you exactly what the setter expected to go wrong."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 13 ---------------------------------- */
+{
+ "name": "How long until the energy is shared equally?",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In an LC circuit starting from a fully charged capacitor, the charge varies as",
+   "diagram": DIAGRAMS.chargeTiming(),
+   "opts": ["q = Q cos&#969;t","q = Q sin&#969;t","q = Q e<sup>&#8722;&#969;t</sup>","q = Q&#969;t"],
+   "ans": 0,
+   "sol": "At t = 0 the charge is maximum, and cos(0) = 1, so <strong>q = Q cos&#969;t</strong>.<br><br>Use cosine when the capacitor starts fully charged, and sine when it starts empty. Getting this choice right at the start saves you from a wrong phase at the end."
+  },
+  {
+   "q": "The energy is shared equally when q = Q/&#8730;2. In terms of the phase, that means",
+   "diagram": DIAGRAMS.chargeTiming(),
+   "opts": ["cos&#969;t = 1/&#8730;2, so &#969;t = &#960;/4","cos&#969;t = &#189;, so &#969;t = &#960;/3","cos&#969;t = 1, so &#969;t = 0","cos&#969;t = 0, so &#969;t = &#960;/2"],
+   "ans": 0,
+   "sol": "q = Q cos&#969;t = Q/&#8730;2 requires <strong>cos&#969;t = 1/&#8730;2</strong>, so &#969;t = <strong>&#960;/4</strong>.<br><br>The energy question from Ladder 10 has become a phase question. That is the standard move: convert the energy condition into a charge condition, then into a phase."
+  },
+  {
+   "q": "With &#969; = 1/&#8730;(LC), the time at which &#969;t = &#960;/4 is",
+   "diagram": DIAGRAMS.chargeTiming(),
+   "opts": ["t = (&#960;/4)&#8730;(LC)","t = (&#960;/4)/&#8730;(LC)","t = &#960;&#8730;(LC)","t = (&#960;/2)&#8730;(LC)"],
+   "ans": 0,
+   "sol": "t = (&#960;/4)/&#969; = (&#960;/4) &#215; &#8730;(LC) = <strong>(&#960;/4)&#8730;(LC)</strong><br><br>Since &#969; = 1/&#8730;(LC), dividing by &#969; is the same as <em>multiplying</em> by &#8730;(LC). Students often divide instead, which puts &#8730;(LC) in the wrong place.<br><br>Check the units: &#8730;(LC) has units of time, so the answer is a time. Good."
+  },
+  {
+   "tag": "AIEEE 2011",
+   "q": "&#9733; <strong>Original:</strong> A fully charged capacitor C with initial charge q&#8320; is connected to a coil of self inductance L at t = 0. The time at which the energy is stored equally between the electric and the magnetic fields is",
+   "diagram": DIAGRAMS.chargeTiming(),
+   "opts": ["(&#960;/4)&#8730;(LC)","&#960;&#8730;(LC)","&#8730;(LC)","2&#960;&#8730;(LC)"],
+   "ans": 0,
+   "sol": "q = q&#8320;cos&#969;t, and equal sharing needs q = q&#8320;/&#8730;2, so &#969;t = &#960;/4.<br><br>t = (&#960;/4)&#8730;(LC)<br><br>A neat way to see it: the full period is T = 2&#960;&#8730;(LC), and &#960;/4 out of 2&#960; is one <strong>eighth</strong> of a cycle. So the answer is T/8.<br><br>That makes sense &#8212; the capacitor goes from full to empty in a quarter cycle, and equal sharing happens halfway through in phase terms.<br><br><strong>Every LC timing question follows these three steps:</strong> write q = Q cos&#969;t, turn the condition into a value of cos&#969;t, then divide the phase by &#969;."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 14 ---------------------------------- */
+{
+ "name": "A given fraction of the energy",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "If U&#8320; is the total energy, the energy in the inductor at time t is",
+   "diagram": DIAGRAMS.quarterEnergy(),
+   "opts": ["U&#8320; sin&#178;&#969;t","U&#8320; cos&#178;&#969;t","U&#8320; sin&#969;t","U&#8320;/2"],
+   "ans": 0,
+   "sol": "The capacitor's energy goes as q&#178; = Q&#178;cos&#178;&#969;t, so U_C = U&#8320;cos&#178;&#969;t.<br><br>Whatever is left is in the inductor: <strong>U_L = U&#8320;sin&#178;&#969;t</strong>.<br><br>And sin&#178; + cos&#178; = 1, so the two always add to U&#8320;. The total never changes."
+  },
+  {
+   "q": "For 25% of the energy to be in the inductor, we need",
+   "diagram": DIAGRAMS.quarterEnergy(),
+   "opts": ["sin&#969;t = &#189;","sin&#969;t = &#188;","sin&#969;t = 1/&#8730;2","sin&#969;t = &#8730;3/2"],
+   "ans": 0,
+   "sol": "U&#8320;sin&#178;&#969;t = &#188;U&#8320; gives sin&#178;&#969;t = &#188;, so <strong>sin&#969;t = &#189;</strong>.<br><br>Take the square root. The trap is writing sin&#969;t = &#188; directly &#8212; but the energy is proportional to sin<em>&#178;</em>, so a quarter of the energy means <strong>half</strong> the amplitude.<br><br>This is the same squaring idea as Ladder 10, one level further on."
+  },
+  {
+   "q": "sin&#969;t = &#189; gives the smallest positive phase",
+   "opts": ["&#969;t = &#960;/6","&#969;t = &#960;/4","&#969;t = &#960;/3","&#969;t = &#960;/2"],
+   "ans": 0,
+   "sol": "sin(&#960;/6) = sin(30&#176;) = &#189;, so <strong>&#969;t = &#960;/6</strong>.<br><br>Keep the three standard sines ready: sin(&#960;/6) = &#189;, sin(&#960;/4) = 1/&#8730;2, sin(&#960;/3) = &#8730;3/2. Every LC timing question lands on one of them."
+  },
+  {
+   "tag": "JEE Main 2026 &#183; 21 Jan Evening",
+   "q": "&#9733; <strong>Original:</strong> A capacitor C is first charged fully to a potential difference V&#8320; and disconnected from the battery. The charged capacitor is then connected across an inductor of inductance L. In t seconds, 25% of the initial energy in the capacitor is transferred to the inductor. The value of t is",
+   "diagram": DIAGRAMS.quarterEnergy(),
+   "opts": ["(&#960;/6)&#8730;(LC)","(&#960;/3)&#8730;(LC)","(&#960;/2)&#8730;(LC)","&#960;&#8730;(LC/2)"],
+   "ans": 0,
+   "sol": "U_L = U&#8320;sin&#178;&#969;t = 0.25U&#8320; &#8594; sin&#969;t = &#189; &#8594; &#969;t = &#960;/6<br><br>t = (&#960;/6)/&#969; = <strong>(&#960;/6)&#8730;(LC)</strong><br><br>The option (&#960;/3)&#8730;(LC) is waiting for anyone who writes sin&#969;t = &#188; and then... actually it catches those who use cos instead of sin. Since cos(&#960;/3) = &#189;, that mistake gives &#960;/3 &#8212; and it is on the list.<br><br><strong>Sin or cos? Ask which one starts at zero.</strong> Here the inductor starts with <em>no</em> energy, so its share must start at zero and grow &#8212; that is sin&#178;. The capacitor starts full, so its share is cos&#178;.<br><br>Compare with Ladder 13: there the split was 50-50, giving &#960;/4. Here it is 25-75, giving &#960;/6. Same method, different fraction. This is the newest LC question in the bank &#8212; January 2026."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 15 ---------------------------------- */
+{
+ "name": "An LC circuit driven by a source",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "In a circuit with only L and C (no resistance), the impedance is",
+   "diagram": DIAGRAMS.lcDriven(),
+   "opts": ["|X_L &#8722; X_C|","&#8730;(X_L&#178; + X_C&#178;)","X_L + X_C","zero"],
+   "ans": 0,
+   "sol": "With R = 0 the triangle has no base, so Z = <strong>|X_L &#8722; X_C|</strong> &#8212; a plain subtraction.<br><br>Nothing to combine by Pythagoras. This is the same point made in Lecture 4: no resistance means no perpendicular side."
+  },
+  {
+   "q": "For L = 40 mH and C = 100 &#956;F at &#969; = 314 rad/s, the two reactances are about",
+   "diagram": DIAGRAMS.lcDriven(),
+   "opts": ["X_L = 12.6 &#937;, X_C = 31.8 &#937;","X_L = 31.8 &#937;, X_C = 12.6 &#937;","X_L = 12.6 &#937;, X_C = 12.6 &#937;","X_L = 126 &#937;, X_C = 318 &#937;"],
+   "ans": 0,
+   "sol": "X_L = 314 &#215; 0.04 = <strong>12.6 &#937;</strong><br>X_C = 1/(314 &#215; 10<sup>&#8722;4</sup>) = <strong>31.8 &#937;</strong><br><br>X_C is the larger, so the circuit is <strong>capacitive</strong> and the current <strong>leads</strong> the voltage by 90&#176;.<br><br>Then Z = 31.8 &#8722; 12.6 &#8776; 19.3 &#937;."
+  },
+  {
+   "q": "In a purely capacitive-behaving LC circuit driven by V = V&#8320;sin&#969;t, the current is",
+   "diagram": DIAGRAMS.lcDriven(),
+   "opts": ["(V&#8320;/Z) cos&#969;t","(V&#8320;/Z) sin&#969;t","&#8722;(V&#8320;/Z) cos&#969;t","(V&#8320;/Z) sin(&#969;t &#8722; &#960;/2)"],
+   "ans": 0,
+   "sol": "The current <strong>leads</strong> by 90&#176;, so i = (V&#8320;/Z) sin(&#969;t + &#960;/2) = <strong>(V&#8320;/Z) cos&#969;t</strong>.<br><br>Recall from Lecture 2: sin(&#952; + 90&#176;) = +cos&#952;, and sin(&#952; &#8722; 90&#176;) = &#8722;cos&#952;.<br><br>Leading gives the plus sign. Lagging would give &#8722;cos&#969;t."
+  },
+  {
+   "tag": "JEE Main 2019 &#183; 9 Jan Shift II",
+   "q": "&#9733; <strong>Original:</strong> In an LC circuit the inductance L = 40 mH and the capacitance C = 100 &#956;F. If a voltage V(t) = 10 sin(314t) is applied to the circuit, the current in the circuit is given as",
+   "diagram": DIAGRAMS.lcDriven(),
+   "opts": ["0.52 cos(314t)","0.52 sin(314t)","5.2 cos(314t)","10 cos(314t)"],
+   "ans": 0,
+   "sol": "X_L = 12.6 &#937;, X_C = 31.8 &#937;, so Z = 19.3 &#937;.<br><br>I&#8320; = 10/19.3 = <strong>0.52 A</strong><br><br>X_C is larger, so the current leads by 90&#176; and the sine becomes a cosine:<br><br>i = <strong>0.52 cos(314t)</strong><br><br>Two separate decisions, and you must get both right. The <em>size</em> comes from Z; the <em>form</em> (sin or cos, plus or minus) comes from which reactance is larger.<br><br>The option 0.52 sin(314t) has the right magnitude and the wrong phase &#8212; half the work done. The option 5.2 cos(314t) has the right phase and a tenfold error in the magnitude.<br><br><em>Note:</em> &#969; = 314 means f = 50 Hz, our usual mains frequency, hiding in plain sight."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 16 ---------------------------------- */
+{
+ "name": "LCR as a damped oscillator",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In a mechanical oscillator, the quantity that resists change of motion is the mass m. In an LCR circuit, the matching quantity is",
+   "diagram": DIAGRAMS.springAnalogy(),
+   "opts": ["the inductance L","the capacitance C","the resistance R","the charge q"],
+   "ans": 0,
+   "sol": "An <strong>inductor opposes any change in current</strong>, exactly as mass opposes any change in velocity. So <strong>L &#8596; m</strong>.<br><br>And charge q plays the part of displacement x, while current i = dq/dt plays the part of velocity."
+  },
+  {
+   "q": "Which pairs with the spring constant k?",
+   "diagram": DIAGRAMS.springAnalogy(),
+   "opts": ["1/C","C","L","R"],
+   "ans": 0,
+   "sol": "<strong>1/C</strong>, not C.<br><br>Compare the two frequencies: &#969; = &#8730;(k/m) for the spring and &#969; = 1/&#8730;(LC) = &#8730;((1/C)/L) for the circuit. Line them up and k sits where 1/C sits.<br><br>Physically, a <em>small</em> capacitance pushes back hard against stored charge, just as a <em>stiff</em> spring pushes back hard against displacement. Small C behaves like large k."
+  },
+  {
+   "tag": "JEE Main 2015 &#183; Online 11 Apr",
+   "q": "A capacitor charged to Q&#8320; is connected to L and R. A student plots Q&#178;<sub>max</sub> against time for two values of inductance, L&#8321; &gt; L&#8322;. Which description is correct?",
+   "diagram": DIAGRAMS.dampedLCR(),
+   "opts": ["both decay from the same starting value, with L&#8321; decaying more slowly, and the curves never cross","both decay, with L&#8321; decaying faster","both curves rise with time","the curves cross each other partway along"],
+   "ans": 0,
+   "sol": "The resistance drains the energy, so Q&#178;<sub>max</sub> <strong>decays</strong> in both cases &#8212; and both start from the same Q&#8320;&#178;, since the initial charge is the same.<br><br>The decay rate goes as R/L, so a <strong>larger L means a slower decay</strong>. The L&#8321; curve therefore sits above the L&#8322; curve everywhere, and the two <strong>never cross</strong>.<br><br>Compare with a heavy pendulum in air: more mass, more inertia, longer before it stops.<br><br><em>This build-up rung is itself a real exam question &#8212; JEE Main 2015. The four options in the paper were graphs; they are described in words here.</em>"
+  },
+  {
+   "tag": "JEE Main 2020 &#183; 7 Jan Shift I",
+   "q": "&#9733; <strong>Original:</strong> An LCR circuit behaves like a damped harmonic oscillator. Comparing it with a physical spring-mass damped oscillator having damping constant b, the correct equivalence would be",
+   "diagram": DIAGRAMS.springAnalogy(),
+   "opts": ["L &#8596; m, C &#8596; 1/k, R &#8596; b","L &#8596; m, C &#8596; k, R &#8596; b","L &#8596; k, C &#8596; b, R &#8596; m","L &#8596; 1/b, C &#8596; 1/m, R &#8596; 1/k"],
+   "ans": 0,
+   "sol": "Put the two equations side by side.<br><br><strong>Spring:</strong> m(d&#178;x/dt&#178;) + b(dx/dt) + kx = 0<br><strong>Circuit:</strong> L(d&#178;q/dt&#178;) + R(dq/dt) + q/C = 0<br><br>Term by term: <strong>L &#8596; m</strong>, <strong>R &#8596; b</strong>, and <strong>1/C &#8596; k</strong>, which is the same as writing C &#8596; 1/k.<br><br>The trap option has C &#8596; k instead of 1/k. Three of the four pairings in it are right, and the whole option is still wrong &#8212; check every pairing, not just the first one you recognise.<br><br><strong>Why R pairs with b:</strong> both remove energy from the system and turn it into heat. Both are the reason the oscillation dies away, and both appear on the first-derivative term.<br><br>This analogy is worth carrying into Lecture 7, where the quality factor Q measures exactly how <em>lightly</em> damped the circuit is."
+  }
+ ]
+},
+
+];
+
+
+
+const STORAGE_KEY = 'padipucast_ac_transformer_lc_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original exam question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
