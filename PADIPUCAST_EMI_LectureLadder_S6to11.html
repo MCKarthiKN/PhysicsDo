@@ -1,0 +1,2928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; EMI &#183; Lecture Ladders (Sessions 6&#8211;11)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+
+.tc-note{font-size:12px;color:var(--text3);line-height:1.55;margin:-4px 0 10px;padding-right:18px;}
+#qs-note{margin-top:12px;background:#fffaf0;border:1px solid #f0dcae;border-left:3px solid #b45309;border-radius:10px;
+padding:12px 15px;font-size:13.5px;line-height:1.7;color:#7a4d09;}
+#qs-note b{color:#5c3a06;}
+.lvl{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+border-radius:5px;padding:2px 8px;margin-left:8px;vertical-align:middle;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);}
+.lvl.star{background:#fdf6e7;color:#b45309;border-color:#f0dcae;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> EMI &#183; Sessions 6&#8211;11</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Electromagnetic Induction &#183; Lecture Ladders<br>Sessions 6 to 11 &#183; induced charge to mutual inductance</h1></div>
+    <p id="home-sub">Concepts C4 to C8 of the ALLEN NEET EMI module, one ladder per lecture, in teaching order. Teach the concept, then open that session.<br><br>
+Every question inside is a real module question with its Exercise number on the card. Where a question is <strong>hard</strong>, two easy <strong>build-up rungs</strong> come first, each isolating a single step, and the module question follows as the &#9733; rung. Easy questions stand alone.<br><br>
+<strong>61 module questions</strong>, 54 build-up rungs, <strong>115 rungs</strong> in all. Every rung carries a <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong> badge, inherited from the module question it leads to.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+      <div id="qs-note"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  DIAGRAM LIBRARY — mirrors, refraction, TIR
+// ═══════════════════════════════════════════════════════════════════
+const FS='font-family="DM Sans,sans-serif"';
+const C={hot:'#dc2626',cold:'#2563eb',ink:'#334155',dim:'#64748b',g:'#9ca3af',
+         bs:'#475569',amber:'#ea580c',grn:'#16a34a',vio:'#7c3aed',teal:'#0f766e'};
+const AR=(id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const MARKERS=[['aH',C.hot],['aC',C.cold],['aA',C.amber],['aI',C.ink],['aV',C.vio],['aG',C.grn],['aT',C.teal]].map(([i,c])=>AR(i,c)).join('');
+function svg(w,h,inner){return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg"><defs>${MARKERS}</defs>${inner}</svg>`;}
+function T(x,y,s,size,col,anc){return `<text x="${x}" y="${y}" font-size="${size||12}" fill="${col||C.ink}" text-anchor="${anc||'middle'}" ${FS}>${s}</text>`;}
+function L(x1,y1,x2,y2,col,w,dash,mk){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col||C.ink}" stroke-width="${w||1.4}"${dash?` stroke-dasharray="${dash}"`:''}${mk?` marker-end="url(#${mk})"`:''}/>`;}
+function dim(x1,x2,y,label){
+  return L(x1,y,x2,y,C.dim,1)+L(x1,y-4,x1,y+4,C.dim,1)+L(x2,y-4,x2,y+4,C.dim,1)+T((x1+x2)/2,y+14,label,10.5,C.dim);
+}
+function vdim(y1,y2,x,label){
+  return L(x,y1,x,y2,C.dim,1)+L(x-4,y1,x+4,y1,C.dim,1)+L(x-4,y2,x+4,y2,C.dim,1)+T(x-7,(y1+y2)/2+4,label,10.5,C.dim,'end');
+}
+// hatching under a mirror / behind a surface
+function hatch(x1,x2,y,dep,col){let s='';for(let x=x1;x<=x2;x+=9){s+=L(x,y,x-dep,y+dep,col||C.g,1);}return s;}
+const RAD=Math.PI/180;
+
+const D={};
+
+// ── plane mirror, ray at angle i to the normal ──────────────────────
+D.planeMirror=function(i,note){
+  const P=[150,132],len=92,a=i*RAD,off=i===0?9:0;
+  let s=hatch(48,254,132,10)+L(48,132,254,132,C.bs,2);
+  s+=L(150,132,150,34,C.dim,1.2,'5 4');
+  s+=T(150,26,'normal',10.5,C.dim);
+  s+=L(P[0]-len*Math.sin(a)-off,P[1]-len*Math.cos(a),P[0]-off,P[1],C.hot,1.6,0,'aH');
+  s+=L(P[0]+off,P[1],P[0]+len*Math.sin(a)+off,P[1]-len*Math.cos(a),C.cold,1.6,0,'aC');
+  s+=`<circle cx="150" cy="132" r="2.6" fill="${C.ink}"/>`;
+  if(i>0){s+=`<path d="M 150 ${132-40} A 40 40 0 0 0 ${150-40*Math.sin(a)} ${132-40*Math.cos(a)}" fill="none" stroke="${C.dim}" stroke-width="1"/>`;
+    s+=T(150-52,132-58,'i = '+i+'&#176;',10.5,C.hot);
+    s+=`<path d="M 150 ${132-52} A 52 52 0 0 1 ${150+52*Math.sin(a)} ${132-52*Math.cos(a)}" fill="none" stroke="${C.dim}" stroke-width="1"/>`;
+    s+=T(150+56,132-64,'r',10.5,C.cold);}
+  else{s+=T(112,80,'in',10.5,C.hot)+T(190,80,'out',10.5,C.cold);}
+  s+=T(150,160,note||'plane mirror',10.5,C.dim);
+  return svg(302,172,s);
+};
+
+// ── man in front of a plane mirror ─────────────────────────────────
+D.manMirror=function(){
+  const hx=78,top=42,bot=164,eye=52;
+  let s=`<circle cx="${hx}" cy="${top+9}" r="9" fill="none" stroke="${C.ink}" stroke-width="1.5"/>`;
+  s+=L(hx,top+18,hx,bot-30,C.ink,1.5)+L(hx,top+30,hx-15,top+52,C.ink,1.4)+L(hx,top+30,hx+15,top+52,C.ink,1.4);
+  s+=L(hx,bot-30,hx-13,bot,C.ink,1.4)+L(hx,bot-30,hx+13,bot,C.ink,1.4);
+  s+=`<circle cx="${hx+7}" cy="${eye}" r="2.2" fill="${C.hot}"/>`;
+  s+=hatch(236,252,top,0,C.g);
+  const mt=(top+eye)/2, mb=(bot+eye)/2;
+  s+=`<rect x="238" y="${mt}" width="9" height="${mb-mt}" fill="#cfe0f5" stroke="${C.bs}" stroke-width="1.4"/>`;
+  s+=L(hx+7,eye,238,mt,C.hot,1.2,'4 3')+L(hx+7,eye,238,mb,C.hot,1.2,'4 3');
+  s+=L(hx,top,238,mt,C.dim,1,'3 3')+L(hx,bot,238,mb,C.dim,1,'3 3');
+  s+=vdim(top,bot,42,'H')+vdim(mt,mb,286,'H/2');
+  s+=T(160,190,'mirror needs to be only half the height',10.5,C.dim);
+  return svg(324,204,s);
+};
+
+// ── concave / convex mirror on an axis, with markers ───────────────
+// pts: [{x:cm, label, col, up:height in px (signed)}] ; f in cm ; scale px/cm
+function mirrorBase(type,f,scale,extra,W,H){
+  const px=270,ay=Math.round(H*0.55);
+  let s=L(24,ay,290,ay,C.g,1,'5 4');
+  const bulge=type==='concave'?-32:32;
+  s+=`<path d="M ${px} ${ay-58} Q ${px+bulge} ${ay} ${px} ${ay+58}" fill="none" stroke="${C.bs}" stroke-width="2.4"/>`;
+  s+=hatch(px-2,px+2,ay,0,C.g);
+  const F=px-f*scale, Cc=px-2*f*scale;
+  s+=L(F,ay-5,F,ay+5,C.ink,1.2)+T(F,ay+18,'F',10.5,C.dim);
+  if(Cc>26){s+=L(Cc,ay-5,Cc,ay+5,C.ink,1.2)+T(Cc,ay+18,'C',10.5,C.dim);}
+  s+=T(px+ (type==='concave'?14:16),ay+4,'P',10.5,C.dim);
+  return {s:s+extra(px,ay,scale),ay:ay,px:px};
+}
+D.rodAxis=function(){
+  const r=mirrorBase('concave',10,6,(px,ay,sc)=>{
+    const x1=px-20*sc,x2=px-30*sc;
+    let t=L(x2,ay-9,x1,ay-9,C.hot,4);
+    t+=dim(x2,x1,ay-36,'rod, 10 cm')+T(150,ay+48,'near end 20 cm from the pole',10.5,C.dim);
+    return t;
+  },300,180);
+  return svg(300,180,r.s);
+};
+D.mirrorObj=function(){
+  const r=mirrorBase('concave',10,6,(px,ay,sc)=>{
+    const u=px-15*sc;
+    let t=L(u,ay,u,ay-34,C.hot,2,0,'aH')+T(u,ay-42,'object',10.5,C.hot);
+    const v=px-30*sc;
+    t+=L(v,ay,v,ay+50,C.cold,2,0,'aC')+T(v,ay+62,'image (real, inverted, bigger)',10.5,C.cold);
+    return t;
+  },300,190);
+  return svg(300,196,r.s);
+};
+D.movingObj=function(){
+  const r=mirrorBase('concave',10,5.4,(px,ay,sc)=>{
+    const u=px-25*sc;
+    let t=L(u,ay,u,ay-30,C.hot,2,0,'aH');
+    t+=L(u+4,ay-14,u+34,ay-14,C.hot,1.5,0,'aH')+T(u+20,ay-22,'v',10.5,C.hot);
+    t+=T(150,ay+46,'object moving towards the mirror',10.5,C.dim);
+    return t;
+  },300,180);
+  return svg(300,180,r.s);
+};
+
+// ── four candidate graphs, 2x2 ─────────────────────────────────────
+D.graphOpts=function(){
+  const panels=[
+    {n:'(1)',kind:'down'},{n:'(2)',kind:'up'},
+    {n:'(3)',kind:'decay'},{n:'(4)',kind:'rise'}
+  ];
+  let s='';
+  panels.forEach((p,k)=>{
+    const ox=18+(k%2)*172, oy=18+Math.floor(k/2)*118;
+    const x0=ox+34,x1=ox+140,yb=oy+82,yt=oy+16;
+    s+=L(x0,yb,x1,yb,C.g,1.2,0,'aI')+L(x0,yb,x0,yt,C.g,1.2,0,'aI');
+    s+=T(x1+4,yb+13,'1/u',9.5,C.dim)+T(x0,yt-7,'1/v',9.5,C.dim);
+    if(p.kind==='down')s+=L(x0+6,yt+6,x1-6,yb-6,C.cold,1.8);
+    if(p.kind==='up')s+=L(x0+6,yb-6,x1-6,yt+6,C.cold,1.8);
+    if(p.kind==='decay'){let d='M '+(x0+8)+' '+(yt+6);for(let i=1;i<=24;i++){const t=i/24,x=x0+8+t*(x1-x0-16),y=yt+6+(yb-yt-12)*(1-Math.pow(1-t,0.35));d+=` L ${x.toFixed(1)} ${y.toFixed(1)}`;}s+=`<path d="${d}" fill="none" stroke="${C.cold}" stroke-width="1.8"/>`;}
+    if(p.kind==='rise'){let d='M '+(x0+8)+' '+(yb-6);for(let i=1;i<=24;i++){const t=i/24,x=x0+8+t*(x1-x0-16),y=yb-6-(yb-yt-12)*Math.pow(t,0.35);d+=` L ${x.toFixed(1)} ${y.toFixed(1)}`;}s+=`<path d="${d}" fill="none" stroke="${C.cold}" stroke-width="1.8"/>`;}
+    s+=T(ox,oy+40,p.n,11,C.ink,'start');
+  });
+  return svg(346,254,s);
+};
+
+// ── glass slab over a mark, microscope above ───────────────────────
+D.slabMark=function(t,shift){
+  let s=`<rect x="72" y="96" width="176" height="42" fill="#dbeafe" stroke="${C.bs}" stroke-width="1.5"/>`;
+  s+=T(146,122,'glass slab, &#956;',11,C.bs);
+  s+=L(60,138,262,138,C.ink,2)+T(160,154,'paper with the mark',10.5,C.dim);
+  s+=`<circle cx="160" cy="138" r="3" fill="${C.hot}"/>`;
+  s+=`<circle cx="160" cy="${138-shift}" r="3" fill="none" stroke="${C.hot}" stroke-width="1.4" stroke-dasharray="3 2"/>`;
+  s+=L(238,138,238,138-shift,C.hot,1.3,0,'aH')+T(248,138-shift/2+4,'raised',10.5,C.hot,'start');
+  s+=`<rect x="146" y="24" width="28" height="46" rx="4" fill="#f1f5f9" stroke="${C.bs}" stroke-width="1.4"/>`;
+  s+=T(160,18,'microscope',10.5,C.dim)+vdim(96,138,60,t);
+  return svg(330,168,s);
+};
+
+// ── bubble inside a slab, seen from the two faces ──────────────────
+D.bubbleSlab=function(a,b,ua){
+  let s=`<rect x="60" y="52" width="200" height="76" fill="#dbeafe" stroke="${C.bs}" stroke-width="1.6"/>`;
+  const bx=60+200*(a/(a+b)), U=ua||' cm';
+  s+=`<circle cx="${bx.toFixed(0)}" cy="90" r="7" fill="#fff" stroke="${C.bs}" stroke-width="1.3"/>`;
+  s+=T(bx,74,'bubble',10,C.dim);
+  s+=dim(60,bx,142,'appears '+a+U)+dim(bx,260,164,'appears '+b+U);
+  s+=T(160,42,'glass slab, &#956; = 1.5',11,C.bs);
+  s+=L(40,90,58,90,C.hot,1.4,0,'aH')+L(280,90,262,90,C.hot,1.4,0,'aH');
+  return svg(300,182,s);
+};
+
+// ── vessel with two immiscible liquids ─────────────────────────────
+D.twoLiquids=function(){
+  let s=`<rect x="92" y="42" width="130" height="60" fill="#fde68a" stroke="${C.bs}" stroke-width="1.4"/>`;
+  s+=`<rect x="92" y="102" width="130" height="60" fill="#bfdbfe" stroke="${C.bs}" stroke-width="1.4"/>`;
+  s+=T(157,78,'&#956;  (upper half)',11,C.bs)+T(157,138,'1.5&#956;  (lower half)',11,C.bs);
+  s+=vdim(42,102,84,'d')+vdim(102,162,84,'d');
+  s+=T(157,180,'apparent depth is half the real depth',10.5,C.dim);
+  return svg(300,194,s);
+};
+
+// ── red + green ray through a parallel slab ────────────────────────
+D.slabRG=function(){
+  let s=`<rect x="86" y="56" width="128" height="70" fill="#dbeafe" stroke="${C.bs}" stroke-width="1.5"/>`;
+  s+=L(30,32,86,64,C.ink,1.8,0,'aI')+T(46,26,'red + green',10.5,C.ink,'start');
+  s+=L(86,64,214,104,C.hot,1.6)+L(86,64,214,112,C.grn,1.6);
+  s+=L(214,104,268,135,C.hot,1.6,0,'aH')+L(214,112,268,143,C.grn,1.6,0,'aG');
+  s+=T(276,133,'red',10,C.hot,'start')+T(276,150,'green',10,C.grn,'start');
+  s+=T(150,148,'they leave from two points, but parallel',10.5,C.dim);
+  return svg(320,164,s);
+};
+
+// ── critical angle at a boundary ───────────────────────────────────
+D.critAngle=function(lab1,lab2){
+  const P=[160,96];
+  let s=`<rect x="30" y="30" width="260" height="66" fill="#eff6ff" stroke="none"/>`;
+  s+=`<rect x="30" y="96" width="260" height="66" fill="#bfdbfe" stroke="none"/>`;
+  s+=L(30,96,290,96,C.bs,2);
+  s+=L(160,30,160,162,C.dim,1.1,'5 4');
+  s+=T(64,50,lab1||'rarer',10.5,C.dim,'start')+T(64,150,lab2||'denser',10.5,C.dim,'start');
+  const a=52*RAD;
+  s+=L(P[0]-90*Math.sin(a),P[1]+90*Math.cos(a),P[0],P[1],C.hot,1.7,0,'aH');
+  s+=L(P[0],P[1],P[0]+96,P[1],C.cold,1.7,0,'aC');
+  s+=`<path d="M ${P[0]-34*Math.sin(a)} ${P[1]+34*Math.cos(a)} A 34 34 0 0 0 ${P[0]} ${P[1]+34}" fill="none" stroke="${C.dim}" stroke-width="1"/>`;
+  s+=T(P[0]-30,P[1]+40,'C',11,C.hot);
+  s+=T(228,P[1]-9,'grazes at 90&#176;',10,C.cold);
+  s+=`<circle cx="${P[0]}" cy="${P[1]}" r="2.6" fill="${C.ink}"/>`;
+  return svg(302,172,s);
+};
+
+// ── point source under water: cone and disc ────────────────────────
+D.coneLight=function(h,d,hlab){
+  const sx=160,sy=150,surf=52;
+  let s=`<rect x="24" y="${surf}" width="272" height="${sy+18-surf}" fill="#bfdbfe"/>`;
+  s+=L(24,surf,296,surf,C.bs,2);
+  const half=(d/2)/h*(sy-surf);
+  s+=`<path d="M ${sx} ${sy} L ${sx-half} ${surf} L ${sx+half} ${surf} Z" fill="#fde68a" opacity="0.55"/>`;
+  s+=L(sx,sy,sx-half,surf,C.hot,1.5)+L(sx,sy,sx+half,surf,C.hot,1.5);
+  s+=L(sx,sy,sx,surf,C.dim,1,'4 3');
+  s+=`<rect x="${sx-half}" y="${surf-7}" width="${2*half}" height="7" fill="${C.ink}"/>`;
+  s+=`<circle cx="${sx}" cy="${sy}" r="3.4" fill="${C.hot}"/>`+T(sx,sy+16,'source',10.5,C.hot);
+  s+=vdim(surf,sy,60,hlab||String(h))+dim(sx-half,sx+half,surf-32,'disc, diameter = ?');
+  s+=T(sx-half/2-6,surf+26,'C',10.5,C.hot);
+  return svg(302,178,s);
+};
+
+// ── coin at the bottom, ray grazing the surface ────────────────────
+D.coinGraze=function(){
+  const bx=92,by=140,surf=64;
+  let s=`<rect x="76" y="${surf}" width="168" height="${by-surf+8}" fill="#bfdbfe" stroke="${C.bs}" stroke-width="1.5"/>`;
+  s+=L(76,surf,244,surf,C.bs,2);
+  s+=L(bx,by,bx+76,surf,C.hot,1.7)+L(bx+76,surf,236,surf,C.hot,1.7,0,'aH');
+  s+=L(bx,by,bx,surf,C.dim,1,'4 3')+L(bx,surf,bx+76,surf,C.dim,1,'4 3');
+  s+=`<rect x="${bx-9}" y="${by}" width="18" height="5" rx="2" fill="${C.ink}"/>`+T(bx,by+18,'coin',10.5,C.dim);
+  s+=dim(bx,bx+76,surf+18,'3 cm')+vdim(surf,by,72,'4 cm');
+  s+=T(178,surf-10,'the ray runs along the surface',10,C.hot);
+  return svg(268,168,s);
+};
+
+// ═══════════════ EMI DIAGRAM LIBRARY ═══════════════
+function coil(x,y,n,w,h,col){
+  let d='M '+x+' '+y, cx=x;
+  for(let i=0;i<n;i++){d+=` a ${w/2} ${h} 0 1 1 ${w} 0`;cx+=w;}
+  return `<path d="${d}" fill="none" stroke="${col||C.ink}" stroke-width="1.6"/>`;
+}
+function zig(x,y,w,col){
+  let d='M '+x+' '+y;const s=w/6;
+  for(let i=0;i<6;i++)d+=` l ${s/2} ${i%2?7:-7} l ${s/2} ${i%2?-7:7}`;
+  return `<path d="${d}" fill="none" stroke="${col||C.ink}" stroke-width="1.6"/>`;
+}
+function cell(x,y,col){
+  return L(x,y-11,x,y+11,col||C.ink,2)+L(x+7,y-6,x+7,y+6,col||C.ink,3.2);
+}
+function box(x,y,w,h,lab,fill){
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill||'#fff'}" stroke="${C.bs}" stroke-width="1.4"/>`
+    +T(x+w/2,y+h/2+4,lab,10.5,C.ink);
+}
+
+D.lrSimple=function(labL,labR,labE){
+  let s=`<rect x="60" y="44" width="200" height="96" fill="none" stroke="${C.ink}" stroke-width="1.5"/>`;
+  s+=`<rect x="118" y="36" width="84" height="16" fill="#fff" stroke="none"/>`+coil(120,44,4,20,9,C.cold)+T(160,28,labL,10.5,C.cold);
+  s+=`<rect x="252" y="72" width="16" height="40" fill="#fff" stroke="none"/>`;
+  s+=`<g transform="rotate(90 260 92)">${zig(236,92,48,C.hot)}</g>`+T(288,96,labR,10.5,C.hot,'start');
+  s+=`<rect x="52" y="80" width="16" height="26" fill="#fff" stroke="none"/>`;
+  s+=`<g transform="rotate(90 60 92)">${cell(56,92)}</g>`+T(30,96,labE,10.5,C.ink,'start');
+  return svg(330,160,s);
+};
+D.circ34=function(){
+  let s=`<rect x="52" y="40" width="230" height="110" fill="none" stroke="${C.ink}" stroke-width="1.5"/>`;
+  s+=L(160,40,160,150,C.ink,1.5);
+  s+=`<rect x="88" y="32" width="46" height="16" fill="#fff"/>`+`<g transform="translate(0,0)">${zig(90,40,44,C.hot)}</g>`+T(112,24,'6&#937;',10,C.hot);
+  s+=T(146,58,'I&#8321;',10.5,C.cold,'end')+L(126,52,152,52,C.cold,1.4,0,'aC');
+  s+=`<rect x="188" y="32" width="76" height="16" fill="#fff"/>`+coil(190,40,3,24,8,C.cold)+T(226,26,'2 mH',10,C.cold);
+  s+=`<rect x="152" y="76" width="16" height="42" fill="#fff"/>`+`<g transform="rotate(90 160 96)">${zig(136,96,46,C.hot)}</g>`+T(174,100,'8&#937;',10,C.hot,'start');
+  s+=`<rect x="274" y="76" width="16" height="42" fill="#fff"/>`+`<g transform="rotate(90 282 96)">${zig(258,96,46,C.hot)}</g>`+T(292,100,'8&#937;',10,C.hot,'start');
+  s+=`<rect x="44" y="80" width="16" height="28" fill="#fff"/>`+`<g transform="rotate(90 52 94)">${cell(48,94)}</g>`+T(22,98,'10 V',10,C.ink,'start');
+  s+=`<circle cx="52" cy="60" r="3" fill="none" stroke="${C.ink}" stroke-width="1.4"/>`+L(52,60,64,50,C.ink,1.4)+T(66,46,'K',10.5,C.ink,'start');
+  return svg(330,166,s);
+};
+D.circ7=function(){
+  const yT=42,yB=150;
+  let s=L(52,yT,290,yT,C.ink,1.5)+L(52,yB,290,yB,C.ink,1.5)+L(52,yT,52,yB,C.ink,1.5)+L(290,yT,290,yB,C.ink,1.5);
+  s+=`<rect x="44" y="82" width="16" height="28" fill="#fff"/>`+`<g transform="rotate(90 52 96)">${cell(48,96)}</g>`+T(22,100,'&#949;',11.5,C.ink,'start');
+  // branch 1: L in series with R
+  s+=L(120,yT,120,yB,C.ink,1.4);
+  s+=`<rect x="112" y="56" width="18" height="34" fill="#fff"/>`+`<g transform="rotate(90 120 73)">${coil(98,73,3,15,7,C.cold)}</g>`+T(134,70,'L',10.5,C.cold,'start');
+  s+=`<rect x="112" y="106" width="16" height="38" fill="#fff"/>`+`<g transform="rotate(90 120 125)">${zig(96,125,44,C.hot)}</g>`+T(134,129,'R',10.5,C.hot,'start');
+  // branch 2: R only
+  s+=L(196,yT,196,yB,C.ink,1.4);
+  s+=`<rect x="188" y="76" width="16" height="42" fill="#fff"/>`+`<g transform="rotate(90 196 96)">${zig(172,96,46,C.hot)}</g>`+T(210,100,'R',10.5,C.hot,'start');
+  // branch 3: R in series with L
+  s+=L(262,yT,262,yB,C.ink,1.4);
+  s+=`<rect x="254" y="56" width="16" height="38" fill="#fff"/>`+`<g transform="rotate(90 262 74)">${zig(238,74,44,C.hot)}</g>`+T(276,78,'R',10.5,C.hot,'start');
+  s+=`<rect x="254" y="108" width="18" height="34" fill="#fff"/>`+`<g transform="rotate(90 262 125)">${coil(240,125,3,15,7,C.cold)}</g>`+T(276,129,'L',10.5,C.cold,'start');
+  s+=`<circle cx="76" cy="${yB}" r="3" fill="none" stroke="${C.ink}" stroke-width="1.4"/>`+L(76,yB,90,yB-11,C.ink,1.4)+T(74,yB+18,'switch',10,C.ink);
+  s+=T(170,yB+34,'three 9 &#937; resistors, two 2 mH inductors',10.5,C.dim);
+  return svg(320,196,s);
+};
+
+D.circ16=function(){
+  let s=`<rect x="48" y="38" width="236" height="112" fill="none" stroke="${C.ink}" stroke-width="1.5"/>`;
+  s+=L(166,38,166,150,C.ink,1.5)+L(226,38,226,150,C.ink,1.5);
+  s+=`<rect x="40" y="52" width="16" height="26" fill="#fff"/>`+`<g transform="rotate(90 48 65)">${cell(44,65)}</g>`+T(20,69,'E',11,C.ink,'start');
+  s+=`<rect x="40" y="104" width="16" height="42" fill="#fff"/>`+`<g transform="rotate(90 48 124)">${zig(24,124,46,C.hot)}</g>`+T(32,128,'R',10,C.hot,'end');
+  s+=`<rect x="158" y="52" width="16" height="42" fill="#fff"/>`+`<g transform="rotate(90 166 72)">${zig(142,72,46,C.hot)}</g>`+T(150,76,'R',10,C.hot,'end');
+  s+=`<rect x="158" y="104" width="16" height="42" fill="#fff"/>`+`<g transform="rotate(90 166 124)">${zig(142,124,46,C.hot)}</g>`+T(150,128,'2R',10,C.hot,'end');
+  s+=`<rect x="218" y="52" width="16" height="42" fill="#fff"/>`+`<g transform="rotate(90 226 72)">${zig(202,72,46,C.hot)}</g>`+T(234,76,'6R',10,C.hot,'start');
+  s+=`<rect x="218" y="104" width="18" height="42" fill="#fff"/>`+`<g transform="rotate(90 226 124)">${coil(204,124,3,15,7,C.cold)}</g>`+T(236,128,'L',10,C.cold,'start');
+  s+=`<circle cx="96" cy="150" r="3" fill="none" stroke="${C.ink}" stroke-width="1.4"/>`+L(96,150,110,140,C.ink,1.4)+T(94,166,'S',10.5,C.ink);
+  return svg(330,176,s);
+};
+D.branch=function(items,lab){
+  const y=76;let x=54,s=L(30,y,54,y,C.ink,1.6,0,'aI')+T(24,y+4,'A',11,C.ink,'end');
+  s+=T(46,y-14,lab||'i',10.5,C.cold);
+  items.forEach(it=>{
+    if(it[0]==='L'){s+=coil(x,y,3,24,9,C.cold)+T(x+36,y+22,it[1],10.5,C.cold);x+=72;}
+    if(it[0]==='C'){s+=cell(x+8,y)+T(x+8,y+26,it[1],10.5,C.ink);x+=34;}
+    if(it[0]==='R'){s+=zig(x,y,50,C.hot)+T(x+25,y+24,it[1],10.5,C.hot);x+=50;}
+    s+=L(x-1,y,x+14,y,C.ink,1.6);x+=14;
+  });
+  s+=L(x,y,x+18,y,C.ink,1.6)+T(x+26,y+4,'B',11,C.ink,'start');
+  return svg(x+44,120,s);
+};
+D.twoCoils=function(labA,labB,note){
+  let s=coil(60,86,5,20,13,C.cold)+T(110,120,labA,11.5,C.cold);
+  s+=coil(196,86,5,20,13,C.hot)+T(246,120,labB,11.5,C.hot);
+  s+=L(30,86,58,86,C.cold,1.5,0,"aC")+T(30,76,"current in",10,C.cold,"start");
+  s+=T(160,40,note||'',10.5,C.dim);
+  s+=L(172,86,190,86,C.dim,1,'4 3');
+  return svg(330,138,s);
+};
+D.nested=function(inner,outer){
+  let s=`<rect x="70" y="34" width="150" height="118" fill="none" stroke="${C.hot}" stroke-width="1.7"/>`;
+  s+=`<rect x="126" y="72" width="38" height="42" fill="none" stroke="${C.cold}" stroke-width="1.7"/>`;
+  s+=T(145,166,outer||'large loop, side L',10.5,C.hot)+T(145,66,inner||'&#8467;',10.5,C.cold);
+  s+=`<circle cx="145" cy="93" r="2" fill="${C.ink}"/>`;
+  return svg(290,178,s);
+};
+D.concentric=function(){
+  let s=`<circle cx="150" cy="92" r="62" fill="none" stroke="${C.hot}" stroke-width="1.7"/>`;
+  s+=`<circle cx="150" cy="92" r="17" fill="none" stroke="${C.cold}" stroke-width="1.7"/>`;
+  s+=L(150,92,212,92,C.hot,1.2,'4 3')+T(184,86,'R&#8321;',10.5,C.hot);
+  s+=L(150,92,150,75,C.cold,1.2,'4 3')+T(166,72,'R&#8322;',10.5,C.cold);
+  s+=T(150,174,'coplanar and concentric, R&#8321; &#8811; R&#8322;',10.5,C.dim);
+  return svg(300,186,s);
+};
+D.itri=function(){
+  const x0=60,x1=250,yb=132,yt=44;
+  let s=L(x0,yb,x1+16,yb,C.g,1.2,0,'aI')+L(x0,yb,x0,yt-10,C.g,1.2,0,'aI');
+  s+=T(x0-8,yt-8,'i',11,C.dim,'end')+T(x1+22,yb+13,'t',11,C.dim);
+  s+=L(x0,yb,155,yt,C.cold,1.8)+L(155,yt,250,yb,C.cold,1.8);
+  s+=L(155,yb,155,yt,C.dim,1,'4 3')+T(155,yb+14,'T/2',10,C.dim)+T(250,yb+14,'T',10,C.dim);
+  return svg(300,156,s);
+};
+D.vopts=function(){
+  const kinds=[['(1)','sine'],['(2)','step'],['(3)','tri'],['(4)','ramp']];
+  let s='';
+  kinds.forEach(([n,k],idx)=>{
+    const ox=16+(idx%2)*168, oy=16+Math.floor(idx/2)*112;
+    const x0=ox+38,x1=ox+142,ym=oy+56,yt=oy+22,yb=oy+90;
+    s+=L(x0,ym,x1,ym,C.g,1.2,0,'aI')+L(x0,yb,x0,yt-6,C.g,1.2,0,'aI');
+    s+=T(x0-6,yt-4,'V',10,C.dim,'end')+T(x1+4,ym+13,'t',10,C.dim);
+    const mid=(x0+x1)/2;
+    if(k==='step')s+=L(x0,yt+6,mid,yt+6,C.cold,1.8)+L(mid,yt+6,mid,yb-6,C.cold,1.8)+L(mid,yb-6,x1-4,yb-6,C.cold,1.8);
+    if(k==='sine'){let d='M '+x0+' '+ym;for(let i=1;i<=30;i++){const t=i/30,x=x0+t*(x1-x0-4),y=ym-26*Math.sin(2*Math.PI*t);d+=` L ${x.toFixed(1)} ${y.toFixed(1)}`;}s+=`<path d="${d}" fill="none" stroke="${C.cold}" stroke-width="1.8"/>`;}
+    if(k==='tri')s+=L(x0,ym,mid,yt+6,C.cold,1.8)+L(mid,yt+6,x1-4,yb-6,C.cold,1.8);
+    if(k==='ramp')s+=L(x0,yb-6,mid,yt+6,C.cold,1.8)+L(mid,yt+6,mid,yb-6,C.cold,1.8)+L(mid,yb-6,x1-4,yt+6,C.cold,1.8);
+    s+=T(ox,oy+56,n,11,C.ink,'start');
+    s+=L(mid,ym-3,mid,ym+3,C.dim,1)+T(mid,ym+15,'T/2',8.5,C.dim);
+  });
+  return svg(340,244,s);
+};
+D.igraph=function(){
+  const x0=64,x1=240,yb=128,yt=48;
+  let s=L(x0,yb,x1+16,yb,C.g,1.2,0,'aI')+L(x0,yb,x0,yt-10,C.g,1.2,0,'aI');
+  s+=T(x0-8,yt-8,'i (A)',10,C.dim,'end')+T(x1+24,yb+13,'t (s)',10,C.dim);
+  s+=`<path d="M ${x0} ${yt} L ${x1} ${yb} L ${x0} ${yb} Z" fill="#dbeafe" opacity="0.7" stroke="none"/>`;
+  s+=L(x0,yt,x1,yb,C.cold,1.8);
+  s+=L(x0-5,yt,x0+5,yt,C.dim,1)+T(x0-10,yt+4,'4',10,C.dim,'end');
+  s+=T(x1,yb+14,'0.1',10,C.dim)+T(x0,yb+14,'0',10,C.dim);
+  return svg(300,150,s);
+};
+D.solCoil=function(){
+  let s=coil(50,80,9,24,16,C.ink);
+  s+=`<rect x="132" y="66" width="34" height="28" fill="none" stroke="${C.hot}" stroke-width="1.6"/>`;
+  s+=T(149,58,'coil, 100 turns',10,C.hot);
+  s+=T(150,132,'small coil at the centre of a long solenoid',10.5,C.dim);
+  return svg(300,146,s);
+};
+
+const TOPICS = [
+ {
+  "name": "Induced charge &#183; q = N&#916;&#966;/R",
+  "note": "Straight after Faraday's law. The one result in the chapter with no time in it &#8212; how fast you move the magnet does not matter, only how much the flux changed and what the resistance is.",
+  "session": 6,
+  "base": 7,
+  "rungs": 15,
+  "questions": [
+   {
+    "q": "The magnetic flux through a circuit of resistance R changes by an amount &#916;&#966; in a time &#916;t. The total quantity of electric charge Q that passes any point in the circuit during the time &#916;t is represented by:",
+    "diagram": null,
+    "opts": [
+     "Q = &#916;&#966;/R",
+     "Q = &#916;&#966;/&#916;t",
+     "Q = R &#183; &#916;&#966;/&#916;t",
+     "Q = (1/R) &#183; &#916;&#966;/&#916;t"
+    ],
+    "ans": 0,
+    "sol": "Charge is current integrated over time:<br>q = &#8747;i dt = &#8747;(e/R) dt = (1/R)&#8747;(d&#966;/dt) dt = <strong>&#916;&#966;/R</strong>.<br>The &#916;t cancels out completely. That is the whole point of this result: <strong>the induced charge does not depend on how fast the flux changes</strong>, only on how much it changed and on the resistance. Move the magnet quickly or slowly &#8212; the same charge flows.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q20",
+    "note": ""
+   },
+   {
+    "q": "A coil of resistance 10&#937; and 1000 turns have the magnetic flux line of 5.5 &#215; 10<sup>&#8722;4</sup> Wb. If the magnetic flux changed to 5 &#215; 10<sup>&#8722;4</sup> Wb in 0.1 sec, then the induced charge in coil is:",
+    "diagram": null,
+    "opts": [
+     "50 &#956;C",
+     "5 &#956;C",
+     "2 &#956;C",
+     "20 &#956;C"
+    ],
+    "ans": 1,
+    "sol": "&#916;&#966; = 5.5 &#215; 10<sup>&#8722;4</sup> &#8722; 5 &#215; 10<sup>&#8722;4</sup> = 0.5 &#215; 10<sup>&#8722;4</sup> Wb.<br>q = &#916;&#966;/R = (0.5 &#215; 10<sup>&#8722;4</sup>)/10 = <strong>5 &#215; 10<sup>&#8722;6</sup> C = 5 &#956;C</strong>.<br>Two numbers in the question are decoys: the 0.1 s never enters, and the flux quoted is already the <em>total</em> linkage, so the 1000 turns must not be multiplied in again.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q7",
+    "note": ""
+   },
+   {
+    "q": "In a circuit with coil of resistance 5 &#937;, the magnetic flux changes from 20 Weber to 10 Weber in 0.1 second. The charge that flows in the coil during this time is:",
+    "diagram": null,
+    "opts": [
+     "1 coulomb",
+     "2 coulomb",
+     "6 coulomb",
+     "4 coulomb"
+    ],
+    "ans": 1,
+    "sol": "q = &#916;&#966;/R = (20 &#8722; 10)/5 = <strong>2 C</strong>.<br>Again the 0.1 s is not needed. If you had used it you would have found the average <em>current</em> (20 A) instead, and 2 C is the charge.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q17",
+    "note": ""
+   },
+   {
+    "q": "A coil with flux BA through it is turned over so its plane faces the other way. The change in flux is:",
+    "diagram": null,
+    "opts": [
+     "2BA",
+     "BA",
+     "BA/2",
+     "Zero"
+    ],
+    "ans": 0,
+    "sol": "The flux does not just vanish &#8212; it <strong>reverses</strong>, going from +BA to &#8722;BA. The change is <strong>2BA</strong>. Missing this factor of 2 is the single commonest error in rotated-coil questions.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q11",
+    "note": ""
+   },
+   {
+    "q": "For a coil of N turns and resistance R, the charge that flows when the flux per turn changes by &#916;&#966; is:",
+    "diagram": null,
+    "opts": [
+     "N&#916;&#966;/R",
+     "&#916;&#966;/(NR)",
+     "N&#916;&#966;R",
+     "&#916;&#966;/R"
+    ],
+    "ans": 0,
+    "sol": "Every turn contributes, so the emf and hence the charge carry a factor N: <strong>q = N&#916;&#966;/R</strong>.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q11",
+    "note": ""
+   },
+   {
+    "q": "A closed coil consists of 500 turns on a rectangular frame of area 4.0 cm<sup>2</sup> and has a resistance of 50 ohms. The coil is kept with its plane perpendicular to a uniform magnetic field of 0.2 wb/m<sup>2</sup>. The amount of charge flowing through the coil if it is turned over (rotated through 180&#176;) is:",
+    "diagram": null,
+    "opts": [
+     "1.6 &#215; 10<sup>&#8722;3</sup> C",
+     "16 &#215; 10<sup>&#8722;3</sup> C",
+     "0.16 &#215; 10<sup>&#8722;3</sup> C",
+     "160 &#215; 10<sup>&#8722;3</sup> C"
+    ],
+    "ans": 0,
+    "sol": "Turning the coil over reverses the flux, so the change per turn is not BA but <strong>2BA</strong>:<br>&#916;&#966; = BA &#8722; (&#8722;BA) = 2BA = 2(0.2)(4 &#215; 10<sup>&#8722;4</sup>) = 1.6 &#215; 10<sup>&#8722;4</sup> Wb.<br>q = N&#916;&#966;/R = 500(1.6 &#215; 10<sup>&#8722;4</sup>)/50 = <strong>1.6 &#215; 10<sup>&#8722;3</sup> C</strong>.<br>Forgetting the factor 2 gives 0.8 &#215; 10<sup>&#8722;3</sup>, which is not on the list &#8212; a useful hint that the doubling is intended.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q11",
+    "note": ""
+   },
+   {
+    "q": "A coil of resistance 40&#937; is connected to a galvanometer of 160&#937;. The charge that flows is found using a total resistance of:",
+    "diagram": null,
+    "opts": [
+     "200 &#937;",
+     "40 &#937;",
+     "160 &#937;",
+     "120 &#937;"
+    ],
+    "ans": 0,
+    "sol": "They are in one closed loop, so the same charge passes through both and the resistances <strong>add: 200 &#937;</strong>. Using only the coil's 40&#937; is the trap.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q8",
+    "note": ""
+   },
+   {
+    "q": "A circular coil has radius 6 mm. Its area is:",
+    "diagram": null,
+    "opts": [
+     "1.13 &#215; 10<sup>&#8722;4</sup> m<sup>2</sup>",
+     "1.13 &#215; 10<sup>&#8722;2</sup> m<sup>2</sup>",
+     "3.6 &#215; 10<sup>&#8722;5</sup> m<sup>2</sup>",
+     "1.13 &#215; 10<sup>&#8722;6</sup> m<sup>2</sup>"
+    ],
+    "ans": 0,
+    "sol": "A = &#960;r<sup>2</sup> = &#960;(6 &#215; 10<sup>&#8722;3</sup>)<sup>2</sup> = <strong>1.13 &#215; 10<sup>&#8722;4</sup> m<sup>2</sup></strong>. Convert mm to m <em>before</em> squaring.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q8",
+    "note": ""
+   },
+   {
+    "q": "One coil of resistance 40&#937; is connected to a galvanometer of 160&#937; resistance. The coil has radius 6mm and turns 100. This coil is placed between the poles of a magnet such that magnetic field is perpendicular to coil. If coil is dragged out then the charge through the galvanometer is 32&#956;C. The magnetic field is:",
+    "diagram": null,
+    "opts": [
+     "6.55 T",
+     "5.66 T",
+     "0.655 T",
+     "0.566 T"
+    ],
+    "ans": 3,
+    "sol": "Dragging the coil right out drops the flux from BA to zero, so &#916;&#966; = BA per turn.<br>The charge passes through the whole loop, so use the <strong>total</strong> resistance:<br>q = NBA/(R + G) = NBA/200.<br>A = &#960;r<sup>2</sup> = &#960;(6 &#215; 10<sup>&#8722;3</sup>)<sup>2</sup> = 1.131 &#215; 10<sup>&#8722;4</sup> m<sup>2</sup>.<br>32 &#215; 10<sup>&#8722;6</sup> = 100 &#215; B &#215; 1.131 &#215; 10<sup>&#8722;4</sup>/200<br>B = (32 &#215; 10<sup>&#8722;6</sup> &#215; 200)/(1.131 &#215; 10<sup>&#8722;2</sup>) = <strong>0.566 T</strong>.<br>Using only the 40&#937; coil gives 0.113 T. The galvanometer is in the same loop, so it must be added.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q8",
+    "note": ""
+   },
+   {
+    "q": "The magnetic field inside a long solenoid with n turns per metre carrying current I is:",
+    "diagram": null,
+    "opts": [
+     "&#956;<sub>0</sub>nI",
+     "&#956;<sub>0</sub>NI",
+     "&#956;<sub>0</sub>nI/2",
+     "&#956;<sub>0</sub>I/2n"
+    ],
+    "ans": 0,
+    "sol": "<strong>B = &#956;<sub>0</sub>nI</strong>, with n the turns per <em>unit length</em>, not the total number of turns.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-II Q6",
+    "note": ""
+   },
+   {
+    "q": "A small coil sits inside a large solenoid. The flux through the small coil is found using:",
+    "diagram": null,
+    "opts": [
+     "The area of the small coil",
+     "The area of the solenoid",
+     "The sum of the two areas",
+     "The difference of the two areas"
+    ],
+    "ans": 0,
+    "sol": "Flux is B times the area <em>that the flux passes through</em>, which here is the <strong>small coil's</strong> area. The solenoid diameter is a decoy.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-II Q6",
+    "note": ""
+   },
+   {
+    "q": "A long solenoid of diameter 0.1 m has 2 &#215; 10<sup>4</sup> turns per meter. At the centre of the solenoid, a coil of 100 turns and radius 0.01 m is placed with its axis coinciding with the solenoid axis. The current in the solenoid reduces at a constant rate to 0 A from 4 A in 0.05 s. If the resistance of the coil is 10&#960;<sup>2</sup>&#937;, the total charge flowing through the coil during this time is:",
+    "diagram": "<svg viewBox=\"0 0 300 146\" width=\"300\" height=\"146\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><path d=\"M 50 80 a 12 16 0 1 1 24 0 a 12 16 0 1 1 24 0 a 12 16 0 1 1 24 0 a 12 16 0 1 1 24 0 a 12 16 0 1 1 24 0 a 12 16 0 1 1 24 0 a 12 16 0 1 1 24 0 a 12 16 0 1 1 24 0 a 12 16 0 1 1 24 0\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.6\"/><rect x=\"132\" y=\"66\" width=\"34\" height=\"28\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/><text x=\"149\" y=\"58\" font-size=\"10\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">coil, 100 turns</text><text x=\"150\" y=\"132\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">small coil at the centre of a long solenoid</text></svg>",
+    "opts": [
+     "16 &#956;C",
+     "32 &#956;C",
+     "16&#960; &#956;C",
+     "32&#960; &#956;C"
+    ],
+    "ans": 1,
+    "sol": "<strong>Step 1 &#8212; field of the solenoid.</strong><br>B = &#956;<sub>0</sub>nI = (4&#960; &#215; 10<sup>&#8722;7</sup>)(2 &#215; 10<sup>4</sup>)(4) = 32&#960; &#215; 10<sup>&#8722;3</sup> T.<br><strong>Step 2 &#8212; flux through the small coil.</strong> Use the <em>coil's</em> area, not the solenoid's:<br>A = &#960;(0.01)<sup>2</sup> = &#960; &#215; 10<sup>&#8722;4</sup> m<sup>2</sup>, so N&#966; = 100(32&#960; &#215; 10<sup>&#8722;3</sup>)(&#960; &#215; 10<sup>&#8722;4</sup>) = 32&#960;<sup>2</sup> &#215; 10<sup>&#8722;5</sup> Wb.<br><strong>Step 3 &#8212; charge.</strong><br>q = N&#916;&#966;/R = (32&#960;<sup>2</sup> &#215; 10<sup>&#8722;5</sup>)/(10&#960;<sup>2</sup>) = 3.2 &#215; 10<sup>&#8722;5</sup> = <strong>32 &#956;C</strong>.<br>The &#960;<sup>2</sup> in the resistance is deliberately placed so it cancels. The solenoid diameter 0.1 m is a decoy &#8212; the coil sits inside, so only the coil's area matters. <em>NEET(UG) 2017.</em>",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q6",
+    "note": ""
+   },
+   {
+    "q": "The charge that has flowed in a circuit is found from a current-time graph by taking:",
+    "diagram": null,
+    "opts": [
+     "The area under the graph",
+     "The slope of the graph",
+     "The peak value",
+     "The final value"
+    ],
+    "ans": 0,
+    "sol": "q = &#8747;i dt, and an integral is an <strong>area</strong>. For a triangle that is &#189; &#215; base &#215; height.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-III Q25",
+    "note": ""
+   },
+   {
+    "q": "If a charge q has flowed through a coil of resistance R, the flux change was:",
+    "diagram": null,
+    "opts": [
+     "&#916;&#966; = qR",
+     "&#916;&#966; = q/R",
+     "&#916;&#966; = qR<sup>2</sup>",
+     "&#916;&#966; = q/R<sup>2</sup>"
+    ],
+    "ans": 0,
+    "sol": "Rearranging q = &#916;&#966;/R gives <strong>&#916;&#966; = qR</strong>.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-III Q25",
+    "note": ""
+   },
+   {
+    "q": "In a coil of resistance 10 &#937;, the induced current developed by changing magnetic flux through it is shown in the figure as a function of time. The magnitude of change in flux through the coil in Weber is:",
+    "diagram": "<svg viewBox=\"0 0 300 150\" width=\"300\" height=\"150\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"64\" y1=\"128\" x2=\"256\" y2=\"128\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><line x1=\"64\" y1=\"128\" x2=\"64\" y2=\"38\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><text x=\"56\" y=\"40\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">i (A)</text><text x=\"264\" y=\"141\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">t (s)</text><path d=\"M 64 48 L 240 128 L 64 128 Z\" fill=\"#dbeafe\" opacity=\"0.7\" stroke=\"none\"/><line x1=\"64\" y1=\"48\" x2=\"240\" y2=\"128\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><line x1=\"59\" y1=\"48\" x2=\"69\" y2=\"48\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"54\" y=\"52\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">4</text><text x=\"240\" y=\"142\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">0.1</text><text x=\"64\" y=\"142\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">0</text></svg>",
+    "opts": [
+     "6",
+     "4",
+     "8",
+     "2"
+    ],
+    "ans": 3,
+    "sol": "The charge that has flowed is the <strong>area under the i&#8211;t graph</strong>:<br>q = &#189; &#215; base &#215; height = &#189; &#215; 0.1 &#215; 4 = 0.2 C.<br>Then from q = &#916;&#966;/R:<br>&#916;&#966; = qR = 0.2 &#215; 10 = <strong>2 Wb</strong>.<br>This question is the reason the induced-charge formula is worth teaching as its own idea: it turns a graph-reading problem into two lines. Trying to work through emf and time here gets messy because the current is not constant.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-III Q25",
+    "note": ""
+   }
+  ]
+ },
+ {
+  "name": "Self inductance",
+  "note": "The turn from 'flux changes' to 'a coil opposing its own current change'. Two formulas run through the whole session: L = N&#966;/i for the definition, and L = &#956;<sub>0</sub>n<sup>2</sup>Al whenever the geometry is altered.",
+  "session": 7,
+  "base": 16,
+  "rungs": 26,
+  "questions": [
+   {
+    "q": "A long solenoid has 1000 turns. When a current of 4A flows through it, the magnetic flux linked with each turn of the solenoid is 4 &#215; 10<sup>&#8722;3</sup> Wb. The self inductance of the solenoid is:",
+    "diagram": null,
+    "opts": [
+     "4H",
+     "3H",
+     "2H",
+     "1H"
+    ],
+    "ans": 3,
+    "sol": "Self inductance is defined by the total flux linkage per unit current:<br><strong>L = N&#966;/i</strong> = (1000)(4 &#215; 10<sup>&#8722;3</sup>)/4 = <strong>1 H</strong>.<br>Note the question says flux <em>per turn</em>, so it must be multiplied by N. If it had given the total linkage, you would divide straight away. <em>NEET-I 2016.</em>",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q4",
+    "note": ""
+   },
+   {
+    "q": "A long solenoid has 500 turns. When a current of 2 ampere is passed through it, the resulting magnetic flux linked with each turn of the solenoid is 4 &#215; 10<sup>&#8722;3</sup> wb. The self-inductance of the solenoid is:",
+    "diagram": null,
+    "opts": [
+     "1.0 henry",
+     "4.0 henry",
+     "2.5 henry",
+     "2.0 henry"
+    ],
+    "ans": 0,
+    "sol": "L = N&#966;/i = (500)(4 &#215; 10<sup>&#8722;3</sup>)/2 = <strong>1.0 H</strong>.<br>The same question as the 2016 PYQ with different numbers &#8212; worth showing the class side by side so they see how directly the module questions feed the paper.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-III Q19",
+    "note": ""
+   },
+   {
+    "q": "When a current changes from 2A to 4A in 0.05 sec. in a coil, induced emf is 8 V. The self inductance of coil is:",
+    "diagram": null,
+    "opts": [
+     "0.1 H",
+     "0.2 H",
+     "0.4 H",
+     "0.8 H"
+    ],
+    "ans": 1,
+    "sol": "e = L(di/dt) &#8594; L = e &#215; &#916;t/&#916;i = 8 &#215; 0.05/2 = <strong>0.2 H</strong>.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q41",
+    "note": ""
+   },
+   {
+    "q": "When current in a coil is reduced from 2A to 1A in 1 ms, the induced emf is 5V. The inductance of coil is:",
+    "diagram": null,
+    "opts": [
+     "5 H",
+     "5000 H",
+     "5 mH",
+     "50 H"
+    ],
+    "ans": 2,
+    "sol": "L = e &#215; &#916;t/&#916;i = 5 &#215; (1 &#215; 10<sup>&#8722;3</sup>)/1 = <strong>5 &#215; 10<sup>&#8722;3</sup> H = 5 mH</strong>.<br>Watch the millisecond. Reading it as 1 s gives 5 H, which is sitting there as option (1).",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q48",
+    "note": ""
+   },
+   {
+    "q": "The current in an inductor of self inductance 4 H changes from 4 A to 2 A in 1 second. The e.m.f. induced in the coil is:",
+    "diagram": null,
+    "opts": [
+     "2 V",
+     "&#8722;4 V",
+     "8 V",
+     "&#8722;2 V"
+    ],
+    "ans": 2,
+    "sol": "|e| = L|di/dt| = 4 &#215; (2/1) = <strong>8 V</strong>.<br>The current is falling, so the induced emf acts to keep it going &#8212; but the question asks for the emf induced, and the printed key takes its magnitude. <em>NEET(UG) 2022 Overseas.</em>",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q20",
+    "note": ""
+   },
+   {
+    "q": "An e.m.f. of 12 V is induced in a given coil when the current in it changes at the rate of 48 amp./minute. The inductance of the coil is:",
+    "diagram": null,
+    "opts": [
+     "0.5 henry",
+     "15 henry",
+     "1.5 henry",
+     "9.6 henry"
+    ],
+    "ans": 1,
+    "sol": "Convert the rate to SI first: di/dt = 48/60 = 0.8 A/s.<br>L = e/(di/dt) = 12/0.8 = <strong>15 H</strong>.<br>Skipping the conversion gives 12/48 = 0.25 H. The word <em>minute</em> is the whole question.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q42",
+    "note": ""
+   },
+   {
+    "q": "Inductance of a solenoid is 3H and it consist of 500 turns. If number of turn make twice, then the value of self inductance becomes:",
+    "diagram": null,
+    "opts": [
+     "1.5 H",
+     "3 H",
+     "9 H",
+     "12 H"
+    ],
+    "ans": 3,
+    "sol": "For a solenoid L = &#956;<sub>0</sub>N<sup>2</sup>A/l, so <strong>L &#8733; N<sup>2</sup></strong> when the length and area are unchanged.<br>Doubling N multiplies L by 4: L = 4 &#215; 3 = <strong>12 H</strong>.<br>Answering 6 H (thinking L &#8733; N) is the usual slip &#8212; and it is not even an option, which tells you the squaring is the point.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q46",
+    "note": ""
+   },
+   {
+    "q": "Written in terms of turn density n = N/l, the inductance of a solenoid is:",
+    "diagram": null,
+    "opts": [
+     "L = &#956;<sub>0</sub>n<sup>2</sup>(&#960;r<sup>2</sup>)l",
+     "L = &#956;<sub>0</sub>n(&#960;r<sup>2</sup>)l",
+     "L = &#956;<sub>0</sub>n<sup>2</sup>(&#960;r)l",
+     "L = &#956;<sub>0</sub>n<sup>2</sup>(&#960;r<sup>2</sup>)/l"
+    ],
+    "ans": 0,
+    "sol": "Start from L = &#956;<sub>0</sub>N<sup>2</sup>A/l and put N = nl: <strong>L = &#956;<sub>0</sub>n<sup>2</sup>Al</strong>. This form is the one to use whenever the <em>turn density</em> is held fixed.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q29",
+    "note": ""
+   },
+   {
+    "q": "A quantity doubles in value. The percentage increase is:",
+    "diagram": null,
+    "opts": [
+     "100%",
+     "200%",
+     "50%",
+     "150%"
+    ],
+    "ans": 0,
+    "sol": "Increase = new &#8722; old = one times the original, i.e. <strong>100%</strong>. Doubling is a 100% increase, not 200% &#8212; that distinction is what the question turns on.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q29",
+    "note": ""
+   },
+   {
+    "q": "For a solenoid keeping the turn density constant its length makes halved and its cross section radius is doubled then the inductance of the solenoid increased by:",
+    "diagram": null,
+    "opts": [
+     "200%",
+     "100%",
+     "800%",
+     "700%"
+    ],
+    "ans": 1,
+    "sol": "Write L in terms of turn density n = N/l:<br><strong>L = &#956;<sub>0</sub>n<sup>2</sup>(&#960;r<sup>2</sup>)l</strong><br>n is held constant. Radius doubled &#8594; r<sup>2</sup> gives a factor <strong>4</strong>. Length halved &#8594; a factor <strong>&#189;</strong>.<br>Net factor = 4 &#215; &#189; = 2, so L doubles.<br>The question asks by how much it <em>increased</em>, not what it became: the increase is L, i.e. <strong>100%</strong>.<br>Reading &#8220;doubled&#8221; as 200% is the trap sitting in option (1).",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q29",
+    "note": ""
+   },
+   {
+    "q": "Two solenoids have the same cross-section and material. Their inductances compare as:",
+    "diagram": null,
+    "opts": [
+     "L &#8733; n<sup>2</sup>l",
+     "L &#8733; nl",
+     "L &#8733; n<sup>2</sup>/l",
+     "L &#8733; n/l"
+    ],
+    "ans": 0,
+    "sol": "From L = &#956;n<sup>2</sup>Al with &#956; and A fixed, <strong>L &#8733; n<sup>2</sup>l</strong>.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-II Q33",
+    "note": ""
+   },
+   {
+    "q": "Solenoid A has half the turn density of B and twice the length. The ratio L<sub>A</sub>/L<sub>B</sub> is:",
+    "diagram": null,
+    "opts": [
+     "1/2",
+     "2",
+     "1/8",
+     "8"
+    ],
+    "ans": 0,
+    "sol": "(&#189;)<sup>2</sup> &#215; 2 = <strong>&#189;</strong>. The turn density is squared, so it outweighs the length &#8212; halving n costs a factor 4, while doubling l only gains a factor 2.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-II Q33",
+    "note": ""
+   },
+   {
+    "q": "Let us consider two solenoids A and B, made from same magnetic material of relative permeability &#956;<sub>r</sub> and equal area of cross-section. Length of A is twice that of B and the number of turns per unit length in A is half that of B. The ratio of self inductance of the two solenoids L<sub>A</sub> : L<sub>B</sub> is:",
+    "diagram": null,
+    "opts": [
+     "1 : 2",
+     "2 : 1",
+     "8 : 1",
+     "1 : 8"
+    ],
+    "ans": 0,
+    "sol": "Use the turn-density form again: L = &#956;n<sup>2</sup>Al.<br>&#956;, &#956;<sub>r</sub> and A are the same for both, so<br>L<sub>A</sub>/L<sub>B</sub> = (n<sub>A</sub>/n<sub>B</sub>)<sup>2</sup> &#215; (l<sub>A</sub>/l<sub>B</sub>) = (&#189;)<sup>2</sup> &#215; 2 = &#189;<br>So <strong>L<sub>A</sub> : L<sub>B</sub> = 1 : 2</strong>.<br>The n<sup>2</sup> beats the length, which is why halving the turn density wins over doubling the length. <em>Re-NEET(UG) 2024.</em>",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q33",
+    "note": ""
+   },
+   {
+    "q": "A toroid is a solenoid bent into a ring. The 'length' to use in its inductance formula is:",
+    "diagram": null,
+    "opts": [
+     "The mean circumference, 2&#960;R<sub>m</sub>",
+     "The mean radius, R<sub>m</sub>",
+     "The cross-sectional radius, r",
+     "The diameter, 2R<sub>m</sub>"
+    ],
+    "ans": 0,
+    "sol": "Follow the winding all the way round: it closes on itself after a distance <strong>2&#960;R<sub>m</sub></strong>. That is the effective length.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q38",
+    "note": ""
+   },
+   {
+    "q": "The cross-section of a toroid is a circle of radius r. Its area is:",
+    "diagram": null,
+    "opts": [
+     "&#960;r<sup>2</sup>",
+     "2&#960;r",
+     "&#960;r",
+     "r<sup>2</sup>"
+    ],
+    "ans": 0,
+    "sol": "<strong>A = &#960;r<sup>2</sup></strong>. Putting this over the 2&#960;R<sub>m</sub> makes the &#960; cancel, which is a good check on the final option.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q38",
+    "note": ""
+   },
+   {
+    "q": "The self inductance of a toroid is (N turns, mean radius R<sub>m</sub>, cross-sectional radius r):",
+    "diagram": null,
+    "opts": [
+     "&#956;<sub>0</sub>N<sup>2</sup>r<sup>2</sup> / (2R<sub>m</sub>)",
+     "&#956;<sub>0</sub>N<sup>2</sup>&#960;r / (2R<sub>m</sub>)",
+     "&#956;<sub>0</sub>N<sup>2</sup>r / (2R<sub>m</sub>)",
+     "&#956;<sub>0</sub>N<sup>2</sup>r&#960; / R<sub>m</sub>"
+    ],
+    "ans": 0,
+    "sol": "A toroid is a solenoid bent into a ring, so its &#8220;length&#8221; is the mean circumference 2&#960;R<sub>m</sub>:<br>L = &#956;<sub>0</sub>N<sup>2</sup>A/(2&#960;R<sub>m</sub>)<br>The cross-section is a circle of radius r, so A = &#960;r<sup>2</sup>:<br>L = &#956;<sub>0</sub>N<sup>2</sup>&#960;r<sup>2</sup>/(2&#960;R<sub>m</sub>) = <strong>&#956;<sub>0</sub>N<sup>2</sup>r<sup>2</sup>/(2R<sub>m</sub>)</strong><br>The &#960; cancels, which is a good check: only option (1) has no &#960; in it.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q38",
+    "note": ""
+   },
+   {
+    "q": "A constant current i is maintained in a solenoid. Which of the following quantities will increase if an iron rod is inserted in the solenoid along its axis?<br>(a) Magnetic field at the centre &#160;(b) Magnetic flux linked with the solenoid<br>(c) Self inductance of the solenoid &#160;(d) Rate of Joule heating",
+    "diagram": null,
+    "opts": [
+     "a, b, c",
+     "c, d",
+     "a, b",
+     "Only b"
+    ],
+    "ans": 0,
+    "sol": "Iron has a relative permeability of several hundred, so putting it in multiplies B by &#956;<sub>r</sub>.<br>(a) B = &#956;<sub>0</sub>&#956;<sub>r</sub>ni &#8594; <strong>increases</strong>.<br>(b) &#966; = NBA &#8594; <strong>increases</strong> with B.<br>(c) L = N&#966;/i, and &#966; rose while i is held fixed &#8594; <strong>increases</strong>.<br>(d) Joule heating is i<sup>2</sup>R. The current is <em>maintained</em> and the winding's resistance has not changed, so it is <strong>unchanged</strong>.<br>So a, b and c.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q30",
+    "note": ""
+   },
+   {
+    "q": "The emf induced across an inductor when the current changes at a rate di/dt is:",
+    "diagram": null,
+    "opts": [
+     "L(di/dt)",
+     "L/(di/dt)",
+     "(di/dt)/L",
+     "L<sup>2</sup>(di/dt)"
+    ],
+    "ans": 0,
+    "sol": "<strong>e = L(di/dt)</strong>. Bigger inductance or faster change, bigger emf.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q33",
+    "note": ""
+   },
+   {
+    "q": "A current changes from 1 A to 1.5 A in 0.1 s. The rate di/dt is:",
+    "diagram": null,
+    "opts": [
+     "5 A/s",
+     "0.5 A/s",
+     "0.05 A/s",
+     "15 A/s"
+    ],
+    "ans": 0,
+    "sol": "di/dt = 0.5/0.1 = <strong>5 A/s</strong>. Dividing the wrong way round gives 0.2 and wrecks the rest of the question.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q33",
+    "note": ""
+   },
+   {
+    "q": "During 0.1 s current in a coil increases from 1A to 1.5 A. If inductance of this coil is 60 &#956;H, induced current in external resistance of 600 &#956;&#937; is:",
+    "diagram": null,
+    "opts": [
+     "1 A",
+     "4/3 A",
+     "2/3 A",
+     "1/2 A"
+    ],
+    "ans": 3,
+    "sol": "<strong>Step 1 &#8212; the emf.</strong><br>e = L(di/dt) = (60 &#215; 10<sup>&#8722;6</sup>)(0.5/0.1) = (60 &#215; 10<sup>&#8722;6</sup>)(5) = 3 &#215; 10<sup>&#8722;4</sup> V.<br><strong>Step 2 &#8212; the current it drives.</strong><br>i = e/R = (3 &#215; 10<sup>&#8722;4</sup>)/(600 &#215; 10<sup>&#8722;6</sup>) = <strong>0.5 A</strong>.<br>Two prefixes in one question: &#956;H on top and &#956;&#937; on the bottom. Convert both before dividing.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q33",
+    "note": ""
+   },
+   {
+    "q": "Two inductances in series and in parallel combine:",
+    "diagram": null,
+    "opts": [
+     "Exactly like resistors",
+     "Exactly like capacitors",
+     "Series adds reciprocals",
+     "Parallel adds directly"
+    ],
+    "ans": 0,
+    "sol": "Inductors follow the <strong>same rules as resistors</strong>: add directly in series, add reciprocals in parallel.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-III Q7",
+    "note": ""
+   },
+   {
+    "q": "If x + y = 10 and xy = 24, then (x &#8722; y)<sup>2</sup> equals:",
+    "diagram": null,
+    "opts": [
+     "4",
+     "2",
+     "196",
+     "148"
+    ],
+    "ans": 0,
+    "sol": "(x &#8722; y)<sup>2</sup> = (x + y)<sup>2</sup> &#8722; 4xy = 100 &#8722; 96 = <strong>4</strong>, so the difference is 2. This identity avoids solving a quadratic.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-III Q7",
+    "note": ""
+   },
+   {
+    "q": "The equivalent inductance of two inductances is 2.4 henry when connected in parallel and 10 henry when connected in series. The difference between the two inductances is:",
+    "diagram": null,
+    "opts": [
+     "2 henry",
+     "3 henry",
+     "4 henry",
+     "5 henry"
+    ],
+    "ans": 0,
+    "sol": "Inductors combine exactly like resistors.<br>Series: L<sub>1</sub> + L<sub>2</sub> = 10.<br>Parallel: L<sub>1</sub>L<sub>2</sub>/(L<sub>1</sub> + L<sub>2</sub>) = 2.4 &#8594; L<sub>1</sub>L<sub>2</sub> = 2.4 &#215; 10 = 24.<br>Now use the identity instead of solving a quadratic:<br>(L<sub>1</sub> &#8722; L<sub>2</sub>)<sup>2</sup> = (L<sub>1</sub> + L<sub>2</sub>)<sup>2</sup> &#8722; 4L<sub>1</sub>L<sub>2</sub> = 100 &#8722; 96 = 4<br>Difference = <strong>2 H</strong>. (The two values are 4 H and 6 H.)",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-III Q7",
+    "note": ""
+   },
+   {
+    "q": "Pure inductors each of inductance 3 H are connected as shown between P and Q. The equivalent inductance of the circuit is:",
+    "diagram": null,
+    "opts": [
+     "1 H",
+     "2 H",
+     "3 H",
+     "9 H"
+    ],
+    "ans": 0,
+    "sol": "The figure puts all three inductors <strong>in parallel</strong> between P and Q.<br>1/L = 1/3 + 1/3 + 1/3 = 1 &#8594; <strong>L = 1 H</strong>.<br>Three equal inductors in parallel always give one third of the single value, exactly as with resistors.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q35",
+    "note": "<b>Note.</b> This one depends on reading the figure. Please confirm the three coils are all in parallel against your book copy before the class."
+   },
+   {
+    "q": "The dimensions [MLT<sup>&#8722;2</sup>A<sup>&#8722;2</sup>] belong to the:",
+    "diagram": null,
+    "opts": [
+     "Self inductance",
+     "Magnetic permeability",
+     "Electric permittivity",
+     "Magnetic flux"
+    ],
+    "ans": 1,
+    "sol": "Check self inductance first, since it is the tempting answer. From U = &#189;Li<sup>2</sup>:<br>[L] = [energy]/[current]<sup>2</sup> = ML<sup>2</sup>T<sup>&#8722;2</sup>A<sup>&#8722;2</sup>. That has <strong>L<sup>2</sup></strong>, not L. So it is not option (1).<br>Now &#956;<sub>0</sub>: from B = &#956;<sub>0</sub>I/2&#960;r, &#956;<sub>0</sub> = B &#215; r/I, and [B] = MT<sup>&#8722;2</sup>A<sup>&#8722;1</sup>:<br>[&#956;<sub>0</sub>] = (MT<sup>&#8722;2</sup>A<sup>&#8722;1</sup>)(L)/(A) = <strong>MLT<sup>&#8722;2</sup>A<sup>&#8722;2</sup></strong> &#10003;<br>Notice that &#956;<sub>0</sub> and L differ by exactly one power of length &#8212; which makes sense, since L = &#956;<sub>0</sub>n<sup>2</sup>Al carries a length with it. <em>NEET(UG) 2022.</em>",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q19",
+    "note": ""
+   },
+   {
+    "q": "Which of the following units denotes the dimensions ML<sup>2</sup>/Q<sup>2</sup>, where Q denotes the electric charge?",
+    "diagram": null,
+    "opts": [
+     "Weber",
+     "Wb/m<sup>2</sup>",
+     "Henry",
+     "H/m<sup>2</sup>"
+    ],
+    "ans": 2,
+    "sol": "Start from U = &#189;Li<sup>2</sup> and write current as charge per time, i = Q/T:<br>[L] = [energy]/[current]<sup>2</sup> = (ML<sup>2</sup>T<sup>&#8722;2</sup>)/(Q/T)<sup>2</sup> = ML<sup>2</sup>T<sup>&#8722;2</sup> &#215; T<sup>2</sup>/Q<sup>2</sup> = <strong>ML<sup>2</sup>/Q<sup>2</sup></strong><br>The T cancels neatly, and the unit of inductance is the <strong>henry</strong>.<br>This is the previous question in a different disguise &#8212; same quantity, charge used instead of current.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-III Q12",
+    "note": ""
+   }
+  ]
+ },
+ {
+  "name": "Magnetic energy and energy density",
+  "note": "Once L exists, the energy follows. U = &#189;Li<sup>2</sup> is the exact partner of &#189;CV<sup>2</sup>. Note that energy goes as the square of the current &#8212; that single fact reappears as a trap in the next session.",
+  "session": 8,
+  "base": 9,
+  "rungs": 13,
+  "questions": [
+   {
+    "q": "Which statement is correct from the following?<br>(a) Inductor stores energy in the form of magnetic field<br>(b) Capacitor stores energy in the form of electric field<br>(c) Inductor stores energy in the form of electric and magnetic field both<br>(d) Capacitor stores energy in the form of electric and magnetic field both",
+    "diagram": null,
+    "opts": [
+     "a, b",
+     "a, c",
+     "b, d",
+     "b, c"
+    ],
+    "ans": 0,
+    "sol": "An inductor's energy sits in the <strong>magnetic field</strong> inside its coil: U = &#189;Li<sup>2</sup>.<br>A capacitor's energy sits in the <strong>electric field</strong> between its plates: U = &#189;CV<sup>2</sup>.<br>Each stores in one field only, so (a) and (b).",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q27",
+    "note": ""
+   },
+   {
+    "q": "Energy is stored in the choke coil in the form of:",
+    "diagram": null,
+    "opts": [
+     "Heat",
+     "Electric field",
+     "Magnetic field",
+     "Electro-magnetic field"
+    ],
+    "ans": 2,
+    "sol": "A choke is simply an inductor, so it stores its energy in the <strong>magnetic field</strong> of its winding.<br>Heat is the wrong answer for a good reason: a choke is used precisely <em>because</em> it limits current without dissipating energy, unlike a resistor. An ideal choke wastes nothing.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q40",
+    "note": ""
+   },
+   {
+    "q": "The energy density in magnetic field B is proportional to:",
+    "diagram": null,
+    "opts": [
+     "1/B",
+     "1/B<sup>2</sup>",
+     "B",
+     "B<sup>2</sup>"
+    ],
+    "ans": 3,
+    "sol": "u = B<sup>2</sup>/(2&#956;<sub>0</sub>), so u &#8733; <strong>B<sup>2</sup></strong>.<br>Worth pairing with the electric case, u = &#189;&#949;<sub>0</sub>E<sup>2</sup>: both energy densities go as the <em>square</em> of the field. Doubling the field quadruples the stored energy per unit volume.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q45",
+    "note": ""
+   },
+   {
+    "q": "An inductor coil of self inductance 10 H carries a current of 1 A. The magnetic field energy stored in the coil is:",
+    "diagram": null,
+    "opts": [
+     "2.5 J",
+     "20 J",
+     "5 J",
+     "10 J"
+    ],
+    "ans": 2,
+    "sol": "U = &#189;Li<sup>2</sup> = &#189; &#215; 10 &#215; 1<sup>2</sup> = <strong>5 J</strong>.<br>Option (4), 10 J, is what you get from Li<sup>2</sup> without the half.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q21",
+    "note": ""
+   },
+   {
+    "q": "The magnetic energy stored in an inductor of inductance 4 &#956;H carrying a current of 2 A is:",
+    "diagram": null,
+    "opts": [
+     "4 mJ",
+     "8 mJ",
+     "8 &#956;J",
+     "4 &#956;J"
+    ],
+    "ans": 2,
+    "sol": "U = &#189;Li<sup>2</sup> = &#189; &#215; (4 &#215; 10<sup>&#8722;6</sup>) &#215; 4 = <strong>8 &#215; 10<sup>&#8722;6</sup> J = 8 &#956;J</strong>.<br>Both the number and the prefix are being tested &#8212; 8 mJ sits there for anyone who loses the micro. <em>NEET(UG) 2023.</em>",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q23",
+    "note": ""
+   },
+   {
+    "q": "The magnetic potential energy stored in a certain inductor is 25 mJ, when the current in the inductor is 60 mA. This inductor is of inductance:",
+    "diagram": null,
+    "opts": [
+     "0.138 H",
+     "138.88 H",
+     "1.389 H",
+     "13.89 H"
+    ],
+    "ans": 3,
+    "sol": "Rearrange U = &#189;Li<sup>2</sup>:<br>L = 2U/i<sup>2</sup> = 2(25 &#215; 10<sup>&#8722;3</sup>)/(60 &#215; 10<sup>&#8722;3</sup>)<sup>2</sup> = (5 &#215; 10<sup>&#8722;2</sup>)/(3.6 &#215; 10<sup>&#8722;3</sup>) = <strong>13.89 H</strong>.<br>The i<sup>2</sup> in the denominator is where the milli-prefix bites: (60 mA)<sup>2</sup> = 3.6 &#215; 10<sup>&#8722;3</sup>, not 3.6 &#215; 10<sup>&#8722;6</sup> or 3600. All four options are the same digits with the decimal moved, so the arithmetic must be exact. <em>NEET(UG) 2018.</em>",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q8",
+    "note": ""
+   },
+   {
+    "q": "A coil of resistance 10&#937; and an inductance 5H is connected to a 100 volt battery. Then energy stored in the coil is:",
+    "diagram": null,
+    "opts": [
+     "125 erg",
+     "125 J",
+     "250 erg",
+     "250 J"
+    ],
+    "ans": 3,
+    "sol": "After a long time the inductor behaves as a plain wire, so the <strong>steady current</strong> is set by the resistance alone:<br>i = V/R = 100/10 = 10 A.<br>U = &#189;Li<sup>2</sup> = &#189; &#215; 5 &#215; 100 = <strong>250 J</strong>.<br>The word &#8220;stored&#8221; means the final, steady state &#8212; you cannot use the battery voltage in the energy formula directly. Note also that two options are in erg, which is 10<sup>&#8722;7</sup> J and far too small here.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q44",
+    "note": ""
+   },
+   {
+    "q": "A coil of N turns carries current i and has flux &#966; through each turn. Its self inductance is:",
+    "diagram": null,
+    "opts": [
+     "L = N&#966;/i",
+     "L = &#966;/(Ni)",
+     "L = Ni/&#966;",
+     "L = N&#966;i"
+    ],
+    "ans": 0,
+    "sol": "<strong>L = N&#966;/i</strong> &#8212; total flux linkage per unit current. If the question gives flux <em>per turn</em>, multiply by N first.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q28",
+    "note": ""
+   },
+   {
+    "q": "The energy stored in an inductor carrying current i is:",
+    "diagram": null,
+    "opts": [
+     "&#189;Li<sup>2</sup>",
+     "Li<sup>2</sup>",
+     "&#189;L<sup>2</sup>i",
+     "&#189;Li"
+    ],
+    "ans": 0,
+    "sol": "<strong>U = &#189;Li<sup>2</sup></strong>, the exact partner of &#189;CV<sup>2</sup> for a capacitor.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q28",
+    "note": ""
+   },
+   {
+    "q": "If a current of 2A give rise to a magnetic flux of 5 &#215; 10<sup>&#8722;5</sup> weber/turn through a coil having 100 turns, then the magnetic energy stored in the medium surrounding by the coil is:",
+    "diagram": null,
+    "opts": [
+     "5 joule",
+     "5 &#215; 10<sup>&#8722;7</sup> joule",
+     "5 &#215; 10<sup>&#8722;3</sup> joule",
+     "0.5 joule"
+    ],
+    "ans": 2,
+    "sol": "This question hides two steps behind one number.<br><strong>Step 1 &#8212; find L.</strong> The flux is given <em>per turn</em>, so<br>L = N&#966;/i = (100)(5 &#215; 10<sup>&#8722;5</sup>)/2 = 2.5 &#215; 10<sup>&#8722;3</sup> H.<br><strong>Step 2 &#8212; find U.</strong><br>U = &#189;Li<sup>2</sup> = &#189;(2.5 &#215; 10<sup>&#8722;3</sup>)(4) = <strong>5 &#215; 10<sup>&#8722;3</sup> J</strong>.<br>You can also do it in one line as U = &#189;N&#966;i = &#189;(100)(5 &#215; 10<sup>&#8722;5</sup>)(2), which gives the same answer and is worth showing.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q28",
+    "note": ""
+   },
+   {
+    "q": "Substituting L = N&#966;/I into U = &#189;LI<sup>2</sup> gives:",
+    "diagram": null,
+    "opts": [
+     "U = &#189;NI&#966;",
+     "U = &#189;N&#966;/I",
+     "U = NI<sup>2</sup>&#966;",
+     "U = &#189;I<sup>2</sup>&#966;"
+    ],
+    "ans": 0,
+    "sol": "U = &#189;(N&#966;/I)I<sup>2</sup> = <strong>&#189;NI&#966;</strong>. One power of I cancels, which is why the answer is linear in I, not quadratic.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q37",
+    "note": ""
+   },
+   {
+    "q": "In the expression U = &#189;NI&#966;, the energy depends on the current as:",
+    "diagram": null,
+    "opts": [
+     "The first power of I",
+     "The square of I",
+     "The inverse of I",
+     "Not at all"
+    ],
+    "ans": 0,
+    "sol": "Only the <strong>first power</strong> survives, because L itself carries a 1/I. Any option with I<sup>2</sup> can be eliminated on sight.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q37",
+    "note": ""
+   },
+   {
+    "q": "A cylindrical iron core supports N turns. If a current I produces a magnetic flux &#966; across the core's cross section, then the magnetic energy is:",
+    "diagram": null,
+    "opts": [
+     "I&#966;",
+     "&#189; I&#966;",
+     "I<sup>2</sup>&#966;/2",
+     "I<sup>2</sup>&#966;"
+    ],
+    "ans": 1,
+    "sol": "Start from U = &#189;LI<sup>2</sup> and substitute L = N&#966;/I:<br>U = &#189; &#215; (N&#966;/I) &#215; I<sup>2</sup> = <strong>&#189;NI&#966;</strong><br>The printed options carry no N, so the intended answer is <strong>&#189;I&#966;</strong> &#8212; option (2). The <em>shape</em> of the answer is what is being tested: energy goes as flux &#215; current, with a half in front, and only <em>one</em> power of I survives. Options (3) and (4) with I<sup>2</sup> can be dropped once you see that L itself carries a 1/I.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q37",
+    "note": "<b>Note.</b> Strictly the answer is &#189;N I&#966;. The printed options omit the N, so the key is (2). Worth saying so in class rather than letting students memorise a formula that is missing a factor."
+   }
+  ]
+ },
+ {
+  "name": "L&#8211;R circuit &#183; growth and decay",
+  "note": "Now put L and R in a loop with a battery. Everything here is one exponential and one number, &#964; = L/R. Watch for questions that ask about energy rather than current &#8212; the square root has to come first.",
+  "session": 9,
+  "base": 12,
+  "rungs": 24,
+  "questions": [
+   {
+    "q": "A coil of 40 henry inductance is connected in series with a resistance of 8 ohm and the combination is joined to the terminals of a 2 volt battery. The time constant of the circuit is:",
+    "diagram": "<svg viewBox=\"0 0 330 160\" width=\"330\" height=\"160\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><rect x=\"60\" y=\"44\" width=\"200\" height=\"96\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.5\"/><rect x=\"118\" y=\"36\" width=\"84\" height=\"16\" fill=\"#fff\" stroke=\"none\"/><path d=\"M 120 44 a 10 9 0 1 1 20 0 a 10 9 0 1 1 20 0 a 10 9 0 1 1 20 0 a 10 9 0 1 1 20 0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><text x=\"160\" y=\"28\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">40 H</text><rect x=\"252\" y=\"72\" width=\"16\" height=\"40\" fill=\"#fff\" stroke=\"none\"/><g transform=\"rotate(90 260 92)\"><path d=\"M 236 92 l 4 -7 l 4 7 l 4 7 l 4 -7 l 4 -7 l 4 7 l 4 7 l 4 -7 l 4 -7 l 4 7 l 4 7 l 4 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"288\" y=\"96\" font-size=\"10.5\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">8 &#937;</text><rect x=\"52\" y=\"80\" width=\"16\" height=\"26\" fill=\"#fff\" stroke=\"none\"/><g transform=\"rotate(90 60 92)\"><line x1=\"56\" y1=\"81\" x2=\"56\" y2=\"103\" stroke=\"#334155\" stroke-width=\"2\"/><line x1=\"63\" y1=\"86\" x2=\"63\" y2=\"98\" stroke=\"#334155\" stroke-width=\"3.2\"/></g><text x=\"30\" y=\"96\" font-size=\"10.5\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">2 V</text></svg>",
+    "opts": [
+     "1/5 sec",
+     "40 sec",
+     "20 sec",
+     "5 sec"
+    ],
+    "ans": 3,
+    "sol": "&#964; = L/R = 40/8 = <strong>5 s</strong>.<br>The battery emf never enters the time constant. It sets <em>how big</em> the final current is (i = V/R), but not <em>how long</em> the circuit takes to get there. Option (1) is L/R inverted.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q47",
+    "note": ""
+   },
+   {
+    "q": "An inductance L and a resistance R are joined to a battery. After some time, the battery is disconnected but L and R remain connected to the closed circuit. The current strength will be reduced to 37% of its initial value in:",
+    "diagram": null,
+    "opts": [
+     "RL sec",
+     "R/L sec",
+     "L/R sec",
+     "1/LR sec"
+    ],
+    "ans": 2,
+    "sol": "On decay, i = i<sub>0</sub>e<sup>&#8722;t/&#964;</sup>. Now 37% is not a random number &#8212; it is <strong>1/e = 0.368</strong>.<br>i<sub>0</sub>e<sup>&#8722;t/&#964;</sup> = i<sub>0</sub>/e &#8594; t/&#964; = 1 &#8594; t = &#964; = <strong>L/R</strong>.<br>That is exactly what the time constant means: the time to fall to 1/e of the start. On growth, the matching number is 63% (= 1 &#8722; 1/e).",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q39",
+    "note": ""
+   },
+   {
+    "q": "The inductance of a solenoid is 5 henry and its resistance is 5&#937;. If it is connected to a 10 volt battery then time taken by the current to reach 9/10<sup>th</sup> of its maximum will be:",
+    "diagram": null,
+    "opts": [
+     "4.0 s",
+     "2.3 s",
+     "1.4 s",
+     "1.2 s"
+    ],
+    "ans": 1,
+    "sol": "&#964; = L/R = 5/5 = 1 s.<br>i = i<sub>0</sub>(1 &#8722; e<sup>&#8722;t/&#964;</sup>) = 0.9 i<sub>0</sub><br>e<sup>&#8722;t/&#964;</sup> = 0.1 &#8594; t = &#964; ln10 = 1 &#215; 2.303 = <strong>2.3 s</strong>.<br>Useful landmarks worth putting on the board: 1&#964; &#8594; 63%, 2&#964; &#8594; 86%, 2.3&#964; &#8594; 90%, 3&#964; &#8594; 95%.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q31",
+    "note": ""
+   },
+   {
+    "q": "A coil of inductance 300 mH and resistance 2&#937; is connected to a source of voltage 2V. The current reaches half of its steady state value in:",
+    "diagram": null,
+    "opts": [
+     "0.3 s",
+     "0.15 s",
+     "0.1 s",
+     "0.05 s"
+    ],
+    "ans": 2,
+    "sol": "&#964; = L/R = 0.3/2 = 0.15 s.<br>Half of steady state: 1 &#8722; e<sup>&#8722;t/&#964;</sup> = &#189; &#8594; t = &#964; ln2 = 0.15 &#215; 0.693 = 0.104 &#8776; <strong>0.1 s</strong>.<br>Option (2) is &#964; itself &#8212; the trap for anyone who assumes half the current takes one time constant. It actually takes about 0.69&#964;.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q49",
+    "note": ""
+   },
+   {
+    "q": "An ideal inductor-resistor-battery circuit is switched on at t = 0 s (L = 100 mH, R = 10&#937;, 10 V). At time t, the current is i<sub>0</sub>(1 &#8722; e<sup>&#8722;t/&#964;</sup>) A, where i<sub>0</sub> is the steady-state value. The time at which the current becomes 0.5 i<sub>0</sub> is: [Given ln 2 = 0.693]",
+    "diagram": "<svg viewBox=\"0 0 330 160\" width=\"330\" height=\"160\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><rect x=\"60\" y=\"44\" width=\"200\" height=\"96\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.5\"/><rect x=\"118\" y=\"36\" width=\"84\" height=\"16\" fill=\"#fff\" stroke=\"none\"/><path d=\"M 120 44 a 10 9 0 1 1 20 0 a 10 9 0 1 1 20 0 a 10 9 0 1 1 20 0 a 10 9 0 1 1 20 0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><text x=\"160\" y=\"28\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">100 mH</text><rect x=\"252\" y=\"72\" width=\"16\" height=\"40\" fill=\"#fff\" stroke=\"none\"/><g transform=\"rotate(90 260 92)\"><path d=\"M 236 92 l 4 -7 l 4 7 l 4 7 l 4 -7 l 4 -7 l 4 7 l 4 7 l 4 -7 l 4 -7 l 4 7 l 4 7 l 4 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"288\" y=\"96\" font-size=\"10.5\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">10 &#937;</text><rect x=\"52\" y=\"80\" width=\"16\" height=\"26\" fill=\"#fff\" stroke=\"none\"/><g transform=\"rotate(90 60 92)\"><line x1=\"56\" y1=\"81\" x2=\"56\" y2=\"103\" stroke=\"#334155\" stroke-width=\"2\"/><line x1=\"63\" y1=\"86\" x2=\"63\" y2=\"98\" stroke=\"#334155\" stroke-width=\"3.2\"/></g><text x=\"30\" y=\"96\" font-size=\"10.5\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">10 V</text></svg>",
+    "opts": [
+     "6.93 ms",
+     "69.3 s",
+     "6.93 s",
+     "6.93 &#215; 10<sup>3</sup> s"
+    ],
+    "ans": 0,
+    "sol": "&#964; = L/R = (100 &#215; 10<sup>&#8722;3</sup>)/10 = 10<sup>&#8722;2</sup> s.<br>t = &#964; ln2 = 10<sup>&#8722;2</sup> &#215; 0.693 = 6.93 &#215; 10<sup>&#8722;3</sup> s = <strong>6.93 ms</strong>.<br>Same physics as the previous rung, straight out of a NEET paper. Every option has the digits 6.93 &#8212; only the power of ten is being tested, so get &#964; right. <em>NEET(UG) 2024.</em>",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q30",
+    "note": ""
+   },
+   {
+    "q": "If a quantity decays as e<sup>&#8722;Rt/2L</sup>, its effective time constant is:",
+    "diagram": null,
+    "opts": [
+     "2L/R",
+     "L/R",
+     "L/2R",
+     "R/2L"
+    ],
+    "ans": 0,
+    "sol": "The time constant is whatever divides t in the exponent, so here it is <strong>2L/R</strong> &#8212; twice the usual L/R. Read the exponent before you reach for a formula.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-II Q34",
+    "note": ""
+   },
+   {
+    "q": "A quantity decaying with time constant &#964; falls to half its value at t equal to:",
+    "diagram": null,
+    "opts": [
+     "&#964; ln 2",
+     "&#964;/2",
+     "2&#964;",
+     "&#964; ln(&#189;)"
+    ],
+    "ans": 0,
+    "sol": "e<sup>&#8722;t/&#964;</sup> = &#189; &#8594; t = <strong>&#964; ln 2 &#8776; 0.693&#964;</strong>.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-II Q34",
+    "note": ""
+   },
+   {
+    "q": "The amplitude of the charge oscillating in a circuit decreases exponentially as Q = Q<sub>0</sub>e<sup>&#8722;Rt/2L</sup>, where Q<sub>0</sub> is the charge at t = 0 s. The time at which charge amplitude decreases to 0.50 Q<sub>0</sub> is nearly: [R = 1.5 &#937;, L = 12 mH, ln 2 = 0.693]",
+    "diagram": null,
+    "opts": [
+     "19.01 ms",
+     "11.09 ms",
+     "19.01 s",
+     "11.09 s"
+    ],
+    "ans": 1,
+    "sol": "Here the exponent is <strong>Rt/2L</strong>, not Rt/L, so the effective time constant is <strong>2L/R</strong>:<br>2L/R = 2(12 &#215; 10<sup>&#8722;3</sup>)/1.5 = 0.016 s.<br>Q<sub>0</sub>e<sup>&#8722;t/(2L/R)</sup> = 0.5Q<sub>0</sub> &#8594; t = (2L/R) ln2 = 0.016 &#215; 0.693 = 0.01109 s = <strong>11.09 ms</strong>.<br>Reading the exponent carelessly as Rt/L gives 5.5 ms; using L/R with ln2 gives 5.5 ms too. The factor 2 is the whole question. <em>Re-NEET(UG) 2024.</em>",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q34",
+    "note": ""
+   },
+   {
+    "q": "The energy stored in an inductor depends on the current as:",
+    "diagram": null,
+    "opts": [
+     "U &#8733; i<sup>2</sup>",
+     "U &#8733; i",
+     "U &#8733; &#8730;i",
+     "U &#8733; 1/i"
+    ],
+    "ans": 0,
+    "sol": "U = &#189;Li<sup>2</sup>, so <strong>U &#8733; i<sup>2</sup></strong>. Energy questions and current questions are therefore never the same question.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q25",
+    "note": ""
+   },
+   {
+    "q": "If the stored energy is one quarter of its maximum, the current is what fraction of its maximum?",
+    "diagram": null,
+    "opts": [
+     "One half",
+     "One quarter",
+     "One eighth",
+     "One sixteenth"
+    ],
+    "ans": 0,
+    "sol": "U &#8733; i<sup>2</sup>, so i/i<sub>max</sub> = &#8730;&#188; = <strong>&#189;</strong>. Take the square root before you go anywhere near the exponential.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q25",
+    "note": ""
+   },
+   {
+    "q": "A solenoid of 10 henry inductance and 2 ohm resistance, is connected to a 10 volt battery. In how much time the magnetic energy will reach to 1/4th of the maximum value?",
+    "diagram": null,
+    "opts": [
+     "3.5 sec",
+     "2.5 sec",
+     "5.5 sec",
+     "7.5 sec"
+    ],
+    "ans": 0,
+    "sol": "The trap is that the question asks about <strong>energy</strong>, not current.<br>U = &#189;Li<sup>2</sup>, so U &#8733; i<sup>2</sup>. For U to be &#188; of its maximum, i must be <strong>&#189;</strong> of its maximum &#8212; not &#188;.<br>&#964; = L/R = 10/2 = 5 s.<br>1 &#8722; e<sup>&#8722;t/&#964;</sup> = &#189; &#8594; t = &#964; ln2 = 5 &#215; 0.693 = <strong>3.47 &#8776; 3.5 s</strong>.<br>Taking i = i<sub>0</sub>/4 would give t = &#964; ln(4/3) = 1.4 s, which is not offered &#8212; a hint that the squaring was meant to be spotted.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q25",
+    "note": ""
+   },
+   {
+    "q": "A coil is cut into two equal halves. Each half has:",
+    "diagram": null,
+    "opts": [
+     "Half the inductance and half the resistance",
+     "Half the inductance and the same resistance",
+     "The same inductance and half the resistance",
+     "A quarter of each"
+    ],
+    "ans": 0,
+    "sol": "Both L and R belong to the same length of wire, so cutting it in half halves <strong>both</strong>.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q26",
+    "note": ""
+   },
+   {
+    "q": "Two identical elements each of value X are connected in parallel. The combination has:",
+    "diagram": null,
+    "opts": [
+     "X/2",
+     "2X",
+     "X",
+     "X/4"
+    ],
+    "ans": 0,
+    "sol": "<strong>X/2</strong>, for inductance and resistance alike. Apply it to both L/2 and R/2 and see what happens to their ratio.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q26",
+    "note": ""
+   },
+   {
+    "q": "An inductance coil have the time constant 4 sec, if it is cut into two equal parts and connected parallel then new time constant of the circuit is:",
+    "diagram": null,
+    "opts": [
+     "4 sec",
+     "2 sec",
+     "1 sec",
+     "0.5 sec"
+    ],
+    "ans": 0,
+    "sol": "Cut the coil in half: each piece has half the turns over half the length, so each has <strong>L/2</strong> and <strong>R/2</strong>.<br>Put the two halves in parallel:<br>L<sub>eq</sub> = (L/2)/2 = L/4 &#160;&#160; R<sub>eq</sub> = (R/2)/2 = R/4<br>&#964;<sub>new</sub> = L<sub>eq</sub>/R<sub>eq</sub> = (L/4)/(R/4) = L/R = <strong>4 s, unchanged</strong>.<br>The point worth making: L and R are both properties of the same piece of wire, so cutting and reconnecting scales them by the same factor every time. The time constant of a coil is remarkably hard to change this way.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q26",
+    "note": "<b>Note.</b> Strictly, halving the length of a solenoid while keeping the turn density fixed halves L. The question intends exactly that reading, and the printed key (4 s) follows from it."
+   },
+   {
+    "q": "A coil of inductance L and resistance R has 90 &#937; added in series. Its new time constant is:",
+    "diagram": null,
+    "opts": [
+     "L/(R + 90)",
+     "(L + 90)/R",
+     "L/R + 90",
+     "90L/R"
+    ],
+    "ans": 0,
+    "sol": "Only the resistance changed, so &#964; = <strong>L/(R + 90)</strong>.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q36",
+    "note": ""
+   },
+   {
+    "q": "If L/R = 2.0 &#215; 10<sup>&#8722;3</sup> and L/(R + 90) = 0.5 &#215; 10<sup>&#8722;3</sup>, dividing the first by the second gives:",
+    "diagram": null,
+    "opts": [
+     "(R + 90)/R = 4",
+     "R/(R + 90) = 4",
+     "R + 90 = 4",
+     "R = 4"
+    ],
+    "ans": 0,
+    "sol": "L cancels, leaving <strong>(R + 90)/R = 4</strong> &#8594; R = 30 &#937;. Dividing the two equations is far cleaner than substituting.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q36",
+    "note": ""
+   },
+   {
+    "q": "The time constant of an inductance coil is 2.0 &#215; 10<sup>&#8722;3</sup> s. When a 90 &#937; resistance is joined in series, the time constant becomes 0.5 &#215; 10<sup>&#8722;3</sup> s. The inductance and resistance of the coil are:",
+    "diagram": null,
+    "opts": [
+     "30 mH ; 30 &#937;",
+     "30 mH ; 60 &#937;",
+     "60 mH ; 30 &#937;",
+     "60 mH ; 60 &#937;"
+    ],
+    "ans": 2,
+    "sol": "Two equations, two unknowns.<br>L/R = 2.0 &#215; 10<sup>&#8722;3</sup> &#160;&#160;&#8230;(i)<br>L/(R + 90) = 0.5 &#215; 10<sup>&#8722;3</sup> &#160;&#160;&#8230;(ii)<br>Divide (i) by (ii): (R + 90)/R = 4 &#8594; R + 90 = 4R &#8594; <strong>R = 30 &#937;</strong>.<br>Then from (i): L = 2.0 &#215; 10<sup>&#8722;3</sup> &#215; 30 = 0.06 H = <strong>60 mH</strong>.<br>Dividing the two equations kills L in one step &#8212; much cleaner than substituting.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q36",
+    "note": ""
+   },
+   {
+    "q": "An ideal coil of 10H is connected in series with a resistance of 5&#937; and a battery of 5V. 2 seconds after the connection is made, the current flowing in amperes in the circuit is:",
+    "diagram": "<svg viewBox=\"0 0 330 160\" width=\"330\" height=\"160\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><rect x=\"60\" y=\"44\" width=\"200\" height=\"96\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.5\"/><rect x=\"118\" y=\"36\" width=\"84\" height=\"16\" fill=\"#fff\" stroke=\"none\"/><path d=\"M 120 44 a 10 9 0 1 1 20 0 a 10 9 0 1 1 20 0 a 10 9 0 1 1 20 0 a 10 9 0 1 1 20 0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><text x=\"160\" y=\"28\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">10 H</text><rect x=\"252\" y=\"72\" width=\"16\" height=\"40\" fill=\"#fff\" stroke=\"none\"/><g transform=\"rotate(90 260 92)\"><path d=\"M 236 92 l 4 -7 l 4 7 l 4 7 l 4 -7 l 4 -7 l 4 7 l 4 7 l 4 -7 l 4 -7 l 4 7 l 4 7 l 4 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"288\" y=\"96\" font-size=\"10.5\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">5 &#937;</text><rect x=\"52\" y=\"80\" width=\"16\" height=\"26\" fill=\"#fff\" stroke=\"none\"/><g transform=\"rotate(90 60 92)\"><line x1=\"56\" y1=\"81\" x2=\"56\" y2=\"103\" stroke=\"#334155\" stroke-width=\"2\"/><line x1=\"63\" y1=\"86\" x2=\"63\" y2=\"98\" stroke=\"#334155\" stroke-width=\"3.2\"/></g><text x=\"30\" y=\"96\" font-size=\"10.5\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">5 V</text></svg>",
+    "opts": [
+     "e",
+     "e &#8722; 1",
+     "(1 &#8722; e<sup>&#8722;1</sup>)",
+     "(1 &#8722; e)"
+    ],
+    "ans": 2,
+    "sol": "Steady current: i<sub>0</sub> = V/R = 5/5 = 1 A.<br>Time constant: &#964; = L/R = 10/5 = 2 s.<br>At t = 2 s, which is exactly one time constant:<br>i = i<sub>0</sub>(1 &#8722; e<sup>&#8722;t/&#964;</sup>) = 1 &#215; (1 &#8722; e<sup>&#8722;1</sup>) = <strong>(1 &#8722; e<sup>&#8722;1</sup>) A &#8776; 0.63 A</strong>.<br>Option (4), (1 &#8722; e), is negative &#8212; a current cannot be negative here, so it can be eliminated on sight.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q50",
+    "note": ""
+   },
+   {
+    "q": "A circuit has L = 5 H and R = 10 &#937;. At t = 1 s, how many time constants have passed?",
+    "diagram": null,
+    "opts": [
+     "Two",
+     "One",
+     "Half",
+     "Five"
+    ],
+    "ans": 0,
+    "sol": "&#964; = L/R = 0.5 s, so 1 s is <strong>two</strong> time constants. Getting &#964; upside down (R/L = 2 s) is the standard slip.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-III Q3",
+    "note": ""
+   },
+   {
+    "q": "The ratio 1/(1 &#8722; e<sup>&#8722;2</sup>) can be rewritten as:",
+    "diagram": null,
+    "opts": [
+     "e<sup>2</sup>/(e<sup>2</sup> &#8722; 1)",
+     "(e<sup>2</sup> &#8722; 1)/e<sup>2</sup>",
+     "e<sup>&#8722;2</sup>",
+     "1 &#8722; e<sup>2</sup>"
+    ],
+    "ans": 0,
+    "sol": "Multiply top and bottom by e<sup>2</sup>: <strong>e<sup>2</sup>/(e<sup>2</sup> &#8722; 1)</strong>. The options are often written this way, so the algebra is part of the question.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-III Q3",
+    "note": ""
+   },
+   {
+    "q": "An e.m.f. of 15 volt is applied in a circuit containing 5 henry inductance and 10 ohm resistance. The ratio of the currents at time t &#8594; &#8734; and at t = 1 second is:",
+    "diagram": null,
+    "opts": [
+     "e<sup>1/2</sup>/(e<sup>1/2</sup> &#8722; 1)",
+     "e<sup>2</sup>/(e<sup>2</sup> &#8722; 1)",
+     "1 &#8722; e<sup>&#8722;1</sup>",
+     "e<sup>&#8722;1</sup>"
+    ],
+    "ans": 1,
+    "sol": "&#964; = L/R = 5/10 = 0.5 s, so at t = 1 s we are at <strong>two</strong> time constants.<br>i(&#8734;) = i<sub>0</sub><br>i(1 s) = i<sub>0</sub>(1 &#8722; e<sup>&#8722;1/0.5</sup>) = i<sub>0</sub>(1 &#8722; e<sup>&#8722;2</sup>)<br>Ratio = 1/(1 &#8722; e<sup>&#8722;2</sup>). Multiply top and bottom by e<sup>2</sup>:<br>= <strong>e<sup>2</sup>/(e<sup>2</sup> &#8722; 1)</strong><br>Option (1) is what you get from t/&#964; = &#189;, i.e. from using &#964; = R/L by mistake.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-III Q3",
+    "note": ""
+   },
+   {
+    "q": "An L-R circuit has been connected to a battery for a long time. The current in it is:",
+    "diagram": null,
+    "opts": [
+     "E/R",
+     "E/L",
+     "Zero",
+     "E/(R + L)"
+    ],
+    "ans": 0,
+    "sol": "After a long time di/dt = 0, so the inductor drops no voltage and behaves as a plain wire: <strong>i = E/R</strong>.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-III Q13",
+    "note": ""
+   },
+   {
+    "q": "The battery is removed and the coil is short-circuited. The current then:",
+    "diagram": null,
+    "opts": [
+     "Decays as i<sub>0</sub>e<sup>&#8722;t/&#964;</sup>",
+     "Stops instantly",
+     "Stays constant forever",
+     "Reverses direction"
+    ],
+    "ans": 0,
+    "sol": "The inductor's stored energy keeps the current running while it is dissipated in R, so it <strong>decays exponentially</strong> with &#964; = L/R.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-III Q13",
+    "note": ""
+   },
+   {
+    "q": "An inductor (L = 100 mH), a resistor (R = 100&#937;) and a battery (E = 100 V) are initially connected in series. After a long time the battery is disconnected after short circuiting the points A and B. The current in the circuit 1 ms after the short circuit is:",
+    "diagram": null,
+    "opts": [
+     "1 A",
+     "1/e A",
+     "e A",
+     "0.1 A"
+    ],
+    "ans": 1,
+    "sol": "<strong>Before the short.</strong> After a long time the inductor is just a wire, so i<sub>0</sub> = E/R = 100/100 = 1 A.<br><strong>After the short.</strong> The battery is out and the current now decays through L and R:<br>&#964; = L/R = (100 &#215; 10<sup>&#8722;3</sup>)/100 = 1 &#215; 10<sup>&#8722;3</sup> s = 1 ms.<br>t = 1 ms is exactly one time constant, so<br>i = i<sub>0</sub>e<sup>&#8722;1</sup> = <strong>1/e A &#8776; 0.37 A</strong>.<br>The inductor keeps the current running after the battery is gone &#8212; that stored energy has to go somewhere, and it is dissipated in R.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-III Q13",
+    "note": ""
+   }
+  ]
+ },
+ {
+  "name": "L&#8211;R circuit &#183; the instant of switching",
+  "note": "A different skill from the last session, and the one NEET keeps asking. Two limits settle almost everything: at t = 0 an inductor is a break in the wire, and after a long time it is a plain wire.",
+  "session": 10,
+  "base": 9,
+  "rungs": 21,
+  "questions": [
+   {
+    "q": "When the current through a solenoid increases at a constant rate, the induced current:",
+    "diagram": null,
+    "opts": [
+     "is a constant and is in the direction of the inducing current",
+     "is a constant and is opposite to the direction of the inducing current",
+     "increases with time and is in the direction of the inducing current",
+     "increases with time and is opposite to the direction of the inducing current"
+    ],
+    "ans": 1,
+    "sol": "Two separate things to settle.<br><strong>Size.</strong> e = L(di/dt). The rate di/dt is constant, so the induced emf is constant, and so is the induced current.<br><strong>Direction.</strong> Lenz's law: the induced effect always opposes the change that made it. The inducing current is growing, so the induced current runs <strong>opposite</strong> to it, trying to hold the current back.<br>Constant and opposing &#8212; option (2).",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q24",
+    "note": ""
+   },
+   {
+    "q": "An LR circuit with a battery is connected at t = 0. Which of the following quantities is not zero just after the connection?<br>(a) Current in circuit &#160;(b) Magnetic potential energy in the inductor<br>(c) Power delivered by the battery &#160;(d) Emf induced in the inductor",
+    "diagram": null,
+    "opts": [
+     "a, b",
+     "a, c",
+     "c, d",
+     "Only d"
+    ],
+    "ans": 3,
+    "sol": "The single fact that settles everything: <strong>an inductor does not allow the current to jump</strong>, so i = 0 at t = 0<sup>+</sup>.<br>(a) i = 0. Zero.<br>(b) U = &#189;Li<sup>2</sup> = 0. Zero.<br>(c) P = &#949;i = 0. Zero.<br>(d) The whole battery voltage appears across the inductor, so e = &#949; &#8800; 0. <strong>Not zero.</strong><br>So only (d). A good line for the class: at t = 0 an inductor behaves like a <em>break in the wire</em>; after a long time it behaves like a <em>plain wire</em>.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q32",
+    "note": ""
+   },
+   {
+    "q": "A coil of copper wire is connected in series with a bulb, a battery and a switch. When the circuit is completed the bulb lights up immediately. The circuit is switched off and a rod of soft iron is placed inside the coil. On completing the circuit again, it is observed that:",
+    "diagram": null,
+    "opts": [
+     "Bulb is not so bright",
+     "There is a slight delay before bulb lights to its normal brightness",
+     "The bulb is initially bright but gradually becomes dim",
+     "The bulb is brighter than before"
+    ],
+    "ans": 1,
+    "sol": "The iron rod raises the coil's inductance L by a large factor, but it does <strong>not</strong> change the resistance of the circuit.<br>&#964; = L/R therefore grows, so the current takes noticeably longer to build up &#8212; a visible <strong>delay</strong>.<br>The <em>final</em> brightness is unchanged, because the steady current is V/R and R was never touched. That rules out options (1) and (4). Option (3) would need the resistance to rise with time, which nothing here does.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-III Q1",
+    "note": ""
+   },
+   {
+    "q": "Just after a switch is closed, an inductor behaves like:",
+    "diagram": null,
+    "opts": [
+     "A break in the wire",
+     "A plain piece of wire",
+     "A resistor equal to L",
+     "A battery"
+    ],
+    "ans": 0,
+    "sol": "It refuses to let the current jump, so at t = 0<sup>+</sup> its branch carries <strong>no current at all</strong> &#8212; treat it as removed from the circuit.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q34",
+    "note": ""
+   },
+   {
+    "q": "After a very long time, the same inductor behaves like:",
+    "diagram": null,
+    "opts": [
+     "A plain piece of wire",
+     "A break in the wire",
+     "An open switch",
+     "A capacitor"
+    ],
+    "ans": 0,
+    "sol": "With di/dt = 0 there is no induced emf, so an ideal inductor is just <strong>wire</strong>. These two limits answer almost every switching question.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q34",
+    "note": ""
+   },
+   {
+    "q": "In the circuit shown in figure what is the value of I<sub>1</sub> just after pressing the key K?",
+    "diagram": "<svg viewBox=\"0 0 330 166\" width=\"330\" height=\"166\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><rect x=\"52\" y=\"40\" width=\"230\" height=\"110\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.5\"/><line x1=\"160\" y1=\"40\" x2=\"160\" y2=\"150\" stroke=\"#334155\" stroke-width=\"1.5\"/><rect x=\"88\" y=\"32\" width=\"46\" height=\"16\" fill=\"#fff\"/><g transform=\"translate(0,0)\"><path d=\"M 90 40 l 3.6666666666666665 -7 l 3.6666666666666665 7 l 3.6666666666666665 7 l 3.6666666666666665 -7 l 3.6666666666666665 -7 l 3.6666666666666665 7 l 3.6666666666666665 7 l 3.6666666666666665 -7 l 3.6666666666666665 -7 l 3.6666666666666665 7 l 3.6666666666666665 7 l 3.6666666666666665 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"112\" y=\"24\" font-size=\"10\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">6&#937;</text><text x=\"146\" y=\"58\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">I&#8321;</text><line x1=\"126\" y1=\"52\" x2=\"152\" y2=\"52\" stroke=\"#2563eb\" stroke-width=\"1.4\" marker-end=\"url(#aC)\"/><rect x=\"188\" y=\"32\" width=\"76\" height=\"16\" fill=\"#fff\"/><path d=\"M 190 40 a 12 8 0 1 1 24 0 a 12 8 0 1 1 24 0 a 12 8 0 1 1 24 0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><text x=\"226\" y=\"26\" font-size=\"10\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">2 mH</text><rect x=\"152\" y=\"76\" width=\"16\" height=\"42\" fill=\"#fff\"/><g transform=\"rotate(90 160 96)\"><path d=\"M 136 96 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"174\" y=\"100\" font-size=\"10\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">8&#937;</text><rect x=\"274\" y=\"76\" width=\"16\" height=\"42\" fill=\"#fff\"/><g transform=\"rotate(90 282 96)\"><path d=\"M 258 96 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"292\" y=\"100\" font-size=\"10\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">8&#937;</text><rect x=\"44\" y=\"80\" width=\"16\" height=\"28\" fill=\"#fff\"/><g transform=\"rotate(90 52 94)\"><line x1=\"48\" y1=\"83\" x2=\"48\" y2=\"105\" stroke=\"#334155\" stroke-width=\"2\"/><line x1=\"55\" y1=\"88\" x2=\"55\" y2=\"100\" stroke=\"#334155\" stroke-width=\"3.2\"/></g><text x=\"22\" y=\"98\" font-size=\"10\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">10 V</text><circle cx=\"52\" cy=\"60\" r=\"3\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.4\"/><line x1=\"52\" y1=\"60\" x2=\"64\" y2=\"50\" stroke=\"#334155\" stroke-width=\"1.4\"/><text x=\"66\" y=\"46\" font-size=\"10.5\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">K</text></svg>",
+    "opts": [
+     "5/7 A",
+     "5/11 A",
+     "1 A",
+     "None of the above"
+    ],
+    "ans": 0,
+    "sol": "At t = 0 the inductor blocks any current, so the branch containing the 2 mH coil (and the 8&#937; below it) carries <strong>nothing</strong> &#8212; treat it as removed.<br>What is left is a simple series loop: the 10 V battery, the 6&#937;, and the middle 8&#937;.<br>I<sub>1</sub> = 10/(6 + 8) = <strong>5/7 A</strong><br>Option (2), 5/11 A, is what you get from putting the two 8&#937; resistors in parallel &#8212; which is the answer <em>after a long time</em>, not at the instant of switching.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q34",
+    "note": ""
+   },
+   {
+    "q": "A branch containing an inductor in series with a resistor, just after the switch closes, carries:",
+    "diagram": null,
+    "opts": [
+     "No current",
+     "Full current",
+     "Half the current",
+     "An infinite current"
+    ],
+    "ans": 0,
+    "sol": "The inductor blocks it, so the whole branch is dead at t = 0<sup>+</sup> &#8212; the resistor beside it makes no difference.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-II Q7",
+    "note": ""
+   },
+   {
+    "q": "Of three parallel branches, two contain inductors and one contains only a resistor R. Just after closing, the battery current is:",
+    "diagram": null,
+    "opts": [
+     "&#949;/R",
+     "3&#949;/R",
+     "&#949;/3R",
+     "Zero"
+    ],
+    "ans": 0,
+    "sol": "Only the inductor-free branch conducts, so the battery sees just <strong>R</strong> and supplies &#949;/R.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-II Q7",
+    "note": ""
+   },
+   {
+    "q": "Figure shows a circuit that contains three identical resistors with resistance R = 9.0 &#937; each, two identical inductors with inductance L = 2.0 mH each, and an ideal battery with emf &#949; = 18 V. The current 'i' through the battery just after the switch closed is:",
+    "diagram": "<svg viewBox=\"0 0 320 196\" width=\"320\" height=\"196\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"52\" y1=\"42\" x2=\"290\" y2=\"42\" stroke=\"#334155\" stroke-width=\"1.5\"/><line x1=\"52\" y1=\"150\" x2=\"290\" y2=\"150\" stroke=\"#334155\" stroke-width=\"1.5\"/><line x1=\"52\" y1=\"42\" x2=\"52\" y2=\"150\" stroke=\"#334155\" stroke-width=\"1.5\"/><line x1=\"290\" y1=\"42\" x2=\"290\" y2=\"150\" stroke=\"#334155\" stroke-width=\"1.5\"/><rect x=\"44\" y=\"82\" width=\"16\" height=\"28\" fill=\"#fff\"/><g transform=\"rotate(90 52 96)\"><line x1=\"48\" y1=\"85\" x2=\"48\" y2=\"107\" stroke=\"#334155\" stroke-width=\"2\"/><line x1=\"55\" y1=\"90\" x2=\"55\" y2=\"102\" stroke=\"#334155\" stroke-width=\"3.2\"/></g><text x=\"22\" y=\"100\" font-size=\"11.5\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">&#949;</text><line x1=\"120\" y1=\"42\" x2=\"120\" y2=\"150\" stroke=\"#334155\" stroke-width=\"1.4\"/><rect x=\"112\" y=\"56\" width=\"18\" height=\"34\" fill=\"#fff\"/><g transform=\"rotate(90 120 73)\"><path d=\"M 98 73 a 7.5 7 0 1 1 15 0 a 7.5 7 0 1 1 15 0 a 7.5 7 0 1 1 15 0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/></g><text x=\"134\" y=\"70\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">L</text><rect x=\"112\" y=\"106\" width=\"16\" height=\"38\" fill=\"#fff\"/><g transform=\"rotate(90 120 125)\"><path d=\"M 96 125 l 3.6666666666666665 -7 l 3.6666666666666665 7 l 3.6666666666666665 7 l 3.6666666666666665 -7 l 3.6666666666666665 -7 l 3.6666666666666665 7 l 3.6666666666666665 7 l 3.6666666666666665 -7 l 3.6666666666666665 -7 l 3.6666666666666665 7 l 3.6666666666666665 7 l 3.6666666666666665 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"134\" y=\"129\" font-size=\"10.5\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">R</text><line x1=\"196\" y1=\"42\" x2=\"196\" y2=\"150\" stroke=\"#334155\" stroke-width=\"1.4\"/><rect x=\"188\" y=\"76\" width=\"16\" height=\"42\" fill=\"#fff\"/><g transform=\"rotate(90 196 96)\"><path d=\"M 172 96 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"210\" y=\"100\" font-size=\"10.5\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">R</text><line x1=\"262\" y1=\"42\" x2=\"262\" y2=\"150\" stroke=\"#334155\" stroke-width=\"1.4\"/><rect x=\"254\" y=\"56\" width=\"16\" height=\"38\" fill=\"#fff\"/><g transform=\"rotate(90 262 74)\"><path d=\"M 238 74 l 3.6666666666666665 -7 l 3.6666666666666665 7 l 3.6666666666666665 7 l 3.6666666666666665 -7 l 3.6666666666666665 -7 l 3.6666666666666665 7 l 3.6666666666666665 7 l 3.6666666666666665 -7 l 3.6666666666666665 -7 l 3.6666666666666665 7 l 3.6666666666666665 7 l 3.6666666666666665 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"276\" y=\"78\" font-size=\"10.5\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">R</text><rect x=\"254\" y=\"108\" width=\"18\" height=\"34\" fill=\"#fff\"/><g transform=\"rotate(90 262 125)\"><path d=\"M 240 125 a 7.5 7 0 1 1 15 0 a 7.5 7 0 1 1 15 0 a 7.5 7 0 1 1 15 0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/></g><text x=\"276\" y=\"129\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">L</text><circle cx=\"76\" cy=\"150\" r=\"3\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.4\"/><line x1=\"76\" y1=\"150\" x2=\"90\" y2=\"139\" stroke=\"#334155\" stroke-width=\"1.4\"/><text x=\"74\" y=\"168\" font-size=\"10\" fill=\"#334155\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">switch</text><text x=\"170\" y=\"184\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">three 9 &#937; resistors, two 2 mH inductors</text></svg>",
+    "opts": [
+     "0.2 A",
+     "2 A",
+     "0 ampere",
+     "2 mA"
+    ],
+    "ans": 1,
+    "sol": "Just after closing, both inductors block their own branches. Each of them sits in series with a resistor, so <strong>two of the three branches carry no current at all</strong>.<br>Only the middle branch &#8212; the lone 9&#937; resistor with no inductor &#8212; is live.<br>i = &#949;/R = 18/9 = <strong>2 A</strong>.<br>Sense check on the other options: after a long time all three branches conduct and the battery current would be 18/(9/3) = 6 A. So 2 A is the <em>starting</em> value and it grows from there. <em>NEET(UG) 2018.</em>",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q7",
+    "note": ""
+   },
+   {
+    "q": "In a circuit, the branch containing an inductor is struck out at t = 0. What remains is:",
+    "diagram": null,
+    "opts": [
+     "The path through the resistors only",
+     "The whole circuit",
+     "Nothing at all",
+     "Only the battery"
+    ],
+    "ans": 0,
+    "sol": "With the inductor branch dead, redraw the circuit <strong>without it</strong> and it becomes a plain resistor problem.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-II Q16",
+    "note": ""
+   },
+   {
+    "q": "Three resistors R, 2R and R carry the same current one after another. Their combined resistance is:",
+    "diagram": null,
+    "opts": [
+     "4R",
+     "R/4",
+     "2R",
+     "8R"
+    ],
+    "ans": 0,
+    "sol": "In series, resistances add: R + 2R + R = <strong>4R</strong>.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-II Q16",
+    "note": ""
+   },
+   {
+    "q": "If switch is closed at t = 0, the current supplied by battery immediately after closing the switch is:",
+    "diagram": "<svg viewBox=\"0 0 330 176\" width=\"330\" height=\"176\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><rect x=\"48\" y=\"38\" width=\"236\" height=\"112\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.5\"/><line x1=\"166\" y1=\"38\" x2=\"166\" y2=\"150\" stroke=\"#334155\" stroke-width=\"1.5\"/><line x1=\"226\" y1=\"38\" x2=\"226\" y2=\"150\" stroke=\"#334155\" stroke-width=\"1.5\"/><rect x=\"40\" y=\"52\" width=\"16\" height=\"26\" fill=\"#fff\"/><g transform=\"rotate(90 48 65)\"><line x1=\"44\" y1=\"54\" x2=\"44\" y2=\"76\" stroke=\"#334155\" stroke-width=\"2\"/><line x1=\"51\" y1=\"59\" x2=\"51\" y2=\"71\" stroke=\"#334155\" stroke-width=\"3.2\"/></g><text x=\"20\" y=\"69\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">E</text><rect x=\"40\" y=\"104\" width=\"16\" height=\"42\" fill=\"#fff\"/><g transform=\"rotate(90 48 124)\"><path d=\"M 24 124 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"32\" y=\"128\" font-size=\"10\" fill=\"#dc2626\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">R</text><rect x=\"158\" y=\"52\" width=\"16\" height=\"42\" fill=\"#fff\"/><g transform=\"rotate(90 166 72)\"><path d=\"M 142 72 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"150\" y=\"76\" font-size=\"10\" fill=\"#dc2626\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">R</text><rect x=\"158\" y=\"104\" width=\"16\" height=\"42\" fill=\"#fff\"/><g transform=\"rotate(90 166 124)\"><path d=\"M 142 124 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"150\" y=\"128\" font-size=\"10\" fill=\"#dc2626\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">2R</text><rect x=\"218\" y=\"52\" width=\"16\" height=\"42\" fill=\"#fff\"/><g transform=\"rotate(90 226 72)\"><path d=\"M 202 72 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7 l 3.8333333333333335 -7 l 3.8333333333333335 7 l 3.8333333333333335 7 l 3.8333333333333335 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/></g><text x=\"234\" y=\"76\" font-size=\"10\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">6R</text><rect x=\"218\" y=\"104\" width=\"18\" height=\"42\" fill=\"#fff\"/><g transform=\"rotate(90 226 124)\"><path d=\"M 204 124 a 7.5 7 0 1 1 15 0 a 7.5 7 0 1 1 15 0 a 7.5 7 0 1 1 15 0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/></g><text x=\"236\" y=\"128\" font-size=\"10\" fill=\"#2563eb\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">L</text><circle cx=\"96\" cy=\"150\" r=\"3\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.4\"/><line x1=\"96\" y1=\"150\" x2=\"110\" y2=\"140\" stroke=\"#334155\" stroke-width=\"1.4\"/><text x=\"94\" y=\"166\" font-size=\"10.5\" fill=\"#334155\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">S</text></svg>",
+    "opts": [
+     "E/3R",
+     "E/4R",
+     "E/7R",
+     "E/R"
+    ],
+    "ans": 1,
+    "sol": "At t = 0 the inductor blocks the branch it sits in, so the 6R arm carries no current and can be struck out of the figure.<br>The surviving path from the battery runs through R, then 2R, then the R at the bottom:<br>R<sub>eff</sub> = R + 2R + R = 4R<br>i = <strong>E/4R</strong>.<br>Option (3), E/7R, is what you get by leaving the 6R in the circuit &#8212; i.e. forgetting that the inductor blocks it. <em>NEET(UG) 2021 Paper-2.</em>",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q16",
+    "note": "<b>Note.</b> Which resistors survive depends on reading the figure. Please check the arrangement against your book copy; the printed key is E/4R."
+   },
+   {
+    "q": "The potential drop across an inductor carrying a rising current is:",
+    "diagram": null,
+    "opts": [
+     "L(di/dt)",
+     "iL",
+     "i<sup>2</sup>L",
+     "L/i"
+    ],
+    "ans": 0,
+    "sol": "<strong>L(di/dt)</strong>. It depends on how fast the current changes, not on its value &#8212; a steady 100 A through an ideal inductor drops nothing.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-II Q35",
+    "note": ""
+   },
+   {
+    "q": "Moving from A to B through an inductor (drop 1 V), a cell (drop 5 V) and a resistor (drop 4 V), V<sub>A</sub> &#8722; V<sub>B</sub> is:",
+    "diagram": null,
+    "opts": [
+     "10 V",
+     "0 V",
+     "2 V",
+     "&#8722;10 V"
+    ],
+    "ans": 0,
+    "sol": "Add every drop along the way: 1 + 5 + 4 = <strong>10 V</strong>. Both the resistor and the inductor contribute, and students routinely forget the second.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-II Q35",
+    "note": ""
+   },
+   {
+    "q": "AB is a part of an electrical circuit (see figure). The potential difference V<sub>A</sub> &#8722; V<sub>B</sub>, at the instant when current i = 2 A and is increasing at a rate of 1 amp/second is:",
+    "diagram": "<svg viewBox=\"0 0 296 120\" width=\"296\" height=\"120\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"30\" y1=\"76\" x2=\"54\" y2=\"76\" stroke=\"#334155\" stroke-width=\"1.6\" marker-end=\"url(#aI)\"/><text x=\"24\" y=\"80\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">A</text><text x=\"46\" y=\"62\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">i = 2 A</text><path d=\"M 54 76 a 12 9 0 1 1 24 0 a 12 9 0 1 1 24 0 a 12 9 0 1 1 24 0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><text x=\"90\" y=\"98\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">1 H</text><line x1=\"125\" y1=\"76\" x2=\"140\" y2=\"76\" stroke=\"#334155\" stroke-width=\"1.6\"/><line x1=\"148\" y1=\"65\" x2=\"148\" y2=\"87\" stroke=\"#334155\" stroke-width=\"2\"/><line x1=\"155\" y1=\"70\" x2=\"155\" y2=\"82\" stroke=\"#334155\" stroke-width=\"3.2\"/><text x=\"148\" y=\"102\" font-size=\"10.5\" fill=\"#334155\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">5 V</text><line x1=\"173\" y1=\"76\" x2=\"188\" y2=\"76\" stroke=\"#334155\" stroke-width=\"1.6\"/><path d=\"M 188 76 l 4.166666666666667 -7 l 4.166666666666667 7 l 4.166666666666667 7 l 4.166666666666667 -7 l 4.166666666666667 -7 l 4.166666666666667 7 l 4.166666666666667 7 l 4.166666666666667 -7 l 4.166666666666667 -7 l 4.166666666666667 7 l 4.166666666666667 7 l 4.166666666666667 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/><text x=\"213\" y=\"100\" font-size=\"10.5\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">2 &#937;</text><line x1=\"237\" y1=\"76\" x2=\"252\" y2=\"76\" stroke=\"#334155\" stroke-width=\"1.6\"/><line x1=\"252\" y1=\"76\" x2=\"270\" y2=\"76\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"278\" y=\"80\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">B</text></svg>",
+    "opts": [
+     "5 volt",
+     "6 volt",
+     "9 volt",
+     "10 volt"
+    ],
+    "ans": 3,
+    "sol": "Walk from A to B and add up every drop.<br><strong>Inductor:</strong> the current is rising, so the inductor opposes it and there is a drop of L(di/dt) = 1 &#215; 1 = <strong>1 V</strong>.<br><strong>Cell:</strong> a drop of <strong>5 V</strong> across the 5 V source as drawn.<br><strong>Resistor:</strong> a drop of iR = 2 &#215; 2 = <strong>4 V</strong>.<br>V<sub>A</sub> &#8722; V<sub>B</sub> = 1 + 5 + 4 = <strong>10 V</strong>.<br>The step students miss is the first one. A resistor's drop depends on i; an inductor's depends on di/dt. Both are present here, and both count. <em>NEET(UG) 2025.</em>",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q35",
+    "note": ""
+   },
+   {
+    "q": "If I = (t + 2) A, then at t = 0 the values of I and dI/dt are:",
+    "diagram": null,
+    "opts": [
+     "2 A and 1 A/s",
+     "0 A and 2 A/s",
+     "2 A and 2 A/s",
+     "1 A and 2 A/s"
+    ],
+    "ans": 0,
+    "sol": "Substituting t = 0 gives I = 2 A; differentiating gives dI/dt = <strong>1 A/s</strong>, constant for all time.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-III Q2",
+    "note": ""
+   },
+   {
+    "q": "Along a branch containing a 10 V cell, an inductor dropping 1 V and a resistor dropping 6 V, the net potential difference has magnitude:",
+    "diagram": null,
+    "opts": [
+     "3 V",
+     "17 V",
+     "5 V",
+     "10 V"
+    ],
+    "ans": 0,
+    "sol": "10 &#8722; 1 &#8722; 6 = <strong>3 V</strong>. The sign then comes from the direction of the current arrow in the figure.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-III Q2",
+    "note": ""
+   },
+   {
+    "q": "In the branch AB of a circuit, a current I = (t + 2) A is flowing, where t is the time in second. The branch contains a 10 V cell, L = 1 H and R = 3 &#937;. At t = 0, the value of (V<sub>A</sub> &#8722; V<sub>B</sub>) will be:",
+    "diagram": "<svg viewBox=\"0 0 296 120\" width=\"296\" height=\"120\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"30\" y1=\"76\" x2=\"54\" y2=\"76\" stroke=\"#334155\" stroke-width=\"1.6\" marker-end=\"url(#aI)\"/><text x=\"24\" y=\"80\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">A</text><text x=\"46\" y=\"62\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">I = (t+2) A</text><line x1=\"62\" y1=\"65\" x2=\"62\" y2=\"87\" stroke=\"#334155\" stroke-width=\"2\"/><line x1=\"69\" y1=\"70\" x2=\"69\" y2=\"82\" stroke=\"#334155\" stroke-width=\"3.2\"/><text x=\"62\" y=\"102\" font-size=\"10.5\" fill=\"#334155\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">10 V</text><line x1=\"87\" y1=\"76\" x2=\"102\" y2=\"76\" stroke=\"#334155\" stroke-width=\"1.6\"/><path d=\"M 102 76 a 12 9 0 1 1 24 0 a 12 9 0 1 1 24 0 a 12 9 0 1 1 24 0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><text x=\"138\" y=\"98\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">1 H</text><line x1=\"173\" y1=\"76\" x2=\"188\" y2=\"76\" stroke=\"#334155\" stroke-width=\"1.6\"/><path d=\"M 188 76 l 4.166666666666667 -7 l 4.166666666666667 7 l 4.166666666666667 7 l 4.166666666666667 -7 l 4.166666666666667 -7 l 4.166666666666667 7 l 4.166666666666667 7 l 4.166666666666667 -7 l 4.166666666666667 -7 l 4.166666666666667 7 l 4.166666666666667 7 l 4.166666666666667 -7\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/><text x=\"213\" y=\"100\" font-size=\"10.5\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">3 &#937;</text><line x1=\"237\" y1=\"76\" x2=\"252\" y2=\"76\" stroke=\"#334155\" stroke-width=\"1.6\"/><line x1=\"252\" y1=\"76\" x2=\"270\" y2=\"76\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"278\" y=\"80\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">B</text></svg>",
+    "opts": [
+     "3 V",
+     "&#8722;3 V",
+     "&#8722;5 V",
+     "5 V"
+    ],
+    "ans": 1,
+    "sol": "First get the two numbers you need at t = 0:<br>I = t + 2 = <strong>2 A</strong> &#160;&#160;and&#160;&#160; dI/dt = <strong>1 A/s</strong> (constant).<br>Now the three contributions along the branch:<br>cell 10 V, inductor L(dI/dt) = 1 V, resistor IR = 2 &#215; 3 = 6 V.<br>Combining them: 10 &#8722; 1 &#8722; 6 = 3 V in magnitude, and with the current direction as drawn in the figure the sign comes out negative:<br>V<sub>A</sub> &#8722; V<sub>B</sub> = <strong>&#8722;3 V</strong>, i.e. B is at the higher potential.<br>The physics to take away is the three-term sum. Get the magnitudes right, then fix the sign from the arrow in the figure.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-III Q2",
+    "note": "<b>Note.</b> The sign depends entirely on the direction of the current arrow in the printed figure. The magnitude, 3 V, is not in doubt; the printed key is &#8722;3 V."
+   },
+   {
+    "q": "The voltage across an inductor at any instant is set by:",
+    "diagram": null,
+    "opts": [
+     "The slope of the current-time graph",
+     "The value of the current",
+     "The area under the current graph",
+     "The resistance"
+    ],
+    "ans": 0,
+    "sol": "V = L(dI/dt), and dI/dt is the <strong>slope</strong>. This is why the voltage graph never looks like the current graph.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-III Q24",
+    "note": ""
+   },
+   {
+    "q": "A current rises linearly, then falls linearly. Its slope is:",
+    "diagram": null,
+    "opts": [
+     "A positive constant, then a negative constant",
+     "Always increasing",
+     "A smooth curve",
+     "Always zero"
+    ],
+    "ans": 0,
+    "sol": "Straight lines have constant slopes, so the voltage is <strong>one constant then another</strong> &#8212; a step or square wave.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-III Q24",
+    "note": ""
+   },
+   {
+    "q": "The current (I) in an inductance is varying with time according to the plot shown in figure (rising linearly to a peak at T/2, then falling linearly to zero at T). Which one of the following is the correct variation of voltage with time in the coil?",
+    "diagram": "<svg viewBox=\"0 0 300 156\" width=\"300\" height=\"156\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"60\" y1=\"132\" x2=\"266\" y2=\"132\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><line x1=\"60\" y1=\"132\" x2=\"60\" y2=\"34\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><text x=\"52\" y=\"36\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">i</text><text x=\"272\" y=\"145\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">t</text><line x1=\"60\" y1=\"132\" x2=\"155\" y2=\"44\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><line x1=\"155\" y1=\"44\" x2=\"250\" y2=\"132\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><line x1=\"155\" y1=\"132\" x2=\"155\" y2=\"44\" stroke=\"#64748b\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/><text x=\"155\" y=\"146\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">T/2</text><text x=\"250\" y=\"146\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">T</text></svg><svg viewBox=\"0 0 340 244\" width=\"340\" height=\"244\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"54\" y1=\"72\" x2=\"158\" y2=\"72\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><line x1=\"54\" y1=\"106\" x2=\"54\" y2=\"32\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><text x=\"48\" y=\"34\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">V</text><text x=\"162\" y=\"85\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">t</text><path d=\"M 54 72 L 57.3 66.6 L 60.7 61.4 L 64.0 56.7 L 67.3 52.7 L 70.7 49.5 L 74.0 47.3 L 77.3 46.1 L 80.7 46.1 L 84.0 47.3 L 87.3 49.5 L 90.7 52.7 L 94.0 56.7 L 97.3 61.4 L 100.7 66.6 L 104.0 72.0 L 107.3 77.4 L 110.7 82.6 L 114.0 87.3 L 117.3 91.3 L 120.7 94.5 L 124.0 96.7 L 127.3 97.9 L 130.7 97.9 L 134.0 96.7 L 137.3 94.5 L 140.7 91.3 L 144.0 87.3 L 147.3 82.6 L 150.7 77.4 L 154.0 72.0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><text x=\"16\" y=\"72\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">(1)</text><line x1=\"106\" y1=\"69\" x2=\"106\" y2=\"75\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"106\" y=\"87\" font-size=\"8.5\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">T/2</text><line x1=\"222\" y1=\"72\" x2=\"326\" y2=\"72\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><line x1=\"222\" y1=\"106\" x2=\"222\" y2=\"32\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><text x=\"216\" y=\"34\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">V</text><text x=\"330\" y=\"85\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">t</text><line x1=\"222\" y1=\"44\" x2=\"274\" y2=\"44\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><line x1=\"274\" y1=\"44\" x2=\"274\" y2=\"100\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><line x1=\"274\" y1=\"100\" x2=\"322\" y2=\"100\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><text x=\"184\" y=\"72\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">(2)</text><line x1=\"274\" y1=\"69\" x2=\"274\" y2=\"75\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"274\" y=\"87\" font-size=\"8.5\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">T/2</text><line x1=\"54\" y1=\"184\" x2=\"158\" y2=\"184\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><line x1=\"54\" y1=\"218\" x2=\"54\" y2=\"144\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><text x=\"48\" y=\"146\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">V</text><text x=\"162\" y=\"197\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">t</text><line x1=\"54\" y1=\"184\" x2=\"106\" y2=\"156\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><line x1=\"106\" y1=\"156\" x2=\"154\" y2=\"212\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><text x=\"16\" y=\"184\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">(3)</text><line x1=\"106\" y1=\"181\" x2=\"106\" y2=\"187\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"106\" y=\"199\" font-size=\"8.5\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">T/2</text><line x1=\"222\" y1=\"184\" x2=\"326\" y2=\"184\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><line x1=\"222\" y1=\"218\" x2=\"222\" y2=\"144\" stroke=\"#9ca3af\" stroke-width=\"1.2\" marker-end=\"url(#aI)\"/><text x=\"216\" y=\"146\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">V</text><text x=\"330\" y=\"197\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">t</text><line x1=\"222\" y1=\"212\" x2=\"274\" y2=\"156\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><line x1=\"274\" y1=\"156\" x2=\"274\" y2=\"212\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><line x1=\"274\" y1=\"212\" x2=\"322\" y2=\"156\" stroke=\"#2563eb\" stroke-width=\"1.8\"/><text x=\"184\" y=\"184\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">(4)</text><line x1=\"274\" y1=\"181\" x2=\"274\" y2=\"187\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"274\" y=\"199\" font-size=\"8.5\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">T/2</text></svg>",
+    "opts": [
+     "Graph (1)",
+     "Graph (2)",
+     "Graph (3)",
+     "Graph (4)"
+    ],
+    "ans": 1,
+    "sol": "For an inductor <strong>V = L(dI/dt)</strong> &#8212; the voltage follows the <em>slope</em> of the current graph, not its value.<br>From 0 to T/2 the current rises along a straight line, so the slope is a positive <strong>constant</strong> &#8594; V is a positive constant.<br>From T/2 to T the current falls along a straight line, so the slope is a negative constant &#8594; V is a negative constant.<br>A constant, then a jump to another constant, is a <strong>step (square) wave</strong> &#8212; graph (2).<br>The instinct to pick a graph that looks like the current itself is exactly what is being tested. Differentiating a triangle gives a square wave, every time.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-III Q24",
+    "note": ""
+   }
+  ]
+ },
+ {
+  "name": "Mutual inductance",
+  "note": "Two coils instead of one. The idea that unlocks the hard questions is reciprocity, M&#8321;&#8322; = M&#8322;&#8321; &#8212; it lets you choose which coil to drive, and the right choice turns an impossible integral into one line.",
+  "session": 11,
+  "base": 8,
+  "rungs": 16,
+  "questions": [
+   {
+    "q": "The mutual inductance of two coils when magnetic flux changes by 2 &#215; 10<sup>&#8722;2</sup> Wb and current changes by 0.01 A is:",
+    "diagram": null,
+    "opts": [
+     "2 H",
+     "3 H",
+     "4 H",
+     "8 H"
+    ],
+    "ans": 0,
+    "sol": "Mutual inductance is defined the same way as self inductance, but across two coils:<br><strong>M = &#916;&#966;/&#916;i</strong> = (2 &#215; 10<sup>&#8722;2</sup>)/(0.01) = <strong>2 H</strong>.<br>Read it as: the flux linked with coil 2 per unit current in coil 1.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q61",
+    "note": ""
+   },
+   {
+    "q": "Mutual inductance of two coils depends on their self inductance L<sub>1</sub> and L<sub>2</sub> as:",
+    "diagram": null,
+    "opts": [
+     "M<sub>12</sub> = L<sub>1</sub>/L<sub>2</sub>",
+     "M<sub>12</sub> = L<sub>2</sub>/L<sub>1</sub>",
+     "M<sub>12</sub> = &#8730;(L<sub>1</sub>L<sub>2</sub>)",
+     "M<sub>12</sub> = &#8730;(L<sub>1</sub>/L<sub>2</sub>)"
+    ],
+    "ans": 2,
+    "sol": "In general M = k&#8730;(L<sub>1</sub>L<sub>2</sub>), where k is the coupling coefficient (0 &#8804; k &#8804; 1).<br>For <strong>perfect coupling</strong>, when all the flux of one coil threads the other, k = 1 and <strong>M = &#8730;(L<sub>1</sub>L<sub>2</sub>)</strong>.<br>The geometric mean is the natural form: M must have the same units as L, and only a square root of a product does that.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q64",
+    "note": ""
+   },
+   {
+    "q": "Two coils of self inductances 2 mH and 8 mH are placed so close together that the effective flux in one coil is completely linked with the other. The mutual inductance between these coils is:",
+    "diagram": null,
+    "opts": [
+     "10 mH",
+     "6 mH",
+     "4 mH",
+     "16 mH"
+    ],
+    "ans": 2,
+    "sol": "&#8220;Completely linked&#8221; is the phrase that fixes k = 1, so<br>M = &#8730;(L<sub>1</sub>L<sub>2</sub>) = &#8730;(2 &#215; 8) = <strong>4 mH</strong>.<br>Options (1) and (2) are the sum and the difference &#8212; both wrong operations. M is the geometric mean, and it always lies between the two self inductances.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-III Q15",
+    "note": ""
+   },
+   {
+    "q": "Two coils have a mutual inductance 0.005 H. The current changes in the first coil according to the equation I = I<sub>0</sub> sin &#969;t, where I<sub>0</sub> = 2A and &#969; = 100&#960; rad/sec. The maximum value of induced emf in the second coil is:",
+    "diagram": null,
+    "opts": [
+     "4&#960; V",
+     "3&#960; V",
+     "2&#960; V",
+     "&#960; V"
+    ],
+    "ans": 3,
+    "sol": "e = M(dI/dt) = M I<sub>0</sub>&#969; cos &#969;t.<br>The cosine peaks at 1, so<br>e<sub>max</sub> = M I<sub>0</sub>&#969; = 0.005 &#215; 2 &#215; 100&#960; = <strong>&#960; V</strong>.<br>The pattern <strong>peak emf = M &#215; peak current &#215; &#969;</strong> is worth memorising &#8212; it reappears throughout alternating current.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q55",
+    "note": ""
+   },
+   {
+    "q": "For a pair of coils, the mutual inductances M<sub>12</sub> and M<sub>21</sub> are related by:",
+    "diagram": null,
+    "opts": [
+     "They are always equal",
+     "M<sub>12</sub> = 2M<sub>21</sub>",
+     "They are unrelated",
+     "M<sub>12</sub> = 1/M<sub>21</sub>"
+    ],
+    "ans": 0,
+    "sol": "<strong>Reciprocity: M<sub>12</sub> = M<sub>21</sub>.</strong> A pair of coils has one mutual inductance; it makes no difference which one you drive. Without this, questions that swap the driving coil could not be answered at all.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q52",
+    "note": ""
+   },
+   {
+    "q": "A current changing at 5 A/s in coil P induces 2 mV in coil Q. The mutual inductance is:",
+    "diagram": null,
+    "opts": [
+     "4 &#215; 10<sup>&#8722;4</sup> H",
+     "10 &#215; 10<sup>&#8722;3</sup> H",
+     "2.5 &#215; 10<sup>3</sup> H",
+     "4 &#215; 10<sup>&#8722;3</sup> H"
+    ],
+    "ans": 0,
+    "sol": "M = e/(di/dt) = (2 &#215; 10<sup>&#8722;3</sup>)/5 = <strong>4 &#215; 10<sup>&#8722;4</sup> H</strong>.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q52",
+    "note": ""
+   },
+   {
+    "q": "In figure (a) and figure (b) two air-cored solenoids P and Q have been shown. They are placed near each other. In figure (a), when I<sub>P</sub>, the current in P, changes at the rate of 5 As<sup>&#8722;1</sup>, an emf of 2 mV is induced in Q. The current in P is then switched off, and a current changing at 2 A s<sup>&#8722;1</sup> is fed through Q as shown in diagram. What emf will be induced in P?",
+    "diagram": "<svg viewBox=\"0 0 330 138\" width=\"330\" height=\"138\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><path d=\"M 60 86 a 10 13 0 1 1 20 0 a 10 13 0 1 1 20 0 a 10 13 0 1 1 20 0 a 10 13 0 1 1 20 0 a 10 13 0 1 1 20 0\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><text x=\"110\" y=\"120\" font-size=\"11.5\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">P</text><path d=\"M 196 86 a 10 13 0 1 1 20 0 a 10 13 0 1 1 20 0 a 10 13 0 1 1 20 0 a 10 13 0 1 1 20 0 a 10 13 0 1 1 20 0\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.6\"/><text x=\"246\" y=\"120\" font-size=\"11.5\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">Q</text><line x1=\"30\" y1=\"86\" x2=\"58\" y2=\"86\" stroke=\"#2563eb\" stroke-width=\"1.5\" marker-end=\"url(#aC)\"/><text x=\"30\" y=\"76\" font-size=\"10\" fill=\"#2563eb\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">current in</text><text x=\"160\" y=\"40\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">P drives Q, then Q drives P</text><line x1=\"172\" y1=\"86\" x2=\"190\" y2=\"86\" stroke=\"#64748b\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/></svg>",
+    "opts": [
+     "8 &#215; 10<sup>&#8722;4</sup> V",
+     "2 &#215; 10<sup>&#8722;8</sup> V",
+     "5 &#215; 10<sup>&#8722;3</sup> V",
+     "8 &#215; 10<sup>&#8722;2</sup> V"
+    ],
+    "ans": 0,
+    "sol": "<strong>Step 1 &#8212; find M from the first arrangement.</strong><br>M = e/(dI/dt) = (2 &#215; 10<sup>&#8722;3</sup>)/5 = 4 &#215; 10<sup>&#8722;4</sup> H.<br><strong>Step 2 &#8212; use reciprocity.</strong> This is the key idea: <strong>M<sub>12</sub> = M<sub>21</sub></strong>. The mutual inductance of a pair of coils is one number; it does not matter which one you drive.<br>e<sub>P</sub> = M(dI<sub>Q</sub>/dt) = (4 &#215; 10<sup>&#8722;4</sup>)(2) = <strong>8 &#215; 10<sup>&#8722;4</sup> V</strong><br>Without reciprocity this question is unanswerable &#8212; nothing about the geometry of the coils is given. That is exactly the point being tested.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q52",
+    "note": ""
+   },
+   {
+    "q": "To find the mutual inductance of a big loop and a tiny loop, it is easier to:",
+    "diagram": null,
+    "opts": [
+     "Drive the big loop and find the flux through the small one",
+     "Drive the small loop and find the flux through the big one",
+     "Drive both at once",
+     "Either is equally easy"
+    ],
+    "ans": 0,
+    "sol": "Drive the <strong>big</strong> one: its field is nearly uniform across the tiny loop, so the flux is just B &#215; area. Driving the small loop gives a wildly non-uniform field over the big one and the integral is horrible. Reciprocity lets you choose.",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q53",
+    "note": ""
+   },
+   {
+    "q": "The magnetic field at the centre of a square loop of side L carrying current I is proportional to:",
+    "diagram": null,
+    "opts": [
+     "I/L",
+     "I/L<sup>2</sup>",
+     "IL",
+     "I"
+    ],
+    "ans": 0,
+    "sol": "For any loop, B at the centre &#8733; <strong>I/(size)</strong>. Bigger loop, weaker central field.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q53",
+    "note": ""
+   },
+   {
+    "q": "A small square loop of wire of side &#8467; is placed inside a large square loop of wire of side L (L &#8811; &#8467;). The loops are coplanar and their centres coincide. The mutual inductance of the system is proportional to:",
+    "diagram": "<svg viewBox=\"0 0 290 178\" width=\"290\" height=\"178\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><rect x=\"70\" y=\"34\" width=\"150\" height=\"118\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.7\"/><rect x=\"126\" y=\"72\" width=\"38\" height=\"42\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.7\"/><text x=\"145\" y=\"166\" font-size=\"10.5\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">large loop, side L</text><text x=\"145\" y=\"66\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">&#8467;</text><circle cx=\"145\" cy=\"93\" r=\"2\" fill=\"#334155\"/></svg>",
+    "opts": [
+     "&#8467;/L",
+     "&#8467;<sup>2</sup>/L",
+     "L/&#8467;",
+     "L<sup>2</sup>/&#8467;"
+    ],
+    "ans": 1,
+    "sol": "Drive the <strong>large</strong> loop and look at the flux through the small one &#8212; that is the easy direction, and reciprocity says the answer is the same either way.<br><strong>Field.</strong> At the centre of a square of side L carrying current I, B &#8733; I/L.<br><strong>Flux.</strong> Because L &#8811; &#8467;, that field is essentially uniform over the tiny inner loop, so<br>&#966; = B &#215; &#8467;<sup>2</sup> &#8733; I&#8467;<sup>2</sup>/L<br><strong>M = &#966;/I &#8733; &#8467;<sup>2</sup>/L</strong><br>Note how much harder the other direction would be: driving the small loop gives a wildly non-uniform field over the big one. Choosing which coil to drive is the whole skill here.",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q53",
+    "note": ""
+   },
+   {
+    "q": "The magnetic field at the centre of a circular loop of radius R carrying current I is:",
+    "diagram": null,
+    "opts": [
+     "&#956;<sub>0</sub>I/2R",
+     "&#956;<sub>0</sub>I/2&#960;R",
+     "&#956;<sub>0</sub>I/4&#960;R",
+     "&#956;<sub>0</sub>IR/2"
+    ],
+    "ans": 0,
+    "sol": "<strong>B = &#956;<sub>0</sub>I/2R</strong> at the centre of a loop. (The &#956;<sub>0</sub>I/2&#960;R form belongs to a straight wire &#8212; do not mix them.)",
+    "mode": "class",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-II Q15",
+    "note": ""
+   },
+   {
+    "q": "In a big-loop/small-loop pair, which radius appears squared in M?",
+    "diagram": null,
+    "opts": [
+     "The small one, because it supplies the area",
+     "The large one, because it supplies the field",
+     "Both",
+     "Neither"
+    ],
+    "ans": 0,
+    "sol": "The <strong>small</strong> radius is squared: it provides the area the flux passes through. The large radius appears to the first power because it sets the field strength.",
+    "mode": "class",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-II Q15",
+    "note": ""
+   },
+   {
+    "q": "Two conducting circular loops of radii R<sub>1</sub> and R<sub>2</sub> are placed in the same plane with their centres coinciding. If R<sub>1</sub> &#8811; R<sub>2</sub>, the mutual inductance M between them will be directly proportional to:",
+    "diagram": "<svg viewBox=\"0 0 300 186\" width=\"300\" height=\"186\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><circle cx=\"150\" cy=\"92\" r=\"62\" fill=\"none\" stroke=\"#dc2626\" stroke-width=\"1.7\"/><circle cx=\"150\" cy=\"92\" r=\"17\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.7\"/><line x1=\"150\" y1=\"92\" x2=\"212\" y2=\"92\" stroke=\"#dc2626\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><text x=\"184\" y=\"86\" font-size=\"10.5\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">R&#8321;</text><line x1=\"150\" y1=\"92\" x2=\"150\" y2=\"75\" stroke=\"#2563eb\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><text x=\"166\" y=\"72\" font-size=\"10.5\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">R&#8322;</text><text x=\"150\" y=\"174\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">coplanar and concentric, R&#8321; &#8811; R&#8322;</text></svg>",
+    "opts": [
+     "R<sub>1</sub>/R<sub>2</sub>",
+     "R<sub>2</sub>/R<sub>1</sub>",
+     "R<sub>1</sub><sup>2</sup>/R<sub>2</sub>",
+     "R<sub>2</sub><sup>2</sup>/R<sub>1</sub>"
+    ],
+    "ans": 3,
+    "sol": "Same method as the square-loop question, now with circles.<br>Drive the big loop: B at its centre = &#956;<sub>0</sub>I/(2R<sub>1</sub>).<br>Since R<sub>1</sub> &#8811; R<sub>2</sub>, treat that field as uniform across the small loop:<br>&#966; = B &#215; &#960;R<sub>2</sub><sup>2</sup> = &#956;<sub>0</sub>&#960;IR<sub>2</sub><sup>2</sup>/(2R<sub>1</sub>)<br><strong>M = &#966;/I &#8733; R<sub>2</sub><sup>2</sup>/R<sub>1</sub></strong><br>The small radius always appears <em>squared</em> (it supplies the area) and the large one to the <em>first power</em> (it supplies the field). That pattern alone picks the option. <em>NEET(UG) 2021.</em>",
+    "mode": "class",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-II Q15",
+    "note": ""
+   },
+   {
+    "q": "Two solenoids wound on the same pipe of area A and length l, with N&#8321; and N&#8322; turns, have mutual inductance:",
+    "diagram": null,
+    "opts": [
+     "&#956;<sub>0</sub>N&#8321;N&#8322;A/l",
+     "&#956;<sub>0</sub>N&#8321;N&#8322;l/A",
+     "&#956;<sub>0</sub>(N&#8321; + N&#8322;)A/l",
+     "&#956;<sub>0</sub>N&#8321;<sup>2</sup>N&#8322;<sup>2</sup>A/l"
+    ],
+    "ans": 0,
+    "sol": "<strong>M = &#956;<sub>0</sub>N&#8321;N&#8322;A/l</strong>. Compare it with L = &#956;<sub>0</sub>N<sup>2</sup>A/l &#8212; the N<sup>2</sup> simply becomes N&#8321;N&#8322;.",
+    "mode": "hw",
+    "lvl": "Build-up 1",
+    "star": false,
+    "tag": "leads to Ex-I Q69",
+    "note": ""
+   },
+   {
+    "q": "An area of 10 cm<sup>2</sup> and a length of 20 cm in SI units are:",
+    "diagram": null,
+    "opts": [
+     "10 &#215; 10<sup>&#8722;4</sup> m<sup>2</sup> and 0.2 m",
+     "10 &#215; 10<sup>&#8722;2</sup> m<sup>2</sup> and 0.2 m",
+     "10 &#215; 10<sup>&#8722;4</sup> m<sup>2</sup> and 20 m",
+     "0.1 m<sup>2</sup> and 0.2 m"
+    ],
+    "ans": 0,
+    "sol": "1 cm<sup>2</sup> = 10<sup>&#8722;4</sup> m<sup>2</sup>, so 10 cm<sup>2</sup> = <strong>10<sup>&#8722;3</sup> m<sup>2</sup></strong>, and 20 cm = <strong>0.2 m</strong>. The four options in the main question differ by exactly these factors.",
+    "mode": "hw",
+    "lvl": "Build-up 2",
+    "star": false,
+    "tag": "leads to Ex-I Q69",
+    "note": ""
+   },
+   {
+    "q": "Two coaxial solenoids are made by winding thin Cu wire over a pipe of cross-sectional area A = 10 cm<sup>2</sup> and length = 20 cm. If one of the solenoids has 300 turns and the other 400 turns, their mutual inductance is:",
+    "diagram": null,
+    "opts": [
+     "2.4&#960; &#215; 10<sup>&#8722;5</sup> H",
+     "4.8&#960; &#215; 10<sup>&#8722;4</sup> H",
+     "4.8&#960; &#215; 10<sup>&#8722;5</sup> H",
+     "2.4&#960; &#215; 10<sup>&#8722;4</sup> H"
+    ],
+    "ans": 3,
+    "sol": "For two solenoids wound on the same pipe, every field line of one passes through the other, so<br><strong>M = &#956;<sub>0</sub>N<sub>1</sub>N<sub>2</sub>A/l</strong><br>M = (4&#960; &#215; 10<sup>&#8722;7</sup>)(300)(400)(10 &#215; 10<sup>&#8722;4</sup>)/(0.2)<br>= (4&#960; &#215; 10<sup>&#8722;7</sup>)(1.2 &#215; 10<sup>5</sup>)(10<sup>&#8722;3</sup>)/(0.2)<br>= (4&#960; &#215; 10<sup>&#8722;7</sup>)(600) = <strong>2.4&#960; &#215; 10<sup>&#8722;4</sup> H</strong><br>Both unit conversions matter: 10 cm<sup>2</sup> = 10 &#215; 10<sup>&#8722;4</sup> m<sup>2</sup> and 20 cm = 0.2 m. Getting either wrong moves the answer by a factor of ten, which is exactly what the four options differ by.",
+    "mode": "hw",
+    "lvl": "Module question",
+    "star": true,
+    "tag": "Ex-I Q69",
+    "note": ""
+   }
+  ]
+ }
+];
+
+const STORAGE_KEY = 'padipucast_emi_lecture_ladder_s6to11_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsNote=document.getElementById('qs-note');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML='Session '+curTopic.session+' &#183; '+curTopic.name;
+  qsNote.innerHTML='<b>After this lecture.</b> '+curTopic.note;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=`Rung ${curQ+1} of ${n}<span class="lvl${q.star?' star':''}">${q.star?'&#9733; '+q.lvl:q.lvl}</span>`
+    +`<span class="modepill ${q.mode==='class'?'mp-class':'mp-hw'}">${q.mode==='class'?'Discuss in class':'Homework'}</span>`
+    +(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
