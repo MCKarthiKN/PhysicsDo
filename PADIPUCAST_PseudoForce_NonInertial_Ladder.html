@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Pseudo Force &#183; Non-Inertial Frame Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> NLM &#183; Pseudo Force</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Pseudo Force &#183; Non-Inertial Frames<br>Sit inside the moving frame</h1></div>
+    <p id="home-sub">Every pseudo-force question from the Newton's Laws chapter, put in <strong>one climbing order</strong>. The sequence goes: why the extra force is needed &#8594; the lift &#8594; the hanging bob &#8594; the accelerating wedge &#8594; a box going up &#8594; an accelerating pulley &#8594; the carriage &#8594; a car on a slope.<br><br>Each source question is a <strong>ladder</strong>: 3 build-up rungs, then the original question (&#9733;). Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 13 ladders &#215; 4 rungs = 52 questions. Take g = 10 m/s<sup>2</sup> throughout.<br><br><em>One method runs through all 13: sit inside the accelerating frame &#8594; add a pseudo force &#8722;ma on every mass &#8594; now the body is at rest for you, so just write balance equations. The frame's acceleration decides the pseudo force. The body being watched decides only the mass.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - NLM / Pseudo force, non-inertial frames  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1d5f7a';
+const FILL_T='#e6f1f4', FILL_B='#c9e2e9', FILL_C='#b3d6df';
+
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+
+// hatched ground line (hatching below)
+function _hatch(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y+9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+// hatched ceiling line (hatching above)
+function _ceil(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y-9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+// a labelled block
+function _blk(x,y,w,h,label,fill){
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${INK}" stroke-width="1.7" rx="2"/>
+  <text x="${x+w/2}" y="${y+h/2+4.5}" font-size="11.5" text-anchor="middle" fill="${INK}" ${FS} font-weight="700">${label}</text>`;
+}
+// horizontal arrow
+function _arr(x0,x1,y,c,mid,label,above){
+  const id=_nid();
+  return `<defs>${AR(id,c)}</defs>
+  <line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${c}" stroke-width="2.2" marker-end="url(#${id})"/>
+  ${label?`<text x="${mid}" y="${above?y-11:y+17}" font-size="11" text-anchor="middle" fill="${c}" ${FS} font-weight="700">${label}</text>`:''}`;
+}
+// any arrow, label placed near the tip with an offset
+function _a2(x0,y0,x1,y1,c,label,dx,dy){
+  const id=_nid();
+  return `<defs>${AR(id,c)}</defs><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="2.2" marker-end="url(#${id})"/>`+
+  (label?`<text x="${x1+(dx===undefined?0:dx)}" y="${y1+(dy===undefined?0:dy)}" font-size="11" text-anchor="middle" fill="${c}" ${FS} font-weight="700">${label}</text>`:'');
+}
+function _txt(x,y,t,c,size,anchor,bold){
+  return `<text x="${x}" y="${y}" font-size="${size||11}" text-anchor="${anchor||'middle'}" fill="${c||INK}" ${FS}${bold?' font-weight="700"':''}>${t}</text>`;
+}
+function _dash(x0,y0,x1,y1,c){
+  return `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c||GREY}" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+}
+// stick person
+function _man(x,yTop,h){
+  const r=h*0.17;
+  return `<circle cx="${x}" cy="${yTop+r}" r="${r}" fill="none" stroke="${INK}" stroke-width="1.5"/>
+  <line x1="${x}" y1="${yTop+2*r}" x2="${x}" y2="${yTop+h*0.62}" stroke="${INK}" stroke-width="1.5"/>
+  <line x1="${x-h*0.16}" y1="${yTop+h*0.42}" x2="${x+h*0.16}" y2="${yTop+h*0.42}" stroke="${INK}" stroke-width="1.5"/>
+  <line x1="${x}" y1="${yTop+h*0.62}" x2="${x-h*0.15}" y2="${yTop+h}" stroke="${INK}" stroke-width="1.5"/>
+  <line x1="${x}" y1="${yTop+h*0.62}" x2="${x+h*0.15}" y2="${yTop+h}" stroke="${INK}" stroke-width="1.5"/>`;
+}
+// pulley wheel
+function _pulley(cx,cy,r){
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${FILL_T}" stroke="${INK}" stroke-width="1.8"/>
+  <circle cx="${cx}" cy="${cy}" r="3" fill="${INK}"/>`;
+}
+
+const DIAGRAMS = {
+
+// ---- goods-train container: block on a smooth floor -------------------------
+train:(o)=>{
+  const W=400,H=185;
+  let s='';
+  s+=_hatch(24,W-24,155);
+  s+=`<rect x="58" y="48" width="250" height="82" fill="none" stroke="${INK}" stroke-width="1.9" rx="3"/>`;
+  s+=`<circle cx="108" cy="146" r="9" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<circle cx="258" cy="146" r="9" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+  const bx = o.mode==='acc' ? 92 : 165;
+  if(o.mode==='acc'){
+    s+=_dash(178,100,178,130,GREY);
+    s+=_txt(214,96,'was here',GREY,10);
+    s+=_a2(160,116,132,116,AMB,'',0,0);
+  }
+  s+=_blk(bx,100,36,30,'m',FILL_T);
+  s+=_txt(183,146,'smooth floor',GREY,10);
+  if(o.mode==='acc') s+=_a2(316,66,376,66,RED,o.a||'a',0,-9);
+  else s+=_a2(316,66,376,66,GRN,o.v||'v = constant',-10,-9);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- lift with a man on a weighing machine ---------------------------------
+lift:(o)=>{
+  const W=330,H=232;
+  let s='';
+  s+=_ceil(70,260,22);
+  if(o.cut){
+    s+=`<line x1="165" y1="22" x2="165" y2="40" stroke="${INK}" stroke-width="2"/>`;
+    s+=`<line x1="165" y1="52" x2="165" y2="62" stroke="${INK}" stroke-width="2"/>`;
+    s+=_txt(206,48,'cable snapped',RED,10.5,'middle',true);
+  } else {
+    s+=`<line x1="165" y1="22" x2="165" y2="62" stroke="${INK}" stroke-width="2"/>`;
+  }
+  s+=`<rect x="96" y="62" width="138" height="132" fill="none" stroke="${INK}" stroke-width="1.9" rx="3"/>`;
+  s+=`<rect x="136" y="168" width="60" height="16" fill="${FILL_B}" stroke="${INK}" stroke-width="1.4" rx="2"/>`;
+  s+=_txt(166,206,o.machine||'weighing machine',GREY,10);
+  s+=_man(166,90,78);
+  if(o.dir==='up')   s+=_a2(262,140,262,86,RED,o.a||'a',26,-6);
+  if(o.dir==='down') s+=_a2(262,86,262,140,RED,o.a||'a',26,16);
+  if(o.dir==='free') s+=_a2(262,86,262,140,RED,o.a||'g',26,16);
+  if(o.read) s+=_txt(166,225,o.read,INK,11.5,'middle',true);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- box accelerating on the ground with a bob hanging inside --------------
+boxBob:(o)=>{
+  const W=360,H=210;
+  let s='';
+  s+=_hatch(40,320,178);
+  s+=`<rect x="86" y="48" width="164" height="130" fill="none" stroke="${INK}" stroke-width="1.9" rx="3"/>`;
+  const px=178, py=56, L=76, th=(o.deg===undefined?28:o.deg)*Math.PI/180;
+  const bx=px-L*Math.sin(th), by=py+L*Math.cos(th);
+  s+=_dash(px,py,px,py+L+8,GREY);
+  s+=`<line x1="${px}" y1="${py}" x2="${bx}" y2="${by}" stroke="${INK}" stroke-width="1.7"/>`;
+  s+=`<circle cx="${bx}" cy="${by}" r="10" fill="${FILL_C}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<path d="M ${px} ${py+38} A 38 38 0 0 1 ${px-38*Math.sin(th)} ${py+38*Math.cos(th)}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+  s+=_txt(px-24,py+34,o.th||'&#952;',GREY,11,'middle',true);
+  s+=_a2(258,110,326,110,RED,o.a||'a',0,-10);
+  s+=_txt(168,198,o.floor||'',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- free body diagram of the bob, inside the box frame --------------------
+bobFBD:(o)=>{
+  const W=340,H=224;
+  let s='';
+  const cx=170, cy=112;
+  const th=28*Math.PI/180, L=72;
+  s+=_dash(cx,cy-96,cx,cy+92,GREY);
+  s+=_a2(cx,cy,cx+L*Math.sin(th),cy-L*Math.cos(th),GRN,o.T||'T',18,-2);
+  s+=_a2(cx,cy,cx,cy+62,BLU,o.W||'mg',0,16);
+  s+=_a2(cx,cy,cx-78,cy,RED,o.P||'ma (pseudo)',-14,-12);
+  s+=`<circle cx="${cx}" cy="${cy}" r="10" fill="${FILL_C}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_txt(cx+15,cy-46,o.th||'&#952;',GREY,11,'middle',true);
+  s+=_txt(W/2,212,o.cap||'as seen from inside the accelerating box',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- trolley on wheels with a bob hanging, pushed by F ---------------------
+trolley:(o)=>{
+  const W=400,H=206;
+  let s='';
+  s+=_hatch(30,370,176);
+  s+=`<rect x="120" y="52" width="180" height="112" fill="none" stroke="${INK}" stroke-width="1.9" rx="3"/>`;
+  s+=`<circle cx="152" cy="170" r="9" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<circle cx="268" cy="170" r="9" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+  const px=224, py=60, L=68, th=37*Math.PI/180;
+  const bx=px-L*Math.sin(th), by=py+L*Math.cos(th);
+  s+=_dash(px,py,px,py+L+6,GREY);
+  s+=`<line x1="${px}" y1="${py}" x2="${bx}" y2="${by}" stroke="${INK}" stroke-width="1.7"/>`;
+  s+=`<circle cx="${bx}" cy="${by}" r="11" fill="${FILL_C}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_txt(bx,by+24,o.m||'2 kg',INK,11,'middle',true);
+  s+=`<path d="M ${px} ${py+34} A 34 34 0 0 1 ${px-34*Math.sin(th)} ${py+34*Math.cos(th)}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+  s+=_txt(px-30,py+26,'37&#176;',GREY,11,'middle',true);
+  s+=_txt(275,150,o.M||'8 kg',INK,11.5,'middle',true);
+  s+=_a2(52,108,116,108,RED,o.F||'F',-4,-11);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- wedge: vertical face on the left, slope running down to the right -----
+//      the whole wedge is pushed to the right with acceleration a
+wedge:(o)=>{
+  const W=390,H=272;
+  const ax=90, ay=66, bx=290, by=216;   // apex (top-left) -> foot (bottom-right)
+  const dx=bx-ax, dy=by-ay, len=Math.hypot(dx,dy);
+  const ux=dx/len, uy=dy/len;           // down-slope unit vector
+  const nx=uy, ny=-ux;                  // outward normal (up and to the right)
+  const deg=Math.atan2(dy,dx)*180/Math.PI;
+  let s='';
+  s+=_hatch(46,352,by);
+  s+=`<path d="M ${ax} ${ay} L ${bx} ${by} L ${ax} ${by} Z" fill="${FILL_B}" stroke="${INK}" stroke-width="1.8"/>`;
+  const mx=ax+dx*0.46, my=ay+dy*0.46;
+  s+=`<g transform="rotate(${deg.toFixed(2)} ${mx} ${my})"><rect x="${mx-25}" y="${my-32}" width="50" height="32" fill="${FILL_T}" stroke="${INK}" stroke-width="1.7" rx="2"/><text x="${mx}" y="${my-12}" font-size="11.5" text-anchor="middle" fill="${INK}" ${FS} font-weight="700">${o.m||'m'}</text></g>`;
+  // angle at the foot
+  s+=`<path d="M ${bx-38} ${by} A 38 38 0 0 0 ${bx-38*ux} ${by-38*uy}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+  s+=_txt(bx-48,by-14,o.th||'&#952;',GREY,11,'middle',true);
+  if(o.forces){
+    const cx=mx-16*ux, cy=my-16*uy;
+    s+=_a2(cx,cy,cx+62*nx,cy+62*ny,GRN,'N',12,-4);
+    s+=_a2(cx,cy,cx,cy+58,BLU,'mg',0,15);
+    s+=_a2(cx,cy,cx-62,cy,RED,'ma',-16,-8);
+  }
+  if(o.a!==false) s+=_a2(286,246,350,246,RED,o.a||'a',-32,-11);
+  if(o.note) s+=_txt(140,250,o.note,GREY,10.5);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- the block alone, drawn on a dashed slope, with its three forces -------
+wedgeFBD:(o)=>{
+  const W=350,H=230;
+  const cx=176, cy=124;
+  const th=(o.deg||37)*Math.PI/180;
+  const ux=Math.cos(th), uy=Math.sin(th);   // down-slope, to the right
+  const nx=uy, ny=-ux;
+  let s='';
+  s+=_dash(cx-108*ux,cy-108*uy,cx+108*ux,cy+108*uy,GREY);
+  s+=`<g transform="rotate(${(o.deg||37)} ${cx} ${cy})"><rect x="${cx-24}" y="${cy-30}" width="48" height="30" fill="${FILL_T}" stroke="${INK}" stroke-width="1.7" rx="2"/></g>`;
+  const px=cx-14*ux, py=cy-14*uy;
+  s+=_a2(px,py,px+70*nx,py+70*ny,GRN,o.N||'N',14,-4);
+  s+=_a2(px,py,px,py+66,BLU,o.W||'mg',0,16);
+  s+=_a2(px,py,px-72,py,RED,o.P||'ma',-16,-8);
+  s+=_txt(W/2,216,o.cap||'block as seen from the wedge frame',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- closed box moving vertically up, incline + block inside --------------
+liftIncline:(o)=>{
+  const W=340,H=236;
+  let s='';
+  s+=`<rect x="78" y="40" width="188" height="160" fill="none" stroke="${INK}" stroke-width="1.9" rx="3"/>`;
+  const ax=98, ay=186, bx=250, by=186, tx=250, ty=98;   // right-angle at the right
+  s+=`<path d="M ${ax} ${ay} L ${bx} ${by} L ${tx} ${ty} Z" fill="${FILL_B}" stroke="${INK}" stroke-width="1.7"/>`;
+  const dx=tx-ax, dy=ty-ay, len=Math.hypot(dx,dy), deg=Math.atan2(dy,dx)*180/Math.PI;
+  const mx=ax+dx*0.55, my=ay+dy*0.55;
+  s+=`<g transform="rotate(${deg.toFixed(2)} ${mx} ${my})"><rect x="${mx-21}" y="${my-27}" width="42" height="27" fill="${FILL_T}" stroke="${INK}" stroke-width="1.6" rx="2"/><text x="${mx}" y="${my-9}" font-size="11" text-anchor="middle" fill="${INK}" ${FS} font-weight="700">m</text></g>`;
+  s+=`<path d="M ${ax+34} ${ay} A 34 34 0 0 0 ${ax+34*dx/len} ${ay+34*dy/len}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+  s+=_txt(ax+40,ay-9,o.th||'&#952;',GREY,11,'middle',true);
+  s+=_a2(296,150,296,66,RED,o.a||'a&#8320;',16,-8);
+  s+=_txt(172,222,o.cap||'smooth surfaces, whole box moving up',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- pulley that is itself accelerating upward -----------------------------
+pulleyAcc:(o)=>{
+  const W=320,H=250;
+  let s='';
+  const cx=160, cy=76, r=30;
+  s+=_a2(cx,58,cx,16,RED,o.a||'a&#8320;',22,4);
+  s+=_pulley(cx,cy,r);
+  s+=`<line x1="${cx-r}" y1="${cy}" x2="${cx-r}" y2="168" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<line x1="${cx+r}" y1="${cy}" x2="${cx+r}" y2="168" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_blk(cx-r-24,168,48,36,o.left||'A &#183; m',FILL_T);
+  s+=_blk(cx+r-24,168,48,36,o.right||'B &#183; 2m',FILL_B);
+  s+=_txt(W/2,230,o.cap||'the pulley itself is moving up',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- cylinder resting in a carriage: AB at 30 deg, BC vertical ------------
+carriage:(o)=>{
+  const W=380,H=250;
+  let s='';
+  s+=_hatch(30,350,222);
+  const A=[80,80], B=[240,172], C=[240,80];
+  s+=`<path d="M ${A[0]} ${A[1]} L ${B[0]} ${B[1]} L ${C[0]} ${C[1]}" fill="none" stroke="${INK}" stroke-width="2.2"/>`;
+  s+=`<path d="M ${A[0]} ${A[1]} L ${A[0]} ${A[1]-14} M ${C[0]} ${C[1]} L ${C[0]} ${C[1]-14}" stroke="${INK}" stroke-width="2.2"/>`;
+  s+=`<line x1="60" y1="196" x2="266" y2="196" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<line x1="${A[0]}" y1="${A[1]}" x2="60" y2="196" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<line x1="${C[0]}" y1="${C[1]}" x2="266" y2="196" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<circle cx="96" cy="210" r="10" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<circle cx="230" cy="210" r="10" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<circle cx="210" cy="120" r="30" fill="${FILL_C}" stroke="${INK}" stroke-width="1.8"/>`;
+  s+=_txt(A[0]-12,A[1]-4,'A',INK,11.5,'middle',true);
+  s+=_txt(B[0]+12,B[1]+6,'B',INK,11.5,'middle',true);
+  s+=_txt(C[0]+12,C[1]-4,'C',INK,11.5,'middle',true);
+  s+=_dash(B[0],B[1],B[0]-58,B[1],GREY);
+  s+=`<path d="M ${B[0]-42} ${B[1]} A 42 42 0 0 1 ${B[0]-42*0.867} ${B[1]-42*0.499}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+  s+=_txt(B[0]-58,B[1]-10,'30&#176;',GREY,11,'middle',true);
+  s+=_a2(110,242,44,242,RED,o.a||'a',6,17);
+  if(o.forces){
+    s+=_a2(210,120,210+56*0.499,120-56*0.867,GRN,'N (AB)',16,-6);
+    s+=_a2(210,120,152,120,AMB,'N (BC)',-18,-8);
+    s+=_a2(210,120,210,178,BLU,'mg',0,16);
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- car climbing a 30 deg incline with a bob hanging inside --------------
+carIncline:(o)=>{
+  const W=390,H=252;
+  const gx0=52, gy=222, apex=[340,56];
+  let s='';
+  s+=_hatch(30,364,gy);
+  s+=`<path d="M ${gx0} ${gy} L ${apex[0]} ${apex[1]} L ${apex[0]} ${gy} Z" fill="${FILL_B}" stroke="${INK}" stroke-width="1.8"/>`;
+  const dx=apex[0]-gx0, dy=apex[1]-gy, len=Math.hypot(dx,dy);
+  const ux=dx/len, uy=dy/len;          // up the slope
+  const deg=Math.atan2(dy,dx)*180/Math.PI;
+  const sx=gx0+dx*0.46, sy=gy+dy*0.46; // point on the slope
+  const nx=uy, ny=-ux;                 // outward normal (up-left)
+  const cx=sx+nx*35, cy=sy+ny*35;
+  s+=`<g transform="rotate(${deg.toFixed(2)} ${cx} ${cy})">
+   <rect x="${cx-50}" y="${cy-26}" width="100" height="52" fill="${FILL_T}" stroke="${INK}" stroke-width="1.8" rx="6"/>
+   <circle cx="${cx-28}" cy="${cy+26}" r="8" fill="none" stroke="${INK}" stroke-width="1.5"/>
+   <circle cx="${cx+28}" cy="${cy+26}" r="8" fill="none" stroke="${INK}" stroke-width="1.5"/></g>`;
+  const px=cx+nx*22, py=cy+ny*22;      // roof point
+  const L=32, th=30*Math.PI/180;
+  const bxp=px-L*Math.sin(th), byp=py+L*Math.cos(th);
+  s+=_dash(px,py,px,py+L+4,GREY);
+  s+=`<line x1="${px}" y1="${py}" x2="${bxp}" y2="${byp}" stroke="${INK}" stroke-width="1.5"/>`;
+  s+=`<circle cx="${bxp}" cy="${byp}" r="7" fill="${FILL_C}" stroke="${INK}" stroke-width="1.5"/>`;
+  s+=_txt(px-27,py+30,o.th||'&#952;',GREY,10.5,'middle',true);
+  s+=_a2(sx+ux*46,sy+uy*46,sx+ux*106,sy+uy*106,RED,o.a||'a = 10 m/s&#178;',14,-10);
+  s+=`<path d="M ${gx0+42} ${gy} A 42 42 0 0 0 ${gx0+42*ux} ${gy+42*uy}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+  s+=_txt(gx0+56,gy-10,'30&#176;',GREY,11,'middle',true);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- effective gravity: g down, pseudo backward, resultant tilted ---------
+geff:(o)=>{
+  const W=330,H=210;
+  const ox=210, oy=54;
+  let s='';
+  s+=_a2(ox,oy,ox,oy+96,BLU,'g',14,10);
+  s+=_a2(ox,oy,ox-92,oy,RED,'a (pseudo)',-6,-12);
+  s+=_a2(ox,oy,ox-92,oy+96,AMB,'',0,0);
+  s+=_dash(ox-92,oy,ox-92,oy+96,GREY);
+  s+=_dash(ox,oy+96,ox-92,oy+96,GREY);
+  s+=_txt(ox-118,oy+112,o.lab||'g effective',AMB,11.5,'middle',true);
+  s+=_txt(W/2,190,o.cap||'inside the accelerating frame, gravity looks tilted',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- three particles with their own accelerations -------------------------
+frames:(o)=>{
+  const W=390,H=180;
+  let s='';
+  const put=(x,y,lab,ax,ay,txt)=>{
+    let t=`<circle cx="${x}" cy="${y}" r="11" fill="${FILL_C}" stroke="${INK}" stroke-width="1.6"/>`;
+    t+=_txt(x,y+4,lab,INK,11,'middle',true);
+    if(ax!==0||ay!==0) t+=_a2(x,y,x+ax,y+ay,RED,'',0,0);
+    t+=_txt(x,y+52,txt,GREY,10.5);
+    return t;
+  };
+  s+=put(70,70,'A',48,0,'a = 2 &#238; m/s&#178;');
+  s+=put(200,70,'B',0,0,'a = 0');
+  s+=put(330,70,'C',0,44,'a = &#8722;4 &#309; m/s&#178;');
+  s+=_txt(W/2,158,o.cap||'each particle carries its own acceleration',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+
+};
+
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "Why we need a pseudo force at all",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A closed container on a goods train runs on a level track with <strong>constant velocity</strong>. A block lies on its smooth floor. A man standing on the ground watches the block. What does he see?",
+   "diagram": DIAGRAMS.train({mode:'const'}),
+   "opts": ["The block moves with the same constant velocity, and no net force acts on it","The block moves backwards inside the container","The block speeds up along with the train","The block is at rest with respect to the ground"],
+   "ans": 0,
+   "sol": "Constant velocity means zero acceleration. So for the block, <strong>&#931;F = ma = 0</strong>, and everything is consistent for the ground observer.<br><br>The man inside the container also sees the block at rest. Both observers can use F = ma happily. A frame like this &#8212; at rest or moving with constant velocity &#8212; is called an <strong>inertial frame</strong>."
+  },
+  {
+   "q": "Now the driver speeds up the train with a uniform acceleration a. The floor is smooth, so nothing pushes the block horizontally. The man sitting <em>inside</em> the container sees the block slide backwards with acceleration a. What is odd about this?",
+   "diagram": DIAGRAMS.train({mode:'acc',a:'a'}),
+   "opts": ["The block accelerates for him even though no real force acts on it","The block gains a real backward force from the floor","The block stays at rest for him too","Newton's third law fails inside the train"],
+   "ans": 0,
+   "sol": "Nothing is touching the block sideways. The floor is smooth, no string, no push. Yet for the man in the train it accelerates backwards.<br><br>So <strong>F = ma is failing for him</strong>. The block is not accelerating at all in reality &#8212; the train is running away forwards from underneath it. A frame like this, which is itself accelerating, is called a <strong>non-inertial frame</strong>."
+  },
+  {
+   "q": "We would still like to use F = ma inside the accelerating train. The trick is to add one extra force on every body in that frame. This extra force must be",
+   "diagram": DIAGRAMS.geff({}),
+   "opts": ["m &#215; (acceleration of the frame), pointing opposite to the frame's acceleration","m &#215; (acceleration of the frame), pointing along the frame's acceleration","equal to the weight of the body","zero for a body at rest in that frame"],
+   "ans": 0,
+   "sol": "The correction is called the <strong>pseudo force</strong>:<br><br>F<sub>pseudo</sub> = &#8722; m a<sub>frame</sub><br><br>Magnitude m &#215; a, direction <strong>opposite</strong> to the acceleration of the frame. When the bus jerks forward, you feel thrown backwards &#8212; that backward push is exactly this.<br><br>Two things to hold on to: it acts on <em>every</em> body in that frame, and it has no reaction pair. Nobody is pushing you. It is a bookkeeping force that lets you keep writing F = ma."
+  },
+  {
+   "tag": "Ex-2 Q5",
+   "q": "&#9733; <strong>Original:</strong> A reference frame attached to the earth &#8212; which statements are correct?<br>(i) it is an inertial frame by definition<br>(ii) it cannot be an inertial frame because the earth revolves round the sun<br>(iii) it is an inertial frame because Newton's laws are applicable in it<br>(iv) it cannot be an inertial frame because the earth is rotating about its own axis",
+   "opts": ["(ii) and (iv)","(i) and (iii)","only (i)","(i), (iii) and (iv)"],
+   "ans": 0,
+   "sol": "The earth goes round the sun and also spins on its axis. Both are accelerated motions (circular motion always has acceleration), so strictly the earth frame is <strong>non-inertial</strong> &#8212; statements (ii) and (iv) are the correct reasons.<br><br>You cannot call a frame inertial <em>by definition</em>, and you cannot call it inertial just because Newton's laws seem to work there. So (i) and (iii) are wrong.<br><br><em>In practice:</em> those accelerations are so small (about 0.034 m/s<sup>2</sup> for the spin) that for lab problems we treat the ground as inertial. That is an approximation, not a definition."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "The pseudo force you can feel &#8212; standing in a lift",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A man of mass 60 kg stands on a weighing machine inside a lift that is <strong>at rest</strong>. Take g = 10 m/s<sup>2</sup>. The machine reads",
+   "diagram": DIAGRAMS.lift({dir:'none',machine:'weighing machine'}),
+   "opts": ["600 N (that is 60 kgf)","60 N","0 N","1200 N"],
+   "ans": 0,
+   "sol": "A weighing machine never reads weight. It reads the <strong>normal force</strong> pressing on its top surface.<br><br>Lift at rest &#8594; a = 0 &#8594; N &#8722; mg = 0 &#8594; N = 600 N.<br><br>Only here does the reading happen to equal the true weight."
+  },
+  {
+   "tag": "Box-4 Q6",
+   "q": "A man weighing 80 kg stands on a scale in a lift moving upward with a uniform acceleration of 5 m/s<sup>2</sup>. Reading on the scale is (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.lift({dir:'up',a:'a = 5 m/s&#178;'}),
+   "opts": ["1200 N","800 N","400 N","Zero"],
+   "ans": 0,
+   "sol": "<strong>Ground frame:</strong> N &#8722; mg = ma &#8594; N = m(g + a) = 80 &#215; 15 = <strong>1200 N</strong>.<br><br><strong>Lift frame:</strong> the lift accelerates up, so the pseudo force on the man is ma = 400 N <em>downwards</em>. He is in equilibrium in this frame:<br>N = mg + ma = 800 + 400 = 1200 N.<br><br>Same answer both ways. Inside a lift going up, everything behaves as if gravity became g + a. That is why you feel heavy when the lift starts."
+  },
+  {
+   "tag": "Box-4 Q8",
+   "q": "A man of mass 90 kg is standing in a lift whose cable breaks suddenly. As the lift falls freely, the apparent weight of the man is",
+   "diagram": DIAGRAMS.lift({dir:'free',a:'g',cut:true}),
+   "opts": ["0 N","90 N","900 N","some negative value"],
+   "ans": 0,
+   "sol": "Free fall means a = g downwards.<br><br>N &#8722; mg = m(&#8722;g) &#8594; N = m(g &#8722; g) = <strong>0</strong>.<br><br>In the lift frame the downward pseudo force mg exactly cancels the weight mg. Effective gravity is zero &#8212; this is weightlessness. The man does not lose his weight; he simply stops pressing on anything.<br><br>Note the reading can never be negative: the floor can push, it cannot pull him down."
+  },
+  {
+   "tag": "Box-4 Q4",
+   "q": "&#9733; <strong>Original:</strong> The mass of the man is 60 kg and the reading of the weighing machine is 90 kg. The acceleration of the lift is",
+   "diagram": DIAGRAMS.lift({dir:'up',a:'a = ?',read:'reading = 90 kg'}),
+   "opts": ["g/2, upward","g/2, downward","g, upward","g, downward"],
+   "ans": 0,
+   "sol": "Reading 90 kg means N = 900 N.<br><br>N &#8722; mg = ma<br>900 &#8722; 600 = 60a &#8594; a = 5 m/s<sup>2</sup> = <strong>g/2, upward</strong>.<br><br>The reading went <em>up</em>, so the extra force is upward, so the acceleration is upward. Quick check before any algebra: reading more than true weight &#8594; a is up; reading less &#8594; a is down.<br><br>Careful: a is upward, but the lift could be moving either way. Speeding up while going up, or slowing down while coming down &#8212; both give an upward a."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "The hanging bob in an accelerating box",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A box is accelerating towards the right with acceleration a. A bob hangs from its roof by a string. In the <strong>box frame</strong>, the pseudo force on the bob is",
+   "diagram": DIAGRAMS.boxBob({a:'a'}),
+   "opts": ["ma, towards the left","ma, towards the right","mg, downwards","zero, because the bob is at rest in the box"],
+   "ans": 0,
+   "sol": "Pseudo force = m &#215; a<sub>frame</sub>, <strong>opposite</strong> to the frame's acceleration. The box goes right, so the pseudo force is <strong>ma to the left</strong>.<br><br>&#8220;The bob is at rest in the box&#8221; is exactly why we need this force. It is at rest even though the string is tilted, and only the pseudo force can balance the books."
+  },
+  {
+   "q": "The bob hangs steady at an angle &#952; from the vertical. Writing equilibrium in the box frame, the correct pair of equations is",
+   "diagram": DIAGRAMS.bobFBD({}),
+   "opts": ["T sin&#952; = ma and T cos&#952; = mg","T cos&#952; = ma and T sin&#952; = mg","T = ma + mg and &#952; = 0","T sin&#952; = mg and T cos&#952; = ma"],
+   "ans": 0,
+   "sol": "Three forces act on the bob in this frame: tension T along the string, weight mg down, pseudo force ma horizontal. It is at rest here, so they must add to zero.<br><br>Horizontal: the horizontal part of T must cancel the pseudo force &#8594; <strong>T sin&#952; = ma</strong><br>Vertical: the vertical part of T must hold the weight &#8594; <strong>T cos&#952; = mg</strong><br><br>The angle is measured from the <em>vertical</em>, so the side opposite to &#952; is horizontal. Get that wrong and sin and cos swap places."
+  },
+  {
+   "q": "Dividing those two equations gives tan&#952; = a/g. So if the box accelerates with a = g, the string settles at",
+   "diagram": DIAGRAMS.geff({}),
+   "opts": ["45&#176; from the vertical","30&#176; from the vertical","60&#176; from the vertical","90&#176; &#8212; the string becomes horizontal"],
+   "ans": 0,
+   "sol": "tan&#952; = a/g = g/g = 1 &#8594; &#952; = <strong>45&#176;</strong>.<br><br>Useful picture: the string always lines up with the <strong>effective gravity</strong> &#8212; the vector sum of g downward and a backward. When a = g, that resultant points 45&#176; away from the vertical.<br><br>The string can never reach 90&#176;. That would need a to be infinite."
+  },
+  {
+   "tag": "Box-7 Q1",
+   "q": "&#9733; <strong>Original:</strong> In the given figure the bob is at rest with respect to the box. Find the acceleration a of the box.",
+   "diagram": DIAGRAMS.boxBob({a:'a',th:'&#952;'}),
+   "opts": ["g tan&#952;","g cot&#952;","g sin&#952;","g cos&#952;"],
+   "ans": 0,
+   "sol": "From the two equations: tan&#952; = a/g &#8594; a = <strong>g tan&#952;</strong>.<br><br>Sense check with numbers: a small tilt means a small acceleration, which is right. If you had chosen g cot&#952;, a tiny angle would need a huge acceleration &#8212; clearly wrong.<br><br>This one relation is the whole of pseudo-force theory in a hanging-bob problem. Every trolley, car, lift or train question with a tilted string comes back to <strong>tan&#952; = a/g</strong>, with &#952; measured from the vertical."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "Read the angle, find the force",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A trolley of mass 8 kg carries a 2 kg object hanging from a string. A constant force F is applied on the trolley and the string settles at 37&#176; from the vertical. The acceleration of the trolley is (g = 10 m/s<sup>2</sup>, tan37&#176; = 3/4)",
+   "diagram": DIAGRAMS.trolley({F:'F'}),
+   "opts": ["7.5 m/s<sup>2</sup>","40/3 m/s<sup>2</sup>","6 m/s<sup>2</sup>","10 m/s<sup>2</sup>"],
+   "ans": 0,
+   "sol": "The string angle tells you the acceleration and nothing else is needed:<br><br>a = g tan37&#176; = 10 &#215; 0.75 = <strong>7.5 m/s<sup>2</sup></strong><br><br>Note that the masses do not appear here at all. A heavy bob and a light bob hang at the same angle. Only a and g decide it."
+  },
+  {
+   "q": "The surface is frictionless. What force F must be pushing the trolley to give the whole thing this acceleration?",
+   "diagram": DIAGRAMS.trolley({F:'F = ?'}),
+   "opts": ["75 N","60 N","15 N","106.7 N"],
+   "ans": 0,
+   "sol": "Take the trolley and the hanging object as <strong>one system</strong> of mass 8 + 2 = 10 kg. The string and the tension are internal, so they cancel.<br><br>F = (M + m)a = 10 &#215; 7.5 = <strong>75 N</strong><br><br>A common slip is to use only the 8 kg trolley (giving 60 N). But F has to accelerate the hanging 2 kg as well &#8212; it gets dragged along by the string."
+  },
+  {
+   "q": "The tension in the string is",
+   "diagram": DIAGRAMS.bobFBD({T:'T',W:'mg = 20 N',P:'ma = 15 N'}),
+   "opts": ["25 N","20 N","15 N","35 N"],
+   "ans": 0,
+   "sol": "In the trolley frame the bob feels mg = 20 N down and ma = 2 &#215; 7.5 = 15 N horizontally. T must balance both together:<br><br>T = &#8730;(20<sup>2</sup> + 15<sup>2</sup>) = &#8730;625 = <strong>25 N</strong><br><br>Or straight from T cos&#952; = mg: T = 20/cos37&#176; = 20/0.8 = 25 N.<br><br>Notice T = 25 N is bigger than the weight 20 N. Any tilted string carries more than the plain weight."
+  },
+  {
+   "tag": "Ex-2 Q3",
+   "q": "&#9733; <strong>Original:</strong> A trolley of mass 8 kg stands on a frictionless surface with an object of mass 2 kg suspended inside it. A constant force F acts on the trolley, as a result of which the string stands at 37&#176; from the vertical. Which pair of statements is correct?",
+   "diagram": DIAGRAMS.trolley({F:'F'}),
+   "opts": ["Force applied is 75 N and tension in the string is 25 N","Acceleration of the trolley is 40/3 m/s<sup>2</sup> and F = 60 N","Force applied is 60 N and tension is 20 N","Acceleration is 40/3 m/s<sup>2</sup> and tension is 25 N"],
+   "ans": 0,
+   "sol": "a = g tan37&#176; = 7.5 m/s<sup>2</sup>, F = 10 &#215; 7.5 = <strong>75 N</strong>, T = 20/cos37&#176; = <strong>25 N</strong>.<br><br>Where does the tempting 40/3 come from? From using tan37&#176; = 4/3 instead of 3/4 &#8212; that is, measuring the angle from the horizontal instead of the vertical. The figure clearly shows 37&#176; from the vertical.<br><br><em>Habit worth building:</em> before touching tan, look at the figure and ask &#8220;angle from vertical or from horizontal?&#8221;"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Pseudo force depends only on the observer",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Two cars move on a straight road, one at 20 m/s and the other at 35 m/s, both with <strong>constant</strong> speed. A passenger in the first car watches a ball lying in the second car. The pseudo force he must add on that ball is",
+   "opts": ["zero","m &#215; 15, opposite to the relative motion","m &#215; 35","m &#215; 20"],
+   "ans": 0,
+   "sol": "Pseudo force depends on the <strong>acceleration</strong> of the observer's frame, not on his speed and not on the relative velocity.<br><br>Both cars move with constant velocity, so both frames are inertial. a<sub>frame</sub> = 0 &#8594; pseudo force = <strong>0</strong>.<br><br>Fast does not mean non-inertial. Only accelerating means non-inertial."
+  },
+  {
+   "q": "An observer sits in a frame accelerating along the <strong>positive x</strong> direction at 2 m/s<sup>2</sup>. He looks at a body of mass m. The pseudo force he must put on that body is",
+   "diagram": DIAGRAMS.frames({}),
+   "opts": ["2m, along negative x","2m, along positive x","2m, along positive y","zero if the body is at rest for him"],
+   "ans": 0,
+   "sol": "F<sub>pseudo</sub> = &#8722; m a<sub>frame</sub> = &#8722; m(2&#238;) = <strong>2m along &#8722;x</strong>.<br><br>Two points that decide almost every question of this type:<br>1. It is the <em>observer's</em> acceleration that matters, never the watched body's.<br>2. The direction is always opposite to that acceleration."
+  },
+  {
+   "q": "Three particles move with v<sub>A</sub> = (2t&#238; + 6&#309;) m/s, v<sub>B</sub> = (3&#238; + 4&#309;) m/s and v<sub>C</sub> = (6&#238; &#8722; 4t&#309;) m/s. Differentiating, their accelerations are a<sub>A</sub> = 2&#238;, a<sub>B</sub> = 0 and a<sub>C</sub> = &#8722;4&#309;. The pseudo force on B <strong>as observed by C</strong> points",
+   "diagram": DIAGRAMS.frames({}),
+   "opts": ["along positive y","along negative y","along positive x","it is zero, since a<sub>B</sub> = 0"],
+   "ans": 0,
+   "sol": "The observer is C, so only a<sub>C</sub> = &#8722;4&#309; matters.<br><br>F<sub>pseudo</sub> = &#8722; m<sub>B</sub>(&#8722;4&#309;) = +4m<sub>B</sub>&#309; &#8594; <strong>along positive y</strong>.<br><br>The trap is the last option: a<sub>B</sub> = 0 tells you B is unaccelerated, but B's own acceleration plays no part in this. Look only at who is watching."
+  },
+  {
+   "tag": "Ex-3 Q12",
+   "q": "&#9733; <strong>Original:</strong> With the same three particles (a<sub>A</sub> = 2&#238;, a<sub>B</sub> = 0, a<sub>C</sub> = &#8722;4&#309;), match these two:<br>(I) pseudo force on A as observed by B<br>(II) pseudo force on C as observed by A",
+   "diagram": DIAGRAMS.frames({}),
+   "opts": ["(I) zero, (II) along negative x","(I) along positive x, (II) along negative x","(I) zero, (II) along positive x","(I) along negative x, (II) zero"],
+   "ans": 0,
+   "sol": "(I) The observer is B and a<sub>B</sub> = 0. B's frame is inertial, so no pseudo force is needed at all &#8594; <strong>zero</strong>.<br><br>(II) The observer is A with a<sub>A</sub> = 2&#238;. Pseudo force on anything he watches = &#8722;m(2&#238;) &#8594; <strong>along negative x</strong>.<br><br>Full key for the other two parts of the original: pseudo force on B as seen by C, and on A as seen by C, both point along <strong>positive y</strong>, since in each case the observer is C.<br><br><em>One line to carry away:</em> the watched body decides only the mass; the observer decides the direction."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "The block that refuses to slide on a moving wedge",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A block sits on the smooth slope of a wedge. The wedge is pushed to the right with acceleration a. Working in the <strong>wedge frame</strong>, the forces on the block are",
+   "diagram": DIAGRAMS.wedge({m:'m',th:'&#952;',a:'a'}),
+   "opts": ["N perpendicular to the slope, mg vertically down, and ma horizontally to the left","N perpendicular to the slope, mg down, and ma to the right","only N and mg, since the surface is smooth","N vertically up, mg down, and ma down the slope"],
+   "ans": 0,
+   "sol": "The surface is smooth, so there is no friction, and the contact force is purely the normal N, perpendicular to the slope.<br><br>The wedge frame accelerates to the right, so the pseudo force on the block is <strong>ma to the left</strong> &#8212; opposite to the frame.<br><br>Watch the last option: the pseudo force is always horizontal here (because the wedge's acceleration is horizontal). It is not along the slope. You resolve it along the slope later, but you do not draw it that way."
+  },
+  {
+   "q": "The block does not slide on the wedge &#8212; it just rides along. Resolving <strong>along the slope</strong>, the balance condition is",
+   "diagram": DIAGRAMS.wedgeFBD({}),
+   "opts": ["mg sin&#952; = ma cos&#952;","mg cos&#952; = ma sin&#952;","mg sin&#952; = ma sin&#952;","N = mg cos&#952;"],
+   "ans": 0,
+   "sol": "Resolve along the surface. N has no component there, so only two forces matter:<br><br>&#8226; weight, down the slope: mg sin&#952;<br>&#8226; pseudo force, up the slope: ma cos&#952;<br><br>No sliding means these are equal: <strong>mg sin&#952; = ma cos&#952;</strong>.<br><br>Careful with which trig ratio goes where. The weight is vertical and the slope is at &#952; to the horizontal, so its along-slope part uses sin&#952;. The pseudo force is horizontal, so its along-slope part uses cos&#952;."
+  },
+  {
+   "q": "If the slope is at 45&#176;, the acceleration needed to keep the block from sliding is (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.wedge({m:'m',th:'45&#176;',a:'a = ?'}),
+   "opts": ["10 m/s<sup>2</sup>","5 m/s<sup>2</sup>","20 m/s<sup>2</sup>","7.07 m/s<sup>2</sup>"],
+   "ans": 0,
+   "sol": "From mg sin&#952; = ma cos&#952;: a = g tan&#952; = 10 &#215; tan45&#176; = <strong>10 m/s<sup>2</sup></strong>.<br><br>Steeper slope &#8594; larger tan&#952; &#8594; you must push harder. A nearly vertical face would need an enormous acceleration, and a nearly flat one needs almost nothing. That matches common sense."
+  },
+  {
+   "tag": "Box-7 Q5",
+   "q": "&#9733; <strong>Original:</strong> In the given figure, if the acceleration of the block with respect to the wedge is zero, find the value of a. (Neglect friction)",
+   "diagram": DIAGRAMS.wedge({m:'m',th:'&#952;',a:'a'}),
+   "opts": ["g tan&#952;","g cot&#952;","g sin&#952;","g cos&#952;"],
+   "ans": 0,
+   "sol": "a = <strong>g tan&#952;</strong>.<br><br>Notice this is the same answer as the hanging-bob question. It is the same physics wearing different clothes: the effective gravity inside the accelerating frame must point perpendicular to the surface the block rests on, exactly as the string lines up with the effective gravity.<br><br>The mass never enters. A 1 kg block and a 100 kg block need the same a.<br><br><em>Two conditions to keep straight:</em> zero acceleration <em>relative to the wedge</em> means the block moves along with the wedge. It is not at rest in the ground frame &#8212; it is accelerating at a, just like the wedge."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "How hard does that block press on the wedge?",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "First the simple case. The wedge is at <strong>rest</strong> and a block m sits on its smooth slope (held in place). The normal force is",
+   "diagram": DIAGRAMS.wedge({m:'m',th:'&#952;',a:false,note:'wedge at rest'}),
+   "opts": ["mg cos&#952;","mg","mg sin&#952;","mg/cos&#952;"],
+   "ans": 0,
+   "sol": "Perpendicular to the slope the block is not moving, so N balances the perpendicular part of the weight:<br><br>N = <strong>mg cos&#952;</strong><br><br>This is always less than mg. On a slope, part of the weight goes into pressing along the surface, so less is left for pressing into it."
+  },
+  {
+   "q": "Now the wedge accelerates to the right with a, and the block rides along without sliding. Perpendicular to the slope, the equation becomes",
+   "diagram": DIAGRAMS.wedgeFBD({}),
+   "opts": ["N = mg cos&#952; + ma sin&#952;","N = mg cos&#952; &#8722; ma sin&#952;","N = mg cos&#952;","N = ma cos&#952; + mg sin&#952;"],
+   "ans": 0,
+   "sol": "The block does not lift off and does not sink in, so the perpendicular forces balance in the wedge frame.<br><br>Into the surface: mg cos&#952; (from the weight) and ma sin&#952; (from the pseudo force, which pushes the block against the slope here).<br>Out of the surface: N.<br><br>So <strong>N = mg cos&#952; + ma sin&#952;</strong>. The block is pressed harder than when the wedge was still.<br><br>The sign depends on the geometry: the pseudo force points to the left and the slope faces up-right, so it pushes into the surface. Always check this against your own figure rather than remembering a formula."
+  },
+  {
+   "q": "Now put in the value a = g tan&#952; from the last ladder. N becomes",
+   "opts": ["mg/cos&#952;","mg cos&#952;","mg sin&#952;","2mg cos&#952;"],
+   "ans": 0,
+   "sol": "N = mg cos&#952; + m(g tan&#952;)sin&#952;<br>= mg cos&#952; + mg sin<sup>2</sup>&#952;/cos&#952;<br>= mg (cos<sup>2</sup>&#952; + sin<sup>2</sup>&#952;)/cos&#952;<br>= <strong>mg/cos&#952;</strong><br><br>The identity sin<sup>2</sup> + cos<sup>2</sup> = 1 does all the tidying. Whenever your answer collapses this neatly, it is usually a sign you are on the right track."
+  },
+  {
+   "tag": "Box-7 Q6",
+   "q": "&#9733; <strong>Original:</strong> In the above question, find the normal force between the block and the wedge.",
+   "diagram": DIAGRAMS.wedge({m:'m',th:'&#952;',a:'a = g tan&#952;',forces:true}),
+   "opts": ["mg sec&#952;","mg cos&#952;","mg tan&#952;","mg cosec&#952;"],
+   "ans": 0,
+   "sol": "N = mg/cos&#952; = <strong>mg sec&#952;</strong>.<br><br>Since sec&#952; &#8805; 1, this is <em>more</em> than mg &#8212; more even than the full weight. That is the whole story of this ladder: on a still wedge the block presses with mg cos&#952; (less than mg); once the wedge is accelerated enough to stop the sliding, it presses with mg sec&#952; (more than mg).<br><br>Neat alternative route: in the wedge frame the effective gravity is &#8730;(g<sup>2</sup> + a<sup>2</sup>) = g&#8730;(1 + tan<sup>2</sup>&#952;) = g sec&#952;, and it points straight into the surface. So N = mg sec&#952; in one line."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "The same wedge, written as &#8220;1 in x&#8221;",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A plane is described as inclined <strong>1 in x</strong>. This means",
+   "diagram": DIAGRAMS.wedge({m:'m',th:'&#952;',a:false,note:'sin&#952; = 1/x'}),
+   "opts": ["sin&#952; = 1/x","tan&#952; = 1/x","cos&#952; = 1/x","&#952; = x degrees"],
+   "ans": 0,
+   "sol": "&#8220;1 in x&#8221; is the old road-and-railway way of writing a gradient: a rise of 1 for every x measured <strong>along the slope</strong>.<br><br>Rise / hypotenuse = <strong>sin&#952; = 1/x</strong>.<br><br>The question itself states this, but it is worth knowing. If the x were measured horizontally you would get tan&#952; = 1/x, which is a different (though nearly equal for gentle slopes) thing."
+  },
+  {
+   "q": "If sin&#952; = 1/x, then cos&#952; equals",
+   "opts": ["&#8730;(x<sup>2</sup> &#8722; 1)/x","1/&#8730;(x<sup>2</sup> &#8722; 1)","x/&#8730;(x<sup>2</sup> &#8722; 1)","&#8730;(1 &#8722; x<sup>2</sup>)"],
+   "ans": 0,
+   "sol": "Draw the right triangle: side opposite &#952; is 1, hypotenuse is x. The third side is &#8730;(x<sup>2</sup> &#8722; 1).<br><br>cos&#952; = adjacent / hypotenuse = <strong>&#8730;(x<sup>2</sup> &#8722; 1)/x</strong><br><br>Drawing the triangle is safer than remembering formulas. It also shows immediately that x must be more than 1."
+  },
+  {
+   "q": "So tan&#952; works out to",
+   "opts": ["1/&#8730;(x<sup>2</sup> &#8722; 1)","&#8730;(x<sup>2</sup> &#8722; 1)","x/&#8730;(x<sup>2</sup> &#8722; 1)","&#8730;(x<sup>2</sup> &#8722; 1)/x"],
+   "ans": 0,
+   "sol": "tan&#952; = sin&#952;/cos&#952; = (1/x) &#247; (&#8730;(x<sup>2</sup> &#8722; 1)/x) = <strong>1/&#8730;(x<sup>2</sup> &#8722; 1)</strong><br><br>Straight from the triangle: opposite / adjacent = 1 / &#8730;(x<sup>2</sup> &#8722; 1)."
+  },
+  {
+   "tag": "Ex-1 Q3",
+   "q": "&#9733; <strong>Original:</strong> A body kept on a smooth inclined plane of inclination 1 in x will remain stationary relative to the inclined plane if the plane is given a horizontal acceleration equal to",
+   "diagram": DIAGRAMS.wedge({m:'m',th:'&#952;',a:'a'}),
+   "opts": ["g/&#8730;(x<sup>2</sup> &#8722; 1)","&#8730;(x<sup>2</sup> &#8722; 1) g","g&#8730;(x<sup>2</sup> &#8722; 1)/x","gx/&#8730;(x<sup>2</sup> &#8722; 1)"],
+   "ans": 0,
+   "sol": "Same condition as before: a = g tan&#952; = <strong>g/&#8730;(x<sup>2</sup> &#8722; 1)</strong>.<br><br>Check it with a number. Take x = 2, so sin&#952; = 0.5 and &#952; = 30&#176;. Our answer gives a = g/&#8730;3 = g tan30&#176;. Correct.<br><br>And a gentle slope (large x) needs only a small acceleration &#8212; also correct. Any option that grows with x must be wrong, and that alone kills two of the four choices."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "When a is <em>not</em> g tan&#952; &#8212; force on the incline",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A 5 kg block rests on the smooth face of an incline of 37&#176;, and the incline is moved to the right with a = 5 m/s<sup>2</sup>. In the incline's frame, the pseudo force on the block is",
+   "diagram": DIAGRAMS.wedge({m:'5 kg',th:'37&#176;',a:'a = 5 m/s&#178;'}),
+   "opts": ["25 N to the left","25 N to the right","50 N to the left","15 N down the slope"],
+   "ans": 0,
+   "sol": "F<sub>pseudo</sub> = ma = 5 &#215; 5 = <strong>25 N</strong>, and it points <strong>opposite</strong> to the incline's acceleration, so to the left.<br><br>It is horizontal, not along the slope. We resolve it later."
+  },
+  {
+   "q": "Along the slope: mg sin37&#176; = 30 N pulls the block down the slope, while the pseudo force gives ma cos37&#176; = 20 N up the slope. So",
+   "diagram": DIAGRAMS.wedgeFBD({W:'mg = 50 N',P:'ma = 25 N'}),
+   "opts": ["the block does slide down along the incline &#8212; a = 5 is less than g tan37&#176; = 7.5","the block stays put on the incline","the block slides up the incline","the block leaves the surface"],
+   "ans": 0,
+   "sol": "For no sliding we would need a = g tan37&#176; = 7.5 m/s<sup>2</sup>. Here a is only 5, so the push is not enough and the block <strong>slides down the slope</strong>.<br><br>This is the honest situation in the original question, and it is worth saying aloud in class. Many students assume &#8220;block on accelerating wedge&#8221; automatically means it rides along. It does not &#8212; only one particular value of a does that."
+  },
+  {
+   "q": "Even though it is sliding along the surface, the block is not leaving the surface. So perpendicular to the incline it still shares the wedge's acceleration, and (m = 5 kg, g = 10)",
+   "opts": ["N = mg cos37&#176; + ma sin37&#176; = 40 + 15","N = mg cos37&#176; &#8722; ma sin37&#176; = 40 &#8722; 15","N = mg cos37&#176; = 40 N only","N = mg = 50 N"],
+   "ans": 0,
+   "sol": "Sliding happens <em>along</em> the slope. Perpendicular to the slope there is no relative movement at all, so that equation is untouched:<br><br>N = mg cos37&#176; + ma sin37&#176; = 5(10)(0.8) + 5(5)(0.6) = 40 + 15 = <strong>55 N</strong><br><br>This is the key idea of the ladder: sliding along the surface does not spoil the perpendicular equation. Handle the two directions separately and neither one confuses the other."
+  },
+  {
+   "tag": "Box-7 Q7",
+   "q": "&#9733; <strong>Original:</strong> An inclined plane is moved towards the right with an acceleration of 5 ms<sup>&#8722;2</sup> as shown. Find the force in newton which the block of mass 5 kg exerts on the incline. (All surfaces are smooth, 37&#176;)",
+   "diagram": DIAGRAMS.wedge({m:'5 kg',th:'37&#176;',a:'5 m/s&#178;',forces:true}),
+   "opts": ["55 N","50 N","60 N","40 N"],
+   "ans": 0,
+   "sol": "The incline pushes the block with N = <strong>55 N</strong>, so by Newton's third law the block pushes the incline with <strong>55 N</strong> too, in the opposite direction.<br><br>The question asks for the force <em>on the incline</em>, but the number is the same. Always read this carefully in an exam &#8212; the magnitude is identical, only the direction flips.<br><br><em>Compare with the earlier ladder:</em> there we found N = mg sec&#952; = 5(10)/0.8 = 62.5 N, for the special a = 7.5 that stops the sliding. Here a is smaller, so N is smaller: 55 N. The formula mg sec&#952; is <strong>not</strong> a general result &#8212; it only holds when a = g tan&#952;."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "A box lifted upward, with an incline inside",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A closed box is moving vertically upward with acceleration a<sub>0</sub>. Inside the box, on everything of mass m, the pseudo force is",
+   "diagram": DIAGRAMS.liftIncline({a:'a&#8320;'}),
+   "opts": ["ma<sub>0</sub>, vertically downward","ma<sub>0</sub>, vertically upward","zero","m(g + a<sub>0</sub>), downward"],
+   "ans": 0,
+   "sol": "The frame accelerates upward, so the pseudo force points <strong>downward</strong> with magnitude ma<sub>0</sub>.<br><br>Now stand in the box frame and add up the two vertical pulls on any body: mg down (real) plus ma<sub>0</sub> down (pseudo) = m(g + a<sub>0</sub>) down.<br><br>So inside the box, gravity behaves as though it has become <strong>g + a<sub>0</sub></strong>. This one substitution solves the whole ladder."
+  },
+  {
+   "q": "In a box that is <strong>not</strong> moving, a block rests on a smooth incline of angle &#952; inside it. The normal force on the block is",
+   "diagram": DIAGRAMS.liftIncline({a:'a = 0',cap:'box at rest'}),
+   "opts": ["mg cos&#952;","mg","mg sin&#952;","m(g)tan&#952;"],
+   "ans": 0,
+   "sol": "The ordinary result: perpendicular to the incline, N = <strong>mg cos&#952;</strong>.<br><br>Store this. The moving-box answer will be exactly this with g replaced by the effective gravity."
+  },
+  {
+   "q": "Now the box moves up with a<sub>0</sub>. Which replacement gives the new normal force?",
+   "diagram": DIAGRAMS.geff({lab:'g + a&#8320;',cap:'inside a box accelerating straight up'}),
+   "opts": ["replace g by (g + a<sub>0</sub>) &#8594; N = m(g + a<sub>0</sub>)cos&#952;","replace g by (g &#8722; a<sub>0</sub>) &#8594; N = m(g &#8722; a<sub>0</sub>)cos&#952;","add ma<sub>0</sub> along the incline &#8594; N = mg cos&#952; + ma<sub>0</sub>sin&#952;","N does not change at all"],
+   "ans": 0,
+   "sol": "Both the weight and the pseudo force point straight down here, so they simply add. Effective gravity = g + a<sub>0</sub>, still vertical.<br><br>Since the direction has not changed &#8212; only the size &#8212; every formula from the static case survives with g &#8594; (g + a<sub>0</sub>):<br><br>N = <strong>m(g + a<sub>0</sub>)cos&#952;</strong><br><br>Compare this with the wedge ladder, where the extra force was horizontal. There the effective gravity tilted, so the formulas changed shape. Here it stays vertical, so nothing tilts."
+  },
+  {
+   "tag": "Box-7 Q4",
+   "q": "&#9733; <strong>Original:</strong> In the given figure the box is moving vertically upward with acceleration a<sub>0</sub> (all surfaces are smooth). The normal force between the block and the incline is",
+   "diagram": DIAGRAMS.liftIncline({a:'a&#8320;',th:'&#952;'}),
+   "opts": ["m(g + a<sub>0</sub>)cos&#952;","mg cos&#952;","m(g &#8722; a<sub>0</sub>)cos&#952;","(m/2)(g + a<sub>0</sub>)sin&#952;"],
+   "ans": 0,
+   "sol": "N = <strong>m(g + a<sub>0</sub>)cos&#952;</strong>.<br><br>Checks worth doing every time:<br>&#8226; Put a<sub>0</sub> = 0 &#8594; N = mg cos&#952;. The stationary answer comes back. Good.<br>&#8226; Put &#952; = 0 (flat floor) &#8594; N = m(g + a<sub>0</sub>). The lift answer comes back. Good.<br><br>If the box were coming <em>down</em> with a<sub>0</sub>, the pseudo force would flip and you would get m(g &#8722; a<sub>0</sub>)cos&#952; &#8212; option 3. In free fall it becomes zero and the block floats off the incline."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ "name": "A pulley that is itself accelerating",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Two blocks m and 2m hang over a light pulley, and the whole <strong>pulley</strong> is pulled upward with acceleration a<sub>0</sub>. Working in the pulley's frame, the effective gravity on each block is",
+   "diagram": DIAGRAMS.pulleyAcc({a:'a&#8320;'}),
+   "opts": ["(g + a<sub>0</sub>), downward","(g &#8722; a<sub>0</sub>), downward","g, downward &#8212; the pulley's motion does not matter","a<sub>0</sub>, upward"],
+   "ans": 0,
+   "sol": "The pulley frame accelerates up with a<sub>0</sub>, so every block gets a pseudo force ma<sub>0</sub> downward, on top of its weight mg.<br><br>Effective gravity = <strong>g + a<sub>0</sub></strong>, still straight down.<br><br>This is the whole reason we shift to the pulley frame. In this frame the pulley is at rest, so the string length constraint is simple again: whatever one block goes up, the other comes down by the same amount."
+  },
+  {
+   "q": "In a normal Atwood machine with masses m and 2m in a gravity g&#8242;, the acceleration of each block is",
+   "opts": ["g&#8242;/3","g&#8242;/2","2g&#8242;/3","3g&#8242;"],
+   "ans": 0,
+   "sol": "a = (m<sub>2</sub> &#8722; m<sub>1</sub>)g&#8242; / (m<sub>1</sub> + m<sub>2</sub>) = (2m &#8722; m)g&#8242; / (3m) = <strong>g&#8242;/3</strong><br><br>Quick way to see it: the unbalanced pull is (2m &#8722; m)g&#8242; = mg&#8242;, and the mass being moved is the whole 3m. Divide."
+  },
+  {
+   "tag": "Box-7 Q2",
+   "q": "In the figure the pulley moves with acceleration a<sub>0</sub> upward, with block A of mass m and block B of mass 2m. The acceleration of block A <strong>with respect to the pulley</strong> is",
+   "diagram": DIAGRAMS.pulleyAcc({a:'a&#8320;',left:'A &#183; m',right:'B &#183; 2m'}),
+   "opts": ["(g + a<sub>0</sub>)/3, upward","(g &#8722; a<sub>0</sub>)/3, upward","(g + a<sub>0</sub>)/2, upward","(g &#8722; a<sub>0</sub>)/2, upward"],
+   "ans": 0,
+   "sol": "Put g&#8242; = g + a<sub>0</sub> into the Atwood result:<br><br>a<sub>rel</sub> = g&#8242;/3 = <strong>(g + a<sub>0</sub>)/3</strong><br><br>Direction: B is heavier, so B goes down relative to the pulley and A goes <strong>up</strong> relative to the pulley.<br><br>&#8220;With respect to the pulley&#8221; is what makes this question easy. If it had asked for A's acceleration with respect to the ground, you would then add the pulley's own a<sub>0</sub> as a vector."
+  },
+  {
+   "tag": "Box-7 Q3",
+   "q": "&#9733; <strong>Original:</strong> In the above question, the tension in the string is",
+   "diagram": DIAGRAMS.pulleyAcc({a:'a&#8320;',left:'A &#183; m',right:'B &#183; 2m',cap:'find the tension in the string'}),
+   "opts": ["(4/3)m(g + a<sub>0</sub>)","(4/3)m(g &#8722; a<sub>0</sub>)","(4/3)mg","2mg/3"],
+   "ans": 0,
+   "sol": "Standard Atwood tension with gravity g&#8242;:<br>T = 2m<sub>1</sub>m<sub>2</sub>g&#8242;/(m<sub>1</sub> + m<sub>2</sub>) = 2(m)(2m)g&#8242;/(3m) = (4/3)mg&#8242;<br><br>So T = <strong>(4/3)m(g + a<sub>0</sub>)</strong>.<br><br>Or do it directly on block A in the pulley frame: T &#8722; m(g + a<sub>0</sub>) = m &#215; (g + a<sub>0</sub>)/3 &#8594; T = (4/3)m(g + a<sub>0</sub>). Same thing.<br><br>Sense check: put a<sub>0</sub> = 0 and you get the familiar 4mg/3, which lies between mg and 2mg as any Atwood tension must."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 12 ---------------------------------- */
+{
+ "name": "Cylinder wedged in an accelerating carriage",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A cylinder rests in the corner of a carriage. The side AB makes 30&#176; with the horizontal and the side BC is vertical. The carriage is pulled to the left with acceleration a. How many contact forces act on the cylinder, and in which directions?",
+   "diagram": DIAGRAMS.carriage({a:'a'}),
+   "opts": ["Two: N<sub>AB</sub> perpendicular to AB, and N<sub>BC</sub> horizontal (since BC is vertical)","Two: both perpendicular to the ground","One: only N<sub>AB</sub>, since BC cannot push","Three: N<sub>AB</sub>, N<sub>BC</sub> and friction"],
+   "ans": 0,
+   "sol": "Friction is neglected here, so each surface gives only a normal force, perpendicular to itself.<br><br>&#8226; AB is at 30&#176; to the horizontal &#8594; N<sub>AB</sub> is perpendicular to AB, so it makes 30&#176; with the vertical.<br>&#8226; BC is vertical &#8594; N<sub>BC</sub> is <strong>horizontal</strong>.<br><br>Getting this second one right is half the question. A vertical wall can only push sideways &#8212; it can never help hold the cylinder up."
+  },
+  {
+   "q": "Write the <strong>vertical</strong> equation for the cylinder (it does not move up or down). What does it give?",
+   "diagram": DIAGRAMS.carriage({a:'a',forces:true}),
+   "opts": ["N<sub>AB</sub> cos30&#176; = mg, so N<sub>AB</sub> = 2mg/&#8730;3 &#8212; no a in it at all","N<sub>AB</sub> sin30&#176; = mg","N<sub>AB</sub> cos30&#176; + N<sub>BC</sub> = mg","N<sub>AB</sub> = mg + ma"],
+   "ans": 0,
+   "sol": "N<sub>BC</sub> is horizontal, so it contributes nothing vertically. The pseudo force is horizontal too, so it also contributes nothing. Only N<sub>AB</sub> and the weight are left:<br><br>N<sub>AB</sub> cos30&#176; = mg &#8594; N<sub>AB</sub> = <strong>2mg/&#8730;3</strong><br><br>Look at what came out: <strong>a is not in this expression</strong>. Whatever the carriage does horizontally, N<sub>AB</sub> is fixed by the weight alone. That is the answer to half the original question, and we got it without any real work."
+  },
+  {
+   "q": "Now the <strong>horizontal</strong> equation, in the carriage frame. The pseudo force is ma pointing to the right (the carriage goes left). It gives",
+   "diagram": DIAGRAMS.carriage({a:'a',forces:true}),
+   "opts": ["N<sub>BC</sub> = N<sub>AB</sub> sin30&#176; + ma, which grows as a grows","N<sub>BC</sub> = N<sub>AB</sub> sin30&#176; &#8722; ma, which falls as a grows","N<sub>BC</sub> = ma only","N<sub>BC</sub> = mg tan30&#176;, independent of a"],
+   "ans": 0,
+   "sol": "Horizontally the cylinder is in balance in the carriage frame. Pushing it towards the wall BC: the horizontal part of N<sub>AB</sub> (which is N<sub>AB</sub> sin30&#176;) and the pseudo force ma. Pushing it back: the wall's N<sub>BC</sub>.<br><br>N<sub>BC</sub> = <strong>N<sub>AB</sub> sin30&#176; + ma</strong><br><br>Since N<sub>AB</sub> is already fixed, every extra bit of a goes straight into N<sub>BC</sub>. The wall takes the whole burden of the acceleration."
+  },
+  {
+   "tag": "Ex-1 Q4",
+   "q": "&#9733; <strong>Original:</strong> A cylinder rests in a supporting carriage. Side AB makes 30&#176; with the horizontal and side BC is vertical. The carriage is on a fixed horizontal surface and is being pulled towards the left with horizontal acceleration 'a'. Neglect friction. As 'a' is increased, pick the correct statement:",
+   "diagram": DIAGRAMS.carriage({a:'a'}),
+   "opts": ["N<sub>AB</sub> remains constant and N<sub>BC</sub> increases","N<sub>AB</sub> increases and N<sub>BC</sub> decreases","Both N<sub>AB</sub> and N<sub>BC</sub> increase","N<sub>AB</sub> increases and N<sub>BC</sub> remains constant"],
+   "ans": 0,
+   "sol": "From the two equations:<br>&#8226; Vertical &#8594; N<sub>AB</sub> = 2mg/&#8730;3, with no a in it &#8594; <strong>constant</strong><br>&#8226; Horizontal &#8594; N<sub>BC</sub> = mg tan30&#176; + ma &#8594; <strong>increases</strong> with a<br><br>The lesson: pick your direction cleverly. Resolving vertically knocked out both unknowns you did not want (N<sub>BC</sub> and the pseudo force) in one stroke.<br><br><em>Physical picture:</em> the inclined floor's only job is to hold the weight, and the weight has not changed. The vertical wall's only job is to supply the sideways force, and that is what the acceleration demands more of."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 13 ---------------------------------- */
+{
+ "name": "Capstone: a bob in a car climbing a slope",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Warm-up. A car on a <strong>level</strong> road accelerates at 10 m/s<sup>2</sup>. A bob hangs from its roof. The angle the string makes with the vertical is (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.boxBob({a:'a = 10 m/s&#178;',deg:38}),
+   "opts": ["45&#176;","30&#176;","60&#176;","0&#176;"],
+   "ans": 0,
+   "sol": "tan&#952; = a/g = 10/10 = 1 &#8594; &#952; = <strong>45&#176;</strong>.<br><br>The bob swings <em>backwards</em>, away from the direction of the acceleration. Hold on to that; it decides the direction of the tilt in the harder version coming up."
+  },
+  {
+   "q": "Now the same car climbs a plane inclined at 30&#176;, with acceleration 10 m/s<sup>2</sup> directed <strong>up along the plane</strong>. Broken into horizontal and vertical parts, this acceleration is",
+   "diagram": DIAGRAMS.carIncline({a:'a = 10 m/s&#178;'}),
+   "opts": ["horizontal 10cos30&#176; = 5&#8730;3, vertical 10sin30&#176; = 5 (upward)","horizontal 10sin30&#176; = 5, vertical 10cos30&#176; = 5&#8730;3 (upward)","horizontal 10, vertical 0","horizontal 5&#8730;3, vertical 5 (downward)"],
+   "ans": 0,
+   "sol": "The acceleration points up along the slope, which is 30&#176; above the horizontal:<br><br>&#8226; horizontal part = 10 cos30&#176; = <strong>5&#8730;3 &#8776; 8.66 m/s<sup>2</sup></strong><br>&#8226; vertical part = 10 sin30&#176; = <strong>5 m/s<sup>2</sup>, upward</strong><br><br>This is the extra step that makes the question look hard. Once the acceleration is split into these two ordinary directions, it is the level-road problem again &#8212; only with a vertical bit added."
+  },
+  {
+   "q": "For the bob of mass m, Newton's second law says T + mg&#8407; = ma&#8407;, so T&#8407; = m(a&#8407; &#8722; g&#8407;). Taking up as positive, the components of T&#8407; are",
+   "diagram": DIAGRAMS.geff({lab:'effective g',cap:'g down, plus a vertical push, plus a horizontal push'}),
+   "opts": ["horizontal 5&#8730;3 m, vertical (5 + 10)m = 15m","horizontal 5&#8730;3 m, vertical (10 &#8722; 5)m = 5m","horizontal 5 m, vertical 5&#8730;3 m","horizontal 10 m, vertical 10 m"],
+   "ans": 0,
+   "sol": "Horizontal: nothing else acts horizontally, so T's horizontal part = m &#215; 5&#8730;3.<br><br>Vertical: T<sub>y</sub> &#8722; mg = m &#215; 5 &#8594; T<sub>y</sub> = m(10 + 5) = <strong>15m</strong>.<br><br>The string has to do two jobs at once: hold the weight up <em>and</em> supply the upward part of the acceleration. That is why the vertical component is 15m, not 5m.<br><br>The string lies along T&#8407;, so its direction is now fixed."
+  },
+  {
+   "tag": "Ex-4(B) Q13",
+   "q": "&#9733; <strong>Original:</strong> A car is moving on a plane inclined at 30&#176; to the horizontal with an acceleration of 10 ms<sup>&#8722;2</sup> parallel to the plane upward. A bob is suspended by a string from the roof of the car. The angle in degrees which the string makes with the vertical is (take g = 10 ms<sup>&#8722;2</sup>)",
+   "diagram": DIAGRAMS.carIncline({a:'a = 10 m/s&#178;',th:'&#952;'}),
+   "opts": ["30","45","60","15"],
+   "ans": 0,
+   "sol": "tan&#952; = T<sub>x</sub>/T<sub>y</sub> = 5&#8730;3 m / 15m = &#8730;3/3 = 1/&#8730;3<br><br>&#952; = <strong>30&#176;</strong><br><br>A nice coincidence here: the string ends up at the same 30&#176; as the incline itself, so it hangs perpendicular to the inclined road surface. That is only because a happens to equal g in this problem &#8212; do not carry it over as a rule.<br><br><em>Which side does it tilt?</em> Backwards, away from the direction the car is climbing, just like the level-road case.<br><br><em>Closing thought for the whole set:</em> every question here came down to one habit &#8212; sit inside the accelerating frame, add &#8722;ma on every mass, and then just do statics."
+  }
+ ]
+},
+
+];
+
+
+const STORAGE_KEY = 'padipucast_pseudoforce_nonInertial_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
