@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NLM &amp; Friction · 16 Model Ladder DPP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+  --star-bg:#fdf6ec;--star:#b45309;--star-border:#f0dcc0;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:14px;}
+.ladder-note{font-size:12.5px;color:var(--text2);background:var(--star-bg);border:1px solid var(--star-border);border-radius:10px;padding:10px 14px;margin-bottom:20px;}
+.ladder-note b{color:var(--star);}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateY(-50%) translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.q-pill.star{box-shadow:0 0 0 2px var(--star-border);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.lvl{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.04em;color:var(--text2);background:var(--tag-bg);border-radius:20px;padding:2px 10px;text-transform:none;font-weight:500;}
+.lvl.lvl-star{background:var(--star-bg);color:var(--star);border:1px solid var(--star-border);font-weight:600;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:400px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>·</span> NLM &amp; Friction · Model Ladder</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Ladders
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Practice Paper &mdash; 16 Question Models</h1></div>
+    <p id="home-sub">Newton’s Laws of Motion &amp; Friction &middot; Physics</p>
+    <div class="ladder-note">16 models, one ladder each, <b>5 rungs</b> per ladder. Rungs 1&ndash;3 build the idea step by step. Rungs 4 and 5 (&#9733;) are two <b>exam-level</b> versions of the same model, so you meet it twice with different numbers. Take g = 10 m/s&sup2; unless told otherwise.</div>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 5</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link — timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── SVG DIAGRAMS ──────────────────────────────────────────────────────────────
+function _defs(){
+  return `<defs>
+    <marker id="ar" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker>
+    <marker id="ab" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#2563eb"/></marker>
+    <marker id="ag" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#1a7a4a"/></marker>
+  </defs>`;
+}
+function _svg(inner){ return `<svg viewBox="0 0 312 222" width="312" height="222" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">`+_defs()+inner+`</svg>`; }
+function _ceil(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="#374151" stroke-width="2"/>`;
+  for(let x=x0+4;x<x1;x+=12){ s+=`<line x1="${x}" y1="${y}" x2="${x-7}" y2="${y-7}" stroke="#b8b4ac" stroke-width="1.4"/>`; }
+  return s;
+}
+function _ground(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="#374151" stroke-width="2"/>`;
+  for(let x=x0+4;x<x1;x+=12){ s+=`<line x1="${x}" y1="${y}" x2="${x-7}" y2="${y+7}" stroke="#b8b4ac" stroke-width="1.4"/>`; }
+  return s;
+}
+function _box(x,y,w,h,lbl,fill){
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="${fill||'#f0ede8'}" stroke="#374151" stroke-width="1.6"/>`
+    +`<text x="${x+w/2}" y="${y+h/2+4}" font-size="10.5" text-anchor="middle" fill="#374151">${lbl||''}</text>`;
+}
+function _spring(x,y1,y2,turns){
+  const n=turns||6, dy=(y2-y1)/n; let p=`M ${x} ${y1}`;
+  for(let i=0;i<n;i++){ p+=` L ${x+(i%2?-10:10)} ${y1+dy*(i+0.5)}`; }
+  p+=` L ${x} ${y2}`;
+  return `<path d="${p}" fill="none" stroke="#374151" stroke-width="1.6"/>`;
+}
+function _springH(y,x1,x2,turns){
+  const n=turns||6, dx=(x2-x1)/n; let p=`M ${x1} ${y}`;
+  for(let i=0;i<n;i++){ p+=` L ${x1+dx*(i+0.5)} ${y+(i%2?9:-9)}`; }
+  p+=` L ${x2} ${y}`;
+  return `<path d="${p}" fill="none" stroke="#374151" stroke-width="1.6"/>`;
+}
+function _note(t){ return `<text x="156" y="208" font-size="10.5" fill="#6b6760" text-anchor="middle">${t}</text>`; }
+
+// 1. spring + two hanging blocks, string between them cut
+function springHang(top,bot,cut){
+  let s=_ceil(96,216,18)+_spring(156,18,74,7);
+  s+=_box(130,74,52,26,top);
+  s+=`<line x1="156" y1="100" x2="156" y2="122" stroke="#374151" stroke-width="1.6" stroke-dasharray="${cut?'':'0'}"/>`;
+  if(cut){ s+=`<line x1="140" y1="105" x2="172" y2="117" stroke="#dc2626" stroke-width="2"/><text x="180" y="116" font-size="10" fill="#dc2626">cut</text>`; }
+  s+=_box(130,122,52,26,bot);
+  return _svg(s+_note(cut?'string between the blocks is cut':'hanging quietly from the spring'));
+}
+// 2. block on floor pulled by F at an angle
+function pullAngle(m,th,mu){
+  let s=_ground(60,252,150)+_box(120,120,56,30,m);
+  s+=`<line x1="176" y1="126" x2="238" y2="88" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>`;
+  s+=`<path d="M 200 126 A 26 26 0 0 0 194 112" fill="none" stroke="#6b6760" stroke-width="1"/>`;
+  s+=`<text x="206" y="120" font-size="10" fill="#6b6760">${th}</text>`;
+  s+=`<text x="242" y="84" font-size="10.5" fill="#2563eb">F</text>`;
+  s+=`<text x="66" y="168" font-size="10" fill="#6b6760">&#956; = ${mu}</text>`;
+  return _svg(s+_note('the slanted pull also lifts the block a little'));
+}
+// 3. four small force-time panels
+function ftPanels(){
+  const P=[[20,30],[176,30],[20,124],[176,124]];
+  const L=['I','II','III','IV'];
+  const shapes=[
+    p=>`<polyline points="${p[0]+16},${p[1]+62} ${p[0]+16},${p[1]+30} ${p[0]+62},${p[1]+30} ${p[0]+62},${p[1]+62}" fill="none" stroke="#2563eb" stroke-width="2"/><text x="${p[0]+8}" y="${p[1]+34}" font-size="8" fill="#6b6760" text-anchor="end">0.5</text><text x="${p[0]+62}" y="${p[1]+74}" font-size="8" fill="#6b6760" text-anchor="middle">1</text>`,
+    p=>`<polyline points="${p[0]+16},${p[1]+62} ${p[0]+50},${p[1]+26} ${p[0]+100},${p[1]+62}" fill="none" stroke="#2563eb" stroke-width="2"/><text x="${p[0]+8}" y="${p[1]+30}" font-size="8" fill="#6b6760" text-anchor="end">0.6</text><text x="${p[0]+100}" y="${p[1]+74}" font-size="8" fill="#6b6760" text-anchor="middle">2</text>`,
+    p=>`<polyline points="${p[0]+16},${p[1]+62} ${p[0]+46},${p[1]+16} ${p[0]+62},${p[1]+62}" fill="none" stroke="#2563eb" stroke-width="2"/><text x="${p[0]+8}" y="${p[1]+20}" font-size="8" fill="#6b6760" text-anchor="end">2</text><text x="${p[0]+62}" y="${p[1]+74}" font-size="8" fill="#6b6760" text-anchor="middle">1</text>`,
+    p=>`<polyline points="${p[0]+16},${p[1]+62} ${p[0]+62},${p[1]+16} ${p[0]+62},${p[1]+62}" fill="none" stroke="#2563eb" stroke-width="2"/><text x="${p[0]+8}" y="${p[1]+20}" font-size="8" fill="#6b6760" text-anchor="end">2</text><text x="${p[0]+62}" y="${p[1]+74}" font-size="8" fill="#6b6760" text-anchor="middle">1</text>`
+  ];
+  let s='';
+  P.forEach((p,i)=>{
+    s+=`<line x1="${p[0]+16}" y1="${p[1]+10}" x2="${p[0]+16}" y2="${p[1]+62}" stroke="#374151" stroke-width="1.3"/>`;
+    s+=`<line x1="${p[0]+16}" y1="${p[1]+62}" x2="${p[0]+108}" y2="${p[1]+62}" stroke="#374151" stroke-width="1.3"/>`;
+    s+=shapes[i](p);
+    s+=`<text x="${p[0]+60}" y="${p[1]+88}" font-size="10" fill="#374151" text-anchor="middle">(${L[i]})  t in ms</text>`;
+  });
+  return _svg(s);
+}
+// 4. force growing then falling (trapezium / triangle)
+function ftRamp(){
+  let s=`<line x1="50" y1="30" x2="50" y2="160" stroke="#374151" stroke-width="1.5"/><line x1="50" y1="160" x2="270" y2="160" stroke="#374151" stroke-width="1.5"/>`;
+  s+=`<polygon points="50,160 160,50 270,160" fill="#2563eb" opacity="0.15"/>`;
+  s+=`<polyline points="50,160 160,50 270,160" fill="none" stroke="#2563eb" stroke-width="2.4"/>`;
+  s+=`<text x="44" y="54" font-size="10" fill="#6b6760" text-anchor="end">6 N</text>`;
+  s+=`<text x="160" y="176" font-size="10" fill="#6b6760" text-anchor="middle">2 s</text>`;
+  s+=`<text x="270" y="176" font-size="10" fill="#6b6760" text-anchor="middle">4 s</text>`;
+  s+=`<text x="30" y="26" font-size="10" fill="#374151">F</text>`;
+  return _svg(s+_note('impulse = shaded area'));
+}
+// 5. ball hitting a wall at an angle
+function wallBounce(th){
+  let s=`<line x1="230" y1="26" x2="230" y2="196" stroke="#374151" stroke-width="3"/>`;
+  for(let y=30;y<196;y+=12){ s+=`<line x1="230" y1="${y}" x2="238" y2="${y-7}" stroke="#b8b4ac" stroke-width="1.4"/>`; }
+  s+=`<line x1="110" y1="160" x2="224" y2="112" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>`;
+  s+=`<line x1="224" y1="112" x2="110" y2="64" stroke="#dc2626" stroke-width="2" marker-end="url(#ar)"/>`;
+  s+=`<line x1="224" y1="112" x2="140" y2="112" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3"/>`;
+  s+=`<text x="196" y="128" font-size="10" fill="#6b6760">${th}</text>`;
+  s+=`<text x="196" y="104" font-size="10" fill="#6b6760">${th}</text>`;
+  s+=`<text x="104" y="164" font-size="10" fill="#2563eb" text-anchor="end">in</text>`;
+  s+=`<text x="104" y="68" font-size="10" fill="#dc2626" text-anchor="end">out</text>`;
+  return _svg(s+_note('angles measured from the wall'));
+}
+// 6. three blocks in a row pushed by F
+function blockTrain(a,b,c,F){
+  let s=_ground(40,286,152);
+  s+=_box(56,104,66,48,a+' kg');
+  s+=_box(126,112,56,40,b+' kg');
+  s+=_box(186,120,44,32,c+' kg');
+  s+=`<line x1="262" y1="136" x2="234" y2="136" stroke="#2563eb" stroke-width="2.2" marker-end="url(#ab)"/>`;
+  s+=`<text x="266" y="132" font-size="10.5" fill="#2563eb">${F} N</text>`;
+  s+=`<text x="124" y="92" font-size="9.5" fill="#dc2626" text-anchor="middle">f&#8322;</text>`;
+  s+=`<text x="184" y="100" font-size="9.5" fill="#dc2626" text-anchor="middle">f&#8321;</text>`;
+  return _svg(s+_note('smooth floor \u00b7 all three move together'));
+}
+// 7. monkey on a rope
+function ropeMonkey(){
+  let s=_ceil(96,216,18)+`<line x1="156" y1="18" x2="156" y2="120" stroke="#374151" stroke-width="2"/>`;
+  s+=`<circle cx="156" cy="132" r="12" fill="#f0ede8" stroke="#374151" stroke-width="1.6"/>`;
+  s+=`<line x1="156" y1="144" x2="156" y2="170" stroke="#374151" stroke-width="1.8"/>`;
+  s+=`<line x1="156" y1="152" x2="140" y2="132" stroke="#374151" stroke-width="1.5"/>`;
+  s+=`<line x1="156" y1="152" x2="172" y2="132" stroke="#374151" stroke-width="1.5"/>`;
+  s+=`<line x1="156" y1="170" x2="142" y2="188" stroke="#374151" stroke-width="1.5"/>`;
+  s+=`<line x1="156" y1="170" x2="170" y2="188" stroke="#374151" stroke-width="1.5"/>`;
+  s+=`<text x="200" y="80" font-size="10.5" fill="#1a7a4a">T</text>`;
+  s+=`<line x1="192" y1="96" x2="192" y2="60" stroke="#1a7a4a" stroke-width="1.6" marker-end="url(#ag)"/>`;
+  return _svg(s+_note('rope snaps if T crosses its limit'));
+}
+// 8. trolley with a bob hanging at an angle
+function trolley(th){
+  let s=_ground(30,290,178);
+  s+=`<rect x="80" y="90" width="130" height="72" rx="3" fill="#ffffff" stroke="#374151" stroke-width="2"/>`;
+  s+=`<circle cx="108" cy="170" r="8" fill="#f0ede8" stroke="#374151" stroke-width="1.6"/>`;
+  s+=`<circle cx="182" cy="170" r="8" fill="#f0ede8" stroke="#374151" stroke-width="1.6"/>`;
+  s+=`<line x1="120" y1="90" x2="152" y2="140" stroke="#374151" stroke-width="1.6"/>`;
+  s+=`<circle cx="155" cy="145" r="8" fill="#f0ede8" stroke="#374151" stroke-width="1.6"/>`;
+  s+=`<line x1="120" y1="90" x2="120" y2="150" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3"/>`;
+  s+=`<text x="128" y="116" font-size="10" fill="#6b6760">${th}</text>`;
+  s+=`<line x1="224" y1="120" x2="266" y2="120" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>`;
+  s+=`<text x="244" y="112" font-size="10.5" fill="#2563eb" text-anchor="middle">a</text>`;
+  return _svg(s+_note('string tilts back as the trolley speeds up'));
+}
+// 9. lift cabin with a block
+function cabin(o){
+  o=o||{};
+  const X0=94,X1=214,Y0=46,Y1=170,CX=154, gap=o.gap||0, bw=46,bh=22, bx=CX-bw/2, by=Y1-bh-gap;
+  let s=_ceil(72,240,20)+`<line x1="${CX}" y1="20" x2="${CX}" y2="${Y0}" stroke="#374151" stroke-width="1.6"/>`;
+  s+=`<rect x="${X0}" y="${Y0}" width="${X1-X0}" height="${Y1-Y0}" rx="3" fill="#ffffff" stroke="#374151" stroke-width="2"/>`;
+  s+=`<line x1="${X0}" y1="${Y1}" x2="${X1}" y2="${Y1}" stroke="#374151" stroke-width="3.4"/>`;
+  s+=_box(bx,by,bw,bh,o.block||'m');
+  if(gap>0){ s+=`<line x1="${bx-16}" y1="${by+bh}" x2="${bx-16}" y2="${Y1}" stroke="#dc2626" stroke-width="1.3" marker-end="url(#ar)"/><text x="${bx-20}" y="${Y1-gap/2+4}" font-size="9.5" fill="#dc2626" text-anchor="end">gap</text>`; }
+  if(o.forces){
+    s+=`<line x1="${CX+30}" y1="${by}" x2="${CX+30}" y2="${by-26}" stroke="#1a7a4a" stroke-width="1.6" marker-end="url(#ag)"/><text x="${CX+35}" y="${by-16}" font-size="10" fill="#1a7a4a">N</text>`;
+    s+=`<line x1="${CX-30}" y1="${by+bh}" x2="${CX-30}" y2="${by+bh+26}" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ar)"/><text x="${CX-52}" y="${by+bh+22}" font-size="10" fill="#dc2626">mg</text>`;
+  }
+  if(o.a){
+    const x=246;
+    s+= o.dir==='up' ? `<line x1="${x}" y1="150" x2="${x}" y2="70" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>`
+                     : `<line x1="${x}" y1="70" x2="${x}" y2="150" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>`;
+    s+=`<text x="${x+6}" y="115" font-size="10.5" fill="#2563eb">a = ${o.a}</text>`;
+  }
+  return _svg(s+(o.note?_note(o.note):''));
+}
+// 10. n blocks on a table pulled by a hanging mass
+function tableChain(n,mlbl,Mlbl){
+  let s=_ground(24,236,150);
+  const w=30, gap0=10; let x=40;
+  for(let i=0;i<n;i++){ s+=_box(x,118,w,32,mlbl); if(i<n-1){ s+=`<line x1="${x+w}" y1="134" x2="${x+w+gap0}" y2="134" stroke="#374151" stroke-width="1.4"/>`; } x+=w+gap0; }
+  s+=`<line x1="${x}" y1="134" x2="248" y2="134" stroke="#374151" stroke-width="1.4"/>`;
+  s+=`<circle cx="248" cy="124" r="10" fill="#ffffff" stroke="#374151" stroke-width="1.8"/>`;
+  s+=`<line x1="258" y1="124" x2="258" y2="164" stroke="#374151" stroke-width="1.4"/>`;
+  s+=_box(240,164,36,28,Mlbl);
+  s+=`<text x="46" y="110" font-size="9.5" fill="#dc2626">last</text>`;
+  return _svg(s+_note('smooth table \u00b7 '+n+' equal blocks in a row'));
+}
+// 11. block sliding down an incline
+function incline(th,rough){
+  let s=`<polygon points="40,170 262,170 262,60" fill="#faf9f6" stroke="#374151" stroke-width="2"/>`;
+  if(rough){ for(let i=0;i<12;i++){ const t=i/12; const x=52+t*200, y=170-(x-40)*(110/222); s+=`<line x1="${x}" y1="${y}" x2="${x-5}" y2="${y+6}" stroke="#b8b4ac" stroke-width="1.3"/>`; } }
+  s+=`<g transform="translate(150,92) rotate(-26.3)">`+_box(-24,-14,48,26,'m')+`</g>`;
+  s+=`<text x="66" y="164" font-size="10" fill="#6b6760">${th}</text>`;
+  s+=`<text x="150" y="196" font-size="10.5" fill="#6b6760" text-anchor="middle">${rough?'rough incline':'smooth incline'}</text>`;
+  return _svg(s);
+}
+// 12. car braking to a stop
+function carSkid(v,d){
+  let s=_ground(20,296,160);
+  s+=`<rect x="40" y="122" width="70" height="26" rx="5" fill="#f0ede8" stroke="#374151" stroke-width="1.6"/>`;
+  s+=`<rect x="58" y="110" width="36" height="14" rx="4" fill="#ffffff" stroke="#374151" stroke-width="1.4"/>`;
+  s+=`<circle cx="58" cy="152" r="8" fill="#ffffff" stroke="#374151" stroke-width="1.5"/>`;
+  s+=`<circle cx="96" cy="152" r="8" fill="#ffffff" stroke="#374151" stroke-width="1.5"/>`;
+  s+=`<line x1="116" y1="134" x2="164" y2="134" stroke="#2563eb" stroke-width="2" marker-end="url(#ab)"/>`;
+  s+=`<text x="140" y="126" font-size="10.5" fill="#2563eb" text-anchor="middle">${v}</text>`;
+  s+=`<line x1="40" y1="180" x2="268" y2="180" stroke="#dc2626" stroke-width="1.4" marker-end="url(#ar)"/>`;
+  s+=`<text x="154" y="196" font-size="10.5" fill="#dc2626" text-anchor="middle">stopping distance ${d}</text>`;
+  s+=`<line x1="268" y1="118" x2="268" y2="160" stroke="#374151" stroke-width="1.6" stroke-dasharray="4 3"/>`;
+  return _svg(s);
+}
+// 13. block on block with F on the top one
+function stack2(top,bot,F){
+  let s=_ground(30,286,164);
+  s+=_box(80,132,140,32,bot+' kg');
+  s+=_box(96,100,100,32,top+' kg');
+  s+=`<line x1="200" y1="116" x2="248" y2="116" stroke="#2563eb" stroke-width="2.2" marker-end="url(#ab)"/>`;
+  s+=`<text x="252" y="112" font-size="10.5" fill="#2563eb">${F} N</text>`;
+  s+=`<text x="56" y="122" font-size="9.5" fill="#dc2626" text-anchor="end">friction</text>`;
+  s+=`<line x1="60" y1="128" x2="90" y2="132" stroke="#dc2626" stroke-width="1.2"/>`;
+  return _svg(s+_note('floor below is frictionless'));
+}
+// 14. pulley with one block on the left, two stacked on the right
+function pulley3(l,u,d){
+  let s=_ceil(110,200,16);
+  s+=`<circle cx="156" cy="42" r="20" fill="#ffffff" stroke="#374151" stroke-width="2"/>`;
+  s+=`<line x1="156" y1="16" x2="156" y2="22" stroke="#374151" stroke-width="1.6"/>`;
+  s+=`<line x1="136" y1="42" x2="136" y2="92" stroke="#374151" stroke-width="1.4"/>`;
+  s+=`<line x1="176" y1="42" x2="176" y2="76" stroke="#374151" stroke-width="1.4"/>`;
+  s+=_box(112,92,48,26,l);
+  s+=_box(152,76,48,26,u);
+  s+=`<line x1="176" y1="102" x2="176" y2="122" stroke="#374151" stroke-width="1.4"/>`;
+  s+=_box(152,122,48,26,d);
+  s+=`<text x="212" y="118" font-size="9.5" fill="#dc2626">T = ?</text>`;
+  return _svg(s+_note('frictionless pulley'));
+}
+// 15. two blocks joined by a spring, F on the right one
+function springBlocks(l,r,F,aL){
+  let s=_ground(20,296,158);
+  s+=_box(46,118,58,40,l);
+  s+=_springH(138,104,186,6);
+  s+=_box(186,118,64,40,r);
+  s+=`<line x1="250" y1="138" x2="288" y2="138" stroke="#2563eb" stroke-width="2.2" marker-end="url(#ab)"/>`;
+  s+=`<text x="276" y="130" font-size="10.5" fill="#2563eb" text-anchor="middle">${F}</text>`;
+  if(aL){ s+=`<line x1="74" y1="104" x2="104" y2="104" stroke="#dc2626" stroke-width="1.8" marker-end="url(#ar)"/><text x="70" y="100" font-size="10" fill="#dc2626" text-anchor="end">${aL}</text>`; }
+  return _svg(s+_note('smooth floor \u00b7 spring pulls both blocks equally'));
+}
+
+const DIAGRAMS = {
+  springHung:  () => springHang('2m','m',false),
+  springCut:   () => springHang('3m','m',true),
+  pull37:      () => pullAngle('m','37\u00b0','\u00b5'),
+  ftFour:      () => ftPanels(),
+  ftTri:       () => ftRamp(),
+  wall60:      () => wallBounce('60\u00b0'),
+  wall30:      () => wallBounce('30\u00b0'),
+  train:       () => blockTrain(4,3,1,16),
+  monkey:      () => ropeMonkey(),
+  trolley37:   () => trolley('37\u00b0'),
+  trolley45:   () => trolley('45\u00b0'),
+  liftFBD:     () => cabin({forces:true, note:'the only two forces on the block'}),
+  liftFast:    () => cabin({a:'15 m/s\u00b2', dir:'down', gap:26, note:'floor runs away \u2014 contact is lost'}),
+  chain4:      () => tableChain(4,'m','M'),
+  inclineR:    () => incline('45\u00b0',true),
+  inclineS:    () => incline('45\u00b0',false),
+  skid:        () => carSkid('v','s'),
+  stackA:      () => stack2(5,20,60),
+  pulleyABC:   () => pulley3('4 kg','2 kg','4 kg'),
+  springTwo:   () => springBlocks('10 kg','20 kg','180 N','a = 4 m/s\u00b2')
+};
+
+// ── LADDER DATA ────────────────────────────────────────────────────────────────
+// 16 question MODELS from Newton's Laws of Motion & Friction.
+// Rungs 1-3 build the idea. Rungs 4 and 5 are two changed-number versions of the
+// exam-level question. g = 10 m/s^2 throughout.
+const TOPICS = [
+
+  { name:"1 \u00b7 String cut under a spring",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A string can lose its tension in an instant. A stretched spring, at the very moment something else is cut, has a force that:",
+        opts:["stays exactly what it was","becomes zero at once","doubles","reverses"], ans:0,
+        sol:"A spring's force depends on how much it is stretched. Length cannot change in zero time, so the spring force is the same just before and just after the cut. A string has no such rule." },
+      { level:"Rung 2 \u00b7 Easy", q:"Blocks of 2m and m hang one below the other from a spring. Before anything is cut, the spring pulls up with:",
+        diagram: DIAGRAMS.springHung(),
+        opts:["3mg","2mg","mg","zero"], ans:0,
+        sol:"The spring holds the whole hanging load: 2m + m = 3m, so spring force = <strong>3mg</strong>." },
+      { level:"Rung 3 \u00b7 Build", q:"The moment the string between them is cut, the lower block has acting on it:",
+        opts:["only its own weight, so a = g downward","nothing, so a = 0","the spring force too","twice its weight"], ans:0,
+        sol:"The lower block was held only by that string. Once it is gone, only gravity is left: a = <strong>g downward</strong>." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"Blocks of mass 3m (upper) and m (lower) hang from a spring, joined by a string. The string is cut. The accelerations of the upper and lower blocks just after the cut are:",
+        diagram: DIAGRAMS.springCut(),
+        opts:["g/3 upward, g downward","g upward, g downward","g/3 downward, g downward","zero, g downward"], ans:0,
+        sol:"Spring force stays 4mg. Upper block: 4mg \u2212 3mg = mg net upward on mass 3m \u2192 a = <strong>g/3 up</strong>. Lower block: only weight \u2192 <strong>g down</strong>." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"Now the upper block is m and the lower one is 3m. Just after the string is cut, the accelerations are:",
+        opts:["3g upward, g downward","g upward, g downward","g/3 upward, g downward","zero, 3g downward"], ans:0,
+        sol:"Spring force is still 4mg. Upper block: 4mg \u2212 mg = 3mg on mass m \u2192 a = <strong>3g up</strong>. Lower block: <strong>g down</strong> as always." }
+    ]},
+
+  { name:"2 \u00b7 Least force to just start sliding",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A block on the floor is pulled by a rope tilted upward at an angle. The normal reaction from the floor is:",
+        diagram: DIAGRAMS.pull37(),
+        opts:["less than mg","more than mg","exactly mg","zero"], ans:0,
+        sol:"The upward part of the pull, F sin\u03b8, shares the job of holding the block. N = mg \u2212 F sin\u03b8, which is less than mg." },
+      { level:"Rung 2 \u00b7 Easy", q:"At the instant the block is just about to slide, the friction acting on it is:",
+        opts:["\u00b5N, its largest possible value","zero","\u00b5mg always","more than \u00b5N"], ans:0,
+        sol:"Static friction has grown to its limit, so f = <strong>\u00b5N</strong>. Note N here is not mg." },
+      { level:"Rung 3 \u00b7 Build", q:"So the equation for the minimum pull F is:",
+        opts:["F cos\u03b8 = \u00b5(mg \u2212 F sin\u03b8)","F cos\u03b8 = \u00b5mg","F sin\u03b8 = \u00b5mg","F = \u00b5mg cos\u03b8"], ans:0,
+        sol:"Horizontal: F cos\u03b8 must beat friction. Vertical: N = mg \u2212 F sin\u03b8. Put them together: <strong>F cos\u03b8 = \u00b5(mg \u2212 F sin\u03b8)</strong>." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A 5 kg block is pulled by a force at 53\u00b0 to the horizontal table. \u00b5 = 0.5, g = 10. The least force that will start it sliding is:",
+        opts:["25 N","50 N","20 N","31.25 N"], ans:0,
+        sol:"0.6F = 0.5(50 \u2212 0.8F) \u2192 0.6F = 25 \u2212 0.4F \u2192 F = <strong>25 N</strong>. (50 N is what you get if you forget that the pull lightens the block.)" },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"A 6 kg block is pulled at 37\u00b0 to the horizontal, \u00b5 = 1/3, g = 10. The minimum force needed to start it sliding is:",
+        opts:["20 N","25 N","15 N","30 N"], ans:0,
+        sol:"0.8F = (1/3)(60 \u2212 0.6F) \u2192 2.4F = 60 \u2212 0.6F \u2192 3F = 60 \u2192 F = <strong>20 N</strong>." }
+    ]},
+
+  { name:"3 \u00b7 Impulse from a force\u2013time graph",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A steady 5 N force acts for 3 s. The impulse it gives is:",
+        opts:["15 N s","5/3 N s","0.6 N s","45 N s"], ans:0,
+        sol:"Impulse = F \u00d7 t = 5 \u00d7 3 = <strong>15 N s</strong>, and it equals the change in momentum." },
+      { level:"Rung 2 \u00b7 Easy", q:"When the force keeps changing, the impulse is found from the force\u2013time graph as the:",
+        opts:["area under the graph","slope of the graph","highest point of the graph","length of the time axis"], ans:0,
+        sol:"Impulse = \u222bF dt, which is exactly the <strong>area under the F\u2013t curve</strong>. The peak value alone tells you nothing." },
+      { level:"Rung 3 \u00b7 Build", q:"Graph A is a rectangle of height 2 N lasting 3 s. Graph B is a triangle peaking at 4 N over the same 3 s. Their impulses are:",
+        opts:["equal (6 N s each)","A is bigger","B is bigger","cannot be compared"], ans:0,
+        sol:"A = 2 \u00d7 3 = 6 N s. B = \u00bd \u00d7 3 \u00d7 4 = 6 N s. Same area, so <strong>same impulse</strong> \u2014 even though B has the taller peak." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"Four force\u2013time graphs are shown. In which case is the impulse the largest?",
+        diagram: DIAGRAMS.ftFour(),
+        opts:["III and IV","I and II","I and III","only II"], ans:0,
+        sol:"Areas: I = 0.5 \u00d7 1 = 0.5; II = \u00bd \u00d7 2 \u00d7 0.6 = 0.6; III = \u00bd \u00d7 1 \u00d7 2 = 1; IV = \u00bd \u00d7 1 \u00d7 2 = 1 (all in N\u00b7ms). <strong>III and IV</strong> tie at the top." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"A force on a 3 kg body at rest rises evenly from 0 to 6 N in 2 s, then falls back to 0 in the next 2 s. Its speed at the end is:",
+        diagram: DIAGRAMS.ftTri(),
+        opts:["4 m/s","12 m/s","2 m/s","6 m/s"], ans:0,
+        sol:"Impulse = area of the triangle = \u00bd \u00d7 4 \u00d7 6 = 12 N s. Then 12 = mv = 3v \u2192 v = <strong>4 m/s</strong>." }
+    ]},
+
+  { name:"4 \u00b7 Ball bouncing off a wall",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A ball hits a wall straight on with speed v and comes back with the same speed. The size of its momentum change is:",
+        opts:["2mv","zero","mv","mv/2"], ans:0,
+        sol:"Momentum goes from +mv to \u2212mv. The change is <strong>2mv</strong>, not zero \u2014 direction matters." },
+      { level:"Rung 2 \u00b7 Easy", q:"The ball now hits the wall at a slant and bounces off at the same angle. Which part of its velocity changes?",
+        diagram: DIAGRAMS.wall60(),
+        opts:["only the part perpendicular to the wall","only the part along the wall","both parts","neither part"], ans:0,
+        sol:"The wall can only push along its own normal. The component along the wall is untouched; the perpendicular one reverses." },
+      { level:"Rung 3 \u00b7 Build", q:"If the ball comes in at angle \u03b8 measured from the wall, the momentum change has size:",
+        opts:["2mv sin\u03b8","2mv cos\u03b8","mv sin\u03b8","2mv"], ans:0,
+        sol:"The perpendicular component is v sin\u03b8 (\u03b8 from the wall), and it reverses. So \u0394p = <strong>2mv sin\u03b8</strong>." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A 2 kg ball hits a wall at 10 m/s making 30\u00b0 with the wall, and returns at the same angle and speed. Contact lasts 0.1 s. The average force on the wall is:",
+        diagram: DIAGRAMS.wall30(),
+        opts:["200 N","400 N","100 N","346 N"], ans:0,
+        sol:"\u0394p = 2 \u00d7 2 \u00d7 10 \u00d7 sin30\u00b0 = 40 \u00d7 0.5 = 20 N s. F = 20/0.1 = <strong>200 N</strong>." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"A 5 kg ball strikes a wall at 8 m/s at 45\u00b0 to the wall and rebounds identically in 0.4 s. The force on the wall is:",
+        opts:["100\u221a2 N","200\u221a2 N","100 N","50\u221a2 N"], ans:0,
+        sol:"\u0394p = 2 \u00d7 5 \u00d7 8 \u00d7 sin45\u00b0 = 80/\u221a2 = 40\u221a2. F = 40\u221a2/0.4 = <strong>100\u221a2 N</strong> (about 141 N)." }
+    ]},
+
+  { name:"5 \u00b7 Force when velocity keeps changing",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"If velocity is given as a formula in t, the acceleration at any instant is:",
+        opts:["dv/dt","v/t","v \u00d7 t","dt/dv"], ans:0,
+        sol:"Acceleration is the rate of change of velocity: a = <strong>dv/dt</strong>. Dividing v by t only gives an average, not the value at an instant." },
+      { level:"Rung 2 \u00b7 Easy", q:"If v = 3t\u00b2, then a is:",
+        opts:["6t","3t","6t\u00b2","t\u00b3"], ans:0,
+        sol:"Differentiate: d(3t\u00b2)/dt = <strong>6t</strong>." },
+      { level:"Rung 3 \u00b7 Build", q:"To get the force at a particular instant you must:",
+        opts:["find a at that instant, then use F = ma","use F = mv/t","use F = mv","take the average a over the whole motion"], ans:0,
+        sol:"Newton's second law works instant by instant: find a at that moment, then <strong>F = ma</strong>." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A 2 kg particle moves with v = 3t\u00b2 m/s. The force on it at t = 3 s is:",
+        opts:["36 N","54 N","18 N","12 N"], ans:0,
+        sol:"a = 6t = 6 \u00d7 3 = 18 m/s\u00b2. F = ma = 2 \u00d7 18 = <strong>36 N</strong>. (54 N comes from wrongly using F = mv/t.)" },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"A 5 kg particle moves with v = t\u00b3 m/s. The force on it at t = 2 s is:",
+        opts:["60 N","40 N","20 N","120 N"], ans:0,
+        sol:"a = 3t\u00b2 = 3 \u00d7 4 = 12 m/s\u00b2. F = 5 \u00d7 12 = <strong>60 N</strong>." }
+    ]},
+
+  { name:"6 \u00b7 Rocket \u00b7 how fast to burn fuel",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A rocket is pushed forward by:",
+        opts:["the reaction of the gas it throws backwards","the air it pushes against","its own weight","the fuel inside it"], ans:0,
+        sol:"Third law. The rocket throws gas back, the gas pushes the rocket forward. It works in vacuum too \u2014 no air needed." },
+      { level:"Rung 2 \u00b7 Easy", q:"If gas leaves at relative speed u and mass leaves at the rate dm/dt, the thrust is:",
+        opts:["u (dm/dt)","u/(dm/dt)","\u00bd u (dm/dt)","u\u00b2 (dm/dt)"], ans:0,
+        sol:"Thrust = <strong>u \u00d7 (dm/dt)</strong> \u2014 exhaust speed times how quickly mass is thrown out." },
+      { level:"Rung 3 \u00b7 Build", q:"For a rocket of mass m to rise with upward acceleration a, the thrust must be:",
+        opts:["m(g + a)","m(g \u2212 a)","ma","mg"], ans:0,
+        sol:"Thrust must first cancel the weight mg and then supply ma. So thrust = <strong>m(g + a)</strong>. Just to hover, a = 0 and thrust = mg." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A 600 kg rocket has an exhaust speed of 400 m/s. To give it an upward acceleration equal to g, gas must be ejected at:",
+        opts:["30 kg/s","15 kg/s","3 kg/s","60 kg/s"], ans:0,
+        sol:"Thrust = m(g + g) = 600 \u00d7 20 = 12000 N. dm/dt = 12000/400 = <strong>30 kg/s</strong>." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"A 200 kg rocket with exhaust speed 500 m/s must just barely lift off (hover). The rate of gas ejection is:",
+        opts:["4 kg/s","8 kg/s","2 kg/s","40 kg/s"], ans:0,
+        sol:"To hover, thrust = mg = 2000 N. dm/dt = 2000/500 = <strong>4 kg/s</strong>." }
+    ]},
+
+  { name:"7 \u00b7 Contact force in a row of blocks",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"Three touching blocks are pushed along a smooth floor by one force. Their accelerations are:",
+        opts:["all the same, a = F/(total mass)","largest for the front block","largest for the pushed block","different for each"], ans:0,
+        sol:"They stay in contact, so they move as one body: a = <strong>F \u00f7 total mass</strong>." },
+      { level:"Rung 2 \u00b7 Easy", q:"To find the contact force at any junction, look at:",
+        opts:["the blocks on the far side of that junction and use F = ma","the block nearest the applied force only","the total mass","the heaviest block only"], ans:0,
+        sol:"Cut the train at the junction. The contact force is the only push on everything beyond it, so contact force = (mass beyond) \u00d7 a." },
+      { level:"Rung 3 \u00b7 Build", q:"For a 2 kg and a 3 kg block touching, pushed together by 10 N applied on the 2 kg, the force between them is:",
+        opts:["6 N","10 N","4 N","5 N"], ans:0,
+        sol:"a = 10/5 = 2 m/s\u00b2. The contact force pushes only the 3 kg block: 3 \u00d7 2 = <strong>6 N</strong>." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"Blocks of 4 kg, 3 kg and 1 kg are in a row on a smooth floor. A 16 N force pushes on the 1 kg block. The contact forces f\u2081 (1 kg\u20133 kg) and f\u2082 (3 kg\u20134 kg) are:",
+        diagram: DIAGRAMS.train(),
+        opts:["14 N and 8 N","8 N and 14 N","16 N and 12 N","12 N and 4 N"], ans:0,
+        sol:"a = 16/8 = 2 m/s\u00b2. f\u2081 pushes the 3 + 4 = 7 kg behind it: 7 \u00d7 2 = <strong>14 N</strong>. f\u2082 pushes only the 4 kg: 4 \u00d7 2 = <strong>8 N</strong>." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"Blocks of 5 kg, 3 kg and 2 kg lie in a row on a smooth floor. A 30 N force is applied on the 2 kg block. The two contact forces are:",
+        opts:["24 N and 15 N","15 N and 24 N","30 N and 18 N","18 N and 12 N"], ans:0,
+        sol:"a = 30/10 = 3 m/s\u00b2. At the 2\u20133 junction: (3 + 5) \u00d7 3 = <strong>24 N</strong>. At the 3\u20135 junction: 5 \u00d7 3 = <strong>15 N</strong>." }
+    ]},
+
+  { name:"8 \u00b7 Monkey climbing a rope",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A monkey of mass m hangs still on a rope. The tension is:",
+        diagram: DIAGRAMS.monkey(),
+        opts:["mg","zero","2mg","mg/2"], ans:0,
+        sol:"Nothing is accelerating, so the rope simply holds the weight: T = <strong>mg</strong>. Climbing at a steady speed gives the same answer." },
+      { level:"Rung 2 \u00b7 Easy", q:"When the monkey climbs UP with acceleration a, the tension becomes:",
+        opts:["m(g + a)","m(g \u2212 a)","mg","ma"], ans:0,
+        sol:"T \u2212 mg = ma \u2192 T = <strong>m(g + a)</strong>. Climbing up is the dangerous case for the rope." },
+      { level:"Rung 3 \u00b7 Build", q:"When it climbs DOWN with acceleration a, the tension is:",
+        opts:["m(g \u2212 a), which is less than mg","m(g + a)","mg","2mg"], ans:0,
+        sol:"mg \u2212 T = ma \u2192 T = <strong>m(g \u2212 a)</strong>. Sliding down is the safest case; in free fall T becomes zero." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A 50 kg monkey climbs a rope that can stand at most 750 N (g = 10). In which case does the rope break?",
+        opts:["climbing up with acceleration 6 m/s\u00b2","climbing up with acceleration 4 m/s\u00b2","climbing down with acceleration 2 m/s\u00b2","climbing up at a steady 5 m/s"], ans:0,
+        sol:"Up with 6: T = 50 \u00d7 16 = 800 N \u2014 <strong>over the limit</strong>. Up with 4: 700 N. Down with 2: 400 N. Steady speed: 500 N. Only the first snaps it." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"A rope can bear 900 N. The largest upward acceleration with which a 60 kg monkey can climb it safely is (g = 10):",
+        opts:["5 m/s\u00b2","15 m/s\u00b2","10 m/s\u00b2","2.5 m/s\u00b2"], ans:0,
+        sol:"m(g + a) \u2264 900 \u2192 60(10 + a) \u2264 900 \u2192 10 + a \u2264 15 \u2192 a \u2264 <strong>5 m/s\u00b2</strong>." }
+    ]},
+
+  { name:"9 \u00b7 Hanging bob in an accelerating trolley",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A bob hangs from the roof of a trolley that is speeding up forward. As seen from inside the trolley, the bob:",
+        diagram: DIAGRAMS.trolley37(),
+        opts:["tilts backward and stays there","stays perfectly vertical","tilts forward","swings continuously"], ans:0,
+        sol:"Inside the accelerating (non-inertial) trolley, a pseudo force ma acts backward on the bob, so the string settles at a backward tilt." },
+      { level:"Rung 2 \u00b7 Easy", q:"For the tilted string, the horizontal and vertical balances are:",
+        opts:["T sin\u03b8 = ma and T cos\u03b8 = mg","T cos\u03b8 = ma and T sin\u03b8 = mg","T = ma and T = mg","T sin\u03b8 = mg and T cos\u03b8 = ma"], ans:0,
+        sol:"\u03b8 is measured from the vertical, so the sideways part of T supplies ma and the upright part carries mg." },
+      { level:"Rung 3 \u00b7 Build", q:"Dividing those two equations gives:",
+        opts:["tan\u03b8 = a/g, so a = g tan\u03b8","tan\u03b8 = g/a","sin\u03b8 = a/g","a = g cos\u03b8"], ans:0,
+        sol:"Divide to remove T: <strong>tan\u03b8 = a/g</strong>. Notice the mass cancels \u2014 it never matters here." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A trolley carries a bob hanging from its roof. The string settles at 45\u00b0 from the vertical. The trolley's acceleration is (g = 10):",
+        diagram: DIAGRAMS.trolley45(),
+        opts:["10 m/s\u00b2","5 m/s\u00b2","7.5 m/s\u00b2","20 m/s\u00b2"], ans:0,
+        sol:"a = g tan45\u00b0 = 10 \u00d7 1 = <strong>10 m/s\u00b2</strong>." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"In another trolley the string stays at 53\u00b0 from the vertical. The acceleration of the trolley is (g = 10):",
+        opts:["40/3 m/s\u00b2","30/4 m/s\u00b2","8 m/s\u00b2","6 m/s\u00b2"], ans:0,
+        sol:"tan53\u00b0 = 4/3, so a = 10 \u00d7 4/3 = <strong>40/3 m/s\u00b2</strong> (about 13.3). Using tan37\u00b0 = 3/4 by mistake gives 30/4." }
+    ]},
+
+  { name:"10 \u00b7 Block on the floor of a falling lift",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A block lies on the floor of a lift. It keeps touching the floor only as long as the normal reaction N is:",
+        diagram: DIAGRAMS.liftFBD(),
+        opts:["more than zero","more than mg","equal to zero","negative"], ans:0,
+        sol:"N is a push and can never pull. Once N would have to go negative, the block simply parts company with the floor." },
+      { level:"Rung 2 \u00b7 Easy", q:"For a lift going down with acceleration a (a smaller than g), the floor's push on the block is:",
+        opts:["m(g \u2212 a)","m(g + a)","mg","ma"], ans:0,
+        sol:"mg \u2212 N = ma \u2192 N = <strong>m(g \u2212 a)</strong>. It is less than mg, so the block feels lighter, but it is still in contact." },
+      { level:"Rung 3 \u00b7 Build", q:"If the lift's downward acceleration is made bigger than g, the block:",
+        opts:["loses contact and falls freely with acceleration g","falls with the lift's acceleration","stays pressed harder to the floor","stops moving"], ans:0,
+        sol:"Gravity alone cannot pull the block faster than g. The floor drops away and the block <strong>free-falls with g</strong>." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A block rests on the floor of a lift at rest. The lift starts descending with acceleration 15 m/s\u00b2. The displacement of the block in the first 0.4 s is (g = 10):",
+        diagram: DIAGRAMS.liftFast(),
+        opts:["80 cm","120 cm","20 cm","40 cm"], ans:0,
+        sol:"15 > 10, so the block free-falls: s = \u00bd \u00d7 10 \u00d7 (0.4)\u00b2 = 0.8 m = <strong>80 cm</strong>. (120 cm is the lift's own drop, the usual trap.)" },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"The same lift instead descends with acceleration 8 m/s\u00b2. The displacement of the block in the first 0.5 s is:",
+        opts:["100 cm","125 cm","25 cm","40 cm"], ans:0,
+        sol:"Now 8 < 10, so the block never leaves the floor and moves <strong>with the lift</strong>: s = \u00bd \u00d7 8 \u00d7 0.25 = 1 m = <strong>100 cm</strong>. Always compare a with g first." }
+    ]},
+
+  { name:"11 \u00b7 Row of blocks pulled by a hanging mass",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"Four blocks on a smooth table are joined by strings and pulled by a hanging mass M over a pulley. The acceleration of the whole system is:",
+        diagram: DIAGRAMS.chain4(),
+        opts:["Mg \u00f7 (total mass of everything)","Mg \u00f7 M","g","Mg \u00f7 (table blocks only)"], ans:0,
+        sol:"Only the hanging weight Mg drives the system, but every block has to be moved: a = <strong>Mg/(nm + M)</strong>." },
+      { level:"Rung 2 \u00b7 Easy", q:"The string attached to the last (farthest) block has to pull:",
+        opts:["only that one block","all the blocks","the hanging mass too","half the system"], ans:0,
+        sol:"Everything beyond that string is just that single block. So its tension = m \u00d7 a \u2014 the smallest tension in the chain." },
+      { level:"Rung 3 \u00b7 Build", q:"Going from the far end towards the pulley, the tensions:",
+        opts:["keep increasing","keep decreasing","stay the same","are all zero"], ans:0,
+        sol:"Each string has to drag more and more mass behind it, so tension <strong>rises</strong> as you move towards the pulley." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"Four 2 kg blocks lie in a row on a smooth table, pulled by a hanging 2 kg mass over a pulley (g = 10). The tension in the string tied to the last block is:",
+        opts:["4 N","20 N","8 N","2 N"], ans:0,
+        sol:"a = (2 \u00d7 10)/(8 + 2) = 2 m/s\u00b2. Last string pulls just one 2 kg block: T = 2 \u00d7 2 = <strong>4 N</strong>." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"Three 1 kg blocks on a smooth table are pulled by a hanging 3 kg mass (g = 10). The tension in the string tied to the last block is:",
+        opts:["5 N","15 N","30 N","10 N"], ans:0,
+        sol:"a = 30/(3 + 3) = 5 m/s\u00b2. T = 1 \u00d7 5 = <strong>5 N</strong>. (15 N is the tension in the string holding the hanging mass.)" }
+    ]},
+
+  { name:"12 \u00b7 Ice sliding down a rough incline",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"On a smooth incline of angle \u03b8, the acceleration of a sliding block is:",
+        diagram: DIAGRAMS.inclineS(),
+        opts:["g sin\u03b8","g cos\u03b8","g tan\u03b8","g"], ans:0,
+        sol:"Only the component of gravity along the slope drives it: a = <strong>g sin\u03b8</strong>. Mass does not appear." },
+      { level:"Rung 2 \u00b7 Easy", q:"If the same incline is rough with coefficient \u00b5, the acceleration becomes:",
+        diagram: DIAGRAMS.inclineR(),
+        opts:["g(sin\u03b8 \u2212 \u00b5cos\u03b8)","g(sin\u03b8 + \u00b5cos\u03b8)","g \u00b5 sin\u03b8","g cos\u03b8 \u2212 \u00b5g"], ans:0,
+        sol:"Friction \u00b5mg cos\u03b8 acts up the slope, against the motion: a = <strong>g(sin\u03b8 \u2212 \u00b5cos\u03b8)</strong>." },
+      { level:"Rung 3 \u00b7 Build", q:"The same distance is covered from rest, but the rough slide takes twice as long. So the rough acceleration is:",
+        opts:["one quarter of the smooth one","half","double","four times"], ans:0,
+        sol:"s = \u00bdat\u00b2 with the same s, so a \u221d 1/t\u00b2. Twice the time means <strong>a/4</strong>." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A piece of ice slides down a rough 45\u00b0 incline in three times the time it takes on a smooth 45\u00b0 incline. The coefficient of friction is:",
+        opts:["8/9","1/9","1/3","2/3"], ans:0,
+        sol:"a_rough = a_smooth/9 \u2192 g sin45(1 \u2212 \u00b5) = g sin45/9 \u2192 1 \u2212 \u00b5 = 1/9 \u2192 \u00b5 = <strong>8/9</strong> \u2248 0.89." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"On a rough 45\u00b0 incline the same block takes \u221a2 times as long as on a smooth one. The coefficient of friction is:",
+        opts:["0.5","0.25","0.75","1"], ans:0,
+        sol:"Time \u00d7 \u221a2 \u2192 a becomes a/2 \u2192 1 \u2212 \u00b5 = 1/2 \u2192 \u00b5 = <strong>0.5</strong>. General rule at 45\u00b0: \u00b5 = 1 \u2212 1/n\u00b2 where n is the time ratio." }
+    ]},
+
+  { name:"13 \u00b7 Braking distance of a car",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A car braking on a level road is stopped by:",
+        diagram: DIAGRAMS.skid(),
+        opts:["friction between the tyres and the road","its own weight","air only","the normal reaction"], ans:0,
+        sol:"Friction is the only horizontal force available, and it gives a retardation of \u00b5g." },
+      { level:"Rung 2 \u00b7 Easy", q:"Using v\u00b2 = u\u00b2 + 2as with retardation \u00b5g, the stopping distance is:",
+        opts:["u\u00b2/(2\u00b5g)","u/(2\u00b5g)","u\u00b2/(\u00b5g)","2\u00b5g/u\u00b2"], ans:0,
+        sol:"0 = u\u00b2 \u2212 2(\u00b5g)s \u2192 s = <strong>u\u00b2/(2\u00b5g)</strong>. Mass cancels, so a loaded lorry and an empty one stop in the same distance." },
+      { level:"Rung 3 \u00b7 Build", q:"Because s \u221d u\u00b2, tripling the speed makes the stopping distance:",
+        opts:["9 times longer","3 times longer","6 times longer","unchanged"], ans:0,
+        sol:"Distance goes with the <em>square</em> of the speed: 3\u00b2 = <strong>9 times</strong>." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A car at 40 km/h stops in 8 m after braking. On the same road, at 120 km/h it will stop in about:",
+        opts:["72 m","24 m","36 m","144 m"], ans:0,
+        sol:"Speed becomes 3 times, so distance becomes 9 times: 8 \u00d7 9 = <strong>72 m</strong>." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"A car moving at 20 m/s brakes on a road with \u00b5 = 0.5 (g = 10). The shortest stopping distance is:",
+        opts:["40 m","20 m","80 m","10 m"], ans:0,
+        sol:"s = u\u00b2/(2\u00b5g) = 400/(2 \u00d7 0.5 \u00d7 10) = <strong>40 m</strong>." }
+    ]},
+
+  { name:"14 \u00b7 Block on block, floor frictionless",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A block B sits on a block A which rests on a frictionless floor. A force is applied on B. The only horizontal force acting on A is:",
+        diagram: DIAGRAMS.stackA(),
+        opts:["friction from B","the applied force","the normal reaction","its weight"], ans:0,
+        sol:"Nothing else touches A horizontally: the floor is smooth, so only <strong>friction from B</strong> can move it." },
+      { level:"Rung 2 \u00b7 Easy", q:"The largest friction B can pass down to A is:",
+        opts:["\u00b5\u209b \u00d7 (weight of B)","\u00b5\u209b \u00d7 (weight of A + B)","the applied force","unlimited"], ans:0,
+        sol:"The normal force between them is only B's weight, so f_max = <strong>\u00b5\u209b m_B g</strong>." },
+      { level:"Rung 3 \u00b7 Build", q:"To decide whether they move together, you should:",
+        opts:["assume they move together, find the friction needed on A, and compare with f_max","always use \u00b5_k","assume they slip","compare the masses"], ans:0,
+        sol:"Test first: a = F/(m\u2090 + m_b), then required friction = m\u2090a. If it exceeds f_max, they slip and you switch to <strong>\u00b5_k</strong>." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A 20 kg block A rests on a frictionless floor with a 5 kg block B on top. Between them \u00b5\u209b = 0.5 and \u00b5\u2096 = 0.4. A force of 60 N acts on B (g = 10). The acceleration of A is:",
+        opts:["1 m/s\u00b2","2.4 m/s\u00b2","8 m/s\u00b2","0.4 m/s\u00b2"], ans:0,
+        sol:"Together: a = 60/25 = 2.4, needing 20 \u00d7 2.4 = 48 N of friction, but f_max = 0.5 \u00d7 50 = 25 N. So they slip. Friction = 0.4 \u00d7 50 = 20 N \u2192 a\u2090 = 20/20 = <strong>1 m/s\u00b2</strong> (and B has 8 m/s\u00b2)." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"Now A = 10 kg, B = 5 kg on top, \u00b5\u209b = 0.6, \u00b5\u2096 = 0.5, and the force on B is only 12 N. The acceleration of A is:",
+        opts:["0.8 m/s\u00b2","2.4 m/s\u00b2","1.2 m/s\u00b2","zero"], ans:0,
+        sol:"Together: a = 12/15 = 0.8, needing 10 \u00d7 0.8 = 8 N of friction. f_max = 0.6 \u00d7 50 = 30 N, which is plenty. So they <strong>move together at 0.8 m/s\u00b2</strong> \u2014 do not use \u00b5_k here." }
+    ]},
+
+  { name:"15 \u00b7 Weights over a pulley \u00b7 tension in between",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"For masses hung over a frictionless pulley, the acceleration of the system is:",
+        diagram: DIAGRAMS.pulleyABC(),
+        opts:["(difference in the two sides) \u00d7 g \u00f7 (total mass)","g always","(sum of masses) \u00d7 g \u00f7 difference","zero"], ans:0,
+        sol:"The unbalanced weight drives everything: a = <strong>(m_heavy \u2212 m_light)g / (total mass)</strong>." },
+      { level:"Rung 2 \u00b7 Easy", q:"Two blocks hang one below the other on the same side. The string joining them carries:",
+        opts:["only what is needed for the lower block","the weight of both","the whole system's weight","nothing"], ans:0,
+        sol:"Cut that string: everything below it is just the lower block. Write mg \u2212 T = ma for that block alone." },
+      { level:"Rung 3 \u00b7 Build", q:"For a lower block of mass m moving down with acceleration a, the tension above it is:",
+        opts:["m(g \u2212 a)","m(g + a)","mg","ma"], ans:0,
+        sol:"mg \u2212 T = ma \u2192 T = <strong>m(g \u2212 a)</strong>." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"Over a frictionless pulley: a 4 kg block on one side, and on the other side a 2 kg block with a 4 kg block hanging below it. The tension in the string joining the 2 kg and 4 kg is (g = 10):",
+        opts:["32 N","40 N","24 N","8 N"], ans:0,
+        sol:"a = (6 \u2212 4) \u00d7 10 / 10 = 2 m/s\u00b2. For the lower 4 kg block: 40 \u2212 T = 4 \u00d7 2 \u2192 T = <strong>32 N</strong>." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"Now a 2 kg block hangs on one side, and on the other a 3 kg block with a 5 kg block below it. The tension in the string between the 3 kg and 5 kg is (g = 10):",
+        opts:["20 N","50 N","30 N","10 N"], ans:0,
+        sol:"a = (8 \u2212 2) \u00d7 10 / 10 = 6 m/s\u00b2. Lower 5 kg block: 50 \u2212 T = 5 \u00d7 6 \u2192 T = <strong>20 N</strong>." }
+    ]},
+
+  { name:"16 \u00b7 Two blocks joined by a spring",
+    questions:[
+      { level:"Rung 1 \u00b7 Warm-up", q:"A spring connects two blocks. The force it applies on the two ends is:",
+        diagram: DIAGRAMS.springTwo(),
+        opts:["equal in size, opposite in direction","bigger on the heavier block","bigger on the pulled block","zero"], ans:0,
+        sol:"A light spring has the same tension throughout, and by the third law the two ends feel equal and opposite pulls." },
+      { level:"Rung 2 \u00b7 Easy", q:"The far block (the one not being pushed) is acted on by:",
+        opts:["the spring force alone","the applied force alone","both the applied force and the spring","friction"], ans:0,
+        sol:"The applied force never reaches it directly. Only the spring pulls it, so F_spring = m \u00d7 a for that block." },
+      { level:"Rung 3 \u00b7 Build", q:"For the block that the external force F acts on (mass M, spring force F\u209b), the equation is:",
+        opts:["F \u2212 F\u209b = Ma","F + F\u209b = Ma","F = Ma","F\u209b \u2212 F = Ma"], ans:0,
+        sol:"The spring pulls it backwards while F pushes it forward: <strong>F \u2212 F\u209b = Ma</strong>. The two blocks need not have the same acceleration here." },
+      { level:"Rung 4 \u00b7 Exam level \u2605", q:"A 10 kg and a 20 kg block on a smooth floor are joined by a spring. A 180 N force acts on the 20 kg block. At the instant the 10 kg block has an acceleration of 4 m/s\u00b2, the acceleration of the 20 kg block is:",
+        diagram: DIAGRAMS.springTwo(),
+        opts:["7 m/s\u00b2","9 m/s\u00b2","4 m/s\u00b2","6 m/s\u00b2"], ans:0,
+        sol:"Spring force = 10 \u00d7 4 = 40 N. For the 20 kg block: (180 \u2212 40)/20 = 140/20 = <strong>7 m/s\u00b2</strong>." },
+      { level:"Rung 5 \u00b7 Exam level \u2605", q:"A 5 kg and a 15 kg block are joined by a spring on a smooth floor, with a 100 N force on the 15 kg block. When the 5 kg block has an acceleration of 8 m/s\u00b2, the 15 kg block has:",
+        opts:["4 m/s\u00b2","6.7 m/s\u00b2","8 m/s\u00b2","2 m/s\u00b2"], ans:0,
+        sol:"Spring force = 5 \u00d7 8 = 40 N. For the 15 kg block: (100 \u2212 40)/15 = 60/15 = <strong>4 m/s\u00b2</strong>." }
+    ]}
+];
+
+
+// ── STORAGE KEY ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'padipucast_nlm_friction_16model_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(()=>Array(5).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+// Shuffle option order within each rung; keep rung order (easy -> original).
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t,
+  topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, level:raw.level||'', diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti];
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===5&&done===5?' all-done':'');
+    const dots=Array(5).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/5 rungs</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${TOPICS.length*5} rungs cleared`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  qsTopicLbl.textContent=`Ladder ${String(ti+1).padStart(2,'0')}`;
+  qsTitle.textContent=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=5;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((qq,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'')+(i===4?' star':'');
+    pill.textContent=(i===4?'\u2605':(i+1));
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  const isStar=q.level.indexOf('\u2605')!==-1;
+  qLabel.innerHTML=`Rung ${curQ+1} of 5 <span class="lvl${isStar?' lvl-star':''}">${q.level}</span>`;
+  qText.textContent=q.q;
+  if(q.diagram){ qDiagram.style.display='flex'; qDiagram.innerHTML=q.diagram; }
+  else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open'); solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D'][i]}</span>${opt}`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &mdash;</strong> ${q.sol}`;
+    solWrap.classList.add('open'); showFeedback(a.correct); showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0; nextBtn.disabled=false;
+  if(curQ===4){ nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`; }
+  else { nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`; }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct}; saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &mdash;</strong> ${q.sol}`;
+  solWrap.classList.add('open'); showFeedback(correct); showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w'); pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Not quite \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false}; saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct'); else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &mdash;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show'; feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[TOPICS_SHUFFLED.indexOf(curTopic)].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const newQ=curQ+dir;
+  if(newQ<0||newQ>4){if(newQ>4) goHome(); return;}
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(()=>Array(5).fill(null)); saveAnswers();
+  clearModal.classList.remove('show'); buildHome(); showToast('All progress cleared');
+}
+function showToast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); setTimeout(()=>toastEl.classList.remove('show'), 2400); }
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){ ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible'); ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value=''; }
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0; const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]); return t;
+}
+function extractYTData(url){
+  if(!url)return null; let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null; const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]); return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block'; ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
