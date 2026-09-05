@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Electromagnetic Waves &#183; Lecture 1 Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> EM Waves &#183; JEE Main</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Electromagnetic Waves &#183; Lecture 1<br>Maxwell&#8217;s Equations and Displacement Current</h1></div>
+    <p id="home-sub">Electromagnetic Waves, <strong>Lecture 1</strong> &#8212; where the whole chapter starts. Maxwell's four equations and their names, the capacitor-gap problem that forced him to invent the <strong>displacement current</strong>, the working formula <strong>I&#8340; = C dV/dt</strong>, and what an EM wave actually is. Every source question is a real <strong>JEE Main PYQ</strong> from the chapter bank, turned into a <strong>ladder</strong>: 3 build-up rungs, then the original exam question (&#9733;). Each ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 8 ladders &#215; 4 rungs = 32 questions.<br><br><em>Years covered: 2013, 2021, 2023, 2025 and 2026 &#8212; all 8 Maxwell and displacement-current PYQs in the bank are here. Ladder 7 is the only one in the lecture that needs the tan&#969;t factor; every other ratio question compares peaks. Lecture 2 picks up from ladder 8.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Electromagnetic Waves, Lecture 1  (PADIPUCAST)
+//  Maxwell's equations, the capacitor gap, displacement current
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+
+function _sine(x0,x1,ymid,amp,cycles,phase){
+  let p=[];
+  for(let i=0;i<=240;i++){
+    const f=i/240, x=x0+f*(x1-x0);
+    const y=ymid-amp*Math.sin(2*Math.PI*cycles*f+(phase||0));
+    p.push(x.toFixed(1)+','+y.toFixed(1));
+  }
+  return p.join(' ');
+}
+function _axes(x0,x1,ymid,top,bot,id){
+  return `<line x1="${x0-12}" y1="${ymid}" x2="${x1+14}" y2="${ymid}" stroke="#6b7280" stroke-width="1.3" marker-end="url(#${id})"/>
+  <line x1="${x0-12}" y1="${bot}" x2="${x0-12}" y2="${top}" stroke="#6b7280" stroke-width="1.3" marker-end="url(#${id})"/>`;
+}
+// generic circle-with-wave symbol (kept from the shared engine)
+function _src(cx,cy,r){
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--surface)" stroke="#1a1916" stroke-width="1.7"/>
+  <path d="M ${cx-r*0.6} ${cy} Q ${cx-r*0.3} ${cy-r*0.55} ${cx} ${cy} T ${cx+r*0.6} ${cy}" fill="none" stroke="#1a1916" stroke-width="1.6"/>`;
+}
+
+const DIAGRAMS = {
+
+  // the four equations laid out with their names
+  maxwellFour:()=>`
+    <svg viewBox="0 0 340 196" width="340" height="196" xmlns="http://www.w3.org/2000/svg">
+      ${[['&#8750; E&#183;dA = q/&#949;&#8320;','Gauss, electricity',12,14],
+         ['&#8750; B&#183;dA = 0','Gauss, magnetism',176,14],
+         ['&#8750; E&#183;dl = &#8722;d&#966;&#8305;/dt','Faraday',12,102],
+         ['&#8750; B&#183;dl = &#956;&#8320;(I + I&#8340;)','Ampere &#8211; Maxwell',176,102]].map(function(d){
+        return `<rect x="${d[2]}" y="${d[3]}" width="152" height="76" rx="9" fill="var(--surface)" stroke="#d4d1c8" stroke-width="1.2"/>
+        <text x="${d[2]+76}" y="${d[3]+34}" font-size="12" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">${d[0]}</text>
+        <text x="${d[2]+76}" y="${d[3]+58}" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>${d[1]}</text>`;
+      }).join('')}
+      <text x="170" y="192" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>only the last one was changed by Maxwell &#8212; he added the I&#8340; term</text>
+    </svg>`,
+
+  // the capacitor-gap problem
+  capGap:()=>`
+    <svg viewBox="0 0 340 184" width="340" height="184" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('cg1','#c0392b')}</defs>
+      <line x1="20" y1="76" x2="140" y2="76" stroke="#1a1916" stroke-width="2"/>
+      <line x1="200" y1="76" x2="320" y2="76" stroke="#1a1916" stroke-width="2"/>
+      <line x1="146" y1="40" x2="146" y2="112" stroke="#1a1916" stroke-width="3"/>
+      <line x1="194" y1="40" x2="194" y2="112" stroke="#1a1916" stroke-width="3"/>
+      <line x1="140" y1="76" x2="146" y2="76" stroke="#1a1916" stroke-width="2"/>
+      <line x1="194" y1="76" x2="200" y2="76" stroke="#1a1916" stroke-width="2"/>
+      <line x1="52" y1="62" x2="84" y2="62" stroke="#c0392b" stroke-width="2" marker-end="url(#cg1)"/>
+      <text x="66" y="54" font-size="10.5" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">I</text>
+      <ellipse cx="86" cy="76" rx="13" ry="34" fill="none" stroke="#1a7a4a" stroke-width="1.6" stroke-dasharray="4 3"/>
+      <text x="86" y="128" font-size="9.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">the loop</text>
+      <path d="M 86 42 L 86 110" stroke="#6b7280" stroke-width="1.5"/>
+      <path d="M 86 42 Q 175 26 175 76 Q 175 126 86 110" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <text x="170" y="152" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">one loop, two surfaces: the flat one is cut by I,</text>
+      <text x="170" y="168" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">the bulging one passes through the empty gap</text>
+      <text x="170" y="182" font-size="9.5" fill="#a09d97" text-anchor="middle" ${FS}>Ampere's old law gives two different answers &#8212; so it was incomplete</text>
+    </svg>`,
+
+  // the displacement current formulas
+  dispFormula:(foot)=>`
+    <svg viewBox="0 0 340 158" width="340" height="158" xmlns="http://www.w3.org/2000/svg">
+      <rect x="12" y="14" width="316" height="42" rx="9" fill="var(--surface)" stroke="#d4d1c8" stroke-width="1.3"/>
+      <text x="170" y="42" font-size="14" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">I&#8340; = &#949;&#8320; d&#966;&#8337;/dt</text>
+      <text x="170" y="76" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>for a capacitor, &#966;&#8337; = q/&#949;&#8320; and q = CV, so this becomes</text>
+      <rect x="12" y="86" width="316" height="42" rx="9" fill="#f0faf5" stroke="#b3e0c6" stroke-width="1.2"/>
+      <text x="170" y="114" font-size="15" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">I&#8340; = C dV/dt</text>
+      <text x="170" y="148" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">${foot}</text>
+    </svg>`,
+
+  // current shared across the plate area
+  areaShare:(bigTxt,smallTxt,foot)=>`
+    <svg viewBox="0 0 340 168" width="340" height="168" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('as1','#c0392b')}</defs>
+      <rect x="60" y="24" width="140" height="94" fill="#f0ede8" stroke="#1a1916" stroke-width="1.6"/>
+      <rect x="102" y="52" width="56" height="38" fill="#fff5f5" stroke="#c0392b" stroke-width="1.6"/>
+      <text x="130" y="44" font-size="10" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">A&#8320;</text>
+      <text x="130" y="76" font-size="10.5" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">${smallTxt}</text>
+      <text x="130" y="132" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">A: ${bigTxt}</text>
+      ${[36,60,84,108].map(function(x){return `<line x1="${60+x}" y1="14" x2="${60+x}" y2="22" stroke="#c0392b" stroke-width="1.4" marker-end="url(#as1)"/>`;}).join('')}
+      <text x="270" y="60" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>the field is spread</text>
+      <text x="270" y="76" font-size="10.5" fill="#6b7280" text-anchor="middle" ${FS}>evenly over A</text>
+      <text x="270" y="98" font-size="12" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">I&#8320; = I &#215; A&#8320;/A</text>
+      <text x="170" y="158" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">${foot}</text>
+    </svg>`,
+
+  // the two current densities and their ratio
+  jRatio:(foot)=>`
+    <svg viewBox="0 0 340 162" width="340" height="162" xmlns="http://www.w3.org/2000/svg">
+      <rect x="12" y="14" width="150" height="56" rx="9" fill="#fff5f5" stroke="#f5c6c2" stroke-width="1.2"/>
+      <rect x="178" y="14" width="150" height="56" rx="9" fill="#f0faf5" stroke="#b3e0c6" stroke-width="1.2"/>
+      <text x="87" y="34" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>conduction</text>
+      <text x="87" y="56" font-size="13" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">J&#8331; = &#963;E</text>
+      <text x="253" y="34" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>displacement</text>
+      <text x="253" y="56" font-size="13" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">J&#8340; = &#949; dE/dt</text>
+      <rect x="12" y="84" width="316" height="42" rx="9" fill="var(--surface)" stroke="#d4d1c8" stroke-width="1.3"/>
+      <text x="170" y="112" font-size="14" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">peak ratio = &#963; / (&#949;&#969;)</text>
+      <text x="170" y="150" font-size="10.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">${foot}</text>
+    </svg>`,
+
+  // the 90 degree phase gap between the two densities
+  phase90:()=>`
+    <svg viewBox="0 0 340 172" width="340" height="172" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('p91','#6b7280')}</defs>
+      ${_axes(40,290,80,36,124,'p91')}
+      <polyline points="${_sine(40,290,80,34,1,0)}" fill="none" stroke="#c0392b" stroke-width="2.5"/>
+      <polyline points="${_sine(40,290,80,34,1,Math.PI/2)}" fill="none" stroke="#1a7a4a" stroke-width="2.2" stroke-dasharray="5 3"/>
+      <text x="296" y="52" font-size="10" fill="#c0392b" ${FS} font-weight="700">J&#8331; &#8733; sin &#969;t</text>
+      <text x="296" y="112" font-size="10" fill="#1a7a4a" ${FS} font-weight="700">J&#8340; &#8733; cos &#969;t</text>
+      <text x="170" y="148" font-size="11.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">J&#8331; / J&#8340; = tan(&#969;t) &#215; &#963;/(&#949;&#969;)</text>
+      <text x="170" y="166" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>a quarter cycle apart, so the ratio changes from instant to instant</text>
+    </svg>`,
+
+  // an accelerating charge radiates
+  radiating:()=>`
+    <svg viewBox="0 0 340 164" width="340" height="164" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rd1','#c0392b')}</defs>
+      <circle cx="110" cy="80" r="9" fill="#1a1916"/>
+      <line x1="110" y1="62" x2="110" y2="34" stroke="#c0392b" stroke-width="2" marker-end="url(#rd1)"/>
+      <line x1="110" y1="98" x2="110" y2="126" stroke="#c0392b" stroke-width="2" marker-end="url(#rd1)"/>
+      <text x="124" y="40" font-size="10" fill="#c0392b" ${FS} font-weight="700">shaken</text>
+      ${[26,46,66,86].map(function(r){return `<circle cx="110" cy="80" r="${r}" fill="none" stroke="#1a7a4a" stroke-width="1.1" opacity="0.5"/>`;}).join('')}
+      <text x="270" y="52" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">an accelerating</text>
+      <text x="270" y="70" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">charge radiates</text>
+      <text x="270" y="94" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>a charge at rest, or moving</text>
+      <text x="270" y="108" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>at steady speed, does not</text>
+      <text x="170" y="152" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>the wave carries away both energy and momentum</text>
+    </svg>`,
+
+  // static form versus time-varying form
+  staticVsTime:(a,b,c,d)=>`
+    <svg viewBox="0 0 340 148" width="340" height="148" xmlns="http://www.w3.org/2000/svg">
+      <rect x="12" y="14" width="316" height="52" rx="9" fill="#f0ede8" stroke="#d4d1c8" stroke-width="1.2"/>
+      <rect x="12" y="78" width="316" height="52" rx="9" fill="#f0faf5" stroke="#b3e0c6" stroke-width="1.2"/>
+      <text x="26" y="34" font-size="10" fill="#6b7280" ${FS} font-weight="700">${a}</text>
+      <text x="170" y="56" font-size="12.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">${b}</text>
+      <text x="26" y="98" font-size="10" fill="#6b7280" ${FS} font-weight="700">${c}</text>
+      <text x="170" y="120" font-size="12.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">${d}</text>
+    </svg>`,
+
+  // tick/cross checklist
+  elimList:(title,rows)=>`
+    <svg viewBox="0 0 340 ${44+rows.length*26}" width="340" height="${44+rows.length*26}" xmlns="http://www.w3.org/2000/svg">
+      <text x="14" y="20" font-size="11" fill="#6b7280" ${FS} font-weight="700">${title}</text>
+      ${rows.map(function(r,i){
+        const y=42+i*26, ok=r[0]==='y';
+        return `<rect x="12" y="${y-14}" width="316" height="22" rx="6" fill="${ok?'#f0faf5':'#fff5f5'}" stroke="${ok?'#b3e0c6':'#f5c6c2'}" stroke-width="1"/>
+        <text x="26" y="${y+1}" font-size="11" fill="${ok?'#1a7a4a':'#c0392b'}" ${FS} font-weight="700">${ok?'&#10003;':'&#10007;'}</text>
+        <text x="44" y="${y+1}" font-size="10.5" fill="#1a1916" ${FS}>${r[1]}</text>`;
+      }).join('')}
+    </svg>`
+
+};
+
+
+// ===============================================================================
+//  QUESTION LADDERS  -  ELECTROMAGNETIC WAVES, LECTURE 1
+//  Maxwell's equations, displacement current, and what an EM wave is
+//  Every star rung is a real JEE Main PYQ from the chapter question bank.
+// ===============================================================================
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "The four equations and their names",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "The equation &#8750; E&#183;dA = q/&#949;&#8320; is",
+   "diagram": DIAGRAMS.maxwellFour(),
+   "opts": ["Gauss's law of electrostatics","Faraday's law","Ampere's circuital law","Gauss's law for magnetism"],
+   "ans": 0,
+   "sol": "A surface integral of <strong>E</strong> equal to the enclosed charge is <strong>Gauss's law of electrostatics</strong>.<br><br>Sort them by two features and the matching becomes automatic:<br>&#183; <strong>dA</strong> (a surface) &#8594; a Gauss law<br>&#183; <strong>dl</strong> (a loop) &#8594; Faraday or Ampere<br>&#183; then look at whether it is E or B."
+  },
+  {
+   "q": "The equation &#8750; E&#183;dl = &#8722;d&#966;<sub>B</sub>/dt is",
+   "diagram": DIAGRAMS.maxwellFour(),
+   "opts": ["Faraday's law of electromagnetic induction","Ampere's circuital law","Gauss's law of electrostatics","the Ampere&#8211;Maxwell law"],
+   "ans": 0,
+   "sol": "A loop integral of <strong>E</strong> driven by a changing magnetic flux is <strong>Faraday's law</strong>.<br><br>Say it in words: a changing B makes an E. That is a whole chapter of Class 12 in one line.<br><br>The minus sign is Lenz's law &#8212; the induced effect opposes the change that made it."
+  },
+  {
+   "q": "&#8750; B&#183;dl = &#956;&#8320;I and &#8750; B&#183;dl = &#956;&#8320;(I + &#949;&#8320; d&#966;<sub>E</sub>/dt) are respectively",
+   "diagram": DIAGRAMS.staticVsTime("THE OLD FORM","&#8750; B&#183;dl = &#956;&#8320;I &#8212; Ampere's circuital law","MAXWELL'S REPAIRED FORM","&#8750; B&#183;dl = &#956;&#8320;(I + I&#8340;) &#8212; Ampere&#8211;Maxwell law"),
+   "opts": ["Ampere's circuital law and the Ampere&#8211;Maxwell law","the Ampere&#8211;Maxwell law and Ampere's circuital law","Faraday's law and Gauss's law","both Ampere's circuital law"],
+   "ans": 0,
+   "sol": "The plain one is <strong>Ampere's circuital law</strong>. The one with the extra flux term is the <strong>Ampere&#8211;Maxwell law</strong>.<br><br>The extra piece, &#949;&#8320; d&#966;<sub>E</sub>/dt, is Maxwell's <strong>displacement current</strong>. It is the only thing Maxwell actually added &#8212; the other three equations were already known.<br><br>And it is the piece that makes electromagnetic waves possible, because now a changing E can make a B, and Faraday already said a changing B makes an E. The two feed each other."
+  },
+  {
+   "tag": "JEE Main 2026 &#183; 23 Jan Morning Shift",
+   "q": "&#9733; <strong>Original:</strong> Match List-I with List-II.<br><br><strong>List-I</strong> &#8212; (A) &#8750; E&#183;dl = &#8722;(d/dt)&#8750; B&#183;da &nbsp;(B) &#8750; B&#183;dl = &#956;&#8320;(I + &#949;&#8320; d&#966;<sub>E</sub>/dt) &nbsp;(C) &#8750; E&#183;da = (1/&#949;&#8320;)&#8747;&#961; dv &nbsp;(D) &#8750; B&#183;dl = &#956;&#8320;I<br><br><strong>List-II</strong> &#8212; (I) Ampere's circuital law &nbsp;(II) Faraday's law of electromagnetic induction &nbsp;(III) Ampere&#8211;Maxwell law &nbsp;(IV) Gauss's law of electrostatics",
+   "diagram": DIAGRAMS.maxwellFour(),
+   "opts": ["A-II, B-III, C-IV, D-I","A-I, B-IV, C-III, D-II","A-IV, B-I, C-II, D-III","A-II, B-III, C-I, D-IV"],
+   "ans": 0,
+   "sol": "Take them one at a time.<br><br><strong>A</strong> &#8212; loop of E, changing B flux &#8594; Faraday &#8594; <strong>II</strong><br><strong>B</strong> &#8212; loop of B, with the extra flux term &#8594; Ampere&#8211;Maxwell &#8594; <strong>III</strong><br><strong>C</strong> &#8212; surface of E, charge inside &#8594; Gauss, electrostatics &#8594; <strong>IV</strong><br><strong>D</strong> &#8212; loop of B, plain &#956;&#8320;I &#8594; Ampere's circuital law &#8594; <strong>I</strong><br><br>Answer: <strong>A-II, B-III, C-IV, D-I</strong><br><br>The setter's trick is putting B and D so far apart in the list. They are the same law before and after Maxwell, and the only difference is that one extra term. Read the whole of each equation before matching."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Which equation needs things to be changing",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In electrostatics, the work done in carrying a charge round a closed loop is zero. So for static fields, &#8750; E&#183;dl equals",
+   "diagram": DIAGRAMS.staticVsTime("STATIC CASE","&#8750; E&#183;dl = 0","WITH A CHANGING B","&#8750; E&#183;dl = &#8722;&#8706;&#966;&#8305;/&#8706;t"),
+   "opts": ["zero","q/&#949;&#8320;","&#956;&#8320;I","&#8722;d&#966;<sub>B</sub>/dt, which is not zero"],
+   "ans": 0,
+   "sol": "<strong>Zero.</strong> A static electric field is conservative, so going all the way round a loop brings you back to the same potential.<br><br>That is exactly why potential works as an idea in electrostatics, and why we can talk about volts at all."
+  },
+  {
+   "q": "If the magnetic flux through the loop is changing, then &#8750; E&#183;dl is",
+   "opts": ["&#8722;d&#966;<sub>B</sub>/dt, which is not zero","still zero","q/&#949;&#8320;","&#956;&#8320;I"],
+   "ans": 0,
+   "sol": "Now Faraday's law takes over: &#8750; E&#183;dl = <strong>&#8722;d&#966;<sub>B</sub>/dt</strong>.<br><br>The induced electric field is <em>not</em> conservative. You can go round a loop and gain energy &#8212; which is precisely how a generator works.<br><br>So the same integral has two different values depending on whether things are changing. That is what the star question below is really asking about."
+  },
+  {
+   "q": "Do &#8750; D&#183;dA = q and &#8750; B&#183;dl = &#956;&#8320;I hold in the static case?",
+   "diagram": DIAGRAMS.elimList("which forms survive when nothing changes",[["y","&#8750; D&#183;dA = q &#8212; Gauss, always true"],["y","&#8750; E&#183;dl = 0 &#8212; true in statics"],["y","&#8750; B&#183;dl = &#956;&#8320;I &#8212; true in statics"],["n","&#8750; E&#183;dl = &#8722;&#8706;&#966;&#8305;/&#8706;t &#8212; gives 0 = 0, no content"]]),
+   "opts": ["Yes &#8212; both are perfectly valid for static fields","No &#8212; neither works in statics","Only the first one","Only the second one"],
+   "ans": 0,
+   "sol": "<strong>Yes, both hold.</strong> Gauss's law is always true, and Ampere's plain law is fine as long as no field is changing.<br><br>So the question \"which equation is valid for time-varying conditions but <em>not</em> for static ones\" is really asking: which one says something new only when things change?<br><br>Faraday's law is the one. In statics it just reduces to 0 = 0."
+  },
+  {
+   "tag": "JEE Main 2023 &#183; 13 Apr Shift 1",
+   "q": "&#9733; <strong>Original:</strong> Which of the following Maxwell's equations is valid for time varying conditions but not valid for static conditions?",
+   "diagram": DIAGRAMS.staticVsTime("STATIC CASE","&#8750; E&#183;dl = 0","TIME VARYING","&#8750; E&#183;dl = &#8722;&#8706;&#966;&#8305;/&#8706;t"),
+   "opts": ["&#8750; E&#183;dl = &#8722;&#8706;&#966;<sub>B</sub>/&#8706;t","&#8750; D&#183;dA = Q","&#8750; E&#183;dl = 0","&#8750; B&#183;dl = &#956;&#8320;I"],
+   "ans": 0,
+   "sol": "&#183; <strong>&#8750; D&#183;dA = Q</strong> &#8212; Gauss's law, true in both cases.<br>&#183; <strong>&#8750; E&#183;dl = 0</strong> &#8212; this is the <em>static</em> statement. It fails once B starts changing.<br>&#183; <strong>&#8750; B&#183;dl = &#956;&#8320;I</strong> &#8212; the static form of Ampere's law.<br>&#183; <strong>&#8750; E&#183;dl = &#8722;&#8706;&#966;<sub>B</sub>/&#8706;t</strong> &#8212; the only one that carries real meaning only when things change. &#10003;<br><br>Answer: <strong>Faraday's law</strong>.<br><br>Notice the third option is the exact opposite of the answer. Two of the four options are the same integral, one set to zero and one set to a rate of change."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Displacement current in a capacitor",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A capacitor is being charged. Between the plates there is no moving charge, yet a magnetic field is found there. Maxwell's explanation is that",
+   "diagram": DIAGRAMS.capGap(),
+   "opts": ["a changing electric field acts like a current","charge leaks across the gap","the plates emit electrons","the magnetic field comes from the wires only"],
+   "ans": 0,
+   "sol": "Maxwell said a <strong>changing electric field</strong> does the same job as a current, as far as making a magnetic field is concerned. He called it the <strong>displacement current</strong>.<br><br>It is not a flow of charge. Nothing crosses the gap. It is the rate of change of electric flux, wearing the units of current.<br><br>The name is historical and a little misleading. Read \"displacement current\" as \"the changing-E term\"."
+  },
+  {
+   "q": "The displacement current is defined as",
+   "diagram": DIAGRAMS.dispFormula("this is the form to use whenever a capacitance is given"),
+   "opts": ["I<sub>d</sub> = &#949;&#8320; d&#966;<sub>E</sub>/dt","I<sub>d</sub> = &#949;&#8320; &#966;<sub>E</sub>","I<sub>d</sub> = &#956;&#8320; d&#966;<sub>B</sub>/dt","I<sub>d</sub> = d&#966;<sub>E</sub>/dt"],
+   "ans": 0,
+   "sol": "<strong>I<sub>d</sub> = &#949;&#8320; d&#966;<sub>E</sub>/dt</strong>, where &#966;<sub>E</sub> is the electric flux.<br><br>For a capacitor this simplifies beautifully. The charge is q = &#949;&#8320;&#966;<sub>E</sub>, so I<sub>d</sub> = dq/dt. And since q = CV,<br><br><strong>I<sub>d</sub> = C dV/dt</strong><br><br>That is the working formula for almost every displacement-current question in JEE Main."
+  },
+  {
+   "q": "Rearranged for the rate of change of voltage, that formula gives",
+   "opts": ["dV/dt = I<sub>d</sub>/C","dV/dt = I<sub>d</sub>C","dV/dt = C/I<sub>d</sub>","dV/dt = I<sub>d</sub>/C&#178;"],
+   "ans": 0,
+   "sol": "<strong>dV/dt = I<sub>d</sub>/C</strong><br><br>Watch the units. Amperes divided by farads gives volts per second. If you multiply instead, the units come out wrong immediately, which is a free check."
+  },
+  {
+   "tag": "JEE Main 2025 &#183; 23 Jan Evening Shift",
+   "q": "&#9733; <strong>Original:</strong> A time varying potential difference is applied between the plates of a parallel plate capacitor of capacitance 2.5 &#956;F. The dielectric constant of the medium between the plates is 1. It produces an instantaneous displacement current of 0.25 mA in the space between the plates. The magnitude of the rate of change of the potential difference will be _____ V/s.",
+   "diagram": DIAGRAMS.dispFormula("I&#8340; = 0.25 mA, C = 2.5 &#956;F"),
+   "opts": ["100","10","1000","0.1"],
+   "ans": 0,
+   "sol": "<strong>Convert both units first.</strong><br>I<sub>d</sub> = 0.25 mA = 0.25 &#215; 10<sup>&#8722;3</sup> A<br>C = 2.5 &#956;F = 2.5 &#215; 10<sup>&#8722;6</sup> F<br><br><strong>Divide.</strong><br>dV/dt = (0.25 &#215; 10<sup>&#8722;3</sup>)/(2.5 &#215; 10<sup>&#8722;6</sup>)<br>0.25/2.5 = 0.1, and 10<sup>&#8722;3</sup>/10<sup>&#8722;6</sup> = 10<sup>3</sup><br>dV/dt = 0.1 &#215; 10<sup>3</sup> = <strong>100 V/s</strong><br><br>The sentence about the dielectric constant being 1 is there only to tell you no extra factor is needed. If it had been, say, 5, the capacitance given would already have included it &#8212; so it changes nothing either way.<br><br>mA and &#956;F in the same question is the real test here. Convert both before dividing."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "The same formula, answer as &#945; &#215; 10&#8310;",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "4.0 divided by 6 is",
+   "opts": ["0.67","1.5","0.24","2.4"],
+   "ans": 0,
+   "sol": "4/6 = 2/3 = <strong>0.67</strong> to two figures.<br><br>The reciprocal, 1.5, is the trap. Check which number is on top before you divide."
+  },
+  {
+   "q": "Dividing by 6 &#215; 10<sup>&#8722;6</sup> is the same as",
+   "opts": ["dividing by 6 and multiplying by 10<sup>6</sup>","dividing by 6 and by 10<sup>6</sup>","multiplying by 6 and by 10<sup>6</sup>","dividing by 6 and multiplying by 10<sup>&#8722;6</sup>"],
+   "ans": 0,
+   "sol": "A negative power on the bottom flips up as a positive power on top.<br><br>So dividing by 6 &#215; 10<sup>&#8722;6</sup> means <strong>dividing by 6 and multiplying by 10<sup>6</sup></strong>.<br><br>This single move is worth practising. It is the difference between 10<sup>6</sup> and 10<sup>&#8722;6</sup> &#8212; a factor of a million."
+  },
+  {
+   "q": "So 4.0 &#247; (6 &#215; 10<sup>&#8722;6</sup>) equals",
+   "opts": ["0.67 &#215; 10<sup>6</sup>","0.67 &#215; 10<sup>&#8722;6</sup>","1.5 &#215; 10<sup>6</sup>","24 &#215; 10<sup>&#8722;6</sup>"],
+   "ans": 0,
+   "sol": "0.67 &#215; 10<sup>6</sup>, which is 6.7 &#215; 10<sup>5</sup> V/s.<br><br>Both forms are the same number. The question below wants it written as &#945; &#215; 10<sup>6</sup>, so keep it as <strong>0.67 &#215; 10<sup>6</sup></strong>."
+  },
+  {
+   "tag": "JEE Main 2026 &#183; 5 Apr Morning Shift",
+   "q": "&#9733; <strong>Original:</strong> A displacement current of 4.0 A can be set up in the space between the plates of a 6 &#956;F capacitor. The rate of change of potential difference across the plates is nearly &#945; &#215; 10<sup>6</sup> V/s. The value of &#945; is",
+   "diagram": DIAGRAMS.dispFormula("I&#8340; = 4.0 A, C = 6 &#956;F"),
+   "opts": ["0.67","0.58","0.75","0.82"],
+   "ans": 0,
+   "sol": "dV/dt = I<sub>d</sub>/C = 4.0/(6 &#215; 10<sup>&#8722;6</sup>) = 0.67 &#215; 10<sup>6</sup> V/s<br><br>The question has already written the 10<sup>6</sup>, so <strong>&#945; = 0.67</strong>.<br><br>Same formula as the last ladder, only the dressing changed. Here the answer is asked as a coefficient rather than a full value &#8212; read the printed form after the blank before you decide what to write.<br><br>A note on the physics: 4 A of displacement current is enormous for a 6 &#956;F capacitor. It means the voltage is climbing at nearly a million volts per second. These are exam numbers, not laboratory ones."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Displacement current is spread over the plate",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "While a capacitor is charging with a conduction current I in the wires, the total displacement current between the plates is",
+   "diagram": DIAGRAMS.capGap(),
+   "opts": ["equal to I","zero","half of I","depends on the plate separation"],
+   "ans": 0,
+   "sol": "<strong>Equal to I.</strong> That was the whole point of Maxwell's fix &#8212; the displacement current in the gap picks up exactly where the conduction current in the wire leaves off, so the total current is continuous everywhere.<br><br>If it were not equal, Ampere's law would still give two different answers for the same loop."
+  },
+  {
+   "q": "Between the plates the electric field is uniform. So the displacement current per unit area is",
+   "diagram": DIAGRAMS.areaShare("full plate","A&#8320;","the current shares out in proportion to area"),
+   "opts": ["the same everywhere across the plate","largest at the centre","largest at the edges","zero except at the edges"],
+   "ans": 0,
+   "sol": "<strong>The same everywhere.</strong> A uniform E means a uniform dE/dt, which means a uniform displacement current density.<br><br>So if you take any smaller patch of area A&#8320; inside the plate, the displacement current through it is<br><br><strong>I&#8320; = I &#215; A&#8320;/A</strong><br><br>Just a fraction, set by the area ratio."
+  },
+  {
+   "q": "For A = 16 cm&#178; and A&#8320; = 3.2 cm&#178;, the fraction A&#8320;/A is",
+   "diagram": DIAGRAMS.areaShare("16 cm&#178;","3.2 cm&#178;","3.2/16 = 0.2, so one fifth"),
+   "opts": ["0.2","0.5","5","0.32"],
+   "ans": 0,
+   "sol": "3.2/16 = <strong>0.2</strong>, that is one fifth.<br><br>Both areas are in cm&#178;, so there is no need to convert to m&#178;. In a ratio the units cancel &#8212; converting both is extra work and extra risk."
+  },
+  {
+   "tag": "JEE Main 2025 &#183; 22 Jan Evening Shift",
+   "q": "&#9733; <strong>Original:</strong> A parallel plate capacitor of area A = 16 cm&#178; and plate separation 10 cm is charged by a DC current. Consider a hypothetical plane surface of area A&#8320; = 3.2 cm&#178; inside the capacitor and parallel to the plates. At an instant the current through the circuit is 6 A. At the same instant the displacement current through A&#8320; is _____ mA.",
+   "diagram": DIAGRAMS.areaShare("16 cm&#178;","3.2 cm&#178;","I&#8320; = 6 &#215; 0.2 = 1.2 A"),
+   "opts": ["1200","120","12000","1.2"],
+   "ans": 0,
+   "sol": "<strong>1.</strong> Total displacement current between the plates = conduction current = 6 A.<br><br><strong>2.</strong> Share it by area: I&#8320; = 6 &#215; (3.2/16) = 6 &#215; 0.2 = 1.2 A<br><br><strong>3.</strong> The answer is wanted in mA: 1.2 A = <strong>1200 mA</strong><br><br>Two things in this question are pure decoration. The <strong>plate separation of 10 cm</strong> is never used &#8212; the area ratio is all that matters. And \"charged by a DC current\" simply means the current is steady, not that nothing is changing; the voltage is still climbing, so there is still a displacement current.<br><br>The final unit is where the marks go. 1.2 is sitting in the option list for anyone who forgets to convert to mA."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Conduction against displacement, as densities",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In a conducting medium of conductivity &#963;, the conduction current density is",
+   "diagram": DIAGRAMS.jRatio("both are current per unit area, in A/m&#178;"),
+   "opts": ["J<sub>c</sub> = &#963;E","J<sub>c</sub> = E/&#963;","J<sub>c</sub> = &#963;/E","J<sub>c</sub> = &#963;E&#178;"],
+   "ans": 0,
+   "sol": "<strong>J<sub>c</sub> = &#963;E</strong>. This is Ohm's law written point by point instead of for a whole wire.<br><br>Conductivity &#963; is the reciprocal of resistivity, so if a question gives you resistivity r instead, use &#963; = 1/r."
+  },
+  {
+   "q": "If E = E&#8320; sin&#969;t, then the displacement current density J<sub>d</sub> = &#949; dE/dt has peak value",
+   "diagram": DIAGRAMS.jRatio("differentiating a sine brings down a factor of &#969;"),
+   "opts": ["&#949;&#969;E&#8320;","&#949;E&#8320;","&#949;E&#8320;/&#969;","&#949;&#969;&#178;E&#8320;"],
+   "ans": 0,
+   "sol": "d/dt (E&#8320; sin&#969;t) = &#969;E&#8320; cos&#969;t, whose peak is &#969;E&#8320;.<br><br>So the peak of J<sub>d</sub> is <strong>&#949;&#969;E&#8320;</strong>.<br><br>Differentiating a sine always pulls an &#969; down in front. That &#969; is why frequency appears in the ratio at all."
+  },
+  {
+   "q": "So the ratio of the peak conduction to the peak displacement current density is",
+   "diagram": DIAGRAMS.jRatio("the amplitude E&#8320; cancels"),
+   "opts": ["&#963;/(&#949;&#969;)","&#949;&#969;/&#963;","&#963;&#949;&#969;","&#963;/&#969;"],
+   "ans": 0,
+   "sol": "&#963;E&#8320; &#247; &#949;&#969;E&#8320; = <strong>&#963;/(&#949;&#969;)</strong><br><br>The amplitude E&#8320; cancels, which is why these questions never give you one.<br><br>Read what the ratio says. At <em>low</em> frequency the conduction current dominates and the medium behaves like a conductor. At <em>high</em> frequency the displacement current wins and the same medium behaves like an insulator. That is why seawater blocks radio but conducts at mains frequency."
+  },
+  {
+   "tag": "JEE Main 2026 &#183; 21 Jan Evening Shift",
+   "q": "&#9733; <strong>Original:</strong> An electromagnetic wave of frequency 100 MHz propagates through a medium of conductivity &#963; = 10 mho/m. The ratio of the maximum conduction current density to the maximum displacement current density is _____. (Take 1/4&#960;&#949;&#8320; = 9 &#215; 10<sup>9</sup> Nm&#178;/C&#178;)",
+   "diagram": DIAGRAMS.jRatio("ratio = &#963;/(&#949;&#8320;&#969;), with &#969; = 2&#960; &#215; 10&#8312;"),
+   "opts": ["1800","900","3600","180"],
+   "ans": 0,
+   "sol": "<strong>1. Write the ratio.</strong> &#963;/(&#949;&#8320;&#969;)<br><br><strong>2. Get &#969;.</strong> &#969; = 2&#960;f = 2&#960; &#215; 10<sup>8</sup> rad/s<br><br><strong>3. Use the hint instead of &#949;&#8320;.</strong> The question gives 1/(4&#960;&#949;&#8320;) = 9 &#215; 10<sup>9</sup>, so 1/&#949;&#8320; = 4&#960; &#215; 9 &#215; 10<sup>9</sup> = 36&#960; &#215; 10<sup>9</sup>.<br><br><strong>4. Put it together.</strong><br>Ratio = &#963; &#215; (1/&#949;&#8320;) &#247; &#969; = 10 &#215; (36&#960; &#215; 10<sup>9</sup>)/(2&#960; &#215; 10<sup>8</sup>)<br>The &#960; cancels: 36/2 = 18, and 10<sup>9</sup>/10<sup>8</sup> = 10<sup>1</sup><br>Ratio = 10 &#215; 18 &#215; 10 = <strong>1800</strong><br><br>The setter handed you 1/(4&#960;&#949;&#8320;) rather than &#949;&#8320; on purpose. Use it as given &#8212; substituting 8.85 &#215; 10<sup>&#8722;12</sup> works too, but the &#960; will not cancel and you will be fighting a calculator instead of watching the numbers fall out."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "The two currents are a quarter cycle apart",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "With E = E&#8320; sin&#969;t, J<sub>c</sub> follows sin&#969;t and J<sub>d</sub> follows cos&#969;t. So at a general instant, the ratio J<sub>c</sub>/J<sub>d</sub> is",
+   "diagram": DIAGRAMS.phase90(),
+   "opts": ["[&#963;/(&#949;&#969;)] &#215; tan&#969;t","&#963;/(&#949;&#969;), constant in time","[&#963;/(&#949;&#969;)] &#215; cot&#969;t","&#963;/(&#949;&#969;&#178;)"],
+   "ans": 0,
+   "sol": "J<sub>c</sub>/J<sub>d</sub> = (&#963;E&#8320; sin&#969;t)/(&#949;&#969;E&#8320; cos&#969;t) = <strong>[&#963;/(&#949;&#969;)] tan&#969;t</strong><br><br>The previous ladder compared the two <em>peaks</em>. This one compares them at the <em>same instant</em>, and because they are a quarter cycle apart, a tan&#969;t appears.<br><br>Read the question carefully to see which of the two is being asked."
+  },
+  {
+   "q": "For &#963; = 1/r with r = 0.25 &#937;m, &#949; = 80&#949;&#8320; and f = 900 Hz, the value of &#963;/(&#949;&#969;) is",
+   "diagram": DIAGRAMS.jRatio("&#963;/(&#949;&#969;) = 1/(r &#949; &#969;)"),
+   "opts": ["10<sup>6</sup>","10<sup>3</sup>","10<sup>&#8722;6</sup>","10<sup>9</sup>"],
+   "ans": 0,
+   "sol": "Work with 1/&#949;&#8320; = 36&#960; &#215; 10<sup>9</sup> rather than the decimal.<br><br>r&#949;&#969; = 0.25 &#215; 80&#949;&#8320; &#215; 2&#960;(900)<br>= 0.25 &#215; 80 &#215; 1800&#960; / (36&#960; &#215; 10<sup>9</sup>)<br>The &#960; cancels: = 0.25 &#215; 80 &#215; 1800 / (36 &#215; 10<sup>9</sup>) = 0.25 &#215; 80 &#215; 50 / 10<sup>9</sup> = 1000/10<sup>9</sup> = 10<sup>&#8722;6</sup><br><br>So &#963;/(&#949;&#969;) = 1/10<sup>&#8722;6</sup> = <strong>10<sup>6</sup></strong><br><br>It lands on an exact power of ten. That is a strong sign you have not slipped."
+  },
+  {
+   "q": "At t = 1/800 s with &#969; = 1800&#960;, the value of tan&#969;t is",
+   "diagram": DIAGRAMS.phase90(),
+   "opts": ["1","0","&#8730;3","undefined"],
+   "ans": 0,
+   "sol": "&#969;t = 1800&#960;/800 = 2.25&#960;<br><br>2.25&#960; = 2&#960; + 0.25&#960;, and tangent repeats every &#960;, so<br>tan(2.25&#960;) = tan(&#960;/4) = <strong>1</strong><br><br>Strip out whole multiples of &#960; before evaluating. 2.25&#960; looks awkward; &#960;/4 does not."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 17 Mar Shift 2",
+   "q": "&#9733; <strong>Original:</strong> Seawater at frequency f = 9 &#215; 10<sup>2</sup> Hz has permittivity &#949; = 80&#949;&#8320; and resistivity r = 0.25 &#937;m. A parallel plate capacitor is immersed in seawater and driven by V(t) = V&#8320; sin(2&#960;ft). The conduction current density becomes 10<sup>x</sup> times the displacement current density after time t = 1/800 s. The value of x is _____. (Take 1/4&#960;&#949;&#8320; = 9 &#215; 10<sup>9</sup>)",
+   "diagram": DIAGRAMS.phase90(),
+   "opts": ["6","3","9","&#8722;6"],
+   "ans": 0,
+   "sol": "<strong>1. The general ratio.</strong><br>J<sub>c</sub>/J<sub>d</sub> = [&#963;/(&#949;&#969;)] tan&#969;t = [1/(r&#949;&#969;)] tan&#969;t<br><br><strong>2. The constant part.</strong> r&#949;&#969; = 10<sup>&#8722;6</sup> exactly, so 1/(r&#949;&#969;) = 10<sup>6</sup>.<br><br><strong>3. The time part.</strong> &#969;t = 1800&#960;/800 = 2.25&#960;, and tan(2.25&#960;) = 1.<br><br><strong>4. Multiply.</strong> J<sub>c</sub>/J<sub>d</sub> = 10<sup>6</sup> &#215; 1 = 10<sup>6</sup>, so <strong>x = 6</strong>.<br><br>Everything in this question was chosen so that both pieces come out clean. 0.25 &#215; 80 = 20, 20 &#215; 50 = 1000, and the given time makes the tangent exactly 1.<br><br>This is the hardest question in Lecture 1, and it is the only one that needs the tan&#969;t. Every other displacement-current question compares peaks, where the tangent never appears. Watch for the words \"at time t\" &#8212; that is the signal."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "What an electromagnetic wave actually is",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Which kind of charge produces an electromagnetic wave?",
+   "diagram": DIAGRAMS.radiating(),
+   "opts": ["an accelerating charge","a charge at rest","a charge moving at a steady speed","any charge, always"],
+   "ans": 0,
+   "sol": "Only an <strong>accelerating</strong> charge radiates.<br><br>&#183; At rest &#8594; a static electric field, no wave.<br>&#183; Steady speed &#8594; steady fields as seen from the charge, no wave.<br>&#183; Accelerating &#8594; the fields shake, and the shaking travels outwards.<br><br>An aerial works by driving electrons up and down. The up-and-down is the acceleration."
+  },
+  {
+   "q": "Do electromagnetic waves need a material medium to travel through?",
+   "opts": ["No &#8212; they travel through vacuum","Yes &#8212; they need air","Yes &#8212; they need any material","Only radio waves do"],
+   "ans": 0,
+   "sol": "<strong>No.</strong> The two fields sustain each other, so nothing material is needed.<br><br>Sunlight reaches us across empty space, which settles the matter. Sound cannot &#8212; that is the difference between a mechanical wave and an electromagnetic one."
+  },
+  {
+   "q": "Besides energy, an electromagnetic wave also carries",
+   "diagram": DIAGRAMS.radiating(),
+   "opts": ["momentum","electric charge","mass in the ordinary sense","nothing else"],
+   "ans": 0,
+   "sol": "It carries <strong>momentum</strong>, p = U/c for energy U absorbed.<br><br>That is why light exerts pressure on a surface it falls on, and why a solar sail works. Lecture 4 does the numbers.<br><br>It carries no charge &#8212; which is why, as Lecture 3 noted, an EM wave is not deflected by electric or magnetic fields."
+  },
+  {
+   "tag": "JEE Main 2013 &#183; Online 9 Apr",
+   "q": "&#9733; <strong>Original:</strong> Select the correct statement from the following.",
+   "diagram": DIAGRAMS.elimList("one statement at a time",[["n","cannot travel in vacuum &#8212; false, sunlight reaches us"],["n","are longitudinal &#8212; false, they are transverse"],["n","produced by uniformly moving charges &#8212; needs acceleration"],["y","carry both energy and momentum &#8212; correct"]]),
+   "opts": ["Electromagnetic waves carry both energy and momentum as they propagate through space","Electromagnetic waves cannot travel in vacuum","Electromagnetic waves are longitudinal waves","Electromagnetic waves are produced by charges moving with uniform velocity"],
+   "ans": 0,
+   "sol": "&#183; <strong>Cannot travel in vacuum</strong> &#8212; false. They travel best in vacuum.<br>&#183; <strong>Longitudinal</strong> &#8212; false. They are transverse, which is why they can be polarised.<br>&#183; <strong>Produced by uniformly moving charges</strong> &#8212; false. Acceleration is required.<br>&#183; <strong>Carry energy and momentum</strong> &#8212; <strong>true</strong>. &#10003;<br><br>Four statements, four separate facts from this lecture and the next. Questions like this are free marks once the basic picture is straight.<br><br>That completes Lecture 1. Lecture 2 asks what happens to the wave once it stops travelling through empty space and enters matter."
+  }
+ ]
+},
+
+];
+
+
+
+const STORAGE_KEY = 'padipucast_emwaves_l1_maxwell_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original exam question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
