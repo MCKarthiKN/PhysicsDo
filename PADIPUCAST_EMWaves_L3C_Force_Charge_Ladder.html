@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Electromagnetic Waves &#183; Lecture 3C Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> EM Waves &#183; JEE Main</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Electromagnetic Waves &#183; Lecture 3, Part C<br>Force on a Charge Inside the Wave</h1></div>
+    <p id="home-sub">Electromagnetic Waves, <strong>Lecture 3, Part C</strong> &#8212; drop a charge into the wave and ask what it feels. <strong>F = q(E + v &#215; B)</strong>, why the electric half almost always wins, and the one relation that runs through the whole part: <strong>magnetic force / electric force = v/c</strong>. Every source question is a real <strong>JEE Main PYQ</strong> from the chapter bank, turned into a <strong>ladder</strong>: 3 build-up rungs, then the original exam question (&#9733;). Each ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 7 ladders &#215; 4 rungs = 28 questions.<br><br><em>Years covered: 2019, 2020, 2021 and 2026 &#8212; all 7 force-on-a-charge PYQs in the bank are here. This is the last part of Lecture 3; it assumes Part A (E&#8320; = cB&#8320;) and Part B (E&#770; &#215; B&#770; for direction). Ladders 4, 5 and 6 turn on evaluating the phase at the given point and time before touching any vectors.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Electromagnetic Waves, Lecture 3 Part C  (PADIPUCAST)
+//  Lorentz force, phase snapshots, superposition, rms
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+
+function _sine(x0,x1,ymid,amp,cycles,phase){
+  let p=[];
+  for(let i=0;i<=240;i++){
+    const f=i/240, x=x0+f*(x1-x0);
+    const y=ymid-amp*Math.sin(2*Math.PI*cycles*f+(phase||0));
+    p.push(x.toFixed(1)+','+y.toFixed(1));
+  }
+  return p.join(' ');
+}
+function _axes(x0,x1,ymid,top,bot,id){
+  return `<line x1="${x0-12}" y1="${ymid}" x2="${x1+14}" y2="${ymid}" stroke="#6b7280" stroke-width="1.3" marker-end="url(#${id})"/>
+  <line x1="${x0-12}" y1="${bot}" x2="${x0-12}" y2="${top}" stroke="#6b7280" stroke-width="1.3" marker-end="url(#${id})"/>`;
+}
+// generic circle-with-wave symbol (kept from the shared engine)
+function _src(cx,cy,r){
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--surface)" stroke="#1a1916" stroke-width="1.7"/>
+  <path d="M ${cx-r*0.6} ${cy} Q ${cx-r*0.3} ${cy-r*0.55} ${cx} ${cy} T ${cx+r*0.6} ${cy}" fill="none" stroke="#1a1916" stroke-width="1.6"/>`;
+}
+
+const DIAGRAMS = {
+
+  // the Lorentz force split into its two halves
+  lorentz:(foot)=>`
+    <svg viewBox="0 0 340 156" width="340" height="156" xmlns="http://www.w3.org/2000/svg">
+      <rect x="12" y="14" width="316" height="40" rx="9" fill="var(--surface)" stroke="#d4d1c8" stroke-width="1.3"/>
+      <text x="170" y="40" font-size="15" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">F = q(E + v &#215; B)</text>
+      <rect x="12" y="66" width="150" height="46" rx="9" fill="#fff5f5" stroke="#f5c6c2" stroke-width="1.2"/>
+      <rect x="178" y="66" width="150" height="46" rx="9" fill="#f0faf5" stroke="#b3e0c6" stroke-width="1.2"/>
+      <text x="87" y="84" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>electric part</text>
+      <text x="87" y="104" font-size="13" fill="#c0392b" text-anchor="middle" ${FS} font-weight="700">qE</text>
+      <text x="253" y="84" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>magnetic part</text>
+      <text x="253" y="104" font-size="13" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">qvB (at most)</text>
+      <text x="170" y="140" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">${foot}</text>
+    </svg>`,
+
+  // qE dwarfs qvB
+  forceCompare:(frac,vTxt)=>`
+    <svg viewBox="0 0 340 160" width="340" height="160" xmlns="http://www.w3.org/2000/svg">
+      <text x="14" y="32" font-size="11" fill="#c0392b" ${FS} font-weight="700">qE</text>
+      <rect x="56" y="20" width="264" height="18" rx="5" fill="#c0392b" opacity="0.85"/>
+      <text x="14" y="66" font-size="11" fill="#1a7a4a" ${FS} font-weight="700">qvB</text>
+      <rect x="56" y="54" width="264" height="18" rx="5" fill="#f0ede8" stroke="#d4d1c8" stroke-width="1"/>
+      <rect x="56" y="54" width="${Math.max(3,264*frac).toFixed(1)}" height="18" rx="5" fill="#1a7a4a" opacity="0.85"/>
+      <text x="${(62+Math.max(3,264*frac)).toFixed(1)}" y="68" font-size="10" fill="#a09d97" ${FS}>${vTxt}</text>
+      <rect x="56" y="88" width="264" height="34" rx="9" fill="var(--surface)" stroke="#d4d1c8" stroke-width="1.2"/>
+      <text x="188" y="110" font-size="13" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">qvB / qE = v / c</text>
+      <text x="170" y="146" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>because B = E/c, the whole comparison collapses to one ratio</text>
+    </svg>`,
+
+  // a charge sitting in the wave with a velocity
+  chargeIn:(vLbl,eLbl,bLbl,foot)=>`
+    <svg viewBox="0 0 340 168" width="340" height="168" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ci1','#c0392b')}${AR('ci2','#1a7a4a')}${AR('ci3','#1a1916')}</defs>
+      <circle cx="110" cy="94" r="11" fill="#1a1916"/>
+      <text x="110" y="98" font-size="10" fill="#ffffff" text-anchor="middle" ${FS} font-weight="700">q</text>
+      <line x1="110" y1="82" x2="110" y2="26" stroke="#c0392b" stroke-width="2.2" marker-end="url(#ci1)"/>
+      <line x1="122" y1="94" x2="196" y2="94" stroke="#1a7a4a" stroke-width="2.2" marker-end="url(#ci2)"/>
+      <line x1="102" y1="104" x2="52" y2="146" stroke="#1a1916" stroke-width="2.2" marker-end="url(#ci3)"/>
+      <text x="120" y="30" font-size="11" fill="#c0392b" ${FS} font-weight="700">${eLbl}</text>
+      <text x="200" y="90" font-size="11" fill="#1a7a4a" ${FS} font-weight="700">${bLbl}</text>
+      <text x="56" y="164" font-size="11" fill="#1a1916" ${FS} font-weight="700">${vLbl}</text>
+      <rect x="222" y="26" width="106" height="52" rx="9" fill="var(--surface)" stroke="#d4d1c8" stroke-width="1.2"/>
+      <text x="275" y="56" font-size="11.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">${foot}</text>
+    </svg>`,
+
+  // evaluating the phase at a given point and time
+  snapshot:(where,phase,value)=>`
+    <svg viewBox="0 0 340 152" width="340" height="152" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('sn1','#6b7280')}</defs>
+      <text x="14" y="24" font-size="10.5" fill="#6b7280" ${FS} font-weight="700">${where}</text>
+      <rect x="12" y="34" width="316" height="36" rx="9" fill="var(--surface)" stroke="#d4d1c8" stroke-width="1.3"/>
+      <text x="170" y="58" font-size="12.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">${phase}</text>
+      <line x1="170" y1="74" x2="170" y2="90" stroke="#6b7280" stroke-width="1.4" marker-end="url(#sn1)"/>
+      <rect x="12" y="98" width="316" height="34" rx="9" fill="#f0faf5" stroke="#b3e0c6" stroke-width="1.2"/>
+      <text x="170" y="120" font-size="12.5" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">${value}</text>
+      <text x="170" y="148" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>put the position and the time in before you touch any vectors</text>
+    </svg>`,
+
+  // two waves crossing at the origin
+  twoWaves:(foot)=>`
+    <svg viewBox="0 0 340 170" width="340" height="170" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('tw1','#c0392b')}${AR('tw2','#1a7a4a')}</defs>
+      <circle cx="120" cy="100" r="9" fill="#1a1916"/>
+      <text x="120" y="104" font-size="9" fill="#ffffff" text-anchor="middle" ${FS} font-weight="700">q</text>
+      <line x1="30" y1="100" x2="106" y2="100" stroke="#c0392b" stroke-width="2.2" marker-end="url(#tw1)"/>
+      <line x1="120" y1="164" x2="120" y2="116" stroke="#1a7a4a" stroke-width="2.2" marker-end="url(#tw2)"/>
+      <text x="34" y="92" font-size="10.5" fill="#c0392b" ${FS} font-weight="700">wave 1 &#8594; +x</text>
+      <text x="132" y="158" font-size="10.5" fill="#1a7a4a" ${FS} font-weight="700">wave 2 &#8594; +y</text>
+      <rect x="192" y="30" width="136" height="76" rx="9" fill="var(--surface)" stroke="#d4d1c8" stroke-width="1.2"/>
+      <text x="260" y="54" font-size="10" fill="#6b7280" text-anchor="middle" ${FS}>fields simply add</text>
+      <text x="260" y="76" font-size="12" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">E = E&#8321; + E&#8322;</text>
+      <text x="260" y="94" font-size="12" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">B = B&#8321; + B&#8322;</text>
+      <text x="170" y="166" font-size="10.5" fill="#a09d97" text-anchor="middle" ${FS}>${foot}</text>
+    </svg>`,
+
+  // peak to rms
+  rmsBox:(peakTxt,rmsTxt)=>`
+    <svg viewBox="0 0 340 158" width="340" height="158" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('rb1','#6b7280')}</defs>
+      ${_axes(40,290,74,32,120,'rb1')}
+      <polyline points="${_sine(40,290,74,34,1.5,0)}" fill="none" stroke="#c0392b" stroke-width="2.4"/>
+      <line x1="40" y1="${(74-34/1.414).toFixed(1)}" x2="290" y2="${(74-34/1.414).toFixed(1)}" stroke="#1a7a4a" stroke-width="1.6" stroke-dasharray="5 3"/>
+      <text x="296" y="44" font-size="10" fill="#c0392b" ${FS} font-weight="700">peak</text>
+      <text x="296" y="${(78-34/1.414).toFixed(1)}" font-size="10" fill="#1a7a4a" ${FS} font-weight="700">rms</text>
+      <text x="170" y="140" font-size="12.5" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">${peakTxt} &#8594; ${rmsTxt}</text>
+      <text x="170" y="156" font-size="10" fill="#a09d97" text-anchor="middle" ${FS}>divide the peak by &#8730;2 &#8212; only for a sine or cosine</text>
+    </svg>`,
+
+  // the i -> j -> k cycle
+  axisCycle:(foot)=>`
+    <svg viewBox="0 0 340 164" width="340" height="164" xmlns="http://www.w3.org/2000/svg">
+      <defs>${AR('ac1','#1a1916')}</defs>
+      <circle cx="90" cy="84" r="46" fill="none" stroke="#d4d1c8" stroke-width="1.4"/>
+      <text x="90" y="30" font-size="14" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">i&#770;</text>
+      <text x="140" y="106" font-size="14" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">j&#770;</text>
+      <text x="40" y="106" font-size="14" fill="#1a1916" text-anchor="middle" ${FS} font-weight="700">k&#770;</text>
+      <path d="M 116 54 A 46 46 0 0 1 120 96" fill="none" stroke="#1a1916" stroke-width="1.6" marker-end="url(#ac1)"/>
+      <path d="M 108 120 A 46 46 0 0 1 62 118" fill="none" stroke="#1a1916" stroke-width="1.6" marker-end="url(#ac1)"/>
+      <path d="M 54 100 A 46 46 0 0 1 62 52" fill="none" stroke="#1a1916" stroke-width="1.6" marker-end="url(#ac1)"/>
+      <text x="240" y="68" font-size="12" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">i&#770; &#215; j&#770; = k&#770;</text>
+      <text x="240" y="86" font-size="12" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">j&#770; &#215; k&#770; = i&#770;</text>
+      <text x="240" y="104" font-size="12" fill="#1a7a4a" text-anchor="middle" ${FS} font-weight="700">k&#770; &#215; i&#770; = j&#770;</text>
+      <text x="170" y="156" font-size="11" fill="#1a1916" text-anchor="middle" ${FS} font-weight="600">${foot}</text>
+    </svg>`,
+
+  // tick/cross checklist
+  elimList:(title,rows)=>`
+    <svg viewBox="0 0 340 ${44+rows.length*26}" width="340" height="${44+rows.length*26}" xmlns="http://www.w3.org/2000/svg">
+      <text x="14" y="20" font-size="11" fill="#6b7280" ${FS} font-weight="700">${title}</text>
+      ${rows.map(function(r,i){
+        const y=42+i*26, ok=r[0]==='y';
+        return `<rect x="12" y="${y-14}" width="316" height="22" rx="6" fill="${ok?'#f0faf5':'#fff5f5'}" stroke="${ok?'#b3e0c6':'#f5c6c2'}" stroke-width="1"/>
+        <text x="26" y="${y+1}" font-size="11" fill="${ok?'#1a7a4a':'#c0392b'}" ${FS} font-weight="700">${ok?'&#10003;':'&#10007;'}</text>
+        <text x="44" y="${y+1}" font-size="10.5" fill="#1a1916" ${FS}>${r[1]}</text>`;
+      }).join('')}
+    </svg>`
+
+};
+
+
+// ===============================================================================
+//  QUESTION LADDERS  -  ELECTROMAGNETIC WAVES, LECTURE 3 (PART C)
+//  A charge sitting inside the wave: F = q(E + v x B)
+//  Every star rung is a real JEE Main PYQ from the chapter question bank.
+// ===============================================================================
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "Why the electric force wins",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A charge q moving with velocity v sits inside an electromagnetic wave. The force on it is",
+   "diagram": DIAGRAMS.lorentz("both halves act at the same time"),
+   "opts": ["q(E + v &#215; B)","qE only","qv &#215; B only","q(E &#215; B)"],
+   "ans": 0,
+   "sol": "The Lorentz force: <strong>F = q(E + v &#215; B)</strong>.<br><br>Both fields push on the charge at once. The electric part qE acts whether the charge moves or not; the magnetic part needs motion.<br><br>Note the difference in form. qE is a plain product, so its direction is along E. qv &#215; B is a cross product, so its direction is perpendicular to both v and B."
+  },
+  {
+   "q": "The largest the magnetic part can be is qvB. Using B = E/c, that equals",
+   "diagram": DIAGRAMS.forceCompare(0.02,"tiny unless v approaches c"),
+   "opts": ["qE(v/c)","qE(c/v)","qEvc","qE"],
+   "ans": 0,
+   "sol": "Magnetic force = qvB = qv(E/c) = <strong>qE(v/c)</strong>.<br><br>So the magnetic force is the electric force multiplied by v/c.<br><br><strong>This one line is the whole of Part C.</strong> Once you have it, most of these questions become a single multiplication."
+  },
+  {
+   "q": "So the ratio of the maximum electric force to the maximum magnetic force is",
+   "diagram": DIAGRAMS.forceCompare(0.02,"ratio = c/v"),
+   "opts": ["c/v","v/c","c","v"],
+   "ans": 0,
+   "sol": "Electric &#247; magnetic = qE &#247; qE(v/c) = <strong>c/v</strong><br><br>Since v is always far below c for ordinary particles, this ratio is a big number. That is why the magnetic push of a light wave is almost always ignored.<br><br>Answer this type without touching the amplitude at all. The E&#8320; the question gives you cancels."
+  },
+  {
+   "tag": "JEE Main 2026 &#183; 2 Apr Morning Shift",
+   "q": "&#9733; <strong>Original:</strong> An electromagnetic wave travelling in the x-direction is described by E<sub>y</sub> = 300 sin &#969;(t &#8722; x/c). If an electron is restricted to move in the y-direction only, with speed 1.5 &#215; 10<sup>6</sup> m/s, then the ratio of the maximum electric force to the maximum magnetic force acting on the electron is _____.",
+   "diagram": DIAGRAMS.chargeIn("v &#183; along y","E &#183; along y","B &#183; along z","ratio = c/v"),
+   "opts": ["200","150","300","400"],
+   "ans": 0,
+   "sol": "<strong>The short way.</strong><br>Ratio = c/v = (3 &#215; 10<sup>8</sup>)/(1.5 &#215; 10<sup>6</sup>) = <strong>200</strong><br><br><strong>The long way, to see why it works.</strong><br>B&#8320; = E&#8320;/c = 300/(3 &#215; 10<sup>8</sup>) = 10<sup>&#8722;6</sup> T<br>Max electric force = qE&#8320; = 300q<br>Max magnetic force = qvB&#8320; = q(1.5 &#215; 10<sup>6</sup>)(10<sup>&#8722;6</sup>) = 1.5q<br>Ratio = 300/1.5 = 200 &#10003;<br><br>The 300 V/m cancels either way. Once you notice that, the question is a single division.<br><br>One detail worth checking: v is along y and B is along z, so v &#215; B is not zero. If v had been along z, parallel to B, the magnetic force would vanish entirely."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "The maximum magnetic force, with numbers",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For a light beam with E = 800 sin(&#969;t &#8722; x/c) V/m in air, the peak magnetic field is",
+   "opts": ["2.67 &#215; 10<sup>&#8722;6</sup> T","800 T","2.4 &#215; 10<sup>11</sup> T","2.67 &#215; 10<sup>&#8722;8</sup> T"],
+   "ans": 0,
+   "sol": "B&#8320; = E&#8320;/c = 800/(3 &#215; 10<sup>8</sup>) = <strong>2.67 &#215; 10<sup>&#8722;6</sup> T</strong><br><br>800/3 = 266.7, so 266.7 &#215; 10<sup>&#8722;8</sup> = 2.67 &#215; 10<sup>&#8722;6</sup>."
+  },
+  {
+   "q": "For the magnetic force qvB to be at its maximum, the velocity must be",
+   "diagram": DIAGRAMS.chargeIn("v","E","B","|v &#215; B| = vB sin&#952;"),
+   "opts": ["perpendicular to B","parallel to B","along E","along the direction of travel"],
+   "ans": 0,
+   "sol": "|v &#215; B| = vB sin&#952;, which is largest when &#952; = 90&#176;, that is when v is <strong>perpendicular to B</strong>.<br><br>The questions in this part usually say the charge \"moves normal to the beam\" or \"is restricted to the y-axis\". That phrasing is there to tell you sin&#952; = 1, so you may simply write qvB."
+  },
+  {
+   "q": "The product 1.6 &#215; 10<sup>&#8722;19</sup> &#215; 3 &#215; 10<sup>7</sup> is",
+   "opts": ["4.8 &#215; 10<sup>&#8722;12</sup>","4.8 &#215; 10<sup>&#8722;13</sup>","4.8 &#215; 10<sup>&#8722;26</sup>","1.9 &#215; 10<sup>&#8722;12</sup>"],
+   "ans": 0,
+   "sol": "1.6 &#215; 3 = 4.8, and &#8722;19 + 7 = &#8722;12.<br><br>So the answer is <strong>4.8 &#215; 10<sup>&#8722;12</sup></strong>."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 26 Aug Shift 2",
+   "q": "&#9733; <strong>Original:</strong> A light beam is described by E = 800 sin(&#969;t &#8722; x/c). An electron is allowed to move normal to the propagation of the beam with a speed of 3 &#215; 10<sup>7</sup> m/s. What is the maximum magnetic force exerted on the electron?",
+   "diagram": DIAGRAMS.forceCompare(0.1,"v/c = 0.1 here"),
+   "opts": ["1.28 &#215; 10<sup>&#8722;17</sup> N","1.28 &#215; 10<sup>&#8722;18</sup> N","12.8 &#215; 10<sup>&#8722;17</sup> N","12.8 &#215; 10<sup>&#8722;18</sup> N"],
+   "ans": 0,
+   "sol": "<strong>The short way.</strong> F<sub>mag</sub> = qE&#8320;(v/c)<br>v/c = (3 &#215; 10<sup>7</sup>)/(3 &#215; 10<sup>8</sup>) = 0.1<br>F = (1.6 &#215; 10<sup>&#8722;19</sup>)(800)(0.1) = <strong>1.28 &#215; 10<sup>&#8722;17</sup> N</strong><br><br><strong>The long way.</strong> B&#8320; = 2.67 &#215; 10<sup>&#8722;6</sup> T, then F = qvB&#8320; = (1.6 &#215; 10<sup>&#8722;19</sup>)(3 &#215; 10<sup>7</sup>)(2.67 &#215; 10<sup>&#8722;6</sup>) = 1.28 &#215; 10<sup>&#8722;17</sup> N &#10003;<br><br>The short route avoids the awkward 2.67 completely. Whenever a question gives you E&#8320; and a speed, reach for qE&#8320;(v/c).<br><br>Notice the size of the answer: 10<sup>&#8722;17</sup> N. That is a real force on an electron, but a laughably small one compared with anything mechanical."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "When the speed is given as a fraction of c",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "For E = 30 j&#770; sin(1.5 &#215; 10<sup>7</sup>t &#8722; 5 &#215; 10<sup>&#8722;2</sup>x) V/m, the speed of the wave is",
+   "opts": ["3 &#215; 10<sup>8</sup> m/s","7.5 &#215; 10<sup>5</sup> m/s","3 &#215; 10<sup>&#8722;8</sup> m/s","1.5 &#215; 10<sup>7</sup> m/s"],
+   "ans": 0,
+   "sol": "v = &#969;/k = (1.5 &#215; 10<sup>7</sup>)/(5 &#215; 10<sup>&#8722;2</sup>)<br><br>1.5/5 = 0.3, and dividing by 10<sup>&#8722;2</sup> means multiplying by 10<sup>2</sup>.<br><br>v = 0.3 &#215; 10<sup>9</sup> = <strong>3 &#215; 10<sup>8</sup> m/s</strong> = c<br><br>Always run this check first. It confirms you may use B&#8320; = E&#8320;/c rather than E&#8320;/v."
+  },
+  {
+   "q": "The electron moves along the y-axis at 0.1c. Written out, that speed is",
+   "opts": ["3 &#215; 10<sup>7</sup> m/s","3 &#215; 10<sup>6</sup> m/s","0.1 m/s","3 &#215; 10<sup>9</sup> m/s"],
+   "ans": 0,
+   "sol": "0.1 &#215; 3 &#215; 10<sup>8</sup> = <strong>3 &#215; 10<sup>7</sup> m/s</strong><br><br>You do not actually need this number if you use F = qE&#8320;(v/c), since v/c is already 0.1. But it is worth writing down so the answer stays checkable."
+  },
+  {
+   "q": "The wave travels along x and E lies along j&#770;. Is the electron's motion along y perpendicular to B?",
+   "diagram": DIAGRAMS.axisCycle("B lies along k&#770; here"),
+   "opts": ["Yes &#8212; B lies along z, so v &#215; B is at full strength","No &#8212; v is parallel to B","Only at certain instants","B is along y as well"],
+   "ans": 0,
+   "sol": "Travel along i&#770; with E along j&#770; puts B along <strong>k&#770;</strong>.<br><br>The electron moves along j&#770;, which is perpendicular to k&#770;, so sin&#952; = 1 and the magnetic force is at full strength &#10003;<br><br>Always confirm this before writing qvB. If v happened to be parallel to B, the force would be zero and the question would have a very different answer."
+  },
+  {
+   "tag": "JEE Main 2020 &#183; 5 Sep Shift 1",
+   "q": "&#9733; <strong>Original:</strong> An electron is constrained to move along the y-axis with a speed of 0.1c in the presence of an electromagnetic wave whose electric field is E = 30 j&#770; sin(1.5 &#215; 10<sup>7</sup>t &#8722; 5 &#215; 10<sup>&#8722;2</sup>x) V/m. The maximum magnetic force experienced by the electron will be (c = 3 &#215; 10<sup>8</sup> m/s, electron charge = 1.6 &#215; 10<sup>&#8722;19</sup> C)",
+   "diagram": DIAGRAMS.forceCompare(0.1,"v/c = 0.1"),
+   "opts": ["4.8 &#215; 10<sup>&#8722;19</sup> N","3.2 &#215; 10<sup>&#8722;18</sup> N","2.4 &#215; 10<sup>&#8722;18</sup> N","1.6 &#215; 10<sup>&#8722;19</sup> N"],
+   "ans": 0,
+   "sol": "F<sub>mag</sub> = qE&#8320;(v/c) = (1.6 &#215; 10<sup>&#8722;19</sup>)(30)(0.1)<br><br>1.6 &#215; 30 = 48, and 48 &#215; 0.1 = 4.8.<br><br>F = <strong>4.8 &#215; 10<sup>&#8722;19</sup> N</strong><br><br>Two pieces of information in this question are never used: the &#969; and the k. They are there only so you can confirm the wave is in vacuum &#8212; which is worth doing, but takes one line.<br><br>Compare with ladder 2. Same formula, same v/c = 0.1, only the amplitude changed from 800 to 30. Once you see the pattern, these are ten-second questions."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "The direction of the force at one instant",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A wave has E = E&#8320;(i&#770; + j&#770;)/&#8730;2 cos(kz + &#969;t). At t = 0, a charge sits at z = &#960;/k. The value of the cosine there is",
+   "diagram": DIAGRAMS.snapshot("at z = &#960;/k and t = 0","cos(k &#183; &#960;/k + 0) = cos &#960;","= &#8722;1"),
+   "opts": ["&#8722;1","+1","0","+1/2"],
+   "ans": 0,
+   "sol": "Put the numbers in: k &#215; (&#960;/k) + &#969; &#215; 0 = &#960;.<br><br>cos &#960; = <strong>&#8722;1</strong><br><br>So at that place and moment, E points <em>opposite</em> to (i&#770; + j&#770;)/&#8730;2. The cosine has flipped the whole vector round.<br><br>Evaluate the phase before you think about any vectors. It is the step students skip, and it decides the answer."
+  },
+  {
+   "q": "That wave travels along",
+   "opts": ["&#8722;z","+z","along (i&#770; + j&#770;)","+x"],
+   "ans": 0,
+   "sol": "The bracket (kz + &#969;t) has the same signs, so the wave travels backwards, along <strong>&#8722;z</strong>."
+  },
+  {
+   "q": "With E along (i&#770; + j&#770;)/&#8730;2 and travel along &#8722;k&#770;, the magnetic field lies along",
+   "diagram": DIAGRAMS.axisCycle("test with E&#770; &#215; B&#770; = &#8722;k&#770;"),
+   "opts": ["(i&#770; &#8722; j&#770;)/&#8730;2","(i&#770; + j&#770;)/&#8730;2","(&#8722;i&#770; + j&#770;)/&#8730;2","k&#770;"],
+   "ans": 0,
+   "sol": "Test (i&#770; &#8722; j&#770;)/&#8730;2. Using aq &#8722; bp with a = 1, b = 1, p = 1, q = &#8722;1:<br>(1)(&#8722;1) &#8722; (1)(1) = &#8722;2 &#8594; along &#8722;k&#770; &#10003;<br><br>So B lies along <strong>(i&#770; &#8722; j&#770;)/&#8730;2</strong>."
+  },
+  {
+   "tag": "JEE Main 2020 &#183; 7 Jan Shift 2",
+   "q": "&#9733; <strong>Original:</strong> The electric field of a plane electromagnetic wave is E = E&#8320;[(i&#770; + j&#770;)/&#8730;2] cos(kz + &#969;t). At t = 0, a positively charged particle is at (x, y, z) = (0, 0, &#960;/k). If its instantaneous velocity at t = 0 is v&#8320;k&#770;, the force acting on it due to the wave is",
+   "diagram": DIAGRAMS.chargeIn("v &#183; along +z","E &#183; slanted, and negative here","B &#183; (i&#770;&#8722;j&#770;)/&#8730;2","both halves point the same way"),
+   "opts": ["antiparallel to (i&#770; + j&#770;)/&#8730;2","parallel to (i&#770; + j&#770;)/&#8730;2","zero","parallel to k&#770;"],
+   "ans": 0,
+   "sol": "<strong>Electric part.</strong> At that place and time the cosine is &#8722;1, so E = &#8722;E&#8320;(i&#770; + j&#770;)/&#8730;2. For a positive charge, qE is <strong>antiparallel</strong> to (i&#770; + j&#770;)/&#8730;2.<br><br><strong>Magnetic part.</strong> B is along (i&#770; &#8722; j&#770;)/&#8730;2 and also carries the cos = &#8722;1, so B = &#8722;B&#8320;(i&#770; &#8722; j&#770;)/&#8730;2.<br>v &#215; B = v&#8320;k&#770; &#215; [&#8722;B&#8320;(i&#770; &#8722; j&#770;)/&#8730;2]<br>k&#770; &#215; i&#770; = j&#770; and k&#770; &#215; (&#8722;j&#770;) = i&#770;, so k&#770; &#215; (i&#770; &#8722; j&#770;) = (j&#770; + i&#770;)<br>With the minus in front, v &#215; B is also <strong>antiparallel</strong> to (i&#770; + j&#770;).<br><br><strong>Both halves point the same way</strong>, so the total force is <strong>antiparallel to (i&#770; + j&#770;)/&#8730;2</strong>.<br><br>This is one of the few questions where the magnetic part is worth computing &#8212; not because it is large, but because the question asks only for a direction, and both halves happen to agree."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Two waves at once",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Two electromagnetic waves overlap at a point. The total field there is",
+   "diagram": DIAGRAMS.twoWaves("superposition: add the vectors, field by field"),
+   "opts": ["E&#8321; + E&#8322; and B&#8321; + B&#8322;, added as vectors","the larger of the two","E&#8321; &#215; E&#8322;","zero"],
+   "ans": 0,
+   "sol": "Fields obey superposition, so they simply <strong>add as vectors</strong>.<br><br>Work out each wave's E and B separately, add them, and only then put the totals into F = q(E + v &#215; B). Do not try to add forces from each wave one at a time &#8212; it works here, but the bookkeeping is worse."
+  },
+  {
+   "q": "For E&#8321; = E&#8320; j&#770; cos(&#969;t &#8722; kx), the magnetic field B&#8321; lies along",
+   "diagram": DIAGRAMS.axisCycle("travel is +x, E is along j&#770;"),
+   "opts": ["k&#770;","i&#770;","&#8722;k&#770;","j&#770;"],
+   "ans": 0,
+   "sol": "The bracket (&#969;t &#8722; kx) means travel along +x. With E along j&#770;, we need j&#770; &#215; B&#770; = i&#770;, and j&#770; &#215; k&#770; = i&#770; &#10003;<br><br>So B&#8321; = (E&#8320;/c) <strong>k&#770;</strong> cos(&#969;t &#8722; kx)."
+  },
+  {
+   "q": "For E&#8322; = E&#8320; k&#770; cos(&#969;t &#8722; ky), the magnetic field B&#8322; lies along",
+   "diagram": DIAGRAMS.axisCycle("travel is +y, E is along k&#770;"),
+   "opts": ["i&#770;","j&#770;","&#8722;i&#770;","k&#770;"],
+   "ans": 0,
+   "sol": "This one travels along +y, since the bracket carries ky. With E along k&#770;, we need k&#770; &#215; B&#770; = j&#770;, and k&#770; &#215; i&#770; = j&#770; &#10003;<br><br>So B&#8322; = (E&#8320;/c) <strong>i&#770;</strong> cos(&#969;t &#8722; ky).<br><br>Read the variable inside each bracket carefully. One wave has x in it, the other has y &#8212; that is the only clue to their directions."
+  },
+  {
+   "tag": "JEE Main 2020 &#183; 9 Jan Shift 1",
+   "q": "&#9733; <strong>Original:</strong> The electric fields of two plane electromagnetic waves in vacuum are E&#8321; = E&#8320; j&#770; cos(&#969;t &#8722; kx) and E&#8322; = E&#8320; k&#770; cos(&#969;t &#8722; ky). At t = 0, a particle of charge q is at the origin with velocity v = 0.8c j&#770;. The instantaneous force experienced by the particle is",
+   "diagram": DIAGRAMS.twoWaves("at the origin and t = 0, every cosine equals 1"),
+   "opts": ["E&#8320;q(0.8 i&#770; + j&#770; + 0.2 k&#770;)","E&#8320;q(0.8 i&#770; &#8722; j&#770; + 0.4 k&#770;)","E&#8320;q(0.4 i&#770; &#8722; 3 j&#770; + 0.8 k&#770;)","E&#8320;q(&#8722;0.8 i&#770; + j&#770; + k&#770;)"],
+   "ans": 0,
+   "sol": "<strong>1. Evaluate the phases.</strong> At the origin and t = 0, both cosines are 1. Every wobble disappears.<br><br><strong>2. Add the fields.</strong><br>E = E&#8320;(j&#770; + k&#770;)<br>B = (E&#8320;/c)(k&#770; + i&#770;)<br><br><strong>3. The magnetic term.</strong><br>v &#215; B = 0.8c j&#770; &#215; (E&#8320;/c)(i&#770; + k&#770;) = 0.8E&#8320; [j&#770;&#215;i&#770; + j&#770;&#215;k&#770;] = 0.8E&#8320;(&#8722;k&#770; + i&#770;)<br>The c cancels &#8212; that is why the velocity was given as a fraction of c.<br><br><strong>4. Add everything.</strong><br>F = q[E&#8320;j&#770; + E&#8320;k&#770; + 0.8E&#8320;i&#770; &#8722; 0.8E&#8320;k&#770;]<br>F = <strong>E&#8320;q(0.8 i&#770; + j&#770; + 0.2 k&#770;)</strong><br><br>The k&#770; component is the interesting one: 1 &#8722; 0.8 = 0.2, an electric contribution partly cancelled by a magnetic one. Get a sign wrong there and you get 1.8 instead.<br><br>This is the longest question in Lecture 3, but every step is small. Work in the order above and do not skip step 1."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Two charges in the same wave",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "For a wave with phase cos(kz &#8722; &#969;t) at t = 0, the value at z = &#960;/k is",
+   "diagram": DIAGRAMS.snapshot("at t = 0","cos(k &#183; &#960;/k) = cos &#960;","= &#8722;1"),
+   "opts": ["&#8722;1","+1","0","&#8722;1/2"],
+   "ans": 0,
+   "sol": "cos(&#960;) = <strong>&#8722;1</strong>."
+  },
+  {
+   "q": "At the same instant, the value at z = 3&#960;/k is",
+   "diagram": DIAGRAMS.snapshot("at t = 0","cos(3&#960;) = cos(&#960; + 2&#960;)","= &#8722;1, the same as before"),
+   "opts": ["&#8722;1, the same as at &#960;/k","+1, the opposite","0","&#8722;3"],
+   "ans": 0,
+   "sol": "cos(3&#960;) = cos(&#960; + 2&#960;) = cos(&#960;) = <strong>&#8722;1</strong>.<br><br>Cosine repeats every 2&#960;, so the two points are one full wavelength apart and see <em>identical</em> fields.<br><br>The positions were chosen to look different and turn out to be the same. Spot that and most of the star question below disappears."
+  },
+  {
+   "q": "Two charges sit at those two points with the same velocity. The ratio of the forces on them is",
+   "opts": ["q&#8321; : q&#8322;","1 : 1 whatever the charges","&#8730;q&#8321; : &#8730;q&#8322;","q&#8322; : q&#8321;"],
+   "ans": 0,
+   "sol": "The fields are identical and the velocities are identical, so the bracket (E + v &#215; B) is identical. The only thing left that differs is the charge.<br><br>Ratio = <strong>q&#8321; : q&#8322;</strong><br><br>You never need the value of that bracket. It cancels."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 31 Aug Shift 2",
+   "q": "&#9733; <strong>Original:</strong> The magnetic field of an electromagnetic wave is B = B&#8320;[(i&#770; + j&#770;)/&#8730;2] cos(kz &#8722; &#969;t) T. At t = 0, two charges q&#8321; = 4&#960; C and q&#8322; = 2&#960; C, located at (0, 0, &#960;/k) and (0, 0, 3&#960;/k), have the same velocity 0.5c i&#770;. The ratio of the force on q&#8321; to that on q&#8322; is",
+   "diagram": DIAGRAMS.snapshot("both charges, t = 0","cos(&#960;) = &#8722;1 and cos(3&#960;) = &#8722;1","identical fields, so only the charge differs"),
+   "opts": ["2 : 1","2&#8730;2 : 1","&#8730;2 : 1","1 : &#8730;2"],
+   "ans": 0,
+   "sol": "<strong>The key observation.</strong> The two positions are &#960;/k and 3&#960;/k, which differ by 2&#960;/k &#8212; exactly one wavelength. So both charges sit in identical fields at t = 0.<br><br>Their velocities are also identical, at 0.5c i&#770;.<br><br>So F = q(E + v &#215; B) has the same bracket for both, and<br>F&#8321;/F&#8322; = q&#8321;/q&#8322; = 4&#960;/2&#960; = <strong>2 : 1</strong><br><br>The &#960;s cancel, the &#8730;2 in the field direction cancels, and 0.5c never enters.<br><br>Every &#8730;2 in the option list is bait, put there for anyone who tried to compute the field at each point separately. The whole question turns on noticing that 3&#960; and &#960; give the same cosine."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "A charge that is not moving at all",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A charge is at rest inside an electromagnetic wave. The force on it is",
+   "diagram": DIAGRAMS.lorentz("v = 0 kills the magnetic half entirely"),
+   "opts": ["qE only","qvB only","q(E + vB)","zero"],
+   "ans": 0,
+   "sol": "With v = 0, the term v &#215; B vanishes. Only <strong>qE</strong> is left.<br><br>So for a stationary charge you can ignore the magnetic field completely. If the question hands you B, your first job is to turn it into E."
+  },
+  {
+   "q": "Two waves overlap. One has B along i&#770; with amplitude B&#8320;, the other has B along j&#770; with amplitude B&#8321;. The two electric fields are perpendicular, so the total E amplitude is",
+   "opts": ["c&#8730;(B&#8320;&#178; + B&#8321;&#178;)","c(B&#8320; + B&#8321;)","cB&#8320; only","c(B&#8320; &#8722; B&#8321;)"],
+   "ans": 0,
+   "sol": "Each wave gives an electric field of size cB, and the two are at right angles. Perpendicular vectors add by Pythagoras.<br><br>Total = <strong>c&#8730;(B&#8320;&#178; + B&#8321;&#178;)</strong><br><br>Never add perpendicular amplitudes directly. c(B&#8320; + B&#8321;) is the answer only if they point the same way."
+  },
+  {
+   "q": "A field varies as cos(&#969;t) with peak value P. Its rms value is",
+   "diagram": DIAGRAMS.rmsBox("peak P","rms P/&#8730;2"),
+   "opts": ["P/&#8730;2","P&#8730;2","P/2","P"],
+   "ans": 0,
+   "sol": "For any pure sine or cosine, rms = peak &#247; &#8730;2, so the answer is <strong>P/&#8730;2</strong>.<br><br>Same rule as the a.c. chapter. The word \"rms\" in the star question below is the only reason a &#8730;2 appears in the final number."
+  },
+  {
+   "tag": "JEE Main 2019 &#183; 9 Apr Shift 1",
+   "q": "&#9733; <strong>Original:</strong> The magnetic field of a plane electromagnetic wave is B = B&#8320; i&#770; cos(kz &#8722; &#969;t) + B&#8321; j&#770; cos(kz + &#969;t), where B&#8320; = 3 &#215; 10<sup>&#8722;5</sup> T and B&#8321; = 2 &#215; 10<sup>&#8722;6</sup> T. The rms value of the force experienced by a stationary charge Q = 10<sup>&#8722;4</sup> C at z = 0 is closest to",
+   "diagram": DIAGRAMS.elimList("the four steps",[["y","stationary charge &#8594; only qE matters"],["y","turn each B into E: E = cB"],["y","perpendicular fields &#8594; add by Pythagoras"],["y","rms &#8594; divide the peak by &#8730;2"]]),
+   "opts": ["0.6 N","0.1 N","0.9 N","3 &#215; 10<sup>&#8722;2</sup> N"],
+   "ans": 0,
+   "sol": "<strong>1.</strong> The charge is stationary, so F = QE and the magnetic force plays no part.<br><br><strong>2.</strong> Each wave's electric amplitude is cB. The two E fields are perpendicular to each other, so at z = 0 the peak total is<br>E<sub>peak</sub> = c&#8730;(B&#8320;&#178; + B&#8321;&#178;)<br><br><strong>3.</strong> B&#8320;&#178; = 9 &#215; 10<sup>&#8722;10</sup> and B&#8321;&#178; = 4 &#215; 10<sup>&#8722;12</sup>. The second is tiny beside the first, so the sum is 9.04 &#215; 10<sup>&#8722;10</sup> and its root is 3.01 &#215; 10<sup>&#8722;5</sup>.<br>E<sub>peak</sub> = (3 &#215; 10<sup>8</sup>)(3.01 &#215; 10<sup>&#8722;5</sup>) &#8776; 9.0 &#215; 10<sup>3</sup> V/m<br><br><strong>4.</strong> rms: divide by &#8730;2 &#8594; 6.4 &#215; 10<sup>3</sup> V/m<br>F = QE<sub>rms</sub> = (10<sup>&#8722;4</sup>)(6.4 &#215; 10<sup>3</sup>) &#8776; <strong>0.6 N</strong><br><br>Notice how little the second wave contributes. B&#8321; is fifteen times smaller than B&#8320;, and squaring makes it 225 times smaller, so it barely moves the answer. The option 0.9 N is what you get if you forget the &#8730;2 and stop at the peak.<br><br>That completes Lecture 3. Part A gave you the size of B, Part B gave you its direction, and Part C put a charge in the wave. Lecture 4 asks a different question altogether &#8212; not what the wave <em>is</em>, but how much energy and momentum it carries."
+  }
+ ]
+},
+
+];
+
+
+
+const STORAGE_KEY = 'padipucast_emwaves_l3c_force_charge_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original exam question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
