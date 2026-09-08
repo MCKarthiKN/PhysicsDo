@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PADIPUCAST · Alternating Current — Concept Ladder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF7EF;
+  --card:#FFFDF8;
+  --ink:#23211C;
+  --soft:#6E685C;
+  --line:#E4DACA;
+  --teal:#0E6E68;
+  --teal-soft:#E2F0EE;
+  --amber:#B87A12;
+  --amber-soft:#FBEFD6;
+  --red:#A83232;
+  --red-soft:#F8E4E1;
+  --green:#1E7A48;
+  --green-soft:#E2F3E7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'DM Sans',system-ui,-apple-system,sans-serif;
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:'Space Grotesk','DM Sans',sans-serif;margin:0;line-height:1.2}
+.mono{font-family:'DM Mono',ui-monospace,monospace}
+
+/* ---------- top bar ---------- */
+header{
+  border-bottom:1px solid var(--line);
+  background:var(--card);
+  position:sticky;top:0;z-index:20;
+}
+.bar{
+  max-width:1080px;margin:0 auto;padding:12px 18px;
+  display:flex;flex-wrap:wrap;gap:10px 16px;align-items:baseline;
+}
+.brand{font-family:'Space Grotesk';font-weight:700;letter-spacing:.06em;font-size:14px;color:var(--teal)}
+.bar h1{font-size:19px;font-weight:700}
+.bar .src{
+  font-size:13px;font-weight:700;color:var(--amber);
+  border:1px solid var(--amber);border-radius:999px;padding:2px 11px;
+  background:var(--amber-soft);
+}
+.bar .score{margin-left:auto;font-size:14px;color:var(--soft)}
+.bar .score b{color:var(--ink)}
+button.reset{
+  border:1px solid var(--line);background:transparent;color:var(--soft);
+  font-family:inherit;font-size:13px;border-radius:8px;padding:4px 10px;cursor:pointer;
+}
+button.reset:hover{border-color:var(--soft);color:var(--ink)}
+
+/* ---------- shell ---------- */
+.shell{max-width:1080px;margin:0 auto;padding:22px 18px 70px;display:flex;gap:26px;align-items:flex-start}
+nav{width:236px;flex:0 0 236px;position:sticky;top:74px}
+nav .navhead{font-size:12px;color:var(--soft);margin-bottom:8px}
+nav ol{list-style:none;margin:0;padding:0;counter-reset:t}
+nav li{margin-bottom:4px}
+nav button{
+  width:100%;text-align:left;border:1px solid transparent;background:transparent;
+  font-family:inherit;font-size:14px;color:var(--ink);
+  padding:8px 10px;border-radius:9px;cursor:pointer;display:flex;gap:9px;align-items:flex-start;
+  line-height:1.35;
+}
+nav button:hover{background:var(--card);border-color:var(--line)}
+nav button[aria-current="true"]{background:var(--teal-soft);border-color:#BFDFDB;font-weight:500}
+nav .num{font-family:'DM Mono';font-size:12px;color:var(--teal);padding-top:2px;flex:0 0 auto}
+nav .dots{margin-left:auto;letter-spacing:1px;font-size:11px;color:var(--line);flex:0 0 auto;padding-top:3px}
+nav .dots .on{color:var(--green)}
+nav .dots .off{color:var(--red)}
+
+main{flex:1;min-width:0}
+.setline{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;margin-bottom:4px}
+main h2{font-size:24px}
+.setnote{color:var(--soft);font-size:14px;margin:2px 0 18px}
+.showall{
+  border:1px solid var(--teal);background:transparent;color:var(--teal);
+  font-family:inherit;font-size:13px;font-weight:500;border-radius:8px;padding:5px 12px;cursor:pointer;
+}
+.showall:hover{background:var(--teal-soft)}
+
+/* ---------- question card ---------- */
+.q{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px 14px;margin-bottom:16px;
+}
+.qtop{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.pill{font-size:12px;border-radius:999px;padding:2px 10px;border:1px solid var(--line);color:var(--soft)}
+.pill.lvl{background:var(--teal-soft);border-color:#BFDFDB;color:var(--teal);font-weight:500}
+.pill.var{background:var(--amber-soft);border-color:#EBD5A6;color:var(--amber);font-weight:500}
+.pill.tag{background:transparent}
+.qtext{margin:0 0 12px;font-size:16.5px}
+.dia{margin:0 0 14px;max-width:340px}
+.dia svg{width:100%;height:auto;display:block}
+.opts{display:grid;gap:8px}
+.opt{
+  display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;
+  border:1px solid var(--line);background:var(--paper);border-radius:10px;
+  padding:9px 12px;font-family:inherit;font-size:15.5px;color:var(--ink);cursor:pointer;
+}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt:disabled{cursor:default}
+.opt .k{font-family:'DM Mono';font-size:13px;color:var(--soft);padding-top:2px;flex:0 0 auto}
+.opt.right{background:var(--green-soft);border-color:#A9D4BB}
+.opt.right .k{color:var(--green)}
+.opt.wrong{background:var(--red-soft);border-color:#E6BEB8}
+.opt.wrong .k{color:var(--red)}
+.sol{
+  display:none;margin-top:13px;border-left:3px solid var(--teal);
+  background:var(--teal-soft);border-radius:0 10px 10px 0;padding:10px 14px;font-size:15px;
+}
+.sol.on{display:block}
+.sol b{color:var(--teal)}
+.sol .warn{color:var(--amber);font-weight:500}
+sub{font-size:.72em}
+sup{font-size:.72em}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+@media (max-width:820px){
+  .shell{flex-direction:column;gap:14px}
+  nav{position:static;width:100%;flex:0 0 auto}
+  nav ol{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+  nav li{flex:0 0 auto;margin:0}
+  nav button{white-space:nowrap;border-color:var(--line);background:var(--card)}
+  nav .dots{margin-left:6px}
+  .bar h1{font-size:17px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .sol.on{animation:fade .18s ease-out}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <span class="brand">PADIPUCAST</span>
+    <h1>Alternating Current — concept ladder</h1>
+    <span class="src">NEET / JEE pattern questions</span>
+    <span class="score">Answered <b id="done">0</b> / 28 &nbsp; <button class="reset" id="reset">Clear all</button></span>
+  </div>
+</header>
+
+<div class="shell">
+  <nav>
+    <div class="navhead">7 concepts · 4 questions each</div>
+    <ol id="nav"></ol>
+  </nav>
+  <main>
+    <div class="setline">
+      <h2 id="setTitle"></h2>
+      <button class="showall" id="showall">Show all answers</button>
+    </div>
+    <p class="setnote" id="setNote"></p>
+    <div id="cards"></div>
+  </main>
+</div>
+
+<script>
+/* ================= diagram helpers ================= */
+const INK='#23211C', TEAL='#0E6E68', AMB='#B87A12', SOFT='#6E685C';
+const open=(w,h)=>`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans, sans-serif" font-size="11" fill="${INK}">`;
+const close='</svg>';
+const L=(x1,y1,x2,y2,c=INK,w=1.4)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+const T=(x,y,s,c=INK,a='middle',fs=11)=>`<text x="${x}" y="${y}" text-anchor="${a}" fill="${c}" font-size="${fs}">${s}</text>`;
+const P=(d,c=INK,w=1.6)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"/>`;
+
+/* zigzag resistor drawn along a horizontal wire */
+function res(x,y,w){
+  const n=6, s=w/n; let d=`M${x},${y}`;
+  for(let i=0;i<n;i++) d+=` L${x+s*(i+0.5)},${y+(i%2?7:-7)}`;
+  d+=` L${x+w},${y}`;
+  return P(d);
+}
+/* inductor coil */
+function coil(x,y,w){
+  const n=4, s=w/n; let d=`M${x},${y}`;
+  for(let i=0;i<n;i++) d+=` a${s/2},${s/2} 0 0 1 ${s},0`;
+  return P(d);
+}
+/* capacitor plates centred at x on wire y */
+function cap(x,y){
+  return L(x-4,y-11,x-4,y+11)+L(x+4,y-11,x+4,y+11);
+}
+/* ac source circle */
+function src(x,y){
+  return `<circle cx="${x}" cy="${y}" r="15" fill="none" stroke="${INK}" stroke-width="1.4"/>`+
+         P(`M${x-8},${y} q4,-7 8,0 q4,7 8,0`,INK,1.4);
+}
+/* a rectangular circuit loop with elements on the top wire */
+function loop(items,labels,bottomLabel){
+  let s=open(300,160);
+  const x0=22,x1=278,yt=48,yb=132;
+  s+=L(x0,yt,x0,yb)+L(x1,yt,x1,yb);
+  s+=L(x0,yb,135,yb)+L(165,yb,x1,yb)+src(150,yb);
+  let cur=x0;
+  items.forEach(it=>{
+    s+=L(cur,yt,it.x,yt);
+    if(it.t==='r'){s+=res(it.x,yt,it.w);cur=it.x+it.w;}
+    else if(it.t==='l'){s+=coil(it.x,yt,it.w);cur=it.x+it.w;}
+    else {s+=cap(it.x+it.w/2,yt);cur=it.x+it.w;}
+  });
+  s+=L(cur,yt,x1,yt);
+  labels.forEach(g=>s+=T(g[0],g[1],g[2],g[3]||INK));
+  if(bottomLabel) s+=T(150,158,bottomLabel,SOFT);
+  return s+close;
+}
+
+/* pulse waveform: on for a fraction of every period */
+function pulse(frac,tickLabel,yLabel){
+  let s=open(300,150);
+  const x0=42,yb=112,top=44,Tpx=110;
+  s+=L(x0,26,x0,yb)+L(x0,yb,292,yb);
+  s+=T(296,yb+4,'t',SOFT,'end');
+  let d=`M${x0},${top}`;
+  for(let k=0;k<2;k++){
+    const a=x0+k*Tpx, b=a+Tpx*frac, c=a+Tpx;
+    d+=` L${b},${top} L${b},${yb} L${c},${yb} L${c},${top}`;
+  }
+  s+=P(d,TEAL,1.8);
+  s+=P(`M${x0},${top} L${x0},${yb}`,TEAL,1.8);
+  const t1=x0+Tpx*frac, t2=x0+Tpx;
+  s+=P(`M${t1},${yb} L${t1},${yb+5}`,SOFT,1.2)+T(t1,yb+18,tickLabel,SOFT);
+  s+=P(`M${t2},${yb} L${t2},${yb+5}`,SOFT,1.2)+T(t2,yb+18,'T',SOFT);
+  s+=T(x0-8,top+4,yLabel,SOFT,'end');
+  return s+close;
+}
+
+/* flux and emf sine curves, 90 degrees apart */
+function fluxEmf(){
+  let s=open(300,150);
+  const x0=40,x1=288,mid=78,A=34;
+  s+=L(x0,20,x0,140)+L(x0,mid,x1,mid,SOFT,1.1);
+  let a='',b='';
+  for(let i=0;i<=120;i++){
+    const x=x0+(x1-x0)*i/120, th=2*Math.PI*1.5*i/120;
+    a+=(i?' L':'M')+x+','+(mid-A*Math.cos(th));
+    b+=(i?' L':'M')+x+','+(mid-A*Math.sin(th));
+  }
+  s+=P(a,TEAL,1.8)+P(b,AMB,1.8);
+  s+=T(x0+34,26,'flux \u03C6',TEAL,'start')+T(x0+120,26,'emf e',AMB,'start');
+  s+=T(x1,mid+16,'t',SOFT,'end');
+  return s+close;
+}
+
+/* four candidate graphs of I0 against 1/omega */
+function fourGraphs(){
+  let s=open(300,220);
+  const px=[[10,14],[158,14],[10,120],[158,120]];
+  const kinds=['line','hyp','flat','neg'];
+  px.forEach((p,i)=>{
+    const [ox,oy]=p, w=118, h=78;
+    s+=`<rect x="${ox}" y="${oy}" width="${w+14}" height="${h+18}" rx="8" fill="none" stroke="${'#E4DACA'}"/>`;
+    const gx=ox+22, gy=oy+h+2;
+    s+=L(gx,oy+8,gx,gy)+L(gx,gy,ox+w+8,gy);
+    const kind=kinds[i]; let d='';
+    if(kind==='line') d=`M${gx},${gy} L${gx+86},${oy+12}`;
+    if(kind==='hyp'){ for(let k=0;k<=40;k++){ const x=gx+8+k*2, y=gy-(1400/(x-gx)); d+=(k?' L':'M')+x+','+Math.max(oy+10,y);} }
+    if(kind==='flat') d=`M${gx},${oy+34} L${gx+86},${oy+34}`;
+    if(kind==='neg') d=`M${gx},${oy+12} L${gx+86},${gy}`;
+    s+=P(d,TEAL,1.8);
+    s+=T(gx-8,oy+16,'I\u2080',SOFT,'end');
+    s+=T(ox+w+10,gy+13,'1/\u03C9',SOFT,'end');
+    s+=T(ox+8,oy+16,'('+(i+1)+')',INK,'start',12);
+  });
+  return s+close;
+}
+
+const D={
+  quarter: ()=>pulse(0.25,'T/4','V\u2080'),
+  third:   ()=>pulse(1/3,'T/3','6 A'),
+  fluxEmf: fluxEmf,
+  four:    fourGraphs,
+  rc:      ()=>loop([{t:'r',x:60,w:52},{t:'c',x:186,w:12}],
+                    [[86,32,'R = 200 \u03A9'],[192,32,'X_C = 200 \u03A9']],'AC source'),
+  rcV:     ()=>loop([{t:'r',x:60,w:52},{t:'c',x:186,w:12}],
+                    [[86,32,'V_R = 60 V'],[192,32,'V_C = 80 V']],'I = 4 A'),
+  lcr:     ()=>loop([{t:'r',x:46,w:44},{t:'l',x:120,w:52},{t:'c',x:214,w:12}],
+                    [[68,32,'40 V'],[146,32,'100 V'],[220,32,'70 V']],'I = 0.5 A'),
+  rl:      ()=>loop([{t:'r',x:60,w:50},{t:'l',x:172,w:52}],
+                    [[85,32,'R = 40 \u03A9'],[198,32,'L = 0.3/\u03C0 H']],'100 V, 50 Hz')
+};
+
+/* ================= content ================= */
+const LADDERS=[
+{ id:'rms', title:'Reading an rms value off a waveform',
+  note:'Square it, take the mean over one full period, then take the root. Works for any shape, not just a sine.',
+  qs:[
+  {lvl:'Basic 1', q:'The rms value of an alternating current is the value of that steady direct current which, in the same resistance and in the same time, produces the same &mdash;',
+   opts:['charge','heat','magnetic field','potential difference'],a:1,
+   sol:'rms is fixed by the <b>heating effect</b>. That is why we write H = I<sub>rms</sub><sup>2</sup>Rt. Meters in an AC circuit also read rms.'},
+  {lvl:'Basic 2', q:'A voltage stays at +20 V for the first half of every cycle and at &minus;20 V for the second half. Its rms value is',
+   opts:['20 V','10 V','20/&radic;2 V','zero'],a:0,
+   sol:'Square first: (+20)<sup>2</sup> = (&minus;20)<sup>2</sup> = 400 in both halves, so the mean square is 400 and the root is <b>20 V</b>. <span class="warn">Careful:</span> the plain average over a cycle is zero, but the rms is not. The &radic;2 only comes for a sine.'},
+  {lvl:'Variation 1', dia:'quarter',
+   q:'A potential difference is V<sub>0</sub> for the first quarter of every time period and zero for the rest of the period. Its rms value is',
+   opts:['V<sub>0</sub>/2','V<sub>0</sub>/&radic;2','V<sub>0</sub>/4','V<sub>0</sub>/&radic;3'],a:0,
+   sol:'Mean of the square = V<sub>0</sub><sup>2</sup> &times; (T/4) &divide; T = V<sub>0</sub><sup>2</sup>/4. Root of that is <b>V<sub>0</sub>/2</b>.'},
+  {lvl:'Variation 2', dia:'third',
+   q:'A current is 6 A for the first one-third of every cycle and zero for the remaining two-thirds. Its rms value is nearly',
+   opts:['2 A','2&radic;3 A (\u2248 3.5 A)','3 A','6/&radic;2 A'],a:1,
+   sol:'Mean square = 36 &times; (T/3) &divide; T = 12. So I<sub>rms</sub> = &radic;12 = <b>2&radic;3 &asymp; 3.5 A</b>. <span class="warn">Trap:</span> 6/3 = 2 A is the mean of the current, not the rms.'}
+]},
+
+{ id:'coil', title:'Rotating coil: emf, flux and current',
+  note:'Flux goes as cos, so emf goes as sin. One rotation gives one full cycle of emf.',
+  qs:[
+  {lvl:'Basic 1', q:'The flux linked with a coil rotating in a uniform magnetic field is \u03C6 = \u03C6<sub>0</sub> cos \u03C9t. The induced emf is proportional to',
+   opts:['cos \u03C9t','sin \u03C9t','tan \u03C9t','a constant'],a:1,
+   sol:'e = &minus;d\u03C6/dt = \u03C6<sub>0</sub>\u03C9 <b>sin \u03C9t</b>. Differentiating a cosine gives a sine, so the two are a quarter cycle apart.'},
+  {lvl:'Basic 2', q:'In such a coil the induced emf is maximum at the instant when the flux linked with the coil is',
+   opts:['maximum','zero','half of the maximum','negative maximum'],a:1,
+   sol:'emf follows the <b>rate of change</b> of flux, not the flux itself. Flux changes fastest as it sweeps through zero &mdash; that is when the plane of the coil is parallel to B.'},
+  {lvl:'Variation 1', q:'A coil is rotated at 25 revolutions per second in a uniform magnetic field. The frequency of the emf induced in it is',
+   opts:['12.5 Hz','25 Hz','50 Hz','100 Hz'],a:1,
+   sol:'One full rotation produces one full cycle of emf, so the frequency is the <b>same 25 Hz</b>. <span class="warn">Trap:</span> the emf reaches a peak twice per rotation, but those two peaks have opposite signs &mdash; that is still one cycle, not two.'},
+  {lvl:'Variation 2', dia:'fluxEmf',
+   q:'A coil rotating uniformly in a magnetic field is connected across a pure resistance. The phase difference between (i) the induced emf and the current, and (ii) the induced emf and the flux linked with the coil, are respectively',
+   opts:['0 and \u03C0/2','0 and 0','\u03C0/2 and \u03C0/2','\u03C0 and \u03C0/2'],a:0,
+   sol:'Across a pure resistance i = e/R at every instant, so emf and current are <b>in phase</b> (phase difference 0). But \u03C6 goes as cos \u03C9t while e goes as sin \u03C9t, so emf and flux are <b>\u03C0/2 apart</b>.'}
+]},
+
+{ id:'peak', title:'Peak, rms and how long it takes',
+  note:'Peak = &radic;2 &times; rms for a sine. Zero to peak, or peak to zero, is always a quarter of the period.',
+  qs:[
+  {lvl:'Basic 1', q:'For a current I = 5&radic;2 sin(100\u03C0t) A, the rms current is',
+   opts:['5 A','5&radic;2 A','10 A','2.5 A'],a:0,
+   sol:'Peak I<sub>0</sub> = 5&radic;2 A, and I<sub>rms</sub> = I<sub>0</sub>/&radic;2 = <b>5 A</b>.'},
+  {lvl:'Basic 2', q:'An alternating current has frequency 50 Hz. The time taken for one full cycle is',
+   opts:['0.02 s','0.05 s','0.1 s','0.2 s'],a:0,
+   sol:'T = 1/f = 1/50 = <b>0.02 s</b> = 2 &times; 10<sup>&minus;2</sup> s.'},
+  {lvl:'Variation 1', q:'An alternating current of frequency 100 Hz has rms value 7.07 A. Its peak value, and the time it takes to go from zero to that peak, are',
+   opts:['10 A and 2.5 &times; 10<sup>&minus;3</sup> s','10 A and 5 &times; 10<sup>&minus;3</sup> s','14.14 A and 2.5 &times; 10<sup>&minus;3</sup> s','5 A and 10<sup>&minus;2</sup> s'],a:0,
+   sol:'I<sub>0</sub> = &radic;2 &times; 7.07 = <b>10 A</b>. Zero to peak is a quarter cycle: T/4 = (1/100)/4 = <b>2.5 &times; 10<sup>&minus;3</sup> s</b>.'},
+  {lvl:'Variation 2', q:'The peak voltage of a 60 Hz supply is 100 V. Its rms voltage, and the shortest time in which the voltage falls from its peak value to zero, are about',
+   opts:['70.7 V and 4.2 &times; 10<sup>&minus;3</sup> s','141 V and 4.2 &times; 10<sup>&minus;3</sup> s','70.7 V and 8.3 &times; 10<sup>&minus;3</sup> s','70.7 V and 1.7 &times; 10<sup>&minus;2</sup> s'],a:0,
+   sol:'V<sub>rms</sub> = 100/&radic;2 = <b>70.7 V</b>. Peak to zero is again a quarter cycle: T/4 = (1/60)/4 = 1/240 = <b>4.17 &times; 10<sup>&minus;3</sup> s</b>. <span class="warn">Trap:</span> 8.3 ms is half the period, and 141 V is 100&radic;2 (multiplying when you should divide).'}
+]},
+
+{ id:'rc', title:'R with C in series: how far does the current lead?',
+  note:'tan \u03C6 = X_C / R, and in an R&ndash;C circuit the current leads the applied voltage.',
+  qs:[
+  {lvl:'Basic 1', q:'In a circuit containing only a capacitor across an AC source, the current',
+   opts:['leads the voltage by \u03C0/2','lags the voltage by \u03C0/2','is in phase with the voltage','leads the voltage by \u03C0/4'],a:0,
+   sol:'For a pure capacitor the current <b>leads by a quarter cycle</b>. Remember it as "C leads": the capacitor must be charged first before a voltage appears across it.'},
+  {lvl:'Basic 2', q:'The reactance of a 50 \u03BCF capacitor on a 50 Hz supply (X_C = 1/\u03C9C) is nearly',
+   opts:['200/\u03C0 \u03A9 (\u2248 64 \u03A9)','100/\u03C0 \u03A9','50\u03C0 \u03A9','400/\u03C0 \u03A9'],a:0,
+   sol:'\u03C9 = 2\u03C0f = 100\u03C0. X_C = 1/(100\u03C0 &times; 50 &times; 10<sup>&minus;6</sup>) = 1/(5\u03C0 &times; 10<sup>&minus;3</sup>) = <b>200/\u03C0 &asymp; 64 \u03A9</b>.'},
+  {lvl:'Variation 1', dia:'rc',
+   q:'A resistance of 200 \u03A9 is joined in series with a capacitor whose reactance is also 200 \u03A9. Across an AC source, the current leads the applied voltage by',
+   opts:['\u03C0/4','\u03C0/2','\u03C0/3','zero'],a:0,
+   sol:'tan \u03C6 = X_C/R = 200/200 = 1, so \u03C6 = 45\u00B0 = <b>\u03C0/4</b>. When R and X_C are equal, the lead is always half of 90\u00B0.'},
+  {lvl:'Variation 2',
+   q:'A 50 \u03BCF capacitor is connected in series with a 100 \u03A9 resistance across a 220 V, 50 Hz supply. The current leads the applied voltage by',
+   opts:['tan<sup>&minus;1</sup>(2/\u03C0)','tan<sup>&minus;1</sup>(1/\u03C0)','tan<sup>&minus;1</sup>(\u03C0/2)','tan<sup>&minus;1</sup>(4/\u03C0)'],a:0,
+   sol:'X_C = 200/\u03C0 \u03A9 (from the rung above). tan \u03C6 = X_C/R = (200/\u03C0)/100 = 2/\u03C0 &asymp; 0.64, so \u03C6 = <b>tan<sup>&minus;1</sup>(2/\u03C0) &asymp; 32.5\u00B0</b>. <span class="warn">Note:</span> the 220 V is not needed at all &mdash; phase angle depends only on R and X_C.'}
+]},
+
+{ id:'phasor', title:'Adding element voltages the right way',
+  note:'V_R and V_L (or V_C) are 90\u00B0 apart, so they add like the sides of a right triangle, never straight.',
+  qs:[
+  {lvl:'Basic 1', q:'In a series R&ndash;L circuit, the voltage across the resistor and the voltage across the inductor differ in phase by',
+   opts:['0','\u03C0/4','\u03C0/2','\u03C0'],a:2,
+   sol:'V_R is in phase with the current, while V_L is a quarter cycle ahead of the current. So the two are <b>\u03C0/2 apart</b> and must be added as phasors.'},
+  {lvl:'Basic 2', q:'In a series R&ndash;L circuit V_R = 30 V and V_L = 40 V. The voltage of the source is',
+   opts:['70 V','50 V','35 V','10 V'],a:1,
+   sol:'V = &radic;(30<sup>2</sup> + 40<sup>2</sup>) = <b>50 V</b>. <span class="warn">Trap:</span> 30 + 40 = 70 V is the common mistake &mdash; they are never in phase.'},
+  {lvl:'Variation 1', dia:'rcV',
+   q:'In a series R&ndash;C circuit the voltmeter across R reads 60 V and the one across C reads 80 V, while the ammeter reads 4 A. The impedance of the circuit is',
+   opts:['25 \u03A9','35 \u03A9','20 \u03A9','50 \u03A9'],a:0,
+   sol:'V = &radic;(60<sup>2</sup> + 80<sup>2</sup>) = 100 V. Then Z = V/I = 100/4 = <b>25 \u03A9</b>.'},
+  {lvl:'Variation 2', dia:'lcr',
+   q:'In a series L&ndash;C&ndash;R circuit the voltmeters read V_R = 40 V, V_L = 100 V and V_C = 70 V, and the current is 0.5 A. The impedance of the circuit is',
+   opts:['100 \u03A9','420 \u03A9','80 \u03A9','50 \u03A9'],a:0,
+   sol:'V_L and V_C are exactly opposite, so first subtract: 100 &minus; 70 = 30 V. Then V = &radic;(40<sup>2</sup> + 30<sup>2</sup>) = 50 V, and Z = 50/0.5 = <b>100 \u03A9</b>.'}
+]},
+
+{ id:'rl', title:'Impedance of a coil (R with L)',
+  note:'X_L = \u03C9L = 2\u03C0fL, then Z = &radic;(R<sup>2</sup> + X_L<sup>2</sup>). An L written as a number over \u03C0 is a hint that the \u03C0 will cancel.',
+  qs:[
+  {lvl:'Basic 1', q:'The reactance of an inductor of 0.1/\u03C0 H on a 50 Hz supply is',
+   opts:['10 \u03A9','5 \u03A9','20 \u03A9','100 \u03A9'],a:0,
+   sol:'X_L = 2\u03C0fL = 2\u03C0 &times; 50 &times; (0.1/\u03C0) = <b>10 \u03A9</b>. The \u03C0 cancels &mdash; that is why the value was given in that form.'},
+  {lvl:'Basic 2', q:'A resistance of 3 \u03A9 is in series with an inductive reactance of 4 \u03A9. The impedance of the circuit is',
+   opts:['7 \u03A9','5 \u03A9','1 \u03A9','12 \u03A9'],a:1,
+   sol:'Z = &radic;(3<sup>2</sup> + 4<sup>2</sup>) = <b>5 \u03A9</b>. R and X_L are at right angles, so add them like the sides of a right triangle.'},
+  {lvl:'Variation 1', q:'A resistance of 60 \u03A9 is connected in series with an inductance of 0.8/\u03C0 H across a 50 Hz AC source. The impedance of the circuit is',
+   opts:['100 \u03A9','140 \u03A9','80 \u03A9','60&radic;2 \u03A9'],a:0,
+   sol:'X_L = 2\u03C0 &times; 50 &times; (0.8/\u03C0) = 80 \u03A9. Z = &radic;(60<sup>2</sup> + 80<sup>2</sup>) = <b>100 \u03A9</b>. <span class="warn">Trap:</span> 60 + 80 = 140 \u03A9.'},
+  {lvl:'Variation 2', dia:'rl',
+   q:'A coil of resistance 40 \u03A9 and inductance 0.3/\u03C0 H is connected to a 100 V, 50 Hz supply. The current drawn from the supply is',
+   opts:['2 A','2.5 A','1.25 A','3.3 A'],a:0,
+   sol:'X_L = 2\u03C0 &times; 50 &times; (0.3/\u03C0) = 30 \u03A9, so Z = &radic;(40<sup>2</sup> + 30<sup>2</sup>) = 50 \u03A9 and I = V/Z = 100/50 = <b>2 A</b>. <span class="warn">Trap:</span> 2.5 A comes from using R alone.'}
+]},
+
+{ id:'pureL', title:'Pure inductor: current against frequency',
+  note:'I<sub>0</sub> = V<sub>0</sub>/\u03C9L. Against \u03C9 that is a falling curve; against 1/\u03C9 it becomes a straight line.',
+  qs:[
+  {lvl:'Basic 1', q:'In a purely inductive AC circuit, when the frequency of the source is increased, the inductive reactance',
+   opts:['increases','decreases','stays the same','becomes zero'],a:0,
+   sol:'X_L = 2\u03C0fL, so it <b>increases</b> in direct proportion to frequency. A coil chokes high frequencies.'},
+  {lvl:'Basic 2', q:'In a purely inductive AC circuit the current',
+   opts:['lags the voltage by \u03C0/2','leads the voltage by \u03C0/2','is in phase with the voltage','lags the voltage by \u03C0/4'],a:0,
+   sol:'For a pure inductor the current <b>lags by a quarter cycle</b>. The back emf resists the build-up of current, so current arrives late.'},
+  {lvl:'Variation 1', q:'A pure inductor is connected across an AC source of fixed peak voltage. If the frequency of the source is doubled, the peak current becomes',
+   opts:['half','double','four times','unchanged'],a:0,
+   sol:'I<sub>0</sub> = V<sub>0</sub>/(\u03C9L). Doubling \u03C9 doubles the reactance, so the peak current falls to <b>half</b>.'},
+  {lvl:'Variation 2', dia:'four',
+   q:'For a pure inductor connected across a source of fixed peak voltage V<sub>0</sub>, which graph correctly shows the peak current I<sub>0</sub> against 1/\u03C9?',
+   opts:['Graph (1)','Graph (2)','Graph (3)','Graph (4)'],a:0,
+   sol:'I<sub>0</sub> = (V<sub>0</sub>/L) &times; (1/\u03C9), so plotted against 1/\u03C9 it is a <b>straight line through the origin</b> with slope V<sub>0</sub>/L. Plotted against \u03C9 itself the same relation gives the falling curve of graph (2) &mdash; check which variable is on the axis before you choose.'}
+]}
+];
+
+/* ================= engine ================= */
+const KEY='padipucast_ac_concept_ladder_7x4_v1';
+let state={};
+try{ state=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ state={}; }
+const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} };
+
+let cur=0;
+const navEl=document.getElementById('nav');
+const cardsEl=document.getElementById('cards');
+const K=['(1)','(2)','(3)','(4)'];
+
+function qid(li,qi){ return LADDERS[li].id+'-'+qi; }
+
+function buildNav(){
+  navEl.innerHTML='';
+  LADDERS.forEach((L,i)=>{
+    const li=document.createElement('li');
+    const b=document.createElement('button');
+    b.innerHTML='<span class="num">'+(i+1)+'</span><span>'+L.title+'</span><span class="dots" id="dots'+i+'"></span>';
+    b.onclick=()=>{cur=i;render();};
+    li.appendChild(b); navEl.appendChild(li);
+  });
+}
+function paintDots(){
+  LADDERS.forEach((L,i)=>{
+    const el=document.getElementById('dots'+i); if(!el) return;
+    el.innerHTML=L.qs.map((q,j)=>{
+      const v=state[qid(i,j)];
+      if(v===undefined) return '<span>\u25CB</span>';
+      return '<span class="'+(v===q.a?'on':'off')+'">\u25CF</span>';
+    }).join('');
+    navEl.children[i].firstChild.setAttribute('aria-current',i===cur?'true':'false');
+  });
+  const done=Object.keys(state).length;
+  document.getElementById('done').textContent=done;
+}
+
+function render(){
+  const L=LADDERS[cur];
+  document.getElementById('setTitle').textContent=(cur+1)+'. '+L.title;
+  document.getElementById('setNote').innerHTML=L.note;
+  cardsEl.innerHTML='';
+  L.qs.forEach((q,j)=>{
+    const card=document.createElement('div');
+    card.className='q';
+    const isVar=q.lvl.indexOf('Variation')===0;
+    card.innerHTML=
+      '<div class="qtop">'+
+        '<span class="pill '+(isVar?'var':'lvl')+'">'+q.lvl+'</span>'+
+        '<span class="pill tag">NEET / JEE</span>'+
+      '</div>'+
+      '<p class="qtext">'+q.q+'</p>'+
+      (q.dia?'<div class="dia">'+D[q.dia]()+'</div>':'')+
+      '<div class="opts" id="o'+j+'"></div>'+
+      '<div class="sol" id="s'+j+'"><b>Answer '+K[q.a]+'.</b> '+q.sol+'</div>';
+    cardsEl.appendChild(card);
+
+    const box=card.querySelector('#o'+j);
+    q.opts.forEach((t,k)=>{
+      const b=document.createElement('button');
+      b.className='opt'; b.type='button';
+      b.innerHTML='<span class="k">'+K[k]+'</span><span>'+t+'</span>';
+      b.onclick=()=>choose(j,k);
+      box.appendChild(b);
+    });
+    const prev=state[qid(cur,j)];
+    if(prev!==undefined) mark(j,prev);
+  });
+  paintDots();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function mark(j,chosen){
+  const q=LADDERS[cur].qs[j];
+  const box=document.getElementById('o'+j);
+  [...box.children].forEach((b,k)=>{
+    b.disabled=true;
+    if(k===q.a) b.classList.add('right');
+    else if(k===chosen) b.classList.add('wrong');
+  });
+  document.getElementById('s'+j).classList.add('on');
+}
+function choose(j,k){
+  const id=qid(cur,j);
+  if(state[id]!==undefined) return;
+  state[id]=k; save(); mark(j,k); paintDots();
+}
+
+document.getElementById('showall').onclick=()=>{
+  LADDERS[cur].qs.forEach((q,j)=>{
+    document.getElementById('s'+j).classList.add('on');
+    const box=document.getElementById('o'+j);
+    [...box.children].forEach((b,k)=>{ if(k===q.a) b.classList.add('right'); });
+  });
+};
+document.getElementById('reset').onclick=()=>{
+  state={}; save(); render();
+};
+
+buildNav(); render();
+</script>
+</body>
+</html>
