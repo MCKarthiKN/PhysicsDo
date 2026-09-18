@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Free Body Diagrams &#183; NLM Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> NLM &#183; Free Body Diagrams</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Free Body Diagrams<br>Who is touching this body?</h1></div>
+    <p id="home-sub">Slot 1 of the Newton's Laws flow. Every free-body-diagram question from the chapter, put in <strong>one climbing order</strong>. The sequence goes: which forces are really there &#8594; action and reaction &#8594; the normal force and its direction &#8594; spheres, walls and corners &#8594; three spheres in a groove &#8594; what a string does &#8594; a pulley bolted to a block &#8594; a rod resting on a corner.<br><br>Each source question is a <strong>ladder</strong>: 3 build-up rungs, then the original question (&#9733;). Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 8 ladders &#215; 4 rungs = 32 questions. Take g = 10 m/s<sup>2</sup> throughout.<br><br><em>One routine runs through all 8: walk around the body and ask who is touching it. Each toucher gives one force, and the kind of contact fixes its direction. Then add gravity, and stop. A force the body applies to something else never goes in its own diagram.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - NLM / Free body diagrams  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1d5f7a';
+const FILL_T='#e6f1f4', FILL_B='#c9e2e9', FILL_C='#b3d6df';
+
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+
+function _hatch(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y+9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+function _ceil(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y-9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+function _vwall(x,y0,y1,side){
+  const d = side==='left' ? -9 : 9;
+  let s=`<line x1="${x}" y1="${y0}" x2="${x}" y2="${y1}" stroke="${INK}" stroke-width="2"/>`;
+  for(let y=y0+9;y<y1;y+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x+d}" y2="${y-8}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+function _blk(x,y,w,h,label,fill){
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill||FILL_T}" stroke="${INK}" stroke-width="1.7" rx="2"/>
+  <text x="${x+w/2}" y="${y+h/2+4.5}" font-size="11" text-anchor="middle" fill="${INK}" ${FS} font-weight="700">${label}</text>`;
+}
+function _pul(cx,cy,r){
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${FILL_T}" stroke="${INK}" stroke-width="1.7"/>
+  <circle cx="${cx}" cy="${cy}" r="2.6" fill="${INK}"/>`;
+}
+function _rope(pts){
+  return `<polyline points="${pts.map(p=>p[0]+','+p[1]).join(' ')}" fill="none" stroke="${INK}" stroke-width="1.5"/>`;
+}
+function _a2(x0,y0,x1,y1,c,label,dx,dy){
+  const id=_nid();
+  return `<defs>${AR(id,c)}</defs><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="2.2" marker-end="url(#${id})"/>`+
+  (label?`<text x="${x1+(dx===undefined?0:dx)}" y="${y1+(dy===undefined?0:dy)}" font-size="11" text-anchor="middle" fill="${c}" ${FS} font-weight="700">${label}</text>`:'');
+}
+function _txt(x,y,t,c,size,anchor,bold){
+  return `<text x="${x}" y="${y}" font-size="${size||11}" text-anchor="${anchor||'middle'}" fill="${c||INK}" ${FS}${bold?' font-weight="700"':''}>${t}</text>`;
+}
+function _dash(x0,y0,x1,y1,c){
+  return `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c||GREY}" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+}
+function _man(x,yTop,h){
+  const r=h*0.17;
+  return `<circle cx="${x}" cy="${yTop+r}" r="${r}" fill="none" stroke="${INK}" stroke-width="1.5"/>
+  <line x1="${x}" y1="${yTop+2*r}" x2="${x}" y2="${yTop+h*0.62}" stroke="${INK}" stroke-width="1.5"/>
+  <line x1="${x-h*0.16}" y1="${yTop+h*0.42}" x2="${x+h*0.16}" y2="${yTop+h*0.42}" stroke="${INK}" stroke-width="1.5"/>
+  <line x1="${x}" y1="${yTop+h*0.62}" x2="${x-h*0.15}" y2="${yTop+h}" stroke="${INK}" stroke-width="1.5"/>
+  <line x1="${x}" y1="${yTop+h*0.62}" x2="${x+h*0.15}" y2="${yTop+h}" stroke="${INK}" stroke-width="1.5"/>`;
+}
+
+const DIAGRAMS = {
+
+// ---- a book lying on a table, with its two forces ------------------------
+bookTable:(o)=>{
+  const W=320,H=190;
+  let s='';
+  s+=_hatch(60,270,130);
+  s+=_blk(126,100,72,30,o.lab||'book',FILL_T);
+  if(o.forces!==false){
+    s+=_a2(162,100,162,48,GRN,o.N||'N',0,-8);
+    s+=_a2(162,115,162,168,BLU,o.W||'mg',0,16);
+  }
+  s+=_txt(W/2,182,o.cap||'',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- two blocks pushing each other: the third-law pair -------------------
+pairBlocks:(o)=>{
+  const W=380,H=190;
+  let s='';
+  s+=_hatch(30,350,146);
+  s+=_blk(96,96,74,50,o.left||'m&#8321;',FILL_T);
+  s+=_blk(180,96,74,50,o.right||'m&#8322;',FILL_B);
+  s+=_dash(175,86,175,156,GREY);
+  s+=_a2(40,120,92,120,RED,o.F||'F',-4,-11);
+  s+=_a2(168,66,124,66,AMB,o.f1||'force on m&#8321;',-4,-10);
+  s+=_a2(182,66,226,66,AMB,o.f2||'force on m&#8322;',6,-10);
+  s+=_txt(W/2,178,o.cap||'equal in size, opposite in direction, on different bodies',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- block on an incline, normal perpendicular to the surface ------------
+inclineBlock:(o)=>{
+  const W=360,H=224;
+  const toe=[70,190], ap=[290,190-165];
+  let s='';
+  s+=_hatch(40,330,190);
+  s+=`<path d="M ${toe[0]} ${toe[1]} L ${ap[0]} ${ap[1]} L ${ap[0]} ${toe[1]} Z" fill="${FILL_B}" stroke="${INK}" stroke-width="1.8"/>`;
+  const dx=ap[0]-toe[0], dy=ap[1]-toe[1], len=Math.hypot(dx,dy);
+  const ux=dx/len, uy=dy/len, deg=Math.atan2(dy,dx)*180/Math.PI;
+  const mx=toe[0]+dx*0.5, my=toe[1]+dy*0.5;
+  s+=`<g transform="rotate(${deg.toFixed(2)} ${mx} ${my})"><rect x="${mx-24}" y="${my-30}" width="48" height="30" fill="${FILL_T}" stroke="${INK}" stroke-width="1.7" rx="2"/><text x="${mx}" y="${my-11}" font-size="11" text-anchor="middle" fill="${INK}" ${FS} font-weight="700">${o.m||'m'}</text></g>`;
+  if(o.forces){
+    const nx=uy, ny=-ux;
+    s+=_a2(mx,my-14,mx+58*nx,my-14+58*ny,GRN,'N',-14,-6);
+    s+=_a2(mx+14,my-24,mx+14,my+34,BLU,'mg',18,10);
+    s+=_dash(mx,my,mx-40*nx,my-40*ny,GREY);
+  }
+  s+=`<path d="M ${toe[0]+36} ${toe[1]} A 36 36 0 0 0 ${toe[0]+36*ux} ${toe[1]+36*uy}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+  s+=_txt(toe[0]+52,toe[1]-10,o.th||'37&#176;',GREY,11,'middle',true);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- block A with a slanted top face, block B wedged against the wall ----
+slantPair:(o)=>{
+  const W=360,H=250;
+  let s='';
+  s+=_hatch(50,330,220);
+  s+=_vwall(292,60,220,'right');
+  s+=`<path d="M 110 220 L 270 220 L 270 95 L 110 208 Z" fill="${FILL_B}" stroke="${INK}" stroke-width="1.8"/>`;
+  s+=_txt(180,200,o.A||'A',INK,12,'middle',true);
+  s+=`<path d="M 216 141 L 292 88 L 292 150 L 250 176 Z" fill="${FILL_T}" stroke="${INK}" stroke-width="1.8"/>`;
+  s+=_txt(258,132,o.B||'B',INK,12,'middle',true);
+  s+=_txt(138,202,o.th||'37&#176;',GREY,11,'middle',true);
+  if(o.forces){
+    // contact face runs from (110,208) to (270,95); outward normal of A is up-right
+    const nx=0.577, ny=0.816;    // perpendicular to A's slanted face, into A
+    s+=_a2(152,220,152,156,GRN,'N&#8321;',-14,-4);
+    s+=_a2(215,134,215+54*nx,134+54*ny,AMB,'N&#8322;',20,8);
+    s+=_a2(200,148,200,194,BLU,'mg',0,14);
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- sphere on flat ground ----------------------------------------------
+sphereFlat:(o)=>{
+  const W=300,H=200;
+  let s='';
+  s+=_hatch(50,250,160);
+  s+=`<circle cx="150" cy="112" r="48" fill="${FILL_C}" stroke="${INK}" stroke-width="1.8"/>`;
+  s+=`<circle cx="150" cy="112" r="2.6" fill="${INK}"/>`;
+  s+=_dash(150,160,150,44,GREY);
+  s+=_a2(150,160,150,78,GRN,'N',16,-4);
+  s+=_a2(150,112,150,178,BLU,'mg',-18,8);
+  s+=_txt(W/2,192,o.cap||'the normal at a smooth contact passes through the centre',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- sphere resting on a slope and pressing a vertical wall --------------
+sphereInclineWall:(o)=>{
+  const W=380,H=250;
+  let s='';
+  s+=_hatch(50,350,220);
+  s+=_vwall(310,60,220,'right');
+  s+=`<path d="M 90 90 L 270 220 L 90 220 Z" fill="${FILL_B}" stroke="${INK}" stroke-width="1.8"/>`;
+  s+=`<circle cx="270" cy="171" r="40" fill="${FILL_C}" stroke="${INK}" stroke-width="1.8"/>`;
+  s+=_txt(270,175,o.m1||'m&#8321;',INK,11,'middle',true);
+  const bx=170, by=90+ (170-90)*(130/180);
+  s+=`<g transform="rotate(35.8 ${bx} ${by})"><rect x="${bx-24}" y="${by-28}" width="48" height="28" fill="${FILL_T}" stroke="${INK}" stroke-width="1.7" rx="2"/><text x="${bx}" y="${by-9}" font-size="10.5" text-anchor="middle" fill="${INK}" ${FS} font-weight="700">${o.m2||'m&#8322;'}</text></g>`;
+  if(o.forces){
+    s+=_a2(270,171,270-58,171,AMB,'N (wall)',-8,-11);
+    s+=_a2(270,171,270+0.586*62,171-0.811*62,GRN,'N (slope)',16,-8);
+    s+=_a2(270,171,270,196,BLU,'mg',-24,-2);
+  }
+  s+=_txt(126,176,o.th||'&#952;',GREY,11,'middle',true);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- ball in the corner: vertical wall + top corner of a block -----------
+sphereCorner:(o)=>{
+  const W=340,H=240;
+  let s='';
+  s+=_vwall(90,40,210,'left');
+  s+=_hatch(70,310,210);
+  s+=_blk(170,150,110,60,o.m2||'m&#8322;',FILL_B);
+  s+=`<circle cx="137" cy="116" r="47" fill="${FILL_C}" stroke="${INK}" stroke-width="1.8"/>`;
+  s+=`<circle cx="137" cy="116" r="2.6" fill="${INK}"/>`;
+  s+=_txt(137,88,o.m1||'m&#8321;',INK,11,'middle',true);
+  s+=`<circle cx="170" cy="150" r="3.4" fill="${RED}"/>`;
+  if(o.forces){
+    s+=_dash(170,150,110,88,GREY);
+    s+=_a2(137,116,137+58,116,AMB,'N (wall)',18,-8);
+    s+=_a2(137,116,137-0.70*52,116-0.71*52,GRN,'N (corner)',26,-10);
+    s+=_a2(137,116,137,116+60,BLU,'mg',0,16);
+  }
+  s+=_txt(W/2,230,o.cap||'',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- three identical spheres in a V groove -------------------------------
+threeSpheres:(o)=>{
+  const W=400,H=286;
+  const vx=200, vy=254, r=36;
+  let s='';
+  s+=_hatch(40,360,vy);
+  s+=`<line x1="${vx}" y1="${vy}" x2="${vx-100}" y2="${vy-173}" stroke="${INK}" stroke-width="2"/>`;
+  s+=`<line x1="${vx}" y1="${vy}" x2="${vx+100}" y2="${vy-173}" stroke="${INK}" stroke-width="2"/>`;
+  const A=[vx-r,vy-134], B=[vx+r,vy-134], C=[vx,vy-134-62.4];
+  [[A,'A'],[B,'B'],[C,'C']].forEach(p=>{
+    s+=`<circle cx="${p[0][0]}" cy="${p[0][1]}" r="${r}" fill="${FILL_C}" stroke="${INK}" stroke-width="1.8"/>`;
+    s+=_txt(p[0][0],p[0][1]+4,p[1],INK,12,'middle',true);
+  });
+  s+=_txt(vx-26,vy-8,o.th||'&#952;',GREY,11,'middle',true);
+  s+=_txt(vx+26,vy-8,o.th||'&#952;',GREY,11,'middle',true);
+  if(o.lines){
+    s+=_dash(C[0],C[1],A[0],A[1],RED);
+    s+=_dash(C[0],C[1],B[0],B[1],RED);
+    s+=_dash(A[0],A[1],B[0],B[1],RED);
+  }
+  if(o.forces){
+    s+=_a2(C[0],C[1],C[0]-52,C[1]-30,GRN,'N',-14,-4);
+    s+=_a2(C[0],C[1],C[0]+52,C[1]-30,GRN,'N',14,-4);
+    s+=_a2(C[0],C[1],C[0],C[1]+34,BLU,'mg',-20,2);
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- man on the ground pulling a string over a ceiling pulley ------------
+manPulley:(o)=>{
+  const W=340,H=250;
+  let s='';
+  s+=_ceil(90,300,26);
+  s+=_hatch(50,310,215);
+  const pc=[190,56], pr=22;
+  s+=`<line x1="${pc[0]}" y1="26" x2="${pc[0]}" y2="${pc[1]-pr}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_rope([[168,56],[168,170]]);
+  s+=_rope([[212,56],[212,163]]);
+  s+=_pul(pc[0],pc[1],pr);
+  s+=_blk(140,170,56,36,o.load||'block',FILL_B);
+  s+=_man(232,125,90);
+  if(o.pull) s+=_a2(266,146,266,188,RED,o.pull,22,4);
+  s+=_txt(W/2,246,o.cap||'the man pulls his end of the string straight down',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- free body diagram of the man ---------------------------------------
+manFBD:(o)=>{
+  const W=320,H=236;
+  let s='';
+  s+=_man(160,96,90);
+  s+=_a2(140,96,140,44,GRN,o.T||'T',0,-8);
+  s+=_a2(180,96,180,44,AMB,o.N||'N',0,-8);
+  s+=_a2(160,152,160,198,BLU,o.W||'mg',22,6);
+  s+=_txt(W/2,228,o.cap||'free body diagram of the man',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- the force a string puts on a pulley ---------------------------------
+pulleyForceVec:(o)=>{
+  const W=330,H=210;
+  let s='';
+  const cx=150, cy=86, r=26;
+  s+=_ceil(110,190,20);
+  s+=`<line x1="${cx}" y1="20" x2="${cx}" y2="${cy-r}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_rope([[cx-r,cy],[cx-r,170]]);
+  s+=_rope([[cx+r,cy],[cx+r,170]]);
+  s+=_pul(cx,cy,r);
+  s+=_a2(cx,cy,cx,cy+72,RED,o.res||'2T on the pulley',0,18);
+  s+=_txt(cx-r-18,150,'T',GREY,11,'middle',true);
+  s+=_txt(cx+r+18,150,'T',GREY,11,'middle',true);
+  s+=_txt(W/2,198,o.cap||'the two pulls add as vectors',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- big block M carrying block B and two corner pulleys -----------------
+bigBlockPulleys:(o)=>{
+  const W=400,H=250;
+  let s='';
+  s+=_hatch(20,380,210);
+  s+=_blk(110,120,180,90,o.M||'M',FILL_B);
+  s+=_blk(168,84,64,36,o.B||'B',FILL_T);
+  const lp=[110,112], rp=[290,112], pr=14;
+  s+=_rope([[168,102],[lp[0],102]]);
+  s+=_rope([[232,102],[rp[0],102]]);
+  s+=_rope([[96,112],[96,168]]);
+  s+=_rope([[304,112],[304,168]]);
+  s+=_pul(lp[0],lp[1],pr); s+=_pul(rp[0],rp[1],pr);
+  s+=_blk(72,168,48,34,o.C||'C',FILL_T);
+  s+=_blk(280,168,48,34,o.A||'A',FILL_T);
+  s+=_txt(W/2,236,o.cap||'smooth surface, light strings and pulleys',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- wedge carrying a pulley at its top ----------------------------------
+wedgePulley:(o)=>{
+  const W=400,H=250;
+  let s='';
+  s+=_hatch(60,370,214);
+  s+=_vwall(96,60,214,'left');
+  s+=`<line x1="40" y1="88" x2="96" y2="88" stroke="${INK}" stroke-width="2"/>`;
+  s+=_hatch(40,96,88);
+  s+=_blk(48,58,44,30,o.m1||'m&#8321;',FILL_T);
+  s+=`<path d="M 130 214 L 330 214 L 330 96 Z" fill="${FILL_B}" stroke="${INK}" stroke-width="1.8"/>`;
+  s+=_txt(268,196,o.m3||'m&#8323;',INK,12,'middle',true);
+  const pc=[326,82], pr=14;
+  s+=_rope([[92,72],[pc[0]-pr,72]]);
+  s+=_pul(pc[0],pc[1],pr);
+  const bx=250, by=214-(250-130)*(118/200);
+  s+=`<g transform="rotate(-30.5 ${bx} ${by})"><rect x="${bx-24}" y="${by-28}" width="48" height="28" fill="${FILL_T}" stroke="${INK}" stroke-width="1.7" rx="2"/><text x="${bx}" y="${by-9}" font-size="10.5" text-anchor="middle" fill="${INK}" ${FS} font-weight="700">${o.m2||'m&#8322;'}</text></g>`;
+  s+=_rope([[pc[0]+2,pc[1]+pr],[bx+16,by-20]]);
+  s+=_txt(200,236,o.cap||'the pulley is fixed to the wedge',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- rod resting across a corner, held by a vertical string --------------
+rodCorner:(o)=>{
+  const W=400,H=260;
+  const B=[80,80], A=[300,215];
+  let s='';
+  s+=_ceil(250,350,30);
+  s+=_hatch(40,360,230);
+  s+=`<rect x="125" y="120" width="22" height="110" fill="${FILL_B}" stroke="${INK}" stroke-width="1.7"/>`;
+  s+=_rope([[A[0],30],[A[0],A[1]]]);
+  s+=`<line x1="${B[0]}" y1="${B[1]}" x2="${A[0]}" y2="${A[1]}" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>`;
+  s+=_txt(B[0]-12,B[1]-6,'B',INK,12,'middle',true);
+  s+=_txt(A[0]+14,A[1]+12,'A',INK,12,'middle',true);
+  s+=`<circle cx="147" cy="121" r="3.4" fill="${RED}"/>`;
+  s+=_txt(126,102,o.q||'L/4',GREY,10.5,'middle',true);
+  s+=_dash(B[0],B[1],147,121,GREY);
+  s+=_txt(W/2,250,o.cap||'smooth surfaces, light string',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- free body diagram of that rod --------------------------------------
+rodFBD:(o)=>{
+  const W=380,H=240;
+  const B=[80,70], A=[300,205];
+  const dx=A[0]-B[0], dy=A[1]-B[1], L=Math.hypot(dx,dy);
+  const nx=dy/L, ny=-dx/L;   // perpendicular, pointing up-right
+  const cx=(A[0]+B[0])/2, cy=(A[1]+B[1])/2;
+  const kx=B[0]+dx*0.3, ky=B[1]+dy*0.3;
+  let s='';
+  s+=`<line x1="${B[0]}" y1="${B[1]}" x2="${A[0]}" y2="${A[1]}" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>`;
+  s+=_txt(B[0]-12,B[1]-6,'B',INK,12,'middle',true);
+  s+=_txt(A[0]+14,A[1]+12,'A',INK,12,'middle',true);
+  s+=_a2(kx,ky,kx+62*nx,ky+62*ny,GRN,o.N||'N',12,-6);
+  s+=_a2(cx,cy,cx,cy+62,BLU,o.W||'mg',-18,10);
+  s+=_a2(A[0],A[1],A[0],A[1]-62,AMB,o.T||'T',18,-4);
+  s+=_dash(kx-40*nx,ky-40*ny,kx+8*nx,ky+8*ny,GREY);
+  s+=_txt(W/2,230,o.cap||'N is perpendicular to the rod, not vertical',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+
+};
+
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "Which forces are really there?",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A book lies at rest on a table. Which forces act <strong>on the book</strong>?",
+   "diagram": DIAGRAMS.bookTable({forces:false}),
+   "opts": ["Its weight, and the normal force from the table &#8212; that is all","Its weight, the normal force, and the force of the table's pressure","Its weight only","Its weight, the normal force, and the reaction of the book on the table"],
+   "ans": 0,
+   "sol": "Only <strong>two</strong> forces act on the book: its weight mg (from the earth) and the normal force N (from the table).<br><br>The last option is the classic trap. The force of the book <em>on the table</em> is a real force, but it acts on the <strong>table</strong>, not on the book. It has no place in the book's free body diagram.<br><br>This is the first rule of drawing an FBD: only forces that <em>other bodies apply to this body</em> go in. Nothing this body does to anyone else."
+  },
+  {
+   "q": "A puck is sliding on smooth ice at a steady speed, with nothing touching it. Which forces act on it?",
+   "opts": ["Weight down and normal up, nothing horizontal","Weight, normal, and a forward force keeping it moving","A forward force only","Weight, normal, and a backward force"],
+   "ans": 0,
+   "sol": "Only <strong>weight and normal</strong>, and they cancel. There is no horizontal force at all.<br><br>Students keep drawing a forward arrow, because it feels like a moving body must be pushed. It does not. Motion needs no force; only a <em>change</em> of motion does. The puck keeps sliding because nothing stops it.<br><br>Ask the question the right way: <em>who is touching it?</em> Nobody. So no contact force. Then: <em>which field acts?</em> Gravity. That is the whole list."
+  },
+  {
+   "q": "A light (massless) string hangs from the ceiling with a block tied at the bottom. Can such a string exert a force?",
+   "diagram": DIAGRAMS.pulleyForceVec({}),
+   "opts": ["Yes &#8212; it pulls the block up with a tension T","No, because a massless body cannot exert a force","Only if the block is at rest","Only if it has some mass"],
+   "ans": 0,
+   "sol": "Of course it can. A light string, a light rod, a light pulley &#8212; all of them apply real forces. The whole chapter would collapse if they could not.<br><br>What &#8220;massless&#8221; really means: the <em>net</em> force on such a body must be zero, because ma = 0 &#215; a = 0 whatever the acceleration. That is why the tension is the same at both ends of a light string, and why an ideal pulley does not change the tension.<br><br>So being massless restricts the forces <em>on</em> it, not the forces it can apply to others."
+  },
+  {
+   "tag": "Ex-2 Q10",
+   "q": "&#9733; <strong>Original:</strong> Select the <strong>incorrect</strong> statement.<br>(A) A powerful man pushes a wall and the wall gets deformed. The force exerted by the wall on the man is equal in magnitude to the force exerted by the man on the wall.<br>(B) Ten persons pull an object on a smooth floor in different directions and its acceleration is zero. Then the pull of each man equals the resultant pull of the other nine.<br>(C) A massless object cannot exert a force on any other object.<br>(D) All contact forces are electromagnetic in nature.",
+   "opts": ["(C)","(A)","(B)","(D)"],
+   "ans": 0,
+   "sol": "<strong>(C) is the incorrect one</strong>, for the reason in the last rung: a light string exerts tension, so a massless body certainly can push or pull.<br><br>Why the rest are correct:<br>&#8226; (A) Newton's third law never asks who is stronger, or which body deforms. The pair is equal, always.<br>&#8226; (B) If the total is zero, then any one pull must be exactly cancelled by the sum of the rest. So it is equal and opposite to their resultant.<br>&#8226; (D) Normal force, friction, tension &#8212; all of them come from the electromagnetic repulsion of atoms at the surface. That is why contact forces exist at all.<br><br>The question asks for the <em>incorrect</em> statement. Underline that word before you answer; many marks are lost here."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Action and reaction &#8212; the pair rule",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Block m<sub>1</sub> is pushed against block m<sub>2</sub> on a smooth floor. The contact force from m<sub>1</sub> on m<sub>2</sub> and the contact force from m<sub>2</sub> on m<sub>1</sub> are",
+   "diagram": DIAGRAMS.pairBlocks({}),
+   "opts": ["equal in size, opposite in direction, and acting on <strong>different</strong> bodies","equal and opposite, and acting on the same body, so they cancel","equal only if the masses are equal","different, because m<sub>1</sub> is being pushed"],
+   "ans": 0,
+   "sol": "The third-law pair is always equal and opposite, and its two members always act on <strong>two different bodies</strong>.<br><br>That is why they can never cancel each other. To cancel, two forces must act on the <em>same</em> body.<br><br>Handy test while drawing an FBD: if you find two arrows in one diagram that look like an action-reaction pair, one of them is in the wrong diagram."
+  },
+  {
+   "q": "A truck of 5000 kg collides with a car of 1000 kg. During the collision, the force on the car compared with the force on the truck is",
+   "opts": ["equal in magnitude","five times larger","five times smaller","larger, because the truck is heavier"],
+   "ans": 0,
+   "sol": "<strong>Equal.</strong> Mass has nothing to do with the size of the pair.<br><br>What differs is the <em>effect</em>. The same force gives the 1000 kg car five times the acceleration of the 5000 kg truck, which is why the car is wrecked and the truck is dented.<br><br>Equal forces, unequal accelerations. Students constantly mix these two up."
+  },
+  {
+   "q": "Two bodies m<sub>1</sub> and m<sub>2</sub> in space push each other. Their accelerations are related by",
+   "opts": ["m<sub>1</sub>a<sub>1</sub> = m<sub>2</sub>a<sub>2</sub>","a<sub>1</sub> = a<sub>2</sub>","m<sub>1</sub>a<sub>2</sub> = m<sub>2</sub>a<sub>1</sub>","a<sub>1</sub>/a<sub>2</sub> = m<sub>1</sub>/m<sub>2</sub>"],
+   "ans": 0,
+   "sol": "The forces are equal in size, and each body obeys F = ma:<br><br>m<sub>1</sub>a<sub>1</sub> = m<sub>2</sub>a<sub>2</sub> &#8594; a<sub>1</sub>/a<sub>2</sub> = m<sub>2</sub>/m<sub>1</sub><br><br><strong>Inverse ratio.</strong> The lighter body always gets the bigger acceleration.<br><br>Option 4 has the ratio upside down, and it is the one most students tick in a hurry."
+  },
+  {
+   "tag": "Ex-1 Q1",
+   "q": "&#9733; <strong>Original:</strong> A body of mass m<sub>1</sub> exerts a force on another body of mass m<sub>2</sub>. If the magnitude of the acceleration of m<sub>2</sub> is a<sub>2</sub>, then the magnitude of the acceleration of m<sub>1</sub> is (considering only two bodies in space)",
+   "opts": ["m<sub>2</sub>a<sub>2</sub>/m<sub>1</sub>","m<sub>1</sub>a<sub>2</sub>/m<sub>2</sub>","a<sub>2</sub>","Zero"],
+   "ans": 0,
+   "sol": "From m<sub>1</sub>a<sub>1</sub> = m<sub>2</sub>a<sub>2</sub>:<br><br>a<sub>1</sub> = <strong>m<sub>2</sub>a<sub>2</sub>/m<sub>1</sub></strong><br><br>&#8220;Only two bodies in space&#8221; is there to tell you nothing else touches them, so the mutual force is the only force on each.<br><br>Check the units and the sense: if m<sub>1</sub> is huge, a<sub>1</sub> comes out tiny. That is the earth barely moving when you jump. Correct."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "The normal force sits at 90&#176; to the surface",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A block of mass m rests on a horizontal floor and nothing else touches it. The normal force is",
+   "diagram": DIAGRAMS.bookTable({lab:'m'}),
+   "opts": ["mg, vertically upward","mg, but only because the floor is horizontal and nothing else acts vertically","always mg, whatever else is happening","mg, horizontally"],
+   "ans": 0,
+   "sol": "Here N = mg, upward. But hold that lightly: N came out equal to mg only because the surface is horizontal, the block is not accelerating vertically, and nothing else pulls or pushes it up or down.<br><br>Press down on the block and N grows. Tie a string and pull up and N shrinks. Tilt the surface and N is no longer mg at all.<br><br><strong>N = mg is not a formula. It is an answer you get, sometimes.</strong> Always get it from the equations, never from memory."
+  },
+  {
+   "q": "The same block now rests on a smooth 37&#176; incline. The normal force from the surface is",
+   "diagram": DIAGRAMS.inclineBlock({m:'m',forces:true}),
+   "opts": ["perpendicular to the inclined surface, of size mg cos37&#176;","vertically upward, of size mg","perpendicular to the incline, of size mg","along the incline, of size mg sin37&#176;"],
+   "ans": 0,
+   "sol": "The normal is <strong>perpendicular to the surface that is doing the touching</strong> &#8212; here the slope, so it is tilted 37&#176; away from the vertical.<br><br>Balancing perpendicular to the slope: N = mg cos37&#176; = 0.8mg, less than mg.<br><br>Where does the rest of the weight go? Into mg sin37&#176; along the slope, which is what makes the block slide."
+  },
+  {
+   "q": "Block B rests on the slanted top face of block A. The force B applies to A is",
+   "diagram": DIAGRAMS.slantPair({}),
+   "opts": ["perpendicular to that slanted face, pressing into A","vertically downward, equal to B's weight","along the slanted face","horizontal, towards the wall"],
+   "ans": 0,
+   "sol": "Smooth contact means the only force is the normal one, and the normal is at 90&#176; <strong>to the contact face</strong> &#8212; the slanted face here, not to the floor.<br><br>So B pushes A along that perpendicular, into A. By the third law, A pushes B back along the same line, outward.<br><br>It is not vertical and it is not equal to B's weight. B is also being held by the wall, so only part of its weight reaches A."
+  },
+  {
+   "tag": "Box-1 Q3",
+   "q": "&#9733; <strong>Original:</strong> Two blocks A and B are placed as shown; there is no friction anywhere. Which set of forces is the correct F.B.D. of block A?",
+   "diagram": DIAGRAMS.slantPair({forces:true}),
+   "opts": ["mg down, N<sub>1</sub> vertically up from the floor, and N<sub>2</sub> perpendicular to the slanted face, pressing into A","mg down, N<sub>1</sub> up from the floor, and N<sub>2</sub> horizontal","mg down and N<sub>1</sub> up only","mg down, N<sub>1</sub> up, N<sub>2</sub> perpendicular to the face, and a force from the wall"],
+   "ans": 0,
+   "sol": "Three bodies can touch A: the floor (below), block B (on the slanted face), and the earth (gravity). The wall touches <em>B</em>, not A.<br><br>So A's diagram is: <strong>mg down, N<sub>1</sub> vertical from the floor, and N<sub>2</sub> perpendicular to the slanted face pushing into A.</strong><br><br>N<sub>2</sub> is the one to get right. Being tilted, it has a horizontal part too, and that part is what tries to slide A along the floor.<br><br><em>Note:</em> the original options are four pictures. The scan is faint, so I have written out the four force lists in words instead &#8212; the physics is unchanged."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "Spheres, walls and sharp corners",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A sphere rests on flat ground. The line of the normal force",
+   "diagram": DIAGRAMS.sphereFlat({}),
+   "opts": ["passes through the centre of the sphere","is along the surface","passes through the edge of the sphere","depends on the mass of the sphere"],
+   "ans": 0,
+   "sol": "The normal is perpendicular to the ground at the contact point, and for a sphere that line runs straight through the <strong>centre</strong>.<br><br>This is worth knowing as a rule of its own: <em>every</em> normal on a sphere points at its centre, whatever it is touching &#8212; a floor, a wall, a slope, another ball, or a sharp corner. The radius is always perpendicular to the surface of the sphere.<br><br>It makes sphere problems easy: just draw the radii to the contact points, and you have all your force directions."
+  },
+  {
+   "tag": "Box-1 Q5",
+   "q": "A sphere m<sub>1</sub> sits between a smooth slope and a smooth vertical wall, with all surfaces frictionless. Which set of forces acts on m<sub>1</sub>?",
+   "diagram": DIAGRAMS.sphereInclineWall({forces:true}),
+   "opts": ["mg down, a horizontal normal from the wall, and a normal perpendicular to the slope","mg down and one normal only","mg down, a vertical normal from the slope, and a horizontal one from the wall","mg down, plus two normals both perpendicular to the wall"],
+   "ans": 0,
+   "sol": "Two surfaces touch the sphere, so there are two normals plus the weight &#8212; three forces in all.<br><br>&#8226; The wall is vertical, so its normal is <strong>horizontal</strong>.<br>&#8226; The slope is tilted, so its normal is <strong>perpendicular to the slope</strong>, tilted away from the vertical.<br><br>Both point at the centre of the sphere, as the last rung promised. The three arrows meet at the centre, which is exactly why the sphere can sit still: three concurrent forces adding to zero.<br><br><em>Note:</em> the original options are pictures; I have listed the forces in words."
+  },
+  {
+   "q": "A body rests on the <strong>sharp corner</strong> of a table, not on a flat face. The normal force there is",
+   "opts": ["perpendicular to the surface of the body at that point","vertical, always","along the edge of the table","undefined, since a corner has no surface"],
+   "ans": 0,
+   "sol": "A corner has no surface of its own to be perpendicular to. So the direction is set by the <strong>other</strong> body: the normal is perpendicular to the surface of the body resting on it.<br><br>For a sphere on a corner, that line runs from the contact point to the <strong>centre</strong> of the sphere. For a rod on a corner, it is perpendicular to the rod.<br><br>Remember it as: at a corner, the corner has no say in the direction &#8212; the smooth body decides."
+  },
+  {
+   "tag": "Box-1 Q6",
+   "q": "&#9733; <strong>Original:</strong> A ball m<sub>1</sub> rests against a smooth vertical wall and on the top corner of block m<sub>2</sub>, with no friction anywhere. Which set of forces is the correct F.B.D. of m<sub>1</sub>?",
+   "diagram": DIAGRAMS.sphereCorner({forces:true}),
+   "opts": ["mg down, a horizontal normal from the wall, and a normal from the corner along the line joining the corner to the centre","mg down, a horizontal normal from the wall, and a vertical normal from the corner","mg down and a vertical normal from the corner only","mg down, and two normals both passing through the contact with the wall"],
+   "ans": 0,
+   "sol": "Two contacts again, so two normals plus the weight.<br><br>&#8226; Wall &#8594; horizontal.<br>&#8226; Corner of the block &#8594; along the line from that corner to the <strong>centre</strong> of the ball, which comes out tilted, not vertical.<br><br>The tilted one is doing two jobs at once: its vertical part holds the ball up against gravity, and its horizontal part presses the ball into the wall &#8212; which is why the wall has to push back at all.<br><br><em>Note:</em> options written out in words, as the original is a set of pictures."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Three spheres in a groove",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Two smooth spheres press on each other. The force between them acts",
+   "diagram": DIAGRAMS.threeSpheres({lines:true}),
+   "opts": ["along the line joining their centres","vertically","along the common tangent at the contact","along the incline"],
+   "ans": 0,
+   "sol": "At the contact, the common tangent plane touches both spheres, and the normal to it is the <strong>line of centres</strong>.<br><br>So &#8220;normal along the line of centres&#8221; is just the sphere rule from the previous ladder, applied twice at once.<br><br>Draw the line of centres first in any sphere problem. Every force direction you need is sitting on it."
+  },
+  {
+   "q": "Three <strong>identical</strong> spheres touch each other, C resting on A and B. The angle between the two lines of centres CA and CB is",
+   "diagram": DIAGRAMS.threeSpheres({lines:true}),
+   "opts": ["60&#176;","90&#176;","45&#176;","120&#176;"],
+   "ans": 0,
+   "sol": "Each centre-to-centre distance is 2r, the same for all three pairs. So the three centres form an <strong>equilateral triangle</strong>, and every angle in it is <strong>60&#176;</strong>.<br><br>This is the entire question, hidden inside one word: <em>identical</em>. Different radii would give a different angle, and then you would have to work it out."
+  },
+  {
+   "q": "In the figure, does sphere C touch the inclined walls of the groove?",
+   "diagram": DIAGRAMS.threeSpheres({}),
+   "opts": ["No &#8212; C rests only on A and B","Yes, it touches both walls","Yes, it touches one wall","It touches the ground"],
+   "ans": 0,
+   "sol": "C sits on top, in the hollow between A and B, well clear of the walls. So C has only <strong>two contacts</strong>, both with spheres.<br><br>Read the picture before you count forces. Two contacts means two normals; adding a third from an imaginary wall is the commonest mistake in this question.<br><br>A and B are different: each of them touches a wall, the other sphere, and C."
+  },
+  {
+   "tag": "Box-1 Q1",
+   "q": "&#9733; <strong>Original:</strong> A, B and C are three identical smooth spheres placed on a frictionless inclined groove as shown. The F.B.D. of sphere C is",
+   "diagram": DIAGRAMS.threeSpheres({forces:true,lines:true}),
+   "opts": ["two normals with 60&#176; between them, and mg downward","two normals with 90&#176; between them, and mg downward","two normals with 60&#176; between them, both pointing downward, and mg","one normal and mg"],
+   "ans": 0,
+   "sol": "C's diagram: <strong>mg down, and two equal normals from A and B, with 60&#176; between them</strong>, each pointing away from the sphere it came from &#8212; that is, upward and outward.<br><br>Check that it can balance: the two normals are symmetric about the vertical, so their horizontal parts cancel and their vertical parts add up to mg. If each makes 30&#176; with the vertical, then 2N cos30&#176; = mg, giving N = mg/&#8730;3.<br><br>The 90&#176; option is there for students who guess that spheres stack at right angles. Identical touching circles always give 60&#176;."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "A string can only pull",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A string is tied to a block. The force the string applies to the block is",
+   "opts": ["a pull, directed along the string, away from the block","a push or a pull, whichever is needed","always vertical","zero if the string is light"],
+   "ans": 0,
+   "sol": "A string <strong>pulls, never pushes</strong>, and the pull is along the string, away from the body it is tied to.<br><br>That one line decides the direction of every tension arrow you will ever draw. You never have to guess: look at where the string runs, and draw the arrow along it, pointing away.<br><br>A rod is different &#8212; it can push as well. Which is why a rod can hold a block out sideways and a string cannot."
+  },
+  {
+   "q": "A man stands on the floor and pulls <strong>down</strong> on a string that runs over a ceiling pulley to a block. What does the string do to the man?",
+   "diagram": DIAGRAMS.manPulley({pull:'he pulls down'}),
+   "opts": ["It pulls him <strong>up</strong> with force T","It pushes him down with force T","It does nothing to him; he acts on it","It pulls him sideways"],
+   "ans": 0,
+   "sol": "The string is tied to (held by) his hands, and a string pulls <em>away</em> from the body along itself. The string runs upward from his hands, so it pulls him <strong>upward</strong> with T.<br><br>Third law, said differently: he pulls the string down, so the string pulls him up. Equal and opposite, on different bodies.<br><br>This feels wrong to students because they are pulling downward and their hands feel pulled up. Ask them to actually hold a rope and pull &#8212; the feeling is the physics."
+  },
+  {
+   "q": "The floor still supports him. Taking his mass as M, the normal force from the floor on the man is",
+   "opts": ["Mg &#8722; T","Mg + T","Mg","T &#8722; Mg"],
+   "ans": 0,
+   "sol": "He is in equilibrium, so the vertical forces balance:<br><br>N + T = Mg &#8594; N = <strong>Mg &#8722; T</strong><br><br>The harder he pulls, the lighter he presses on the floor. Pull with T = Mg and he lifts off. This is exactly the painter-in-a-box question you will meet later &#8212; same physics, fancier picture.<br><br>Also note N &#8804; Mg here, but a weighing machine under him would show Mg &#8722; T, not his real weight."
+  },
+  {
+   "tag": "Illustration 2",
+   "q": "&#9733; <strong>Original:</strong> A man is pulling the string vertically downward (assume there is no friction anywhere). Draw the F.B.D. of the man. Which set is correct?",
+   "diagram": DIAGRAMS.manFBD({}),
+   "opts": ["T upward, N upward, and Mg downward","T downward, N upward, and Mg downward","T upward and Mg downward only","N upward and Mg downward only"],
+   "ans": 0,
+   "sol": "Three forces on the man: <strong>T up</strong> (from the string), <strong>N up</strong> (from the floor) and <strong>Mg down</strong> (his weight).<br><br>Notice what is <em>not</em> there: the weight of the block on the other side of the pulley. That acts on the block. The man only feels the string, and the string only gives him T.<br><br><em>The habit this builds:</em> for any body, go round it and ask &#8212; what touches it? Each answer gives one force, and gravity gives one more. Then stop."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "A pulley bolted to a block",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A string runs over a pulley. The string is <strong>not</strong> tied to the pulley. Does the string apply a force to the pulley?",
+   "diagram": DIAGRAMS.pulleyForceVec({}),
+   "opts": ["Yes &#8212; the string presses on the pulley, and the pulley feels the sum of the two tensions","No, because the string is not tied to it","Yes, but only a force T","No, because the pulley is light"],
+   "ans": 0,
+   "sol": "The string has to bend around the pulley, and bending needs a sideways push. That push is the force on the pulley.<br><br>Its size is the <strong>vector sum of the two tension pulls</strong>. For a string that turns through 180&#176; (both segments hanging down), the two pulls are parallel and the force on the pulley is <strong>2T</strong>, straight down.<br><br>Nothing needs to be tied for a force to exist. Contact is enough."
+  },
+  {
+   "q": "If the two string segments leave the pulley at <strong>90&#176;</strong> to each other, the force on the pulley from the string is",
+   "opts": ["&#8730;2 T, along the bisector of the two segments","2T","T","zero"],
+   "ans": 0,
+   "sol": "Two equal pulls T at 90&#176; add to <strong>&#8730;(T<sup>2</sup> + T<sup>2</sup>) = &#8730;2 T</strong>, along the line that bisects the angle between them.<br><br>Useful cases worth keeping: 180&#176; apart &#8594; 2T; 90&#176; &#8594; &#8730;2 T; 120&#176; &#8594; T; and if the string goes straight through without bending, zero.<br><br>The pulley does not change the size of the tension. It only changes its direction &#8212; and that change of direction is what it charges you for, in the shape of this force."
+  },
+  {
+   "tag": "Box-1 Q4",
+   "q": "Masses m<sub>1</sub>, m<sub>2</sub>, m<sub>3</sub> are joined by a light string, with the pulley fixed to the top of wedge m<sub>3</sub> and no friction anywhere. Which of these forces acts on the wedge m<sub>3</sub>?",
+   "diagram": DIAGRAMS.wedgePulley({}),
+   "opts": ["The force from the string on its pulley, and the normal from m<sub>2</sub> on its slope","The tension T itself, acting directly on m<sub>3</sub>","Nothing from the string, since the string only passes over","The weight of m<sub>2</sub>, acting directly on m<sub>3</sub>"],
+   "ans": 0,
+   "sol": "The pulley is bolted to the wedge, so whatever the string does to the pulley is passed straight on to <strong>m<sub>3</sub></strong>. That force is the vector sum of the two tension pulls, and it is real.<br><br>m<sub>2</sub> also sits on the wedge's slope, so m<sub>3</sub> feels a normal from m<sub>2</sub>, perpendicular to the slope.<br><br>What does <em>not</em> act on m<sub>3</sub>: the tension T on its own (that acts along the string, on m<sub>1</sub> and m<sub>2</sub>), and the weight of m<sub>2</sub> (that acts on m<sub>2</sub>, and reaches the wedge only through the normal).<br><br><em>Note:</em> this rung is written from the original's figure; the four printed options are pictures."
+  },
+  {
+   "tag": "Box-1 Q2",
+   "q": "&#9733; <strong>Original:</strong> Blocks A, B and C are joined by light strings to a larger block M, with light frictionless pulleys mounted on M and no friction anywhere. Which is the correct F.B.D. of the larger block M?",
+   "diagram": DIAGRAMS.bigBlockPulleys({}),
+   "opts": ["Mg down, the normal from the ground up, the normal from B pressing down on its top, and one force from each pulley","Mg down and the normal from the ground up only","Mg down, the normal from the ground, and the tensions T<sub>1</sub> and T<sub>2</sub> acting directly on M","Mg down, the normal from B, and the weights of A and C"],
+   "ans": 0,
+   "sol": "Go round M and list what touches it:<br>&#8226; the ground &#8594; normal, up<br>&#8226; block B sitting on top &#8594; normal, down<br>&#8226; each pulley bolted to M &#8594; the force the string applies to that pulley<br>&#8226; the earth &#8594; Mg down<br><br>Option 3 is the trap that catches most students: the strings are not tied to M, so T does not act on M directly. It reaches M only through the pulleys, and the force there is the <em>sum</em> of two tensions, not one.<br><br>Option 4 is the other classic: the weights of the hanging blocks act on <em>them</em>, not on M.<br><br><em>Note:</em> the original prints four picture options; the force lists above say the same thing in words."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "Putting it together: a rod on a corner",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A uniform rod of mass m hangs in some arrangement. Its weight is drawn as a single arrow acting at",
+   "opts": ["the centre of the rod","the lower end of the rod","the point of support","both ends, mg/2 each"],
+   "ans": 0,
+   "sol": "Gravity pulls on every bit of the rod, but all of that adds up to one force mg acting at the <strong>centre</strong> (the centre of mass), because the rod is uniform.<br><br>For a non-uniform rod it would act somewhere else, and the problem would have to tell you where.<br><br>In force balance the position does not matter much; it starts to matter when you take torques, which is the next chapter."
+  },
+  {
+   "q": "A rod leans across the sharp top corner of a pillar. The normal force from that corner on the rod is",
+   "diagram": DIAGRAMS.rodCorner({}),
+   "opts": ["perpendicular to the <strong>rod</strong>","vertically upward","along the rod","perpendicular to the pillar's side"],
+   "ans": 0,
+   "sol": "Same corner rule as before: the corner has no surface of its own, so the smooth body decides. The rod's surface runs along the rod, so the normal is <strong>perpendicular to the rod</strong>.<br><br>This is the one force students get wrong here. They draw it vertical, because the pillar stands vertically &#8212; but the pillar's shape has nothing to do with it.<br><br>Tilt the rod and the arrow tilts with it, always staying at 90&#176; to the rod."
+  },
+  {
+   "q": "The string holding the end A of the rod hangs from the ceiling and is vertical. The tension on the rod is",
+   "diagram": DIAGRAMS.rodCorner({}),
+   "opts": ["vertically upward, at the end A","vertically downward at A","perpendicular to the rod at A","along the rod"],
+   "ans": 0,
+   "sol": "A string pulls along itself, away from the body. The string runs straight up to the ceiling from A, so it pulls the rod <strong>straight up at A</strong>.<br><br>Note how the two contact forces here point in quite different directions: T is vertical because the <em>string</em> is vertical, and N is perpendicular to the rod because the contact is a <em>corner</em>. Each force takes its direction from its own source."
+  },
+  {
+   "tag": "Illustration 1",
+   "q": "&#9733; <strong>Original:</strong> Rod B of mass m is placed on a smooth surface and connected with a light string as shown. Which is the correct F.B.D. of the rod?",
+   "diagram": DIAGRAMS.rodFBD({}),
+   "opts": ["N perpendicular to the rod at the corner, mg down at the centre, T vertically up at A","N vertically up at the corner, mg down at the centre, T vertically up at A","N perpendicular to the rod, mg down at A, T along the rod","N and T both perpendicular to the rod, mg down at the centre"],
+   "ans": 0,
+   "sol": "Three forces on the rod:<br>&#8226; <strong>mg</strong> down, at the centre<br>&#8226; <strong>N</strong> at the corner, perpendicular to the rod<br>&#8226; <strong>T</strong> at A, vertically up along the string<br><br>That is all &#8212; the surface is smooth, so there is no friction anywhere.<br><br><em>Closing thought for the whole set:</em> every question here came down to the same short routine. Walk around the body and ask who is touching it. Each toucher gives one force, and its direction is fixed by the kind of contact &#8212; flat surface gives a normal at 90&#176; to that surface, a corner gives one at 90&#176; to the body resting on it, a string gives a pull along itself, a pulley gives the sum of two tensions. Then add gravity, and stop. Nothing else goes in the diagram."
+  }
+ ]
+},
+
+];
+
+const STORAGE_KEY = 'padipucast_nlm_fbd_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>

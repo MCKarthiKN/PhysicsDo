@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Equilibrium &#183; NLM Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> NLM &#183; Equilibrium</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Point Equilibrium<br>Resolve, then balance</h1></div>
+    <p id="home-sub">Slot 2 of the Newton's Laws flow. Every point-equilibrium question from the chapter, put in <strong>one climbing order</strong>. The sequence goes: what equilibrium means &#8594; the triangle of forces &#8594; finding a missing force &#8594; components with an unknown &#8594; a stack of blocks &#8594; hanging by a string &#8594; why a sagging string is safer &#8594; the 3-4-5 pull &#8594; pushing a rope at its middle &#8594; a string round a log &#8594; three blocks over two pulleys.<br><br>Each source question is a <strong>ladder</strong>: 3 build-up rungs, then the original question (&#9733;). Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 11 ladders &#215; 4 rungs = 44 questions. Take g = 10 m/s<sup>2</sup> throughout.<br><br><em>One routine runs through all 11: draw the forces at the point, pick two directions (usually vertical and horizontal), and write &#931;F = 0 along each. Do the vertical one first &#8212; it is nearly always the one that has only the weight and one unknown in it.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - NLM / Equilibrium of concurrent forces  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1d5f7a';
+const FILL_T='#e6f1f4', FILL_B='#c9e2e9', FILL_C='#b3d6df';
+
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+
+function _hatch(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y+9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+function _ceil(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y-9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+function _vwall(x,y0,y1,side){
+  const d = side==='left' ? -9 : 9;
+  let s=`<line x1="${x}" y1="${y0}" x2="${x}" y2="${y1}" stroke="${INK}" stroke-width="2"/>`;
+  for(let y=y0+9;y<y1;y+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x+d}" y2="${y-8}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+function _blk(x,y,w,h,label,fill){
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill||FILL_T}" stroke="${INK}" stroke-width="1.7" rx="2"/>
+  <text x="${x+w/2}" y="${y+h/2+4.5}" font-size="11" text-anchor="middle" fill="${INK}" ${FS} font-weight="700">${label}</text>`;
+}
+function _pul(cx,cy,r){
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${FILL_T}" stroke="${INK}" stroke-width="1.7"/>
+  <circle cx="${cx}" cy="${cy}" r="2.6" fill="${INK}"/>`;
+}
+function _rope(pts){
+  return `<polyline points="${pts.map(p=>p[0]+','+p[1]).join(' ')}" fill="none" stroke="${INK}" stroke-width="1.5"/>`;
+}
+function _a2(x0,y0,x1,y1,c,label,dx,dy){
+  const id=_nid();
+  return `<defs>${AR(id,c)}</defs><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="2.2" marker-end="url(#${id})"/>`+
+  (label?`<text x="${x1+(dx===undefined?0:dx)}" y="${y1+(dy===undefined?0:dy)}" font-size="11" text-anchor="middle" fill="${c}" ${FS} font-weight="700">${label}</text>`:'');
+}
+function _txt(x,y,t,c,size,anchor,bold){
+  return `<text x="${x}" y="${y}" font-size="${size||11}" text-anchor="${anchor||'middle'}" fill="${c||INK}" ${FS}${bold?' font-weight="700"':''}>${t}</text>`;
+}
+function _dash(x0,y0,x1,y1,c){
+  return `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c||GREY}" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+}
+
+const DIAGRAMS = {
+
+// ---- a particle with three forces, two of them perpendicular -------------
+threeForces:(o)=>{
+  const W=340,H=240;
+  const cx=170, cy=120;
+  let s='';
+  if(!o.removed) s+=_a2(cx,cy,cx+0.8*78,cy-0.6*78,GRN,o.F1||'F&#8321; = 10 N',22,-6);
+  s+=_a2(cx,cy,cx-76,cy,AMB,o.F2||'F&#8322; = 8 N',-12,-12);
+  s+=_a2(cx,cy,cx,cy+72,BLU,o.F3||'F&#8323; = 6 N',0,16);
+  if(o.resultant) s+=_dash(cx,cy,cx+0.8*78,cy-0.6*78,RED);
+  s+=`<circle cx="${cx}" cy="${cy}" r="8" fill="${FILL_C}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_txt(W/2,224,o.cap||(o.removed?'F&#8321; has been removed':'F&#8322; and F&#8323; are perpendicular'),GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- three vectors drawn head to tail, forming a closed triangle ---------
+triangleForces:(o)=>{
+  const W=340,H=220;
+  const A=[70,170], B=[250,170], C=[190,58];
+  let s='';
+  s+=_a2(A[0],A[1],B[0],B[1],GRN,o.F1||'F&#8321;',-30,18);
+  s+=_a2(B[0],B[1],C[0],C[1],AMB,o.F2||'F&#8322;',26,-6);
+  s+=_a2(C[0],C[1],A[0],A[1],BLU,o.F3||'F&#8323;',-26,-8);
+  s+=_txt(W/2,204,o.cap||'head to tail, and back to the start &#8212; the sum is zero',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- four forces along the axes -----------------------------------------
+fourForces:(o)=>{
+  const W=330,H=250;
+  const cx=165, cy=122;
+  let s='';
+  s+=_dash(cx-120,cy,cx+120,cy,GREY);
+  s+=_dash(cx,cy-104,cx,cy+104,GREY);
+  s+=_txt(cx+128,cy+4,'x',GREY,10.5);
+  s+=_txt(cx+6,cy-112,'y',GREY,10.5);
+  s+=`<circle cx="${cx}" cy="${cy}" r="56" fill="none" stroke="${GREY}" stroke-width="1"/>`;
+  s+=_a2(cx,cy,cx,cy-82,GRN,o.up||'7 N',0,-8);
+  s+=_a2(cx,cy,cx,cy+90,BLU,o.down||'8 N',0,16);
+  s+=_a2(cx,cy,cx-86,cy,AMB,o.left||'6 N',-6,-10);
+  s+=_a2(cx,cy,cx+76,cy,RED,o.right||'5 N',8,-10);
+  s+=_txt(W/2,236,o.cap||'',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- three blocks stacked on the ground ---------------------------------
+stack3:(o)=>{
+  const W=320,H=210;
+  let s='';
+  s+=_hatch(60,260,170);
+  s+=_blk(100,120,120,50,o.c||'4 kg&#160;&#160;C',FILL_C);
+  s+=_blk(112,80,96,40,o.b||'3 kg&#160;&#160;B',FILL_B);
+  s+=_blk(124,46,72,34,o.a||'2 kg&#160;&#160;A',FILL_T);
+  if(o.mark){
+    s+=_dash(90,120,240,120,RED);
+    s+=_txt(268,124,o.mark,RED,10.5,'middle',true);
+  }
+  s+=_txt(W/2,196,o.cap||'all at rest',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- block hanging from the ceiling by a string --------------------------
+hangBlock:(o)=>{
+  const W=300,H=230;
+  let s='';
+  s+=_ceil(90,210,26);
+  s+=_rope([[150,26],[150,132]]);
+  if(o.knot){
+    s+=`<circle cx="150" cy="86" r="4" fill="${INK}"/>`;
+    s+=_txt(188,90,o.knot,GREY,10.5);
+  }
+  s+=_blk(114,132,72,44,o.m||'10 kg',FILL_B);
+  if(o.forces){
+    s+=_a2(150,132,150,74,GRN,'T',18,-2);
+    s+=_a2(150,154,150,212,BLU,'mg',20,10);
+  }
+  s+=_txt(W/2,222,o.cap||'',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- block slung from two ceiling points, separation adjustable ----------
+stringV:(o)=>{
+  const W=340,H=260;
+  const sep = o.sep===undefined ? 120 : o.sep;
+  const cx=170, top=40, by=168;
+  const L=[cx-sep/2,top], R=[cx+sep/2,top];
+  let s='';
+  s+=_ceil(40,300,top-14);
+  s+=`<line x1="${L[0]}" y1="${top-14}" x2="${L[0]}" y2="${top}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<line x1="${R[0]}" y1="${top-14}" x2="${R[0]}" y2="${top}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_rope([L,[cx,by]]); s+=_rope([R,[cx,by]]);
+  s+=_blk(cx-26,by,52,42,o.m||'W',FILL_B);
+  s+=_dash(cx,by,cx,top,GREY);
+  if(o.ang){
+    s+=`<path d="M ${cx} ${by-40} A 40 40 0 0 0 ${cx-40*Math.sin(Math.atan2(sep/2,by-top))} ${by-40*Math.cos(Math.atan2(sep/2,by-top))}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+    s+=_txt(cx-22,by-44,o.ang,GREY,11,'middle',true);
+  }
+  if(o.forces){
+    s+=_a2(cx,by,cx-58,by-64,GRN,'T',-12,-4);
+    s+=_a2(cx,by,cx+58,by-64,GRN,'T',12,-4);
+    s+=_a2(cx,by+42,cx,by+82,BLU,o.w||'W',20,6);
+  }
+  s+=_txt(W/2,250,o.cap||'',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- pendulum bob pulled aside by a horizontal force ---------------------
+pendPull:(o)=>{
+  const W=360,H=286;
+  const A=[110,44];
+  let s='';
+  s+=_vwall(110,30,214,'left');
+  s+=`<circle cx="${A[0]}" cy="${A[1]}" r="4" fill="${INK}"/>`;
+  s+=_txt(A[0]-14,A[1]-6,'A',INK,11.5,'middle',true);
+  s+=_dash(A[0],A[1],A[0],214,GREY);
+  s+=`<line x1="${A[0]}" y1="${A[1]}" x2="${A[0]+120}" y2="${A[1]+160}" stroke="${INK}" stroke-width="1.6"/>`;
+  const B=[A[0],A[1]+160], Cp=[A[0]+120,A[1]+160];
+  s+=_dash(B[0],B[1],Cp[0],Cp[1],GREY);
+  s+=_txt(B[0]-12,B[1]+4,'B',INK,11.5,'middle',true);
+  s+=`<circle cx="${Cp[0]}" cy="${Cp[1]}" r="9" fill="${FILL_C}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_txt(Cp[0]-6,Cp[1]-14,'C',INK,11.5,'middle',true);
+  s+=_a2(Cp[0]+10,Cp[1],Cp[0]+66,Cp[1],RED,o.F||'F',6,-10);
+  s+=_a2(Cp[0],Cp[1]+10,Cp[0],Cp[1]+48,BLU,o.W||'8 N',0,16);
+  s+=_txt(A[0]+82,A[1]+92,o.L||'0.5 m',GREY,10.5);
+  s+=_txt(Cp[0]-60,Cp[1]-8,o.d||'0.3 m',GREY,10.5);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- rope from the ceiling, pushed sideways at its midpoint --------------
+ropeMid:(o)=>{
+  const W=350,H=262;
+  const top=[250,34], mid=[150,134], bot=[150,196];
+  let s='';
+  s+=_ceil(150,330,34);
+  s+=_rope([top,mid,bot]);
+  s+=`<circle cx="${mid[0]}" cy="${mid[1]}" r="4" fill="${INK}"/>`;
+  s+=_dash(mid[0],mid[1],mid[0],top[1]+4,GREY);
+  s+=`<path d="M ${mid[0]} ${mid[1]-44} A 44 44 0 0 1 ${mid[0]+31} ${mid[1]-31}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+  s+=_txt(mid[0]+20,mid[1]-50,o.th||'45&#176;',GREY,11,'middle',true);
+  s+=_a2(mid[0]-8,mid[1],mid[0]-74,mid[1],RED,o.F||'F',0,-11);
+  s+=_blk(bot[0]-30,bot[1],60,40,o.m||'1 kg',FILL_B);
+  if(o.labels){
+    s+=_txt(212,86,o.T1||'T&#8321;',GREY,11,'middle',true);
+    s+=_txt(168,172,o.T2||'T&#8322;',GREY,11,'middle',true);
+  }
+  s+=_txt(W/2,254,o.cap||'the force acts at the mid point of the rope',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- string wrapped round a log, pulled by F ----------------------------
+logString:(o)=>{
+  const W=360,H=230;
+  const C=[110,110], r=60, V=[240,110];
+  const P1=[C[0]+r*Math.cos(62.5*Math.PI/180), C[1]-r*Math.sin(62.5*Math.PI/180)];
+  const P2=[C[0]+r*Math.cos(62.5*Math.PI/180), C[1]+r*Math.sin(62.5*Math.PI/180)];
+  let s='';
+  s+=`<circle cx="${C[0]}" cy="${C[1]}" r="${r}" fill="${FILL_C}" stroke="${INK}" stroke-width="1.8"/>`;
+  s+=`<path d="M ${P1[0].toFixed(1)} ${P1[1].toFixed(1)} A ${r} ${r} 0 1 0 ${P2[0].toFixed(1)} ${P2[1].toFixed(1)}" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_rope([[P1[0],P1[1]],V]); s+=_rope([[P2[0],P2[1]],V]);
+  s+=`<circle cx="${V[0]}" cy="${V[1]}" r="3.4" fill="${INK}"/>`;
+  s+=_a2(V[0]+6,V[1],V[0]+80,V[1],RED,o.F||'F',6,-10);
+  s+=_dash(V[0],V[1],V[0]-120,V[1],GREY);
+  s+=`<path d="M ${V[0]-44} ${V[1]} A 44 44 0 0 1 ${(V[0]-44*Math.cos(27.5*Math.PI/180)).toFixed(1)} ${(V[1]-44*Math.sin(27.5*Math.PI/180)).toFixed(1)}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+  s+=_txt(V[0]-56,V[1]-14,o.th||'&#952;',GREY,11,'middle',true);
+  s+=_txt(180,70,o.T||'T',GREY,11,'middle',true);
+  s+=_txt(180,158,o.T||'T',GREY,11,'middle',true);
+  s+=_txt(W/2,216,o.cap||'the string is wrapped round a smooth log',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+// ---- three blocks hanging over two pulleys -------------------------------
+twoPulleyHang:(o)=>{
+  const W=380,H=250;
+  const lp=[120,62], rp=[280,62], pr=16;
+  const Bp=[200,160];
+  let s='';
+  s+=_ceil(60,340,30);
+  s+=`<line x1="${lp[0]}" y1="30" x2="${lp[0]}" y2="${lp[1]-pr}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<line x1="${rp[0]}" y1="30" x2="${rp[0]}" y2="${rp[1]-pr}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_rope([[lp[0]-pr,lp[1]],[lp[0]-pr,150]]);
+  s+=_rope([[rp[0]+pr,rp[1]],[rp[0]+pr,150]]);
+  s+=_rope([[lp[0]+pr,lp[1]],Bp]);
+  s+=_rope([[rp[0]-pr,rp[1]],Bp]);
+  s+=_pul(lp[0],lp[1],pr); s+=_pul(rp[0],rp[1],pr);
+  s+=_blk(lp[0]-pr-24,150,48,36,o.A||'A &#183; m',FILL_T);
+  s+=_blk(rp[0]+pr-24,150,48,36,o.C||'C &#183; m',FILL_T);
+  s+=_blk(Bp[0]-26,Bp[1],52,38,o.B||'B &#183; M',FILL_B);
+  s+=_dash(Bp[0],Bp[1],Bp[0],70,GREY);
+  if(o.ang){
+    s+=`<path d="M ${Bp[0]} ${Bp[1]-44} A 44 44 0 0 0 ${Bp[0]-30} ${Bp[1]-32}" fill="none" stroke="${GREY}" stroke-width="1.2"/>`;
+    s+=_txt(Bp[0]-24,Bp[1]-50,o.ang,GREY,11,'middle',true);
+  }
+  s+=_txt(W/2,236,o.cap||'the whole system hangs at rest',GREY,10);
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+
+};
+
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "What equilibrium actually means",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A body is in <strong>translational equilibrium</strong> when",
+   "opts": ["the vector sum of all forces on it is zero &#8212; it may be at rest or moving with constant velocity","it is at rest","no force acts on it at all","its speed is zero at that instant"],
+   "ans": 0,
+   "sol": "Equilibrium means <strong>&#931;F = 0</strong>, so a = 0. That allows two situations: at rest (static equilibrium) and moving with constant velocity (dynamic equilibrium).<br><br>Forces may very well be acting &#8212; often several of them. They just cancel.<br><br>&#8220;Speed zero at that instant&#8221; is not enough either. A ball at the top of its flight has zero speed but is very much not in equilibrium."
+  },
+  {
+   "q": "Two forces of 8 N and 6 N act on a particle at <strong>right angles</strong> to each other. Their resultant is",
+   "diagram": DIAGRAMS.threeForces({removed:true}),
+   "opts": ["10 N","14 N","2 N","&#8730;14 N"],
+   "ans": 0,
+   "sol": "For perpendicular forces the resultant is the hypotenuse:<br><br>R = &#8730;(8<sup>2</sup> + 6<sup>2</sup>) = &#8730;100 = <strong>10 N</strong><br><br>The good old 3-4-5 triangle, doubled. Examiners use 6-8-10 and 3-4-5 constantly, so learn to spot them &#8212; they save you from reaching for a calculator.<br><br>14 N would be the answer only if the two were in the same direction, 2 N only if opposite."
+  },
+  {
+   "q": "A third force F<sub>1</sub> = 10 N is now added and the particle stays at rest. F<sub>1</sub> must be",
+   "diagram": DIAGRAMS.threeForces({}),
+   "opts": ["equal and opposite to the 10 N resultant of the other two","along the 8 N force","anywhere, since 10 N is enough","perpendicular to the resultant"],
+   "ans": 0,
+   "sol": "For the total to be zero, F<sub>1</sub> has to cancel exactly what the other two add up to. So it is <strong>10 N pointing opposite to their resultant</strong>.<br><br>This is a useful way to look at any three-force equilibrium: each force is equal and opposite to the resultant of the other two. Every one of the three is doing the same job for the other pair."
+  },
+  {
+   "tag": "Ex-4(A) Q11",
+   "q": "&#9733; <strong>Original:</strong> Three forces F<sub>1</sub> = 10 N, F<sub>2</sub> = 8 N and F<sub>3</sub> = 6 N act on a particle of mass 5 kg. F<sub>2</sub> and F<sub>3</sub> are perpendicular, and the particle remains at rest. If F<sub>1</sub> is now removed, the acceleration of the particle is",
+   "diagram": DIAGRAMS.threeForces({removed:true}),
+   "opts": ["2 m/s<sup>2</sup>","0.5 m/s<sup>2</sup>","4.8 m/s<sup>2</sup>","7 m/s<sup>2</sup>"],
+   "ans": 0,
+   "sol": "Take away F<sub>1</sub> and what is left is the 10 N resultant of F<sub>2</sub> and F<sub>3</sub>, now unbalanced.<br><br>a = 10/5 = <strong>2 m/s<sup>2</sup></strong>, in the direction opposite to where F<sub>1</sub> used to point.<br><br><em>The shortcut worth teaching:</em> when a body is in equilibrium and you remove one force, the leftover net force is exactly that removed force, reversed. You never have to add up the others. The same trick answers the spring-cutting questions later in the chapter."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Forces that close a triangle",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Vectors are added <strong>head to tail</strong>. If three vectors drawn this way bring you back to your starting point, their sum is",
+   "diagram": DIAGRAMS.triangleForces({}),
+   "opts": ["zero","three times any one of them","equal to the longest side","not defined"],
+   "ans": 0,
+   "sol": "The sum of vectors placed head to tail is the arrow drawn from the very first tail to the very last head. If you end where you began, that arrow has zero length.<br><br>So a <strong>closed polygon of forces means equilibrium</strong>. This works for three forces, four, any number.<br><br>It is often the fastest way to check an answer without any algebra: sketch the arrows nose to tail and see whether they shut."
+  },
+  {
+   "q": "Three forces are represented by the three sides of a triangle, <strong>taken in the same order</strong>. It follows that",
+   "diagram": DIAGRAMS.triangleForces({}),
+   "opts": ["their vector sum is zero, so the body is in translational equilibrium","their sum equals the perimeter of the triangle","they cannot be in equilibrium","their sum is zero only for a right triangle"],
+   "ans": 0,
+   "sol": "&#8220;Taken in the same order&#8221; is the crucial phrase &#8212; it means going round the triangle the same way, which is exactly head-to-tail addition. The triangle closes, so the sum is <strong>zero</strong>.<br><br>This is the <em>triangle law of forces</em>.<br><br>Note the small print: this gives <strong>translational</strong> equilibrium only. If the three forces do not pass through one point, the body can still turn. That is a rotation question, for the next chapter."
+  },
+  {
+   "q": "If F&#8407;<sub>1</sub> + F&#8407;<sub>2</sub> = &#8722;F&#8407;<sub>3</sub>, then",
+   "opts": ["F&#8407;<sub>1</sub> + F&#8407;<sub>2</sub> + F&#8407;<sub>3</sub> = 0, so the three forces balance","F<sub>3</sub> is the largest of the three","the three forces must be perpendicular","the three forces must be equal in size"],
+   "ans": 0,
+   "sol": "Take F&#8407;<sub>3</sub> across: F&#8407;<sub>1</sub> + F&#8407;<sub>2</sub> + F&#8407;<sub>3</sub> = <strong>0</strong>. That is the equilibrium condition, written a different way.<br><br>It says nothing about which force is biggest or what the angles are. Any three forces at all can balance, as long as they close a triangle."
+  },
+  {
+   "tag": "Ex-4(A) Q5",
+   "q": "&#9733; <strong>Original:</strong> <strong>Statement I:</strong> If three forces F&#8407;<sub>1</sub>, F&#8407;<sub>2</sub> and F&#8407;<sub>3</sub> are represented by three sides of a triangle and F&#8407;<sub>1</sub> + F&#8407;<sub>2</sub> = &#8722;F&#8407;<sub>3</sub>, then these three forces are concurrent forces and satisfy the condition for equilibrium.<br><strong>Statement II:</strong> A triangle made up of three forces as its sides taken in the same order satisfies the condition for translatory equilibrium. Choose the correct option.",
+   "diagram": DIAGRAMS.triangleForces({}),
+   "opts": ["Both Statement I and Statement II are true","Statement I is true but Statement II is false","Statement I is false but Statement II is true","Both statements are false"],
+   "ans": 0,
+   "sol": "<strong>Both are true.</strong><br><br>Statement II is the triangle law itself, straight from the last two rungs.<br>Statement I applies it: the given relation means the three add to zero, the triangle closes, and when the three forces act at one point they are concurrent and in equilibrium.<br><br>In statement-type questions, read each line on its own first and mark it true or false before you even look at the four options. Comparing the two statements to each other first is what trips students up."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Finding the force that is missing",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Four forces act on a body along the axes: 7 N up, 8 N down, 6 N along &#8722;x and 5 N along +x. The net force along x is",
+   "diagram": DIAGRAMS.fourForces({}),
+   "opts": ["1 N along &#8722;x","11 N along &#8722;x","1 N along +x","11 N along +x"],
+   "ans": 0,
+   "sol": "Along x: 5 (right) &#8722; 6 (left) = &#8722;1, that is <strong>1 N pointing along &#8722;x</strong>.<br><br>Do the two axes completely separately. Forces along y never enter the x equation. This one habit removes most of the arithmetic errors in equilibrium questions."
+  },
+  {
+   "q": "For the same four forces, the net force along y is",
+   "diagram": DIAGRAMS.fourForces({}),
+   "opts": ["1 N along &#8722;y","15 N along +y","1 N along +y","15 N along &#8722;y"],
+   "ans": 0,
+   "sol": "Along y: 7 (up) &#8722; 8 (down) = &#8722;1, that is <strong>1 N along &#8722;y</strong>.<br><br>So the whole set of four forces boils down to a single net force with components (&#8722;1, &#8722;1). Everything else has cancelled."
+  },
+  {
+   "q": "To make the net force zero, the extra force we must add is",
+   "opts": ["(+1, +1), that is 1 N along +x and 1 N along +y","(&#8722;1, &#8722;1)","(+1, &#8722;1)","(&#8722;2, &#8722;2)"],
+   "ans": 0,
+   "sol": "The added force must be the <strong>exact opposite</strong> of what is left over. The leftover is (&#8722;1, &#8722;1), so we add <strong>(+1, +1)</strong>.<br><br>Flipping the sign is the whole job. Students who add (&#8722;1, &#8722;1) are doubling the problem instead of fixing it."
+  },
+  {
+   "tag": "Ex-4(A) Q9",
+   "q": "&#9733; <strong>Original:</strong> For the free body diagram shown, four forces are applied in the x and y directions. What additional force must be applied, and at what angle with the positive x-axis, so that the net acceleration of the body is zero?",
+   "diagram": DIAGRAMS.fourForces({}),
+   "opts": ["&#8730;2 N at 45&#176;","&#8730;2 N at 135&#176;","(2/&#8730;3) N at 30&#176;","2 N at 45&#176;"],
+   "ans": 0,
+   "sol": "The force is (1, 1):<br><br>size = &#8730;(1<sup>2</sup> + 1<sup>2</sup>) = <strong>&#8730;2 N</strong><br>angle = tan<sup>&#8722;1</sup>(1/1) = <strong>45&#176;</strong> from the positive x-axis<br><br>Both components are positive, so the arrow sits in the first quadrant, at 45&#176;. If they had been (&#8722;1, +1), the same size would come with 135&#176; &#8212; which is why that option is sitting there.<br><br>Always check the quadrant after you use tan<sup>&#8722;1</sup>. The calculator cannot tell &#8722;1/1 from 1/&#8722;1."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "Components with an unknown in them",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "F&#8407;<sub>1</sub> = p&#238; + 3&#309; &#8722; k&#770;, F&#8407;<sub>2</sub> = &#8722;5&#238; + &#309; + 2k&#770; and F&#8407;<sub>3</sub> = 6&#238; &#8722; k&#770;. The &#238; component of their resultant is",
+   "opts": ["p + 1","p &#8722; 11","p &#8722; 1","p + 11"],
+   "ans": 0,
+   "sol": "Add the &#238; parts only: p + (&#8722;5) + 6 = <strong>p + 1</strong><br><br>Vectors add component by component. Never mix &#238;, &#309; and k&#770; terms with one another."
+  },
+  {
+   "q": "The &#309; and k&#770; components of the same resultant are",
+   "opts": ["&#309;: 4, and k&#770;: 0","&#309;: 4, and k&#770;: 2","&#309;: 3, and k&#770;: &#8722;2","&#309;: 5, and k&#770;: 0"],
+   "ans": 0,
+   "sol": "&#309;: 3 + 1 + 0 = <strong>4</strong><br>k&#770;: (&#8722;1) + 2 + (&#8722;1) = <strong>0</strong><br><br>So the resultant is (p + 1)&#238; + 4&#309;. It is a flat, two-dimensional vector &#8212; the k&#770; parts have cancelled themselves.<br><br>Watch F&#8407;<sub>3</sub>: it has no &#309; term at all, which counts as zero, not as something you may skip."
+  },
+  {
+   "q": "This resultant has magnitude 5 units. Squaring gives",
+   "opts": ["(p + 1)<sup>2</sup> + 16 = 25, so (p + 1)<sup>2</sup> = 9","(p + 1) + 4 = 5","(p + 1)<sup>2</sup> + 4 = 25","(p + 1)<sup>2</sup> = 25"],
+   "ans": 0,
+   "sol": "|R&#8407;| = &#8730;((p+1)<sup>2</sup> + 4<sup>2</sup>) = 5<br><br>Square both sides: (p + 1)<sup>2</sup> + 16 = 25 &#8594; <strong>(p + 1)<sup>2</sup> = 9</strong><br><br>Now notice this is a <em>quadratic</em>. p + 1 = +3 or &#8722;3, so there will be <strong>two</strong> answers. Students who take only the positive root lose half the marks on this question."
+  },
+  {
+   "tag": "Ex-2 Q9",
+   "q": "&#9733; <strong>Original:</strong> If the resultant of the three forces has magnitude equal to 5 units, the value(s) of p is (are)",
+   "opts": ["2 and &#8722;4","2 only","&#8722;4 only","2 and 4"],
+   "ans": 0,
+   "sol": "p + 1 = 3 &#8594; p = <strong>2</strong><br>p + 1 = &#8722;3 &#8594; p = <strong>&#8722;4</strong><br><br>Both work. Put each back in and the &#238; component comes out as +3 or &#8722;3, and either way the magnitude is &#8730;(9 + 16) = 5.<br><br>This is a multiple-correct question in the original paper, and that is a hint in itself: in JEE Advanced, a squared unknown almost always means more than one option is right."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "A stack of blocks at rest",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Blocks A (2 kg), B (3 kg) and C (4 kg) are stacked on the floor, all at rest. The contact force between A and B is (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.stack3({}),
+   "opts": ["20 N","50 N","90 N","30 N"],
+   "ans": 0,
+   "sol": "Take block A alone. Only two forces touch it: its weight 20 N down, and the push from B up.<br><br>A is at rest &#8594; the contact force = <strong>20 N</strong>.<br><br>The masses of B and C never enter. They are <em>below</em> A, and a surface only has to hold up what is sitting on it."
+  },
+  {
+   "q": "The normal force from the floor on C is",
+   "diagram": DIAGRAMS.stack3({}),
+   "opts": ["90 N","40 N","70 N","50 N"],
+   "ans": 0,
+   "sol": "The floor holds up the whole tower: 2 + 3 + 4 = 9 kg.<br><br>N = 90 N.<br><br>Quickest route: take the three blocks as <strong>one system</strong>. The internal pushes between them cancel in pairs, and only the total weight and the floor's normal are left."
+  },
+  {
+   "q": "So the general rule for a vertical stack at rest is: the contact force at any level equals",
+   "diagram": DIAGRAMS.stack3({mark:'this level'}),
+   "opts": ["the total weight of everything <strong>above</strong> that level","the total weight of everything below it","the weight of the whole stack, at every level","the weight of the two blocks that touch there"],
+   "ans": 0,
+   "sol": "Cut the stack at the level you care about and look at the part above the cut. Its weight must be held by that one contact force.<br><br>So the contact force = <strong>weight of everything above</strong>.<br><br>This makes the whole question a matter of adding up masses. Cutting an imaginary line through a stack, a rope or a chain is a tool you will use many times in this chapter."
+  },
+  {
+   "tag": "Box-2 Q1",
+   "q": "&#9733; <strong>Original:</strong> Three blocks A, B and C are vertically stacked at rest as shown. The magnitude of the contact force between blocks B and C is",
+   "diagram": DIAGRAMS.stack3({mark:'B on C'}),
+   "opts": ["50 N","20 N","30 N","70 N"],
+   "ans": 0,
+   "sol": "Above the B-C contact sit A (2 kg) and B (3 kg), a total of 5 kg.<br><br>Contact force = 5 &#215; 10 = <strong>50 N</strong><br><br>The trap is 30 N, the weight of B alone. The contact is holding up B <em>and everything B is carrying</em>.<br><br>Check the set: 20 N at A-B, 50 N at B-C, 90 N at the floor. Each step down adds the next block's weight."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Hanging from a light string",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A light (massless) string hangs vertically with a block at the bottom. The tension in the string",
+   "diagram": DIAGRAMS.hangBlock({}),
+   "opts": ["is the same at every point of the string","is largest at the top","is largest at the bottom","increases towards the middle"],
+   "ans": 0,
+   "sol": "Cut the string anywhere and look at the piece below the cut. It weighs nothing, so the tension pulling it up must equal the pull at its lower end.<br><br>So the tension is the <strong>same everywhere</strong>.<br><br>A heavy rope is a different matter: there the top has to carry the rope below it as well, so the tension does grow towards the top. That is a later slot."
+  },
+  {
+   "q": "A block of mass 10 kg hangs at rest from that string. The tension is (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.hangBlock({forces:true}),
+   "opts": ["100 N","10 N","1000 N","50 N"],
+   "ans": 0,
+   "sol": "Two forces on the block: T up and mg = 100 N down. It is at rest, so<br><br>T = mg = <strong>100 N</strong><br><br>Note T = mg holds only here, where the string is the <em>only</em> thing holding the block and nothing is accelerating. Hang the same block in a lift going up and it changes at once."
+  },
+  {
+   "q": "Now the same block hangs from a string that is tied to a second string at a knot in the middle. The tension in the upper piece is",
+   "diagram": DIAGRAMS.hangBlock({forces:false,knot:'knot'}),
+   "opts": ["100 N &#8212; the same as in the lower piece","200 N, since it carries two strings","50 N in each piece","zero at the knot"],
+   "ans": 0,
+   "sol": "The knot is massless. The forces on it must add to zero, so the upper string pulls up with exactly what the lower string pulls down with: <strong>100 N</strong>.<br><br>Joining two light strings in a straight line changes nothing at all. It only matters when the pieces go off at <em>angles</em> &#8212; which is what the next few ladders are about."
+  },
+  {
+   "tag": "Box-2 Q4",
+   "q": "&#9733; <strong>Original:</strong> A block of mass 10 kg is suspended with a massless string as shown in the figure. Find the tension in the string. (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.hangBlock({forces:true}),
+   "opts": ["100 N","1 N","10 N","100&#8730;2 N"],
+   "ans": 0,
+   "sol": "<strong>T = 100 N.</strong><br><br>A short question, and worth exactly one line of working: the block is at rest, so the string's pull equals its weight.<br><br>Keep this number in your head. The next several questions all hang the same 10 kg in more awkward ways, and every one of them is really asking how the same 100 N gets shared out."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "Why a sagging string is safer",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A block of weight W hangs from two strings, each making an angle &#952; with the vertical. Balancing the vertical forces gives",
+   "diagram": DIAGRAMS.stringV({sep:120,ang:'&#952;',forces:true}),
+   "opts": ["2T cos&#952; = W","2T sin&#952; = W","T cos&#952; = W","2T = W, whatever &#952; is"],
+   "ans": 0,
+   "sol": "Each string pulls with T along its own line. The vertical part of each is T cos&#952;, since &#952; is measured from the vertical.<br><br>Two strings, so <strong>2T cos&#952; = W</strong>.<br><br>The horizontal parts, T sin&#952; each, point opposite ways and cancel. That is why the block hangs straight."
+  },
+  {
+   "q": "Rearranged, T = W / (2 cos&#952;). As &#952; is made larger, the tension",
+   "opts": ["grows, and shoots up as &#952; approaches 90&#176;","falls","stays the same","falls to zero at 90&#176;"],
+   "ans": 0,
+   "sol": "Larger &#952; means smaller cos&#952;, and dividing by a smaller number gives a <strong>bigger T</strong>.<br><br>Some values worth remembering: &#952; = 0 &#8594; T = W/2 (the smallest possible); &#952; = 60&#176; &#8594; T = W; and as &#952; &#8594; 90&#176;, T &#8594; &#8734;.<br><br>This is why a clothes line pulled dead straight snaps under a light towel, and why power cables are always left with a sag. A perfectly horizontal string can hold nothing at all."
+  },
+  {
+   "q": "The <strong>length of the string is fixed</strong>, and its two ends are moved further apart on the ceiling. Then",
+   "diagram": DIAGRAMS.stringV({sep:220,ang:'&#952;'}),
+   "opts": ["&#952; gets bigger, so the tension gets bigger","&#952; gets smaller, so the tension gets smaller","&#952; does not change","the weight changes"],
+   "ans": 0,
+   "sol": "The same length of string now has to span a wider gap, so each half lies closer to the horizontal. That means a <strong>bigger &#952;</strong> measured from the vertical, and so a <strong>bigger tension</strong>.<br><br>Pull the ends together instead and the V becomes deep and narrow, &#952; shrinks, and the tension drops towards W/2.<br><br>So &#8220;which case has the largest tension?&#8221; is really asking &#8220;which case is the most spread out?&#8221;"
+  },
+  {
+   "tag": "Box-2 Q2",
+   "q": "&#9733; <strong>Original:</strong> A block of weight W is suspended by a string of fixed length. The ends of the string are held at various positions as shown in the four figures. In which case, if any, is the magnitude of the tension along the string largest?",
+   "diagram": DIAGRAMS.stringV({sep:240,ang:'&#952;'}),
+   "opts": ["The case where the two ends are held furthest apart","The case where the two ends are closest together","The tension is the same in all four cases, since W is the same","The case where the block hangs lowest"],
+   "ans": 0,
+   "sol": "<strong>The most spread-out case</strong> &#8212; the first figure in the original, where the supports are at the two far ends.<br><br>Spread out the most &#8594; largest &#952; &#8594; largest T = W/(2 cos&#952;).<br><br>Option 3 is the tempting one. The weight is the same in all four, true &#8212; but the weight is shared between the two strings according to their angle, and that is what changes.<br><br>Notice the last option is the same answer in disguise: closest together also means the block hangs lowest, and that case has the <em>smallest</em> tension."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "Pulled aside: the 3-4-5 hanging object",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "An object hangs from A on a string and is pulled aside by a horizontal force F, coming to rest in a slanted position. How many forces act on it?",
+   "diagram": DIAGRAMS.pendPull({}),
+   "opts": ["Three: the tension along the string, the weight down, and F horizontal","Two: the tension and the weight","Four, including the swing force","Three, but the tension is vertical"],
+   "ans": 0,
+   "sol": "<strong>Three</strong>: T along the string (pointing up towards A), the weight 8 N straight down, and the applied F horizontally.<br><br>They act at one point and add to zero &#8212; the standard three-concurrent-forces picture, which turns up again and again in this chapter.<br><br>And the tension is <em>not</em> vertical. It runs along the string, and the string is slanted."
+  },
+  {
+   "q": "The string is 0.5 m long and the object is now 0.3 m from the vertical through A. How far is it below A?",
+   "diagram": DIAGRAMS.pendPull({}),
+   "opts": ["0.4 m","0.2 m","0.5 m","0.35 m"],
+   "ans": 0,
+   "sol": "The string, the vertical drop and the sideways shift form a right triangle with the string as the hypotenuse:<br><br>&#8730;(0.5<sup>2</sup> &#8722; 0.3<sup>2</sup>) = &#8730;0.16 = <strong>0.4 m</strong><br><br>Our friend the 3-4-5 triangle again. So for the angle &#952; from the vertical: sin&#952; = 0.3/0.5 = 0.6 and cos&#952; = 0.4/0.5 = 0.8.<br><br>Get these two numbers out of the geometry <em>before</em> writing any force equations. Then there is no trigonometry left to do."
+  },
+  {
+   "q": "Balancing the vertical forces on the object (weight 8 N) gives",
+   "opts": ["T &#215; 0.8 = 8, so T = 10 N","T &#215; 0.6 = 8","T = 8 N","T &#215; 0.8 = F"],
+   "ans": 0,
+   "sol": "The vertical part of the tension is T cos&#952; = 0.8T, and it has to hold the whole 8 N weight:<br><br>0.8T = 8 &#8594; T = <strong>10 N</strong><br><br>Note T is bigger than the weight. Any slanted string carries more than the load hanging on it &#8212; the same lesson as the last ladder.<br><br>Do the <em>vertical</em> equation first. It contains only T and the known weight, so it gives you T straight away."
+  },
+  {
+   "tag": "Ex-2 Q15",
+   "q": "&#9733; <strong>Original:</strong> One end of a string 0.5 m long is fixed to a point A and the other end is fastened to a small object of weight 8 N. The object is pulled aside by a horizontal force F until it is 0.3 m from the vertical through A. The magnitudes of the tension T and the force F are",
+   "diagram": DIAGRAMS.pendPull({F:'F',W:'8 N'}),
+   "opts": ["10 N, 6 N","6 N, 10 N","8 N, 10 N","3 N, 4 N"],
+   "ans": 0,
+   "sol": "T = <strong>10 N</strong> from the vertical equation.<br><br>Now horizontally: F = T sin&#952; = 10 &#215; 0.6 = <strong>6 N</strong><br><br>Check the shape of the answer: the three forces 6, 8 and 10 form a right triangle, and they must, because F is horizontal and the weight is vertical. So the force triangle is just the 3-4-5 geometry triangle, scaled up.<br><br>Option 2 has the two swapped, which is what you get if you mix up sin and cos. Ask yourself which force ought to be biggest &#8212; it has to be the tension, since it is balancing the other two together."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "Pushing a rope sideways at its middle",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A mass hangs from the ceiling by a rope. A horizontal force F is applied at the <strong>mid point</strong> of the rope, so the upper half tilts while the lower half stays vertical. The tension in the <strong>lower</strong> half is",
+   "diagram": DIAGRAMS.ropeMid({m:'10 kg',labels:true}),
+   "opts": ["the full weight of the hanging mass","half the weight","zero","greater than the weight"],
+   "ans": 0,
+   "sol": "Look only at the hanging block. Two forces: its weight down, and the lower rope's tension up. It is at rest, so the lower tension = <strong>the full weight</strong>.<br><br>For a 10 kg block that is 100 N.<br><br>F is applied above the block, so the block never feels it. Always start such questions from the bottom, where the forces are simplest."
+  },
+  {
+   "tag": "Ex-4(A) Q3",
+   "q": "The mass is 10 kg and the upper half of the rope makes 45&#176; with the vertical. Taking the mid point as the body, the horizontal force F is",
+   "diagram": DIAGRAMS.ropeMid({m:'10 kg',labels:true}),
+   "opts": ["100 N","100&#8730;2 N","50 N","70 N"],
+   "ans": 0,
+   "sol": "Three forces meet at the mid point: T<sub>1</sub> along the upper rope, T<sub>2</sub> = 100 N pulling straight down, and F horizontal.<br><br>Vertical: T<sub>1</sub> cos45&#176; = 100<br>Horizontal: T<sub>1</sub> sin45&#176; = F<br><br>Divide one by the other: F = 100 tan45&#176; = <strong>100 N</strong><br><br>Dividing kills T<sub>1</sub> in one step. If you do want it, T<sub>1</sub> = 100&#8730;2 &#8776; 141 N &#8212; bigger than both, as the slanted string always is.<br><br>At 45&#176; the answer is simply F = weight, because tan45&#176; = 1."
+  },
+  {
+   "tag": "Ex-4(A) Q2",
+   "q": "The same 10 kg hangs from the roof, and when a horizontal force is applied on the rope the rope is found to deviate by 45&#176; <strong>at the roof point</strong>. The applied force is",
+   "diagram": DIAGRAMS.ropeMid({m:'10 kg'}),
+   "opts": ["100 N &#8212; the same question in different words","200 N","140 N","70 N"],
+   "ans": 0,
+   "sol": "&#8220;Deviates by 45&#176; at the roof&#8221; means the upper part of the rope makes 45&#176; with the vertical &#8212; exactly the situation of the previous rung.<br><br>F = mg tan45&#176; = <strong>100 N</strong><br><br>Two different papers, two different pictures, one piece of physics. The general result is worth writing down:<br><br><strong>F = mg tan&#952;</strong>, where &#952; is the angle of the upper rope from the vertical.<br><br>You have met mg tan&#952; before, in the pseudo-force ladders. That is not a coincidence &#8212; a bob held aside by a pseudo force is this very same triangle."
+  },
+  {
+   "tag": "Ex-4(A) Q12",
+   "q": "&#9733; <strong>Original:</strong> A 1 kg mass is suspended from the ceiling by a rope of length 4 m. A horizontal force F is applied at the mid point of the rope so that the rope makes an angle of 45&#176; with the vertical. The magnitude of F is (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.ropeMid({m:'1 kg',labels:true}),
+   "opts": ["10 N","10/&#8730;2 N","1 N","1/(10&#8730;2) N"],
+   "ans": 0,
+   "sol": "F = mg tan45&#176; = 1 &#215; 10 &#215; 1 = <strong>10 N</strong><br><br>The 4 m length is not needed at all. Neither is the fact that F acts at the mid point &#8212; only the <em>angle</em> matters, because the rope is light.<br><br>Extra numbers that do no work are a normal part of JEE questions. Before you start, ask of each given quantity: does this appear anywhere in my equations? If not, leave it alone.<br><br><em>Same question, three papers:</em> 2019 with 10 kg, 2020 with 10 kg, 2024 with 1 kg. Learn the one relation and all three are one line each."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "A string wrapped round a log",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A string is wrapped round a smooth log and its two ends are brought together and pulled with a force F. The two straight parts each make an angle &#952; with the direction of F. The equilibrium condition at the joining point is",
+   "diagram": DIAGRAMS.logString({}),
+   "opts": ["2T cos&#952; = F","2T sin&#952; = F","T cos&#952; = F","2T = F"],
+   "ans": 0,
+   "sol": "At the point where the two ends meet, three forces act: the pull F, and the two tensions T, each slanting back at &#952; on either side.<br><br>Along the line of F: the two tensions each contribute T cos&#952;, so <strong>2T cos&#952; = F</strong>.<br><br>Across that line they cancel by symmetry, which is why the joint stays put."
+  },
+  {
+   "q": "So T = F / (2 cos&#952;). As &#952; increases &#8212; that is, as the string wraps a wider way round the log &#8212; the tension",
+   "diagram": DIAGRAMS.logString({}),
+   "opts": ["increases","decreases","stays the same","first increases, then decreases"],
+   "ans": 0,
+   "sol": "Bigger &#952; &#8594; smaller cos&#952; &#8594; <strong>bigger T</strong>.<br><br>Exactly the same relation as the hanging-block V two ladders ago, with F in place of W. The picture is different, the physics is identical.<br><br>Once you notice that, half the equilibrium questions in this chapter become the same question."
+  },
+  {
+   "q": "For which angles is the tension actually <strong>larger</strong> than the applied force F?",
+   "opts": ["When cos&#952; &lt; 1/2, that is &#952; &gt; 60&#176; (= &#960;/3)","When &#952; &gt; 45&#176; (= &#960;/4)","Never &#8212; T is always less than F","For every &#952;"],
+   "ans": 0,
+   "sol": "T &gt; F needs F/(2cos&#952;) &gt; F, that is 2cos&#952; &lt; 1, that is cos&#952; &lt; 1/2.<br><br>So <strong>&#952; &gt; 60&#176; = &#960;/3</strong>.<br><br>Check &#960;/4: there cos45&#176; = 0.707, so 2cos&#952; = 1.41 &gt; 1 and T = 0.71F, which is <em>less</em> than F. So the &#960;/4 option is wrong &#8212; and that is exactly the trap in the original question."
+  },
+  {
+   "tag": "Ex-2 Q7",
+   "q": "&#9733; <strong>Original:</strong> A string is wrapped round a log of wood and it is pulled with a force F as shown. Which pair of statements is correct?<br>(A) T increases with an increase in &#952;&#160;&#160;(B) T decreases with an increase in &#952;&#160;&#160;(C) T &gt; F if &#952; &gt; &#960;/3&#160;&#160;(D) T &gt; F if &#952; &gt; &#960;/4",
+   "diagram": DIAGRAMS.logString({}),
+   "opts": ["(A) and (C)","(B) and (D)","(A) and (D)","(B) and (C)"],
+   "ans": 0,
+   "sol": "<strong>(A) and (C).</strong><br><br>(A) is right because T = F/(2cos&#952;) grows with &#952;.<br>(C) is right because T passes F exactly at &#952; = 60&#176; = &#960;/3.<br><br>(D) fails the numbers: at &#960;/4 we found T = 0.71F, still below F.<br><br>When an option gives a threshold, always test it with a number rather than trusting the look of it. One substitution settles (C) against (D) in seconds."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ "name": "Three hanging blocks, two pulleys",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Blocks A and C, each of mass m, hang freely from the outer sides of two pulleys. The tension in each of those strings is",
+   "diagram": DIAGRAMS.twoPulleyHang({}),
+   "opts": ["mg","2mg","mg/2","it depends on M"],
+   "ans": 0,
+   "sol": "Look at A alone: it hangs at rest on one string, so T = <strong>mg</strong>. Same for C.<br><br>And an ideal pulley does not change the tension, so the inner part of each string &#8212; the part running down to B &#8212; also carries mg.<br><br>Always begin at the freely hanging block. It is the one place where the tension is known instantly."
+  },
+  {
+   "q": "Block B hangs at the point where the two inner strings meet, each making an angle &#952; with the vertical. Balancing the vertical forces on B gives",
+   "diagram": DIAGRAMS.twoPulleyHang({ang:'&#952;'}),
+   "opts": ["2mg cos&#952; = Mg","2mg sin&#952; = Mg","mg cos&#952; = Mg","2mg = Mg"],
+   "ans": 0,
+   "sol": "Each inner string pulls B with mg along its own slanted line, and the vertical part of each is mg cos&#952;.<br><br>Two strings, so <strong>2mg cos&#952; = Mg</strong>, giving M = 2m cos&#952;.<br><br>The horizontal parts cancel because the arrangement is symmetric, which is what lets B hang in the middle."
+  },
+  {
+   "q": "Since the two pulleys are a fixed distance apart, the strings can never hang vertically. So cos&#952; is",
+   "diagram": DIAGRAMS.twoPulleyHang({ang:'&#952;'}),
+   "opts": ["always less than 1","always greater than 1","exactly 1","zero"],
+   "ans": 0,
+   "sol": "&#952; can never be 0, because that would need the two pulleys to sit at the same point. So &#952; &gt; 0 and <strong>cos&#952; &lt; 1</strong>.<br><br>That single inequality answers the whole question. You never have to know what &#952; actually is.<br><br>Questions asking for &#8220;=&#8221; or &#8220;&lt;&#8221; or &#8220;&gt;&#8221; rather than a number are usually of this kind: find the quantity that is squeezed between limits, and read the answer off it."
+  },
+  {
+   "tag": "Ex-1 Q16",
+   "q": "&#9733; <strong>Original:</strong> Three blocks A, B and C are suspended as shown. The mass of each of blocks A and C is m and the mass of B is M. If the system is in equilibrium, then",
+   "diagram": DIAGRAMS.twoPulleyHang({ang:'&#952;'}),
+   "opts": ["M &lt; 2m","M = 2m","M &gt; 2m","M = m"],
+   "ans": 0,
+   "sol": "M = 2m cos&#952;, and cos&#952; &lt; 1, so <strong>M &lt; 2m</strong>.<br><br>The physical picture: the two strings are pulling at a slant, so only part of each mg goes into holding B up. The rest is spent pulling sideways against the other string. B therefore has to be lighter than the 2m you might expect.<br><br>Push it to the limits to be sure: as the pulleys come together, &#952; &#8594; 0 and M &#8594; 2m from below, never reaching it. As they move apart, the strings flatten out and M gets smaller and smaller.<br><br><em>Closing thought for this slot:</em> every ladder here was one body, three or four forces, and two equations &#8212; vertical and horizontal. Draw the forces, pick your two directions, and resolve. In equilibrium questions there is never anything more to it than that."
+  }
+ ]
+},
+
+];
+
+const STORAGE_KEY = 'padipucast_nlm_equilibrium_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
