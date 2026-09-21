@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Vertical Circular Motion &#183; WPE Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> WPE &#183; Vertical Circular Motion</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Vertical Circular Motion<br>One equation, then energy</h1></div>
+    <p id="home-sub">Every vertical-circle question from the <strong>Work, Energy &amp; Power JEE Main PYQ bank</strong> (2021&#8211;2023), put in one climbing order. The sequence follows the board work: the radial equation &#8594; T(&#952;) and its three special cases &#8594; energy on the circle &#8594; the pendulum &#8594; looping the loop &#8594; the 6mg gap &#8594; the three speed regimes &#8594; losing contact &#8594; curved tracks &#8594; the horizontal circle &#8594; a rough circle.<br><br>Each source PYQ is a <strong>ladder</strong>: 3 build-up rungs, then the original question (&#9733;) with its year and shift. Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 10 ladders &#215; 4 rungs = 40 questions. Take g = 10 m/s<sup>2</sup> throughout.<br><br><em>One method runs through all ten: write the radial equation at the point you care about (which way is the centre?) &#8594; use energy, v&#178; = u&#178; &#8722; 2gh, to link two points &#8594; if something is about to let go, set the contact force to zero. T = 0 for a string, N = 0 for a surface. Tension and normal force never do work; only gravity and friction do.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Vertical Circular Motion (WPE)   (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1d5f7a';
+const FILL_T='#e6f1f4', FILL_B='#c9e2e9', FILL_C='#b3d6df';
+
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+
+function _txt(x,y,t,c,size,anchor,bold){
+  return `<text x="${x}" y="${y}" font-size="${size||11}" text-anchor="${anchor||'middle'}" fill="${c||INK}" ${FS}${bold?' font-weight="700"':''}>${t}</text>`;
+}
+function _dash(x0,y0,x1,y1,c){
+  return `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c||GREY}" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+}
+function _a2(x0,y0,x1,y1,c,label,dx,dy){
+  const id=_nid();
+  return `<defs>${AR(id,c)}</defs><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="2.2" marker-end="url(#${id})"/>`+
+  (label?`<text x="${x1+(dx===undefined?0:dx)}" y="${y1+(dy===undefined?0:dy)}" font-size="11" text-anchor="middle" fill="${c}" ${FS} font-weight="700">${label}</text>`:'');
+}
+function _hatch(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y+9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+function _ceil(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y-9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+// ---- vertical-circle helpers -------------------------------------------------
+// theta is measured from the LOWEST point, growing to the right and up
+function _P(cx,cy,R,deg){
+  const t=deg*Math.PI/180;
+  return [cx + R*Math.sin(t), cy + R*Math.cos(t)];
+}
+function _ring(cx,cy,R){
+  return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${GREY}" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <circle cx="${cx}" cy="${cy}" r="3.2" fill="${INK}"/>`;
+}
+function _bob(x,y,label){
+  return `<circle cx="${x}" cy="${y}" r="9" fill="${FILL_C}" stroke="${INK}" stroke-width="1.8"/>`+
+  (label?_txt(x+16,y+4,label,INK,11,'start',true):'');
+}
+// angle arc at the centre, from the downward vertical to the string
+function _arc(cx,cy,r,deg,label){
+  const [x1,y1]=[cx,cy+r];
+  const [x2,y2]=_P(cx,cy,r,deg);
+  const t=deg/2*Math.PI/180;
+  const lx=cx+(r+13)*Math.sin(t), ly=cy+(r+13)*Math.cos(t);
+  return `<path d="M ${x1} ${y1} A ${r} ${r} 0 0 0 ${x2} ${y2}" fill="none" stroke="${AMB}" stroke-width="1.5"/>`+
+  (label?_txt(lx,ly+4,label,AMB,11,'middle',true):'');
+}
+
+const DIAGRAMS = {
+
+// 1. bob at the lowest point, T up, mg down, v sideways
+vcBottom(o){
+  const W=340,H=250, cx=170, cy=112, R=78;
+  const [bx,by]=_P(cx,cy,R,0);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_ring(cx,cy,R)}
+  <line x1="${cx}" y1="${cy}" x2="${bx}" y2="${by}" stroke="${INK}" stroke-width="1.8"/>
+  ${_bob(bx,by,'')}
+  ${_txt(bx-16,by+5,'m',INK,11,'end',true)}
+  ${_a2(bx,by-11,bx,cy+16,GRN,'T',-14,6)}
+  ${_a2(bx,by+11,bx,by+52,RED,'mg',0,15)}
+  ${_a2(bx+12,by,bx+64,by,BLU,'v',4,-9)}
+  ${_txt(cx,cy-R-12,'lowest point of a vertical circle, radius R',GREY,11)}
+  ${o.note?_txt(cx,H-12,o.note,INK,11.5,'middle',true):''}
+  </svg>`;
+},
+
+// 2. bob at a general angle, mg resolved
+vcAngle(o){
+  const W=360,H=268, cx=176, cy=126, R=82;
+  const deg=o.deg===undefined?50:o.deg;
+  const [bx,by]=_P(cx,cy,R,deg);
+  const ux=(bx-cx)/R, uy=(by-cy)/R;            // outward radial
+  const tx=Math.cos(deg*Math.PI/180), ty=-Math.sin(deg*Math.PI/180); // tangent
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_ring(cx,cy,R)}
+  ${_dash(cx,cy,cx,cy+R+26,GREY)}
+  <line x1="${cx}" y1="${cy}" x2="${bx}" y2="${by}" stroke="${INK}" stroke-width="1.8"/>
+  ${_arc(cx,cy,34,deg,'&#952;')}
+  ${_bob(bx,by)}
+  ${_a2(bx-ux*11,by-uy*11,bx-ux*46,by-uy*46,GRN,'T',-6,-6)}
+  ${_a2(bx,by+11,bx,by+50,RED,'mg',0,14)}
+  ${_dash(bx,by+50,bx+ux*42,by+uy*42,RED)}
+  ${_a2(bx+ux*11,by+uy*11,bx+ux*44,by+uy*44,AMB,'mg cos&#952;',16,14)}
+  ${_a2(bx+tx*12,by+ty*12,bx+tx*46,by+ty*46,BLU,'v',6,-6)}
+  ${_txt(cx,H-12,'&#952; measured from the lowest point',GREY,11)}
+  </svg>`;
+},
+
+// 3. the three special positions with their tensions
+vcThree(o){
+  const W=360,H=268, cx=176, cy=128, R=84;
+  const [bx,by]=_P(cx,cy,R,0);
+  const [mx,my]=_P(cx,cy,R,90);
+  const [tx,ty]=_P(cx,cy,R,180);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_ring(cx,cy,R)}
+  ${_bob(bx,by)}${_bob(mx,my)}${_bob(tx,ty)}
+  ${_txt(bx,by+30,o.b||'bottom',INK,11,'middle',true)}
+  ${_txt(mx+22,my+4,o.m||'middle',INK,11,'start',true)}
+  ${_txt(tx,ty-20,o.t||'top',INK,11,'middle',true)}
+  ${o.lb?_txt(bx-14,by+46,o.lb,GRN,11.5,'middle',true):''}
+  ${o.lt?_txt(tx,ty-36,o.lt,RED,11.5,'middle',true):''}
+  ${_txt(cx,H-10,o.note||'&#952; = 0&#176;, 90&#176; and 180&#176; from the bottom',GREY,11)}
+  </svg>`;
+},
+
+// 4. height risen, h = R(1 - cos theta)
+vcHeight(o){
+  const W=360,H=270, cx=170, cy=128, R=84;
+  const deg=o.deg===undefined?60:o.deg;
+  const [bx,by]=_P(cx,cy,R,deg);
+  const [lx,ly]=_P(cx,cy,R,0);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_ring(cx,cy,R)}
+  ${_dash(cx,cy,cx,cy+R+30,GREY)}
+  <line x1="${cx}" y1="${cy}" x2="${bx}" y2="${by}" stroke="${INK}" stroke-width="1.8"/>
+  ${_arc(cx,cy,34,deg,'&#952;')}
+  ${_bob(bx,by)}${_bob(lx,ly)}
+  ${_dash(lx-46,ly,bx+40,ly,GREY)}
+  ${_dash(bx,by,bx+40,by,GREY)}
+  <line x1="${bx+30}" y1="${by}" x2="${bx+30}" y2="${ly}" stroke="${AMB}" stroke-width="1.6"/>
+  <line x1="${bx+26}" y1="${by}" x2="${bx+34}" y2="${by}" stroke="${AMB}" stroke-width="1.6"/>
+  <line x1="${bx+26}" y1="${ly}" x2="${bx+34}" y2="${ly}" stroke="${AMB}" stroke-width="1.6"/>
+  ${_txt(bx+38,(by+ly)/2+4,o.h||'h',AMB,11.5,'start',true)}
+  ${_txt(cx,H-10,o.note||'the bob has climbed a height h',GREY,11)}
+  </svg>`;
+},
+
+// 5. pendulum pulled aside and released
+pend(o){
+  const W=392,H=266, px=168, py=36, L=134;
+  const deg=o.deg===undefined?60:o.deg;
+  const t=deg*Math.PI/180;
+  const bx=px-L*Math.sin(t), by=py+L*Math.cos(t);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_ceil(px-104,px+104,py)}
+  ${_dash(px,py,px,py+L+22,GREY)}
+  <line x1="${px}" y1="${py}" x2="${bx}" y2="${by}" stroke="${INK}" stroke-width="1.8"/>
+  <path d="M ${px} ${py+40} A 40 40 0 0 1 ${px-40*Math.sin(t)} ${py+40*Math.cos(t)}" fill="none" stroke="${AMB}" stroke-width="1.5"/>
+  ${_txt(px-26*Math.sin(t/2)-8,py+56,o.th||(deg+'&#176;'),AMB,11.5,'middle',true)}
+  ${_bob(bx,by,'')}
+  ${_bob(px,py+L,'')}
+  ${_dash(bx,by,px+30,by,GREY)}
+  <line x1="${px+26}" y1="${by}" x2="${px+26}" y2="${py+L}" stroke="${AMB}" stroke-width="1.6"/>
+  <line x1="${px+22}" y1="${by}" x2="${px+30}" y2="${by}" stroke="${AMB}" stroke-width="1.6"/>
+  <line x1="${px+22}" y1="${py+L}" x2="${px+30}" y2="${py+L}" stroke="${AMB}" stroke-width="1.6"/>
+  ${_txt(px+34,(by+py+L)/2+4,o.h||'h',AMB,11.5,'start',true)}
+  ${_txt(px-L*Math.sin(t)*0.5-22,py+L*Math.cos(t)*0.5-6,o.L||'l',INK,11.5,'end',true)}
+  ${_a2(px+22,py+L+26,px+62,py+L+26,BLU,'',0,0)}
+  ${_txt(px+70,py+L+30,o.v||'v is largest here',BLU,11,'start',true)}
+  </svg>`;
+},
+
+// 6. bob at the very top
+vcTop(o){
+  const W=340,H=252, cx=170, cy=132, R=80;
+  const [bx,by]=_P(cx,cy,R,180);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_ring(cx,cy,R)}
+  <line x1="${cx}" y1="${cy}" x2="${bx}" y2="${by}" stroke="${INK}" stroke-width="1.8"/>
+  ${_bob(bx,by,'')}
+  ${_a2(bx-13,by+11,bx-13,by+46,GRN,'T',-14,6)}
+  ${_a2(bx+13,by+11,bx+13,by+46,RED,'mg',20,6)}
+  ${_a2(bx-12,by,bx-58,by,BLU,'v',-2,-10)}
+  ${_txt(cx,cy+R+26,o.note||'at the top BOTH forces point to the centre',GREY,11)}
+  ${o.cap?_txt(cx,H-10,o.cap,INK,11.5,'middle',true):''}
+  </svg>`;
+},
+
+// 7. bullet fired through a hanging bob
+bulletBob(o){
+  const W=440,H=252, px=232, py=36, L=120;
+  const bx=px, by=py+L;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_ceil(px-120,px+96,py)}
+  <line x1="${px}" y1="${py}" x2="${bx}" y2="${by}" stroke="${INK}" stroke-width="1.8"/>
+  ${_txt(px-14,py+L/2,o.L||'l',INK,11.5,'end',true)}
+  ${_bob(bx,by,'')}
+  ${_txt(bx,by+30,o.bob||'bob M',INK,11,'middle',true)}
+  <circle cx="${bx-96}" cy="${by}" r="5" fill="${RED}"/>
+  ${_a2(bx-88,by,bx-24,by,RED,o.vin||'bullet m, speed v',-4,-13)}
+  ${_a2(bx+13,by,bx+52,by,AMB,'',0,0)}
+  <circle cx="${bx+58}" cy="${by}" r="5" fill="${AMB}"/>
+  ${_txt(bx+70,by+4,o.vout||'leaves at v/3',AMB,11,'start',true)}
+  <path d="M ${bx} ${by} A 62 62 0 0 1 ${bx+62} ${by-62}" fill="none" stroke="${GREY}" stroke-width="1.3" stroke-dasharray="5 4"/>
+  ${_txt(px,H-10,o.note||'after the hit the bob must just get round the full circle',GREY,11)}
+  </svg>`;
+},
+
+// 8. the three speed regimes
+vcRegimes(o){
+  const W=492,H=268, cx=142, cy=132, R=84;
+  const [bx,by]=_P(cx,cy,R,0);
+  const [hx,hy]=_P(cx,cy,R,90);
+  const [h2x,h2y]=_P(cx,cy,R,270);
+  const [tx,ty]=_P(cx,cy,R,180);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  <path d="M ${h2x} ${h2y} A ${R} ${R} 0 0 0 ${hx} ${hy}" fill="none" stroke="${GRN}" stroke-width="4" opacity="0.5"/>
+  <path d="M ${hx} ${hy} A ${R} ${R} 0 0 0 ${h2x} ${h2y}" fill="none" stroke="${AMB}" stroke-width="4" opacity="0.5"/>
+  ${_ring(cx,cy,R)}
+  ${_bob(bx,by,'')}
+  ${_a2(bx+12,by,bx+56,by,BLU,'u',4,-9)}
+  ${_txt(hx+8,hy+4,'M',INK,11,'start',true)}
+  ${_txt(h2x-8,h2y+4,"M'",INK,11,'end',true)}
+  ${_txt(tx,ty-14,'T',INK,11,'middle',true)}
+  ${_txt(268,58,'u &#8804; &#8730;(2gR)',GRN,12,'start',true)}
+  ${_txt(268,76,'swings between M and M&#8242;',GREY,11,'start')}
+  ${_txt(268,108,'&#8730;(2gR) &lt; u &lt; &#8730;(5gR)',AMB,12,'start',true)}
+  ${_txt(268,126,'string goes slack above M',GREY,11,'start')}
+  ${_txt(268,158,'u &#8805; &#8730;(5gR)',RED,12,'start',true)}
+  ${_txt(268,176,'completes the loop',GREY,11,'start')}
+  ${_txt(cx,H-10,o.note||'u is the speed at the lowest point',GREY,11)}
+  </svg>`;
+},
+
+// 9. velocity at the bottom and at the horizontal position (vector change)
+vcQuarter(o){
+  const W=478,H=272, cx=142, cy=120, R=82;
+  const [bx,by]=_P(cx,cy,R,0);
+  const [hx,hy]=_P(cx,cy,R,90);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_ring(cx,cy,R)}
+  <line x1="${cx}" y1="${cy}" x2="${hx}" y2="${hy}" stroke="${INK}" stroke-width="1.8"/>
+  ${_bob(bx,by,'')}${_bob(hx,hy,'')}
+  ${_a2(bx+12,by,bx+62,by,BLU,'u',6,-9)}
+  ${_a2(hx,hy-12,hx,hy-58,GRN,'v',0,-8)}
+  ${_txt(cx,cy+R+30,'string horizontal &#8594; v points straight up',GREY,11)}
+  <g transform="translate(348,66)">
+    ${_txt(0,-14,'change in velocity',INK,11,'middle',true)}
+    ${_a2(-40,60,20,60,BLU,'u',0,16)}
+    ${_a2(20,60,20,4,GRN,'v',14,4)}
+    ${_a2(-40,60,20,4,RED,'|&#916;v|',-24,-8)}
+    ${_txt(0,88,'v and u are perpendicular',GREY,10.5,'middle')}
+  </g>
+  ${o.note?_txt(142,H-10,o.note,INK,11,'middle',true):''}
+  </svg>`;
+},
+
+// 10. block sliding on the outside of a hemisphere
+hemi(o){
+  const W=370,H=246, cx=178, cy=200, R=110;
+  const deg=o.deg===undefined?40:o.deg;
+  const t=deg*Math.PI/180;
+  const bx=cx+R*Math.sin(t), by=cy-R*Math.cos(t);
+  const ux=Math.sin(t), uy=-Math.cos(t);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_hatch(30,340,cy)}
+  <path d="M ${cx-R} ${cy} A ${R} ${R} 0 0 1 ${cx+R} ${cy}" fill="${FILL_T}" stroke="${INK}" stroke-width="1.8"/>
+  ${_dash(cx,cy,cx,cy-R-18,GREY)}
+  ${_dash(cx,cy,bx,by,GREY)}
+  <path d="M ${cx} ${cy-44} A 44 44 0 0 1 ${cx+44*Math.sin(t)} ${cy-44*Math.cos(t)}" fill="none" stroke="${AMB}" stroke-width="1.5"/>
+  ${_txt(cx+20,cy-50,'&#952;',AMB,11.5,'middle',true)}
+  <rect x="${bx-11}" y="${by-11}" width="22" height="16" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6" rx="2" transform="rotate(${deg} ${bx} ${by})"/>
+  ${_a2(bx+ux*12,by+uy*12,bx+ux*46,by+uy*46,GRN,'N',10,-4)}
+  ${_a2(bx,by+10,bx,by+50,RED,'mg',12,14)}
+  ${_dash(cx+R+14,cy,cx+R+14,by,GREY)}
+  ${_dash(bx,by,cx+R+18,by,GREY)}
+  <line x1="${cx+R+14}" y1="${by}" x2="${cx+R+14}" y2="${cy}" stroke="${AMB}" stroke-width="1.6"/>
+  <line x1="${cx+R+10}" y1="${by}" x2="${cx+R+18}" y2="${by}" stroke="${AMB}" stroke-width="1.6"/>
+  ${_txt(cx+R+24,(by+cy)/2,o.h||'h',AMB,11.5,'start',true)}
+  ${_txt(cx-R-12,cy-R/2,o.R||'R',INK,11.5,'middle',true)}
+  ${_txt(cx,26,o.note||'smooth hemisphere &#8212; block slides from the top',GREY,11)}
+  </svg>`;
+},
+
+// 11. smooth curved track, A high, B low
+track(o){
+  const W=414,H=232;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_hatch(24,366,196)}
+  <path d="M 58 52 C 108 52, 120 150, 178 150 C 226 150, 232 108, 286 108 C 322 108, 330 150, 352 150"
+        fill="none" stroke="${INK}" stroke-width="2.4"/>
+  <circle cx="60" cy="44" r="8" fill="${FILL_C}" stroke="${INK}" stroke-width="1.8"/>
+  ${_txt(48,36,'A',INK,12,'end',true)}
+  <circle cx="178" cy="142" r="8" fill="${FILL_B}" stroke="${INK}" stroke-width="1.8"/>
+  ${_txt(186,160,'B',INK,12,'start',true)}
+  ${_dash(60,52,370,52,GREY)}
+  ${_dash(178,150,370,150,GREY)}
+  <line x1="360" y1="52" x2="360" y2="150" stroke="${AMB}" stroke-width="1.6"/>
+  <line x1="356" y1="52" x2="364" y2="52" stroke="${AMB}" stroke-width="1.6"/>
+  <line x1="356" y1="150" x2="364" y2="150" stroke="${AMB}" stroke-width="1.6"/>
+  ${_txt(368,104,o.h||'5 m',AMB,11.5,'start',true)}
+  ${_a2(72,36,108,36,BLU,'given a tiny push',34,-9)}
+  ${_txt(195,216,o.note||'smooth track &#8212; only the height drop matters',GREY,11)}
+  </svg>`;
+},
+
+// 12. stone whirled in a horizontal circle
+horiz(o){
+  const W=466,H=240;
+  const cx=120, cy=128, rx=82, ry=30;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="${GREY}" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <circle cx="${cx}" cy="${cy}" r="3" fill="${INK}"/>
+  <line x1="${cx}" y1="${cy}" x2="${cx+rx}" y2="${cy}" stroke="${INK}" stroke-width="1.8"/>
+  ${_txt(cx+rx/2,cy+20,o.r||'r = 2 m',INK,11,'middle',true)}
+  <circle cx="${cx+rx}" cy="${cy}" r="9" fill="${FILL_C}" stroke="${INK}" stroke-width="1.8"/>
+  ${_a2(cx+rx-12,cy,cx+rx-52,cy,GRN,'T',0,-12)}
+  ${_a2(cx+rx+6,cy+12,cx+rx+6,cy+46,BLU,'v',16,4)}
+  ${_txt(cx,cy+ry+30,o.note||'horizontal plane &#8212; the circle is flat',GREY,11)}
+  <g transform="translate(250,44)">
+    ${_txt(56,0,'the numbers you need',INK,11,'middle',true)}
+    ${_txt(0,24,'T = m&#969;&#178;r = mv&#178;/r',INK,11.5,'start',true)}
+    ${_txt(0,46,'&#969; = 2&#960;n  (n in rev/s)',INK,11.5,'start',true)}
+    ${_txt(0,68,'1 rev/s = 60 rev/min',GREY,11,'start')}
+    ${_txt(0,94,'m = 100 g,  T(max) = 80 N',AMB,11.5,'start',true)}
+  </g>
+  </svg>`;
+},
+
+// 13. closed circular tube in a vertical plane, rough inside
+tube(o){
+  const W=400,H=268, cx=152, cy=132, R=86;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  <circle cx="${cx}" cy="${cy}" r="${R+9}" fill="none" stroke="${INK}" stroke-width="1.8"/>
+  <circle cx="${cx}" cy="${cy}" r="${R-9}" fill="none" stroke="${INK}" stroke-width="1.8"/>
+  <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${AMB}" stroke-width="7" opacity="0.18"/>
+  <rect x="${cx-9}" y="${cy-R-8}" width="18" height="16" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6" rx="2"/>
+  ${_a2(cx+14,cy-R,cx+62,cy-R,BLU,'',0,0)}
+  ${_txt(cx+70,cy-R+4,o.v||'22 m/s',BLU,11,'start',true)}
+  ${_txt(cx,cy-R-22,'introduced at the top',GREY,11)}
+  <rect x="${cx-9}" y="${cy+R-8}" width="18" height="16" fill="${FILL_C}" stroke="${INK}" stroke-width="1.6" rx="2"/>
+  ${_txt(cx,cy+R+26,'stops down here',GREY,11)}
+  ${_dash(cx+R+22,cy-R,cx+R+42,cy-R,GREY)}
+  ${_dash(cx+R+22,cy+R,cx+R+42,cy+R,GREY)}
+  <line x1="${cx+R+34}" y1="${cy-R}" x2="${cx+R+34}" y2="${cy+R}" stroke="${AMB}" stroke-width="1.6"/>
+  <line x1="${cx+R+30}" y1="${cy-R}" x2="${cx+R+38}" y2="${cy-R}" stroke="${AMB}" stroke-width="1.6"/>
+  <line x1="${cx+R+30}" y1="${cy+R}" x2="${cx+R+38}" y2="${cy+R}" stroke="${AMB}" stroke-width="1.6"/>
+  ${_txt(cx+R+44,cy+4,o.h||'2R',AMB,11.5,'start',true)}
+  ${_txt(cx,H-10,o.note||'inner walls are rough &#8212; radius 15 cm',GREY,11)}
+  </svg>`;
+},
+
+// 14. tension comparison, bottom vs top
+vcTension(o){
+  const W=430,H=272, cx=160, cy=126, R=82;
+  const [bx,by]=_P(cx,cy,R,0);
+  const [tx,ty]=_P(cx,cy,R,180);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" ${FS}>
+  ${_ring(cx,cy,R)}
+  <line x1="${cx}" y1="${cy}" x2="${bx}" y2="${by}" stroke="${INK}" stroke-width="1.8"/>
+  <line x1="${cx}" y1="${cy}" x2="${tx}" y2="${ty}" stroke="${INK}" stroke-width="1.8"/>
+  ${_bob(bx,by,'')}${_bob(tx,ty,'')}
+  ${_a2(bx,by-11,bx,cy+18,GRN,'',0,0)}
+  ${_a2(bx+3,by+11,bx+3,by+42,RED,'',0,0)}
+  ${_txt(bx-16,by+30,'T',GRN,12,'end',true)}
+  ${_txt(bx+22,by+30,'mg',RED,12,'start',true)}
+  ${_a2(tx-10,ty+11,tx-10,ty+42,GRN,'',0,0)}
+  ${_a2(tx+12,ty+11,tx+12,ty+42,RED,'',0,0)}
+  ${_txt(tx-22,ty+34,'T',GRN,12,'end',true)}
+  ${_txt(tx+24,ty+34,'mg',RED,12,'start',true)}
+  ${_txt(bx+74,by+5,o.lb||'T is LARGEST here',GRN,11.5,'start',true)}
+  ${_txt(tx+74,ty+5,o.lt||'T is SMALLEST here',RED,11.5,'start',true)}
+  ${_txt(cx,H-10,o.note||'v(bottom)&#178; = v(top)&#178; + 4gl',GREY,11)}
+  </svg>`;
+}
+
+};
+
+
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "The one equation &#8212; and where the string is safest",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A stone tied to a string is moving in a vertical circle of radius R. At the <strong>lowest</strong> point the string pulls up with tension T and gravity pulls down with mg. The net force pointing towards the centre is",
+   "diagram": DIAGRAMS.vcBottom({}),
+   "opts": ["T &#8722; mg","T + mg","mg &#8722; T","only T, because gravity acts downward and the centre is above"],
+   "ans": 0,
+   "sol": "At the lowest point the centre of the circle is straight <strong>above</strong> the stone. So &#8220;towards the centre&#8221; means upward.<br><br>T is upward (+), mg is downward (&#8722;). Net inward force = <strong>T &#8722; mg</strong>, and this is what equals mv<sup>2</sup>/R.<br><br>T &#8722; mg = mv<sup>2</sup>/R<br><br>Notice that T must be bigger than mg here. The string has to hold the weight <em>and</em> supply the turning force."
+  },
+  {
+   "q": "Now the stone is at a general angle &#952; measured from the lowest point. Resolve mg along the string and perpendicular to it. The correct radial equation is",
+   "diagram": DIAGRAMS.vcAngle({deg:50}),
+   "opts": ["T &#8722; mg cos&#952; = mv<sub>1</sub><sup>2</sup>/R","T &#8722; mg sin&#952; = mv<sub>1</sub><sup>2</sup>/R","T + mg cos&#952; = mv<sub>1</sub><sup>2</sup>/R","T = mg cos&#952;, since the speed keeps changing"],
+   "ans": 0,
+   "sol": "Break mg into two pieces:<br>&#8226; <strong>mg cos&#952;</strong> along the string, pointing <em>away</em> from the centre<br>&#8226; mg sin&#952; perpendicular to the string (this one changes the speed, not the direction)<br><br>Only the radial pieces go into the centripetal equation:<br><strong>T &#8722; mg cos&#952; = mv<sub>1</sub><sup>2</sup>/R</strong><br><br>Check it at &#952; = 0: cos0 = 1, so T &#8722; mg = mv<sup>2</sup>/R &#8212; the lowest-point equation from Rung 1. Good.",
+   "note": "&#952; is measured from the <em>lowest</em> point, so cos&#952; sits along the string. If you measure from the top instead, every sign flips."
+  },
+  {
+   "q": "Use energy conservation, v<sub>1</sub><sup>2</sup> = v<sup>2</sup> &#8722; 2Rg(1 &#8722; cos&#952;), where v is the speed at the bottom. Substituting into the radial equation gives T = mv<sup>2</sup>/R &#8722; 2mg + 3mg cos&#952;. Keeping v fixed, T is <strong>smallest</strong> at",
+   "diagram": DIAGRAMS.vcThree({b:'&#952; = 0&#176;',m:'&#952; = 90&#176;',t:'&#952; = 180&#176;'}),
+   "opts": ["&#952; = 180&#176;, the highest point","&#952; = 0&#176;, the lowest point","&#952; = 90&#176;, the horizontal position","T is the same everywhere, since the circle is symmetric"],
+   "ans": 0,
+   "sol": "In <strong>T = mv<sup>2</sup>/R &#8722; 2mg + 3mg cos&#952;</strong> the only changing term is 3mg cos&#952;. T is smallest when cos&#952; is smallest, i.e. cos&#952; = &#8722;1, i.e. <strong>&#952; = 180&#176;</strong>.<br><br>Put the three standard angles in and you get the results worth memorising:<br>&#952; = 0&#176; &#8594; T<sub>bottom</sub> = mv<sup>2</sup>/R + mg<br>&#952; = 90&#176; &#8594; T<sub>middle</sub> = mv<sup>2</sup>/R &#8722; 2mg<br>&#952; = 180&#176; &#8594; T<sub>top</sub> = mv<sup>2</sup>/R &#8722; 5mg<br><br>So T<sub>bottom</sub> &#8722; T<sub>middle</sub> = 3mg and T<sub>bottom</sub> &#8722; T<sub>top</sub> = 6mg. These two differences do not depend on the speed at all."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 24 Jun S2",
+   "q": "&#9733; <strong>Original:</strong> A stone of mass m, tied to a string, is being whirled in a vertical circle with a <strong>uniform speed</strong>. The tension in the string is",
+   "diagram": DIAGRAMS.vcTension({}),
+   "opts": ["minimum at the highest position of the circular path","the same throughout the motion","minimum at the lowest position of the circular path","minimum when the rope is in the horizontal position"],
+   "ans": 0,
+   "sol": "Uniform speed means v is the same everywhere, so the mv<sup>2</sup>/R term never changes. From T = mg cos&#952; + mv<sup>2</sup>/R, only cos&#952; varies.<br><br>Smallest cos&#952; &#8594; &#952; = 180&#176; &#8594; <strong>tension is minimum at the highest point</strong>.<br><br>Why &#8220;the same throughout&#8221; is wrong: uniform <em>speed</em> does not mean uniform <em>tension</em>. Gravity still pulls straight down, so it helps the string at the top and fights it at the bottom.<br><br><em>Real-life check:</em> when a bucket of water is swung in a vertical circle, the rope feels heaviest at the bottom of the swing. Everyone has felt this."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Speed changes as it climbs &#8212; energy on the circle",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A bob on a string of length l swings up from the lowest point until the string makes an angle &#952; with the vertical. The height it has risen is",
+   "diagram": DIAGRAMS.vcHeight({deg:60,h:'h = ?'}),
+   "opts": ["l(1 &#8722; cos&#952;)","l cos&#952;","l sin&#952;","l(1 &#8722; sin&#952;)"],
+   "ans": 0,
+   "sol": "Drop a vertical from the pivot. The bob is now l&#183;cos&#952; below the pivot, but at the bottom it was a full l below.<br><br>h = l &#8722; l cos&#952; = <strong>l(1 &#8722; cos&#952;)</strong><br><br>Sanity checks that take two seconds:<br>&#952; = 0 &#8594; h = 0 (it has not moved)<br>&#952; = 90&#176; &#8594; h = l (string horizontal, risen by the full length)<br>&#952; = 180&#176; &#8594; h = 2l (at the top, risen by a diameter)"
+  },
+  {
+   "q": "Take l = 0.5 m and &#952; = 60&#176;. Since cos60&#176; = 1/2, the height risen is",
+   "diagram": DIAGRAMS.vcHeight({deg:60,h:'h',note:'l = 0.5 m, &#952; = 60&#176;'}),
+   "opts": ["0.25 m","0.5 m","0.43 m","0.75 m"],
+   "ans": 0,
+   "sol": "h = l(1 &#8722; cos60&#176;) = 0.5 &#215; (1 &#8722; 0.5) = 0.5 &#215; 0.5 = <strong>0.25 m</strong><br><br>At 60&#176; the bob has climbed exactly <strong>half the string length</strong>. That is worth remembering &#8212; 60&#176; is the angle that turns up again and again in these questions."
+  },
+  {
+   "q": "A bob is moving with 5 m/s at its lowest point. It rises through a height of 0.8 m. Using v<sup>2</sup> = u<sup>2</sup> &#8722; 2gh with g = 10 m/s<sup>2</sup>, its speed there is",
+   "opts": ["3 m/s","4 m/s","1 m/s","2 m/s"],
+   "ans": 0,
+   "sol": "v<sup>2</sup> = u<sup>2</sup> &#8722; 2gh = 25 &#8722; 2(10)(0.8) = 25 &#8722; 16 = 9<br>v = <strong>3 m/s</strong><br><br>The string tension does <strong>zero</strong> work here &#8212; it is always perpendicular to the motion. So only gravity changes the speed, and energy conservation alone does the job. No need for any force equation."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 25 Jul S1",
+   "q": "&#9733; <strong>Original:</strong> A pendulum bob has a speed of 3 m/s at its lowest position. The pendulum is 50 cm long. The speed of the bob when the string makes an angle of 60&#176; with the vertical is ______ m/s. (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.vcHeight({deg:60,h:'h = 0.25 m',note:'u = 3 m/s at the bottom, l = 0.5 m'}),
+   "opts": ["2","1","3","2.5"],
+   "ans": 0,
+   "sol": "Height risen: h = l(1 &#8722; cos60&#176;) = 0.5 &#215; 0.5 = 0.25 m<br><br>Energy: v<sup>2</sup> = u<sup>2</sup> &#8722; 2gh = 9 &#8722; 2(10)(0.25) = 9 &#8722; 5 = 4<br>v = <strong>2 m/s</strong><br><br>Two rungs joined, nothing new. Rung 1 gave h, Rung 3 gave the energy step.<br><br><em>Watch out:</em> a very common slip is to use h = l cos60&#176; = 0.25 m, which happens to give the same number here <em>by accident</em> because cos60&#176; = 1 &#8722; cos60&#176;. Try the same wrong method at 30&#176; and you will be far off. Always write h = l(1 &#8722; cos&#952;)."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Released from rest at an angle &#8212; the pendulum",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A pendulum bob is pulled aside to an angle &#952; and released from rest. Its speed is largest",
+   "diagram": DIAGRAMS.pend({deg:60,th:'&#952;',h:'h'}),
+   "opts": ["at the lowest point of the swing","just after release, at the extreme position","halfway down, at &#952;/2","the speed is the same all through, since energy is conserved"],
+   "ans": 0,
+   "sol": "Energy is conserved, but it keeps swapping between potential and kinetic. KE is largest where PE is smallest &#8212; that is the <strong>lowest point</strong>.<br><br>At the extreme position the bob is momentarily at rest (that is what &#8220;released from rest&#8221; and &#8220;turning point&#8221; mean), so the speed there is zero, not maximum.<br><br>&#8220;Energy is conserved so speed is constant&#8221; mixes up two different things: total energy stays fixed, kinetic energy does not."
+  },
+  {
+   "q": "The string is 2.5 m long and the bob is pulled to 60&#176; from the vertical. The height the bob is raised through is",
+   "diagram": DIAGRAMS.pend({deg:60,th:'60&#176;',h:'h = ?',L:'2.5 m'}),
+   "opts": ["1.25 m","2.5 m","1.0 m","0.625 m"],
+   "ans": 0,
+   "sol": "h = l(1 &#8722; cos60&#176;) = 2.5 &#215; (1 &#8722; 0.5) = 2.5 &#215; 0.5 = <strong>1.25 m</strong><br><br>Again the 60&#176; shortcut: at 60&#176; the rise is half the length."
+  },
+  {
+   "q": "A body starts from rest and falls through a vertical height of 0.45 m. With g = 10 m/s<sup>2</sup>, the speed it picks up is",
+   "opts": ["3 m/s","4.5 m/s","9 m/s","1.5 m/s"],
+   "ans": 0,
+   "sol": "v = &#8730;(2gh) = &#8730;(2 &#215; 10 &#215; 0.45) = &#8730;9 = <strong>3 m/s</strong><br><br>Starting from rest, the whole of the lost PE turns into KE:<br>mgh = &#189;mv<sup>2</sup> &#8594; v = &#8730;(2gh)<br><br>The mass cancels out. A heavy bob and a light bob released from the same angle arrive at the bottom with the same speed."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 28 Jun S1",
+   "q": "&#9733; <strong>Original:</strong> A pendulum is suspended by a string of length 250 cm. The mass of the bob is 200 g. The bob is pulled aside until the string is at 60&#176; with the vertical. After releasing the bob, the maximum velocity attained by the bob will be ______ m/s. (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.pend({deg:60,th:'60&#176;',h:'h = 1.25 m',L:'2.5 m',v:'v is maximum here'}),
+   "opts": ["5","10","2.5","7.5"],
+   "ans": 0,
+   "sol": "Maximum speed is at the lowest point (Rung 1).<br><br>h = l(1 &#8722; cos60&#176;) = 2.5 &#215; 0.5 = 1.25 m (Rung 2)<br>v = &#8730;(2gh) = &#8730;(2 &#215; 10 &#215; 1.25) = &#8730;25 = <strong>5 m/s</strong> (Rung 3)<br><br>Notice the mass 200 g was never used. It is in the question only to see whether you reach for it.<br><br><em>Unit trap:</em> 250 cm is 2.5 m. Leaving it as 250 and getting 50 m/s is the single most common wrong answer on this question."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "Getting round the top &#8212; looping the loop",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "At the very top of a vertical circle, both T and mg point downwards, i.e. towards the centre. For the string to stay taut, the smallest possible case is T = 0. The speed at the top is then given by",
+   "diagram": DIAGRAMS.vcTop({}),
+   "opts": ["mg = mv<sub>top</sub><sup>2</sup>/R, so v<sub>top</sub> = &#8730;(gR)","T = mg, so v<sub>top</sub> = 0","mg = mv<sub>top</sub><sup>2</sup>/2R, so v<sub>top</sub> = &#8730;(gR/2)","v<sub>top</sub> = &#8730;(5gR)"],
+   "ans": 0,
+   "sol": "At the top: T + mg = mv<sub>top</sub><sup>2</sup>/R<br><br>A string can only pull, never push, so T can drop to zero but not below. Put T = 0:<br>mg = mv<sub>top</sub><sup>2</sup>/R &#8594; <strong>v<sub>top</sub> = &#8730;(gR)</strong><br><br>This is the slowest the stone can be moving at the top and still keep the string straight. Any slower and the string goes slack and the stone falls inwards.<br><br><em>Careful:</em> &#8730;(5gR) is the speed needed at the <strong>bottom</strong>, not the top. Mixing the two up is the classic error here."
+  },
+  {
+   "q": "Carrying &#8730;(gR) down to the bottom with energy conservation (a drop of 2R) gives v<sub>bottom</sub> = &#8730;(5gR). For a bob on a 2 m string to <strong>just</strong> complete the vertical circle, the speed it needs at the lowest point is (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.vcThree({b:'v = ?',m:'',t:'v(top) = &#8730;(gR)',note:'the drop from top to bottom is 2R'}),
+   "opts": ["10 m/s","20 m/s","5 m/s","6.3 m/s"],
+   "ans": 0,
+   "sol": "v<sub>bottom</sub> = &#8730;(5gl) = &#8730;(5 &#215; 10 &#215; 2) = &#8730;100 = <strong>10 m/s</strong><br><br>Where &#8730;(5gR) comes from:<br>v<sub>b</sub><sup>2</sup> = v<sub>top</sub><sup>2</sup> + 2g(2R) = gR + 4gR = 5gR<br><br>Three speeds worth keeping on the tip of your tongue, all measured at the bottom:<br>&#8730;(gR) &#8212; speed at the top in the limiting case<br>&#8730;(2gR) &#8212; just reaches the horizontal level<br>&#8730;(5gR) &#8212; just completes the loop"
+  },
+  {
+   "q": "A bullet of mass 60 g moving at speed v hits a stationary bob and comes out the other side at v/2. The 30 g bob flies off at 8 m/s. Conserving momentum, v is",
+   "diagram": DIAGRAMS.bulletBob({vin:'m = 60 g, speed v',vout:'leaves at v/2',bob:'bob 30 g &#8594; 8 m/s',note:'momentum before = momentum after'}),
+   "opts": ["8 m/s","4 m/s","16 m/s","12 m/s"],
+   "ans": 0,
+   "sol": "Momentum before = momentum after (the hit is over in an instant, so gravity has no time to matter):<br><br>60v = 60(v/2) + 30(8)<br>60v &#8722; 30v = 240<br>30v = 240 &#8594; v = <strong>8 m/s</strong><br><br>Keep the masses in grams on both sides &#8212; they cancel, so there is no need to convert. Just do not mix grams and kilograms in the same line."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 27 Jun S1",
+   "q": "&#9733; <strong>Original:</strong> A pendulum of length 2 m consists of a wooden bob of mass 50 g. A bullet of mass 75 g is fired towards the stationary bob with a speed v. The bullet emerges out of the bob with a speed v/3 and the bob <strong>just completes the vertical circle</strong>. The value of v is ______ m/s. (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.bulletBob({vin:'75 g at speed v',vout:'emerges at v/3',bob:'bob 50 g, l = 2 m'}),
+   "opts": ["10","20","30","15"],
+   "ans": 0,
+   "sol": "<strong>Step 1 &#8212; read &#8220;just completes the circle&#8221; backwards.</strong> The bob must leave with<br>v<sub>bob</sub> = &#8730;(5gl) = &#8730;(5 &#215; 10 &#215; 2) = 10 m/s<br><br><strong>Step 2 &#8212; momentum during the hit.</strong><br>75v = 75(v/3) + 50(10)<br>75v &#8722; 25v = 500<br>50v = 500 &#8594; v = <strong>10 m/s</strong><br><br>Two separate pieces of physics stuck together, and they must be done in this order. The circle condition fixes the bob's speed; only then can momentum give the bullet's speed.<br><br><em>Do not</em> try to conserve energy during the collision. The bullet tears through the wood and a lot of energy is lost as heat. Momentum survives; kinetic energy does not."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Tension at the top and at the bottom &#8212; the 6mg gap",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "For a bob going round a vertical circle of radius l, the tensions at the lowest and highest points are",
+   "diagram": DIAGRAMS.vcTension({}),
+   "opts": ["T<sub>max</sub> = mg + mv<sub>1</sub><sup>2</sup>/l  and  T<sub>min</sub> = mv<sub>2</sub><sup>2</sup>/l &#8722; mg","T<sub>max</sub> = mv<sub>1</sub><sup>2</sup>/l &#8722; mg  and  T<sub>min</sub> = mg + mv<sub>2</sub><sup>2</sup>/l","T<sub>max</sub> = mg + mv<sub>1</sub><sup>2</sup>/l  and  T<sub>min</sub> = mg + mv<sub>2</sub><sup>2</sup>/l","both equal mv<sup>2</sup>/l, because tension is always centripetal"],
+   "ans": 0,
+   "sol": "<strong>At the bottom</strong> the centre is above, so T is inward and mg is outward:<br>T &#8722; mg = mv<sub>1</sub><sup>2</sup>/l &#8594; T<sub>max</sub> = mg + mv<sub>1</sub><sup>2</sup>/l<br><br><strong>At the top</strong> the centre is below, so both T and mg point inward:<br>T + mg = mv<sub>2</sub><sup>2</sup>/l &#8594; T<sub>min</sub> = mv<sub>2</sub><sup>2</sup>/l &#8722; mg<br><br>The only thing you have to get right is which way the centre is. Everything else follows."
+  },
+  {
+   "q": "Using v<sub>1</sub><sup>2</sup> = v<sub>2</sub><sup>2</sup> + 4gl (energy over a drop of 2l), the difference T<sub>max</sub> &#8722; T<sub>min</sub> works out to",
+   "diagram": DIAGRAMS.vcTension({lb:'T(max) is here',lt:'T(min) is here'}),
+   "opts": ["6mg, whatever the speed is","2mg","5mg","it depends on the speed at the bottom"],
+   "ans": 0,
+   "sol": "T<sub>max</sub> &#8722; T<sub>min</sub> = (mg + mv<sub>1</sub><sup>2</sup>/l) &#8722; (mv<sub>2</sub><sup>2</sup>/l &#8722; mg)<br>= 2mg + m(v<sub>1</sub><sup>2</sup> &#8722; v<sub>2</sub><sup>2</sup>)/l<br>= 2mg + m(4gl)/l<br>= 2mg + 4mg = <strong>6mg</strong><br><br>The speed cancels out completely. Fast or slow, the gap between the biggest and smallest tension in a vertical circle is always 6mg.<br><br>The same working with the horizontal position gives T<sub>bottom</sub> &#8722; T<sub>middle</sub> = 3mg. Two clean results, no speed needed."
+  },
+  {
+   "q": "A bob of mass 100 g on a 0.5 m string <strong>just</strong> completes a vertical circle. The tension at the lowest point is (g = 10 m/s<sup>2</sup>)",
+   "opts": ["6 N","1 N","5 N","11 N"],
+   "ans": 0,
+   "sol": "&#8220;Just completes&#8221; means T at the top is exactly zero, so T<sub>min</sub> = 0.<br><br>From the 6mg result: T<sub>max</sub> &#8722; 0 = 6mg = 6 &#215; 0.1 &#215; 10 = <strong>6 N</strong><br><br>The long way gives the same thing: v<sub>1</sub><sup>2</sup> = 5gl = 25, so T = mg + mv<sub>1</sub><sup>2</sup>/l = 1 + (0.1 &#215; 25)/0.5 = 1 + 5 = 6 N.<br><br>In the limiting case the string at the bottom carries six times the weight. That is why ropes snap at the bottom of a swing, never at the top."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 25 Feb S1",
+   "q": "&#9733; <strong>Original:</strong> A small bob tied at one end of a thin string of length 1 m is describing a vertical circle, so that the maximum and minimum tension in the string are in the ratio <strong>5 : 1</strong>. The velocity of the bob at the highest position is ______ m/s. (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.vcTension({lb:'T(max) is here',lt:'T(min) is here',note:'T(max) : T(min) = 5 : 1,  l = 1 m'}),
+   "opts": ["5","4","10","2.5"],
+   "ans": 0,
+   "sol": "Write the ratio out, with v<sub>2</sub> the speed at the top:<br><br>(mg + mv<sub>1</sub><sup>2</sup>/l) = 5(mv<sub>2</sub><sup>2</sup>/l &#8722; mg)<br><br>Put v<sub>1</sub><sup>2</sup> = v<sub>2</sub><sup>2</sup> + 4gl and cancel m:<br>g + (v<sub>2</sub><sup>2</sup> + 4gl)/l = 5v<sub>2</sub><sup>2</sup>/l &#8722; 5g<br>gl + v<sub>2</sub><sup>2</sup> + 4gl = 5v<sub>2</sub><sup>2</sup> &#8722; 5gl<br>10gl = 4v<sub>2</sub><sup>2</sup><br>v<sub>2</sub><sup>2</sup> = 10gl/4 = (10 &#215; 10 &#215; 1)/4 = 25<br>v<sub>2</sub> = <strong>5 m/s</strong><br><br><em>Sense check:</em> if the bob only just managed the loop, T<sub>min</sub> would be 0 and the ratio would be infinite. As the bob is whirled faster the ratio falls towards 1. So a ratio of 5 : 1 means it is moving comfortably faster than the bare minimum &#8212; and sure enough, v<sub>2</sub> = 5 m/s is well above the limiting &#8730;(gl) = &#8730;10 &#8776; 3.2 m/s. Consistent."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Three regimes &#8212; oscillate, go slack, or loop",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A bob is given a speed u = &#8730;(2gL) at the lowest point of a vertical circle of radius L. Where does it come to rest?",
+   "diagram": DIAGRAMS.vcQuarter({}),
+   "opts": ["exactly where the string is horizontal","at the highest point","one quarter of the way up from the bottom","it never comes to rest, it keeps looping"],
+   "ans": 0,
+   "sol": "To reach the horizontal position the bob must climb h = L. Energy gives<br>v<sup>2</sup> = u<sup>2</sup> &#8722; 2gL = 2gL &#8722; 2gL = 0<br><br>So it arrives there with <strong>exactly zero speed</strong> and stops. This is the boundary case.<br><br>&#8730;(2gL) is therefore the dividing line: below it the bob just swings to and fro like a pendulum, staying in the bottom half."
+  },
+  {
+   "q": "A bob is launched from the lowest point with speed u. Matching the three ranges of u to what happens:",
+   "diagram": DIAGRAMS.vcRegimes({}),
+   "opts": ["u &#8804; &#8730;(2gL): oscillates in the lower half &#183; &#8730;(2gL) &lt; u &lt; &#8730;(5gL): string goes slack somewhere above the horizontal &#183; u &#8805; &#8730;(5gL): completes the circle","u &#8804; &#8730;(2gL): completes the circle &#183; &#8730;(2gL) &lt; u &lt; &#8730;(5gL): oscillates &#183; u &#8805; &#8730;(5gL): string goes slack","u &#8804; &#8730;(gL): oscillates &#183; &#8730;(gL) &lt; u &lt; &#8730;(2gL): goes slack &#183; u &#8805; &#8730;(2gL): completes the circle","any u &gt; 0 will complete the circle, as long as the string does not break"],
+   "ans": 0,
+   "sol": "The three ranges, with the physical reason for each:<br><br><strong>u &#8804; &#8730;(2gL)</strong> &#8212; the bob runs out of speed at or below the horizontal. Above the horizontal the string would have to push, and it cannot, but it does not need to: the bob simply turns back. It swings between M and M&#8242;.<br><br><strong>&#8730;(2gL) &lt; u &lt; &#8730;(5gL)</strong> &#8212; it climbs past the horizontal, but before reaching the top the required centripetal force exceeds what gravity's radial component supplies. Tension would have to go negative, so the <strong>string goes slack</strong> and the bob leaves the circle and becomes a projectile.<br><br><strong>u &#8805; &#8730;(5gL)</strong> &#8212; still has &#8730;(gL) left at the top, so T &#8805; 0 all the way round and it <strong>completes the loop</strong>.<br><br>The awkward middle case exists only because a string can pull but not push. Replace the string with a <em>rod</em> and it disappears: a rod can push, so a rod only needs &#8730;(4gL) to get round."
+  },
+  {
+   "q": "A bob starts at the bottom with speed u and reaches the position where the string is horizontal. There its velocity is",
+   "diagram": DIAGRAMS.vcQuarter({}),
+   "opts": ["&#8730;(u<sup>2</sup> &#8722; 2gL), pointing vertically upwards","&#8730;(u<sup>2</sup> &#8722; 2gL), still pointing horizontally","&#8730;(u<sup>2</sup> &#8722; gL), pointing vertically upwards","u, pointing vertically upwards, since tension does no work"],
+   "ans": 0,
+   "sol": "<strong>Size:</strong> it has climbed h = L, so v<sup>2</sup> = u<sup>2</sup> &#8722; 2gL.<br><br><strong>Direction:</strong> velocity is always tangent to the circle, and the tangent at the horizontal position is <strong>vertical</strong>. So it points straight up.<br><br>That change of direction is the whole point of the next rung. At the bottom u was horizontal; a quarter turn later v is vertical. The two are at right angles.<br><br>Tension does no work, true &#8212; but gravity does, so the speed is not u."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 27 Jun S2",
+   "q": "&#9733; <strong>Original:</strong> A stone tied to a string of length L is whirled in a vertical circle with the other end of the string at the centre. At a certain instant the stone is at its lowest position and has a speed u. The magnitude of the <strong>change in its velocity</strong> as it reaches a position where the string is horizontal is &#8730;[x(u<sup>2</sup> &#8722; gL)]. The value of x is",
+   "diagram": DIAGRAMS.vcQuarter({note:'|&#916;v| = |v &#8722; u|, a vector subtraction'}),
+   "opts": ["2","1","3","5"],
+   "ans": 0,
+   "sol": "At the bottom: <strong>u</strong> = u &#238; (horizontal)<br>At the horizontal position: <strong>v</strong> = &#8730;(u<sup>2</sup> &#8722; 2gL) &#309; (vertical)<br><br>Change in velocity is a <em>vector</em> subtraction. The two are perpendicular, so use Pythagoras:<br><br>|&#916;v| = &#8730;[(u<sup>2</sup> &#8722; 2gL) + u<sup>2</sup>] = &#8730;(2u<sup>2</sup> &#8722; 2gL) = &#8730;[<strong>2</strong>(u<sup>2</sup> &#8722; gL)]<br><br>So <strong>x = 2</strong>.<br><br><em>The trap:</em> subtracting the speeds instead of the vectors. That would give u &#8722; &#8730;(u<sup>2</sup> &#8722; 2gL), which does not even have the right form. The words &#8220;change in velocity&#8221; always mean the vector difference; &#8220;change in speed&#8221; would mean the numbers."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "Losing contact &#8212; sliding off a dome",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A block slides down the <strong>outside</strong> of a smooth hemisphere. When the radius to the block makes an angle &#952; with the vertical, the centripetal equation is",
+   "diagram": DIAGRAMS.hemi({deg:40}),
+   "opts": ["mg cos&#952; &#8722; N = mv<sup>2</sup>/R","N &#8722; mg cos&#952; = mv<sup>2</sup>/R","N + mg cos&#952; = mv<sup>2</sup>/R","mg sin&#952; &#8722; N = mv<sup>2</sup>/R"],
+   "ans": 0,
+   "sol": "Here the centre of the circle is <strong>below and inside</strong> the dome, so &#8220;towards the centre&#8221; means into the surface.<br><br>&#8226; mg cos&#952; is the part of the weight along the radius, pointing <em>inward</em> (+)<br>&#8226; N is the surface pushing the block <em>outward</em> (&#8722;)<br><br><strong>mg cos&#952; &#8722; N = mv<sup>2</sup>/R</strong><br><br>Compare with the string case, where tension pointed inward and mg cos&#952; outward. Everything has flipped, because the body is now on the outside of the curve, not the inside."
+  },
+  {
+   "q": "The block leaves the surface at the moment when",
+   "diagram": DIAGRAMS.hemi({deg:48,note:'the block is about to lift off'}),
+   "opts": ["N = 0, giving v<sup>2</sup> = gR cos&#952;","N = mg, giving v<sup>2</sup> = 0","v = 0","N is maximum"],
+   "ans": 0,
+   "sol": "Contact means the surface is pushing. A surface can push but never pull, so the moment it stops pushing, contact is lost.<br><br>Put <strong>N = 0</strong>:<br>mg cos&#952; = mv<sup>2</sup>/R &#8594; <strong>v<sup>2</sup> = gR cos&#952;</strong><br><br>This is the same idea as T = 0 for a string. Whether you are on a string or on a dome, the condition is always &#8220;the contact force just runs out&#8221;."
+  },
+  {
+   "q": "Starting from rest at the top, energy gives v<sup>2</sup> = 2g(R &#8722; h), and the geometry gives cos&#952; = h/R. Combining these with v<sup>2</sup> = gR cos&#952;, the block leaves at a height",
+   "diagram": DIAGRAMS.hemi({deg:48,h:'h',R:'R'}),
+   "opts": ["h = 2R/3","h = R/2","h = R/3","h = 3R/4"],
+   "ans": 0,
+   "sol": "Set the two expressions for v<sup>2</sup> equal:<br><br>2g(R &#8722; h) = gR &#215; (h/R) = gh<br>2R &#8722; 2h = h<br>2R = 3h<br><strong>h = 2R/3</strong><br><br>A clean result that does not depend on g or on the mass. Every smooth dome loses its block at two-thirds of the way up, measured from the ground.<br><br>The matching angle is cos&#952; = 2/3, i.e. &#952; &#8776; 48&#176;."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 27 Jul S2",
+   "q": "&#9733; <strong>Original:</strong> A small block slides down from the top of a hemisphere of radius R = 3 m. The height h at which the block will lose contact with the surface of the sphere is ______ m. (No friction between the block and the hemisphere.)",
+   "diagram": DIAGRAMS.hemi({deg:48,h:'h = ?',R:'R = 3 m'}),
+   "opts": ["2","1","1.5","2.25"],
+   "ans": 0,
+   "sol": "Straight from Rung 3:<br><br>h = 2R/3 = 2 &#215; 3 / 3 = <strong>2 m</strong><br><br>Nothing else in the question is needed &#8212; no mass, no g.<br><br><em>Read the diagram carefully:</em> h here is measured from the <strong>ground</strong>, not from the top of the dome. If a question measures the drop from the top instead, the answer is R &#8722; 2R/3 = R/3 = 1 m. Same physics, different reference level. Always check which one the figure marks."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "Down a curved track &#8212; only the height counts",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A particle slides down a smooth curved track from A to B. To find its speed at B you need",
+   "diagram": DIAGRAMS.track({}),
+   "opts": ["only the vertical drop from A to B","the full shape and length of the track","the shape of the track and the mass of the particle","the normal force from the track at every point"],
+   "ans": 0,
+   "sol": "On a smooth track there are only two forces: gravity and the normal reaction. The normal reaction is always perpendicular to the motion, so it does <strong>zero work</strong>.<br><br>That leaves gravity, and the work done by gravity depends only on the height dropped &#8212; not on the path taken to get there.<br><br>&#189;mv<sub>B</sub><sup>2</sup> = &#189;mv<sub>A</sub><sup>2</sup> + mgh<br><br>Bumpy, smooth, spiral, zig-zag &#8212; if it is frictionless and you know the drop, you know the speed."
+  },
+  {
+   "q": "A particle starts from rest and slides down a smooth track through a vertical drop of 1.8 m. Its speed at the bottom is (g = 10 m/s<sup>2</sup>)",
+   "opts": ["6 m/s","3.6 m/s","18 m/s","1.8 m/s"],
+   "ans": 0,
+   "sol": "v = &#8730;(2gh) = &#8730;(2 &#215; 10 &#215; 1.8) = &#8730;36 = <strong>6 m/s</strong><br><br>Same free-fall formula as a straight drop. The track only steers it; the speed does not care."
+  },
+  {
+   "q": "Two particles, 2 kg and 20 kg, slide down the same smooth track from the same point, both from rest. At the bottom",
+   "opts": ["both have the same speed, but the heavier one has more kinetic energy","the heavier one is faster","the lighter one is faster","the heavier one has more speed and more kinetic energy"],
+   "ans": 0,
+   "sol": "From mgh = &#189;mv<sup>2</sup>, the mass cancels: v = &#8730;(2gh) for both. <strong>Same speed.</strong><br><br>But kinetic energy is &#189;mv<sup>2</sup>, and mass does not cancel there. The 20 kg particle arrives with ten times the kinetic energy.<br><br>Same speed, different energy. Keep the two ideas apart &#8212; questions often test exactly this gap."
+  },
+  {
+   "tag": "JEE Main 2021 &#183; 18 Mar S1",
+   "q": "&#9733; <strong>Original:</strong> A particle of mass 10 kg is placed at a point A on a smooth curved track. When the particle is slightly displaced to its right, it starts moving and reaches the point B. Point A is 5 m above B. The speed of the particle at B is x m/s. The value of x, to the nearest integer, is (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.track({h:'5 m'}),
+   "opts": ["10","5","14","20"],
+   "ans": 0,
+   "sol": "&#8220;Slightly displaced&#8221; means it starts from rest, v<sub>A</sub> &#8776; 0.<br><br>v<sub>B</sub> = &#8730;(2gh) = &#8730;(2 &#215; 10 &#215; 5) = &#8730;100 = <strong>10 m/s</strong><br><br>The 10 kg mass is not used at all, and neither is the shape of the hill in between.<br><br><em>Worth saying in class:</em> if the same question had said the track was rough, everything changes &#8212; you would then need the friction work, and the shape and length of the path would suddenly matter. The word &#8220;smooth&#8221; is doing all the work in this question."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "The horizontal circle &#8212; and how many turns per minute",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A stone is whirled in a <strong>horizontal</strong> circle of radius r with angular speed &#969;. The tension in the string is",
+   "diagram": DIAGRAMS.horiz({}),
+   "opts": ["T = m&#969;<sup>2</sup>r = mv<sup>2</sup>/r","T = mg","T = m&#969;r","T = mg + m&#969;<sup>2</sup>r"],
+   "ans": 0,
+   "sol": "In an ideal horizontal circle the string lies in the horizontal plane, so the whole tension is available as the centripetal force:<br><br><strong>T = m&#969;<sup>2</sup>r = mv<sup>2</sup>/r</strong><br><br>Contrast this with the vertical circle, where gravity kept getting mixed in and T changed from point to point. Here T is the same all the way round.<br><br>(Strictly the string must dip slightly below the horizontal to support the weight &#8212; the conical pendulum. JEE questions of this type ignore that unless they say otherwise.)"
+  },
+  {
+   "q": "A 100 g stone on a 2 m string is whirled in a horizontal circle. The string snaps at 80 N. The largest angular speed it can take is",
+   "diagram": DIAGRAMS.horiz({r:'r = 2 m'}),
+   "opts": ["20 rad/s","40 rad/s","400 rad/s","4 rad/s"],
+   "ans": 0,
+   "sol": "T = m&#969;<sup>2</sup>r<br>80 = 0.1 &#215; &#969;<sup>2</sup> &#215; 2 = 0.2&#969;<sup>2</sup><br>&#969;<sup>2</sup> = 400 &#8594; &#969; = <strong>20 rad/s</strong><br><br>Convert the mass first: 100 g = 0.1 kg. Forgetting that gives &#969;<sup>2</sup> = 0.4 and a badly wrong answer."
+  },
+  {
+   "q": "An angular speed of 20 rad/s, written in revolutions per minute, is",
+   "opts": ["600/&#960; rev/min","20/&#960; rev/min","1200&#960; rev/min","600&#960; rev/min"],
+   "ans": 0,
+   "sol": "One revolution is 2&#960; radians, and one minute is 60 seconds.<br><br>n = &#969;/(2&#960;) rev per second = 20/(2&#960;) = 10/&#960; rev/s<br>In a minute: 10/&#960; &#215; 60 = <strong>600/&#960; rev/min</strong><br><br>That is about 191 revolutions a minute. Good sense check &#8212; roughly three turns a second, which is a fast but believable whirl."
+  },
+  {
+   "tag": "JEE Main 2022 &#183; 24 Jun S1",
+   "q": "&#9733; <strong>Original:</strong> A boy ties a stone of mass 100 g to the end of a 2 m long string and whirls it around in a horizontal plane. The string can withstand a maximum tension of 80 N. If the maximum speed with which the stone can revolve is (K/&#960;) rev/min, the value of K is (string massless and unstretchable)",
+   "diagram": DIAGRAMS.horiz({r:'r = 2 m'}),
+   "opts": ["600","400","300","800"],
+   "ans": 0,
+   "sol": "From Rung 2, &#969;<sub>max</sub> = 20 rad/s. From Rung 3, that is 600/&#960; rev/min.<br><br>Matching with the given form (K/&#960;) rev/min gives <strong>K = 600</strong>.<br><br>Or do it in one line, writing the rate as n = K/&#960; rev/min = K/(60&#960;) rev/s, so &#969; = 2&#960;n = K/30:<br>80 = 0.1 &#215; (K/30)<sup>2</sup> &#215; 2 = 0.2K<sup>2</sup>/900<br>K<sup>2</sup> = 360000 &#8594; K = 600<br><br><em>Note on the printed question:</em> some copies of this paper show the rate as &#8220;K&#960; rev/min&#8221;, but the official solution uses <strong>K/&#960;</strong>, which is what gives 600. If your book shows K&#960;, treat it as a typo."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "When the circle is rough &#8212; friction on a closed path",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A block moves inside a rough tube. Over the whole journey, the correct statement of the work&#8211;energy theorem is",
+   "diagram": DIAGRAMS.tube({}),
+   "opts": ["W<sub>friction</sub> + W<sub>gravity</sub> = KE<sub>final</sub> &#8722; KE<sub>initial</sub>","W<sub>friction</sub> = KE<sub>final</sub> + KE<sub>initial</sub>","W<sub>gravity</sub> = 0, because the path is a circle","W<sub>friction</sub> = 0, because the block returns near its starting height"],
+   "ans": 0,
+   "sol": "The work&#8211;energy theorem takes the <strong>total</strong> work of <strong>all</strong> forces:<br><br>W<sub>total</sub> = &#916;KE<br>W<sub>friction</sub> + W<sub>gravity</sub> + W<sub>normal</sub> = KE<sub>f</sub> &#8722; KE<sub>i</sub><br><br>The normal force from the tube wall is perpendicular to the motion, so it contributes nothing, leaving the option shown.<br><br>Friction never cancels out over a loop. It takes energy away on every single stretch, whichever way the block is going."
+  },
+  {
+   "q": "A closed circular tube of radius 15 cm stands in a vertical plane. A block is introduced at the <strong>top</strong> and finally stops at the <strong>bottom</strong>. The work done by gravity on the block over the whole journey is (m = 1 kg, g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.tube({h:'2R = 0.3 m'}),
+   "opts": ["+3 J","&#8722;3 J","+1.5 J","0, since it went round several times"],
+   "ans": 0,
+   "sol": "Gravity is a conservative force, so only the <strong>net</strong> drop matters, however many loops the block made in between.<br><br>Net drop from top to bottom = 2R = 2 &#215; 0.15 = 0.3 m<br>W<sub>gravity</sub> = +mgh = 1 &#215; 10 &#215; 0.3 = <strong>+3 J</strong><br><br>It is positive because the block ends up lower than it started; gravity pulled in the direction of the net displacement.<br><br>Do not confuse this with friction, which is <em>not</em> conservative &#8212; for friction, every centimetre travelled counts."
+  },
+  {
+   "q": "The block of mass 1 kg enters at the top with a speed of 22 m/s and finally stops. Its change in kinetic energy is",
+   "diagram": DIAGRAMS.tube({v:'22 m/s'}),
+   "opts": ["&#8722;242 J","&#8722;484 J","&#8722;22 J","+242 J"],
+   "ans": 0,
+   "sol": "KE<sub>i</sub> = &#189;mv<sup>2</sup> = &#189; &#215; 1 &#215; 22<sup>2</sup> = &#189; &#215; 484 = 242 J<br>KE<sub>f</sub> = 0 (it stops)<br><br>&#916;KE = 0 &#8722; 242 = <strong>&#8722;242 J</strong><br><br>Do the 22<sup>2</sup> = 484 first, then halve it. Halving 22 first and squaring gives 121, a popular wrong answer."
+  },
+  {
+   "tag": "JEE Main 2023 &#183; 10 Apr S1",
+   "q": "&#9733; <strong>Original:</strong> A closed circular tube of average radius 15 cm, whose inner walls are rough, is kept in a vertical plane. A block of mass 1 kg just fits inside the tube. The speed of the block is 22 m/s when it is introduced at the top of the tube. After completing five oscillations, the block stops at the bottom region of the tube. The work done by the tube on the block is ______ J. (g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.tube({v:'22 m/s',h:'2R = 0.3 m'}),
+   "opts": ["245","242","239","3"],
+   "ans": 0,
+   "sol": "Put the three rungs together:<br><br>W<sub>friction</sub> + W<sub>gravity</sub> = &#916;KE<br>W<sub>friction</sub> + 3 = &#8722;242<br><strong>W<sub>friction</sub> = &#8722;245 J</strong><br><br>The official answer is recorded as <strong>245</strong>, i.e. the magnitude.<br><br>Notice that &#8220;five oscillations&#8221; and &#8220;bottom region&#8221; are deliberately vague &#8212; and they do not need to be precise. Friction's work comes out of the energy books, not out of measuring the path. That is the whole trick of this question.",
+   "note": "<strong>Sign note worth flagging in class:</strong> the work done <em>by</em> the tube on the block is negative (&#8722;245 J) &#8212; friction always opposes motion. The official key prints the magnitude 245. If a student writes &#8722;245 with the reasoning shown, they have understood it better than the key has."
+  }
+ ]
+}
+
+];
+
+
+const STORAGE_KEY = 'padipucast_wpe_vertical_circular_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
