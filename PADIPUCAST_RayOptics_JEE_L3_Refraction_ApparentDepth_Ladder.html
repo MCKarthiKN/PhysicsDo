@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Ray Optics JEE &#183; L3 Refraction &amp; apparent depth Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Ray Optics &#183; JEE</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Ray Optics &#183; Lecture 3<br>Refraction &amp; apparent depth</h1></div>
+    <p id="home-sub">All 12 questions of this lecture from the ALLEN JEE module, in the order of your notes: <strong>matching μ &#8594; Snell with vectors &#8594; i = 2r &#8594; pole in a pool &#8594; sphere inside a sphere (3 Qs) &#8594; deviation inside a sphere &#8594; the sphere match-list &#8594; bubble in a slab &#8594; fish and bird &#8594; mirror under water</strong>.<br><br>Each source question is a <strong>ladder</strong>: 2 build-up rungs, then the original question (&#9733;) with its exercise number. Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 12 ladders &#215; 3 rungs = 36 questions (7 class, 5 homework).<br><br><em>For every bend, first mark the normal. For a sphere, the normal is the radius.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Ray Optics L1 · Plane mirror  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1f6f8b';
+const FILL_T='#e6f1f4';
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+const _f=v=>(+v).toFixed(1);
+function _svg(W,H,s){ return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`; }
+// mirror line with hatching on one side (side = +1 or -1)
+function _mline(x1,y1,x2,y2,side){
+  side=side||1;
+  const dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L, nx=-uy*side, ny=ux*side;
+  let s=`<line x1="${_f(x1)}" y1="${_f(y1)}" x2="${_f(x2)}" y2="${_f(y2)}" stroke="${INK}" stroke-width="2.4"/>`;
+  for(let d=5; d<L-2; d+=9){ const px=x1+ux*d, py=y1+uy*d;
+    s+=`<line x1="${_f(px)}" y1="${_f(py)}" x2="${_f(px+nx*7-ux*4)}" y2="${_f(py+ny*7-uy*4)}" stroke="${INK}" stroke-width="1"/>`; }
+  return s;
+}
+// light ray with an arrowhead at its middle
+function _ray(x1,y1,x2,y2,c,dash){
+  c=c||AMB; const id=_nid(); const mx=(x1+x2)/2, my=(y1+y2)/2;
+  return `<defs>${AR(id,c)}</defs><path d="M${_f(x1)} ${_f(y1)} L${_f(mx)} ${_f(my)} L${_f(x2)} ${_f(y2)}" stroke="${c}" stroke-width="2" fill="none" ${dash?'stroke-dasharray="5 4"':''} marker-mid="url(#${id})"/>`;
+}
+function _arrow(x1,y1,x2,y2,c,w){ const id=_nid(); c=c||RED;
+  return `<defs>${AR(id,c)}</defs><line x1="${_f(x1)}" y1="${_f(y1)}" x2="${_f(x2)}" y2="${_f(y2)}" stroke="${c}" stroke-width="${w||2.2}" marker-end="url(#${id})"/>`; }
+function _dash(x1,y1,x2,y2,c){ return `<line x1="${_f(x1)}" y1="${_f(y1)}" x2="${_f(x2)}" y2="${_f(y2)}" stroke="${c||GREY}" stroke-width="1.2" stroke-dasharray="4 4"/>`; }
+function _t(x,y,txt,c,sz,anc,wt){ return `<text x="${_f(x)}" y="${_f(y)}" font-size="${sz||11}" text-anchor="${anc||'middle'}" fill="${c||INK}" ${FS} font-weight="${wt||700}">${txt}</text>`; }
+function _pt(cx,cy,r,deg){ return [cx+r*Math.cos(deg*Math.PI/180), cy-r*Math.sin(deg*Math.PI/180)]; }
+function _arc(cx,cy,r,a1,a2,c){
+  const [x1,y1]=_pt(cx,cy,r,a1),[x2,y2]=_pt(cx,cy,r,a2);
+  return `<path d="M${_f(x1)} ${_f(y1)} A${r} ${r} 0 ${Math.abs(a2-a1)>180?1:0} ${a2>a1?0:1} ${_f(x2)} ${_f(y2)}" stroke="${c||GREY}" stroke-width="1.3" fill="none"/>`;
+}
+function _arcL(cx,cy,r,a1,a2,label,c){ const [lx,ly]=_pt(cx,cy,r+12,(a1+a2)/2); return _arc(cx,cy,r,a1,a2,c)+_t(lx,ly+4,label,c||GREY,11); }
+function _dot(x,y,c,r){ return `<circle cx="${_f(x)}" cy="${_f(y)}" r="${r||4}" fill="${c||INK}"/>`; }
+function _dimH(x1,x2,y,label){ return _arrow((x1+x2)/2,y,x1+1,y,GREY,1.1)+_arrow((x1+x2)/2,y,x2-1,y,GREY,1.1)
+  +`<rect x="${_f((x1+x2)/2-24)}" y="${y-8}" width="48" height="15" fill="var(--bg)"/>`+_t((x1+x2)/2,y+4,label,GREY,10.5); }
+// ray tracer between two mirrors meeting at O (math coords, y up); M1 along +x, M2 at angle a
+function _trace(a,p,d,n,L1,L2,ext){
+  const u1=[1,0], u2=[Math.cos(a*Math.PI/180),Math.sin(a*Math.PI/180)];
+  const pts=[p.slice()]; let cur=p.slice(), dir=d.slice(), hits=0;
+  while(hits<n){
+    let best=null;
+    [[u1,L1],[u2,L2]].forEach(([u,L])=>{
+      const det=-dir[0]*u[1]+u[0]*dir[1]; if(Math.abs(det)<1e-9) return;
+      const r0=-cur[0], r1=-cur[1];
+      const t=(-r0*u[1]+u[0]*r1)/det, s=(dir[0]*r1-dir[1]*r0)/det;
+      if(t>1e-6 && s>0 && s<L && (!best||t<best.t)) best={t,u};
+    });
+    if(!best) break;
+    cur=[cur[0]+best.t*dir[0],cur[1]+best.t*dir[1]];
+    const k=dir[0]*best.u[0]+dir[1]*best.u[1];
+    dir=[2*k*best.u[0]-dir[0],2*k*best.u[1]-dir[1]];
+    pts.push(cur.slice()); hits++;
+  }
+  if(ext) pts.push([cur[0]+ext*dir[0],cur[1]+ext*dir[1]]);
+  return pts;
+}
+
+const DIAGRAMS = {
+
+// ---- single horizontal mirror, ray at 30° to surface ----------------------
+reflect1:()=>{
+  const W=320,H=180,hx=160,hy=145; let s='';
+  s+=_mline(40,hy,280,hy,1);
+  s+=_dash(hx,35,hx,hy); s+=_t(hx,28,'normal',GREY,10.5,'middle',400);
+  const [sx,sy]=_pt(hx,hy,125,150);
+  s+=_ray(sx,sy,hx,hy);
+  s+=_arcL(hx,hy,42,150,180,'30°',AMB);
+  s+=_arcL(hx,hy,30,90,150,'i = ?',RED);
+  return _svg(W,H,s);
+},
+
+// ---- inclined mirror (Ex-1 Q2 and the horizontal-ray rung) -----------------
+incline:(o)=>{
+  const W=360,H=210,ox=40,oy=182; let s='';
+  const th=o.mode==='horiz'?30:24;
+  s+=`<line x1="${ox}" y1="${oy}" x2="330" y2="${oy}" stroke="${GREY}" stroke-width="1.4"/>`+_t(338,oy+4,'H',GREY,11,'start');
+  const [ex,ey]=_pt(ox,oy,300,th);
+  s+=_mline(ox,oy,ex,ey,1)+_t(ex+10,ey,'M',INK,11,'start');
+  if(o.mode==='horiz'){
+    const [px,py]=_pt(ox,oy,165,th);
+    s+=_ray(px-135,py,px,py);
+    const [rx,ry]=_pt(px,py,95,60);
+    s+=_ray(px,py,rx,ry,GREY,true)+_t(rx+8,ry+4,'?',RED,14,'start');
+    s+=_arcL(ox,oy,46,0,th,'30°',GREY);
+    s+=_arcL(px,py,34,180,180+th,'30°',AMB);
+  } else {
+    const [px,py]=_pt(ox,oy,190,th);
+    const [sx,sy]=_pt(px,py,125,2*th);
+    s+=_ray(sx,sy,px,py);
+    s+=_arcL(ox,oy,46,0,th,'θ',GREY);
+    s+=_arcL(px,py,36,th,2*th,'θ',AMB);
+  }
+  return _svg(W,H,s);
+},
+
+// ---- mirror y = (2/π) sin πx -----------------------------------------------
+sineMirror:()=>{
+  const W=330,H=235,ox=45,oy=205,k=250; let s='', d=`M${ox} ${oy}`;
+  for(let i=0;i<=50;i++){ const x=i/50; d+=` L${_f(ox+k*x)} ${_f(oy-k*(2/Math.PI)*Math.sin(Math.PI*x))}`; }
+  s+=`<path d="${d} Z" fill="${FILL_T}" stroke="none"/><path d="${d}" stroke="${INK}" stroke-width="2.6" fill="none"/>`;
+  s+=_arrow(ox,oy,ox+272,oy,INK,1.3)+_arrow(ox,oy,ox,28,INK,1.3);
+  s+=_t(ox+280,oy+4,'x',INK,11,'start')+_t(ox,20,'y',INK,11)+_t(ox-8,oy+14,'0',GREY,10)+_t(ox+k,oy+15,'1',GREY,10);
+  s+=_t(ox+k/2,oy-k*0.64-10,'y = (2/π) sin πx',INK,11);
+  s+=_ray(8,oy-95,ox+28,oy-95,AMB)+_t(ox+40,oy-91,'?',RED,13,'start');
+  s+=_t(ox+k/2,oy-40,'mirror surface = the curve',GREY,10,'middle',400);
+  return _svg(W,H,s);
+},
+
+// ---- point source in front of a wall mirror, field of view ------------------
+viewRegion:(o)=>{
+  const W=320,H=265,mx=110,cy=118; let s='';
+  const d=o.d, D=o.D, h=o.h;
+  s+=`<line x1="${mx}" y1="14" x2="${mx}" y2="222" stroke="${GREY}" stroke-width="1" stroke-dasharray="2 3"/>`;
+  s+=_mline(mx,cy-h,mx,cy+h,1)+_t(mx,cy-h-9,o.wl,INK,10.5);
+  s+=_dash(mx+D,10,mx+D,222,INK)+_t(mx+D,236,o.pl,GREY,10,'middle',400);
+  s+=_dot(mx+d,cy,AMB,4.5)+_t(mx+d,cy-10,'S',AMB,12);
+  if(o.lines){
+    const sx=mx-d; s+=_dot(sx,cy,GREY,4)+_t(sx,cy-10,'S′',GREY,12);
+    const off=h*(d+D)/d;
+    s+=_dash(sx,cy,mx+D,cy-off,BLU)+_dash(sx,cy,mx+D,cy+off,BLU);
+    s+=`<line x1="${mx+D}" y1="${_f(cy-off)}" x2="${mx+D}" y2="${_f(cy+off)}" stroke="${GRN}" stroke-width="4" opacity="0.55"/>`;
+    s+=_t(mx+D+6,cy+4,'seen here',GRN,10,'start');
+  }
+  s+=_dimH(mx,mx+d,cy+h+28,o.dl)+_dimH(mx,mx+D,252,o.Dl);
+  return _svg(W,H,s);
+},
+
+// ---- two mirrors meeting at O, with a traced ray ----------------------------
+twoM:(o)=>{
+  const W=370,H=o.H||240,OX=40,OY=H-26; let s='';
+  const L1=o.L1||310, L2=o.L2||210, a=o.a;
+  const S=([x,y])=>[OX+x,OY-y];
+  s+=_mline(OX,OY,OX+L1,OY,1)+_t(OX+L1-6,OY+22,'M₁',INK,11);
+  const [ex,ey]=S([L2*Math.cos(a*Math.PI/180),L2*Math.sin(a*Math.PI/180)]);
+  s+=_mline(OX,OY,ex,ey,-1)+_t(ex-14,ey-2,'M₂',INK,11,'end');
+  s+=_arcL(OX,OY,30,0,a,o.aL||(a+'°'),GREY)+_t(OX-10,OY+14,'O',GREY,10);
+  if(o.src){
+    const pts=_trace(a,o.src,o.dir,o.n,L1,L2,o.ext||0);
+    for(let i=0;i<pts.length-1;i++){ const [x1,y1]=S(pts[i]),[x2,y2]=S(pts[i+1]); s+=_ray(x1,y1,x2,y2,(o.lastGrey&&i===pts.length-2)?GREY:AMB,(o.lastGrey&&i===pts.length-2)); }
+    const [hx,hy]=S(pts[1]);
+    if(o.nrm){ s+=_dash(hx,hy,hx,hy-78); s+=_arcL(hx,hy,34,o.nrm[0],o.nrm[1],o.nrmL,RED); }
+    if(o.g1){ s+=_arcL(hx,hy,34,o.g1[0],o.g1[1],o.g1L,AMB); }
+    if(o.q2&&pts[2]){ const [qx,qy]=S(pts[2]); s+=_t(qx+14,qy+16,'?',RED,14,'start'); }
+    if(o.note){ s+=_t(W/2+30,24,o.note,GREY,10.5,'middle',400); }
+  }
+  return _svg(W,H,s);
+},
+
+// ---- two parallel vertical mirrors with object (and images) -----------------
+parallel2:(o)=>{
+  const W=390,H=205,ax=250,bx=350,k=10,oy=100; let s='';
+  s+=_mline(ax,30,ax,170,1)+_mline(bx,30,bx,170,-1);
+  s+=_t(ax,22,'A',INK,12)+_t(bx,22,'B',INK,12);
+  const px=ax+o.o*k; s+=_dot(px,oy,AMB,4.5)+_t(px,oy-10,'O',AMB,12);
+  s+=_dimH(ax,px,oy+34,o.o+' cm')+_dimH(ax,bx,190,'10 cm');
+  (o.imgs||[]).forEach((d,i)=>{ const x=ax-d*k; s+=_dot(x,oy,GREY,3.8)+_t(x,oy-10,'I'+(i+1),GREY,10.5)+_t(x,oy+18,d+' cm',GREY,9.5,'middle',400); });
+  if(o.q) s+=_t(120,oy+4,'images behind A → ?',RED,11);
+  return _svg(W,H,s);
+},
+
+// ---- bird between two mirrors / object near one mirror ----------------------
+bird:(o)=>{
+  const W=340,H=210,m1=85,m2=265,bx=o.single?150:175,by=128; let s='';
+  s+=_mline(m1,20,m1,178,1)+_t(m1,195,'M₁',INK,11);
+  if(!o.single){ s+=_mline(m2,20,m2,178,-1)+_t(m2,195,'M₂',INK,11); s+=_dimH(m1,m2,204-2,'L'); }
+  const th=o.single?30:35, len=80;
+  const ex=bx+len*Math.sin(th*Math.PI/180), ey=by-len*Math.cos(th*Math.PI/180);
+  s+=_dash(bx,by,bx,by-len-8);
+  s+=_arrow(bx,by,ex,ey,RED,2.4)+_t(ex+8,ey-2,o.single?'10 m/s':'v',RED,12,'start');
+  s+=_arcL(bx,by,32,90-th,90,o.single?'30°':'θ',GREY);
+  s+=_dot(bx,by,AMB,5.5)+_t(bx-12,by+18,o.single?'object':'bird',AMB,10.5);
+  return _svg(W,H,s);
+},
+
+// ---- three mirrors in an equilateral triangle with a hole -------------------
+tri:(o)=>{
+  const W=380,H=285,A=[80,212],B=[300,212],C=[190,212-190.5]; let s='';
+  const hx=A[0]+o.l, hy=A[1];
+  s+=_mline(A[0],A[1],hx-5,hy,1)+_mline(hx+5,hy,B[0],B[1],1);
+  s+=_mline(B[0],B[1],C[0],C[1],1)+_mline(C[0],C[1],A[0],A[1],1);
+  s+=_t(C[0]+62,C[1]+92,'L',GREY,11);
+  const th=30, dx=Math.sin(th*Math.PI/180), dy=-Math.cos(th*Math.PI/180);
+  s+=_ray(hx-58*dx,hy-58*dy,hx,hy);
+  s+=_dash(hx,hy,hx,hy+50); s+=_arcL(hx,hy,30,270-th,270,o.path?'30°':'θ',RED);
+  s+=_t(hx+8,hy+14,'hole',GREY,10,'start',400);
+  if(o.path){
+    const M=[190,212], R=[245,116.75], Lf=[135,116.75];
+    s+=_ray(M[0],M[1],R[0],R[1])+_ray(R[0],R[1],Lf[0],Lf[1])+_ray(Lf[0],Lf[1],M[0],M[1]);
+    s+=_ray(hx,hy,hx+48*dx,hy+48*Math.cos(th*Math.PI/180),GREY,true);
+  } else {
+    s+=_ray(hx,hy,hx+60*dx,hy+60*dy,AMB)+_t(hx+44,hy-60,'?',RED,14,'start');
+    s+=_dimH(A[0],hx,198,'l');
+  }
+  return _svg(W,H,s);
+},
+
+};
+
+// ---- extra helpers for L2-L5 ----
+function _cm(x,cy,h,b,hs){ // spherical mirror: b>0 bulges right; hatch side hs (+1 right)
+  let s=`<path d="M${x} ${cy-h} Q${x+2*b} ${cy} ${x} ${cy+h}" stroke="${INK}" stroke-width="2.4" fill="none"/>`;
+  for(let k=1;k<16;k++){const t=k/16,px=(1-t)*(1-t)*x+2*t*(1-t)*(x+2*b)+t*t*x,py=cy-h+2*h*t; s+=`<line x1="${_f(px)}" y1="${_f(py)}" x2="${_f(px+7*hs)}" y2="${_f(py-4)}" stroke="${INK}" stroke-width="1"/>`;}
+  return s;}
+function _axis(x1,x2,y){ return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${GREY}" stroke-width="1.1"/>`; }
+Object.assign(DIAGRAMS,{
+planeConvex:()=>{ let s='';const y=110; s+=_axis(30,360,y)+_mline(40,40,40,180,1)+_cm(340,y,70,-9,1);
+  s+=`<line x1="100" y1="${y}" x2="280" y2="${y}" stroke="${AMB}" stroke-width="5"/>`+_t(100,y-10,'A',AMB,11)+_t(280,y-10,'B',AMB,11);
+  s+=_arrow(210,y-26,160,y-26,RED)+_t(185,y-34,'v',RED,11)+_t(340,30,'R = 120 cm',INK,10.5);
+  s+=_dimH(40,100,y+26,'10 cm')+_dimH(280,340,y+26,'10 cm')+_dimH(40,340,y+62,'50 cm'); return _svg(380,200,s);},
+wireTri:()=>{ let s='';const y=160; s+=_axis(40,340,y)+_cm(320,y,110,12,1);
+  s+=`<polygon points="220,${y} 120,${y} 220,${y-100}" fill="none" stroke="${AMB}" stroke-width="2.6"/>`+_arcL(120,y,26,0,45,'45°',GREY);
+  s+=_t(120,y+18,'f',GREY,11)+_t(220,y+18,'f/2',GREY,11)+_t(250,y+36,'(measured from the mirror)',GREY,9.5,'middle',400); return _svg(370,205,s);},
+movingMirror:()=>{ let s='';const y=110; s+=_axis(30,340,y)+_cm(270,y,75,10,1);
+  s+=`<line x1="90" y1="${y}" x2="90" y2="${y-40}" stroke="${AMB}" stroke-width="2.6"/>`+_arrow(90,y-52,140,y-52,RED)+_t(115,y-60,'V₀ = 15 cm/s',RED,10.5);
+  s+=_arrow(282,40,322,40,RED)+_t(302,30,'Vₘ = ?',RED,10.5)+_dimH(90,270,y+30,'u = 30 cm')+_t(270,y+56,'f = 10 cm',INK,10.5); return _svg(360,180,s);},
+sphereIn:()=>{ let s='';const cx=190,cy=125; s+=`<circle cx="${cx}" cy="${cy}" r="100" fill="${FILL_T}" stroke="${INK}" stroke-width="2"/><circle cx="${cx}" cy="${cy}" r="48" fill="#c9e2e9" stroke="${INK}" stroke-width="1.6"/>`;
+  const A=_pt(cx,cy,100,168),B=_pt(cx,cy,48,120),C=_pt(cx,cy,100,40);
+  s+=_ray(A[0]-70,A[1]+22,A[0],A[1])+_ray(A[0],A[1],B[0],B[1])+_ray(B[0],B[1],C[0],C[1])+_dash(cx,cy,A[0],A[1])+_dash(cx,cy,B[0]-10,B[1]-17);
+  s+=_t(A[0]-8,A[1]-8,'A',INK,11)+_t(B[0]-4,B[1]-8,'B',INK,11)+_t(C[0]+8,C[1]-4,'C',INK,11)+_dot(cx,cy,INK,3)+_t(cx+8,cy+14,'O',INK,10)+_t(cx+60,cy-70,'μ₁',INK,11)+_t(cx+10,cy+34,'μ₂',INK,11)+_t(A[0]-44,A[1]+30,'i₁',RED,11); return _svg(380,250,s);},
+pole:()=>{ let s='';const sy=100,by=210; s+=`<rect x="30" y="${sy}" width="330" height="${by-sy}" fill="${FILL_T}"/>`+_axis(30,360,sy)+`<line x1="30" y1="${by}" x2="360" y2="${by}" stroke="${INK}" stroke-width="2"/>`;
+  s+=`<line x1="70" y1="50" x2="70" y2="${by}" stroke="${INK}" stroke-width="4"/>`; const hx=70+50*Math.sqrt(3);
+  s+=_ray(70-45*1.732,50-45,70,50,AMB,true)+_ray(70,50,hx,sy,AMB,true)+_ray(hx,sy,hx+110*0.854,by,AMB,true)+_arcL(hx,sy,26,180,210,'30°',GREY);
+  s+=`<line x1="70" y1="${by-3}" x2="${_f(hx+94)}" y2="${by-3}" stroke="${INK}" stroke-width="6" opacity="0.5"/>`+_t(160,by+18,'shadow 2.15 m',INK,10.5)+_t(56,78,'h?',RED,11,'end')+_t(345,160,'1.5 m',GREY,10.5,'end'); return _svg(380,232,s);},
+beakerMirror:()=>{ let s='';const top=60,bot=190; s+=`<rect x="120" y="${top}" width="140" height="${bot-top}" fill="${FILL_T}" stroke="${INK}" stroke-width="1.8"/>`+`<path d="M120 ${bot} Q190 ${bot-28} 260 ${bot}" stroke="${INK}" stroke-width="3" fill="none"/>`;
+  s+=_dot(190,top,RED,5)+_t(215,top-8,'particle',RED,10.5,'start')+_t(290,130,'water 5 cm',GREY,10.5,'start')+_t(190,bot+22,'concave mirror, R = 40 cm',INK,10.5); return _svg(380,225,s);},
+cube:()=>{ let s='';s+=`<rect x="110" y="40" width="160" height="160" fill="${FILL_T}" stroke="${INK}" stroke-width="2"/>`+_mline(110,200,270,200,1);
+  s+=_ray(120,0,160,40)+_dash(160,20,160,70)+_arcL(160,40,24,90,135,'45°',RED)+_ray(160,40,220,200)+_t(140,185,'μ = 2',INK,11)+_t(190,225,'silvered',GREY,10,'middle',400); return _svg(380,240,s);},
+compSlab:()=>{ let s='';const y=110; s+=_axis(30,360,y)+_cm(50,y,80,-9,-1);
+  s+=`<rect x="170" y="40" width="22" height="140" fill="${FILL_T}" stroke="${INK}" stroke-width="1.6"/>`+_dot(340,y,AMB,4.5)+_t(340,y-10,'object',AMB,10.5);
+  s+=_dimH(50,170,y+50,'x₀')+_t(181,30,'t = 3 cm, μ = 1.5',INK,10)+_t(60,24,'f = 15 cm',INK,10.5)+_dimH(50,340,y+84,'u = 61 cm'); return _svg(380,210,s);},
+fibre:(o)=>{ o=o||{}; let s='';s+=`<rect x="60" y="40" width="300" height="130" fill="#e9e6df"/><rect x="60" y="70" width="300" height="70" fill="${FILL_T}"/>`;
+  s+=_ray(10,140,70,105)+_ray(70,105,130,70)+_ray(130,70,200,140)+_ray(200,140,270,70)+_t(20,125,o.i||'i',RED,11)+_t(210,60,o.n2||'cladding n₂',INK,10.5)+_t(300,110,o.n1||'core n₁',INK,10.5)+_t(30,60,'air',GREY,10.5); return _svg(380,190,s);},
+graphRI:()=>{ let s='';const ox=60,oy=170; s+=_arrow(ox,oy,340,oy,INK,1.2)+_arrow(ox,oy,ox,25,INK,1.2)+_t(344,oy+4,'k',INK,11,'start')+_t(ox-6,30,'|r−i|',INK,10.5,'end');
+  s+=`<path d="M110 118 Q150 150 175 ${oy} Q220 110 330 58" stroke="${AMB}" stroke-width="2.4" fill="none"/>`+_dash(ox,118,110,118)+_dash(ox,50,335,50);
+  s+=_t(ox-6,122,'θ₁',INK,11,'end')+_t(ox-6,54,'θ₂',INK,11,'end')+_t(110,oy+16,'k₁',INK,11)+_t(175,oy+16,'k₀',INK,11)+_t(250,148,'k = μ₁/μ₂, i = π/3',GREY,10,'middle',400); return _svg(370,195,s);},
+box:()=>{ let s='';s+=`<rect x="120" y="70" width="210" height="150" fill="${FILL_T}"/>`+`<line x1="120" y1="70" x2="330" y2="70" stroke="${INK}" stroke-width="2"/><line x1="120" y1="70" x2="120" y2="220" stroke="${INK}" stroke-width="2"/>`;
+  s+=_ray(260,10,220,70)+_ray(220,70,120,160)+_ray(120,160,200,232)+_dash(220,40,220,110)+_arcL(220,70,24,56,90,'θ',RED)+_t(290,190,'μ = 4/3',INK,11); return _svg(370,240,s);},
+prism45:()=>{ let s='';s+=`<polygon points="120,40 120,200 280,200" fill="${FILL_T}" stroke="${INK}" stroke-width="2"/>`;
+  [90,120,150,180].forEach(y=>s+=_arrow(40,y,115,y,AMB,2));s+=_arcL(280,200,30,135,180,'45°',GREY); return _svg(340,220,s);},
+});
+
+const TOPICS = [
+{ "name":"When is an object invisible? Same μ, no bending","mode":"class","questions":[
+ {"q":"We can see a glass rod dipped in water mainly because","opts":["light bends and partly reflects at its boundary","glass gives out its own light","glass absorbs all light","water is opaque"],"ans":0,"sol":"Light <strong>refracts and reflects</strong> at the glass–water boundary. That change at the edge is what our eye picks up."},
+ {"q":"If the refractive index of the object equals that of the liquid around it, a ray crossing the boundary","opts":["goes straight on, with no reflection","bends towards the normal","is totally reflected","bends away from the normal"],"ans":0,"sol":"μ₁ sin i = μ₂ sin r with μ₁ = μ₂ → r = i. <strong>No bending and no reflection</strong>, so the boundary cannot be seen."},
+ {"tag":"Ex-1 Q9","q":"&#9733; <strong>Original:</strong> An object is immersed in a fluid. In order that the object becomes invisible, it should","opts":["have refractive index exactly matching with that of the surrounding fluid","behave as a perfect reflector","absorb all light falling on it","have refractive index one"],"ans":0,"sol":"From rung 2: matching refractive index → no bending, no reflection → <strong>invisible</strong>. A perfect absorber would look black, not invisible."}]},
+
+{ "name":"Snell's law with unit vectors","mode":"class","questions":[
+ {"q":"A ray's unit vector is a î + b ĵ and the boundary is the x–z plane (normal along ĵ). The sine of the angle between the ray and the normal is","opts":["a","b","a/b","b/a"],"ans":0,"sol":"cos(angle with ĵ) = b, so sin = √(1 − b²) = <strong>a</strong> (since a² + b² = 1). The component along the surface gives the sine."},
+ {"q":"Light goes from μ₁ = 1.5 into μ₂ = 2. If sin i = 0.8, then sin r is","opts":["0.6","1.07","0.8","0.4"],"ans":0,"sol":"1.5 × 0.8 = 2 × sin r → sin r = <strong>0.6</strong>."},
+ {"tag":"Ex-1 Q5","q":"&#9733; <strong>Original:</strong> The x–z plane separates two media A and B of refractive indices μ₁ = 1.5 and μ₂ = 2. A ray of light travels from A to B. Its directions in the two media are given by unit vectors u₁ = a î + b ĵ and u₂ = c î + d ĵ. Then","opts":["a/c = 4/3","a/c = 3/4","b/d = 4/3","b/d = 3/4"],"ans":0,"sol":"sin i = a, sin r = c (rung 1). 1.5a = 2c → <strong>a/c = 4/3</strong>. b and d are the cosines; Snell's law does not fix their ratio this simply."}]},
+
+{ "name":"Angle of incidence is twice the angle of refraction","mode":"hw","questions":[
+ {"q":"sin 2r equals","opts":["2 sin r cos r","2 sin r","sin² r","cos² r − sin² r"],"ans":0,"sol":"<strong>sin 2r = 2 sin r cos r</strong>."},
+ {"q":"μ = √3 and i = 2r. Then r and i are","opts":["30° and 60°","45° and 90°","15° and 30°","60° and 120°"],"ans":0,"sol":"sin 2r = √3 sin r → 2 cos r = √3 → r = <strong>30°</strong>, i = 60°."},
+ {"tag":"Ex-4B Q14 · JEE Main 2022","q":"&#9733; <strong>Original:</strong> Consider a light ray travelling in air is incident into a medium of refractive index √(2n). The incident angle is twice that of refracting angle. Then, the angle of incidence will be","opts":["2 cos⁻¹(√(n/2))","sin⁻¹(√n)","cos⁻¹(√(n/2))","sin⁻¹(√(2n))"],"ans":0,"sol":"2 sin r cos r = √(2n) sin r → cos r = √(2n)/2 = √(n/2).<br>i = 2r = <strong>2 cos⁻¹(√(n/2))</strong>."}]},
+
+{ "name":"Shadow of a pole in a pool","mode":"hw","questions":[
+ {"q":"Sunlight makes 30° with the water surface. The angle of incidence is","opts":["60°","30°","90°","45°"],"ans":0,"sol":"Angle of incidence is from the normal: 90° − 30° = <strong>60°</strong>."},
+ {"q":"μ = 4/3, i = 60°. The refracted ray goes 1.5 m down to the pool floor. How far sideways does it travel? (sin r = 3√3/8 ≈ 0.65, tan r ≈ 0.854)","opts":["about 1.28 m","about 2.6 m","about 0.87 m","1.5 m"],"ans":0,"sol":"Sideways = depth × tan r = 1.5 × 0.854 ≈ <strong>1.28 m</strong>."},
+ {"tag":"Ex-4B Q22 · JEE Main 2023","q":"&#9733; <strong>Original:</strong> A pole is vertically submerged in swimming pool, such that it gives a length of shadow 2.15 m within water when sunlight is incident at an angle of 30° with the surface of water. If swimming pool is filled to a height of 1.5 m, then the height of the pole above the water surface in centimetres is (n<sub>w</sub> = 4/3) ____.","diagram":DIAGRAMS.pole(),"opts":["50","87","128","25"],"ans":0,"sol":"The ray grazing the top of the pole travels h tan 60° = h√3 sideways before reaching the water, then 1.28 m more in water (rung 2).<br><br>h√3 + 1.28 = 2.15 → h√3 = 0.87 → h = 0.50 m = <strong>50 cm</strong>."}]},
+
+{ "name":"Sphere inside a sphere (Comprehension-3) &#8212; find r₁","mode":"class","questions":[
+ {"q":"A ray hits a sphere at point A. The normal at A is along","opts":["the radius OA","the tangent at A","the incident ray","the horizontal"],"ans":0,"sol":"For any sphere the normal at a point is <strong>along the radius</strong> through that point."},
+ {"q":"At A the ray goes from air into glass of index μ₁. Snell's law at A is","opts":["sin i₁ = μ₁ sin r₁","μ₁ sin i₁ = sin r₁","sin i₁ = sin r₁","sin r₁ = μ₁"],"ans":0,"sol":"<strong>1 × sin i₁ = μ₁ sin r₁</strong>."},
+ {"tag":"Ex-2 Comprehension-3 · Q13","q":"&#9733; <strong>Original:</strong> <em>Passage:</em> There is a spherical glass ball of refractive index μ₁ and another glass ball of refractive index μ₂ inside it as shown in figure. The radius of the outer ball is R₁ and that of inner ball is R₂. A ray is incident on the outer surface of the ball at an angle i₁.<br><br>Find the value of r₁.","diagram":DIAGRAMS.sphereIn(),"opts":["sin⁻¹(sin i₁ / μ₁)","sin⁻¹(μ₁ sin i₁)","sin⁻¹(μ₁ / sin i₁)","sin⁻¹(1/(μ₁ sin i₁))"],"ans":0,"sol":"From rung 2: <strong>r₁ = sin⁻¹(sin i₁/μ₁)</strong>."}]},
+
+{ "name":"Sphere inside a sphere &#8212; find i₂ with the sine rule","mode":"class","questions":[
+ {"q":"The sine rule in a triangle says","opts":["a/sin A = b/sin B","a sin A = b sin B","a/cos A = b/cos B","a + b = c"],"ans":0,"sol":"<strong>a/sin A = b/sin B = c/sin C</strong>, each side divided by the sine of the angle opposite it."},
+ {"q":"In triangle OAB: OA = R₁, OB = R₂. The angle at A is r₁, and the angle at B is (180° − i₂). The sine rule gives","opts":["R₁ sin r₁ = R₂ sin i₂","R₁ sin i₂ = R₂ sin r₁","R₁ = R₂","R₁ cos r₁ = R₂ cos i₂"],"ans":0,"sol":"OB is opposite A, OA is opposite B: R₂/sin r₁ = R₁/sin(180° − i₂) = R₁/sin i₂ → <strong>R₁ sin r₁ = R₂ sin i₂</strong>."},
+ {"tag":"Ex-2 Comprehension-3 · Q14","q":"&#9733; <strong>Original:</strong> (Same passage.) Find the value of i₂.","diagram":DIAGRAMS.sphereIn(),"opts":["sin⁻¹((R₁/R₂)(sin i₁/μ₁))","sin⁻¹((R₂/R₁)(sin i₁/μ₁))","sin⁻¹((R₁/R₂)(sin i₁/μ₂))","sin⁻¹((R₂/R₁)(sin i₁/μ₂))"],"ans":0,"sol":"sin i₂ = (R₁/R₂) sin r₁ and sin r₁ = sin i₁/μ₁.<br>i₂ = <strong>sin⁻¹((R₁/R₂)(sin i₁/μ₁))</strong>."}]},
+
+{ "name":"Sphere inside a sphere &#8212; find r₂","mode":"hw","questions":[
+ {"q":"At B the ray goes from μ₁ into μ₂. Snell's law at B is","opts":["μ₁ sin i₂ = μ₂ sin r₂","μ₂ sin i₂ = μ₁ sin r₂","sin i₂ = μ₂ sin r₂","μ₁ sin r₂ = sin i₂"],"ans":0,"sol":"<strong>μ₁ sin i₂ = μ₂ sin r₂</strong>."},
+ {"q":"Putting sin i₂ = (R₁/R₂)(sin i₁/μ₁) into rung 1 gives μ₂ sin r₂ =","opts":["(R₁/R₂) sin i₁","(R₂/R₁) sin i₁","μ₁ sin i₁","sin i₁/μ₁"],"ans":0,"sol":"μ₁ × (R₁/R₂)(sin i₁/μ₁) = <strong>(R₁/R₂) sin i₁</strong>. μ₁ cancels."},
+ {"tag":"Ex-2 Comprehension-3 · Q15","q":"&#9733; <strong>Original:</strong> (Same passage.) Find the value of r₂.","opts":["sin⁻¹((R₁/(μ₂R₂)) sin i₁)","sin⁻¹((R₂/(μ₂R₁)) sin i₁)","sin⁻¹((R₁/(μ₁R₂)) (1/sin i₁))","sin⁻¹((R₂/(μ₁R₁)) sin i₁)"],"ans":0,"sol":"r₂ = <strong>sin⁻¹(R₁ sin i₁/(μ₂R₂))</strong>. Neat result: μ₁ drops out completely."}]},
+
+{ "name":"Deviation inside a sphere &#8212; add up each turn","mode":"class","questions":[
+ {"q":"A ray enters a sphere (μ = √2) at i = 45°. The deviation at this one refraction is","opts":["15°","30°","45°","75°"],"ans":0,"sol":"sin r = sin 45°/√2 = 1/2 → r = 30°. Deviation = i − r = <strong>15°</strong>."},
+ {"q":"Inside the sphere, the ray meets the surface again at 30° (the triangle made with the centre is isosceles). The deviation for one internal reflection there is","opts":["120°","60°","30°","150°"],"ans":0,"sol":"Reflection deviation = 180° − 2 × 30° = <strong>120°</strong>."},
+ {"tag":"Ex-1 Q10","q":"&#9733; <strong>Original:</strong> A light ray is incident on a transparent sphere of index √2, at an angle of incidence 45°. What is the deviation of a tiny fraction of the ray, which enters the sphere, undergoes two internal reflections and then refracts out into air?","opts":["270°","240°","120°","180°"],"ans":0,"sol":"In: 15°. Two reflections: 120° + 120°. Out: 15°.<br>Total = 15 + 240 + 15 = <strong>270°</strong>."}]},
+
+{ "name":"Sphere with one internal reflection &#8212; match the list","mode":"hw","questions":[
+ {"q":"Refraction in, one reflection, refraction out. The total deviation α is","opts":["180° + 2i − 4r","2i − 2r","180° − 2r","360° − 4r"],"ans":0,"sol":"α = (i − r) + (180° − 2r) + (i − r) = <strong>180° + 2i − 4r</strong>."},
+ {"q":"For α = 180°, we need i = 2r, so cos r = n/2. For n = √3, r and i are","opts":["30° and 60°","45° and 90°","60° and 120°","15° and 30°"],"ans":0,"sol":"cos r = √3/2 → r = <strong>30°</strong>, i = 60°. (i = r = 0 also gives α = 180°.)"},
+ {"tag":"Ex-5 Q29 · JEE Adv 2024","q":"&#9733; <strong>Original:</strong> A light ray is incident on the surface of a sphere of refractive index n at an angle of incidence θ₀. The ray partially refracts into the sphere with angle of refraction φ₀ and then partly reflects from the back surface. The reflected ray then emerges out of the sphere after a partial refraction. The total angle of deviation of the emergent ray with respect to the incident ray is α. Match the quantities in List-I with their values in List-II.<br>(P) If n = 2 and α = 180°, then all the possible values of θ₀ will be<br>(Q) If n = √3 and α = 180°, then all the possible values of θ₀ will be<br>(R) If n = √3 and α = 180°, then all the possible values of φ₀ will be<br>(S) If n = √2 and θ₀ = 45°, then all the possible values of α will be<br>List-II: (1) 30° and 0° (2) 60° and 0° (3) 45° and 0° (4) 150° (5) 0°","opts":["P→5; Q→2; R→1; S→4","P→5; Q→1; R→2; S→4","P→3; Q→2; R→1; S→4","P→3; Q→1; R→2; S→5"],"ans":0,"sol":"(P) cos r = 2/2 = 1 → only r = 0 → θ₀ = <strong>0°</strong> → (5).<br>(Q) θ₀ = 60° or 0° → (2).<br>(R) φ₀ = 30° or 0° → (1).<br>(S) r = 30°: α = 180 + 90 − 120 = <strong>150°</strong> → (4)."}]},
+
+{ "name":"Air bubble in a slab &#8212; seen from both sides","mode":"class","questions":[
+ {"q":"An object in glass (μ = 3/2) is at real depth 9 cm, seen from air. The apparent depth is","opts":["6 cm","13.5 cm","9 cm","4.5 cm"],"ans":0,"sol":"d<sub>app</sub> = d<sub>real</sub>/μ = 9/1.5 = <strong>6 cm</strong>."},
+ {"q":"A bubble in the same glass appears 4 cm deep. Its real depth is","opts":["6 cm","2.7 cm","4 cm","8 cm"],"ans":0,"sol":"d<sub>real</sub> = μ × d<sub>app</sub> = 1.5 × 4 = <strong>6 cm</strong>."},
+ {"tag":"Ex-3 Q2","q":"&#9733; <strong>Original:</strong> A tiny air bubble inside a glass slab appears to be 6 cm deep when viewed from one side and 4 cm deep when viewed from the other side. Assuming μ<sub>glass</sub> = 3/2, find the thickness of slab (in cm).","opts":["15","10","12","18"],"ans":0,"sol":"Real depths from the two faces: 1.5 × 6 = 9 cm and 1.5 × 4 = 6 cm.<br>Thickness = 9 + 6 = <strong>15 cm</strong>.<br><br>Trap: 6 + 4 = 10 adds apparent depths."}]},
+
+{ "name":"Fish and bird &#8212; apparent height, apparent speed","mode":"hw","questions":[
+ {"q":"A bird is at height y above water (μ = 4/3). To a fish, its apparent height is","opts":["μy = 4y/3","y/μ = 3y/4","y","2y"],"ans":0,"sol":"Rarer object seen from denser medium: h<sub>app</sub> = μ h<sub>real</sub> = <strong>4y/3</strong>. It looks higher."},
+ {"q":"The bird dives at 9 cm/s and the fish is at rest. The bird's apparent speed to the fish is","opts":["12 cm/s","9 cm/s","6.75 cm/s","16 cm/s"],"ans":0,"sol":"Apparent height = μy → apparent speed = μ × 9 = <strong>12 cm/s</strong>."},
+ {"tag":"Ex-3 Q3","q":"&#9733; <strong>Original:</strong> A fish is rising up vertically inside a pond with velocity 4 cm/s and notices a bird, which is diving vertically downward and its velocity appears to be 16 cm/s (to the fish). What is the real velocity of the diving bird, if refractive index of water is 4/3?","opts":["9 cm/s","12 cm/s","16 cm/s","3 cm/s"],"ans":0,"sol":"Apparent separation = μy + (fish depth). Rate of closing = μv<sub>b</sub> + v<sub>f</sub>.<br>(4/3)v<sub>b</sub> + 4 = 16 → v<sub>b</sub> = <strong>9 cm/s</strong>."}]},
+
+{ "name":"Concave mirror under water &#8212; mirror first, then apparent depth","mode":"class","questions":[
+ {"q":"Concave mirror, f = −20 cm. A particle is 5 cm in front of it. The image is","opts":["20/3 cm behind the mirror, virtual","20/3 cm in front, real","4 cm behind","6.7 cm in front"],"ans":0,"sol":"1/v = −1/20 + 1/5 = 3/20 → v = <strong>+20/3 ≈ 6.7 cm</strong> (behind, virtual)."},
+ {"q":"An object is 12 cm deep in water (μ = 1.33). Seen from just above, its apparent depth is about","opts":["9 cm","16 cm","12 cm","6 cm"],"ans":0,"sol":"12/1.33 ≈ <strong>9 cm</strong>."},
+ {"tag":"Ex-4B Q10 · JEE Main 2019","q":"&#9733; <strong>Original:</strong> A concave mirror has radius of curvature of 40 cm. It is at the bottom of a glass that has water filled up to 5 cm (see figure). If a small particle is floating on the surface of water, its image as seen, from directly above the glass, is at a distance d from the surface of water. The value of d is close to (Refractive index of water = 1.33)","diagram":DIAGRAMS.beakerMirror(),"opts":["8.8 cm","11.7 cm","6.7 cm","13.4 cm"],"ans":0,"sol":"Mirror image: 20/3 cm below the mirror (rung 1) → 5 + 6.67 = 11.67 cm below the water surface.<br>Seen from air: 11.67/1.33 ≈ <strong>8.8 cm</strong>.<br><br>Trap: 11.7 forgets the final refraction at the surface."}]},
+];
+
+
+const STORAGE_KEY = 'padipucast_rayoptics_jee_l3_refraction_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
