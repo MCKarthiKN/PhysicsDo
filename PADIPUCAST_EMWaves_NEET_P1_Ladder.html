@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; EM Waves (NEET) &#183; Part 1 Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> EM Waves &#183; NEET</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>EM Waves &#183; Part 1<br>Displacement current to the spectrum</h1></div>
+    <p id="home-sub">The ALLEN NEET EM Waves module, put in the <strong>same order as your lecture notes, pages 1&#8211;3</strong>. The sequence goes: displacement current (S1) &#8594; Maxwell&#8211;Ampere law and the four equations (S2) &#8594; nature of the wave (S3) &#8594; direction of travel = E &#215; B (S4) &#8594; the spectrum (S5) &#8594; greenhouse and ozone (S6).<br><br>Each module question is a <strong>ladder</strong>: 3 build-up rungs, then the original question (&#9733;). Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 34 ladders &#215; 4 rungs = 136 questions. Page 4 of the notes (wave equation, energy, speed, E&#8320; = cB&#8320;, intensity) is in Part 2.<br><br><em>Two ideas run through this part: a changing electric field acts like a current (i<sub>d</sub> = &#949;&#8320; d&#966;/dt), and the wave always travels along E &#215; B.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - EM Waves (NEET) Part 1  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1d4ed8';
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+function _line(x1,y1,x2,y2,c,w,arrow,dash){
+  let d='';
+  if(arrow){ const id=_nid(); d=`<defs>${AR(id,c)}</defs>`; arrow=`marker-end="url(#${id})"`; } else arrow='';
+  return d+`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w||1.6}" ${arrow} ${dash?'stroke-dasharray="5 4"':''}/>`;
+}
+function _t(x,y,txt,c,size,anchor,weight){
+  return `<text x="${x}" y="${y}" font-size="${size||12}" fill="${c||INK}" ${FS} text-anchor="${anchor||'middle'}" font-weight="${weight||400}">${txt}</text>`;
+}
+
+const DIAGRAMS = {
+
+/* capacitor being charged: I in the wires, i_d in the gap */
+capGap(o){
+  o=o||{};
+  const W=380;
+  let s='';
+  s+=_line(20,85,160,85,INK,2);
+  s+=_line(220,85,360,85,INK,2);
+  s+=_line(160,40,160,130,INK,3);
+  s+=_line(220,40,220,130,INK,3);
+  for(let y=50;y<=120;y+=18){ s+=_t(150,y+4,'+',RED,13); s+=_t(230,y+4,'&#8722;',BLU,13); }
+  s+=_line(60,72,110,72,AMB,2,true); s+=_t(85,64,'I',AMB,13,'middle',700);
+  s+=_line(270,72,320,72,AMB,2,true); s+=_t(295,64,'I',AMB,13,'middle',700);
+  if(o.id!==false){
+    s+=_line(168,85,212,85,GRN,2,true,true);
+    s+=_t(190,150,o.idLabel||'i<tspan dy="3" font-size="9">d</tspan><tspan dy="-3"> in the gap</tspan>',GRN,12,'middle',700);
+  }
+  if(o.E){ s+=_t(190,32,'E = q/(A&#949;&#8320;)',GREY,11); }
+  return `<svg viewBox="0 0 ${W} 165" width="${W}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+/* series R and C across an ac source */
+rcAC(){
+  const W=340;
+  let s='';
+  s+=_line(60,40,130,40,INK,2);
+  // resistor zigzag
+  let z='M130 40';
+  for(let i=0;i<6;i++){ z+=` L${137+i*10} ${i%2?48:32}`; }
+  z+=' L200 40';
+  s+=`<path d="${z}" fill="none" stroke="${INK}" stroke-width="2"/>`;
+  s+=_t(165,24,'R = 100 &#937;',INK,11);
+  s+=_line(200,40,280,40,INK,2);
+  s+=_line(280,40,280,78,INK,2);
+  s+=_line(262,78,298,78,INK,3); s+=_line(262,90,298,90,INK,3);
+  s+=_line(280,90,280,130,INK,2);
+  s+=_t(254,88,'X<tspan dy="3" font-size="8">C</tspan><tspan dy="-3"> = 100 &#937;</tspan>',INK,11,'end');
+  s+=_line(280,130,60,130,INK,2);
+  s+=_line(60,130,60,103,INK,2); s+=_line(60,67,60,40,INK,2);
+  s+=`<circle cx="60" cy="85" r="18" fill="var(--surface)" stroke="${INK}" stroke-width="2"/>`;
+  s+=`<path d="M48 85 q6 -10 12 0 t12 0" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_t(60,155,'220 V (rms)',GREY,11);
+  return `<svg viewBox="0 0 ${W} 165" width="${W}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+/* B against r for circular plates with uniform i_d */
+bGraph(){
+  const W=340, x0=46, y0=140, R=150;
+  let s='';
+  s+=_line(x0,y0,x0+270,y0,GREY,1.4,true); s+=_line(x0,y0,x0,20,GREY,1.4,true);
+  s+=_t(x0+272,y0+16,'r',GREY,12); s+=_t(x0-14,26,'B',GREY,12);
+  s+=_line(x0,y0,R,40,BLU,2.4);
+  let p=`M${R} 40`;
+  for(let x=R;x<=x0+260;x+=4){ const y=y0-(100*(R-x0))/(x-x0); p+=` L${x} ${y.toFixed(1)}`; }
+  s+=`<path d="${p}" fill="none" stroke="${BLU}" stroke-width="2.4"/>`;
+  s+=_line(R,40,R,y0,GREY,1,false,true);
+  s+=_t(R,y0+16,'r = R (plate edge)',INK,11);
+  s+=_t(95,78,'B &#8733; r',BLU,11); s+=_t(262,68,'B &#8733; 1/r',BLU,11);
+  return `<svg viewBox="0 0 ${W} 165" width="${W}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+/* E (y) and B (z) sine waves travelling along x, as in the notes */
+emWave(o){
+  o=o||{};
+  const W=380, x0=40, y0=90, L=300;
+  let s='';
+  s+=_line(x0,y0,x0+L+20,y0,INK,1.6,true); s+=_t(x0+L+26,y0+4,'x',INK,12,'start');
+  s+=_line(x0,y0,x0,20,GREY,1.2,true); s+=_t(x0,14,'y',GREY,11);
+  s+=_line(x0,y0,x0-28,y0+34,GREY,1.2,true); s+=_t(x0-34,y0+46,'z',GREY,11);
+  let pe=`M${x0} ${y0}`, pb=`M${x0} ${y0}`;
+  for(let x=0;x<=L;x+=3){
+    const v=Math.sin(2*Math.PI*x/150);
+    pe+=` L${x0+x} ${(y0-55*v).toFixed(1)}`;
+    pb+=` L${(x0+x-26*v).toFixed(1)} ${(y0+26*v).toFixed(1)}`;
+  }
+  s+=`<path d="${pe}" fill="none" stroke="${BLU}" stroke-width="2.2"/>`;
+  s+=`<path d="${pb}" fill="none" stroke="${RED}" stroke-width="2.2"/>`;
+  s+=_t(x0+80,26,'E (along y)',BLU,12,'middle',700);
+  s+=_t(x0+60,150,'B (along z)',RED,12,'middle',700);
+  s+=_t(x0+L-30,y0-12,o.v||'wave travels',INK,11,'end');
+  return `<svg viewBox="0 0 ${W} 165" width="${W}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+/* x, y, z axes with optional coloured labels on each */
+triad(o){
+  o=o||{};
+  const W=300, cx=130, cy=92;
+  let s='';
+  s+=_line(cx,cy,cx+110,cy,INK,1.8,true); s+=_t(cx+118,cy+4,'x',INK,12,'start');
+  s+=_line(cx,cy,cx,20,INK,1.8,true); s+=_t(cx,14,'y',INK,12);
+  s+=_line(cx,cy,cx-62,cy+54,INK,1.8,true); s+=_t(cx-70,cy+66,'z',INK,12);
+  const lab=(t,x,y,c)=> t?_t(x,y,t,c,12,'start',700):'';
+  s+=lab(o.x,cx+62,cy-8,o.xc||GRN);
+  s+=lab(o.y,cx+8,44,o.yc||BLU);
+  s+=lab(o.z,cx-40,cy+62,o.zc||RED);
+  return `<svg viewBox="0 0 ${W} 165" width="${W}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+/* the i -> j -> k cycle for cross products */
+cycle(){
+  const W=300, cx=150, cy=82, r=52;
+  let s='';
+  const pts=[[-90,'&#238;'],[30,'&#309;'],[150,'k&#770;']];
+  const P=a=>[cx+r*Math.cos(a*Math.PI/180), cy+r*Math.sin(a*Math.PI/180)];
+  for(let i=0;i<3;i++){
+    const a1=pts[i][0]+22, a2=pts[(i+1)%3][0]-22+(i==2?360:0);
+    const [x1,y1]=P(a1), [x2,y2]=P(a2);
+    const id=_nid();
+    s+=`<defs>${AR(id,GRN)}</defs><path d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="${GRN}" stroke-width="2" marker-end="url(#${id})"/>`;
+  }
+  pts.forEach(p=>{ const [x,y]=P(p[0]); s+=`<circle cx="${x}" cy="${y}" r="15" fill="var(--surface)" stroke="${INK}" stroke-width="1.6"/>`+_t(x,y+5,p[1],INK,14,'middle',700); });
+  s+=_t(cx,cy+84,'with the arrow: + &#160;&#160;|&#160;&#160; against the arrow: &#8722;',GREY,11);
+  return `<svg viewBox="0 0 ${W} 175" width="${W}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+/* xy plane: E = -2i + 2j, B out of the page (k) */
+slant(o){
+  o=o||{};
+  const W=300, cx=150, cy=100, u=28;
+  let s='';
+  s+=_line(cx-110,cy,cx+110,cy,GREY,1.2,true); s+=_t(cx+118,cy+4,'x',GREY,11,'start');
+  s+=_line(cx,cy+50,cx,18,GREY,1.2,true); s+=_t(cx,12,'y',GREY,11);
+  s+=_line(cx,cy,cx-2*u,cy-2*u,BLU,2.4,true); s+=_t(cx-2*u-4,cy-2*u-6,'E = &#8722;2&#238; + 2&#309;',BLU,11,'end',700);
+  s+=`<circle cx="${cx}" cy="${cy}" r="8" fill="none" stroke="${RED}" stroke-width="2"/><circle cx="${cx}" cy="${cy}" r="2.5" fill="${RED}"/>`;
+  s+=_t(cx+14,cy+22,'B along k&#770; (out of page)',RED,11,'start',700);
+  if(o.v){ s+=_line(cx,cy,cx+2*u,cy-2*u,GRN,2.4,true,true); s+=_t(cx+2*u+4,cy-2*u-4,'travel?',GRN,11,'start',700); }
+  return `<svg viewBox="0 0 ${W} 165" width="${W}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+/* the spectrum strip, in the order of the notes */
+spectrum(o){
+  o=o||{};
+  const W=380, names=['&#947;','X','UV','Visible','IR','Micro','Radio'];
+  const w=[40,40,44,58,44,58,64];
+  let s='', x=12;
+  names.forEach((n,i)=>{
+    const hl=o.hl&&o.hl.includes(i);
+    s+=`<rect x="${x}" y="46" width="${w[i]}" height="40" rx="4" fill="${hl?'#fdf0dc':'var(--surface)'}" stroke="${hl?AMB:INK}" stroke-width="${hl?2:1.3}"/>`;
+    s+=_t(x+w[i]/2,71,n,hl?AMB:INK,12,'middle',hl?700:500);
+    x+=w[i]+3;
+  });
+  s+=_line(20,112,360,112,GRN,1.8,true);
+  s+=_t(190,130,'wavelength &#955; increases &#8594;',GRN,11);
+  s+=_line(360,26,20,26,RED,1.8,true);
+  s+=_t(190,18,'&#8592; frequency and photon energy increase',RED,11);
+  return `<svg viewBox="0 0 ${W} 140" width="${W}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+/* greenhouse: visible comes in, IR goes out, part of IR sent back */
+greenhouse(){
+  const W=360;
+  let s='';
+  s+=`<rect x="10" y="30" width="340" height="44" fill="#eef4f7" stroke="none"/>`;
+  s+=_t(345,46,'atmosphere (CO&#8322;, H&#8322;O)',GREY,10,'end');
+  s+=`<rect x="10" y="130" width="340" height="16" fill="#e7e1d4"/>`; s+=_t(180,160,'ground',GREY,10);
+  s+=`<circle cx="40" cy="14" r="10" fill="#f6c343"/>`;
+  s+=_line(55,20,120,126,AMB,2.2,true); s+=_t(64,100,'visible in',AMB,11,'start',700);
+  const wave=(x,y1,y2,c)=>{ let p=`M${x} ${y1}`; const up=y2<y1; for(let k=1;k<=10;k++){ const yy=y1+(y2-y1)*k/10; p+=` L${x+(k%2?6:-6)} ${yy}`; } const id=_nid(); return `<defs>${AR(id,c)}</defs><path d="${p}" fill="none" stroke="${c}" stroke-width="2" marker-end="url(#${id})"/>`; };
+  s+=wave(200,128,20,RED); s+=_t(212,24,'some IR escapes',RED,10,'start');
+  s+=wave(270,128,62,RED); s+=wave(300,62,126,RED);
+  s+=_t(318,96,'IR sent',RED,10,'start',700); s+=_t(318,108,'back',RED,10,'start',700);
+  return `<svg viewBox="0 0 ${W} 170" width="${W}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+},
+
+/* a single boxed formula card */
+box(lines){
+  const W=340, h=26+lines.length*24;
+  let s=`<rect x="10" y="8" width="${W-20}" height="${h-16}" rx="8" fill="var(--surface)" stroke="${GRN}" stroke-width="1.6"/>`;
+  lines.forEach((l,i)=>{ s+=_t(W/2,34+i*24,l,INK,13,'middle',i===0?700:400); });
+  return `<svg viewBox="0 0 ${W} ${h}" width="${W}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+
+};
+
+
+// one rung: question, options, index of correct option, solution, extras (diagram / tag / note)
+const R=(q,opts,ans,sol,x)=>Object.assign({q,opts,ans,sol},x||{});
+const O='&#9733; <strong>Original:</strong> ';
+const id='i<sub>d</sub>';
+
+const TOPICS = [
+
+/* ============================ S1 · DISPLACEMENT CURRENT (notes page 1) ============================ */
+{ "name":"S1 &#183; Charging capacitor &#8212; what flows in the gap?", "mode":"class", "questions":[
+ R("A capacitor is being charged. The charge on its plate is q and it is increasing. The current in the connecting wire is",
+  ["I = dq/dt","I = q","I = q/C","I = 0, because the gap breaks the circuit"],0,
+  "Current is the rate of flow of charge. Charge is coming onto the plate at the rate dq/dt, so <strong>I = dq/dt</strong>.<br><br>The wire has a real current even though there is a gap ahead. The charges simply pile up on the plate.",
+  {diagram:DIAGRAMS.capGap({id:false})}),
+ R("Between the plates there is only air (or vacuum). Can electrons jump across the gap and carry a current?",
+  ["No &#8212; there is no conduction current in the gap","Yes &#8212; the same current I crosses the gap","Yes, but only half of I","Only when the capacitor is fully charged"],0,
+  "Air is an insulator here. No charge crosses the gap. So the <strong>conduction current in the gap is zero</strong>.<br><br>But the old Ampere law then gives B = 0 in the gap. Experiments show B is not zero there. Something else must be acting like a current. That something is the changing electric field."),
+ R("In the gap, E = q/(A&#949;&#8320;), so electric flux &#966; = EA = q/&#949;&#8320;. Then &#949;&#8320;(d&#966;/dt) equals",
+  ["dq/dt, which is the same as I","zero","q/&#949;&#8320;","I/&#949;&#8320;"],0,
+  "This is exactly your notes, page 1.<br>q = &#949;&#8320;&#966; &#8594; dq/dt = &#949;&#8320;(d&#966;/dt)<br><br>So <strong>"+id+" = &#949;&#8320;(d&#966;/dt) = dq/dt = I</strong>.<br><br>The changing flux in the gap behaves like a current of the same size as the wire current. Maxwell called it the displacement current.",
+  {diagram:DIAGRAMS.capGap({E:true})}),
+ R(O+"A parallel plate capacitor is charged by connecting it to a battery through a resistor. If I is the current in the circuit, then in the gap between the plates:",
+  ["there is no current","displacement current of magnitude equal to I flows in the same direction as I","displacement current of magnitude equal to I flows in a direction opposite to that of I","displacement current of magnitude greater than I flows but can be in any direction"],1,
+  "From rung 3: "+id+" = dq/dt = I. So the size is <strong>equal to I</strong>.<br><br>Direction: while charging, E in the gap points from + plate to &#8722; plate and it is growing. So dE/dt points the same way as the wire current. The displacement current flows in the <strong>same direction as I</strong>.<br><br>Think of it as the current &#8216;continuing&#8217; through the gap. Current in, current through, current out &#8212; no break.",
+  {tag:"Ex-II Q23 &#183; NEET 2024"}) ]},
+
+{ "name":"S1 &#183; Conduction current = displacement current &#8212; ac or dc?", "mode":"class", "questions":[
+ R(id+" = &#949;&#8320;(d&#966;/dt). If the electric flux between the plates is not changing, the displacement current is",
+  ["zero","maximum","equal to &#949;&#8320;&#966;","infinite"],0,
+  "No change in flux means d&#966;/dt = 0, so <strong>"+id+" = 0</strong>.<br><br>Only a <em>changing</em> electric field gives a displacement current. A steady field gives nothing."),
+ R("A capacitor is connected to a dc battery through a resistor and is still charging. At this moment, the wire current I and the displacement current "+id+" in the gap are",
+  ["equal, and both non-zero","I non-zero, "+id+" zero","I zero, "+id+" non-zero","both zero"],0,
+  "While charging, q is still increasing. So I = dq/dt is not zero, and "+id+" = dq/dt also.<br><br>They are <strong>equal and both non-zero</strong>, even with a dc battery. A dc source can give a changing current for a short time &#8212; during charging."),
+ R("Once the capacitor in rung 2 is fully charged, I = 0 and "+id+" = 0. With an ac source, q keeps changing all the time. So the relation I = "+id+" holds",
+  ["at every instant, in both cases","only for the ac case","only for the dc case","only at the peak of the ac"],0,
+  "dc: during charging both are equal; after charging both are zero &#8212; still equal.<br>ac: q keeps changing, and at every instant I = dq/dt = "+id+".<br><br>So the equality holds <strong>for both</strong>. The gap never &#8216;breaks&#8217; the current."),
+ R(O+"The conduction current is the same as displacement current when source is:",
+  ["ac only","dc only","both ac and dc","neither dc nor ac"],2,
+  "From rung 3, <strong>both ac and dc</strong>.<br><br>For dc, the equality is useful only during charging, because after that both are zero. The book key still marks (3), since the rule I = "+id+" is never broken.",
+  {tag:"Ex-I Q20"}) ]},
+
+{ "name":"S1 &#183; "+id+" = C&#183;dV/dt &#8212; find the rate of change of voltage", "mode":"class", "questions":[
+ R("For a capacitor, q = CV. With C fixed, dq/dt equals",
+  ["C(dV/dt)","V(dC/dt)","CV","dV/dt"],0,
+  "q = CV, and C does not change. So <strong>dq/dt = C(dV/dt)</strong>."),
+ R("Since "+id+" = dq/dt, a 1 &#956;F capacitor whose voltage changes at 1000 V/s has a displacement current of",
+  ["1 mA","1 A","1 &#956;A","1000 A"],0,
+  id+" = C(dV/dt) = 1&#215;10<sup>&#8722;6</sup> &#215; 1000 = 10<sup>&#8722;3</sup> A = <strong>1 mA</strong>."),
+ R("To get "+id+" = 4 mA with a 2 &#956;F capacitor, dV/dt must be",
+  ["2000 V/s","500 V/s","8000 V/s","200 V/s"],0,
+  "dV/dt = "+id+"/C = (4&#215;10<sup>&#8722;3</sup>)/(2&#215;10<sup>&#8722;6</sup>) = <strong>2000 V/s</strong>.<br><br>Watch the powers: milli on top, micro below &#8594; 10<sup>3</sup>."),
+ R(O+"To produce an instantaneous displacement current of 2 mA in the space between the parallel plates of a capacitor of capacitance 4 &#956;F, the rate of change of applied variable potential difference (dV/dt) must be:",
+  ["800 V/s","500 V/s","200 V/s","400 V/s"],1,
+  "dV/dt = "+id+"/C = (2&#215;10<sup>&#8722;3</sup>)/(4&#215;10<sup>&#8722;6</sup>) = <strong>500 V/s</strong>.",
+  {tag:"Ex-II Q22 &#183; NEET 2023 (Manipur)"}) ]},
+
+{ "name":"S1 &#183; Capacitor on an ac source &#8212; write "+id+"(t)", "mode":"class", "questions":[
+ R("If V = V&#8320; sin &#969;t, then dV/dt is",
+  ["V&#8320;&#969; cos &#969;t","V&#8320; cos &#969;t","&#8722;V&#8320;&#969; cos &#969;t","V&#8320;&#969; sin &#969;t"],0,
+  "d/dt (sin &#969;t) = &#969; cos &#969;t. So <strong>dV/dt = V&#8320;&#969; cos &#969;t</strong>."),
+ R("Using "+id+" = C(dV/dt), the displacement current for V = V&#8320; sin &#969;t is",
+  ["CV&#8320;&#969; cos &#969;t","CV&#8320; sin &#969;t","V&#8320;/(&#969;C) cos &#969;t","CV&#8320;&#969; sin &#969;t"],0,
+  id+" = C &#215; V&#8320;&#969; cos &#969;t = <strong>V&#8320;&#969;C cos &#969;t</strong>.<br><br>Notice cos, not sin: the current leads the voltage by 90&#176; in a capacitor."),
+ R("The peak value of this displacement current, V&#8320;&#969;C, can also be written as",
+  ["V&#8320;/X<sub>C</sub>, where X<sub>C</sub> = 1/(&#969;C)","V&#8320;X<sub>C</sub>","V&#8320;/(&#969;C)","V&#8320;/R"],0,
+  "X<sub>C</sub> = 1/(&#969;C), so V&#8320;&#969;C = V&#8320;/X<sub>C</sub>. It is just Ohm's law for a capacitor.<br><br>Trap: V&#8320;/(&#969;C) looks similar but is V&#8320;X<sub>C</sub> &#8212; wrong way up."),
+ R(O+"A capacitor of capacitance C is connected across an ac source of voltage V = V&#8320; sin &#969;t. The displacement current between the plates of the capacitor would then be given by:",
+  ["I<sub>d</sub> = V&#8320;&#969;C cos &#969;t","I<sub>d</sub> = (V&#8320;/&#969;C) cos &#969;t","I<sub>d</sub> = (V&#8320;/&#969;C) sin &#969;t","I<sub>d</sub> = V&#8320;&#969;C sin &#969;t"],0,
+  "From rung 2: <strong>I<sub>d</sub> = V&#8320;&#969;C cos &#969;t</strong>.<br><br>Two traps in the options: sin instead of cos (forgot to differentiate), and &#969;C in the denominator (mixed up with X<sub>C</sub>).",
+  {tag:"Ex-II Q12 &#183; NEET 2021"}) ]},
+
+{ "name":"S1 &#183; Lower the frequency &#8212; what happens to "+id+"?", "mode":"hw", "questions":[
+ R("X<sub>C</sub> = 1/(2&#960;fC). If the frequency f is decreased, X<sub>C</sub>",
+  ["increases","decreases","stays the same","becomes zero"],0,
+  "f is in the denominator. Smaller f &#8594; <strong>larger X<sub>C</sub></strong>.<br><br>At f = 0 (dc), X<sub>C</sub> is infinite. That is why a capacitor blocks steady dc."),
+ R("For the same V&#8320;, the peak current I&#8320; = V&#8320;/X<sub>C</sub> = V&#8320;&#969;C. If f is halved, I&#8320;",
+  ["is halved","is doubled","stays the same","becomes four times"],0,
+  "I&#8320; &#8733; &#969; (V&#8320; and C fixed). Half the frequency &#8594; <strong>half the current</strong>."),
+ R("The displacement current in the gap is equal to the conduction current in the wires. So, for fixed V&#8320; and C, "+id+" is proportional to",
+  ["frequency","1/frequency","frequency squared","it does not depend on frequency"],0,
+  id+" = I = V&#8320;&#969;C, so "+id+" &#8733; <strong>frequency</strong>."),
+ R(O+"An ac source is connected to a capacitor C. Due to decrease in its operating frequency:",
+  ["displacement current increases","displacement current decreases","capacitive reactance remains constant","capacitive reactance decreases"],1,
+  "Lower f &#8594; X<sub>C</sub> goes up &#8594; current goes down. Since "+id+" = I, the <strong>displacement current decreases</strong>.<br><br>Options 3 and 4 are wrong because X<sub>C</sub> actually increases.",
+  {tag:"Ex-II Q20 &#183; NEET 2023"}) ]},
+
+{ "name":"S1 &#183; RC in series on ac &#8212; peak displacement current", "mode":"class", "questions":[
+ R("A 100 &#937; resistor and a capacitor of reactance 100 &#937; are in series. The impedance of the circuit is",
+  ["100&#8730;2 &#937;","200 &#937;","100 &#937;","50 &#937;"],0,
+  "Z = &#8730;(R&#178; + X<sub>C</sub>&#178;) = &#8730;(100&#178; + 100&#178;) = <strong>100&#8730;2 &#937;</strong>.<br><br>Do not add them directly. R and X<sub>C</sub> are 90&#176; apart, so they add like perpendicular vectors.",
+  {diagram:DIAGRAMS.rcAC()}),
+ R("The source is 220 V (rms). The rms current is",
+  ["1.1&#8730;2 A (about 1.56 A)","2.2 A","1.1 A","2.2&#8730;2 A"],0,
+  "I<sub>rms</sub> = V<sub>rms</sub>/Z = 220/(100&#8730;2) = 2.2/&#8730;2 = <strong>1.1&#8730;2 A</strong>."),
+ R("The question says &#8216;when the capacitor is 50% charged&#8217;. Does the <em>peak value</em> of the current depend on this moment?",
+  ["No &#8212; the peak value is fixed; "+id+" equals the wire current at every instant","Yes &#8212; at 50% charge the peak is halved","Yes &#8212; at 50% charge the peak doubles","Yes &#8212; at 50% charge the current is zero"],0,
+  "The peak (amplitude) is a property of the whole ac cycle. It does not change from moment to moment. The line about 50% charge is just a distraction.<br><br>And "+id+" in the gap always equals the conduction current, so its peak is the same as the circuit's peak current."),
+ R(O+"A 100 &#937; resistance and a capacitor of 100 &#937; reactance are connected in series across a 220 V source. When the capacitor is 50% charged, the peak value of the displacement current is:",
+  ["4.4 A","11&#8730;2 A","2.2 A","11 A"],2,
+  "I&#8320; = &#8730;2 &#215; I<sub>rms</sub> = &#8730;2 &#215; 1.1&#8730;2 = <strong>2.2 A</strong>.<br><br>Peak "+id+" = peak conduction current = 2.2 A.",
+  {tag:"Ex-II Q4 &#183; NEET 2016"}) ]},
+
+/* ============================ S2 · MAXWELL-AMPERE LAW (notes page 2) ============================ */
+{ "name":"S2 &#183; Magnetic field made by the displacement current", "mode":"class", "questions":[
+ R("Old Ampere law: &#8750;B&#183;dl = &#956;&#8320;I. Take a circle between the plates of a charging capacitor. No wire passes through it, so the old law predicts B on that circle is",
+  ["zero","&#956;&#8320;I/(2&#960;r)","infinite","same as near the wire"],0,
+  "No conduction current through the loop &#8594; old law gives <strong>B = 0</strong>.<br><br>But experiments show B is present there. That is why Maxwell added a term: &#8750;B&#183;dl = &#956;&#8320;(I + &#949;&#8320; d&#966;/dt). Your notes, page 2."),
+ R("The surface charge density &#963; on the plates increases at a constant rate. Then E = &#963;/&#949;&#8320; in the gap",
+  ["increases at a constant rate, the same at every point of the gap","stays constant","increases faster near the edges","decreases"],0,
+  "E = &#963;/&#949;&#8320;, so dE/dt = (d&#963;/dt)/&#949;&#8320; = constant. It is the <strong>same at every point</strong> between the plates.<br><br>So the displacement current is spread evenly over the plate area, like current in a thick wire."),
+ R("For circular plates of radius R, take a loop of radius r in the gap. Inside (r &lt; R), only a part of "+id+" passes through the loop; outside (r &gt; R), all of it does. So B",
+  ["grows as r inside, then falls as 1/r outside &#8212; largest at r = R","is the same everywhere","is zero inside, non-zero outside","falls as 1/r everywhere"],0,
+  "Inside: "+id+" enclosed = "+id+"(r&#178;/R&#178;). So B(2&#960;r) = &#956;&#8320;"+id+"r&#178;/R&#178; &#8594; B &#8733; r.<br>Outside: all of "+id+" is enclosed. B(2&#960;r) = &#956;&#8320;"+id+" &#8594; B &#8733; 1/r.<br><br>Same shape as the field of a thick wire. <strong>Maximum at r = R</strong>.",
+  {diagram:DIAGRAMS.bGraph()}),
+ R(O+"A parallel plate capacitor made of circular plates is being charged such that the surface charge density on its plates is increasing at a constant rate with time. The magnetic field arising due to displacement current is:",
+  ["zero at all places","constant between the plates and zero outside the plates","non-zero everywhere with maximum at the imaginary cylindrical surface connecting peripheries of the plates","zero between the plates and non-zero outside"],2,
+  "From rung 3: B rises from the axis to the edge, then falls off outside. It is <strong>non-zero everywhere, maximum at r = R</strong> &#8212; the imaginary cylinder joining the plate edges.<br><br>Option 2 is the common trap: the <em>displacement current density</em> is constant between the plates, but B is not.",
+  {tag:"Ex-II Q30 &#183; NEET 2025"}) ]},
+
+{ "name":"S2 &#183; All four Maxwell equations &#8212; name each one", "mode":"class", "questions":[
+ R("&#8750;E&#183;dA = Q/&#949;&#8320; says that electric flux out of a closed surface depends on the charge inside. This is",
+  ["Gauss's law of electrostatics","Gauss's law of magnetism","Faraday's law","Ampere&#8211;Maxwell law"],0,
+  "Closed <em>surface</em> (dA), electric field, charge inside &#8594; <strong>Gauss's law of electrostatics</strong>."),
+ R("&#8750;B&#183;dA = 0 for every closed surface. The physical meaning is",
+  ["there are no magnetic monopoles &#8212; field lines always form closed loops","B is always zero","magnetic charge is always positive","B does not depend on current"],0,
+  "Whatever B-lines go in, the same number come out. So there is no isolated N or S pole. This is <strong>Gauss's law of magnetism</strong>."),
+ R("&#8750;E&#183;dl = &#8722;d&#966;<sub>B</sub>/dt says a changing magnetic flux makes an emf around a loop. This is",
+  ["Faraday's law","Ampere's law","Gauss's law of magnetism","Lenz's law only"],0,
+  "Changing magnetic flux &#8594; induced emf. This is <strong>Faraday's law</strong> (the minus sign is Lenz's part of it).<br><br>Quick trick: a line integral (dl) is a law about loops &#8212; Faraday or Ampere. A surface integral (dA) is a Gauss law."),
+ R(O+"Match List-I with List-II.<br>A. &#8750;E&#183;dA = Q/&#949;&#8320; &#160;&#160; I. Ampere&#8211;Maxwell's law<br>B. &#8750;B&#183;dA = 0 &#160;&#160; II. Faraday's law<br>C. &#8750;E&#183;dl = &#8722;d&#966;/dt &#160;&#160; III. Gauss law of electrostatics<br>D. &#8750;B&#183;dl = &#956;&#8320;i<sub>c</sub> + &#956;&#8320;&#949;&#8320; d&#966;<sub>E</sub>/dt &#160;&#160; IV. Gauss law of magnetism",
+  ["A-IV, B-III, C-II, D-I","A-III, B-II, C-IV, D-I","A-IV, B-I, C-III, D-II","A-III, B-IV, C-II, D-I"],3,
+  "A &#8594; III (rung 1), B &#8594; IV (rung 2), C &#8594; II (rung 3), and D is the equation in your notes, page 2 &#8594; I.<br><br><strong>A-III, B-IV, C-II, D-I</strong>.",
+  {tag:"Ex-II Q26 &#183; NEET 2024"}) ]},
+
+/* ============================ S3 · NATURE OF THE WAVE (notes page 3) ============================ */
+{ "name":"S3 &#183; Transverse or longitudinal?", "mode":"hw", "questions":[
+ R("If the particles (or fields) of a wave oscillate along the direction of travel, the wave is longitudinal. Sound in air is",
+  ["longitudinal","transverse","electromagnetic","stationary"],0,
+  "Air layers move back and forth along the direction the sound goes. So sound in air is <strong>longitudinal</strong>."),
+ R("In the picture from your notes, E oscillates along y and the wave travels along x. The angle between E and the direction of travel is",
+  ["90&#176;","0&#176;","45&#176;","180&#176;"],0,
+  "E is along y, travel is along x. They are <strong>perpendicular</strong>.",
+  {diagram:DIAGRAMS.emWave({v:'travel along x'})}),
+ R("B oscillates along z &#8212; also perpendicular to the travel. The wave keeps moving forward, with no fixed nodes. So it is",
+  ["a travelling (progressive) wave, not a stationary one","a stationary wave","a longitudinal wave","not a wave at all"],0,
+  "Stationary waves have fixed nodes and antinodes and do not move forward. The EM wave from an antenna moves forward at speed c. So it is a <strong>travelling</strong> wave."),
+ R(O+"The nature of electromagnetic wave is &#8211;",
+  ["longitudinal","longitudinal stationary","transverse","transverse stationary"],2,
+  "Both E and B are perpendicular to the direction of travel &#8594; <strong>transverse</strong>. And it moves forward, so not stationary.",
+  {tag:"Ex-I Q16"}) ]},
+
+{ "name":"S3 &#183; What does an EM wave carry?", "mode":"class", "questions":[
+ R("A sound wave passes through a room. The air as a whole does not travel across the room. A wave carries",
+  ["energy, but not the medium itself","the medium along with it","only mass","nothing"],0,
+  "A wave passes on <strong>energy</strong> from one place to another. The medium only oscillates about its place."),
+ R("Sunlight falling on a surface pushes on it slightly (radiation pressure), and a radio wave can carry a song. So an EM wave carries",
+  ["momentum and information, as well as energy","only energy","only information","only momentum"],0,
+  "A push on a surface means momentum is delivered. A song on the radio means information is carried. So EM waves carry <strong>energy, momentum and information</strong>."),
+ R("An EM wave is made only of oscillating E and B fields. Does it contain any charge?",
+  ["No &#8212; it is neutral","Yes, positive charge","Yes, negative charge","Yes, equal + and &#8722; charge moving together"],0,
+  "An EM wave is just fields. There are no charges in it. (Even in photon language, a photon has <strong>zero charge</strong>.)"),
+ R(O+"The electromagnetic waves do not transport &#8211;",
+  ["energy","charge","momentum","information"],1,
+  "From rungs 2 and 3: energy, momentum and information are carried, but <strong>charge</strong> is not.",
+  {tag:"Ex-I Q2"}) ]},
+
+{ "name":"S3 &#183; Same speed in every medium? &#8212; spot the wrong line", "mode":"hw", "questions":[
+ R("In vacuum, the speed of every EM wave is",
+  ["c = 1/&#8730;(&#956;&#8320;&#949;&#8320;) = 3&#215;10<sup>8</sup> m/s, whatever its frequency","larger for gamma rays","larger for radio waves","zero"],0,
+  "From the note at the end of your page 4: <strong>c = 1/&#8730;(&#956;&#8320;&#949;&#8320;)</strong>. All EM waves &#8212; radio to gamma &#8212; have this speed in vacuum."),
+ R("In a material, v = 1/&#8730;(&#956;&#949;) = c/&#8730;(&#956;<sub>r</sub>&#949;<sub>r</sub>). In glass (&#949;<sub>r</sub> &gt; 1), the speed of light is",
+  ["less than c","more than c","equal to c","zero"],0,
+  "&#8730;(&#956;<sub>r</sub>&#949;<sub>r</sub>) &gt; 1, so v &lt; c. Light is <strong>slower in glass</strong>. This is why light bends (refraction)."),
+ R("Which one of these is TRUE for EM waves?",
+  ["their speed depends on the medium they travel in","they travel at c in glass","they need a medium to travel","they are longitudinal"],0,
+  "From rung 2, the speed <strong>depends on the medium</strong>. They need no medium at all, and they are transverse."),
+ R(O+"Select wrong statement from the following for EMW &#8211;",
+  ["are transverse","travel with same speed in all medium","travel with the speed of light","are produced by accelerating charge"],1,
+  "&#8216;Same speed in all medium&#8217; is <strong>wrong</strong> (rung 2). The other three are true.",
+  {tag:"Ex-I Q14"}) ]},
+
+{ "name":"S3 &#183; E and B &#8212; parallel or perpendicular? In phase?", "mode":"hw", "questions":[
+ R("In the picture from your notes, E is along y and B is along z. The angle between E and B is",
+  ["90&#176;","0&#176;","180&#176;","45&#176;"],0,
+  "y and z axes are perpendicular. So <strong>E &#8869; B</strong>, and both are &#8869; to the travel direction x.",
+  {diagram:DIAGRAMS.emWave({v:'travel along x'})}),
+ R("Your notes write E = E&#8320; sin(&#969;t &#8722; kx) and B = B&#8320; sin(&#969;t &#8722; kx). Do E and B reach their maximum at the same place and the same time?",
+  ["Yes &#8212; they are in phase","No &#8212; B is 90&#176; ahead","No &#8212; B is 180&#176; behind","Only in a medium"],0,
+  "Both have the same phase (&#969;t &#8722; kx). So they are <strong>in phase</strong>: max together, zero together."),
+ R("Average energy density: electric part = &#188;&#949;&#8320;E&#8320;&#178;, magnetic part = &#188;B&#8320;&#178;/&#956;&#8320;. In an EM wave these two are",
+  ["equal","electric part is larger","magnetic part is larger","both zero"],0,
+  "Your notes, page 4: &#188;&#949;&#8320;E&#8320;&#178; = &#188;B&#8320;&#178;/&#956;&#8320;. The energy is <strong>shared equally</strong>."),
+ R(O+"Which of the following statement is false for the properties of electromagnetic waves?",
+  ["These waves do not require any material medium for propagation","Both electric and magnetic field vectors attain the maxima and minima at the same place and same time","The energy in electromagnetic wave is divided equally between electric and magnetic vectors","Both electric and magnetic field vectors are parallel to each other and perpendicular to the direction of propagation of wave"],3,
+  "E and B are <strong>perpendicular</strong> to each other, not parallel (rung 1). So statement 4 is false. Statements 2 and 3 are rungs 2 and 3.",
+  {tag:"Ex-I Q22"}) ]},
+
+{ "name":"S3 &#183; Which charge makes an EM wave?", "mode":"class", "questions":[
+ R("A charge sitting at rest produces",
+  ["only a steady electric field","an EM wave","only a magnetic field","both steady E and B"],0,
+  "A charge at rest gives only a <strong>static electric field</strong>. No current, so no B. Nothing changes, so no wave."),
+ R("A charge moving with constant velocity gives a steady current. Do its fields radiate energy away as a wave?",
+  ["No &#8212; its fields just move along with it; no radiation","Yes, strongly","Yes, but only at low speed","Only in vacuum"],0,
+  "A uniformly moving charge carries its field pattern along with it. Nothing is thrown off. <strong>No radiation</strong>."),
+ R("In an antenna, electrons oscillate up and down. An oscillating charge is always",
+  ["accelerating &#8212; and it radiates an EM wave of the same frequency","moving at constant speed","at rest","neutral"],0,
+  "Oscillating means velocity keeps changing &#8594; the charge is <strong>accelerating</strong>. Changing E makes B, changing B makes E &#8212; and the disturbance travels out as an EM wave. Its frequency = the oscillation frequency."),
+ R(O+"Out of the following options which one can be used to produce a propagating electromagnetic wave?",
+  ["A charge moving at constant velocity","A stationary charge","A chargeless particle","An accelerating charge"],3,
+  "Only an <strong>accelerating charge</strong> radiates (rung 3).",
+  {tag:"Ex-II Q3 &#183; NEET 2016"}) ]},
+
+{ "name":"S3 &#183; Which is NOT a property of an EM wave?", "mode":"hw", "questions":[
+ R("Speed of an EM wave in free space is",
+  ["1/&#8730;(&#956;&#8320;&#949;&#8320;)","&#8730;(&#956;&#8320;&#949;&#8320;)","&#956;&#8320;&#949;&#8320;","1/(&#956;&#8320;&#949;&#8320;)"],0,
+  "Your notes: <strong>c = 1/&#8730;(&#956;&#8320;&#949;&#8320;)</strong>."),
+ R("In an EM wave, the energy density in the electric field compared to that in the magnetic field is",
+  ["equal","double","half","zero"],0,
+  "&#189;&#949;&#8320;E&#178; = B&#178;/(2&#956;&#8320;) &#8212; exactly your boxed line on page 4. <strong>Equal</strong>."),
+ R("EM waves are produced by charges that are",
+  ["accelerating","moving with uniform speed","at rest","neutral"],0,
+  "Only <strong>accelerating</strong> charges radiate. A uniformly moving charge does not."),
+ R(O+"The property which is not of an electromagnetic wave travelling in free space is that:",
+  ["they are transverse in nature","the energy density in electric field is equal to energy density in magnetic field","they travel with a speed equal to 1/&#8730;(&#956;&#8320;&#949;&#8320;)","they originate from charges moving with uniform speed"],3,
+  "Options 1, 2, 3 are all true. <strong>Option 4</strong> is false: uniform speed does not radiate (rung 3).",
+  {tag:"Ex-II Q24 &#183; NEET 2024"}) ]},
+
+/* ============================ S4 · DIRECTION = E × B (notes page 3 picture) ============================ */
+{ "name":"S4 &#183; The direction rule: travel along E &#215; B", "mode":"class", "questions":[
+ R("&#238; &#215; &#309; equals",
+  ["k&#770;","&#8722;k&#770;","&#238;","0"],0,
+  "Go round the cycle &#238; &#8594; &#309; &#8594; k&#770;. With the arrow gives +. So <strong>&#238; &#215; &#309; = k&#770;</strong>.",
+  {diagram:DIAGRAMS.cycle()}),
+ R("&#309; &#215; &#238; equals",
+  ["&#8722;k&#770;","k&#770;","&#238;","&#309;"],0,
+  "&#309; to &#238; is against the arrow, so the sign is minus. <strong>&#309; &#215; &#238; = &#8722;k&#770;</strong>. Changing the order flips the sign."),
+ R("In your notes' picture, E is along y (&#309;), B is along z (k&#770;), and the wave goes along x. Check: &#309; &#215; k&#770; =",
+  ["&#238; &#8212; matches the direction of travel","&#8722;&#238;","k&#770;","0"],0,
+  "&#309; &#8594; k&#770; is with the arrow: &#309; &#215; k&#770; = +&#238;. That is exactly the travel direction.<br><br>So the rule is: <strong>direction of travel = E &#215; B</strong>. Keep the order: E first.",
+  {diagram:DIAGRAMS.triad({x:'travel',y:'E',z:'B'})}),
+ R(O+"If E and B are the electric and magnetic field vectors of electromagnetic waves then the direction of propagation of electromagnetic wave is along the direction of &#8211;",
+  ["E","B","E &#215; B","none of these"],2,
+  "From rung 3: <strong>E &#215; B</strong>.",
+  {tag:"Ex-I Q1"}) ]},
+
+{ "name":"S4 &#183; E &#215; B or B &#215; E? &#8212; order matters", "mode":"hw", "questions":[
+ R("B &#215; E is related to E &#215; B as",
+  ["B &#215; E = &#8722;(E &#215; B)","B &#215; E = E &#215; B","B &#215; E = 0","B &#215; E = 2(E &#215; B)"],0,
+  "Swapping the order of a cross product <strong>flips the sign</strong>."),
+ R("E is along k&#770; and B is along &#238;. The wave travels along",
+  ["&#309;","&#8722;&#309;","&#238;","k&#770;"],0,
+  "E &#215; B = k&#770; &#215; &#238;. k&#770; &#8594; &#238; is with the arrow &#8594; +&#309;. Travel along <strong>+&#309;</strong>.",
+  {diagram:DIAGRAMS.cycle()}),
+ R("E is along &#309; and B is along &#238;. The wave travels along",
+  ["&#8722;k&#770;","k&#770;","&#238;","&#309;"],0,
+  "&#309; &#215; &#238; = &#8722;k&#770; (against the arrow). Travel along <strong>&#8722;z</strong>."),
+ R(O+"If E and B represents the electric field vector and magnetic field vector, respectively, in an electromagnetic wave then the direction of EM wave is along:",
+  ["B","E &#215; B","B &#215; E","E"],1,
+  "<strong>E &#215; B</strong>. B &#215; E would point the opposite way.",
+  {tag:"Ex-II Q25 &#183; NEET 2024 (Sawai Madhopur)"}) ]},
+
+{ "name":"S4 &#183; Wave along +z &#8212; choose the right E and B", "mode":"class", "questions":[
+ R("A wave travels along +z. Both E and B must lie",
+  ["in the xy-plane (perpendicular to z)","along z","in the yz-plane","anywhere"],0,
+  "The wave is transverse, so E and B are both perpendicular to the travel. They must lie in the <strong>xy-plane</strong>."),
+ R("For a wave travelling along +z, can E be along k&#770;?",
+  ["No &#8212; E cannot point along the travel direction","Yes, always","Only in a medium","Only for gamma rays"],0,
+  "E along k&#770; would make the wave longitudinal. <strong>Not allowed</strong>. Any option with E or B along k&#770; is out straight away."),
+ R("For travel along +z with E along &#238;, B must be along",
+  ["&#309;","&#8722;&#309;","&#238;","k&#770;"],0,
+  "We need &#238; &#215; B = k&#770;. Since &#238; &#215; &#309; = k&#770;, <strong>B = &#309;</strong>.",
+  {diagram:DIAGRAMS.triad({z:'travel',x:'E',y:'B?',zc:GRN,xc:BLU,yc:RED})}),
+ R(O+"The electric and the magnetic field, associated with an e.m. wave, propagating along the +z-axis, can be represented by:",
+  ["E = E&#8320;&#238;, B = B&#8320;&#309;","E = E&#8320;k&#770;, B = B&#8320;&#238;","E = E&#8320;&#309;, B = B&#8320;&#238;","E = E&#8320;&#309;, B = B&#8320;k&#770;"],0,
+  "Options 2 and 4 have a field along k&#770; &#8212; out (rung 2). Option 3: &#309; &#215; &#238; = &#8722;k&#770; &#8212; wrong way.<br><br>Option 1: &#238; &#215; &#309; = +k&#770; &#10003;. <strong>E = E&#8320;&#238;, B = B&#8320;&#309;</strong>.",
+  {tag:"Ex-I Q24"}) ]},
+
+{ "name":"S4 &#183; Given travel and E &#8212; find the direction of B", "mode":"hw", "questions":[
+ R("A wave travels along +x and its E is along +y. B must be along",
+  ["+z or &#8722;z (perpendicular to both)","+x","+y","&#8722;x"],0,
+  "B is perpendicular to E (y) and to travel (x). Only the z-axis is left: <strong>&#177;z</strong>. The cross product decides the sign."),
+ R("Test B = +k&#770;: E &#215; B = &#309; &#215; k&#770; =",
+  ["+&#238; &#8212; matches travel along +x","&#8722;&#238;","+&#309;","0"],0,
+  "&#309; &#8594; k&#770; is with the arrow &#8594; +&#238;. It matches the travel, so B = +k&#770; is correct.",
+  {diagram:DIAGRAMS.triad({x:'v',y:'E',z:'B?'})}),
+ R("If instead E were along &#8722;y (travel still +x), B would be along",
+  ["&#8722;z","+z","+y","&#8722;x"],0,
+  "(&#8722;&#309;) &#215; (&#8722;k&#770;) = &#309; &#215; k&#770; = +&#238; &#10003;. So <strong>B = &#8722;k&#770;</strong>. Flip E and B flips too."),
+ R(O+"An em wave is propagating in a medium with a velocity V = V&#238;. The instantaneous oscillating electric field of this em wave is along +y axis. Then the direction of oscillating magnetic field of the em wave will be along:",
+  ["&#8722;z direction","+z direction","&#8722;y direction","&#8722;x direction"],1,
+  "From rung 2: <strong>+z</strong>.",
+  {tag:"Ex-II Q6 &#183; NEET 2018"}) ]},
+
+{ "name":"S4 &#183; Slanted E &#8212; find the unit vector of travel", "mode":"class", "questions":[
+ R("The unit vector along (&#238; + &#309;) is",
+  ["(&#238; + &#309;)/&#8730;2","&#238; + &#309;","(&#238; + &#309;)/2","&#238;/&#8730;2"],0,
+  "Magnitude of &#238; + &#309; = &#8730;(1&#178; + 1&#178;) = &#8730;2. Divide by it: <strong>(&#238; + &#309;)/&#8730;2</strong>."),
+ R("&#238; &#215; k&#770; and &#309; &#215; k&#770; are",
+  ["&#8722;&#309; and +&#238;","+&#309; and &#8722;&#238;","&#8722;&#309; and &#8722;&#238;","0 and 0"],0,
+  "&#238; &#8594; k&#770; is against the arrow (the cycle goes k&#770; &#8594; &#238;), so &#238; &#215; k&#770; = &#8722;&#309;.<br>&#309; &#8594; k&#770; is with the arrow, so &#309; &#215; k&#770; = +&#238;.",
+  {diagram:DIAGRAMS.cycle()}),
+ R("E is along (&#8722;2&#238; + 2&#309;) and B along k&#770;. Then E &#215; B =",
+  ["2&#238; + 2&#309;","&#8722;2&#238; &#8722; 2&#309;","2&#238; &#8722; 2&#309;","0"],0,
+  "(&#8722;2&#238; + 2&#309;) &#215; k&#770; = &#8722;2(&#238; &#215; k&#770;) + 2(&#309; &#215; k&#770;) = &#8722;2(&#8722;&#309;) + 2&#238; = <strong>2&#238; + 2&#309;</strong>.",
+  {diagram:DIAGRAMS.slant({v:true})}),
+ R(O+"In a plane electromagnetic wave, the directions of electric field and magnetic fields are represented by (2&#309; &#8722; 2&#238;) and k&#770; respectively. What is the unit vector along direction of propagation of the wave:",
+  ["(&#238; + 2&#309;)/&#8730;5","(&#309; + &#238;)/&#8730;2","(&#309; + k&#770;)/&#8730;2","(2&#238; + &#309;)/&#8730;5"],1,
+  "Direction = 2&#238; + 2&#309; (rung 3). Unit vector = <strong>(&#238; + &#309;)/&#8730;2</strong> (rung 1).<br><br>Quick check: (&#238; + &#309;) &#183; (&#8722;&#238; + &#309;) = 0, so the travel really is perpendicular to E.",
+  {tag:"Ex-I Q11"}) ]},
+
+{ "name":"S4 &#183; Slanted E and B pair for travel along x", "mode":"hw", "questions":[
+ R("Two vectors are perpendicular if their dot product is zero. Are (&#238; + &#309;) and (&#238; &#8722; &#309;) perpendicular?",
+  ["Yes &#8212; dot product = 1 &#8722; 1 = 0","No &#8212; dot product = 2","No &#8212; dot product = 1","Cannot say"],0,
+  "(&#238; + &#309;)&#183;(&#238; &#8722; &#309;) = 1 &#8722; 1 = <strong>0</strong>. So they are perpendicular. Use this test to throw out wrong E&#8211;B pairs quickly."),
+ R("For a wave along x, E and B can have components only along",
+  ["y and z (no x-component)","x only","x and y","x and z"],0,
+  "Transverse wave: no component along the travel. So only <strong>y and z</strong> parts are allowed."),
+ R("Take E = (&#8722;&#309; + k&#770;) and B = (&#8722;&#309; &#8722; k&#770;). First, E&#183;B = 1 &#8722; 1 = 0 &#10003;. Now E &#215; B =",
+  ["2&#238;","&#8722;2&#238;","2k&#770;","0"],0,
+  "(&#8722;&#309; + k&#770;) &#215; (&#8722;&#309; &#8722; k&#770;)<br>= &#309;&#215;&#309; + &#309;&#215;k&#770; &#8722; k&#770;&#215;&#309; &#8722; k&#770;&#215;k&#770;<br>= 0 + &#238; + &#238; &#8722; 0 = <strong>2&#238;</strong> &#10003; (along +x)."),
+ R(O+"For a plane electromagnetic wave propagating in x-direction, which one of the following combination gives the correct possible directions for electric field (E) and magnetic field (B) respectively?",
+  ["&#309; + k&#770;, &#309; + k&#770;","&#8722;&#309; + k&#770;, &#8722;&#309; &#8722; k&#770;","&#309; + k&#770;, &#8722;&#309; &#8722; k&#770;","&#8722;&#309; + k&#770;, &#8722;&#309; + k&#770;"],1,
+  "Dot product test: options 1, 3, 4 give &#177;2, not zero &#8212; out. Only option 2 is perpendicular, and rung 3 shows its E &#215; B is along +x.<br><br><strong>E = &#8722;&#309; + k&#770;, B = &#8722;&#309; &#8722; k&#770;</strong>.",
+  {tag:"Ex-II Q13 &#183; NEET 2021"}) ]},
+
+/* ============================ S5 · SPECTRUM (notes page 3 list) ============================ */
+{ "name":"S5 &#183; Shortest wavelength among UV, X-rays, gamma, microwaves", "mode":"hw", "questions":[
+ R("Your notes list the spectrum as &#947;, X, UV, visible, IR, micro, radio. Going down this list, the wavelength",
+  ["increases","decreases","stays the same","first rises then falls"],0,
+  "The list goes from shortest to longest &#955;. So &#955; <strong>increases</strong> down the list. Radio has the longest &#955;.",
+  {diagram:DIAGRAMS.spectrum()}),
+ R("c = f&#955; and c is fixed. If the frequency is doubled, the wavelength",
+  ["is halved","is doubled","stays the same","becomes four times"],0,
+  "&#955; = c/f. Double f &#8594; <strong>half &#955;</strong>. High frequency means short wavelength."),
+ R("Between UV and X-rays, which has the shorter wavelength?",
+  ["X-rays","UV","both equal","depends on the source"],0,
+  "X comes before UV in the list. <strong>X-rays</strong> are shorter."),
+ R(O+"The E.M. wave with shortest wavelength among the following is",
+  ["Ultraviolet rays","X-rays","Gamma-rays","Microwaves"],2,
+  "&#947; is at the very top of the list &#8594; <strong>gamma rays</strong>.",
+  {tag:"Ex-II Q10 &#183; NEET 2020 (COVID)", diagram:DIAGRAMS.spectrum({hl:[0]})}) ]},
+
+{ "name":"S5 &#183; Smallest wavelength &#8212; the energy view", "mode":"hw", "questions":[
+ R("Among X-rays, gamma rays, UV and microwaves, the one with the smallest frequency is",
+  ["microwaves","gamma rays","X-rays","UV"],0,
+  "Microwaves are lowest in the list here, so longest &#955; and <strong>smallest frequency</strong>."),
+ R("Photon energy E = hf = hc/&#955;. The most energetic photon has",
+  ["the shortest wavelength","the longest wavelength","zero wavelength","any wavelength"],0,
+  "E &#8733; 1/&#955;. Highest energy &#8594; <strong>shortest wavelength</strong>."),
+ R("Gamma rays mostly come from",
+  ["the nucleus (radioactive decay)","hot bodies","oscillating circuits","electron jumps in outer shells"],0,
+  "Gamma rays are emitted by the <strong>nucleus</strong>. That is why they have the most energy and the shortest &#955;."),
+ R(O+"The electromagnetic radiation which has the smallest wavelength are:",
+  ["X-rays","Gamma rays","Ultraviolet rays","Microwaves"],1,
+  "<strong>Gamma rays</strong>.",
+  {tag:"Ex-II Q27 &#183; Re-NEET 2024"}) ]},
+
+{ "name":"S5 &#183; Put four waves in decreasing order of wavelength", "mode":"class", "questions":[
+ R("&#8216;Decreasing order of wavelength&#8217; means you start from",
+  ["the longest wavelength","the shortest wavelength","the highest frequency","visible light"],0,
+  "Decreasing means big to small. Start with the <strong>longest &#955;</strong>."),
+ R("Between infrared and microwaves, which is longer in wavelength?",
+  ["microwaves","infrared","both equal","depends on temperature"],0,
+  "In the list, micro comes after IR. So <strong>microwaves</strong> are longer.",
+  {diagram:DIAGRAMS.spectrum({hl:[4,5]})}),
+ R("Between UV and gamma rays, which is longer in wavelength?",
+  ["UV","gamma rays","both equal","cannot say"],0,
+  "&#947; is the shortest of all. So <strong>UV</strong> is longer."),
+ R(O+"The decreasing order of wavelength of infrared, microwave, ultraviolet and gamma rays is:",
+  ["microwave, infrared, ultraviolet, gamma rays","gamma rays, ultraviolet, infrared, microwaves","microwaves, gamma rays, infrared, ultraviolet","infrared, microwave, ultraviolet, gamma rays"],0,
+  "Longest to shortest: <strong>microwave &gt; infrared &gt; ultraviolet &gt; gamma</strong>. Read your list from the bottom up.<br><br>Option 2 is the same four but in increasing order &#8212; a common slip.",
+  {tag:"Ex-I Q25"}) ]},
+
+{ "name":"S5 &#183; Wavelength order with symbols", "mode":"class", "questions":[
+ R("Is &#955;<sub>X</sub> &lt; &#955;<sub>IR</sub> true?",
+  ["Yes","No","Only in glass","Cannot say"],0,
+  "X-rays come far above IR in the list. So X-rays are much shorter. <strong>Yes</strong>."),
+ R("Compare &#955;<sub>&#947;</sub> and &#955;<sub>X</sub>.",
+  ["&#955;<sub>&#947;</sub> &lt; &#955;<sub>X</sub>","&#955;<sub>&#947;</sub> &gt; &#955;<sub>X</sub>","equal","depends on the source"],0,
+  "&#947; is first in the list &#8212; shortest of all. <strong>&#955;<sub>&#947;</sub> &lt; &#955;<sub>X</sub></strong>."),
+ R("Compare &#955;<sub>IR</sub> and &#955;<sub>M</sub> (microwaves).",
+  ["&#955;<sub>IR</sub> &lt; &#955;<sub>M</sub>","&#955;<sub>IR</sub> &gt; &#955;<sub>M</sub>","equal","cannot say"],0,
+  "Micro comes after IR. <strong>&#955;<sub>IR</sub> &lt; &#955;<sub>M</sub></strong>.",
+  {diagram:DIAGRAMS.spectrum({hl:[0,1,4,5]})}),
+ R(O+"If &#955;<sub>x</sub>, &#955;<sub>I</sub>, &#955;<sub>M</sub> and &#955;<sub>&#947;</sub> are the wavelengths of X-rays, infrared rays, microwaves and &#947; rays respectively, then:",
+  ["&#955;<sub>M</sub> &lt; &#955;<sub>I</sub> &lt; &#955;<sub>x</sub> &lt; &#955;<sub>&#947;</sub>","&#955;<sub>x</sub> &lt; &#955;<sub>&#947;</sub> &lt; &#955;<sub>M</sub> &lt; &#955;<sub>I</sub>","&#955;<sub>x</sub> &lt; &#955;<sub>I</sub> &lt; &#955;<sub>&#947;</sub> &lt; &#955;<sub>M</sub>","&#955;<sub>&#947;</sub> &lt; &#955;<sub>x</sub> &lt; &#955;<sub>I</sub> &lt; &#955;<sub>M</sub>"],3,
+  "Join rungs 1&#8211;3: <strong>&#955;<sub>&#947;</sub> &lt; &#955;<sub>x</sub> &lt; &#955;<sub>I</sub> &lt; &#955;<sub>M</sub></strong>.",
+  {tag:"Ex-II Q17 &#183; NEET 2022 (Overseas)"}) ]},
+
+{ "name":"S5 &#183; Match each wave with its wavelength", "mode":"class", "questions":[
+ R("X-rays have wavelengths of the order of",
+  ["10<sup>&#8722;10</sup> m (about 1 &#197;)","10<sup>&#8722;2</sup> m","10<sup>2</sup> m","10<sup>&#8722;6</sup> m"],0,
+  "X-rays are about atomic size: <strong>~10<sup>&#8722;10</sup> m</strong>. That is why they are used to study crystals."),
+ R("Microwaves (as in a microwave oven or radar) have wavelengths of the order of",
+  ["10<sup>&#8722;2</sup> m (cm range)","10<sup>&#8722;10</sup> m","10<sup>3</sup> m","10<sup>&#8722;7</sup> m"],0,
+  "Microwave &#955; runs from about 1 mm to 30 cm. A typical value is <strong>~10<sup>&#8722;2</sup> m</strong>."),
+ R("An AM station broadcasts at about 1 MHz. Its wavelength is about",
+  ["300 m, i.e. of the order of 10<sup>2</sup> m","3 m","3 cm","3 km"],0,
+  "&#955; = c/f = (3&#215;10<sup>8</sup>)/(10<sup>6</sup>) = <strong>300 m</strong>. Order 10<sup>2</sup> m.<br><br>That leaves 10<sup>&#8722;4</sup> m for infrared (far IR), which fits between microwaves and visible."),
+ R(O+"Match List-I with List-II.<br>(a) AM radio waves &#160;&#160; (i) 10<sup>&#8722;10</sup> m<br>(b) Microwaves &#160;&#160; (ii) 10<sup>2</sup> m<br>(c) Infrared radiations &#160;&#160; (iii) 10<sup>&#8722;2</sup> m<br>(d) X-rays &#160;&#160; (iv) 10<sup>&#8722;4</sup> m",
+  ["(a)-(iii), (b)-(ii), (c)-(i), (d)-(iv)","(a)-(iii), (b)-(iv), (c)-(ii), (d)-(i)","(a)-(ii), (b)-(iii), (c)-(iv), (d)-(i)","(a)-(iv), (b)-(iii), (c)-(ii), (d)-(i)"],2,
+  "AM &#8594; 10<sup>2</sup> m (ii), microwaves &#8594; 10<sup>&#8722;2</sup> m (iii), IR &#8594; 10<sup>&#8722;4</sup> m (iv), X-rays &#8594; 10<sup>&#8722;10</sup> m (i).<br><br><strong>(a)-(ii), (b)-(iii), (c)-(iv), (d)-(i)</strong>.<br><br>Shortcut: the four &#955;s must go in the same order as the spectrum. Only option 3 does that.",
+  {tag:"Ex-II Q15 &#183; NEET 2022"}) ]},
+
+{ "name":"S5 &#183; A 15 keV photon &#8212; which part of the spectrum?", "mode":"class", "questions":[
+ R("A handy result: E(in eV) &#215; &#955;(in nm) &#8776; 1240. A photon of green light, &#955; = 500 nm, has energy about",
+  ["2.5 eV","25 eV","0.25 eV","2500 eV"],0,
+  "E = 1240/500 &#8776; <strong>2.5 eV</strong>. Visible photons are a few eV."),
+ R("For E = 15 keV = 15000 eV, the wavelength is about",
+  ["0.08 nm (about 0.8 &#197;)","80 nm","8 nm","800 nm"],0,
+  "&#955; = 1240/15000 &#8776; <strong>0.083 nm</strong> &#8776; 0.8 &#197;."),
+ R("A wavelength of about 1 &#197; (10<sup>&#8722;10</sup> m) belongs to",
+  ["X-rays","UV","IR","microwaves"],0,
+  "About 10<sup>&#8722;10</sup> m is the <strong>X-ray</strong> region (last ladder, rung 1).",
+  {diagram:DIAGRAMS.spectrum({hl:[1]})}),
+ R(O+"The energy of the em waves is of the order of 15 keV. To which part of the spectrum does it belong?",
+  ["&#947;-rays","X-rays","Infra-red rays","Ultraviolet rays"],1,
+  "keV photons are <strong>X-rays</strong>. Gamma rays are usually in the MeV range; UV is only a few eV to about 100 eV.",
+  {tag:"Ex-II Q1 &#183; Re-AIPMT 2015"}) ]},
+
+{ "name":"S5 &#183; AM and FM radio bands", "mode":"hw", "questions":[
+ R("AM stands for",
+  ["amplitude modulation","alternating modulation","audio magnetic","amplified microwave"],0,
+  "AM = <strong>amplitude modulation</strong>: the sound is carried by changing the amplitude of the carrier. FM = frequency modulation."),
+ R("FM radio stations work in the band",
+  ["88&#8211;108 MHz","530&#8211;1710 kHz","54&#8211;890 MHz","2.4 GHz"],0,
+  "FM radio: <strong>88&#8211;108 MHz</strong>. (54&#8211;890 MHz is the TV band.)"),
+ R("Compared with FM, AM radio uses",
+  ["lower frequencies, in the kHz range","higher frequencies, in the GHz range","the same frequencies","visible light"],0,
+  "AM uses the medium-wave band &#8212; <strong>hundreds of kHz</strong>. Lower frequency than FM."),
+ R(O+"The AM range of radiowaves have frequency &#8211;",
+  ["530 &#8211; 1710 kHz","88 &#8211; 108 MHz","54 &#8211; 890 MHz","500 kHz &#8211; 1000 MHz"],0,
+  "<strong>530&#8211;1710 kHz</strong>. Option 2 is FM and option 3 is TV.",
+  {tag:"Ex-I Q13"}) ]},
+
+{ "name":"S5 &#183; Which wave for which job?", "mode":"hw", "questions":[
+ R("Mobile phone towers and satellite links use frequencies in the GHz range. These are",
+  ["microwaves","gamma rays","X-rays","UV"],0,
+  "GHz frequencies are <strong>microwaves</strong>. They pass through the atmosphere and can be sent as narrow beams."),
+ R("A TV remote uses",
+  ["infrared","ultraviolet","X-rays","microwaves"],0,
+  "The small LED in a remote sends <strong>infrared</strong> pulses."),
+ R("UV lamps are used to",
+  ["kill germs in water and hospitals","cook food","send phone signals","see through walls"],0,
+  "UV has enough energy to damage bacteria. So it is used to <strong>sterilise</strong>."),
+ R(O+"The waves related to tele-communication are &#8211;",
+  ["infrared","visible light","microwaves","ultraviolet rays"],2,
+  "<strong>Microwaves</strong> (rung 1).",
+  {tag:"Ex-I Q15"}) ]},
+
+{ "name":"S5 &#183; How a microwave oven heats food", "mode":"hw", "questions":[
+ R("A microwave oven runs at about 2.45 GHz. This radiation belongs to",
+  ["the microwave region","the infrared region","the radio (AM) region","the UV region"],0,
+  "GHz &#8594; <strong>microwaves</strong>. Not infrared &#8212; a microwave oven is not a heat-lamp."),
+ R("When a driving force has the same frequency as the natural frequency of a system, the energy transfer is",
+  ["maximum (resonance)","minimum","zero","the same as at any frequency"],0,
+  "Same frequency &#8594; <strong>resonance</strong> &#8594; maximum energy transfer. Like pushing a swing at the right moment."),
+ R("Water molecules in food absorb energy strongly when the microwave frequency",
+  ["matches their natural frequency","is as high as possible","is as low as possible","is in the visible range"],0,
+  "Resonance again. When the frequencies <strong>match</strong>, the water molecules take in energy fast, and this becomes heat."),
+ R(O+"The condition under which a microwave oven heats up a food item containing water molecules most efficiently is:",
+  ["Infra-red waves produce heating in a microwave oven","The frequency of the microwaves must match the resonant frequency of the water molecules","The frequency of the microwaves has no relation with natural frequency of water molecules","Microwaves are heat waves, so always produce heating"],1,
+  "<strong>Frequencies must match</strong> (rung 3). Options 1 and 4 mix microwaves up with infrared.",
+  {tag:"Ex-I Q27"}) ]},
+
+/* ============================ S6 · GREENHOUSE AND OZONE (not in the notes) ============================ */
+{ "name":"S6 &#183; What causes the greenhouse effect?", "mode":"class", "questions":[
+ R("Warm bodies (like the ground at about 300 K) give out their heat mainly as",
+  ["infrared radiation","visible light","X-rays","radio waves"],0,
+  "Objects at room temperature radiate mostly in the <strong>infrared</strong>. That is why IR is called heat radiation."),
+ R("Sunlight, mostly visible, passes through the air and warms the ground. The warm ground then sends energy back upward as",
+  ["infrared","visible","UV","gamma"],0,
+  "Visible comes in, <strong>infrared</strong> goes out. The type of radiation changes.",
+  {diagram:DIAGRAMS.greenhouse()}),
+ R("Gases like CO&#8322; and water vapour let visible light through but absorb",
+  ["infrared, and send part of it back to the ground","visible light","radio waves","gamma rays"],0,
+  "These gases absorb <strong>IR</strong> and send part of it back down. The heat is trapped, like in a glass greenhouse."),
+ R(O+"What is the cause of greenhouse effect?",
+  ["Infrared rays","Ultraviolet rays","X-rays","Radio waves"],0,
+  "<strong>Infrared</strong> rays, trapped by the atmosphere.",
+  {tag:"Ex-I Q19"}) ]},
+
+{ "name":"S6 &#183; Greenhouse effect at night", "mode":"hw", "questions":[
+ R("At night there is no sunlight. The earth loses heat by giving out",
+  ["infrared radiation","visible light","UV","nothing"],0,
+  "The ground keeps radiating <strong>infrared</strong> even at night."),
+ R("Greenhouse gases in the air",
+  ["trap part of this outgoing infrared","reflect all sunlight","create heat by themselves","stop only UV"],0,
+  "They absorb some of the outgoing IR and send it back down. So less heat is lost."),
+ R("The Moon has no atmosphere. Its night-side temperature is",
+  ["very cold, far below 0 &#176;C","about the same as earth's night","hotter than day","exactly 0 &#176;C"],0,
+  "No blanket &#8594; heat escapes freely. The Moon's night is <strong>extremely cold</strong> (below &#8722;150 &#176;C)."),
+ R(O+"Greenhouse effect keeps the earth surface &#8211;",
+  ["cold at night","dusty and cold","warm at night","moist"],2,
+  "Trapped IR stops the surface from cooling too much. It stays <strong>warm at night</strong>.",
+  {tag:"Ex-I Q17"}) ]},
+
+{ "name":"S6 &#183; No atmosphere &#8212; hotter or colder earth?", "mode":"hw", "questions":[
+ R("The part of the atmosphere that traps outgoing heat is",
+  ["greenhouse gases such as CO&#8322; and water vapour","the ozone layer only","the ionosphere","nitrogen only"],0,
+  "Mainly <strong>CO&#8322; and water vapour</strong>."),
+ R("If this &#8216;blanket&#8217; were removed, the infrared given out by the ground would",
+  ["escape freely into space","be trapped even more","turn into visible light","stop being produced"],0,
+  "Nothing is left to absorb it. The IR <strong>escapes</strong>."),
+ R("Losing more heat, with the same sunlight coming in, means the average temperature",
+  ["goes down","goes up","stays the same","becomes exactly 0 &#176;C"],0,
+  "Same input, more loss &#8594; <strong>lower</strong> temperature."),
+ R(O+"If there were no atmosphere, the average temperature on earth surface would be &#8211;",
+  ["lower","higher","same","0 &#176;C"],0,
+  "<strong>Lower</strong>. Estimates give about &#8722;18 &#176;C instead of today's average of about 15 &#176;C. Option 4 is a trap: the answer is not exactly 0 &#176;C.",
+  {tag:"Ex-I Q8"}) ]},
+
+{ "name":"S6 &#183; Where is the ozone layer?", "mode":"hw", "questions":[
+ R("From the ground upward, the layers of the atmosphere are",
+  ["troposphere, stratosphere, mesosphere, thermosphere (ionosphere)","stratosphere, troposphere, mesosphere, ionosphere","mesosphere, troposphere, stratosphere, ionosphere","ionosphere, troposphere, stratosphere, mesosphere"],0,
+  "<strong>Tropo &#8594; strato &#8594; meso &#8594; thermo</strong>. The ionosphere lies in the upper part."),
+ R("Clouds, rain and almost all weather happen in the",
+  ["troposphere","stratosphere","mesosphere","ionosphere"],0,
+  "The lowest layer, the <strong>troposphere</strong> (up to about 12 km)."),
+ R("AM radio waves bounce back to earth from the",
+  ["ionosphere","troposphere","ozone layer","mesosphere"],0,
+  "The charged layer &#8212; the <strong>ionosphere</strong> &#8212; reflects radio waves. It is not where ozone is."),
+ R(O+"In which part of earth's atmosphere is the ozone layer present?",
+  ["troposphere","stratosphere","ionosphere","mesosphere"],1,
+  "The ozone layer is in the <strong>stratosphere</strong>, about 15&#8211;35 km up.",
+  {tag:"Ex-I Q9"}) ]},
+
+{ "name":"S6 &#183; Why the ozone layer matters", "mode":"hw", "questions":[
+ R("Too much ultraviolet from the sun can cause",
+  ["sunburn, eye damage and skin cancer","only warmth","radio noise","nothing harmful"],0,
+  "UV photons carry enough energy to damage living cells. So too much UV is <strong>harmful</strong>."),
+ R("Ozone (O&#8323;) strongly absorbs",
+  ["ultraviolet radiation","infrared radiation","radio waves","visible light"],0,
+  "Ozone takes in most of the sun's harmful <strong>UV</strong> before it reaches us."),
+ R("Infrared from the ground is mainly absorbed by CO&#8322; and water vapour, and radio waves are reflected by the ionosphere. So ozone's main job is about",
+  ["UV","IR","radio","ions"],0,
+  "Ozone's job is to protect us from <strong>UV</strong>. The other options belong to other layers."),
+ R(O+"The ozone layer in earth's atmosphere is crucial for human survival because it &#8211;",
+  ["contains ions","reflects radio signals","reflects ultraviolet rays","reflects infra red rays"],2,
+  "Answer: the <strong>ultraviolet</strong> option.<br><br>Small note: ozone actually <em>absorbs</em> UV rather than reflecting it. The book's wording says &#8216;reflects&#8217;, but the idea being tested is &#8216;it stops UV&#8217;.",
+  {tag:"Ex-I Q10"}) ]}
+
+];
+
+
+
+const STORAGE_KEY = 'padipucast_emwaves_neet_p1_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original question</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
