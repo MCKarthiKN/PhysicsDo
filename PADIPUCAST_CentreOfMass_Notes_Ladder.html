@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Centre of Mass &#183; Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Centre of Mass</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Centre of Mass<br>From one point to a disc with a hole</h1></div>
+    <p id="home-sub">Every problem from your COM notes, put in <strong>one climbing order</strong> that follows the four calculation types in the notes: what COM is &#8594; <strong>discrete</strong> masses (line, plane, triangle, 3D vectors) &#8594; <strong>continuous</strong> rods with dm = &#955;dx (uniform, the three H.W rods, JEE 2020) &#8594; the half ring and half disc &#8594; <strong>compound</strong> bodies &#8594; <strong>truncated</strong> bodies &#8594; motion of the COM.<br><br>Each source question is a <strong>ladder</strong>: 3 build-up rungs, then the question from the notes (&#9733;). Every ladder is marked <strong>DISCUSS IN CLASS</strong> (worked in the notes) or <strong>HOMEWORK</strong> (set or left unsolved in the notes). 21 ladders &#215; 4 rungs = 84 questions.<br><br><em>One formula runs through all 21: x<sub>com</sub> = &#931;mx / &#931;m. For a continuous body, &#931; becomes &#8747; and m becomes dm. For a compound body, each part becomes one point mass at its own COM. For a cut body, the removed piece goes in with a minus sign.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Centre of Mass  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#2b6cb0';
+const FILL_T='#e6f1f4', FILL_B='#c9e2e9', FILL_C='#b3d6df', FILL_W='#f6ecd2';
+
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+function _svg(W,H,s){ return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`; }
+function _t(x,y,txt,o={}){
+  return `<text x="${x}" y="${y}" font-size="${o.fs||11}" text-anchor="${o.a||'middle'}" fill="${o.c||INK}" ${FS} font-weight="${o.w||400}"${o.it?' font-style="italic"':''}>${txt}</text>`;
+}
+function _line(x1,y1,x2,y2,c,w,dash){
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c||INK}" stroke-width="${w||1.5}"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+}
+// arrow between any two points
+function _arrow(x1,y1,x2,y2,c,w){
+  const id=_nid();
+  return `<defs>${AR(id,c)}</defs><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w||2}" marker-end="url(#${id})"/>`;
+}
+// double-headed dimension arrow
+function _dim(x1,y1,x2,y2,c){
+  const id=_nid();
+  return `<defs><marker id="${id}" markerWidth="8" markerHeight="7" refX="7.5" refY="3.5" orient="auto-start-reverse"><polygon points="0 0,8 3.5,0 7" fill="${c}"/></marker></defs><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="1.1" marker-start="url(#${id})" marker-end="url(#${id})"/>`;
+}
+// x and y axes with arrowheads, origin at (ox,oy)
+function _axes(ox,oy,xLen,yLen,xl,yl){
+  let s=_arrow(ox-10,oy,ox+xLen,oy,GREY,1.3)+_arrow(ox,oy+10,ox,oy-yLen,GREY,1.3);
+  s+=_t(ox+xLen+8,oy+4,xl||'x',{c:GREY,a:'start',it:1});
+  s+=_t(ox-4,oy-yLen-6,yl||'y',{c:GREY,it:1});
+  return s;
+}
+function _dot(x,y,c,r){ return `<circle cx="${x}" cy="${y}" r="${r||4}" fill="${c||RED}"/>`; }
+function _hatchDefs(id,c){
+  return `<defs><pattern id="${id}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="${c}" stroke-width="1.4"/></pattern></defs>`;
+}
+
+const DIAGRAMS = {
+
+// ---- ring, disc, sphere, cube (optionally with COM dots) --------------------
+shapes:(o={})=>{
+  const W=400,H=150,cy=66;
+  let s='';
+  // ring
+  s+=`<circle cx="56" cy="${cy}" r="38" fill="none" stroke="${AMB}" stroke-width="2.2"/><circle cx="56" cy="${cy}" r="34.5" fill="none" stroke="${AMB}" stroke-width="1.2"/>`;
+  // disc
+  s+=`<circle cx="152" cy="${cy}" r="38" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.8"/>`;
+  // sphere
+  s+=`<circle cx="248" cy="${cy}" r="38" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.8"/>`;
+  s+=`<path d="M210 ${cy} A38 11 0 0 0 286 ${cy}" fill="none" stroke="${AMB}" stroke-width="1.2"/><path d="M210 ${cy} A38 11 0 0 1 286 ${cy}" fill="none" stroke="${AMB}" stroke-width="1" stroke-dasharray="4 3"/>`;
+  // cube
+  s+=`<rect x="316" y="44" width="52" height="52" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.8"/>`;
+  s+=`<path d="M316 44 L332 30 L384 30 L368 44 M384 30 L384 82 L368 96" fill="none" stroke="${AMB}" stroke-width="1.8"/>`;
+  if(o.dots){ [56,152,248].forEach(x=>s+=_dot(x,cy)); s+=_dot(350,63); }
+  ['ring (hoop)','disc','sphere','cube'].forEach((l,i)=>s+=_t([56,152,248,350][i],132,l,{c:GREY}));
+  s+=_t(W/2,147,'all uniform',{c:GREY,fs:10});
+  return _svg(W,H,s);
+},
+
+// ---- triangular plate with height h -----------------------------------------
+triCentroid:()=>{
+  const W=360,H=196;
+  let s=`<polygon points="90,168 270,168 180,36" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.8"/>`;
+  s+=_line(180,36,180,168,GREY,1.1,'4 3');
+  s+=_dim(300,36,300,168,GREY)+_t(312,106,'h',{c:GREY,it:1,a:'start',fs:13});
+  s+=_line(270,168,306,168,GREY,0.8,'2 2')+_line(186,36,306,36,GREY,0.8,'2 2');
+  s+=_dot(180,124)+_t(150,121,'COM',{c:RED,w:700});
+  s+=_t(180,188,'uniform triangular plate on its base',{c:GREY,fs:10.5});
+  return _svg(W,H,s);
+},
+
+// ---- L-shaped plate: COM outside the material --------------------------------
+lShape:()=>{
+  const W=340,H=196;
+  let s=`<path d="M70 26 L94 26 L94 146 L250 146 L250 170 L70 170 Z" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.8"/>`;
+  s+=_dot(128,128)+_t(128,116,'COM',{c:RED,w:700});
+  s+=_line(131,131,168,108,GREY,0.9)+_t(172,104,'no material here',{c:GREY,a:'start',fs:10.5});
+  s+=_t(170,190,'L-shaped plate',{c:GREY,fs:10.5});
+  return _svg(W,H,s);
+},
+
+// ---- wire, plate, solid sphere (no density labels) ---------------------------
+densities:()=>{
+  const W=400,H=140;
+  let s=`<rect x="20" y="60" width="104" height="7" rx="2" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.5"/>`;
+  s+=`<rect x="160" y="30" width="72" height="66" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.6"/>`;
+  s+=`<path d="M160 30 L172 22 L244 22 L232 30 M244 22 L244 88 L232 96" fill="none" stroke="${AMB}" stroke-width="1.2"/>`;
+  s+=`<circle cx="326" cy="62" r="40" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.6"/>`;
+  for(let i=0;i<14;i++){ const a=i*2.4, r=8+((i*13)%28); s+=_dot(326+r*Math.cos(a),62+r*Math.sin(a),AMB,1.4); }
+  s+=_t(72,122,'(i) thin wire',{c:GREY})+_t(200,122,'(ii) thin plate',{c:GREY})+_t(326,122,'(iii) solid sphere',{c:GREY});
+  return _svg(W,H,s);
+},
+
+// ---- two masses on a line ----------------------------------------------------
+twoMass:(o)=>{
+  const W=380,H=o.big?150:118, cy=o.big?66:50;
+  const r1=o.r1||18, r2=o.r2||18, x1=70, x2=310;
+  let s=_line(x1,cy,x2,cy,GREY,1,'4 3');
+  s+=`<circle cx="${x1}" cy="${cy}" r="${r1}" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<circle cx="${x2}" cy="${cy}" r="${r2}" fill="${FILL_T}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_t(x1,cy+4.5,o.m1,{w:700,fs:12})+_t(x2,cy+4.5,o.m2,{w:700,fs:12});
+  const dy=cy+Math.max(r1,r2)+18;
+  s+=_line(x1,cy+r1+3,x1,dy+6,GREY,0.8)+_line(x2,cy+r2+3,x2,dy+6,GREY,0.8);
+  s+=_dim(x1,dy,x2,dy,GREY)+_t((x1+x2)/2,dy+16,o.d,{c:GREY,w:700});
+  if(o.note) s+=_t(W/2,H-4,o.note,{c:GREY,fs:10});
+  return _svg(W,H,s);
+},
+
+// ---- point masses on x-y axes --------------------------------------------------
+// o.pts: [x, y, massLabel, coordLabel, labelSide('l'|'r'|'t'|'b')]
+plot:(o)=>{
+  const W=o.W||380, H=o.H||230, ox=o.ox||90, oy=o.oy||185, sx=o.sx||40, sy=o.sy||sx;
+  let s=_axes(ox,oy,o.xLen||230,o.yLen||165);
+  const P=o.pts.map(p=>[ox+p[0]*sx, oy-p[1]*sy]);
+  if(o.tri){ s+=`<polygon points="${P.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${GREY}" stroke-width="1.2" stroke-dasharray="5 4"/>`; }
+  o.pts.forEach((p,i)=>{
+    const [X,Y]=P[i], side=p[4]||'r';
+    s+=`<circle cx="${X}" cy="${Y}" r="7" fill="#fff" stroke="${INK}" stroke-width="1.6"/>`+_dot(X,Y,GRN,3.2);
+    const lbl=`${p[2]}${p[3]?'  '+p[3]:''}`;
+    if(side==='r') s+=_t(X+12,Y-9,lbl,{a:'start',w:600});
+    if(side==='l') s+=_t(X-12,Y-9,lbl,{a:'end',w:600});
+    if(side==='t') s+=_t(X,Y-14,lbl,{w:600});
+    if(side==='b') s+=_t(X+4,Y+22,lbl,{w:600});
+    if(side==='bl') s+=_t(X-8,Y+22,lbl,{a:'end',w:600});
+  });
+  if(o.note) s+=_t(W/2,H-4,o.note,{c:GREY,fs:10});
+  return _svg(W,H,s);
+},
+
+// ---- rod on the x-axis with a small element dx ------------------------------
+rodEl:(o={})=>{
+  const W=380,H=150, x0=50, x1=320, y=62, h=18, ex=205;
+  const gid=_nid();
+  let fill=FILL_W, defs='';
+  if(o.grad){
+    defs=`<defs><linearGradient id="${gid}" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fbf6e9"/>${o.grad==='sq'?'<stop offset="0.55" stop-color="#f1dfae"/>':''}<stop offset="1" stop-color="#c9973a"/></linearGradient></defs>`;
+    fill=`url(#${gid})`;
+  }
+  let s=defs+_arrow(x0-16,y+h+22,x1+30,y+h+22,GREY,1.2)+_t(x1+36,y+h+26,'x',{c:GREY,it:1,a:'start'});
+  s+=`<rect x="${x0}" y="${y}" width="${x1-x0}" height="${h}" fill="${fill}" stroke="${AMB}" stroke-width="1.6"/>`;
+  s+=`<rect x="${ex}" y="${y}" width="9" height="${h}" fill="${INK}"/>`;
+  s+=_line(x0,y-4,x0,y+h+30,INK,1.4)+_t(x0,y+h+44,'0',{c:GREY})+_t(x1,y+h+44,'L',{c:GREY,it:1});
+  s+=_line(x1,y+h+18,x1,y+h+26,GREY,1.2);
+  s+=_arrow(x0,y-14,ex,y-14,INK,1.3)+_t((x0+ex)/2,y-20,'x',{it:1});
+  s+=_t(ex+4,y+h+14,'dx',{fs:10.5,c:GREY});
+  s+=_t(W-8,24,o.lab||'dm = &#955; dx',{a:'end',w:700,c:GRN});
+  if(o.grad) s+=_t(W/2,H-6,o.grad==='sq'?'lighter at x = 0, much heavier towards x = L':'lighter at x = 0, heavier towards x = L',{c:GREY,fs:10});
+  return _svg(W,H,s);
+},
+
+// ---- three kinds of small element (unlabelled) -------------------------------
+elements:()=>{
+  const W=400,H=150;
+  let s='';
+  // rod
+  s+=`<rect x="14" y="58" width="104" height="12" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.4"/><rect x="70" y="58" width="7" height="12" fill="${INK}"/>`;
+  // disc with ring
+  s+=`<circle cx="200" cy="64" r="44" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.4"/>`;
+  s+=`<circle cx="200" cy="64" r="27" fill="none" stroke="${INK}" stroke-width="5.5" opacity="0.85"/>`;
+  s+=_line(200,64,227,64,GREY,1)+_dot(200,64,GREY,2);
+  // half ring with small arc
+  s+=`<path d="M290 96 A48 48 0 0 1 386 96" fill="none" stroke="${AMB}" stroke-width="3"/>`;
+  const a1=0.9,a2=1.12, cx=338, cy=96, R=48;
+  s+=`<path d="M${cx+R*Math.cos(a1)} ${cy-R*Math.sin(a1)} A${R} ${R} 0 0 0 ${cx+R*Math.cos(a2)} ${cy-R*Math.sin(a2)}" fill="none" stroke="${INK}" stroke-width="6"/>`;
+  s+=_line(cx,cy,cx+R*Math.cos(a1),cy-R*Math.sin(a1),GREY,0.9)+_line(cx,cy,cx+R*Math.cos(a2),cy-R*Math.sin(a2),GREY,0.9);
+  s+=_t(66,128,'(i) straight rod',{c:GREY})+_t(200,128,'(ii) disc cut into rings',{c:GREY})+_t(338,128,'(iii) half ring',{c:GREY});
+  return _svg(W,H,s);
+},
+
+// ---- semicircular ring with an element at angle theta --------------------------
+halfRing:(o={})=>{
+  const W=380,H=210, cx=150, cy=170, R=110, th=0.95, dth=0.16;
+  let s=_axes(cx,cy,R+60,R+30);
+  s+=_line(cx-R-20,cy,cx,cy,GREY,1.3);
+  s+=`<path d="M${cx-R} ${cy} A${R} ${R} 0 0 1 ${cx+R} ${cy}" fill="none" stroke="${AMB}" stroke-width="3"/>`;
+  const px=cx+R*Math.cos(th), py=cy-R*Math.sin(th), qx=cx+R*Math.cos(th+dth), qy=cy-R*Math.sin(th+dth);
+  s+=`<path d="M${px} ${py} A${R} ${R} 0 0 0 ${qx} ${qy}" fill="none" stroke="${GRN}" stroke-width="7"/>`;
+  s+=_line(cx,cy,px,py,GRN,1.2)+_line(cx,cy,qx,qy,GRN,1.2);
+  s+=_t(cx+R*0.5*Math.cos(th)+14,cy-R*0.5*Math.sin(th)+12,'R',{c:GRN,w:700,it:1});
+  s+=`<path d="M${cx+26} ${cy} A26 26 0 0 0 ${cx+26*Math.cos(th)} ${cy-26*Math.sin(th)}" fill="none" stroke="${INK}" stroke-width="1"/>`;
+  s+=_t(cx+36,cy-10,'&#952;',{it:1});
+  s+=_t(qx-6,qy-10,'d&#952;',{c:GRN,fs:10.5,a:'end'});
+  if(o.full){
+    s+=_line(px,py,px,cy,GREY,1.1,'4 3');
+    s+=_t(px+9,(py+cy)/2+14,'y = R sin &#952;',{a:'start',c:GREY,fs:10.5});
+    s+=_t(px+16,py-8,'dl = R d&#952;',{a:'start',c:GRN,w:700,fs:10.5});
+  }
+  s+=_t(cx,cy+22,'O',{c:GREY});
+  return _svg(W,H,s);
+},
+
+// ---- semicircular disc on the x-axis ---------------------------------------------
+halfDisc:()=>{
+  const W=360,H=190, cx=170, cy=160, R=105;
+  let s=_axes(cx,cy,R+50,R+30);
+  s+=_line(cx-R-20,cy,cx,cy,GREY,1.3);
+  s+=`<path d="M${cx-R} ${cy} A${R} ${R} 0 0 1 ${cx+R} ${cy} Z" fill="${FILL_W}" stroke="${AMB}" stroke-width="1.8"/>`;
+  s+=_line(cx,cy,cx+R*Math.cos(0.6),cy-R*Math.sin(0.6),INK,1.1)+_t(cx+50,cy-44,'R',{it:1,w:700});
+  s+=_t(cx,cy+22,'O',{c:GREY});
+  return _svg(W,H,s);
+},
+
+// ---- two blocks side by side from O ------------------------------------------------
+blocksRow:()=>{
+  const W=360,H=176, ox=70, gy=112, w=100, h=64;
+  let s=_line(ox-30,gy,ox+2*w+40,gy,INK,1.6)+_line(ox,gy-h-24,ox,gy+34,INK,1.4);
+  s+=`<rect x="${ox}" y="${gy-h}" width="${w}" height="${h}" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<rect x="${ox+w}" y="${gy-h}" width="${w}" height="${h}" fill="${FILL_T}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_t(ox+w/2,gy-h/2+5,'m',{w:700,it:1,fs:13})+_t(ox+1.5*w,gy-h/2+5,'m',{w:700,it:1,fs:13});
+  s+=_dot(ox+w/2,gy-h/2+16,INK,2.6)+_dot(ox+1.5*w,gy-h/2+16,INK,2.6);
+  s+=_dim(ox,gy-h-12,ox+w,gy-h-12,GREY)+_t(ox+w/2,gy-h-18,'x',{it:1,c:GREY})
+    +_dim(ox+w,gy-h-12,ox+2*w,gy-h-12,GREY)+_t(ox+1.5*w,gy-h-18,'x',{it:1,c:GREY});
+  s+=_dim(ox,gy+16,ox+w/2,gy+16,GREY)+_t(ox+w/4,gy+32,'x/2',{c:GREY,fs:10.5});
+  s+=_dim(ox,gy+44,ox+1.5*w,gy+44,GREY)+_t(ox+0.75*w,gy+60,'3x/2',{c:GREY,fs:10.5});
+  s+=_t(ox-12,gy+16,'O',{c:GREY});
+  return _svg(W,H,s);
+},
+
+// ---- L-shaped frame of two rods ---------------------------------------------------
+lRods:()=>{
+  const W=340,H=210, ox=90, oy=170, L=130;
+  let s=_axes(ox,oy,L+50,L+26);
+  s+=`<rect x="${ox}" y="${oy-5}" width="${L}" height="10" fill="#a0522d"/><rect x="${ox-5}" y="${oy-L}" width="10" height="${L}" fill="#a0522d"/>`;
+  s+=_dot(ox+L/2,oy,'#fff',3)+_dot(ox,oy-L/2,'#fff',3);
+  s+=_t(ox-10,oy+18,'(0, 0)',{a:'end',c:GREY,fs:10.5})+_t(ox+L,oy+22,'(L, 0)',{c:GREY,fs:10.5})+_t(ox-12,oy-L+4,'(0, L)',{a:'end',c:GREY,fs:10.5});
+  s+=_t(ox+L/2,oy+22,'m',{it:1,w:700})+_t(ox-14,oy-L/2+4,'m',{it:1,w:700,a:'end'});
+  return _svg(W,H,s);
+},
+
+// ---- three rods forming a right triangle -------------------------------------------
+triRods:()=>{
+  const W=340,H=220, ox=90, oy=180, a=150;
+  let s=_axes(ox,oy,a+46,a+26);
+  s+=`<polygon points="${ox},${oy} ${ox+a},${oy} ${ox},${oy-a}" fill="none" stroke="${BLU}" stroke-width="6" stroke-linejoin="round" opacity="0.75"/>`;
+  s+=_t(ox-8,oy+18,'O (0, 0)',{a:'end',c:GREY,fs:10.5})+_t(ox+a,oy+22,'A (a, 0)',{c:GREY,fs:10.5})+_t(ox-10,oy-a+4,'B (0, a)',{a:'end',c:GREY,fs:10.5});
+  s+=_t(W/2+10,H-2,'all three rods have the same mass',{c:GREY,fs:10});
+  return _svg(W,H,s);
+},
+
+// ---- three square plates -------------------------------------------------------------
+plates3:()=>{
+  const W=320,H=220, ox=90, oy=180, a=66;
+  let s=_axes(ox,oy,2*a+60,2*a+26);
+  const sq=(x,y)=>`<rect x="${ox+x*a}" y="${oy-(y+1)*a}" width="${a}" height="${a}" fill="#f3d9b8" stroke="#8a6a44" stroke-width="1.5"/>`;
+  s+=sq(0,0)+sq(1,0)+sq(1,1);
+  s+=_line(ox+a,oy,ox+a,oy+6,GREY,1)+_line(ox+2*a,oy,ox+2*a,oy+6,GREY,1)
+    +_t(ox+a,oy+20,'a',{it:1,c:GREY})+_t(ox+2*a,oy+20,'2a',{it:1,c:GREY})
+    +_line(ox-6,oy-a,ox,oy-a,GREY,1)+_line(ox-6,oy-2*a,ox,oy-2*a,GREY,1)
+    +_t(ox-10,oy-a+4,'a',{it:1,c:GREY,a:'end'})+_t(ox-10,oy-2*a+4,'2a',{it:1,c:GREY,a:'end'});
+  s+=_t(W/2+20,H-2,'each plate: side a, mass m',{c:GREY,fs:10});
+  return _svg(W,H,s);
+},
+
+// ---- disc + square touching ------------------------------------------------------------
+discSquare:()=>{
+  const W=400,H=200, ox=110, oy=100, a=58;
+  let s=_line(20,oy,W-16,oy,GREY,1.1)+_line(ox,oy-a-24,ox,oy+a+20,GREY,1,'5 4');
+  s+=`<circle cx="${ox}" cy="${oy}" r="${a}" fill="#f7f0c8" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<rect x="${ox+a}" y="${oy-a}" width="${2*a}" height="${2*a}" fill="#dde7f5" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_line(ox+2*a,oy-a,ox+2*a,oy+a,GREY,1,'5 4');
+  s+=_dot(ox,oy,RED,3.5)+_dot(ox+2*a,oy,RED,3.5);
+  s+=_t(ox-8,oy+18,'(0, 0)',{a:'end',fs:10.5})+_t(ox+2*a+6,oy+18,'(2a, 0)',{a:'start',fs:10.5});
+  s+=_dim(ox,oy-18,ox+a,oy-18,INK)+_t(ox+a/2,oy-24,'a',{it:1,w:700});
+  s+=_dim(ox+a,oy-a-12,ox+3*a,oy-a-12,INK)+_t(ox+2*a,oy-a-18,'2a',{it:1,w:700});
+  s+=_t(ox-28,oy+a+18,'disc',{c:GREY,fs:10.5})+_t(ox+2*a,oy+a+18,'square',{c:GREY,fs:10.5});
+  return _svg(W,H,s);
+},
+
+// ---- disc with a hole of radius R/2 ---------------------------------------------------------
+discHole:()=>{
+  const W=360,H=220, cx=160, cy=108, R=92, hid=_nid();
+  let s=_hatchDefs(hid,'#9ca3af');
+  s+=_line(40,cy,W-20,cy,GREY,1.1)+_line(cx,cy-R-10,cx,cy+R+10,GREY,1.1,'4 3');
+  s+=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="${FILL_W}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<circle cx="${cx+R/2}" cy="${cy}" r="${R/2}" fill="#fff" stroke="${GRN}" stroke-width="1.6" stroke-dasharray="5 3"/>`;
+  s+=`<circle cx="${cx+R/2}" cy="${cy}" r="${R/2}" fill="url(#${hid})" opacity="0.6"/>`;
+  s+=_dot(cx,cy,INK,3)+_t(cx-7,cy-7,'O',{a:'end',w:700});
+  s+=_dot(cx+R/2,cy,GRN,3);
+  s+=_dim(cx,cy-12,cx+R/2,cy-12,GRN)+_t(cx+R/4,cy-18,'R/2',{c:GRN,w:700,fs:10.5});
+  s+=_line(cx,cy,cx-R*0.7,cy+R*0.7,INK,1)+_t(cx-R*0.42,cy+R*0.36,'R',{it:1,w:700});
+  s+=_t(cx+R/2,cy+R/2+16,'removed',{c:GRN,fs:10.5});
+  return _svg(W,H,s);
+},
+
+// ---- 4 m square with 2 m corner removed ----------------------------------------------------
+squareCut:()=>{
+  const W=320,H=220, ox=80, oy=184, u=38, hid=_nid();
+  let s=_hatchDefs(hid,RED)+_axes(ox,oy,4*u+40,4*u+22);
+  s+=`<rect x="${ox}" y="${oy-4*u}" width="${4*u}" height="${4*u}" fill="${FILL_W}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<rect x="${ox+2*u}" y="${oy-4*u}" width="${2*u}" height="${2*u}" fill="url(#${hid})" stroke="${RED}" stroke-width="1.6"/>`;
+  [0,2,4].forEach(k=>{ s+=_t(ox+k*u,oy+18,String(k),{c:GREY,fs:10.5}); if(k) s+=_t(ox-10,oy-k*u+4,String(k),{c:GREY,fs:10.5,a:'end'}); });
+  s+=_t(ox+3*u,oy-2*u+16,'cut out',{c:RED,fs:10,w:700});
+  s+=_t(W/2+20,H-2,'lengths in metres',{c:GREY,fs:10});
+  return _svg(W,H,s);
+},
+
+// ---- two bodies with velocity arrows ------------------------------------------------------------
+twoMove:(o)=>{
+  const W=380,H=120, gy=84;
+  let s=_line(20,gy,W-20,gy,INK,1.6);
+  s+=`<rect x="70" y="${gy-40}" width="62" height="40" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<rect x="240" y="${gy-40}" width="62" height="40" fill="${FILL_T}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_t(101,gy-15,o.m1,{w:700})+_t(271,gy-15,o.m2,{w:700});
+  const v=(x,dir,lab)=>{
+    if(!dir) return _t(x,gy-48,lab,{c:GREY,fs:10.5});
+    const x2=x+dir*52; return _arrow(x,gy-52,x2,gy-52,RED,2.2)+_t((x+x2)/2,gy-60,lab,{c:RED,w:700,fs:10.5});
+  };
+  s+=v(o.d1>0?106:96,o.d1,o.v1)+v(o.d2>0?276:266,o.d2,o.v2);
+  s+=_t(W/2,H-6,o.note||'smooth floor',{c:GREY,fs:10});
+  return _svg(W,H,s);
+},
+
+};
+
+
+const TOPICS = [
+
+/* ================= PART A · WHAT COM IS ================= */
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "What is the centre of mass? One point that stands in for the whole body",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A uniform ring, a uniform disc, a uniform solid sphere and a uniform cube. Where is the centre of mass of each?",
+   "diagram": DIAGRAMS.shapes(),
+   "opts": ["At the geometric centre of each","On the surface of each","At the lowest point of each","It depends on how heavy the body is"],
+   "ans": 0,
+   "sol": "For a <strong>uniform</strong> body with a centre of symmetry, the mass on one side of the centre is balanced by equal mass on the other side. So the COM sits at the <strong>geometric centre</strong>.<br><br>Uniform means the mass is spread evenly. If a body is not uniform, this shortcut does not work. Then we must calculate."
+  },
+  {
+   "q": "Look at the ring again. Its centre of mass is at the centre of the ring. Is there any mass at that point?",
+   "diagram": DIAGRAMS.shapes({dots:true}),
+   "opts": ["No. The COM is in empty space, and that is allowed","Yes, a ring always has a small mass at its centre","No, so a ring has no centre of mass","Yes, because the COM must lie on the body"],
+   "ans": 0,
+   "sol": "Every small piece of the ring has a partner piece exactly opposite. Their average position is the centre. So the COM is at the <strong>centre of the ring</strong>, where there is no material at all.<br><br>Remember this early: the COM does <strong>not</strong> have to lie on the body."
+  },
+  {
+   "q": "A uniform triangular plate stands on its base. Its height is h. How far above the base is its centre of mass?",
+   "diagram": DIAGRAMS.triCentroid(),
+   "opts": ["h/3","h/2","2h/3","h/4"],
+   "ans": 0,
+   "sol": "The COM of a uniform triangular plate is its <strong>centroid</strong>, the point where the three medians meet.<br><br>The centroid is at <strong>one-third of the height</strong> from the base: h/3 above the base, 2h/3 below the top corner.<br><br>More mass is near the wide base, so the COM sits closer to the base than to the tip."
+  },
+  {
+   "tag": "Notes p.1 &#183; definition",
+   "starLbl": "From your notes",
+   "q": "&#9733; <strong>From your notes:</strong> Which statement about the centre of mass is correct?",
+   "diagram": DIAGRAMS.lShape(),
+   "opts": ["It is a point, inside or outside the body, where the whole mass of the body appears to be concentrated","It is always a point inside the body","It is always the geometric centre of the body","It is the point where the body has the most mass"],
+   "ans": 0,
+   "sol": "This is the definition from the notes. Two key words:<br><br>1. <strong>Point</strong> &#8212; we replace the whole body by one point carrying all the mass.<br>2. <strong>Inside or outside</strong> &#8212; for a ring or an L-shaped body, the COM lies in empty space (see the figure).<br><br>&#8220;Always the geometric centre&#8221; is true only for uniform, symmetric bodies."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Discrete or continuous? &#955;, &#963; and &#961;",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Which of these is a <strong>discrete</strong> system of masses?",
+   "opts": ["Three small balls kept at the corners of a triangle","A metre rod","A thin circular disc","A solid sphere"],
+   "ans": 0,
+   "sol": "<strong>Discrete</strong> = you can count the particles (1, 2, 3 &#8230;). Three balls are countable, so we simply add: &#931;mx.<br><br><strong>Continuous</strong> = mass is spread everywhere and you cannot count pieces. Rod, disc and sphere are continuous. For these we cut the body into tiny pieces dm and integrate."
+  },
+  {
+   "q": "A uniform rod has mass 2 kg and length 50 cm. Its linear mass density &#955; is",
+   "opts": ["4 kg/m","1 kg/m","0.04 kg/m","100 kg/m"],
+   "ans": 0,
+   "sol": "&#955; = M / L &#8212; mass per unit length.<br><br>L = 50 cm = 0.5 m, so &#955; = 2 / 0.5 = <strong>4 kg/m</strong>.<br><br>Change cm to m first. 2 / 50 = 0.04 is the unit trap."
+  },
+  {
+   "q": "A uniform square plate of side 0.5 m has mass 2 kg. Its surface mass density &#963; is",
+   "opts": ["8 kg/m&#178;","4 kg/m&#178;","1 kg/m&#178;","0.5 kg/m&#178;"],
+   "ans": 0,
+   "sol": "&#963; = M / A &#8212; mass per unit area.<br><br>A = 0.5 &#215; 0.5 = 0.25 m&#178;, so &#963; = 2 / 0.25 = <strong>8 kg/m&#178;</strong>.<br><br>In the same way, for a solid body &#961; = M / V &#8212; mass per unit volume."
+  },
+  {
+   "tag": "Notes p.1",
+   "starLbl": "From your notes",
+   "q": "&#9733; <strong>From your notes:</strong> Match each body with the density we use for it: (i) a thin wire, (ii) a thin plate, (iii) a solid sphere.",
+   "diagram": DIAGRAMS.densities(),
+   "opts": ["(i) &#955; = M/L, (ii) &#963; = M/A, (iii) &#961; = M/V","(i) &#963;, (ii) &#955;, (iii) &#961;","(i) &#961;, (ii) &#963;, (iii) &#955;","All three use &#961; = M/V"],
+   "ans": 0,
+   "sol": "Pick the density by how the mass is spread:<br><br>Along a line (wire, rod, ring) &#8594; <strong>&#955; = M/L</strong> (linear)<br>Over a surface (disc, plate, hollow shell) &#8594; <strong>&#963; = M/A</strong> (surface)<br>Through a volume (solid sphere, cube) &#8594; <strong>&#961; = M/V</strong> (volume)<br><br>A tiny piece then has dm = &#955; dl, or &#963; dA, or &#961; dV. This dm is what we integrate."
+  }
+ ]
+},
+
+/* ================= PART B · DISCRETE BODIES ================= */
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Two masses on a line &#8212; the COM leans towards the heavier one",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Two equal masses are kept 4 m apart. Where is their centre of mass?",
+   "diagram": DIAGRAMS.twoMass({m1:'m',m2:'m',d:'4 m'}),
+   "opts": ["Exactly in the middle, 2 m from each","Nearer to the left mass","At one of the two masses","Nowhere &#8212; it is not defined"],
+   "ans": 0,
+   "sol": "Equal masses pull the average equally, so the COM is at the <strong>midpoint</strong>, 2 m from each.<br><br>Check with the formula: one mass at x = 0, the other at x = 4.<br>x<sub>com</sub> = (m&#183;0 + m&#183;4)/(2m) = 2 m."
+  },
+  {
+   "q": "A 2 kg mass is at x = 0 and a 3 kg mass is at x = 5 m. Find x<sub>com</sub>.",
+   "opts": ["3 m","2 m","2.5 m","5 m"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = (m&#8321;x&#8321; + m&#8322;x&#8322;)/(m&#8321; + m&#8322;) = (2&#215;0 + 3&#215;5)/(2 + 3) = 15/5 = <strong>3 m</strong><br><br>2.5 m is the midpoint &#8212; correct only for equal masses. The heavier 3 kg pulls the COM towards itself."
+  },
+  {
+   "q": "A 3 kg ball and a 1 kg ball are 8 m apart. How far is the COM from the 3 kg ball?",
+   "diagram": DIAGRAMS.twoMass({m1:'3 kg',m2:'1 kg',d:'8 m',r1:22,r2:15}),
+   "opts": ["2 m","6 m","4 m","8/3 m"],
+   "ans": 0,
+   "sol": "Let the COM be x from the 3 kg ball. Then it is (8 &#8722; x) from the 1 kg ball.<br><br>Balance: 3 &#215; x = 1 &#215; (8 &#8722; x) &#8594; 4x = 8 &#8594; x = <strong>2 m</strong><br><br>Rule: distances from the COM are in the <strong>inverse ratio</strong> of the masses. Masses 3 : 1 &#8594; distances 1 : 3 &#8594; 2 m and 6 m."
+  },
+  {
+   "tag": "Notes p.7",
+   "q": "&#9733; <strong>Original:</strong> Two spheres of masses 2m and m are kept with their centres 10 m apart. How far is the centre of mass from the centre of the 2m sphere?",
+   "diagram": DIAGRAMS.twoMass({m1:'2m',m2:'m',d:'10 m',big:true,r1:34,r2:24}),
+   "opts": ["10/3 m &#8776; 3.33 m","20/3 m &#8776; 6.67 m","5 m","2.5 m"],
+   "ans": 0,
+   "sol": "Let the COM be x from the 2m sphere, so (10 &#8722; x) from the m sphere.<br><br>2m &#183; x = m &#183; (10 &#8722; x)<br>2x = 10 &#8722; x &#8594; 3x = 10 &#8594; x = <strong>10/3 m &#8776; 3.33 m</strong><br><br>The COM is closer to the heavier sphere, as it should be. 20/3 m is the distance from the <em>lighter</em> sphere &#8212; always check &#8220;from which one&#8221;."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "Masses in a plane &#8212; do x and y separately",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "1 kg at (0, 0) and 1 kg at (4, 2). The centre of mass is at",
+   "opts": ["(2, 1)","(4, 2)","(1, 2)","(2, 2)"],
+   "ans": 0,
+   "sol": "Equal masses &#8594; the COM is the midpoint.<br><br>x<sub>com</sub> = (0 + 4)/2 = 2, &nbsp;y<sub>com</sub> = (0 + 2)/2 = 1 &#8594; <strong>(2, 1)</strong><br><br>In a plane, just do one calculation for x and a separate one for y."
+  },
+  {
+   "q": "1 kg at (0, 0) and 3 kg at (4, 0). Find the centre of mass.",
+   "opts": ["(3, 0)","(2, 0)","(1, 0)","(3, 3)"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = (1&#215;0 + 3&#215;4)/4 = 12/4 = 3<br>y<sub>com</sub> = (1&#215;0 + 3&#215;0)/4 = 0<br><br><strong>(3, 0)</strong>. Both masses are on the x-axis, so the COM must be on the x-axis too &#8212; y = 0 with no working."
+  },
+  {
+   "q": "1 kg at (0, 0), 2 kg at (3, 0) and 1 kg at (0, 4). Find the centre of mass.",
+   "diagram": DIAGRAMS.plot({pts:[[0,0,'1 kg','(0, 0)','bl'],[3,0,'2 kg','(3, 0)','b'],[0,4,'1 kg','(0, 4)','r']],sx:38,yLen:175}),
+   "opts": ["(1.5, 1)","(1, 1.5)","(2, 4/3)","(3/4, 1)"],
+   "ans": 0,
+   "sol": "Total mass = 1 + 2 + 1 = 4 kg.<br><br>x<sub>com</sub> = (1&#215;0 + 2&#215;3 + 1&#215;0)/4 = 6/4 = 1.5<br>y<sub>com</sub> = (1&#215;0 + 2&#215;0 + 1&#215;4)/4 = 4/4 = 1<br><br><strong>(1.5, 1)</strong>. Tip from the notes: a mass on the y-axis gives 0 to the x-sum, and a mass on the x-axis gives 0 to the y-sum. Strike those terms out first.<br><br>(2, 4/3) comes from dividing by 3 (the number of masses) instead of 4 kg."
+  },
+  {
+   "tag": "Illustration 1 (p.4)",
+   "q": "&#9733; <strong>Original:</strong> Find the position of the centre of mass: 1 kg at (0, 0), 2 kg at (2, 0) and 3 kg at (0, 3).",
+   "diagram": DIAGRAMS.plot({pts:[[0,0,'1 kg','(0, 0)','bl'],[2,0,'2 kg','(2, 0)','b'],[0,3,'3 kg','(0, 3)','r']],sx:48}),
+   "opts": ["(2/3, 3/2) m","(3/2, 2/3) m","(1, 1) m","(2/3, 1) m"],
+   "ans": 0,
+   "sol": "Total mass = 1 + 2 + 3 = 6 kg.<br><br>x<sub>com</sub> = (1&#215;0 + 2&#215;2 + 3&#215;0)/6 = 4/6 = <strong>2/3 m</strong><br>y<sub>com</sub> = (1&#215;0 + 2&#215;0 + 3&#215;3)/6 = 9/6 = <strong>3/2 m</strong><br><br>As a vector: r<sub>com</sub> = (2/3 &#238; + 3/2 &#309;) m. The COM leans up, towards the heaviest 3 kg mass."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Masses at the corners of an equilateral triangle",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "An equilateral triangle of side a has one corner at (0, 0) and one at (a, 0). The top corner is at",
+   "diagram": DIAGRAMS.plot({pts:[[0,0,'','(0, 0)','bl'],[1,0,'','(a, 0)','b'],[0.5,0.866,'','top corner = ?','r']],sx:190,tri:true,xLen:250,yLen:180,oy:205,H:252}),
+   "opts": ["(a/2, &#8730;3a/2)","(a/2, a/2)","(a, &#8730;3a/2)","(&#8730;3a/2, a/2)"],
+   "ans": 0,
+   "sol": "The top corner is straight above the midpoint of the base, so x = a/2.<br><br>Its height is a sin 60&#176; = <strong>&#8730;3a/2</strong>. So the corner is at (a/2, &#8730;3a/2).<br><br>This is the same &#8220;1 &#183; sin 60&#176;&#8221; step written in the notes beside the JEE 2019 question."
+  },
+  {
+   "q": "Three <strong>equal</strong> masses sit at (0, 0), (a, 0) and (a/2, &#8730;3a/2). Their centre of mass is at",
+   "opts": ["(a/2, &#8730;3a/6)","(a/2, &#8730;3a/4)","(a/2, &#8730;3a/2)","(a/3, a/3)"],
+   "ans": 0,
+   "sol": "Equal masses &#8594; just average the coordinates.<br><br>x = (0 + a + a/2)/3 = a/2<br>y = (0 + 0 + &#8730;3a/2)/3 = &#8730;3a/6<br><br><strong>(a/2, &#8730;3a/6)</strong> &#8212; the centroid, one-third of the height above the base. Same idea as the triangular plate in Ladder 01."
+  },
+  {
+   "tag": "Illustration 2 (p.4)",
+   "q": "Now the masses differ: 1 kg at (0, 0), 2 kg at (a, 0) and 3 kg at the top corner (a/2, &#8730;3a/2). Find the centre of mass.",
+   "diagram": DIAGRAMS.plot({pts:[[0,0,'1 kg','(0, 0)','bl'],[1,0,'2 kg','(a, 0)','b'],[0.5,0.866,'3 kg','(a/2, &#8730;3a/2)','r']],sx:190,tri:true,xLen:250,yLen:180,oy:205,H:252}),
+   "opts": ["(7a/12, &#8730;3a/4)","(a/2, &#8730;3a/6)","(7a/12, &#8730;3a/6)","(5a/12, &#8730;3a/4)"],
+   "ans": 0,
+   "sol": "Total mass = 6 kg.<br><br>x<sub>com</sub> = (1&#215;0 + 2&#215;a + 3&#215;a/2)/6 = (2a + 3a/2)/6 = (7a/2)/6 = <strong>7a/12</strong><br>y<sub>com</sub> = (1&#215;0 + 2&#215;0 + 3&#215;&#8730;3a/2)/6 = <strong>&#8730;3a/4</strong><br><br>This is Illustration 2 from the notes. Keep the answer in mind for the next rung."
+  },
+  {
+   "tag": "JEE Main 2019",
+   "q": "&#9733; <strong>Original:</strong> Three particles of masses 50 g, 100 g and 150 g are placed at the vertices of an equilateral triangle of side 1 m (50 g at the origin, 100 g at (1 m, 0), 150 g at the top). The (x, y) coordinates of the centre of mass will be",
+   "diagram": DIAGRAMS.plot({pts:[[0,0,'50 g','(0, 0)','bl'],[1,0,'100 g','(1.0 m, 0)','b'],[0.5,0.866,'150 g','','r']],sx:190,tri:true,xLen:250,yLen:180,oy:205,H:252,note:'equilateral triangle, side 1 m'}),
+   "opts": ["(7/12 m, &#8730;3/4 m)","(&#8730;3/8 m, 7/12 m)","(&#8730;3/4 m, 5/12 m)","(7/12 m, &#8730;3/8 m)"],
+   "ans": 0,
+   "sol": "Look at the masses: 50 : 100 : 150 = <strong>1 : 2 : 3</strong>. Only the ratio matters, so this is Illustration 2 with a = 1 m.<br><br>x = (50&#215;0 + 100&#215;1 + 150&#215;0.5)/300 = 175/300 = 7/12 m<br>y = (150 &#215; &#8730;3/2)/300 = &#8730;3/4 m<br><br>Answer: <strong>(7/12 m, &#8730;3/4 m)</strong> &#8212; option (4) in the paper. The option (7/12, &#8730;3/8) has the right x but only half the right y."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Position vectors in 3D &#8212; &#238;, &#309;, k&#770; one at a time",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "1 kg at <strong>r</strong>&#8321; = &#238; m and 1 kg at <strong>r</strong>&#8322; = (3&#238; + 2&#309;) m. The position vector of their COM is",
+   "opts": ["(2&#238; + &#309;) m","(4&#238; + 2&#309;) m","(3&#238; + 2&#309;) m","(&#238; + &#309;) m"],
+   "ans": 0,
+   "sol": "Equal masses &#8594; average the vectors.<br><br><strong>r</strong><sub>com</sub> = (<strong>r</strong>&#8321; + <strong>r</strong>&#8322;)/2 = (4&#238; + 2&#309;)/2 = <strong>(2&#238; + &#309;) m</strong><br><br>4&#238; + 2&#309; is only the sum. Don&#8217;t forget to divide by the total mass."
+  },
+  {
+   "q": "1 kg at <strong>r</strong>&#8321; = (2&#238; + &#309; + 3k&#770;) m and 3 kg at <strong>r</strong>&#8322; = (2&#238; &#8722; &#309; &#8722; k&#770;) m. Find <strong>r</strong><sub>com</sub>.",
+   "opts": ["(2&#238; &#8722; &#189;&#309;) m","(2&#238; + &#189;&#309; + k&#770;) m","(8&#238; &#8722; 2&#309;) m","(2&#238; &#8722; &#309; &#8722; &#189;k&#770;) m"],
+   "ans": 0,
+   "sol": "Total mass = 4 kg. Do each direction separately.<br><br>&#238;: (1&#215;2 + 3&#215;2)/4 = 8/4 = 2<br>&#309;: (1&#215;1 + 3&#215;(&#8722;1))/4 = &#8722;2/4 = &#8722;1/2<br>k&#770;: (1&#215;3 + 3&#215;(&#8722;1))/4 = 0<br><br><strong>r</strong><sub>com</sub> = <strong>(2&#238; &#8722; &#189;&#309;) m</strong>. Minus signs stay with their own component &#8212; never drop them."
+  },
+  {
+   "q": "Three particles: 1 kg at <strong>r</strong>&#8321;, 2 kg at <strong>r</strong>&#8322; and 3 kg at <strong>r</strong>&#8323;. Which expression gives <strong>r</strong><sub>com</sub>?",
+   "opts": ["(<strong>r</strong>&#8321; + 2<strong>r</strong>&#8322; + 3<strong>r</strong>&#8323;)/6","(<strong>r</strong>&#8321; + <strong>r</strong>&#8322; + <strong>r</strong>&#8323;)/3","(<strong>r</strong>&#8321; + 2<strong>r</strong>&#8322; + 3<strong>r</strong>&#8323;)/3","(3<strong>r</strong>&#8321; + 2<strong>r</strong>&#8322; + <strong>r</strong>&#8323;)/6"],
+   "ans": 0,
+   "sol": "<strong>r</strong><sub>com</sub> = &#931;m<sub>i</sub><strong>r</strong><sub>i</sub> / &#931;m<sub>i</sub> = (1&#183;<strong>r</strong>&#8321; + 2&#183;<strong>r</strong>&#8322; + 3&#183;<strong>r</strong>&#8323;)/(1 + 2 + 3)<br><br>Each vector is multiplied by <strong>its own</strong> mass, and we divide by the total mass (6), not by the number of particles (3)."
+  },
+  {
+   "tag": "Illustration 5 (p.4)",
+   "q": "&#9733; <strong>Original:</strong> The position vectors of three particles of masses m&#8321; = 1 kg, m&#8322; = 2 kg and m&#8323; = 3 kg are <strong>r</strong>&#8321; = (&#238; + 4&#309; + k&#770;) m, <strong>r</strong>&#8322; = (&#238; + &#309; + k&#770;) m and <strong>r</strong>&#8323; = (2&#238; &#8722; &#309; &#8722; 2k&#770;) m. Find the position vector of their centre of mass.",
+   "opts": ["(3/2 &#238; + 1/2 &#309; &#8722; 1/2 k&#770;) m","(3/2 &#238; + 1/2 &#309; + 1/2 k&#770;) m","(4/3 &#238; + 4/3 &#309;) m","(9&#238; + 3&#309; &#8722; 3k&#770;) m"],
+   "ans": 0,
+   "sol": "Multiply each vector by its mass:<br>1&#183;<strong>r</strong>&#8321; = &#238; + 4&#309; + k&#770;<br>2&#183;<strong>r</strong>&#8322; = 2&#238; + 2&#309; + 2k&#770;<br>3&#183;<strong>r</strong>&#8323; = 6&#238; &#8722; 3&#309; &#8722; 6k&#770;<br><br>Sum = 9&#238; + 3&#309; &#8722; 3k&#770;. Divide by 6 kg:<br><strong>r</strong><sub>com</sub> = <strong>(3/2 &#238; + 1/2 &#309; &#8722; 1/2 k&#770;) m</strong><br><br>(4/3, 4/3, 0) is the plain average &#8212; it ignores the masses. 9&#238; + 3&#309; &#8722; 3k&#770; forgets to divide."
+  }
+ ]
+},
+
+/* ================= PART C · CONTINUOUS BODIES ================= */
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "Continuous body &#8212; cut it into pieces dm (the uniform rod)",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "For a rod on the x-axis, the mass of the part from 0 to x is m(x) = 5x&#178; kg. The linear mass density at position x is",
+   "opts": ["&#955; = 10x kg/m","&#955; = 5x&#178; kg/m","&#955; = 5x kg/m","&#955; = 5 kg/m"],
+   "ans": 0,
+   "sol": "When a rod is not uniform, &#955; is not simply M/L. It is the mass per unit length <strong>at that point</strong>: &#955; = dm/dx.<br><br>&#955; = d(5x&#178;)/dx = <strong>10x kg/m</strong><br><br>5x (= m/x) is only the average density of the first x metres, not the density at x."
+  },
+  {
+   "tag": "Notes p.2",
+   "q": "Which small element do we use for each body? (i) a straight rod, (ii) a disc cut into thin rings, (iii) a half ring.",
+   "diagram": DIAGRAMS.elements(),
+   "opts": ["(i) dx &#8212; length-wise, (ii) dr &#8212; radius-wise, (iii) d&#952; &#8212; angle-wise","(i) d&#952;, (ii) dx, (iii) dr","(i) dr, (ii) d&#952;, (iii) dx","All three use dx"],
+   "ans": 0,
+   "sol": "From the notes &#8212; choose the variable that changes as you move over the body:<br><br>1. <strong>Length-wise</strong>: straight rod &#8594; variable x, element dx, dm = &#955; dx<br>2. <strong>Radius-wise</strong>: disc made of rings &#8594; variable r, element dr<br>3. <strong>Angle-wise</strong>: arc or ring &#8594; variable &#952;, element d&#952;, dl = R d&#952;"
+  },
+  {
+   "q": "A uniform rod of mass M and length L lies from x = 0 to x = L. What is &#8747;<sub>0</sub><sup>L</sup> &#955; dx?",
+   "opts": ["M, the total mass","M/2","ML","L/M"],
+   "ans": 0,
+   "sol": "&#8747; dm adds up every small piece, so it must give the <strong>whole mass</strong>.<br><br>&#955; is constant: &#8747;<sub>0</sub><sup>L</sup> &#955; dx = &#955;[x]<sub>0</sub><sup>L</sup> = &#955;L = (M/L)&#183;L = <strong>M</strong><br><br>This is the bottom line of every continuous COM formula: x<sub>com</sub> = &#8747;x dm / &#8747;dm."
+  },
+  {
+   "tag": "Notes p.2",
+   "q": "&#9733; <strong>Original:</strong> A uniform rod of length L lies on the x-axis from x = 0 to x = L. Using x<sub>com</sub> = &#8747;x dm / &#8747;dm with dm = &#955; dx, find x<sub>com</sub>.",
+   "diagram": DIAGRAMS.rodEl(),
+   "opts": ["L/2","L/3","2L/3","L"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = &#8747;<sub>0</sub><sup>L</sup> &#955;x dx / &#8747;<sub>0</sub><sup>L</sup> &#955; dx<br><br>&#955; is constant, so it cancels:<br>= [x&#178;/2]<sub>0</sub><sup>L</sup> / [x]<sub>0</sub><sup>L</sup> = (L&#178;/2)/L = <strong>L/2</strong><br><br>We knew this by symmetry. The point of this rung is the <em>method</em>. The same three lines now handle rods where &#955; changes with x."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "Non-uniform rod: &#955; = &#955;&#8320;x",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A rod from x = 0 to x = L has &#955; = &#955;&#8320;x. Which end is heavier, and where will the COM be?",
+   "diagram": DIAGRAMS.rodEl({grad:'lin',lab:'&#955; = &#955;&#8320;x'}),
+   "opts": ["The x = L end is heavier, so x<sub>com</sub> &gt; L/2","The x = 0 end is heavier, so x<sub>com</sub> &lt; L/2","Both ends are equal, so x<sub>com</sub> = L/2","The COM lies outside the rod"],
+   "ans": 0,
+   "sol": "&#955; = &#955;&#8320;x grows with x: zero at x = 0 and largest at x = L. More mass near x = L pulls the COM past the middle.<br><br>So before any integration: <strong>x<sub>com</sub> &gt; L/2</strong>. Use this to check your final answer."
+  },
+  {
+   "q": "Find the total mass of this rod, &#8747;<sub>0</sub><sup>L</sup> &#955;&#8320;x dx.",
+   "opts": ["&#955;&#8320;L&#178;/2","&#955;&#8320;L","&#955;&#8320;L&#178;","&#955;&#8320;L&#179;/3"],
+   "ans": 0,
+   "sol": "M = &#8747;<sub>0</sub><sup>L</sup> &#955;&#8320;x dx = &#955;&#8320;[x&#178;/2]<sub>0</sub><sup>L</sup> = <strong>&#955;&#8320;L&#178;/2</strong>"
+  },
+  {
+   "q": "Now the top part: &#8747;<sub>0</sub><sup>L</sup> x dm = &#8747;<sub>0</sub><sup>L</sup> x&#183;&#955;&#8320;x dx = ?",
+   "opts": ["&#955;&#8320;L&#179;/3","&#955;&#8320;L&#178;/2","&#955;&#8320;L&#179;/2","&#955;&#8320;L&#8308;/4"],
+   "ans": 0,
+   "sol": "&#8747;<sub>0</sub><sup>L</sup> &#955;&#8320;x&#178; dx = &#955;&#8320;[x&#179;/3]<sub>0</sub><sup>L</sup> = <strong>&#955;&#8320;L&#179;/3</strong><br><br>Common slip: writing x&#183;&#955; dx but forgetting that &#955; itself has an x in it. Here the integrand is x &#215; &#955;&#8320;x = &#955;&#8320;x&#178;."
+  },
+  {
+   "tag": "Notes p.2 &#183; H.W 1",
+   "q": "&#9733; <strong>Original (H.W 1):</strong> A rod of length L has &#955; = &#955;&#8320;x, where x is measured from one end. Find the position of its centre of mass from that end.",
+   "diagram": DIAGRAMS.rodEl({grad:'lin',lab:'&#955; = &#955;&#8320;x'}),
+   "opts": ["2L/3","L/2","L/3","3L/4"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = (&#955;&#8320;L&#179;/3) / (&#955;&#8320;L&#178;/2) = <strong>2L/3</strong><br><br>Check: 2L/3 &gt; L/2 &#10003;. The COM moved towards the heavy end, as rung 1 said."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "Non-uniform rod: &#955; = &#955;&#8320;x&#178;/L&#178;",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A rod from 0 to L has &#955; = &#955;&#8320;x&#178;/L&#178;. Find its total mass.",
+   "diagram": DIAGRAMS.rodEl({grad:'sq',lab:'&#955; = &#955;&#8320;x&#178;/L&#178;'}),
+   "opts": ["&#955;&#8320;L/3","&#955;&#8320;L&#178;/3","&#955;&#8320;L/2","&#955;&#8320;L"],
+   "ans": 0,
+   "sol": "&#955;&#8320;/L&#178; is a constant &#8212; take it outside first.<br><br>M = (&#955;&#8320;/L&#178;) &#8747;<sub>0</sub><sup>L</sup> x&#178; dx = (&#955;&#8320;/L&#178;)&#183;(L&#179;/3) = <strong>&#955;&#8320;L/3</strong>"
+  },
+  {
+   "q": "For the same rod, &#8747;<sub>0</sub><sup>L</sup> x dm = ?",
+   "opts": ["&#955;&#8320;L&#178;/4","&#955;&#8320;L&#178;/3","&#955;&#8320;L&#179;/4","&#955;&#8320;L/4"],
+   "ans": 0,
+   "sol": "&#8747;<sub>0</sub><sup>L</sup> x&#183;(&#955;&#8320;/L&#178;)x&#178; dx = (&#955;&#8320;/L&#178;)&#183;(L&#8308;/4) = <strong>&#955;&#8320;L&#178;/4</strong>"
+  },
+  {
+   "q": "Compare with the &#955;&#8320;x rod of Ladder 08 (COM at 2L/3). With &#955; &#8733; x&#178;, the mass is packed even more towards x = L. So this COM will be",
+   "opts": ["further than 2L/3 from x = 0","exactly at 2L/3","between L/2 and 2L/3","exactly at L/2"],
+   "ans": 0,
+   "sol": "&#955; &#8733; x&#178; is tiny near x = 0 and rises steeply. Even more mass sits near the far end than with &#955; &#8733; x. So the COM moves <strong>past 2L/3</strong>.<br><br>Pattern so far: uniform &#8594; L/2, &#955; &#8733; x &#8594; 2L/3. Guess the next one before you divide."
+  },
+  {
+   "tag": "Notes p.2 &#183; H.W 2",
+   "q": "&#9733; <strong>Original (H.W 2):</strong> A rod of length L has &#955; = &#955;&#8320;x&#178;/L&#178;. Find x<sub>com</sub> from the end x = 0.",
+   "opts": ["3L/4","2L/3","L/2","4L/5"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = (&#955;&#8320;L&#178;/4)/(&#955;&#8320;L/3) = <strong>3L/4</strong><br><br>The pattern: for &#955; &#8733; x&#8319;, x<sub>com</sub> = (n + 1)L/(n + 2).<br>n = 0 &#8594; L/2, &nbsp;n = 1 &#8594; 2L/3, &nbsp;n = 2 &#8594; 3L/4. A fast way to check MCQ options."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "Non-uniform rod: &#955; = ax + b",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A rod from 0 to L has &#955; = ax + b. If a = 0, where is the COM?",
+   "opts": ["L/2, because &#955; = b is uniform","2L/3","At x = 0","It cannot be found"],
+   "ans": 0,
+   "sol": "With a = 0, &#955; = b, a constant. Uniform rod &#8594; <strong>L/2</strong>.<br><br>Keep this as a test: the final formula must give L/2 when you put a = 0."
+  },
+  {
+   "q": "Total mass M = &#8747;<sub>0</sub><sup>L</sup> (ax + b) dx = ?",
+   "opts": ["aL&#178;/2 + bL","aL&#178; + bL","aL/2 + b","aL&#178;/2 + b"],
+   "ans": 0,
+   "sol": "Integrate term by term:<br>&#8747;ax dx = aL&#178;/2, &nbsp;&#8747;b dx = bL<br><br>M = <strong>aL&#178;/2 + bL</strong>. The constant b also gets multiplied by L &#8212; easy to miss."
+  },
+  {
+   "q": "&#8747;<sub>0</sub><sup>L</sup> x(ax + b) dx = ?",
+   "opts": ["aL&#179;/3 + bL&#178;/2","aL&#179;/3 + bL","aL&#178;/2 + bL&#178;/2","aL&#179; + bL&#178;"],
+   "ans": 0,
+   "sol": "x(ax + b) = ax&#178; + bx<br><br>&#8747;<sub>0</sub><sup>L</sup> (ax&#178; + bx) dx = <strong>aL&#179;/3 + bL&#178;/2</strong>"
+  },
+  {
+   "tag": "Notes p.2 &#183; H.W 3",
+   "q": "&#9733; <strong>Original (H.W 3):</strong> A rod of length L has &#955; = ax + b, where a and b are constants. Find x<sub>com</sub> from the end x = 0.",
+   "opts": ["L(2aL + 3b) / [3(aL + 2b)]","L(aL + 2b) / [3(2aL + 3b)]","L(2aL + 3b) / [2(aL + 2b)]","L/2"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = (aL&#179;/3 + bL&#178;/2)/(aL&#178;/2 + bL)<br><br>Multiply top and bottom by 6/L:<br>= (2aL&#178; + 3bL)/(3aL + 6b) = <strong>L(2aL + 3b) / [3(aL + 2b)]</strong><br><br>Tests: a = 0 &#8594; 3bL/6b = L/2 &#10003;. &nbsp;b = 0 &#8594; 2aL&#178;/3aL = 2L/3 &#10003; (the &#955;&#8320;x rod)."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ "name": "JEE Main 2020 &#8212; &#961;(x) = a + b(x/L)&#178;",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A rod from 0 to L has linear density &#961;(x) = a + b(x/L)&#178;. If b = 0, x<sub>com</sub> = ?",
+   "opts": ["L/2","3L/4","2L/3","L/3"],
+   "ans": 0,
+   "sol": "b = 0 &#8594; &#961; = a, uniform &#8594; <strong>L/2</strong>. Save this: it will test the options at the end."
+  },
+  {
+   "q": "Total mass M = &#8747;<sub>0</sub><sup>L</sup> [a + bx&#178;/L&#178;] dx = ?",
+   "opts": ["aL + bL/3","aL + bL&#178;/3","aL + bL","aL/2 + bL/3"],
+   "ans": 0,
+   "sol": "&#8747;a dx = aL. &nbsp;&#8747;(b/L&#178;)x&#178; dx = (b/L&#178;)(L&#179;/3) = bL/3.<br><br>M = <strong>aL + bL/3</strong>"
+  },
+  {
+   "q": "&#8747;<sub>0</sub><sup>L</sup> x[a + bx&#178;/L&#178;] dx = ?",
+   "opts": ["aL&#178;/2 + bL&#178;/4","aL&#178;/2 + bL/4","aL&#178; + bL&#178;/3","aL&#178;/2 + bL&#179;/4"],
+   "ans": 0,
+   "sol": "&#8747;ax dx = aL&#178;/2. &nbsp;&#8747;(b/L&#178;)x&#179; dx = (b/L&#178;)(L&#8308;/4) = bL&#178;/4.<br><br>Sum = <strong>aL&#178;/2 + bL&#178;/4</strong>"
+  },
+  {
+   "tag": "JEE Main 2020",
+   "q": "&#9733; <strong>Original:</strong> A rod of length L has non-uniform linear mass density given by &#961;(x) = a + b(x/L)&#178;, where a and b are constants and 0 &#8804; x &#8804; L. The value of x for the centre of mass of the rod is at",
+   "opts": ["(3/4)&#183;(2a + b)/(3a + b)&#183;L","(3/2)&#183;(a + b)/(2a + b)&#183;L","(4/3)&#183;(a + b)/(2a + 3b)&#183;L","(3/2)&#183;(2a + b)/(3a + b)&#183;L"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = (aL&#178;/2 + bL&#178;/4)/(aL + bL/3)<br><br>Top = L&#178;(2a + b)/4, &nbsp;bottom = L(3a + b)/3<br><br>x<sub>com</sub> = <strong>(3/4)&#183;(2a + b)/(3a + b)&#183;L</strong> &#8212; option (4) in the paper.<br><br>Fast check with b = 0: this option gives L/2 &#10003;. The other three give 3L/4, 2L/3 and L &#8212; all wrong for a uniform rod. So the b = 0 test alone picks the answer."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 12 ---------------------------------- */
+{
+ "name": "Angle-wise element &#8212; the semicircular ring",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "On a ring of radius R, a small arc makes an angle d&#952; at the centre. Its length dl is",
+   "diagram": DIAGRAMS.halfRing(),
+   "opts": ["R d&#952;","d&#952;","R&#178; d&#952;","2&#960;R d&#952;"],
+   "ans": 0,
+   "sol": "Arc length = radius &#215; angle (angle in radians). So <strong>dl = R d&#952;</strong>, and its mass is dm = &#955; dl = &#955;R d&#952;."
+  },
+  {
+   "q": "That small element is at angle &#952; from the x-axis. Its height y above the diameter is",
+   "opts": ["y = R sin &#952;","y = R cos &#952;","y = R&#952;","y = R"],
+   "ans": 0,
+   "sol": "From the right triangle in the notes: sin &#952; = y/R, so <strong>y = R sin &#952;</strong> (and x = R cos &#952;)."
+  },
+  {
+   "q": "A uniform semicircular ring of radius R sits symmetrically about the y-axis, as in the figure. What is x<sub>com</sub>?",
+   "opts": ["0","R/2","2R/&#960;","R"],
+   "ans": 0,
+   "sol": "Every piece on the right (at +x) has a mirror piece on the left (at &#8722;x). They cancel in &#931;mx. So <strong>x<sub>com</sub> = 0</strong> &#8212; the COM is on the symmetry axis.<br><br>Always use symmetry first. Then only y<sub>com</sub> needs work."
+  },
+  {
+   "tag": "Notes p.3",
+   "q": "&#9733; <strong>Original:</strong> Find y<sub>com</sub> of a uniform semicircular ring of radius R, measured from the centre.",
+   "diagram": DIAGRAMS.halfRing({full:true}),
+   "opts": ["2R/&#960;","4R/3&#960;","R/2","&#960;R/2"],
+   "ans": 0,
+   "sol": "y<sub>com</sub> = &#8747;y dm / &#8747;dm = &#8747;<sub>0</sub><sup>&#960;</sup> (R sin &#952;)(&#955;R d&#952;) / &#8747;<sub>0</sub><sup>&#960;</sup> &#955;R d&#952;<br><br>&#955; and one R cancel:<br>= R[&#8722;cos &#952;]<sub>0</sub><sup>&#960;</sup> / [&#952;]<sub>0</sub><sup>&#960;</sup> = R[1 &#8722; (&#8722;1)]/&#960; = <strong>2R/&#960;</strong><br><br>2R/&#960; &#8776; 0.64R, above the centre, in empty space &#8212; one more COM that sits outside the body."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 13 ---------------------------------- */
+{
+ "name": "Half ring vs half disc &#8212; which result goes where",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A semicircular disc (a flat half-plate) can be cut into many thin half-rings of radius r, from r = 0 to r = R. What kind of element is this?",
+   "opts": ["Radius-wise &#8212; variable r, element dr","Length-wise &#8212; element dx","Angle-wise &#8212; element d&#952;","No element is needed"],
+   "ans": 0,
+   "sol": "The thing that changes from one half-ring to the next is its radius r. So this is <strong>radius-wise</strong> integration with element dr &#8212; the second type in the notes. Each thin half-ring has its own COM at 2r/&#960; (from Ladder 12)."
+  },
+  {
+   "q": "Compare a half disc with a half ring of the same radius R. The COM of the half disc is",
+   "opts": ["lower, closer to the centre, than 2R/&#960;","higher than 2R/&#960;","exactly at 2R/&#960;","exactly at the centre"],
+   "ans": 0,
+   "sol": "In the half ring all the mass is at distance R. In the half disc, a lot of mass is in the small half-rings near the centre. So the average height drops: the half disc&#8217;s COM is <strong>below 2R/&#960;</strong>."
+  },
+  {
+   "q": "Don&#8217;t mix up flat shapes and 3D shapes. The COM of a uniform <strong>solid hemisphere</strong> of radius R, from the centre of its flat face, is",
+   "opts": ["3R/8","2R/&#960;","R/2","R/4"],
+   "ans": 0,
+   "sol": "Two 3D results that JEE and NEET use often:<br><br>Hollow hemisphere (thin shell) &#8594; R/2<br>Solid hemisphere &#8594; <strong>3R/8</strong><br><br>These are 3D bodies. The flat half disc in the next rung is a 2D plate, and its answer is different. Always read which shape the question means."
+  },
+  {
+   "tag": "Notes p.3",
+   "starLbl": "From your notes",
+   "q": "&#9733; <strong>From your notes:</strong> A uniform semicircular disc (plate) of radius R lies with its flat edge on the x-axis and its centre at the origin. Its centre of mass is at",
+   "diagram": DIAGRAMS.halfDisc(),
+   "opts": ["(0, 4R/3&#960;)","(0, 2R/&#960;)","(0, 3R/8)","(4R/3&#960;, 0)"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = 0 by symmetry. &nbsp;y<sub>com</sub> = <strong>4R/3&#960;</strong> &#8776; 0.42R.<br><br>Where it comes from: build the plate from half-rings, dm = &#963;(&#960;r)dr, each with COM at 2r/&#960;.<br>y<sub>com</sub> = &#8747;<sub>0</sub><sup>R</sup> (2r/&#960;)&#183;&#963;&#960;r dr / &#8747;<sub>0</sub><sup>R</sup> &#963;&#960;r dr = (2R&#179;/3)/(&#960;R&#178;/2) = 4R/3&#960;<br><br>Summary: half ring 2R/&#960; &#183; half disc 4R/3&#960; &#183; hollow hemisphere R/2 &#183; solid hemisphere 3R/8."
+  }
+ ]
+},
+
+/* ================= PART D · COMPOUND BODIES ================= */
+
+/* ---------------------------------- LADDER 14 ---------------------------------- */
+{
+ "name": "Compound body &#8212; replace each part by one point",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A uniform block of width 2 m is kept from x = 0 to x = 2 m. Its COM along x is at",
+   "opts": ["x = 1 m, its centre","x = 2 m","x = 0","x = 0.5 m"],
+   "ans": 0,
+   "sol": "A uniform block&#8217;s COM is at its geometric centre: halfway across, <strong>x = 1 m</strong>."
+  },
+  {
+   "q": "For a compound body (made of simple parts), the first step is to",
+   "opts": ["replace each part by a point mass placed at that part&#8217;s own COM","add up all the lengths","find the centre of the whole outline","integrate over the whole body at once"],
+   "ans": 0,
+   "sol": "This is the whole idea of compound bodies. Each part acts like one particle of its full mass, sitting at its own COM. Then use the discrete formula:<br><br>x<sub>com</sub> = (m&#8321;x&#8321; + m&#8322;x&#8322; + &#8230;)/(m&#8321; + m&#8322; + &#8230;)"
+  },
+  {
+   "q": "A second identical block of width 2 m is placed touching the first, from x = 2 m to x = 4 m. Where is its own COM?",
+   "opts": ["x = 3 m","x = 2 m","x = 4 m","x = 1 m"],
+   "ans": 0,
+   "sol": "It starts at 2 m and is 2 m wide, so its centre is at 2 + 1 = <strong>3 m</strong>.<br><br>Measure every position from the <strong>same origin</strong> O, not from the start of each block."
+  },
+  {
+   "tag": "Notes p.3",
+   "q": "&#9733; <strong>Original:</strong> Two identical blocks, each of mass m and width x, are placed side by side, starting at the origin O. Find x<sub>com</sub> of the pair.",
+   "diagram": DIAGRAMS.blocksRow(),
+   "opts": ["x","x/2","3x/2","2x"],
+   "ans": 0,
+   "sol": "Block 1: centre at x/2. &nbsp;Block 2: centre at x + x/2 = 3x/2.<br><br>x<sub>com</sub> = [m(x/2) + m(3x/2)]/(m + m) = 2mx/2m = <strong>x</strong><br><br>That is the point where the two blocks touch. Symmetry says so too, and the formula agrees."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 15 ---------------------------------- */
+{
+ "name": "L-shaped rods &#8212; the COM sits in the empty corner",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A uniform rod of length L lies on the x-axis from (0, 0) to (L, 0). Its COM is at",
+   "opts": ["(L/2, 0)","(0, L/2)","(L, 0)","(L/4, 0)"],
+   "ans": 0,
+   "sol": "Middle of the rod: <strong>(L/2, 0)</strong>."
+  },
+  {
+   "q": "An identical rod lies on the y-axis from (0, 0) to (0, L). Its COM is at",
+   "opts": ["(0, L/2)","(L/2, 0)","(L/2, L/2)","(0, L)"],
+   "ans": 0,
+   "sol": "<strong>(0, L/2)</strong>. Now the L-frame is just two point masses m, at (L/2, 0) and (0, L/2)."
+  },
+  {
+   "q": "Two equal point masses m sit at (L/2, 0) and (0, L/2). Find x<sub>com</sub> only.",
+   "opts": ["L/4","L/2","L/3","0"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = [m(L/2) + m(0)]/2m = <strong>L/4</strong>. The rod on the y-axis adds nothing to the x-sum."
+  },
+  {
+   "tag": "Illustration 1 (p.6)",
+   "q": "&#9733; <strong>Original:</strong> Find the position of the COM of the L-shaped frame made of two identical uniform rods of length L, one along each axis from the origin.",
+   "diagram": DIAGRAMS.lRods(),
+   "opts": ["(L/4, L/4)","(L/2, L/2)","(L/4, L/2)","(L/3, L/3)"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = [m(L/2) + 0]/2m = L/4<br>y<sub>com</sub> = [0 + m(L/2)]/2m = L/4<br><br>COM = <strong>(L/4, L/4)</strong>. The y-working is the mirror image of the x-working, so the two answers must match. This point is in the empty space inside the corner &#8212; no rod passes through it, same as the L-shape on page 1."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 16 ---------------------------------- */
+{
+ "name": "Three rods of equal mass forming a triangle",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Rod OA runs from O (0, 0) to A (a, 0). Its COM is at",
+   "opts": ["(a/2, 0)","(a, 0)","(0, a/2)","(a/3, 0)"],
+   "ans": 0,
+   "sol": "Midpoint of OA: <strong>(a/2, 0)</strong>. In the same way, rod OB from (0, 0) to (0, a) has its COM at (0, a/2)."
+  },
+  {
+   "q": "Rod AB runs from A (a, 0) to B (0, a). Its COM is at",
+   "opts": ["(a/2, a/2)","(a, a)","(a/&#8730;2, a/&#8730;2)","(a/3, a/3)"],
+   "ans": 0,
+   "sol": "Midpoint = average of the two ends: ((a + 0)/2, (0 + a)/2) = <strong>(a/2, a/2)</strong>."
+  },
+  {
+   "q": "Rod AB is &#8730;2 times longer than OA. But the question says all three rods have the <strong>same mass</strong>. So in the COM formula, AB gets a mass of",
+   "opts": ["m &#8212; the same as the others","&#8730;2 m","2m","m/&#8730;2"],
+   "ans": 0,
+   "sol": "The question fixes the masses: all equal to m. Length does not decide it here.<br><br>(If instead the rods were cut from the <em>same wire</em> &#8212; same &#955; &#8212; then AB would have mass &#8730;2 m. Read the question carefully for which case it is.)"
+  },
+  {
+   "tag": "Illustration 2 (p.6)",
+   "q": "&#9733; <strong>Original:</strong> Three rods of the same mass are placed as shown in the figure. Calculate the coordinates of the centre of mass of the system.",
+   "diagram": DIAGRAMS.triRods(),
+   "opts": ["(a/3, a/3)","(a/2, a/2)","(a/4, a/4)","(&#8730;2a/4, &#8730;2a/4)"],
+   "ans": 0,
+   "sol": "Three equal masses m at (a/2, 0), (0, a/2) and (a/2, a/2):<br><br>x<sub>com</sub> = (a/2 + 0 + a/2)/3 = <strong>a/3</strong><br>y<sub>com</sub> = (0 + a/2 + a/2)/3 = <strong>a/3</strong><br><br>Extra: if the rods were from the same wire (AB = &#8730;2 m), x<sub>com</sub> = (a/2)(1 + &#8730;2)/(2 + &#8730;2) = &#8730;2a/4 &#8776; 0.35a. That is the trap option &#8212; it is why &#8220;same mass&#8221; matters."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 17 ---------------------------------- */
+{
+ "name": "Three square plates &#8212; an L made of tiles",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A square plate of side a covers 0 &#8804; x &#8804; a, 0 &#8804; y &#8804; a. Its COM is at",
+   "opts": ["(a/2, a/2)","(a, a)","(a/2, 0)","(a/3, a/3)"],
+   "ans": 0,
+   "sol": "Uniform square &#8594; its centre &#8594; <strong>(a/2, a/2)</strong>."
+  },
+  {
+   "q": "In the figure, one plate sits on top of the bottom-right plate, so it covers a &#8804; x &#8804; 2a, a &#8804; y &#8804; 2a. Its COM is at",
+   "diagram": DIAGRAMS.plates3(),
+   "opts": ["(3a/2, 3a/2)","(a, a)","(3a/2, a/2)","(2a, 2a)"],
+   "ans": 0,
+   "sol": "Centre of the square that runs from a to 2a in both directions: <strong>(3a/2, 3a/2)</strong>. The bottom-right plate has its centre at (3a/2, a/2)."
+  },
+  {
+   "q": "Each plate has mass m. What is x<sub>com</sub> of all three plates?",
+   "opts": ["7a/6","5a/6","a","7a/3"],
+   "ans": 0,
+   "sol": "x-positions of the three centres: a/2, 3a/2, 3a/2.<br><br>x<sub>com</sub> = (a/2 + 3a/2 + 3a/2)/3 = (7a/2)/3 = <strong>7a/6</strong>"
+  },
+  {
+   "tag": "Illustration 3 (p.6)",
+   "q": "&#9733; <strong>Original:</strong> Find the position of the COM for the given combination (each plate is a square of side a and mass m).",
+   "diagram": DIAGRAMS.plates3(),
+   "opts": ["(7a/6, 5a/6)","(5a/6, 7a/6)","(a, a)","(7a/6, 7a/6)"],
+   "ans": 0,
+   "sol": "Centres: (a/2, a/2), (3a/2, a/2), (3a/2, 3a/2).<br><br>x<sub>com</sub> = 7a/6 (rung 3)<br>y<sub>com</sub> = (a/2 + a/2 + 3a/2)/3 = (5a/2)/3 = 5a/6<br><br>COM = <strong>(7a/6, 5a/6)</strong>. It leans right (two plates on the right) and down (two plates at the bottom)."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 18 ---------------------------------- */
+{
+ "name": "Disc + square &#8212; equal masses vs equal density",
+ "mode": "class",
+ "questions": [
+  {
+   "tag": "Illustration 6 (1)",
+   "q": "A disc of radius a is centred at (0, 0). A square of side 2a touches it, with its centre at (2a, 0). If the disc and the square have <strong>equal masses</strong> m, x<sub>com</sub> = ?",
+   "diagram": DIAGRAMS.discSquare(),
+   "opts": ["a","2a","a/2","8a/(&#960; + 4)"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = [m(0) + m(2a)]/2m = <strong>a</strong><br><br>Equal masses &#8594; midpoint of the two centres. This is part (1) of Illustration 6."
+  },
+  {
+   "q": "Now both are cut from the same sheet, so they have the same surface density &#963;. Their masses are",
+   "opts": ["disc: &#963;&#960;a&#178;, square: 4&#963;a&#178;","disc: &#963;&#960;a&#178;, square: &#963;a&#178;","disc: 2&#963;&#960;a, square: 8&#963;a","both &#963;a&#178;"],
+   "ans": 0,
+   "sol": "M = &#963; &#215; area.<br>Disc area = &#960;a&#178; &#8594; M<sub>c</sub> = &#963;&#960;a&#178;<br>Square area = (2a)&#178; = 4a&#178; &#8594; M<sub>s</sub> = 4&#963;a&#178;<br><br>The side of the square is 2a, not a &#8212; the most common slip here."
+  },
+  {
+   "q": "With equal density, which is heavier, and which way does the COM move compared with part (1)?",
+   "opts": ["The square (4 &gt; &#960;), so the COM moves past a, towards the square","The disc, so the COM moves towards the disc","They are equal, so the COM stays at a","The COM moves to the centre of the square, 2a"],
+   "ans": 0,
+   "sol": "4&#963;a&#178; &gt; &#960;&#963;a&#178; because 4 &gt; 3.14. The square is heavier, so the COM shifts from a <strong>towards the square</strong> &#8212; just a little past a."
+  },
+  {
+   "tag": "Illustration 6 (2)",
+   "q": "&#9733; <strong>Original:</strong> Same disc and square. If their densities are equal, find x<sub>com</sub> from the centre of the disc.",
+   "diagram": DIAGRAMS.discSquare(),
+   "opts": ["8a/(&#960; + 4)","a","2a/(&#960; + 4)","8a/&#960;"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = [&#963;&#960;a&#178;(0) + &#963;(4a&#178;)(2a)] / (&#963;&#960;a&#178; + 4&#963;a&#178;)<br>= 8&#963;a&#179; / &#963;a&#178;(&#960; + 4) = <strong>8a/(&#960; + 4)</strong> &#8776; 1.12a<br><br>Check with rung 3: 1.12a is just past a, towards the square &#10003;."
+  }
+ ]
+},
+
+/* ================= PART E · TRUNCATED BODIES ================= */
+
+/* ---------------------------------- LADDER 19 ---------------------------------- */
+{
+ "name": "Truncated body &#8212; a disc with a hole (negative mass)",
+ "mode": "class",
+ "questions": [
+  {
+   "tag": "Notes p.8",
+   "q": "When a piece is cut out of a body, the COM of the remaining part is",
+   "opts": ["(M<sub>total</sub>r<sub>total</sub> &#8722; M<sub>removed</sub>r<sub>removed</sub>)/(M<sub>total</sub> &#8722; M<sub>removed</sub>)","(M<sub>total</sub>r<sub>total</sub> + M<sub>removed</sub>r<sub>removed</sub>)/(M<sub>total</sub> + M<sub>removed</sub>)","r<sub>total</sub> &#8722; r<sub>removed</sub>","(r<sub>total</sub> + r<sub>removed</sub>)/2"],
+   "ans": 0,
+   "sol": "Whole body = remaining part + removed part. So remaining part = whole &#8722; removed.<br><br>Treat the removed piece as a <strong>negative mass</strong>: a minus on top and a minus at the bottom."
+  },
+  {
+   "q": "A uniform disc of radius R has mass M. A disc of radius R/2 is cut out of it. The mass removed is",
+   "opts": ["M/4","M/2","M/8","3M/4"],
+   "ans": 0,
+   "sol": "Same sheet &#8594; mass &#8733; area. Area ratio = (R/2)&#178;/R&#178; = 1/4.<br><br>M<sub>removed</sub> = <strong>M/4</strong> (the notes write it as &#963;&#960;R&#178;/4). The remaining mass is 3M/4."
+  },
+  {
+   "q": "The hole is on the right side of the centre O. The COM of the remaining part will be",
+   "diagram": DIAGRAMS.discHole(),
+   "opts": ["to the left of O &#8212; away from the hole","to the right of O &#8212; towards the hole","exactly at O","at the centre of the hole"],
+   "ans": 0,
+   "sol": "Mass has been taken away from the right. The left side is now heavier, so the COM shifts <strong>away from the hole</strong>, to the left. Expect a negative x."
+  },
+  {
+   "tag": "Notes p.8",
+   "q": "&#9733; <strong>Original:</strong> From a uniform disc of radius R, a disc of radius R/2 is removed. The small disc touches the edge of the big one, so its centre is R/2 from O. Find the COM of the remaining part from O.",
+   "diagram": DIAGRAMS.discHole(),
+   "opts": ["R/6 to the left of O (x = &#8722;R/6)","R/6 to the right of O","R/2 to the left of O","R/8 to the left of O"],
+   "ans": 0,
+   "sol": "M<sub>total</sub> = &#963;&#960;R&#178;, r<sub>total</sub> = 0<br>M<sub>removed</sub> = &#963;&#960;R&#178;/4, r<sub>removed</sub> = (R/2)&#238;<br><br>x<sub>com</sub> = [&#963;&#960;R&#178;(0) &#8722; (&#963;&#960;R&#178;/4)(R/2)] / [&#963;&#960;R&#178; &#8722; &#963;&#960;R&#178;/4]<br>= (&#8722;R/8)/(3/4) = <strong>&#8722;R/6</strong><br><br>So the new COM is R/6 from O, on the side away from the hole. R/8 is the trap: it forgets to divide by the remaining 3/4."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 20 ---------------------------------- */
+{
+ "name": "Truncated body &#8212; a square with a corner cut out",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A uniform square plate, 4 m &#215; 4 m, has one corner at the origin. Its COM is at",
+   "opts": ["(2, 2) m","(4, 4) m","(1, 1) m","(2, 0) m"],
+   "ans": 0,
+   "sol": "Centre of the square: <strong>(2, 2) m</strong>. Area = 16 m&#178;."
+  },
+  {
+   "q": "A 2 m &#215; 2 m square is cut from the top-right corner (it covers 2 &#8804; x &#8804; 4, 2 &#8804; y &#8804; 4). The COM of the removed piece is at",
+   "diagram": DIAGRAMS.squareCut(),
+   "opts": ["(3, 3) m","(2, 2) m","(1, 1) m","(4, 4) m"],
+   "ans": 0,
+   "sol": "Centre of the small square: <strong>(3, 3) m</strong>. Its area is 4 m&#178;, which is 1/4 of the big square, so it carries 1/4 of the mass."
+  },
+  {
+   "q": "Using mass &#8733; area, x<sub>com</sub> of the remaining plate is",
+   "opts": ["(16 &#215; 2 &#8722; 4 &#215; 3)/(16 &#8722; 4)","(16 &#215; 2 + 4 &#215; 3)/(16 + 4)","(16 &#215; 2 &#8722; 4 &#215; 3)/16","(2 &#8722; 3)/(16 &#8722; 4)"],
+   "ans": 0,
+   "sol": "Whole minus removed, on top and at the bottom:<br><br>x<sub>com</sub> = (A&#8321;x&#8321; &#8722; A&#8322;x&#8322;)/(A&#8321; &#8722; A&#8322;) = <strong>(16 &#215; 2 &#8722; 4 &#215; 3)/(16 &#8722; 4)</strong><br><br>&#963; is the same everywhere, so it cancels. That is why areas can stand in for masses."
+  },
+  {
+   "tag": "Notes p.8",
+   "q": "&#9733; <strong>Original:</strong> A uniform square plate of side 4 m has a 2 m &#215; 2 m square removed from its top-right corner (figure). Find the COM of the remaining plate, taking the bottom-left corner as the origin.",
+   "diagram": DIAGRAMS.squareCut(),
+   "opts": ["(5/3, 5/3) m","(2, 2) m","(4/3, 4/3) m","(5/3, 2) m"],
+   "ans": 0,
+   "sol": "x<sub>com</sub> = (32 &#8722; 12)/12 = 20/12 = <strong>5/3 m</strong><br>y<sub>com</sub> = same working = <strong>5/3 m</strong> (the shape is symmetric about the line y = x)<br><br>COM = (5/3, 5/3) m &#8776; (1.67, 1.67) m. It moved from (2, 2) down and to the left, away from the cut corner &#10003;."
+  }
+ ]
+},
+
+/* ================= PART F · MOTION OF THE COM ================= */
+
+/* ---------------------------------- LADDER 21 ---------------------------------- */
+{
+ "name": "Motion of the COM &#8212; v<sub>com</sub> and a<sub>com</sub>",
+ "mode": "hw",
+ "questions": [
+  {
+   "tag": "Notes p.8",
+   "q": "x<sub>com</sub> = (m&#8321;x&#8321; + m&#8322;x&#8322;)/(m&#8321; + m&#8322;). Differentiating with respect to time gives",
+   "opts": ["v<sub>com</sub> = (m&#8321;v&#8321; + m&#8322;v&#8322;)/(m&#8321; + m&#8322;)","v<sub>com</sub> = v&#8321; + v&#8322;","v<sub>com</sub> = (v&#8321; + v&#8322;)/2","v<sub>com</sub> = (m&#8321; + m&#8322;)/(m&#8321;v&#8321; + m&#8322;v&#8322;)"],
+   "ans": 0,
+   "sol": "The masses do not change, so only x&#8321; and x&#8322; change. dx/dt = v:<br><br>v<sub>com</sub> = (m&#8321; dx&#8321;/dt + m&#8322; dx&#8322;/dt)/(m&#8321; + m&#8322;) = <strong>(m&#8321;v&#8321; + m&#8322;v&#8322;)/(m&#8321; + m&#8322;)</strong><br><br>Differentiate once more (dv/dt = a) and you get a<sub>com</sub> = (m&#8321;a&#8321; + m&#8322;a&#8322;)/(m&#8321; + m&#8322;). Same shape every time: x &#8594; v &#8594; a."
+  },
+  {
+   "q": "A 2 kg block moves at 3 m/s and a 1 kg block is at rest. The velocity of their COM is",
+   "diagram": DIAGRAMS.twoMove({m1:'2 kg',m2:'1 kg',v1:'3 m/s',d1:1,v2:'at rest',d2:0}),
+   "opts": ["2 m/s","3 m/s","1.5 m/s","1 m/s"],
+   "ans": 0,
+   "sol": "v<sub>com</sub> = (2 &#215; 3 + 1 &#215; 0)/(2 + 1) = 6/3 = <strong>2 m/s</strong><br><br>1.5 m/s is the plain average &#8212; it ignores the masses."
+  },
+  {
+   "q": "A 1 kg ball moves at 4 m/s to the right and a 3 kg ball moves at 2 m/s to the left. v<sub>com</sub> = ?",
+   "diagram": DIAGRAMS.twoMove({m1:'1 kg',m2:'3 kg',v1:'4 m/s',d1:1,v2:'2 m/s',d2:-1}),
+   "opts": ["0.5 m/s to the left","0.5 m/s to the right","2.5 m/s to the right","1 m/s to the left"],
+   "ans": 0,
+   "sol": "Take right as +. So v&#8321; = +4 and v&#8322; = &#8722;2.<br><br>v<sub>com</sub> = (1 &#215; 4 + 3 &#215; (&#8722;2))/4 = (4 &#8722; 6)/4 = &#8722;0.5 m/s &#8594; <strong>0.5 m/s to the left</strong><br><br>Velocity is a vector: put in the sign before you add. 2.5 m/s comes from ignoring the direction."
+  },
+  {
+   "tag": "Built on notes p.8",
+   "starLbl": "From your notes (formula)",
+   "q": "&#9733; <strong>From your notes:</strong> a<sub>com</sub> = (m&#8321;a&#8321; + m&#8322;a&#8322;)/(m&#8321; + m&#8322;). A 2 kg block has acceleration 3 m/s&#178; to the right and a 1 kg block has acceleration 3 m/s&#178; to the left. Find a<sub>com</sub>.",
+   "opts": ["1 m/s&#178; to the right","3 m/s&#178; to the right","0","2 m/s&#178; to the right"],
+   "ans": 0,
+   "sol": "Right = +. So a&#8321; = +3 and a&#8322; = &#8722;3.<br><br>a<sub>com</sub> = (2 &#215; 3 + 1 &#215; (&#8722;3))/(2 + 1) = 3/3 = <strong>1 m/s&#178; to the right</strong><br><br>0 is the trap: the accelerations are equal and opposite, but the masses are not. This links to F<sub>ext</sub> = M a<sub>com</sub> &#8212; only outside forces can accelerate the COM."
+  }
+ ]
+},
+
+];
+
+
+const STORAGE_KEY = 'padipucast_com_notes_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||'', starLbl:raw.starLbl||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; ${q.starLbl||'Original question'}</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
