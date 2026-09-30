@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KVS Class 11 NEET results | PADIPUCAST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+<style>
+:root{
+  --paper:#F2ECDD; --panel:#FBF7EE; --ink:#1D2A29; --muted:#5E665F; --line:#DAD0B9; --line2:#E9E1CF;
+  --teal:#0E7A73; --teal-soft:#D3E9E4; --amber:#B7790A; --amber-soft:#F3E2BA; --red:#B23A2B; --red-soft:#F4DAD3;
+  --b1:#B23A2B; --b2:#D9A441; --b3:#CBC2A3; --b4:#6FB0A6; --b5:#0E7A73;
+  --display:'Space Grotesk', 'DM Sans', system-ui, sans-serif;
+  --body:'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'DM Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --stick:0px;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#121A19; --panel:#192322; --ink:#EAE3D1; --muted:#A1A89F; --line:#2E3B39; --line2:#23302E;
+    --teal:#48B9AE; --teal-soft:#1B3A37; --amber:#E2AE48; --amber-soft:#3A311F; --red:#E57A69; --red-soft:#3D2420;
+    --b1:#E57A69; --b2:#E2AE48; --b3:#56605C; --b4:#3E8A81; --b5:#48B9AE;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121A19; --panel:#192322; --ink:#EAE3D1; --muted:#A1A89F; --line:#2E3B39; --line2:#23302E;
+  --teal:#48B9AE; --teal-soft:#1B3A37; --amber:#E2AE48; --amber-soft:#3A311F; --red:#E57A69; --red-soft:#3D2420;
+  --b1:#E57A69; --b2:#E2AE48; --b3:#56605C; --b4:#3E8A81; --b5:#48B9AE;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.muted{color:var(--muted)} .small{font-size:13px}
+.mono{font-family:var(--mono);font-size:12.5px}
+.teal{color:var(--teal)} .amber{color:var(--amber)} .red{color:var(--red)}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.01em}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--paper);border-bottom:1px solid var(--line)}
+.top-in{max-width:1380px;margin:0 auto;padding:14px 20px 0}
+.brandrow{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.14em;color:var(--teal)}
+.brand span{color:var(--amber)}
+h1{font-size:clamp(22px,3vw,30px);font-weight:700;line-height:1.1;margin-top:2px}
+.sub{margin:4px 0 0;color:var(--muted);font-size:14px}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:7px 12px;line-height:1.15;text-align:left;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button b{display:block;font-family:var(--display);font-size:14px;font-weight:600}
+.seg button small{font-size:11.5px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--teal);color:#fff}
+.seg button[aria-pressed="true"] small{color:rgba(255,255,255,.85)}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#0c1413}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#0c1413} :root:not([data-theme="light"]) .seg button[aria-pressed="true"] small{color:rgba(12,20,19,.8)}}
+:root[data-theme="dark"] .seg button[aria-pressed="true"] small{color:rgba(12,20,19,.8)}
+.sel{display:flex;flex-direction:column;font-size:11.5px;color:var(--muted)}
+.sel select{margin-top:2px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:14px;max-width:260px}
+.findbtn{display:none;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px 12px;font-weight:500}
+.tabs{display:flex;gap:2px;margin-top:12px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{border:0;background:none;padding:9px 12px 11px;font-weight:500;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--amber)}
+.tabs button:hover{color:var(--ink)}
+
+/* ---------- layout ---------- */
+.layout{max-width:1380px;margin:0 auto;display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px;padding:18px 20px 40px}
+.side{position:sticky;top:calc(var(--stick) + 14px);align-self:start;max-height:calc(100vh - var(--stick) - 28px);display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.side-head{padding:12px 12px 8px;border-bottom:1px solid var(--line2)}
+.side-head input{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--paper)}
+.side-head p{margin:6px 2px 0}
+.slist{list-style:none;margin:0;padding:6px;overflow:auto;flex:1}
+.slist button{width:100%;display:flex;justify-content:space-between;align-items:baseline;gap:8px;border:0;background:none;text-align:left;padding:7px 8px;border-radius:8px}
+.slist button:hover{background:var(--line2)}
+.slist .nm{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slist .sc{font-family:var(--display);font-weight:600;font-size:13.5px;font-variant-numeric:tabular-nums}
+.slist .sc.ab{color:var(--red);font-weight:500;font-size:12px}
+.slist .sc.nl{color:var(--muted);font-weight:500}
+.slist .rk{color:var(--muted);font-size:12px;width:22px;display:inline-block;font-variant-numeric:tabular-nums}
+main{min-width:0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:18px}
+.panel h3{font-size:17px;font-weight:600;margin-bottom:2px}
+.panel .lede{margin:0 0 12px;color:var(--muted);font-size:13.5px;max-width:70ch}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.grid2 > .panel{margin-bottom:0}
+.gridwrap{margin-bottom:18px}
+.chartbox{position:relative;height:260px}
+.chartbox.h220{height:220px} .chartbox.h320{height:320px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+
+/* ---------- hero ---------- */
+.hero{padding:18px 18px 10px;border-radius:16px;background:var(--panel);border:1px solid var(--line);margin-bottom:18px}
+.hero-top{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:flex-end}
+.hero h2{font-size:26px;font-weight:700}
+.hero p{margin:3px 0 0;color:var(--muted);font-size:14px}
+.duo{display:flex;gap:26px}
+.num{display:flex;flex-direction:column}
+.num b{font-family:var(--display);font-size:38px;line-height:1;font-weight:700;font-variant-numeric:tabular-nums}
+.num span{font-size:12.5px;color:var(--muted);margin-top:4px}
+.strip{position:relative;margin-top:10px;min-height:120px}
+.strip svg{display:block;width:100%;overflow:visible}
+.strip circle{cursor:pointer;transition:r .12s}
+.strip circle:hover,.strip circle:focus{r:9}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);padding:2px 2px 6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.legend i.l{width:14px;height:0;border-radius:0;border-top:2px solid;vertical-align:3px}
+.legend i.d{border-top-style:dashed}
+.read{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.read li{padding-left:18px;position:relative;max-width:78ch}
+.read li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:2px;background:var(--amber)}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-bottom:18px}
+.stats > div{padding:12px 14px;border-right:1px solid var(--line2)}
+.stats > div:last-child{border-right:0}
+.stats b{display:block;font-family:var(--display);font-size:26px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.stats span{font-size:12.5px;color:var(--muted);display:block}
+.stats em{font-style:normal;font-size:12.5px;color:var(--ink)}
+
+/* subject gap rows */
+.gap{display:grid;grid-template-columns:86px minmax(0,1fr) 112px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line2)}
+.gap:last-child{border-bottom:0}
+.gap .sn{font-weight:600}
+.track{position:relative;height:16px;background:var(--line2);border-radius:4px}
+.track .fill{position:absolute;left:0;top:0;bottom:0;background:var(--teal);border-radius:4px}
+.track .mk{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--amber);border-radius:2px;transform:translateX(-1px)}
+.gap .vals{font-size:13px;text-align:right;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:1px 7px;border-radius:20px;font-weight:600;font-size:12.5px;font-variant-numeric:tabular-nums}
+.pill.up{background:var(--teal-soft);color:var(--teal)}
+.pill.dn{background:var(--red-soft);color:var(--red)}
+.pill.ab{background:var(--red-soft);color:var(--red);font-weight:500}
+.pill.nl{background:var(--line2);color:var(--muted);font-weight:500}
+
+/* groups */
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.group h4{margin:0;font-family:var(--display);font-size:15px;font-weight:600}
+.group h4 .cnt{color:var(--muted);font-weight:500}
+.group p{margin:2px 0 8px;font-size:12.5px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--paper);border-radius:20px;padding:3px 10px;font-size:13px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.chip em{font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:4px}
+.chip:hover{border-color:var(--teal)}
+.group.g-good h4{color:var(--teal)} .group.g-push h4{color:var(--amber)} .group.g-help h4,.group.g-drop h4{color:var(--red)}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line2);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line2);white-space:nowrap}
+thead th{position:sticky;top:0;background:var(--panel);font-weight:600;font-size:12.5px;color:var(--muted);z-index:1}
+th.n,td.n{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr:hover{background:var(--line2)}
+tbody tr[data-open]{cursor:pointer}
+th button{border:0;background:none;padding:0;font-weight:600;color:inherit;font-size:12.5px}
+th button[data-dir]::after{content:attr(data-dir);margin-left:4px;color:var(--teal)}
+td .lnk{border:0;background:none;padding:0;font-weight:500;text-align:left}
+td .lnk:hover{color:var(--teal);text-decoration:underline}
+.neg{color:var(--red);font-weight:600}
+.low{color:var(--red)}
+.barcell{min-width:180px}
+.hbar{position:relative;height:12px;background:var(--line2);border-radius:3px}
+.hbar .fill{position:absolute;left:0;top:0;bottom:0;background:var(--teal);border-radius:3px}
+.hbar .mk{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--amber)}
+tr.grp td{font-weight:600;background:var(--paper)}
+tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--amber)}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.tools input[type=search]{padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:var(--paper);min-width:220px}
+.tools label{font-size:14px;display:flex;gap:6px;align-items:center}
+
+/* movers */
+.movers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.mv{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 56px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line2);font-size:14px}
+.mv .lnk{border:0;background:none;padding:0;text-align:left;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mv .lnk:hover{color:var(--teal)}
+.mv .from{font-size:12px;color:var(--muted);display:block}
+.mv .d{text-align:right;font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
+.mv .bar{height:10px;border-radius:3px}
+.inline-sel{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;margin-bottom:10px}
+.inline-sel select{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+
+/* profile drawer */
+#scrim{position:fixed;inset:0;background:rgba(10,16,15,.38);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+#scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--paper);border-left:1px solid var(--line);z-index:50;transform:translateX(102%);transition:transform .25s ease;overflow-y:auto;padding:calc(18px + env(safe-area-inset-top,0px)) 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.drawer.on{transform:none}
+.pf-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.pf-head h2{font-size:24px;font-weight:700;line-height:1.15}
+.pf-head p{margin:4px 0 0}
+.x{border:1px solid var(--line);background:var(--panel);border-radius:10px;width:38px;height:38px;font-size:20px;line-height:1;flex:none}
+.pf-tests{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0 6px}
+.pf-t{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:10px;text-align:left;display:flex;flex-direction:column;gap:2px}
+.pf-t span{font-size:12px;color:var(--muted)}
+.pf-t b{font-family:var(--display);font-size:24px;line-height:1.1;font-variant-numeric:tabular-nums}
+.pf-t small{font-size:11.5px;color:var(--muted);line-height:1.35}
+.pf-t[aria-pressed="true"]{border-color:var(--teal);box-shadow:inset 0 0 0 1px var(--teal)}
+.pf-t:disabled{cursor:default;opacity:.8}
+.pf-t:disabled b{font-size:16px;color:var(--red)}
+.drawer h3{font-size:15px;font-weight:600;margin:18px 0 6px}
+.talk{margin:0;padding:0;list-style:none;display:grid;gap:7px}
+.talk li{background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:8px 11px;font-size:14px}
+.talk li.warn{border-color:var(--red-soft);box-shadow:inset 3px 0 0 var(--red)}
+.talk li.good{box-shadow:inset 3px 0 0 var(--teal)}
+.hint{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+
+#tip{position:fixed;z-index:60;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12.5px;padding:5px 9px;border-radius:7px;opacity:0;transition:opacity .1s;white-space:nowrap}
+#tip.on{opacity:1}
+footer{max-width:1380px;margin:0 auto;padding:0 20px 36px;color:var(--muted);font-size:12.5px}
+footer ul{margin:6px 0 0;padding-left:18px;max-width:90ch}
+
+@media (max-width:1100px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))} .stats > div:nth-child(3){border-right:0} .stats > div:nth-child(-n+3){border-bottom:1px solid var(--line2)}}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr;padding:14px 14px 32px}
+  .top-in{padding:12px 14px 0}
+  .findbtn{display:inline-block}
+  .side{position:fixed;left:0;top:0;bottom:0;width:min(320px,88vw);max-height:none;border-radius:0;z-index:50;transform:translateX(-102%);transition:transform .25s ease;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .side.on{transform:none}
+  .grid2,.movers{grid-template-columns:1fr}
+  .duo{gap:18px} .num b{font-size:30px}
+}
+@media (max-width:560px){
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats > div{border-right:0!important;border-bottom:1px solid var(--line2)}
+  .gap{grid-template-columns:70px minmax(0,1fr);}
+  .gap .vals{grid-column:1 / -1;text-align:left}
+  .pf-tests{grid-template-columns:1fr}
+  .seg button{padding:6px 9px}
+  .sel select{max-width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top" id="top">
+  <div class="top-in">
+    <div class="brandrow">
+      <div>
+        <div class="brand">PADIPUCAST <span>/</span> student analysis</div>
+        <h1>KVS Class 11 NEET results</h1>
+        <p class="sub">ALLEN centre 6251, Madurai. Three tests from the NEET Nurture (WD-WE Phase 1 &amp; 2) series.</p>
+      </div>
+      <div class="controls">
+        <div class="seg" id="testSeg" role="group" aria-label="Choose a test"></div>
+        <label class="sel">Students
+          <select id="groupSel"></select>
+        </label>
+        <button class="findbtn" id="findBtn" aria-controls="side">Find a student</button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Views"></nav>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="side" id="side" aria-label="Student list">
+    <div class="side-head">
+      <label for="q" class="sr">Find a student</label>
+      <input id="q" type="search" placeholder="Find a student by name" autocomplete="off">
+      <p class="muted small" id="sideNote"></p>
+    </div>
+    <ol class="slist" id="slist"></ol>
+  </aside>
+  <main id="main" tabindex="-1"></main>
+</div>
+
+<footer>
+  <strong>About this data</strong>
+  <ul>
+    <li>Marks are copied from the ALLEN provisional result sheets (centre 6251): Minor Test 4 (12 Aug), Minor Test 5 (2 Sep) and Major Test 2 (23 Sep 2026). Each subject is out of 180, total out of 720.</li>
+    <li>TN &amp; PY average and highest come from the summary box at the end of each sheet. They cover all Tamil Nadu and Puducherry students, not only this centre.</li>
+    <li>"AB" means the sheet marks the student absent. "Not in sheet" means the name is not printed at all. The Minor 5 sheet has no absent list, so a missing name there most likely means absent.</li>
+    <li>Minor 5: the centre-rank column was not readable in the scan, so centre ranks for that test are worked out from the totals.</li>
+    <li>Balan B, Minor 5: the subject marks sit in a blurred part of the scan. The total (503) is sure because it matches the % and state rank, but one subject mark may be off by a few marks.</li>
+  </ul>
+</footer>
+
+<div id="scrim"></div>
+<aside class="drawer" id="profile" aria-label="Student profile" aria-hidden="true"></aside>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const D = {"tests":[{"id":"MI4","name":"Minor Test 4","short":"Minor 4","date":"12 Aug 2026"},{"id":"MI5","name":"Minor Test 5","short":"Minor 5","date":"2 Sep 2026"},{"id":"MA2","name":"Major Test 2","short":"Major 2","date":"23 Sep 2026"}],"state":{"MI4":{"avg":[43.5,69.3,79.2,99.4,291.4,40.5],"high":[160,166,180,175,638,88.61],"low":[-15,-4,-4,0,29,4.03]},"MI5":{"avg":[41.0,46.7,115.4,99.3,302.4,42.0],"high":[165,162,180,170,672,93.33],"low":[-10,-20,-7,2,11,1.53]},"MA2":{"avg":[43.5,53.3,95.9,87.4,280.1,38.9],"high":[150,160,176,171,650,90.28],"low":[-5,-9,-2,2,33,4.58]}},"students":[{"id":"2460917105","n":"A Mithun Prasad","b":"M1MN-26-S0C0","g":"S","t":{"MI4":[46,73,36,50,205,319,50],"MI5":[56,44,103,68,271,261,44],"MA2":[15,54,83,58,210,232,53]}},{"id":"2460967173","n":"A Padmajothi","b":"M1MN-26-Q0C0KV","g":"KV","t":{"MI4":[33,27,16,35,111,398,54],"MA2":"AB"}},{"id":"2460694255","n":"Abinaya K","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[74,120,161,141,496,29,7],"MI5":[48,63,170,157,438,58,11],"MA2":[33,15,143,130,321,109,22]}},{"id":"2461391241","n":"Afra Rahman Bivi","b":"M1MN-46-R0C0","g":"R","t":{"MI4":[36,67,58,82,243,271,47],"MA2":[21,50,63,64,198,243,57]}},{"id":"2461379218","n":"Afsheen","b":"M1MN-46-R0C0","g":"R","t":{"MI4":[37,36,72,81,226,290,49],"MI5":[-6,11,57,84,146,409,71]}},{"id":"2461345199","n":"Akashaya N","b":"M1MN-36-Q0C0KV","g":"KV","t":{"MI4":[36,79,131,137,383,103,17],"MI5":[24,49,170,112,355,138,20],"MA2":[37,8,127,116,288,144,35]}},{"id":"2460639341","n":"Akchara J K G","b":"M1MN-16-S0C0","g":"S","t":{"MI4":"AB","MA2":"AB"}},{"id":"2460917605","n":"Akshita R","b":"M1MN-26-Q0C0KV","g":"KV","t":{"MI4":[38,76,77,111,302,192,33],"MI5":[28,17,138,93,276,255,42],"MA2":[27,24,86,118,255,184,45]}},{"id":"2460705196","n":"Amirthavarshini A","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[36,81,112,112,341,144,25],"MI5":[25,32,135,101,293,232,36],"MA2":[11,32,117,100,260,174,43]}},{"id":"2460806734","n":"Ashvathram Abarajithan","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[15,39,90,99,243,271,47],"MI5":[27,56,127,83,293,232,36],"MA2":"AB"}},{"id":"2461293935","n":"Aswin S","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[42,21,126,51,240,310,54],"MA2":[56,38,100,107,301,124,27]}},{"id":"2461281688","n":"Bala Kousik S R","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[93,86,175,146,500,25,4],"MA2":[107,106,171,166,550,8,3]}},{"id":"2461011649","n":"Balan B","b":"M1MN-26-R0C0","g":"R","t":{"MI4":[109,117,83,122,431,63,11],"MI5":[79,91,178,155,503,23,3],"MA2":[114,140,130,125,509,18,6]}},{"id":"2461286833","n":"Chitrapriya S","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[19,20,98,77,214,343,57],"MA2":[46,30,124,100,300,128,29]}},{"id":"2461396304","n":"D Megna","b":"M1MN-46-Q0C0KV","g":"KV","t":{"MI4":[101,98,129,148,476,36,9]}},{"id":"2461287121","n":"Daksha M","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[54,63,170,130,417,72,14],"MA2":[68,109,134,118,429,46,9]}},{"id":"2461319411","n":"Dhaniskaa A","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[32,18,66,108,224,331,56],"MA2":[30,-9,100,74,195,248,59]}},{"id":"2461287914","n":"Dhanya Mahesh M","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[23,2,94,39,158,398,69],"MA2":[49,26,92,67,234,215,51]}},{"id":"2461313780","n":"Dhuvarakaa S","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[73,50,135,115,373,111,17],"MA2":[65,50,107,122,344,94,19]}},{"id":"2461487375","n":"Fazlur Rahman Khan","b":"M1MN-46-S0C0","g":"S","t":{"MI4":[33,77,18,60,188,339,53]}},{"id":"2460898570","n":"G Anusha","b":"M1MN-26-Q0C0KV","g":"KV","t":{"MI4":[59,80,69,75,283,218,38],"MI5":[33,43,101,86,263,280,48],"MA2":[7,30,72,32,141,296,65]}},{"id":"2460694240","n":"Gowshik A","b":"M1MN-16-S0C0","g":"S","t":{"MI4":"AB","MI5":[9,22,89,69,189,356,60],"MA2":"AB"}},{"id":"2461293956","n":"Gowtham Sakthi K","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[32,2,80,76,190,353,58],"MA2":[53,11,88,99,251,192,47]}},{"id":"2461598621","n":"Hanah N","b":"M1MN-46-R0C0","g":"R","t":{"MI4":[30,80,80,115,305,187,32]}},{"id":"2460320211","n":"Hannah George Puthuran","b":"M1MN-16-S0C0","g":"S","t":{"MI4":[81,138,123,139,481,33,8],"MI5":[43,104,167,167,481,36,7],"MA2":[50,77,138,156,421,49,12]}},{"id":"2461282943","n":"Hari Muthu Ram R S","b":"M1MN-36-S0C0","g":"S","t":{"MI4":[112,125,145,130,512,20,6],"MI5":[81,110,160,140,491,27,5],"MA2":[138,150,150,156,594,5,2]}},{"id":"2460916382","n":"Haritha","b":"M1MN-26-S0C0","g":"S","t":{"MI4":"AB","MI5":[55,51,129,49,284,245,39],"MA2":[32,43,120,103,298,130,30]}},{"id":"2461531807","n":"Hashni R","b":"M1MN-46-R0C0","g":"R","t":{"MI4":[26,48,73,56,203,321,51],"MI5":[10,39,96,104,249,299,52]}},{"id":"2460580078","n":"Heshini M","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[96,160,145,150,551,9,2],"MI5":[129,141,165,146,581,7,1],"MA2":[112,97,155,160,524,15,5]}},{"id":"2460985015","n":"Ilavenil V","b":"M1MN-26-Q0C0KV","g":"KV","t":{"MI4":[37,84,84,80,285,215,37],"MI5":[51,41,117,129,338,162,26],"MA2":[33,18,107,103,261,173,42]}},{"id":"2460581877","n":"Iswaryalakshmi KJS","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[52,78,102,104,336,153,27],"MI5":[17,36,145,106,304,217,33],"MA2":[19,18,76,89,202,239,55]}},{"id":"2461281712","n":"Jason J","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[75,31,139,105,350,143,22],"MA2":[55,38,118,97,308,118,24]}},{"id":"2461290633","n":"Jeyavarshini M","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[38,4,131,114,287,239,38],"MA2":[35,28,120,95,278,155,38]}},{"id":"2460301801","n":"K Dhejaa Sri","b":"M1MN-16-S0C0","g":"S","t":{"MI4":[33,52,68,102,255,250,43],"MA2":[12,33,80,61,186,256,60]}},{"id":"2460965786","n":"K Shanthosh","b":"M1MN-26-Q0C0KV","g":"KV","t":{"MI4":[24,62,33,84,203,321,51],"MI5":[39,22,117,64,242,307,53],"MA2":[28,50,80,40,198,243,57]}},{"id":"2461319396","n":"Kishore Viswanath G","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[76,33,140,90,339,160,24],"MA2":[84,91,146,106,427,48,11]}},{"id":"2461281567","n":"Lekha R","b":"M1MN-16-P0C0MN","g":"MN","t":{"MI4":"AB","MI5":[22,7,94,50,173,379,67],"MA2":[43,25,53,51,172,268,61]}},{"id":"2460542882","n":"Lithick R","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[62,123,113,110,408,78,12],"MI5":[36,103,139,113,391,92,15],"MA2":[61,70,113,99,343,95,20]}},{"id":"2460909902","n":"Lithiksha Srinithi S G","b":"M1MN-26-Q0C0KV","g":"KV","t":{"MI4":[57,69,108,117,351,134,23],"MI5":[52,37,151,99,339,160,24],"MA2":[38,30,126,97,291,137,32]}},{"id":"2461323099","n":"M Harshika Aruni","b":"M1MN-36-S0C0","g":"S","t":{"MI4":[63,43,87,85,278,223,40],"MA2":[20,17,110,55,202,239,55]}},{"id":"2461348361","n":"M V Muthuvijaykumar Manick","b":"M1MN-46-Q0C0KV","g":"KV","t":{"MI4":[70,34,133,108,345,139,24],"MI5":[20,43,104,130,297,224,35],"MA2":[74,50,100,99,323,106,21]}},{"id":"2461281575","n":"Madhu Sri R P","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[52,27,105,120,304,217,33],"MA2":[53,20,97,105,275,162,39]}},{"id":"2460855758","n":"Manikandaprabu M","b":"M1MN-26-S0C0","g":"S","t":{"MI4":[35,95,42,86,258,247,42],"MA2":[48,79,89,85,301,124,27]}},{"id":"2461253375","n":"Matheshwara Pandian","b":"M1MN-26-Q0C0KV","g":"KV","t":{"MI4":[73,46,83,90,292,208,36],"MI5":[36,5,116,121,278,251,41],"MA2":[66,33,81,61,241,206,49]}},{"id":"2461410290","n":"Mithun K","b":"M1MN-46-S0C0","g":"S","t":{"MI5":[32,2,51,61,146,409,71]}},{"id":"2461294380","n":"Mukeshwaran G","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[61,11,142,104,318,193,29],"MA2":[44,49,110,118,321,109,22]}},{"id":"2460479218","n":"N S Harini","b":"M1MN-16-S0C0","g":"S","t":{"MI4":"AB","MI5":[49,49,144,112,354,140,21],"MA2":[51,71,121,136,379,77,18]}},{"id":"2461528995","n":"Najila Jamil H","b":"M1MN-46-R0C0","g":"R","t":{"MI4":[33,63,103,136,335,155,28],"MI5":[10,26,155,64,255,295,51]}},{"id":"2461281554","n":"Nikitha A J","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[65,16,120,59,260,288,49],"MA2":[27,6,100,77,210,232,53]}},{"id":"2461420269","n":"Niraimathi M","b":"M1MN-46-S0C0","g":"S","t":{"MI5":[-4,13,92,80,181,368,64]}},{"id":"2460778994","n":"Nithish Kumar J","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[89,131,166,160,546,11,4],"MI5":[86,124,170,156,536,15,2],"MA2":[83,121,166,161,531,12,4]}},{"id":"2460655205","n":"P Pratika","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[110,133,138,166,547,10,3],"MI5":[58,120,155,148,481,36,7],"MA2":[46,56,151,143,396,66,15]}},{"id":"2461395312","n":"P R Karunya","b":"M1MN-46-R0C0","g":"R","t":{"MI5":[8,17,36,68,129,417,74]}},{"id":"2461281858","n":"P S Pranavi","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[19,9,89,70,187,361,61],"MA2":[37,11,97,77,222,227,52]}},{"id":"2460277018","n":"Parmitha I","b":"M1MN-16-S0C0","g":"S","t":{"MI4":"AB","MI5":[17,-2,67,49,131,416,73],"MA2":[19,30,65,45,159,275,62]}},{"id":"2460257320","n":"Parnitha I","b":"M1MN-16-S0C0","g":"S","t":{"MI4":"AB","MI5":[15,30,60,76,181,368,64],"MA2":[6,32,50,70,158,278,63]}},{"id":"2461004347","n":"Pavani K R","b":"M1MN-26-R0C0","g":"R","t":{"MI4":[34,43,99,120,296,204,35],"MA2":[39,42,105,80,266,169,41]}},{"id":"2461345177","n":"Poorana Sri S","b":"M1MN-36-Q0C0KV","g":"KV","t":{"MI4":[44,51,117,90,302,192,33],"MI5":[27,-6,55,75,151,405,70],"MA2":[13,9,41,38,101,319,67]}},{"id":"2460066685","n":"Pradnya Satarch","b":"M1MN-16-S0C0","g":"S","t":{"MI4":"AB","MA2":"AB"}},{"id":"2460357748","n":"Prajith R","b":"M1MN-16-S0C0","g":"S","t":{"MI4":"AB","MA2":"AB"}},{"id":"2460514880","n":"Prithika S N","b":"M1MN-16-S0C0","g":"S","t":{"MI4":[32,114,101,118,365,118,18],"MI5":[50,63,113,109,335,170,28],"MA2":[62,69,128,132,391,71,17]}},{"id":"2460705296","n":"Priyadharshini R","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[50,46,107,70,273,232,41],"MI5":[3,10,42,69,124,422,76],"MA2":"AB"}},{"id":"2460836003","n":"R Anish Padmasivam","b":"M1MN-26-S0C0","g":"S","t":{"MI4":[44,88,72,108,312,178,30],"MI5":[45,49,142,131,367,121,19],"MA2":"AB"}},{"id":"2460654479","n":"R Madhu Vanthiha","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[45,79,91,120,335,155,28],"MI5":[44,43,99,85,271,261,44],"MA2":[42,33,100,77,252,188,46]}},{"id":"2461293904","n":"Ragavi R","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[24,20,75,65,184,364,62],"MA2":[15,7,49,35,106,318,66]}},{"id":"2460745140","n":"Rajammala K","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[54,127,96,128,405,82,14],"MI5":[21,17,118,128,284,245,39],"MA2":[59,41,99,80,279,154,37]}},{"id":"2460490369","n":"Ranjan A P","b":"M1MN-26-S0C0","g":"S","t":{"MI4":"AB","MA2":"AB"}},{"id":"2461452914","n":"Rashmika","b":"M1MN-46-S0C0","g":"S","t":{"MI4":[75,90,76,124,365,118,18]}},{"id":"2460562624","n":"Reshwanth K V","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[66,109,132,166,473,38,10],"MI5":[34,78,162,152,426,68,13],"MA2":[70,48,146,155,419,52,13]}},{"id":"2460850010","n":"Rohan P","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[120,114,141,141,516,17,5],"MI5":[115,97,150,115,477,38,9],"MA2":[140,125,110,112,487,20,7]}},{"id":"2461314183","n":"Rohith Balaji K","b":"M1MN-36-Q0C0KV","g":"KV","t":{"MI4":[54,102,77,76,309,183,31],"MI5":[40,53,99,76,268,265,46],"MA2":[35,26,100,76,237,211,50]}},{"id":"2460690126","n":"S B Abhijith Samuel","b":"M1MN-16-Q0C0KV","g":"KV","t":{"MI4":[120,155,170,160,605,4,1],"MA2":[146,151,141,160,598,4,1]}},{"id":"2461286783","n":"S Harshini","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[11,9,30,50,100,432,77],"MA2":[11,20,42,22,95,324,69]}},{"id":"2460830540","n":"S Mukundan","b":"M1MN-26-S0C0","g":"S","t":{"MI4":[53,95,137,102,387,99,16],"MI5":[10,8,103,60,181,368,64],"MA2":"AB"}},{"id":"2460359883","n":"S P Kaviyaazhini","b":"M1MN-16-S0C0","g":"S","t":{"MI4":"AB","MI5":[56,44,118,99,317,196,30],"MA2":[61,54,106,60,281,149,36]}},{"id":"2460135330","n":"Sachina Durai A","b":"M1MN-16-S0C0","g":"S","t":{"MI4":[74,113,51,115,353,130,22],"MI5":[60,57,144,77,338,162,26],"MA2":[39,96,108,151,394,68,16]}},{"id":"2461287861","n":"Sakthi Kumaran M","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[64,2,128,65,259,289,50],"MA2":[41,54,107,88,290,139,33]}},{"id":"2461334569","n":"Sankara Sri Varsha S","b":"M1MN-36-S0C0","g":"S","t":{"MI4":[59,100,74,123,356,127,20],"MA2":[61,44,96,55,256,181,44]}},{"id":"2461273184","n":"Santhosh Varadharaj","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[85,79,157,145,466,45,10],"MA2":[100,93,130,132,455,28,8]}},{"id":"2461289888","n":"Sasirekha B","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[88,22,121,111,342,154,23],"MA2":[96,22,97,75,290,139,33]}},{"id":"2461335039","n":"Shagana Sri K","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[58,25,123,62,268,265,46],"MA2":[47,31,113,81,272,164,40]}},{"id":"2461286317","n":"Sharvesh Sarad A","b":"M1MN-46-P0C0MN","g":"MN","t":{"MI5":[79,30,146,61,316,197,31],"MA2":[43,59,123,77,302,123,26]}},{"id":"2461474388","n":"Siddharth R","b":"M1MN-46-S0C0","g":"S","t":{"MI4":[21,96,41,87,245,268,45],"MI5":[14,33,69,67,183,367,63]}},{"id":"2461294390","n":"Sivani M","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[32,0,125,68,225,329,55]}},{"id":"2460357332","n":"Sri Dhesaganavi S","b":"M1MN-16-S0C0","g":"S","t":{"MI4":"AB","MA2":"AB"}},{"id":"2460540699","n":"TRO Rohithharan","b":"M1MN-16-S0C0","g":"S","t":{"MI4":[38,66,76,68,248,259,44],"MI5":[28,27,175,155,385,95,16],"MA2":"AB"}},{"id":"2461314201","n":"Thairish R","b":"M1MN-36-Q0C0KV","g":"KV","t":{"MI4":[17,14,9,51,91,413,55],"MI5":[0,5,69,55,129,417,74],"MA2":[12,0,53,36,101,319,67]}},{"id":"2461294363","n":"Thiyageshwar P A","b":"M1MN-36-P0C0MN","g":"MN","t":{"MI5":[13,1,94,64,172,382,68],"MA2":[44,23,88,89,244,201,48]}},{"id":"2461124157","n":"Varatha Kesavan G","b":"M1MN-26-R0C0","g":"R","t":{"MI4":[38,84,60,97,279,222,39],"MI5":[10,34,94,52,190,353,58],"MA2":[44,101,111,147,403,60,14]}},{"id":"2460560162","n":"Varshitha M J","b":"M1MN-26-S0C0","g":"S","t":{"MI4":[88,118,76,125,407,80,13],"MI5":[96,89,165,134,484,33,6],"MA2":"AB"}},{"id":"2460917749","n":"Vasudhevan R","b":"M1MN-26-Q0C0KV","g":"KV","t":{"MI4":[58,51,120,125,354,128,21],"MI5":[20,49,114,133,316,197,31],"MA2":[54,50,98,92,294,133,31]}},{"id":"2461314214","n":"Vijaya Saarathi T","b":"M1MN-36-Q0C0KV","g":"KV","t":{"MI4":[45,78,104,110,337,151,26],"MI5":[65,100,160,109,434,63,12],"MA2":[68,63,83,89,303,122,25]}},{"id":"2460978600","n":"Yamuna M","b":"M1MN-26-Q0C0KV","g":"KV","t":{"MI4":[25,70,65,85,245,268,45],"MI5":[8,28,151,87,274,257,43],"MA2":[26,10,72,49,157,281,64]}},{"id":"2460525173","n":"Yazhini G T","b":"M1MN-16-S0C0","g":"S","t":{"MI4":[40,91,125,138,394,92,15],"MI5":[38,27,156,151,372,113,18],"MA2":[48,85,135,160,428,47,10]}}]};
+const TESTS = D.tests;
+const SUBJ = ['Physics','Chemistry','Botany','Zoology'];
+const SUBJ3 = ['Phy','Che','Bot','Zoo'];
+const GROUPS = {KV:'KV batches (Q0C0KV)', MN:'MN batches (P0C0MN)', S:'S batches (S0C0)', R:'R batches (R0C0)'};
+const TABS = [['overview','Overview'],['subjects','Subjects'],['progress','Progress'],['physics','Physics'],['batches','Batches'],['attendance','Attendance'],['table','All students']];
+const KEY = 'padipucast_kvs_neet_xi_dash_v1';
+const S = {test:'MA2', group:'all', tab:'overview', sortKey:'tot', sortDir:-1, q:'', tq:'', from:'MI5', to:'MA2', onlyMissed:false, prof:null, profTest:null};
+try{ const saved = JSON.parse(localStorage.getItem(KEY)||'{}'); ['test','group','tab'].forEach(k=>{ if(saved[k]) S[k]=saved[k]; }); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify({test:S.test, group:S.group, tab:S.tab})); }catch(e){} }
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tmeta = id => TESTS.find(t => t.id === id);
+const tIndex = id => TESTS.findIndex(t => t.id === id);
+const prevId = id => { const i = tIndex(id); return i > 0 ? TESTS[i-1].id : null; };
+const SA = id => D.state[id];
+function res(s,t){ const r = s.t[t]; return Array.isArray(r) ? {p:r[0],c:r[1],b:r[2],z:r[3],tot:r[4],sr:r[5],cr:r[6],sub:r.slice(0,4)} : null; }
+function status(s,t){ const r = s.t[t]; return Array.isArray(r) ? 'W' : (r === 'AB' ? 'AB' : 'NL'); }
+function inGroup(s){ if(S.group === 'all') return true; const i = S.group.indexOf(':'); const k = S.group.slice(0,i), v = S.group.slice(i+1); return k === 'g' ? s.g === v : s.b === v; }
+const pool = () => D.students.filter(inGroup);
+function rowsOf(t, list){ return (list || pool()).map(s => ({s, r:res(s,t)})).filter(x => x.r).sort((a,b) => b.r.tot - a.r.tot || a.s.n.localeCompare(b.s.n)); }
+const mean = a => a.length ? a.reduce((x,y) => x+y, 0) / a.length : NaN;
+function median(a){ if(!a.length) return NaN; const b = [...a].sort((x,y) => x-y), m = b.length >> 1; return b.length % 2 ? b[m] : (b[m-1]+b[m]) / 2; }
+const minus = s => s.replace('-', '−');
+const f0 = v => isNaN(v) ? '–' : minus(String(Math.round(v)));
+const f1 = v => isNaN(v) ? '–' : minus((Math.round(v*10)/10).toFixed(1));
+function sg(v, d){ if(isNaN(v)) return '–'; const a = Math.abs(v); const r = d ? (Math.round(a*10)/10).toFixed(1) : String(Math.round(a)); if(r === '0' || r === '0.0') return '0'; return (v > 0 ? '+' : '−') + r; }
+const pctOf = tot => tot / 7.2;
+const plural = (n, one, many) => n + ' ' + (n === 1 ? one : (many || one + 's'));
+const joinAnd = a => a.length <= 1 ? a.join('') : a.slice(0,-1).join(', ') + ' and ' + a[a.length-1];
+function missingBatches(t, list){ const L = list || pool(); const bs = [...new Set(L.map(s => s.b))].sort(); return bs.filter(b => L.filter(s => s.b === b).every(s => status(s,t) === 'NL')); }
+function missingNote(list){ const parts = TESTS.map(t => ({t, m:missingBatches(t.id, list)})).filter(o => o.m.length); if(!parts.length) return '';
+  return parts.map(o => `No student from ${joinAnd(o.m)} is in the ${o.t.short} sheet, so ${o.t.short} numbers leave ${o.m.length > 1 ? 'those batches' : 'that batch'} out.`).join(' '); }
+function centreAvg(t){ return mean(D.students.map(s => res(s,t)).filter(Boolean).map(r => r.tot)); }
+
+/* ---------- colours & charts ---------- */
+function col(){ const c = getComputedStyle(document.documentElement); const g = n => c.getPropertyValue(n).trim();
+  return {ink:g('--ink'), muted:g('--muted'), line:g('--line'), line2:g('--line2'), teal:g('--teal'), tealSoft:g('--teal-soft'), amber:g('--amber'), red:g('--red'), panel:g('--panel'), paper:g('--paper'), b:[g('--b1'),g('--b2'),g('--b3'),g('--b4'),g('--b5')]}; }
+function alpha(hex, a){ const h = hex.replace('#',''); if(h.length !== 6) return hex; const n = parseInt(h,16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
+const charts = {};
+function killCharts(prefix){ Object.keys(charts).forEach(k => { if(prefix === undefined ? !k.startsWith('pf') : k.startsWith(prefix)){ charts[k].destroy(); delete charts[k]; } }); }
+function mk(id, cfg){
+  if(charts[id]){ charts[id].destroy(); delete charts[id]; }
+  const cv = document.getElementById(id); if(!cv) return;
+  if(typeof Chart === 'undefined'){ cv.parentElement.innerHTML = '<p class="muted small">The chart could not load. Check the internet connection and reload the page.</p>'; return; }
+  const k = col();
+  Chart.defaults.font.family = "'DM Sans', system-ui, sans-serif";
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = k.muted;
+  Chart.defaults.borderColor = k.line2;
+  cfg.options = Object.assign({responsive:true, maintainAspectRatio:false, animation:{duration:350}}, cfg.options || {});
+  charts[id] = new Chart(cv, cfg);
+}
+const tipCfg = () => { const k = col(); return {backgroundColor:k.ink, titleColor:k.paper, bodyColor:k.paper, padding:9, cornerRadius:7, displayColors:false}; };
+
+/* ---------- header, tabs, sidebar ---------- */
+function renderControls(){
+  $('#testSeg').innerHTML = TESTS.map(t => `<button type="button" data-test="${t.id}" aria-pressed="${t.id===S.test}"><b>${t.short}</b><small>${t.date.replace(' 2026','')}</small></button>`).join('');
+  const all = D.students.length;
+  const batches = [...new Set(D.students.map(s => s.b))].sort();
+  const cnt = f => D.students.filter(f).length;
+  let o = `<option value="all">All students (${all})</option><optgroup label="Batch groups">`;
+  o += Object.keys(GROUPS).map(g => `<option value="g:${g}">${GROUPS[g]} (${cnt(s=>s.g===g)})</option>`).join('');
+  o += `</optgroup><optgroup label="Single batch">` + batches.map(b => `<option value="b:${b}">${b} (${cnt(s=>s.b===b)})</option>`).join('') + '</optgroup>';
+  const sel = $('#groupSel'); sel.innerHTML = o; sel.value = S.group;
+  $('#tabs').innerHTML = TABS.map(([id,l]) => `<button type="button" role="tab" data-tab="${id}" aria-selected="${id===S.tab}">${l}</button>`).join('');
+}
+function renderSide(){
+  const t = S.test, T = tmeta(t), q = S.q.trim().toLowerCase();
+  const list = pool().filter(s => !q || s.n.toLowerCase().includes(q) || s.id.includes(q) || s.b.toLowerCase().includes(q));
+  list.sort((a,b) => { const ra = res(a,t), rb = res(b,t); if(ra && rb) return rb.tot - ra.tot; if(ra) return -1; if(rb) return 1; return a.n.localeCompare(b.n); });
+  $('#sideNote').textContent = `${plural(list.length,'student')}. Sorted by ${T.short} total.`;
+  $('#slist').innerHTML = list.map(s => { const r = res(s,t), st = status(s,t);
+    const sc = r ? `<span class="sc">${r.tot}</span>` : st === 'AB' ? '<span class="sc ab">Absent</span>' : '<span class="sc nl">–</span>';
+    return `<li><button type="button" data-open="${s.id}"><span class="nm"><span class="rk">${r ? r.cr : ''}</span>${esc(s.n)}</span>${sc}</button></li>`; }).join('') || '<li class="muted small" style="padding:10px">No name matches. Try fewer letters.</li>';
+}
+
+/* ---------- views ---------- */
+const V = {};
+
+V.overview = {
+  html(){
+    const t = S.test, T = tmeta(t), R = rowsOf(t), P = pool(), A = SA(t).avg;
+    const n = R.length, ab = P.filter(s => status(s,t) === 'AB'), nl = P.filter(s => status(s,t) === 'NL');
+    if(!n) return `<div class="empty">No student in this group wrote ${T.name}. Pick another test or another group.</div>`;
+    const tots = R.map(x => x.r.tot), cav = mean(tots), sav = A[4];
+    const sub = [0,1,2,3].map(i => mean(R.map(x => x.r.sub[i])));
+    let who = `${plural(n,'student')} wrote it`;
+    const extra = [];
+    if(ab.length) extra.push(`${ab.length} absent`);
+    if(nl.length) extra.push(`${nl.length} not in this sheet`);
+    if(extra.length) who += `. ${joinAnd(extra)}`;
+    const n360 = tots.filter(v => v >= 360).length, n180 = tots.filter(v => v < 180).length, nAbove = tots.filter(v => v >= sav).length;
+    const top = R[0];
+    // quick read
+    const read = [];
+    const gapT = cav - sav;
+    read.push(`Our average is <b>${f0(cav)}</b>. The TN &amp; PY average is <b>${f0(sav)}</b>. ${gapT >= 0 ? `We are <b class="teal">${f0(gapT)} marks ahead</b>.` : `We are <b class="red">${f0(-gapT)} marks behind</b>.`}`);
+    const behind = [0,1,2,3].filter(i => sub[i] < A[i]);
+    if(!behind.length) read.push('We are ahead of the TN &amp; PY average in all four subjects.');
+    else if(behind.length === 1){ const i = behind[0]; read.push(`<b>${SUBJ[i]}</b> is the only subject where we are behind (${f1(sub[i])} against ${f1(A[i])}).`); }
+    else read.push(`We are behind in ${joinAnd(behind.map(i => `<b>${SUBJ[i]}</b> (${f1(sub[i])} vs ${f1(A[i])})`))}.`);
+    const weak = [0,0,0,0]; R.forEach(x => { const m = Math.min(...x.r.sub); weak[x.r.sub.indexOf(m)]++; });
+    const wi = weak.indexOf(Math.max(...weak));
+    read.push(`For <b>${weak[wi]} of ${n}</b> students, ${SUBJ[wi]} is their lowest subject.`);
+    read.push(`${plural(n360,'student')} crossed 360 (50%). ${n180 === 1 ? '1 student is' : n180 + ' students are'} below 180 (25%).`);
+    const pv = prevId(t);
+    if(pv){ const d = sav - SA(pv).avg[4]; if(Math.abs(d) >= 5) read.push(`The TN &amp; PY average ${d < 0 ? 'fell' : 'rose'} by ${f0(Math.abs(d))} from ${tmeta(pv).short}, so this paper was ${d < 0 ? 'harder' : 'easier'} for everyone.`); }
+    // subject gap rows
+    const gaps = [0,1,2,3].map(i => { const g = sub[i] - A[i];
+      return `<div class="gap"><span class="sn">${SUBJ[i]}</span><div class="track" title="Our average ${f1(sub[i])}, TN & PY average ${f1(A[i])}"><div class="fill" style="width:${Math.max(0,sub[i])/180*100}%"></div><div class="mk" style="left:${A[i]/180*100}%"></div></div><div class="vals">${f1(sub[i])} vs ${f1(A[i])} <span class="pill ${g >= 0 ? 'up' : 'dn'}">${sg(g,1)}</span></div></div>`; }).join('');
+    // groups
+    const G = [
+      {c:'g-good', k:'Doing well', d:'60% and above (432 or more). Keep them challenged.', list:R.filter(x => x.r.tot >= 432)},
+      {c:'g-push', k:'Push them to 50%', d:'Between 288 and 359. A small push takes them past 360.', list:R.filter(x => x.r.tot >= 288 && x.r.tot < 360)},
+      {c:'g-help', k:'Needs support', d:'Below 30% (under 216). Start with basics and one-to-one talk.', list:R.filter(x => x.r.tot < 216)}
+    ];
+    if(pv){ const sd = sav - SA(pv).avg[4];
+      const dl = R.map(x => ({...x, pr:res(x.s,pv)})).filter(x => x.pr && (x.r.tot - x.pr.tot) - sd <= -50).sort((a,b) => (a.r.tot-a.pr.tot)-(b.r.tot-b.pr.tot));
+      G.push({c:'g-drop', k:'Big drop', d:`Fell at least 50 marks more than the TN &amp; PY average did since ${tmeta(pv).short}. Ask what happened.`, list:dl, delta:true}); }
+    if(ab.length) G.push({c:'g-help', k:'Absent', d:'Marked AB on this sheet.', list:ab.map(s => ({s, r:null}))});
+    const groups = G.map(g => `<div class="group ${g.c}"><h4>${g.k} <span class="cnt">${g.list.length}</span></h4><p>${g.d}</p><div class="chips">${g.list.map(x => `<button type="button" class="chip" data-open="${x.s.id}">${esc(x.s.n)}${x.r ? `<em>${g.delta ? sg(x.r.tot - x.pr.tot) : x.r.tot}</em>` : ''}</button>`).join('') || '<span class="muted small">Nobody here.</span>'}</div></div>`).join('');
+    return `
+    <section class="hero">
+      <div class="hero-top">
+        <div><h2>${T.name}</h2><p>${T.date}. ${who}.</p></div>
+        <div class="duo">
+          <div class="num"><b class="teal">${f0(cav)}</b><span>Our average /720</span></div>
+          <div class="num"><b class="amber">${f0(sav)}</b><span>TN &amp; PY average</span></div>
+          <div class="num"><b class="${gapT >= 0 ? 'teal' : 'red'}">${sg(gapT)}</b><span>Difference</span></div>
+        </div>
+      </div>
+      <div class="strip" id="strip"></div>
+      <div class="legend"><span><i style="background:var(--teal)"></i>At or above TN &amp; PY average</span><span><i style="background:var(--b3)"></i>Below it</span><span><i style="background:var(--red)"></i>Below 30%</span><span><i class="l" style="border-color:var(--teal)"></i>Our average</span><span><i class="l d" style="border-color:var(--amber)"></i>TN &amp; PY average</span><span>Each dot is one student. Tap a dot to open the student.</span></div>
+    </section>
+    <section class="panel"><h3>Quick read</h3><p class="lede">What this test says, in a few lines.</p><ul class="read">${read.map(r => `<li>${r}</li>`).join('')}</ul></section>
+    <div class="stats">
+      <div><b>${n360}</b><span>Crossed 360 (50%)</span></div>
+      <div><b>${nAbove}</b><span>At or above TN &amp; PY average</span></div>
+      <div><b>${f0(median(tots))}</b><span>Middle score (median)</span></div>
+      <div><b>${n180}</b><span>Below 180 (25%)</span></div>
+      <div><b>${top.r.tot}</b><span>Top score</span><em>${esc(top.s.n)}</em></div>
+    </div>
+    <div class="grid2 gridwrap">
+      <section class="panel"><h3>Subject by subject</h3><p class="lede">Green bar is our average. Amber line is the TN &amp; PY average. Each subject is out of 180.</p>${gaps}</section>
+      <section class="panel"><h3>How the totals are spread</h3><p class="lede">Number of students in each 60-mark band.</p><div class="chartbox"><canvas id="cBands"></canvas></div></section>
+    </div>
+    <section class="panel"><h3>Who needs what</h3><p class="lede">Groups for mentoring, based on ${T.short}. Tap a name to see the full record.</p><div class="groups">${groups}</div></section>`;
+  },
+  after(){
+    const t = S.test, R = rowsOf(t); if(!R.length) return;
+    drawStrip();
+    const edges = [0,120,180,240,300,360,420,480,540,721];
+    const labels = ['0–119','120–179','180–239','240–299','300–359','360–419','420–479','480–539','540+'];
+    const cnt = labels.map((_,i) => R.filter(x => x.r.tot >= edges[i] && x.r.tot < edges[i+1]).length);
+    const k = col();
+    mk('cBands', {type:'bar', data:{labels, datasets:[{data:cnt, backgroundColor:labels.map((_,i) => i < 2 ? k.red : i < 5 ? k.b[2] : k.teal), borderRadius:4}]},
+      options:{plugins:{legend:{display:false}, tooltip:{...tipCfg(), callbacks:{label:c => plural(c.raw,'student')}}}, scales:{y:{beginAtZero:true, ticks:{precision:0}, title:{display:true, text:'Students'}}, x:{grid:{display:false}}}}});
+  }
+};
+
+function drawStrip(){
+  const el = $('#strip'); if(!el) return;
+  const t = S.test, R = rowsOf(t), A = SA(t).avg, k = col();
+  const W = Math.max(280, el.clientWidth || 800), r = W < 520 ? 5 : 7, gapx = 2*r + 1.5, rowH = 2*r + 2;
+  const pad = 14, x = v => pad + Math.max(0, Math.min(720, v)) / 720 * (W - 2*pad);
+  const sorted = [...R].sort((a,b) => a.r.tot - b.r.tot);
+  const ends = [];
+  const pts = sorted.map(o => { const cx = x(o.r.tot); let row = 0; while(ends[row] !== undefined && cx - ends[row] < gapx) row++; ends[row] = cx; return {o, cx, row}; });
+  const nRows = Math.max(1, ends.length), top = 34, base = top + nRows * rowH + 4, H = base + 30;
+  const cav = mean(R.map(o => o.r.tot)), sav = A[4];
+  const lab = (xx, y, txt, fill) => { const anc = xx > W - 110 ? 'end' : xx < 110 ? 'start' : 'middle'; return `<text x="${xx}" y="${y}" text-anchor="${anc}" font-size="12" font-family="DM Sans, sans-serif" fill="${fill}" font-weight="600">${txt}</text>`; };
+  let s = `<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Totals of ${R.length} students on a 0 to 720 line">`;
+  for(let v = 0; v <= 720; v += 60){ const xx = x(v); s += `<line x1="${xx}" x2="${xx}" y1="${top-6}" y2="${base}" stroke="${k.line2}" stroke-width="1"/>`; if(v % 120 === 0 || W > 700) s += `<text x="${xx}" y="${base+18}" text-anchor="middle" font-size="11.5" font-family="DM Sans, sans-serif" fill="${k.muted}">${v}</text>`; }
+  s += `<line x1="${pad}" x2="${W-pad}" y1="${base}" y2="${base}" stroke="${k.line}" stroke-width="1.5"/>`;
+  s += `<line x1="${x(sav)}" x2="${x(sav)}" y1="${top-16}" y2="${base}" stroke="${k.amber}" stroke-width="2" stroke-dasharray="5 4"/>`;
+  s += `<line x1="${x(cav)}" x2="${x(cav)}" y1="${top-4}" y2="${base}" stroke="${k.teal}" stroke-width="2"/>`;
+  const leftFirst = sav < cav;
+  s += lab(x(sav), 12, `TN &amp; PY avg ${f0(sav)}`, k.amber);
+  s += lab(x(cav), 26, `Our avg ${f0(cav)}`, k.teal);
+  pts.forEach(p => { const cy = base - r - 2 - p.row * rowH, v = p.o.r.tot;
+    const fill = v < 216 ? k.red : v >= sav ? k.teal : k.b[2];
+    s += `<circle cx="${p.cx.toFixed(1)}" cy="${cy}" r="${r}" fill="${fill}" stroke="${k.panel}" stroke-width="1.5" tabindex="0" role="button" data-id="${p.o.s.id}" data-tip="${esc(p.o.s.n)}: ${v}" aria-label="${esc(p.o.s.n)}, ${v} marks"></circle>`; });
+  s += '</svg>';
+  el.innerHTML = s;
+}
+
+V.subjects = {
+  html(){
+    const t = S.test, T = tmeta(t), R = rowsOf(t), St = SA(t);
+    if(!R.length) return `<div class="empty">No student in this group wrote ${T.name}.</div>`;
+    const rowsHtml = [0,1,2,3].map(i => { const v = R.map(x => x.r.sub[i]); const a = mean(v), g = a - St.avg[i];
+      return `<tr><td><b>${SUBJ[i]}</b></td><td class="n">${f1(a)}</td><td class="n">${f1(St.avg[i])}</td><td class="n"><span class="pill ${g >= 0 ? 'up' : 'dn'}">${sg(g,1)}</span></td><td class="n">${f0(median(v))}</td><td class="n">${Math.max(...v)}</td><td class="n">${St.high[i]}</td><td class="n">${v.filter(x => x <= 20).length}</td><td class="n">${v.filter(x => x < 0).length}</td></tr>`; }).join('');
+    const neg = R.filter(x => x.r.sub.some(v => v < 0));
+    const negHtml = neg.length ? neg.map(x => `<button type="button" class="chip" data-open="${x.s.id}">${esc(x.s.n)}<em>${x.r.sub.map((v,i) => v < 0 ? `${SUBJ3[i]} ${f0(v)}` : '').filter(Boolean).join(', ')}</em></button>`).join('') : '<span class="muted small">No negative subject score in this test. Good sign.</span>';
+    const low = [0,1,2,3].map(i => ({i, list:R.filter(x => x.r.sub[i] >= 0 && x.r.sub[i] <= 20)}));
+    return `
+    <section class="panel"><h3>Marks in each subject</h3><p class="lede">${T.name}. Each bar is ${plural(R.length,'student')}, split by the marks they got in that subject (out of 180).</p><div class="chartbox h220"><canvas id="cSubBands"></canvas></div></section>
+    <section class="panel"><h3>Subject numbers</h3><p class="lede">Our students against the whole of Tamil Nadu and Puducherry.</p>
+      <div class="tw"><table><thead><tr><th>Subject</th><th class="n">Our average</th><th class="n">TN &amp; PY average</th><th class="n">Difference</th><th class="n">Our median</th><th class="n">Our top</th><th class="n">TN &amp; PY top</th><th class="n">20 or less</th><th class="n">Negative</th></tr></thead><tbody>${rowsHtml}</tbody></table></div></section>
+    <div class="grid2 gridwrap">
+      <section class="panel"><h3>Lowest subject for each student</h3><p class="lede">For every student we take the subject where they scored least. This shows where the batch is weakest.</p><div class="chartbox h220"><canvas id="cWeak"></canvas></div></section>
+      <section class="panel"><h3>Negative marks</h3><p class="lede">A negative score means more wrong answers than right ones (+4 / −1). These students are guessing too much.</p><div class="chips">${negHtml}</div>
+        <h3 style="margin-top:16px">20 or less in a subject</h3><p class="lede">Very low, but not negative.</p>
+        ${low.map(o => `<p class="small" style="margin:6px 0 4px"><b>${SUBJ[o.i]}</b> <span class="muted">${o.list.length}</span></p><div class="chips">${o.list.map(x => `<button type="button" class="chip" data-open="${x.s.id}">${esc(x.s.n)}<em>${x.r.sub[o.i]}</em></button>`).join('') || '<span class="muted small">None.</span>'}</div>`).join('')}
+      </section>
+    </div>`;
+  },
+  after(){
+    const R = rowsOf(S.test); if(!R.length) return; const k = col();
+    const bands = [[-999,20,'20 or less'],[21,60,'21–60'],[61,100,'61–100'],[101,140,'101–140'],[141,180,'141–180']];
+    mk('cSubBands', {type:'bar', data:{labels:SUBJ, datasets:bands.map((b,j) => ({label:b[2], data:[0,1,2,3].map(i => R.filter(x => x.r.sub[i] >= b[0] && x.r.sub[i] <= b[1]).length), backgroundColor:k.b[j], borderWidth:0}))},
+      options:{indexAxis:'y', plugins:{legend:{position:'bottom', labels:{boxWidth:12, boxHeight:12}}, tooltip:{...tipCfg(), displayColors:true, callbacks:{label:c => `${c.dataset.label}: ${plural(c.raw,'student')} (${Math.round(c.raw/R.length*100)}%)`}}}, scales:{x:{stacked:true, max:R.length, ticks:{precision:0}, title:{display:true, text:'Students'}}, y:{stacked:true, grid:{display:false}}}}});
+    const weak = [0,0,0,0]; R.forEach(x => { const m = Math.min(...x.r.sub); weak[x.r.sub.indexOf(m)]++; });
+    mk('cWeak', {type:'bar', data:{labels:SUBJ, datasets:[{data:weak, backgroundColor:weak.map(v => v === Math.max(...weak) ? k.red : k.b[2]), borderRadius:4}]},
+      options:{plugins:{legend:{display:false}, tooltip:{...tipCfg(), callbacks:{label:c => `Lowest subject for ${plural(c.raw,'student')}`}}}, scales:{y:{beginAtZero:true, ticks:{precision:0}}, x:{grid:{display:false}}}}});
+  }
+};
+
+V.progress = {
+  html(){
+    const opts = sel => TESTS.map(t => `<option value="${t.id}" ${t.id === sel ? 'selected' : ''}>${t.short}</option>`).join('');
+    const P = pool();
+    const ok = s => TESTS.every(t => res(s,t.id));
+    const all3 = P.filter(ok);
+    const rel = (s,t) => res(s,t).tot - SA(t).avg[4];
+    const up = all3.filter(s => rel(s,'MI5') > rel(s,'MI4') && rel(s,'MA2') > rel(s,'MI5'));
+    const dn = all3.filter(s => rel(s,'MI5') < rel(s,'MI4') && rel(s,'MA2') < rel(s,'MI5'));
+    return `
+    <div class="grid2 gridwrap">
+      <section class="panel"><h3>Average total, test by test</h3><p class="lede">Our average against the TN &amp; PY average. The gap matters more than the raw number, because each paper is different. ${missingNote(P)}</p><div class="chartbox"><canvas id="cTrend"></canvas></div></section>
+      <section class="panel"><h3>Ahead or behind, by subject</h3><p class="lede">Our subject average minus the TN &amp; PY subject average. Above zero means we are ahead.</p><div class="chartbox"><canvas id="cGapTrend"></canvas></div></section>
+    </div>
+    <section class="panel"><h3>Who moved the most</h3>
+      <div class="inline-sel"><label>From <select id="mvFrom">${opts(S.from)}</select></label><label>to <select id="mvTo">${opts(S.to)}</select></label></div>
+      <div id="movers"></div>
+    </section>
+    <section class="panel"><h3>Steady over three tests</h3><p class="lede">Only students who wrote all three tests (${all3.length} in this group). We compare each score with the TN &amp; PY average, so a hard paper does not look like a fall.</p>
+      <div class="groups">
+        <div class="group g-good"><h4>Better every time <span class="cnt">${up.length}</span></h4><p>Gap to the TN &amp; PY average grew in both steps.</p><div class="chips">${up.map(s => `<button type="button" class="chip" data-open="${s.id}">${esc(s.n)}</button>`).join('') || '<span class="muted small">Nobody here.</span>'}</div></div>
+        <div class="group g-drop"><h4>Slipping every time <span class="cnt">${dn.length}</span></h4><p>Gap shrank (or went more negative) in both steps.</p><div class="chips">${dn.map(s => `<button type="button" class="chip" data-open="${s.id}">${esc(s.n)}</button>`).join('') || '<span class="muted small">Nobody here.</span>'}</div></div>
+      </div>
+    </section>`;
+  },
+  after(){
+    const k = col(), P = pool();
+    const avgT = t => mean(rowsOf(t,P).map(x => x.r.tot));
+    const labels = TESTS.map(t => t.short);
+    mk('cTrend', {type:'line', data:{labels, datasets:[
+      {label:'Our average', data:TESTS.map(t => avgT(t.id)), borderColor:k.teal, backgroundColor:k.teal, pointRadius:5, borderWidth:2.5, tension:.25},
+      {label:'TN & PY average', data:TESTS.map(t => SA(t.id).avg[4]), borderColor:k.amber, backgroundColor:k.amber, borderDash:[6,4], pointRadius:4, borderWidth:2, tension:.25}]},
+      options:{plugins:{legend:{position:'bottom', labels:{boxWidth:12, boxHeight:12}}, tooltip:{...tipCfg(), displayColors:true, callbacks:{label:c => `${c.dataset.label}: ${f1(c.raw)}`}}}, scales:{y:{suggestedMin:200, suggestedMax:400, title:{display:true, text:'Marks out of 720'}}, x:{grid:{display:false}}}}});
+    const shades = [k.b[2], k.b[3], k.b[4]];
+    mk('cGapTrend', {type:'bar', data:{labels:SUBJ, datasets:TESTS.map((t,j) => { const R = rowsOf(t.id,P); return {label:t.short, data:[0,1,2,3].map(i => R.length ? mean(R.map(x => x.r.sub[i])) - SA(t.id).avg[i] : null), backgroundColor:shades[j], borderRadius:3}; })},
+      options:{plugins:{legend:{position:'bottom', labels:{boxWidth:12, boxHeight:12}}, tooltip:{...tipCfg(), displayColors:true, callbacks:{label:c => `${c.dataset.label}: ${sg(c.raw,1)} marks`}}}, scales:{y:{title:{display:true, text:'Our avg − TN & PY avg'}}, x:{grid:{display:false}}}}});
+    drawMovers();
+  }
+};
+function drawMovers(){
+  const el = $('#movers'); if(!el) return;
+  const f = S.from, t = S.to;
+  if(f === t){ el.innerHTML = '<p class="muted">Pick two different tests.</p>'; return; }
+  const k = col();
+  const L = pool().map(s => ({s, a:res(s,f), b:res(s,t)})).filter(x => x.a && x.b).map(x => ({...x, d:x.b.tot - x.a.tot}));
+  if(!L.length){ el.innerHTML = '<p class="muted">Nobody in this group wrote both tests.</p>'; return; }
+  const sd = SA(t).avg[4] - SA(f).avg[4];
+  const up = [...L].sort((a,b) => b.d - a.d).slice(0,8), dn = [...L].sort((a,b) => a.d - b.d).slice(0,8);
+  const mx = Math.max(...L.map(x => Math.abs(x.d)), 1);
+  const row = x => `<div class="mv"><div><button type="button" class="lnk" data-open="${x.s.id}">${esc(x.s.n)}</button><span class="from">${x.a.tot} to ${x.b.tot}</span></div><div class="bar" style="width:${Math.abs(x.d)/mx*100}%;background:${x.d >= 0 ? k.teal : k.red}"></div><div class="d ${x.d >= 0 ? 'teal' : 'red'}">${sg(x.d)}</div></div>`;
+  const avgD = mean(L.map(x => x.d));
+  el.innerHTML = `<p class="lede">${plural(L.length,'student')} wrote both. Their average change is <b>${sg(avgD)}</b>. The TN &amp; PY average changed by <b>${sg(sd,1)}</b> (${f0(SA(f).avg[4])} to ${f0(SA(t).avg[4])}), so ${Math.abs(sd) < 5 ? 'both papers were about equally hard' : sd < 0 ? `${tmeta(t).short} was harder for everyone` : `${tmeta(t).short} was easier for everyone`}.</p>
+    <div class="movers"><div><h4 class="teal" style="margin:0 0 4px;font-family:var(--display)">Moved up most</h4>${up.filter(x => x.d > 0).map(row).join('') || '<p class="muted small">Nobody moved up.</p>'}</div>
+    <div><h4 class="red" style="margin:0 0 4px;font-family:var(--display)">Dropped most</h4>${dn.filter(x => x.d < 0).map(row).join('') || '<p class="muted small">Nobody dropped.</p>'}</div></div>`;
+}
+
+V.physics = {
+  html(){
+    const t = S.test, T = tmeta(t), R = rowsOf(t), St = SA(t);
+    if(!R.length) return `<div class="empty">No student in this group wrote ${T.name}.</div>`;
+    const ph = R.map(x => x.r.p), a = mean(ph), g = a - St.avg[0];
+    const best = [...R].sort((x,y) => y.r.p - x.r.p);
+    const rescue = R.filter(x => x.r.p <= 20).sort((x,y) => x.r.p - y.r.p);
+    const lag = R.map(x => { const pg = x.r.p - St.avg[0]; const og = ((x.r.c-St.avg[1]) + (x.r.b-St.avg[2]) + (x.r.z-St.avg[3])) / 3; return {...x, pg, og, lag:og - pg}; }).filter(x => x.lag >= 25).sort((p,q) => q.lag - p.lag).slice(0,12);
+    return `
+    <div class="stats">
+      <div><b class="teal">${f1(a)}</b><span>Our Physics average /180</span></div>
+      <div><b class="amber">${f1(St.avg[0])}</b><span>TN &amp; PY Physics average</span></div>
+      <div><b class="${g >= 0 ? 'teal' : 'red'}">${sg(g,1)}</b><span>Difference</span></div>
+      <div><b>${best[0].r.p}</b><span>Our top in Physics</span><em>${esc(best[0].s.n)}</em></div>
+      <div><b class="${rescue.length ? 'red' : ''}">${rescue.length}</b><span>Scored 20 or less</span></div>
+    </div>
+    <div class="grid2 gridwrap">
+      <section class="panel"><h3>Physics marks spread</h3><p class="lede">${T.name}. Red bars are below 20 marks.</p><div class="chartbox"><canvas id="cPhHist"></canvas></div></section>
+      <section class="panel"><h3>Physics against Biology</h3><p class="lede">Each dot is a student. Dashed lines are the TN &amp; PY averages. Top-left dots are good at Biology but weak in Physics: the easiest marks to win back. Tap a dot to open the student.</p><div class="chartbox"><canvas id="cPhBio"></canvas></div></section>
+    </div>
+    <div class="grid2 gridwrap">
+      <section class="panel"><h3>Physics rescue list</h3><p class="lede">20 marks or less in Physics. Start from the basics and short daily practice.</p>
+        ${rescue.length ? `<div class="tw"><table><thead><tr><th>Student</th><th class="n">Phy</th><th class="n">Che</th><th class="n">Bot</th><th class="n">Zoo</th><th class="n">Total</th></tr></thead><tbody>${rescue.map(x => `<tr data-open="${x.s.id}"><td><button type="button" class="lnk" data-open="${x.s.id}">${esc(x.s.n)}</button></td><td class="n ${x.r.p < 0 ? 'neg' : 'low'}">${f0(x.r.p)}</td><td class="n">${f0(x.r.c)}</td><td class="n">${x.r.b}</td><td class="n">${x.r.z}</td><td class="n"><b>${x.r.tot}</b></td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">Nobody scored 20 or less in Physics. Good.</p>'}
+      </section>
+      <section class="panel"><h3>Physics is holding them back</h3><p class="lede">Their other three subjects are well ahead of the TN &amp; PY average, but Physics is not. Both gaps are shown against the TN &amp; PY average.</p>
+        ${lag.length ? `<div class="tw"><table><thead><tr><th>Student</th><th class="n">Phy</th><th class="n">Phy gap</th><th class="n">Others gap</th></tr></thead><tbody>${lag.map(x => `<tr data-open="${x.s.id}"><td><button type="button" class="lnk" data-open="${x.s.id}">${esc(x.s.n)}</button></td><td class="n">${f0(x.r.p)}</td><td class="n"><span class="pill ${x.pg >= 0 ? 'up' : 'dn'}">${sg(x.pg)}</span></td><td class="n"><span class="pill ${x.og >= 0 ? 'up' : 'dn'}">${sg(x.og)}</span></td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">No student has a big Physics gap compared with their other subjects.</p>'}
+      </section>
+    </div>
+    <div class="grid2 gridwrap">
+      <section class="panel"><h3>Physics average, test by test</h3><p class="lede">Our Physics average against the TN &amp; PY Physics average.</p><div class="chartbox h220"><canvas id="cPhTrend"></canvas></div></section>
+      <section class="panel"><h3>Top 8 in Physics</h3><p class="lede">${T.name}.</p><div class="tw"><table><thead><tr><th>Student</th><th>Batch</th><th class="n">Phy</th><th class="n">Total</th></tr></thead><tbody>${best.slice(0,8).map(x => `<tr data-open="${x.s.id}"><td><button type="button" class="lnk" data-open="${x.s.id}">${esc(x.s.n)}</button></td><td class="muted small">${x.s.b}</td><td class="n"><b>${x.r.p}</b></td><td class="n">${x.r.tot}</td></tr>`).join('')}</tbody></table></div></section>
+    </div>`;
+  },
+  after(){
+    const t = S.test, R = rowsOf(t), St = SA(t), k = col(); if(!R.length) return;
+    const edges = [-999,0,20,40,60,80,100,120,140,999], labels = ['Below 0','0–19','20–39','40–59','60–79','80–99','100–119','120–139','140+'];
+    const cnt = labels.map((_,i) => R.filter(x => x.r.p >= edges[i] && x.r.p < edges[i+1]).length);
+    mk('cPhHist', {type:'bar', data:{labels, datasets:[{data:cnt, backgroundColor:labels.map((_,i) => i < 2 ? k.red : k.teal), borderRadius:4}]},
+      options:{plugins:{legend:{display:false}, tooltip:{...tipCfg(), callbacks:{label:c => plural(c.raw,'student')}}}, scales:{y:{beginAtZero:true, ticks:{precision:0}, title:{display:true, text:'Students'}}, x:{grid:{display:false}}}}});
+    const pts = R.map(x => ({x:x.r.p, y:x.r.b + x.r.z, id:x.s.id, name:x.s.n}));
+    const quad = {id:'quad', afterDraw(ch, a, o){ const {ctx, chartArea:ca, scales:{x, y}} = ch; const px = x.getPixelForValue(o.x), py = y.getPixelForValue(o.y);
+      ctx.save(); ctx.strokeStyle = o.color; ctx.lineWidth = 1.5; ctx.setLineDash([5,4]); ctx.beginPath(); ctx.moveTo(px, ca.top); ctx.lineTo(px, ca.bottom); ctx.moveTo(ca.left, py); ctx.lineTo(ca.right, py); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = o.text; ctx.font = "12px 'DM Sans', sans-serif"; ctx.textAlign = 'left'; ctx.fillText('Biology strong, Physics weak', ca.left + 6, ca.top + 14); ctx.textAlign = 'right'; ctx.fillText('Strong in both', ca.right - 6, ca.top + 14); ctx.fillText('Physics strong only', ca.right - 6, ca.bottom - 8); ctx.textAlign = 'left'; ctx.fillText('Weak in both', ca.left + 6, ca.bottom - 8); ctx.restore(); }};
+    mk('cPhBio', {type:'scatter', data:{datasets:[{data:pts, backgroundColor:alpha(k.teal,.75), borderColor:k.panel, borderWidth:1, pointRadius:5.5, pointHoverRadius:8}]}, plugins:[quad],
+      options:{onClick:(e, els) => { if(els.length) openProfile(pts[els[0].index].id); }, onHover:(e, els) => { e.native.target.style.cursor = els.length ? 'pointer' : 'default'; },
+        plugins:{legend:{display:false}, quad:{x:St.avg[0], y:St.avg[2] + St.avg[3], color:k.amber, text:k.muted}, tooltip:{...tipCfg(), callbacks:{label:c => `${c.raw.name}: Phy ${c.raw.x}, Bio ${c.raw.y}`}}},
+        scales:{x:{min:Math.min(0, ...pts.map(p => p.x)) - 5, max:180, title:{display:true, text:'Physics (out of 180)'}}, y:{min:0, max:360, title:{display:true, text:'Botany + Zoology (out of 360)'}}}}});
+    const P = pool();
+    mk('cPhTrend', {type:'line', data:{labels:TESTS.map(x => x.short), datasets:[
+      {label:'Our Physics average', data:TESTS.map(x => mean(rowsOf(x.id,P).map(o => o.r.p))), borderColor:k.teal, backgroundColor:k.teal, pointRadius:5, borderWidth:2.5, tension:.25},
+      {label:'TN & PY Physics average', data:TESTS.map(x => SA(x.id).avg[0]), borderColor:k.amber, backgroundColor:k.amber, borderDash:[6,4], pointRadius:4, borderWidth:2, tension:.25}]},
+      options:{plugins:{legend:{position:'bottom', labels:{boxWidth:12, boxHeight:12}}, tooltip:{...tipCfg(), displayColors:true, callbacks:{label:c => `${c.dataset.label}: ${f1(c.raw)}`}}}, scales:{y:{suggestedMin:20, suggestedMax:70}, x:{grid:{display:false}}}}});
+  }
+};
+
+V.batches = {
+  html(){
+    const t = S.test, T = tmeta(t), A = SA(t).avg;
+    const make = (label, list, cls) => { const R = rowsOf(t, list); const n = R.length;
+      if(!n) return `<tr class="${cls}"><td>${label}</td><td class="n">0 / ${list.length}</td><td colspan="6" class="muted">Nobody wrote this test</td></tr>`;
+      const av = mean(R.map(x => x.r.tot)), sub = [0,1,2,3].map(i => mean(R.map(x => x.r.sub[i])));
+      return `<tr class="${cls}"><td>${label}</td><td class="n">${n} / ${list.length}</td><td class="barcell"><div style="display:flex;gap:8px;align-items:center"><div class="hbar" style="flex:1"><div class="fill" style="width:${av/720*100}%"></div><div class="mk" style="left:${A[4]/720*100}%"></div></div><b style="font-variant-numeric:tabular-nums;width:34px;text-align:right">${f0(av)}</b></div></td>${sub.map((v,i) => `<td class="n ${v < A[i] ? 'low' : ''}">${f1(v)}</td>`).join('')}<td>${cls === 'grp' ? '' : `<button type="button" class="lnk" data-open="${R[0].s.id}">${esc(R[0].s.n)}</button> <span class="muted small">${R[0].r.tot}</span>`}</td></tr>`; };
+    const inSel = b => S.group === 'all' || S.group === 'b:' + b || (S.group.startsWith('g:') && D.students.some(s => s.b === b && s.g === S.group.slice(2)));
+    const groupRows = Object.keys(GROUPS).map(g => make(GROUPS[g], D.students.filter(s => s.g === g), 'grp')).join('');
+    const batches = [...new Set(D.students.map(s => s.b))].map(b => ({b, list:D.students.filter(s => s.b === b)}))
+      .map(o => ({...o, av:mean(rowsOf(t,o.list).map(x => x.r.tot)) || -1})).sort((p,q) => q.av - p.av);
+    const batchRows = batches.map(o => make(o.b, o.list, inSel(o.b) && S.group !== 'all' ? 'hl' : '')).join('');
+    return `<section class="panel"><h3>Batch comparison</h3><p class="lede">${T.name}. This view always shows every batch${S.group !== 'all' ? ' (the batches in your current filter are marked on the left)' : ''}. Green bar is the batch average, amber line is the TN &amp; PY average (${f0(A[4])}). Red subject numbers are below the TN &amp; PY average. Small batches can swing a lot, so read them with care.</p>
+      <div class="tw"><table><thead><tr><th>Batch</th><th class="n">Wrote</th><th>Average total /720</th><th class="n">Phy</th><th class="n">Che</th><th class="n">Bot</th><th class="n">Zoo</th><th>Top student</th></tr></thead><tbody>${groupRows}<tr><td colspan="8" class="muted small" style="background:var(--panel)">Single batches, best average first</td></tr>${batchRows}</tbody></table></div></section>`;
+  }
+};
+
+V.attendance = {
+  html(){
+    const P = pool();
+    const cnt = st => TESTS.map(t => P.filter(s => status(s,t.id) === st).length);
+    const w = cnt('W'), ab = cnt('AB'), nl = cnt('NL');
+    const all3 = P.filter(s => TESTS.every(t => status(s,t.id) === 'W')).length;
+    const missed = s => TESTS.filter(t => status(s,t.id) === 'AB').length;
+    const notIn = s => TESTS.filter(t => status(s,t.id) === 'NL').length;
+    const absOnce = P.filter(s => missed(s) > 0).length;
+    const q = S.tq.trim().toLowerCase();
+    let L = P.filter(s => (!S.onlyMissed || missed(s) + notIn(s) > 0) && (!q || s.n.toLowerCase().includes(q)));
+    L.sort((a,b) => missed(b) - missed(a) || notIn(b) - notIn(a) || a.n.localeCompare(b.n));
+    const cell = (s,t) => { const r = res(s,t), st = status(s,t); return r ? `<td class="n">${r.tot}</td>` : st === 'AB' ? '<td class="n"><span class="pill ab">AB</span></td>' : '<td class="n"><span class="pill nl">Not in sheet</span></td>'; };
+    return `
+    <div class="stats">
+      ${TESTS.map((t,i) => `<div><b>${w[i]}</b><span>Wrote ${t.short}</span><em>${ab[i]} AB, ${nl[i]} not in sheet</em></div>`).join('')}
+      <div><b class="teal">${all3}</b><span>Wrote all three</span></div>
+      <div><b class="red">${absOnce}</b><span>Marked AB at least once</span></div>
+    </div>
+    <section class="panel"><h3>Test by test</h3><p class="lede">AB means marked absent. "Not in sheet" means the name is not printed. The Minor 5 sheet prints no absent list, so for Minor 5 it most likely means absent. It can also mean the student joined later or left. ${missingNote(P)}</p>
+      <div class="tools"><input type="search" id="attQ" placeholder="Find a name" value="${esc(S.tq)}" aria-label="Find a name"><label><input type="checkbox" id="onlyMissed" ${S.onlyMissed ? 'checked' : ''}> Only students with AB or not in a sheet</label></div>
+      <div class="tw"><table><thead><tr><th>Student</th><th>Batch</th>${TESTS.map(t => `<th class="n">${t.short}</th>`).join('')}<th class="n">AB</th><th class="n">Not in sheet</th></tr></thead><tbody>
+      ${L.map(s => `<tr data-open="${s.id}"><td><button type="button" class="lnk" data-open="${s.id}">${esc(s.n)}</button></td><td class="muted small">${s.b}</td>${TESTS.map(t => cell(s,t.id)).join('')}<td class="n ${missed(s) ? 'red' : ''}">${missed(s)}</td><td class="n muted">${notIn(s)}</td></tr>`).join('') || '<tr><td colspan="7" class="muted">No student matches.</td></tr>'}
+      </tbody></table></div></section>`;
+  }
+};
+
+V.table = {
+  html(){
+    const t = S.test, T = tmeta(t), pv = prevId(t), P = pool();
+    const nW = P.filter(s => res(s,t)).length;
+    const cols = [['cr','Centre rank',1],['n','Student',0],['b','Batch',0],['p','Phy',1],['c','Che',1],['bo','Bot',1],['z','Zoo',1],['tot','Total',1],['sr','State rank',1],['d',pv ? `Change from ${tmeta(pv).short}` : 'Change',1]];
+    return `<section class="panel"><h3>All students in ${T.short}</h3><p class="lede">${plural(nW,'student')} wrote ${T.name} in this group. Tap a heading to sort. Tap a row to open the student.</p>
+      <div class="tools"><input type="search" id="tq" placeholder="Find a name, form no. or batch" value="${esc(S.tq)}" aria-label="Find a student"></div>
+      <div class="tw" style="max-height:70vh"><table><thead><tr>${cols.map(c => `<th class="${c[2] ? 'n' : ''}"><button type="button" data-sort="${c[0]}" ${S.sortKey === c[0] ? `data-dir="${S.sortDir < 0 ? '▼' : '▲'}"` : ''}>${c[1]}</button></th>`).join('')}<th class="n">%</th></tr></thead><tbody id="tbody"></tbody></table></div></section>`;
+  },
+  after(){ fillTable(); }
+};
+function fillTable(){
+  const tb = $('#tbody'); if(!tb) return;
+  const t = S.test, pv = prevId(t), q = S.tq.trim().toLowerCase();
+  let R = rowsOf(t).map(x => { const pr = pv ? res(x.s,pv) : null; return {...x, d:pr ? x.r.tot - pr.tot : null}; });
+  if(q) R = R.filter(x => x.s.n.toLowerCase().includes(q) || x.s.id.includes(q) || x.s.b.toLowerCase().includes(q));
+  const key = {cr:x => x.r.cr, n:x => x.s.n, b:x => x.s.b, p:x => x.r.p, c:x => x.r.c, bo:x => x.r.b, z:x => x.r.z, tot:x => x.r.tot, sr:x => x.r.sr, d:x => x.d}[S.sortKey];
+  R.sort((a,b) => { const va = key(a), vb = key(b); if(va === null && vb === null) return 0; if(va === null) return 1; if(vb === null) return -1; return (typeof va === 'string' ? va.localeCompare(vb) : va - vb) * S.sortDir; });
+  const A = SA(t).avg;
+  const sc = (v,i) => `<td class="n ${v < 0 ? 'neg' : v <= 20 ? 'low' : ''}">${f0(v)}</td>`;
+  tb.innerHTML = R.map(x => `<tr data-open="${x.s.id}"><td class="n">${x.r.cr}</td><td><button type="button" class="lnk" data-open="${x.s.id}">${esc(x.s.n)}</button></td><td class="muted small">${x.s.b}</td>${x.r.sub.map(sc).join('')}<td class="n"><b class="${x.r.tot >= A[4] ? 'teal' : ''}">${x.r.tot}</b></td><td class="n">${x.r.sr}</td><td class="n">${x.d === null ? '<span class="muted">–</span>' : `<span class="pill ${x.d >= 0 ? 'up' : 'dn'}">${sg(x.d)}</span>`}</td><td class="n">${f1(pctOf(x.r.tot))}</td></tr>`).join('') || '<tr><td colspan="11" class="muted">No student matches.</td></tr>';
+}
+
+/* ---------- profile ---------- */
+function latestWritten(s){ for(let i = TESTS.length-1; i >= 0; i--) if(res(s,TESTS[i].id)) return TESTS[i].id; return null; }
+function openProfile(id){
+  const s = D.students.find(x => x.id === id); if(!s) return;
+  S.prof = id; S.profTest = res(s,S.test) ? S.test : latestWritten(s);
+  const dr = $('#profile'); dr.classList.add('on'); dr.setAttribute('aria-hidden','false'); $('#scrim').classList.add('on');
+  $('#side').classList.remove('on');
+  renderProfile();
+  requestAnimationFrame(() => { const x = $('#pfClose'); x && x.focus(); });
+}
+function closeProfile(){ const dr = $('#profile'); dr.classList.remove('on'); dr.setAttribute('aria-hidden','true'); $('#scrim').classList.remove('on'); killCharts('pf'); S.prof = null; }
+function talkPoints(s, pt){
+  const out = [];
+  const r = res(s,pt), A = SA(pt).avg, T = tmeta(pt);
+  const d = r.tot - A[4];
+  out.push({c:d >= 0 ? 'good' : 'warn', t:`${T.short}: <b>${r.tot}/720</b> (${f1(pctOf(r.tot))}%). That is ${f0(Math.abs(d))} marks ${d >= 0 ? 'above' : 'below'} the TN &amp; PY average. Centre rank ${r.cr}.`});
+  const bi = r.sub.indexOf(Math.max(...r.sub));
+  out.push({c:'good', t:`Best subject: <b>${SUBJ[bi]}</b> (${r.sub[bi]}).`});
+  const gaps = r.sub.map((v,i) => v - A[i]); const wi = gaps.indexOf(Math.min(...gaps));
+  if(gaps[wi] < 0) out.push({c:'warn', t:`Weakest compared with others: <b>${SUBJ[wi]}</b> (${f0(r.sub[wi])}). TN &amp; PY average is ${f1(A[wi])}, so ${f0(-gaps[wi])} marks behind.`});
+  else out.push({c:'good', t:'All four subjects are at or above the TN &amp; PY average.'});
+  const neg = [0,1,2,3].filter(i => r.sub[i] < 0);
+  if(neg.length) out.push({c:'warn', t:`Negative marks in ${joinAnd(neg.map(i => `${SUBJ[i]} (${f0(r.sub[i])})`))}. Too much guessing. Tell them to leave a question when not sure.`});
+  const low = [0,1,2,3].filter(i => r.sub[i] >= 0 && r.sub[i] <= 20);
+  if(low.length) out.push({c:'warn', t:`Very low in ${joinAnd(low.map(i => `${SUBJ[i]} (${r.sub[i]})`))}. Start again from the basics here.`});
+  if(wi !== 0 && !neg.includes(0) && !low.includes(0)) out.push({c:r.p >= A[0] ? 'good' : '', t:`Physics: ${f0(r.p)}. TN &amp; PY average ${f1(A[0])} (${sg(r.p - A[0],1)}).`});
+  const pv = prevId(pt);
+  if(pv){ const pr = res(s,pv);
+    if(pr){ const dd = r.tot - pr.tot, sd = A[4] - SA(pv).avg[4]; const adj = dd - sd;
+      out.push({c:adj >= 0 ? 'good' : (adj <= -40 ? 'warn' : ''), t:`Change from ${tmeta(pv).short}: <b>${sg(dd)}</b> marks (${pr.tot} to ${r.tot}). The TN &amp; PY average moved ${sg(sd)}. ${adj >= 20 ? 'Real improvement.' : adj <= -40 ? 'A real fall, worth a talk.' : 'Roughly the same level.'}`}); }
+  }
+  const abs = TESTS.filter(t => status(s,t.id) === 'AB').map(t => t.short), nl = TESTS.filter(t => status(s,t.id) === 'NL').map(t => t.short);
+  if(abs.length) out.push({c:'warn', t:`Absent in ${joinAnd(abs)}.`});
+  if(nl.length) out.push({c:'', t:`Name not in the ${joinAnd(nl)} sheet${nl.length > 1 ? 's' : ''}.`});
+  return out;
+}
+function renderProfile(){
+  const s = D.students.find(x => x.id === S.prof); if(!s) return;
+  killCharts('pf');
+  const pt = S.profTest;
+  const tiles = TESTS.map(t => { const r = res(s,t.id), st = status(s,t.id);
+    if(!r) return `<button type="button" class="pf-t" disabled><span>${t.short}, ${t.date.replace(' 2026','')}</span><b>${st === 'AB' ? 'Absent' : 'Not in sheet'}</b><small>&nbsp;</small></button>`;
+    return `<button type="button" class="pf-t" data-pt="${t.id}" aria-pressed="${t.id === pt}"><span>${t.short}, ${t.date.replace(' 2026','')}</span><b>${r.tot}</b><small>${f1(pctOf(r.tot))}%<br>State rank ${r.sr}, centre ${r.cr}</small></button>`; }).join('');
+  const body = pt ? `
+    <h3>Total across the three tests</h3><div class="chartbox h220"><canvas id="pfLine"></canvas></div>
+    <h3>Subjects in ${tmeta(pt).short}</h3><div class="chartbox h220"><canvas id="pfBar"></canvas></div><p class="hint">Tap another test above to see its subjects.</p>
+    <h3>Talk points</h3><ul class="talk">${talkPoints(s,pt).map(o => `<li class="${o.c}">${o.t}</li>`).join('')}</ul>` :
+    `<p class="empty" style="margin-top:18px">No marks for this student in these three sheets. ${TESTS.map(t => `${t.short}: ${status(s,t.id) === 'AB' ? 'absent' : 'not in sheet'}`).join('. ')}.</p>`;
+  $('#profile').innerHTML = `<div class="pf-head"><div><h2>${esc(s.n)}</h2><p class="muted small">${s.b} <span class="mono">Form ${s.id}</span></p></div><button type="button" class="x" id="pfClose" aria-label="Close profile">×</button></div>
+    <div class="pf-tests">${tiles}</div>${body}`;
+  if(!pt) return;
+  const k = col();
+  mk('pfLine', {type:'line', data:{labels:TESTS.map(t => t.short), datasets:[
+    {label:s.n, data:TESTS.map(t => { const r = res(s,t.id); return r ? r.tot : null; }), borderColor:k.teal, backgroundColor:k.teal, pointRadius:6, borderWidth:3, tension:.2, spanGaps:false},
+    {label:'Centre average', data:TESTS.map(t => centreAvg(t.id)), borderColor:k.b[2], backgroundColor:k.b[2], borderDash:[2,3], pointRadius:3, borderWidth:2, tension:.2},
+    {label:'TN & PY average', data:TESTS.map(t => SA(t.id).avg[4]), borderColor:k.amber, backgroundColor:k.amber, borderDash:[6,4], pointRadius:3, borderWidth:2, tension:.2}]},
+    options:{plugins:{legend:{position:'bottom', labels:{boxWidth:10, boxHeight:10}}, tooltip:{...tipCfg(), displayColors:true, callbacks:{label:c => `${c.dataset.label}: ${f0(c.raw)}`}}}, scales:{y:{min:0, max:720, ticks:{stepSize:120}}, x:{grid:{display:false}}}}});
+  const r = res(s,pt), A = SA(pt).avg;
+  mk('pfBar', {type:'bar', data:{labels:SUBJ3, datasets:[
+    {label:'This student', data:r.sub, backgroundColor:r.sub.map((v,i) => v < A[i] ? k.red : k.teal), borderRadius:4},
+    {label:'TN & PY average', data:A.slice(0,4), backgroundColor:alpha(k.amber,.55), borderColor:k.amber, borderWidth:1, borderRadius:4}]},
+    options:{plugins:{legend:{position:'bottom', labels:{boxWidth:10, boxHeight:10}}, tooltip:{...tipCfg(), displayColors:true, callbacks:{label:c => `${c.dataset.label}: ${f1(c.raw)}`}}}, scales:{y:{suggestedMin:0, suggestedMax:180, ticks:{stepSize:30}}, x:{grid:{display:false}}}}});
+}
+
+/* ---------- main render & events ---------- */
+function render(){
+  save();
+  renderControls(); renderSide();
+  killCharts();
+  const v = V[S.tab] || V.overview;
+  $('#main').innerHTML = v.html();
+  v.after && v.after();
+  measure();
+}
+function measure(){ document.documentElement.style.setProperty('--stick', $('#top').offsetHeight + 'px'); }
+
+document.addEventListener('click', e => {
+  const tb = e.target.closest('[data-test]'); if(tb){ S.test = tb.dataset.test; render(); return; }
+  const tab = e.target.closest('[data-tab]'); if(tab){ S.tab = tab.dataset.tab; S.tq = ''; render(); $('#main').focus({preventScroll:true}); window.scrollTo({top:0}); return; }
+  const so = e.target.closest('[data-sort]'); if(so){ const k = so.dataset.sort; if(S.sortKey === k) S.sortDir *= -1; else { S.sortKey = k; S.sortDir = ['n','b','cr','sr'].includes(k) ? 1 : -1; } $('#main').innerHTML = V.table.html(); fillTable(); return; }
+  const pt = e.target.closest('[data-pt]'); if(pt){ S.profTest = pt.dataset.pt; renderProfile(); return; }
+  if(e.target.closest('#pfClose') || e.target.id === 'scrim'){ closeProfile(); $('#side').classList.remove('on'); return; }
+  const op = e.target.closest('[data-open]'); if(op){ openProfile(op.dataset.open); return; }
+  const c = e.target.closest('circle[data-id]'); if(c){ openProfile(c.dataset.id); return; }
+  if(e.target.closest('#findBtn')){ $('#side').classList.add('on'); $('#scrim').classList.add('on'); setTimeout(() => $('#q').focus(), 50); }
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){ if(S.prof) closeProfile(); if($('#side').classList.contains('on')){ $('#side').classList.remove('on'); $('#scrim').classList.remove('on'); } }
+  if((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('circle[data-id]')){ e.preventDefault(); openProfile(e.target.dataset.id); }
+});
+$('#groupSel').addEventListener('change', e => { S.group = e.target.value; render(); });
+$('#q').addEventListener('input', e => { S.q = e.target.value; renderSide(); });
+document.addEventListener('input', e => {
+  if(e.target.id === 'tq'){ S.tq = e.target.value; fillTable(); }
+  if(e.target.id === 'attQ'){ S.tq = e.target.value; const pos = e.target.selectionStart; $('#main').innerHTML = V.attendance.html(); const i = $('#attQ'); i.focus(); try{ i.setSelectionRange(pos,pos); }catch(_){} }
+});
+document.addEventListener('change', e => {
+  if(e.target.id === 'onlyMissed'){ S.onlyMissed = e.target.checked; $('#main').innerHTML = V.attendance.html(); }
+  if(e.target.id === 'mvFrom'){ S.from = e.target.value; drawMovers(); }
+  if(e.target.id === 'mvTo'){ S.to = e.target.value; drawMovers(); }
+});
+const tip = $('#tip');
+document.addEventListener('mouseover', e => { const c = e.target.closest && e.target.closest('circle[data-tip]'); if(c){ tip.textContent = c.dataset.tip; tip.classList.add('on'); } });
+document.addEventListener('mousemove', e => { if(tip.classList.contains('on')){ tip.style.left = Math.min(window.innerWidth - tip.offsetWidth - 8, e.clientX + 12) + 'px'; tip.style.top = (e.clientY - 34) + 'px'; } });
+document.addEventListener('mouseout', e => { if(e.target.closest && e.target.closest('circle[data-tip]')) tip.classList.remove('on'); });
+let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { measure(); if(S.tab === 'overview') drawStrip(); }, 150); });
+function rethemed(){ render(); if(S.prof) renderProfile(); }
+try{ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', rethemed); }catch(e){}
+new MutationObserver(rethemed).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+if(!V[S.tab]) S.tab = 'overview';
+if(!TESTS.some(t => t.id === S.test)) S.test = 'MA2';
+render();
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); if(S.tab === 'overview') drawStrip(); });
+</script>
+</body>
+</html>
