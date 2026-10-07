@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Ray Optics JEE &#183; PYQ DPP · Prism, Dispersion &amp; Optical Instruments</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Ray Optics &#183; JEE</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Ray Optics &#183; JEE PYQ DPP<br>Prism &#183; Dispersion &#183; Optical instruments</h1></div>
+    <p id="home-sub">Every ladder is now <strong>5 rungs</strong>, so the idea is built piece by piece before the exam question needs it:<br><strong>Very easy &#8594; Easy &#8594; Medium</strong> (three small steps, each one tiny new idea with a simple sum) <strong>&#8594; Exam level</strong> (a real PYQ) <strong>&#8594; &#9733; Original</strong> (the harder PYQ).<br><br>Topic flow: <strong>A. Prism basics</strong> (why a prism bends light, r₁ + r₂ = A, δ = i + e − A, the δ&#8211;i curve, grazing emergence, TIR at a coated face) &#8594; <strong>B. Minimum deviation</strong> (the setting and its formula, how δm grows with μ, δm tied to A, the μ = cot(A/2) family, the range of μ, speed and time inside, δm at the critical angle) &#8594; <strong>C. Thin prism &amp; dispersion</strong> (δ = (μ − 1)A, why colours split, chromatic aberration, angular dispersion and dispersive power, dispersion without deviation, deviation without dispersion) &#8594; <strong>D. Optical instruments</strong> (simple microscope, compound microscope, normal adjustment, finding f<sub>e</sub>, lens separation, telescope, Galilean telescope, resolving power, aperture, reflecting telescopes).<br><br>26 ladders &#215; 5 rungs = 130 questions, with all 52 PYQs kept. 14 class ladders, 12 homework.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Ray Optics L1 · Plane mirror  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1f6f8b';
+const FILL_T='#e6f1f4';
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+const _f=v=>(+v).toFixed(1);
+function _svg(W,H,s){ return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`; }
+// mirror line with hatching on one side (side = +1 or -1)
+function _mline(x1,y1,x2,y2,side){
+  side=side||1;
+  const dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L, nx=-uy*side, ny=ux*side;
+  let s=`<line x1="${_f(x1)}" y1="${_f(y1)}" x2="${_f(x2)}" y2="${_f(y2)}" stroke="${INK}" stroke-width="2.4"/>`;
+  for(let d=5; d<L-2; d+=9){ const px=x1+ux*d, py=y1+uy*d;
+    s+=`<line x1="${_f(px)}" y1="${_f(py)}" x2="${_f(px+nx*7-ux*4)}" y2="${_f(py+ny*7-uy*4)}" stroke="${INK}" stroke-width="1"/>`; }
+  return s;
+}
+// light ray with an arrowhead at its middle
+function _ray(x1,y1,x2,y2,c,dash){
+  c=c||AMB; const id=_nid(); const mx=(x1+x2)/2, my=(y1+y2)/2;
+  return `<defs>${AR(id,c)}</defs><path d="M${_f(x1)} ${_f(y1)} L${_f(mx)} ${_f(my)} L${_f(x2)} ${_f(y2)}" stroke="${c}" stroke-width="2" fill="none" ${dash?'stroke-dasharray="5 4"':''} marker-mid="url(#${id})"/>`;
+}
+function _arrow(x1,y1,x2,y2,c,w){ const id=_nid(); c=c||RED;
+  return `<defs>${AR(id,c)}</defs><line x1="${_f(x1)}" y1="${_f(y1)}" x2="${_f(x2)}" y2="${_f(y2)}" stroke="${c}" stroke-width="${w||2.2}" marker-end="url(#${id})"/>`; }
+function _dash(x1,y1,x2,y2,c){ return `<line x1="${_f(x1)}" y1="${_f(y1)}" x2="${_f(x2)}" y2="${_f(y2)}" stroke="${c||GREY}" stroke-width="1.2" stroke-dasharray="4 4"/>`; }
+function _t(x,y,txt,c,sz,anc,wt){ return `<text x="${_f(x)}" y="${_f(y)}" font-size="${sz||11}" text-anchor="${anc||'middle'}" fill="${c||INK}" ${FS} font-weight="${wt||700}">${txt}</text>`; }
+function _pt(cx,cy,r,deg){ return [cx+r*Math.cos(deg*Math.PI/180), cy-r*Math.sin(deg*Math.PI/180)]; }
+function _arc(cx,cy,r,a1,a2,c){
+  const [x1,y1]=_pt(cx,cy,r,a1),[x2,y2]=_pt(cx,cy,r,a2);
+  return `<path d="M${_f(x1)} ${_f(y1)} A${r} ${r} 0 ${Math.abs(a2-a1)>180?1:0} ${a2>a1?0:1} ${_f(x2)} ${_f(y2)}" stroke="${c||GREY}" stroke-width="1.3" fill="none"/>`;
+}
+function _arcL(cx,cy,r,a1,a2,label,c){ const [lx,ly]=_pt(cx,cy,r+12,(a1+a2)/2); return _arc(cx,cy,r,a1,a2,c)+_t(lx,ly+4,label,c||GREY,11); }
+function _dot(x,y,c,r){ return `<circle cx="${_f(x)}" cy="${_f(y)}" r="${r||4}" fill="${c||INK}"/>`; }
+function _dimH(x1,x2,y,label){ return _arrow((x1+x2)/2,y,x1+1,y,GREY,1.1)+_arrow((x1+x2)/2,y,x2-1,y,GREY,1.1)
+  +`<rect x="${_f((x1+x2)/2-24)}" y="${y-8}" width="48" height="15" fill="var(--bg)"/>`+_t((x1+x2)/2,y+4,label,GREY,10.5); }
+// ray tracer between two mirrors meeting at O (math coords, y up); M1 along +x, M2 at angle a
+function _trace(a,p,d,n,L1,L2,ext){
+  const u1=[1,0], u2=[Math.cos(a*Math.PI/180),Math.sin(a*Math.PI/180)];
+  const pts=[p.slice()]; let cur=p.slice(), dir=d.slice(), hits=0;
+  while(hits<n){
+    let best=null;
+    [[u1,L1],[u2,L2]].forEach(([u,L])=>{
+      const det=-dir[0]*u[1]+u[0]*dir[1]; if(Math.abs(det)<1e-9) return;
+      const r0=-cur[0], r1=-cur[1];
+      const t=(-r0*u[1]+u[0]*r1)/det, s=(dir[0]*r1-dir[1]*r0)/det;
+      if(t>1e-6 && s>0 && s<L && (!best||t<best.t)) best={t,u};
+    });
+    if(!best) break;
+    cur=[cur[0]+best.t*dir[0],cur[1]+best.t*dir[1]];
+    const k=dir[0]*best.u[0]+dir[1]*best.u[1];
+    dir=[2*k*best.u[0]-dir[0],2*k*best.u[1]-dir[1]];
+    pts.push(cur.slice()); hits++;
+  }
+  if(ext) pts.push([cur[0]+ext*dir[0],cur[1]+ext*dir[1]]);
+  return pts;
+}
+
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY — Prism, Dispersion, Optical Instruments  (PADIPUCAST)
+// ===============================================================================
+function _axis(x1,x2,y){ return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${GREY}" stroke-width="1.1"/>`; }
+function _lens(x,y,h,concave){
+  if(concave) return `<path d="M${x-9} ${y-h} Q${x+3} ${y} ${x-9} ${y+h} H${x+9} Q${x-3} ${y} ${x+9} ${y-h} Z" fill="${FILL_T}" stroke="${INK}" stroke-width="1.8"/>`;
+  return `<path d="M${x} ${y-h} Q${x+13} ${y} ${x} ${y+h} Q${x-13} ${y} ${x} ${y-h} Z" fill="${FILL_T}" stroke="${INK}" stroke-width="1.8"/>`;
+}
+const VIO='#6d4fa8', RED2='#c0392b';
+const DIAGRAMS = {
+
+// generic prism with a ray through it
+prism:(o)=>{ o=o||{}; const W=380,H=238; let s='';
+  const A=[190,34],B=[86,198],C=[294,198];
+  s+=`<polygon points="${A[0]},${A[1]} ${B[0]},${B[1]} ${C[0]},${C[1]}" fill="${FILL_T}" stroke="${INK}" stroke-width="2"/>`;
+  const P=[138,116], Q=[242,116];
+  s+=_ray(P[0]-72,P[1]-32,P[0],P[1]);
+  s+=_ray(P[0],P[1],Q[0],Q[1]);
+  if(o.graze){ s+=_ray(Q[0],Q[1],Q[0]+42,Q[1]+66,AMB)+_t(Q[0]+56,Q[1]+40,'grazes along the face',AMB,10,'start',400); }
+  else { s+=_ray(Q[0],Q[1],Q[0]+70,Q[1]-28); s+=_t(Q[0]+22,Q[1]-16,'e',RED,11); }
+  s+=_dash(P[0]-38,P[1]-19,P[0]+38,P[1]+19)+_dash(Q[0]-38,Q[1]-19,Q[0]+38,Q[1]+19);
+  s+=_t(A[0],A[1]-8,o.A||'A',INK,11)+_t(P[0]-18,P[1]-8,o.i||'i',RED,11);
+  s+=_t(P[0]+16,P[1]+18,'r₁',GREY,10.5)+_t(Q[0]-16,Q[1]+18,'r₂',GREY,10.5);
+  if(!o.graze) s+=_t(190,88,'δ',AMB,12);
+  if(o.note) s+=_t(190,224,o.note,GREY,10.5,'middle',400);
+  return _svg(W,H,s);},
+
+// prism with one face coated / immersed
+prismCoat:(o)=>{ o=o||{}; const W=380,H=238; let s='';
+  const A=[190,34],B=[86,198],C=[294,198];
+  s+=`<polygon points="${A[0]},${A[1]} ${B[0]},${B[1]} ${C[0]},${C[1]}" fill="${FILL_T}" stroke="${INK}" stroke-width="2"/>`;
+  // thick coat on face AC
+  s+=`<line x1="${A[0]}" y1="${A[1]}" x2="${C[0]}" y2="${C[1]}" stroke="${VIO}" stroke-width="5" opacity="0.8"/>`;
+  s+=_t(300,110,o.coat||'coating n₂',VIO,10.5,'start');
+  if(o.normalIn){ s+=_ray(30,160,86+30,160); s+=_ray(116,160,242,116,AMB); }
+  else { s+=_ray(66,84,138,116)+_ray(138,116,242,116,AMB); }
+  s+=_ray(242,116,242-36,116+78,AMB,true);
+  s+=_t(A[0],A[1]-8,o.A||'A',INK,11)+_t(150,186,o.mu||'prism μ',INK,10.5);
+  if(o.note) s+=_t(190,226,o.note,GREY,10.5,'middle',400);
+  return _svg(W,H,s);},
+
+// delta vs i curve
+deltaI:(o)=>{ o=o||{}; let s='';const ox=62,oy=172;
+  s+=_arrow(ox,oy,336,oy,INK,1.2)+_arrow(ox,oy,ox,26,INK,1.2)+_t(342,oy+4,'i',INK,11,'start')+_t(ox-9,28,'δ',INK,11,'end');
+  s+=`<path d="M96 48 Q182 192 312 54" stroke="${AMB}" stroke-width="2.4" fill="none"/>`;
+  s+=_dash(ox,133,200,133)+_t(ox-9,137,'δm',GREY,10.5,'end')+_dash(200,133,200,oy);
+  if(o.two){ s+=_dash(ox,96,286,96); s+=_dot(140,96,RED,3.8)+_dot(263,96,RED,3.8)+_dash(140,96,140,oy)+_dash(263,96,263,oy);
+    s+=_t(140,oy+15,'i₁',RED,10)+_t(263,oy+15,'i₂',RED,10)+_t(202,86,'same δ, two angles',RED,10,'middle',400); }
+  else s+=_t(200,oy+15,'i = e here',GREY,10.5);
+  return _svg(366,196,s);},
+
+// two thin prisms joined
+twoPrisms:(o)=>{ o=o||{}; let s='';
+  s+=`<polygon points="130,38 92,182 196,182" fill="${FILL_T}" stroke="${INK}" stroke-width="2"/>`;
+  s+=`<polygon points="246,182 288,38 172,38" fill="#efe3d2" stroke="${INK}" stroke-width="2"/>`;
+  s+=_ray(16,104,118,104)+_ray(118,104,232,116,AMB);
+  if(o.split){ s+=_ray(232,116,348,94,RED2)+_ray(232,116,348,130,VIO); s+=_t(354,92,'R',RED2,10,'start')+_t(354,134,'V',VIO,10,'start'); }
+  else s+=_ray(232,116,348,104,AMB);
+  s+=_t(120,196,o.l1||'A, μ',INK,10.5)+_t(254,30,o.l2||'A′, μ′',INK,10.5);
+  s+=_t(190,218,o.note||'',GREY,10.5,'middle',400);
+  return _svg(380,232,s);},
+
+// dispersion through a prism
+dispersion:()=>{ let s='';
+  const A=[170,36],B=[76,196],C=[264,196];
+  s+=`<polygon points="${A[0]},${A[1]} ${B[0]},${B[1]} ${C[0]},${C[1]}" fill="${FILL_T}" stroke="${INK}" stroke-width="2"/>`;
+  s+=_ray(28,86,124,116)+_t(44,76,'white',INK,10.5);
+  s+=_ray(124,116,222,116,AMB);
+  [['#c0392b',-46,'R'],['#1a7a4a',-26,'G'],['#6d4fa8',-4,'V']].forEach(([c,d,l])=>{
+    s+=_ray(222,116,352,116+d,c)+_t(358,120+d,l,c,10.5,'start'); });
+  s+=_t(170,224,'violet bends most, red least',GREY,10.5);
+  return _svg(380,238,s);},
+
+// mu vs lambda / Dm vs lambda
+muLambda:()=>{ let s='';const ox=62,oy=168;
+  s+=_arrow(ox,oy,320,oy,INK,1.2)+_arrow(ox,oy,ox,26,INK,1.2)+_t(326,oy+4,'λ',INK,11,'start')+_t(ox-9,28,'μ or Dm',INK,10.5,'end');
+  s+=`<path d="M92 48 Q150 128 300 142" stroke="${AMB}" stroke-width="2.4" fill="none"/>`;
+  s+=_t(200,70,'both fall as λ increases',GREY,10.5,'middle',400);
+  return _svg(346,192,s);},
+
+// simple microscope
+simpleMic:()=>{ let s='';const y=108;
+  s+=_axis(26,366,y)+_lens(210,y,52,false);
+  s+=_arrow(130,y,130,y-30,AMB,2.2)+_t(130,y+16,'object',AMB,10.5);
+  s+=_arrow(58,y,58,y-66,GRN,2.2)+_t(58,y+16,'virtual image',GRN,10.5);
+  s+=_dash(130,y-30,210,y-30)+_dash(58,y-66,210,y-30);
+  s+=_t(300,y-62,'eye close to the lens',GREY,10.5)+_t(210,y-70,'f',INK,10.5);
+  return _svg(390,200,s);},
+
+// compound microscope
+compMic:(o)=>{ o=o||{}; let s='';const y=104;
+  s+=_axis(26,372,y)+_lens(120,y,46,false)+_lens(290,y,46,false);
+  s+=_t(120,y-60,'objective f₀',INK,10.5)+_t(290,y-60,'eyepiece fₑ',INK,10.5);
+  s+=_arrow(72,y,72,y-20,AMB,2.2)+_t(72,y+16,'object',AMB,10);
+  s+=_arrow(238,y,238,y+34,GRN,2.2)+_t(238,y+48,'real inverted image',GRN,10);
+  s+=_dimH(120,290,y+82,o.L||'tube length L');
+  s+=_t(195,y+28,'',GREY,10);
+  return _svg(390,208,s);},
+
+// telescope
+telescope:(o)=>{ o=o||{}; let s='';const y=100;
+  s+=_axis(20,372,y)+_lens(110,y,54,o.galilean?false:false)+(o.galilean?_lens(300,y,30,true):_lens(300,y,30,false));
+  s+=_t(110,y-66,'objective f₀',INK,10.5)+_t(300,y-50,o.galilean?'concave eyepiece':'eyepiece fₑ',INK,10.5);
+  [ -36,-18,0 ].forEach(d=>s+=_ray(20,y+d-6,106,y+d-6));
+  s+=_arrow(176,y,176,y+28,GRN,2)+_t(176,y+42,'image of the objective',GRN,10);
+  s+=_dimH(110,300,y+66,o.L||'f₀ + fₑ');
+  return _svg(390,192,s);},
+
+// resolving power / aperture
+aperture:()=>{ let s='';const cx=120,cy=108;
+  s+=`<circle cx="${cx}" cy="${cy}" r="56" fill="${FILL_T}" stroke="${INK}" stroke-width="2"/>`;
+  s+=_dimH(cx-56,cx+56,cy+76,'aperture D');
+  s+=_t(cx,cy+4,'objective',GREY,10.5);
+  s+=_t(300,70,'smallest angle',INK,10.5)+_t(300,92,'θ = 1.22 λ / D',AMB,12)+_t(300,118,'bigger D → finer detail',GREY,10,'middle',400);
+  return _svg(390,200,s);},
+
+// wire mesh seen through a telescope
+mesh:()=>{ let s='';const x0=230,y0=48,g=22;
+  for(let k=0;k<=4;k++){ s+=`<line x1="${x0}" y1="${y0+k*g}" x2="${x0+4*g}" y2="${y0+k*g}" stroke="${INK}" stroke-width="1.2"/>`;
+    s+=`<line x1="${x0+k*g}" y1="${y0}" x2="${x0+k*g}" y2="${y0+4*g}" stroke="${INK}" stroke-width="1.2"/>`; }
+  s+=_dimH(x0,x0+g,y0+4*g+22,'2 mm');
+  s+=`<circle cx="80" cy="108" r="26" fill="${FILL_T}" stroke="${INK}" stroke-width="2"/>`+_t(80,152,'telescope',GREY,10.5);
+  s+=_dash(106,108,x0,y0+8)+_dash(106,108,x0,y0+4*g);
+  s+=_t(168,178,'80 m away',GREY,10.5);
+  return _svg(390,200,s);},
+};
+
+const TOPICS = [
+/* ================= A · PRISM BASICS ================= */
+{ "name":"A1 · Why a prism bends light, and by how much","mode":"class","questions":[
+ {"q":"Two prisms have exactly the same angle A. One is made of glass with μ = 1.5, the other with μ = 1.7. Which one bends the light more?","diagram":DIAGRAMS.prism({A:'A',note:'same angle, different glass'}),"opts":["the μ = 1.7 one","the μ = 1.5 one","both bend equally","the μ = 1.5 one, if A is small"],"ans":0,"sol":"A bigger μ means light slows down more inside, so it turns more at each face.<br><br><strong>More μ → more bending → more deviation δ.</strong><br><br>Keep this sentence ready. It alone answers many questions: which colour bends more, which prism deviates more, red vs blue, and so on."},
+ {"q":"At a <em>single</em> surface, light enters glass with i = 45° and bends to r = 30°. By how much has the ray turned from its old direction?","opts":["15°","75°","30°","45°"],"ans":0,"sol":"Turning at one face = <strong>i − r</strong> = 45 − 30 = <strong>15°</strong>.<br><br>A prism has <em>two</em> such faces, so the total turning is the sum of the two: δ = (i − r₁) + (e − r₂)."},
+ {"q":"Inside a prism of angle A = 60°, the ray refracts at the first face to r₁ = 25°. What is r₂ at the second face?","diagram":DIAGRAMS.prism({A:'A = 60°'}),"opts":["35°","25°","60°","85°"],"ans":0,"sol":"The quadrilateral inside the prism gives the first key relation:<br><br><strong>r₁ + r₂ = A</strong><br><br>r₂ = 60 − 25 = <strong>35°</strong>.<br><br>Put this together with the previous rung:<br>δ = (i − r₁) + (e − r₂) = i + e − (r₁ + r₂) = <strong>i + e − A</strong>."},
+ {"tag":"PYQ · JEE Main 2018 (online)","q":"A ray of light is incident at an angle of 60° on one face of a prism of angle 30°. The emergent ray makes an angle of 30° with the incident ray. The angle made by the emergent ray with the second face of the prism will be","diagram":DIAGRAMS.prism({A:'A = 30°',i:'60°'}),"opts":["0°","30°","90°","45°"],"ans":0,"sol":"Use δ = i + e − A directly.<br><br>30 = 60 + e − 30 → e = <strong>0°</strong><br><br>e = 0 means the ray leaves <em>along the normal</em> of the second face — straight out, at right angles to that face.<br><br>Reminder: i and e are measured from the normal, never from the face itself."},
+ {"tag":"&#9733; PYQ · JEE Main 2016","q":"&#9733; <strong>Original:</strong> In an experiment for determination of the refractive index of glass of a prism by an i–δ plot, it was found that a ray incident at angle 35° suffers a deviation of 40° and that it emerges at angle 79°. In that case, which of the following is closest to the maximum possible value of the refractive index?","diagram":DIAGRAMS.deltaI({two:true}),"opts":["1.5","1.7","1.8","1.6"],"ans":0,"sol":"Step 1 — get A from δ = i + e − A:<br>40 = 35 + 79 − A → <strong>A = 74°</strong><br><br>Step 2 — notice i (35°) ≠ e (79°), so this is <em>not</em> the minimum deviation. The real δ<sub>m</sub> is smaller than 40°.<br><br>Step 3 — μ = sin[(A + δ<sub>m</sub>)/2]/sin(A/2) grows with δ<sub>m</sub>, so the biggest μ comes from the biggest allowed δ<sub>m</sub>, which is 40°:<br><br>μ ≤ sin 57°/sin 37° = 0.8387/0.6018 = 1.39 → closest option <strong>1.5</strong>.<br><br>The word 'maximum' is the whole clue."}]},
+
+{ "name":"A2 · The δ–i curve and the two angles that give the same δ","mode":"class","questions":[
+ {"q":"Light can travel either way along the same path. So if a ray enters a prism at i = 50° and leaves at e = 40°, then a ray entering at i = 40° will leave at","opts":["e = 40°? No — it leaves at e = 50°, and the deviation is the same","e = 40°, with a different deviation","e = 50°, with a bigger deviation","it will not come out"],"ans":0,"sol":"Light paths are <strong>reversible</strong>. Reverse the ray and i and e simply swap places.<br><br>δ = i + e − A does not care which is which, so <strong>both rays have the same deviation</strong>.<br><br>That is why one value of δ has two angles of incidence."},
+ {"q":"For A = 60° and δ = 30°, the pair (i, e) must satisfy i + e = 90°. Which of these pairs is NOT possible?","opts":["i = 45°, e = 50°","i = 40°, e = 50°","i = 50°, e = 40°","i = 45°, e = 45°"],"ans":0,"sol":"δ = i + e − A → 30 = i + e − 60 → <strong>i + e = 90°</strong>.<br><br>45 + 50 = 95 ✗ — that pair breaks the rule.<br><br>The pair i = e = 45° is special: it is the symmetric case, and that is where δ is at its minimum."},
+ {"q":"Starting from a small i and slowly increasing it, the deviation δ","opts":["first falls, reaches a minimum when i = e, then rises","keeps rising all the way","keeps falling all the way","stays the same"],"ans":0,"sol":"The δ–i graph is a <strong>U-shaped curve with exactly one minimum</strong>.<br><br>Away from that minimum, every δ comes from <em>two</em> angles of incidence (the ray and its reverse). At the minimum the two merge into one."},
+ {"tag":"PYQ · AIEEE 2013","q":"The graph between angle of deviation (δ) and angle of incidence (i) for a triangular prism is represented by","note":"The book's four options are graphs; written in words here. Book key: option C.","diagram":DIAGRAMS.deltaI({}),"opts":["a curve that falls to a minimum and then rises","a straight line going up","a straight line going down","a curve that rises to a maximum and then falls"],"ans":0,"sol":"δ dips to δ<sub>m</sub> and climbs again — <strong>one minimum, never a maximum, never a straight line</strong>.<br><br>Quick way to be sure: at very small i the ray barely gets through and δ is large; at very large i, δ is large again; so it must dip in between."},
+ {"tag":"&#9733; PYQ · JEE Main 2021, 16 March","q":"&#9733; <strong>Original:</strong> The angle of deviation through a prism is minimum when<br>(A) the incident ray and the emergent ray are symmetric to the prism<br>(B) the refracted ray inside the prism becomes parallel to its base<br>(C) the angle of incidence equals the angle of emergence<br>(D) the angle of emergence is double the angle of incidence","diagram":DIAGRAMS.prism({A:'A',note:'symmetric path at minimum deviation'}),"opts":["Statements (A), (B) and (C) are true","Only statement (D) is true","Only statements (A) and (B) are true","Statements (B) and (C) are true"],"ans":0,"sol":"At the minimum, the two angles merge: <strong>i = e</strong>, and so <strong>r₁ = r₂ = A/2</strong>.<br><br>With equal angles at the two faces, the whole path is symmetric about the bisector of A, and the ray inside runs <strong>parallel to the base</strong>.<br><br>So (A), (B) and (C) are three ways of saying one thing → all true. (D) is simply wrong."}]},
+
+{ "name":"A3 · When does light fail to come out? Grazing emergence","mode":"class","questions":[
+ {"q":"For glass of μ = 1.5 in air, the critical angle C satisfies sin C = 1/μ. So C is about","opts":["42°","30°","60°","48°"],"ans":0,"sol":"sin C = 1/1.5 = 0.667 → C ≈ <strong>42°</strong>.<br><br>If the ray inside the prism hits the second face at more than C, it is totally reflected and never comes out."},
+ {"q":"A ray just barely gets out of the second face — it grazes along it. That means e = 90°, so r₂ equals","opts":["the critical angle C","0°","A","90°"],"ans":0,"sol":"μ sin r₂ = sin 90° = 1 → sin r₂ = 1/μ → <strong>r₂ = C</strong>.<br><br>This is the boundary case. Just a little more and TIR takes over."},
+ {"q":"At that moment r₁ = A − C. For light to come out at all, we therefore need A to be less than","opts":["2C","C","C/2","90°"],"ans":0,"sol":"The largest possible r₁ is also C (beyond that no light enters at all), so A = r₁ + r₂ ≤ C + C.<br><br><strong>A<sub>max</sub> = 2C.</strong><br><br>For ordinary glass C ≈ 42°, so a prism with A greater than about 84° will not let light through at all."},
+ {"tag":"PYQ · JEE Main 2026, 22 Jan","q":"Consider an equilateral prism (refractive index √2). A ray of light is incident on one surface at a certain angle i. If the emergent ray is found to graze along the other surface, then the angle of refraction at the incident surface is close to","diagram":DIAGRAMS.prism({A:'A = 60°',graze:true}),"opts":["15°","30°","20°","40°"],"ans":0,"sol":"Grazing out → sin r₂ = 1/√2 → r₂ = 45°.<br><br>r₁ = A − r₂ = 60 − 45 = <strong>15°</strong>.<br><br>(If you also want i: sin i = √2 sin 15° = 0.366 → i ≈ 21.5°.)"},
+ {"tag":"&#9733; PYQ · JEE Main 2015","q":"&#9733; <strong>Original:</strong> Monochromatic light is incident on a glass prism of angle A. If the refractive index of the material of the prism is μ, a ray incident at an angle θ on the face AB would get transmitted through the face AC of the prism provided","diagram":DIAGRAMS.prism({A:'A',i:'θ',note:'the ray must escape through the second face'}),"opts":["θ &gt; sin⁻¹[μ sin(A − sin⁻¹(1/μ))]","θ &lt; sin⁻¹[μ sin(A − sin⁻¹(1/μ))]","θ &gt; cos⁻¹[μ sin(A + sin⁻¹(1/μ))]","θ &lt; cos⁻¹[μ sin(A + sin⁻¹(1/μ))]"],"ans":0,"sol":"To escape through AC we need r₂ &lt; C.<br><br>r₁ + r₂ = A → r₁ = A − r₂ &gt; A − C.<br><br>Snell at AB: sin θ = μ sin r₁ &gt; μ sin(A − C), with C = sin⁻¹(1/μ).<br><br><strong>θ &gt; sin⁻¹[μ sin(A − sin⁻¹(1/μ))]</strong><br><br>Note the direction of the inequality: a <em>bigger</em> θ helps the light escape, because a bigger r₁ leaves a smaller r₂. Most students guess the other way."}]},
+
+{ "name":"A4 · TIR inside a prism when the face is coated or immersed","mode":"hw","questions":[
+ {"q":"A glass prism (μ = 1.5) has one face touching water (μ = 4/3) instead of air. The critical angle at that face","opts":["becomes bigger, so TIR is harder to get","becomes smaller, so TIR is easier","stays the same","becomes zero"],"ans":0,"sol":"sin C = μ<sub>outside</sub>/μ<sub>prism</sub>. Water raises the top of that fraction, so sin C rises and <strong>C becomes bigger</strong>.<br><br>A bigger C means the ray must hit at a steeper angle to be totally reflected → <strong>TIR is harder</strong>."},
+ {"q":"For glass 1.5 touching water 4/3, sin C equals","opts":["8/9","2/3","3/4","9/8"],"ans":0,"sol":"sin C = (4/3)/1.5 = (4/3)/(3/2) = <strong>8/9</strong> ≈ 0.889 → C ≈ 62.7°.<br><br>In air it would have been sin C = 1/1.5 = 2/3 → C ≈ 42°. Water pushes the critical angle up by 20°."},
+ {"q":"A beam enters one face of an equilateral prism along the normal (i = 0). At what angle does it strike the second face?","diagram":DIAGRAMS.prismCoat({coat:'other face',mu:'prism',normalIn:true,A:'A = 60°'}),"opts":["60°","30°","0°","45°"],"ans":0,"sol":"Entering along the normal means no bending, so r₁ = 0 and r₂ = A − 0 = <strong>60°</strong>.<br><br>This 'enter normally' trick appears again and again: the angle at the second face is simply A."},
+ {"tag":"PYQ · JEE Main 2012 (online)","q":"A glass prism of refractive index 1.5 is immersed in water (refractive index 4/3). A light beam incident normally on the face AB is totally reflected to reach the face BC, if","diagram":DIAGRAMS.prismCoat({coat:'water 4/3',mu:'glass 1.5',normalIn:true,note:'beam enters AB along the normal'}),"opts":["sin θ &gt; 8/9","sin θ &gt; 5/9","sin θ &gt; 2/3","sin θ &gt; 1/3"],"ans":0,"sol":"From rung 2, sin C = 8/9.<br><br>TIR needs the angle inside to be bigger than C → <strong>sin θ &gt; 8/9</strong>.<br><br>The distractor 2/3 is the air value — exactly what you get if you forget the prism is under water."},
+ {"tag":"&#9733; PYQ · JEE Main 2026, 2 April","q":"&#9733; <strong>Original:</strong> One side of an equilateral prism is painted by a transparent material of refractive index n₂. The refractive index of the prism is 1.6. The limiting value of n₂ for total internal reflection from the painted face is ____","note":"The paper says 'minimum value of n₂'. Working it out, 4√3/5 is actually the LARGEST n₂ that still gives TIR — the limiting value. Worth pointing out in class.","diagram":DIAGRAMS.prismCoat({coat:'paint n₂',mu:'prism 1.6',normalIn:true,A:'A = 60°'}),"opts":["4√3/5","√3","3.2/√3","3√3/1.6"],"ans":0,"sol":"The beam enters normally, so it meets the painted face at <strong>60°</strong> (rung 3).<br><br>TIR needs sin 60° ≥ n₂/1.6<br>n₂ ≤ 1.6 × (√3/2) = 0.8√3 = <strong>4√3/5 ≈ 1.386</strong><br><br>Any coating denser than this lets the light out instead of reflecting it."}]},
+
+/* ================= B · MINIMUM DEVIATION ================= */
+{ "name":"B1 · The minimum-deviation setting and its formula","mode":"class","questions":[
+ {"q":"At minimum deviation, i = e. Since r₁ + r₂ = A and the two faces are now identical in behaviour,","opts":["r₁ = r₂ = A/2","r₁ = A and r₂ = 0","r₁ = 2A","r₁ = r₂ = A"],"ans":0,"sol":"Equal angles at the two faces → <strong>r₁ = r₂ = A/2</strong>.<br><br>This single line is the key that opens every minimum-deviation question."},
+ {"q":"With i = e, the relation δ = i + e − A becomes δm = 2i − A. So the angle of incidence at minimum deviation is","opts":["i = (A + δm)/2","i = A + δm","i = (A − δm)/2","i = δm − A"],"ans":0,"sol":"δ<sub>m</sub> = 2i − A → <strong>i = (A + δ<sub>m</sub>)/2</strong>.<br><br>Now apply Snell's law at the first face with r₁ = A/2:<br><br>μ = sin i/sin r₁ = <strong>sin[(A + δ<sub>m</sub>)/2] / sin(A/2)</strong><br><br>That is the prism formula. All three lines say the same thing."},
+ {"q":"For an equilateral prism (A = 60°), a glass with a bigger μ will have a minimum deviation that is","opts":["bigger","smaller","the same","zero"],"ans":0,"sol":"μ = sin[(60 + δ<sub>m</sub>)/2]/sin 30°. As δ<sub>m</sub> grows, the top grows, so μ grows.<br><br><strong>Bigger μ → bigger δ<sub>m</sub>.</strong> Same idea as ladder A1 rung 1, now stated for the minimum.<br><br>Quick table for A = 60°: μ = √2 → δ<sub>m</sub> = 30°; μ = 1.5 → δ<sub>m</sub> ≈ 37°; μ = √3 → δ<sub>m</sub> = 60°."},
+ {"tag":"PYQ · JEE Main 2025, 2 April","q":"A ray of light suffers minimum deviation when incident on a prism having an angle of the prism equal to 60°. The refractive index of the prism material is √2. The angle of incidence (in degrees) is ____","diagram":DIAGRAMS.prism({A:'A = 60°',note:'symmetric path'}),"opts":["45","30","60","75"],"ans":0,"sol":"r₁ = r₂ = A/2 = 30°.<br><br>sin i = μ sin r₁ = √2 × 0.5 = 1/√2 → i = <strong>45°</strong>.<br><br>(And δ<sub>m</sub> = 2i − A = 90 − 60 = 30°, matching the table in rung 3.)"},
+ {"tag":"&#9733; PYQ · JEE Main 2019, 11 Jan","q":"&#9733; <strong>Original:</strong> A monochromatic light is incident at a certain angle on an equilateral triangular prism and suffers minimum deviation. If the refractive index of the material of the prism is √3, then the angle of incidence is","diagram":DIAGRAMS.prism({A:'A = 60°'}),"opts":["60°","30°","45°","90°"],"ans":0,"sol":"r = A/2 = 30° → sin i = √3 × 0.5 = √3/2 → i = <strong>60°</strong>.<br><br>Check: δ<sub>m</sub> = 2(60) − 60 = 60°, and μ = sin 60°/sin 30° = √3 ✔<br><br>Nice fact for the board: for μ = √3 in an equilateral prism, i = A = δ<sub>m</sub> = 60° — all three are the same number."}]},
+
+{ "name":"B2 · When δm is given as a fraction of A","mode":"class","questions":[
+ {"q":"If δm = A, then (A + δm)/2 becomes","opts":["A","A/2","2A","A/4"],"ans":0,"sol":"(A + A)/2 = <strong>A</strong>. So μ = sin A/sin(A/2)."},
+ {"q":"Using sin A = 2 sin(A/2) cos(A/2), the expression sin A/sin(A/2) simplifies to","opts":["2 cos(A/2)","2 sin(A/2)","cos(A/2)","tan(A/2)"],"ans":0,"sol":"sin A/sin(A/2) = 2 sin(A/2)cos(A/2)/sin(A/2) = <strong>2 cos(A/2)</strong>.<br><br>So whenever <strong>δ<sub>m</sub> = A</strong>, you can jump straight to <strong>μ = 2 cos(A/2)</strong>. Put this in the formula list."},
+ {"q":"For an equilateral prism with δm = A/2 = 30°, the refractive index is","diagram":DIAGRAMS.prism({A:'A = 60°',note:'δm = 30°'}),"opts":["√2","1.5","√3","1.33"],"ans":0,"sol":"μ = sin[(60 + 30)/2]/sin 30° = sin 45°/0.5 = 0.7071/0.5 = <strong>√2</strong>.<br><br>Here δ<sub>m</sub> is half of A, not equal to A, so you must use the full formula — the 2cos(A/2) shortcut does not apply."},
+ {"tag":"PYQ · JEE Main 2026, 6 April","q":"The angle of minimum deviation is equal to half the angle of the prism in an equilateral prism. The refractive index of the prism is","opts":["√2","1.5","√3","1.65"],"ans":0,"sol":"Exactly rung 3: A = 60°, δ<sub>m</sub> = 30° → μ = sin 45°/sin 30° = <strong>√2</strong>."},
+ {"tag":"&#9733; PYQ · JEE Main 2025, 23 Jan","q":"&#9733; <strong>Original:</strong> The refractive index of the material of a glass prism is √3. The angle of minimum deviation is equal to the angle of the prism. What is the angle of the prism?","opts":["60°","50°","58°","48°"],"ans":0,"sol":"δ<sub>m</sub> = A, so use the shortcut from rung 2: μ = 2 cos(A/2).<br><br>√3 = 2 cos(A/2) → cos(A/2) = √3/2 → A/2 = 30° → <strong>A = 60°</strong>.<br><br>Compare with ladder B1: the same prism, read from the other end."}]},
+
+{ "name":"B3 · The μ = cot(A/2) family","mode":"hw","questions":[
+ {"q":"cot(A/2) written as a ratio of sine and cosine is","opts":["cos(A/2)/sin(A/2)","sin(A/2)/cos(A/2)","1/sin(A/2)","sin(A/2)"],"ans":0,"sol":"<strong>cot(A/2) = cos(A/2)/sin(A/2)</strong>.<br><br>Useful because the prism formula also has sin(A/2) at the bottom — so the two can be compared directly."},
+ {"q":"cos(A/2) can be written as a sine. Which is correct?","opts":["cos(A/2) = sin(90° − A/2)","cos(A/2) = sin(A/2)","cos(A/2) = sin(180° − A/2)","cos(A/2) = sin(A)"],"ans":0,"sol":"<strong>cos θ = sin(90° − θ)</strong>, so cos(A/2) = sin(90° − A/2).<br><br>This is the trick that turns a cot into something the prism formula can match."},
+ {"q":"Put the two together. If μ = cot(A/2) = sin(90° − A/2)/sin(A/2) and μ = sin[(A + δm)/2]/sin(A/2), then","opts":["(A + δm)/2 = 90° − A/2","(A + δm)/2 = A/2","A + δm = 90°","δm = A/2"],"ans":0,"sol":"The bottoms are already the same, so just match the tops:<br><br><strong>(A + δ<sub>m</sub>)/2 = 90° − A/2</strong><br><br>→ A + δ<sub>m</sub> = 180° − A → δ<sub>m</sub> = 180° − 2A.<br><br>General rule: whenever μ is given as a cot, cosec or tan, rewrite it as a ratio of sines and compare. No calculator needed."},
+ {"tag":"PYQ · JEE Main 2022, 28 June","q":"The refracting angle of a prism is A and the refractive index of the material of the prism is cot(A/2). Then the angle of minimum deviation will be","opts":["180° − 2A","90° − A","180° + 2A","180° − 3A"],"ans":0,"sol":"Straight from rung 3: δ<sub>m</sub> = <strong>180° − 2A</strong>.<br><br>Quick check with A = 45°: μ = cot 22.5° = 2.414 and δ<sub>m</sub> = 90°. Put these back in the prism formula — it works ✔"},
+ {"tag":"&#9733; PYQ · JEE Main 2024, 31 Jan","q":"&#9733; <strong>Original:</strong> The refractive index of a prism with apex angle A is cot(A/2). The angle of minimum deviation is","opts":["π − 2A","π/2 − 2A","π − A","π/2 − A"],"ans":0,"sol":"The same result in radians: δ<sub>m</sub> = <strong>π − 2A</strong>.<br><br>This exact question has appeared in 2022, in 2024, and in the ALLEN module. Make the batch learn the <em>result</em>, not just the derivation."}]},
+
+{ "name":"B4 · What values of μ are actually possible?","mode":"hw","questions":[
+ {"q":"At minimum deviation, i = (A + δm)/2 and r = A/2. If i happens to be exactly twice r, then","opts":["δm = A","δm = 2A","δm = A/2","δm = 0"],"ans":0,"sol":"i = 2r → (A + δ<sub>m</sub>)/2 = 2 × (A/2) = A → A + δ<sub>m</sub> = 2A → <strong>δ<sub>m</sub> = A</strong>.<br><br>So 'i is double r' is just another way of saying δ<sub>m</sub> = A."},
+ {"q":"With δm = A we had μ = 2 cos(A/2). As the prism angle A gets smaller and smaller, μ tends towards","opts":["2","1","√2","0"],"ans":0,"sol":"A → 0 means A/2 → 0, so cos(A/2) → 1 and μ → <strong>2</strong>.<br><br>So 2 is the upper limit, never quite reached."},
+ {"q":"And when A = 90°, what is μ = 2 cos(A/2)?","opts":["√2","2","1","1.5"],"ans":0,"sol":"cos 45° = 1/√2 → μ = 2/√2 = <strong>√2</strong>.<br><br>So as A runs from 0° to 90°, μ runs from 2 down to √2. Together: <strong>√2 &lt; μ &lt; 2</strong>."},
+ {"tag":"PYQ · JEE Main 2021, 22 July","q":"A ray of light passing through a prism (μ = √3) suffers minimum deviation. It is found that the angle of incidence is double the angle of refraction within the prism. Then the angle of the prism is ____ (in degrees)","opts":["60","30","45","75"],"ans":0,"sol":"From rung 1: i = 2r at δ<sub>m</sub> means δ<sub>m</sub> = A.<br><br>Then μ = 2 cos(A/2) = √3 → cos(A/2) = √3/2 → A/2 = 30° → <strong>A = 60°</strong>."},
+ {"tag":"&#9733; PYQ · JEE Main 2026, 28 Jan","q":"&#9733; <strong>Original:</strong> For a transparent prism, if the angle of minimum deviation is equal to its refracting angle, the refractive index n of the prism satisfies","opts":["√2 &lt; n &lt; 2","n ≥ 2","1 &lt; n &lt; 2","√2 &lt; n &lt; 2√2"],"ans":0,"sol":"From rungs 2 and 3: n = 2 cos(A/2), with A between 0° and 90°.<br><br>→ <strong>√2 &lt; n &lt; 2</strong><br><br>Same formula as the two ladders before, now asked as a <em>range</em> instead of a number. Teach the family, not the single question."}]},
+
+{ "name":"B5 · Speed inside the prism, and time of travel","mode":"hw","questions":[
+ {"q":"Light travels at 2 × 10⁸ m/s inside a material. Its refractive index is","opts":["1.5","2","0.67","3"],"ans":0,"sol":"<strong>μ = c/v</strong> = 3 × 10⁸ / 2 × 10⁸ = <strong>1.5</strong>.<br><br>A question that gives a speed is really giving you μ in disguise."},
+ {"q":"For an equilateral prism made of this glass (μ = √2), what is the minimum deviation?","diagram":DIAGRAMS.prism({A:'A = 60°'}),"opts":["30°","45°","37°","60°"],"ans":0,"sol":"√2 = sin[(60 + δ<sub>m</sub>)/2]/sin 30° → sin[(60 + δ<sub>m</sub>)/2] = √2 × 0.5 = 0.707<br><br>(60 + δ<sub>m</sub>)/2 = 45° → δ<sub>m</sub> = <strong>30°</strong>."},
+ {"q":"Light travels 0.09 m inside glass of μ = √3. How long does it take? (c = 3 × 10⁸ m/s)","opts":["about 5.2 × 10⁻¹⁰ s","about 3 × 10⁻¹⁰ s","about 9 × 10⁻¹⁰ s","about 1.7 × 10⁻⁹ s"],"ans":0,"sol":"Speed inside = c/μ = 3 × 10⁸/√3 = 1.73 × 10⁸ m/s.<br><br>t = distance/speed = 0.09/1.73 × 10⁸ ≈ <strong>5.2 × 10⁻¹⁰ s</strong>.<br><br>Two steps every time: get μ, then use v = c/μ."},
+ {"tag":"PYQ · JEE Main 2026, 5 April","q":"A ray of light passing through an equilateral prism has velocity 2.12 × 10⁸ m/s in the prism material. The minimum angle of deviation is ____ degrees.","opts":["30","45","28","58"],"ans":0,"sol":"μ = 3 × 10⁸/2.12 × 10⁸ = 1.415 ≈ <strong>√2</strong>.<br><br>Then rung 2 gives δ<sub>m</sub> = <strong>30°</strong>."},
+ {"tag":"&#9733; PYQ · JEE Main 2021, 31 Aug","q":"&#9733; <strong>Original:</strong> The cross-section of a prism is the equilateral triangle ABC with side 10 cm. The minimum deviation is observed when the angle of incidence equals the prism angle. The time taken by light to travel from P (the mid-point of BC) to A is ____ × 10⁻¹⁰ s. (c = 3 × 10⁸ m/s, cos 30° = √3/2)","opts":["5","3","8","10"],"ans":0,"sol":"Step 1 — i = A = 60° at δ<sub>m</sub> → δ<sub>m</sub> = 2i − A = 60° → μ = sin 60°/sin 30° = <strong>√3</strong>.<br><br>Step 2 — PA is the height of the equilateral triangle = (√3/2) × 10 cm = 0.0866 m.<br><br>Step 3 — speed inside = c/√3 = 1.732 × 10⁸ m/s → t = 0.0866/1.732 × 10⁸ = <strong>5 × 10⁻¹⁰ s</strong>."}]},
+
+{ "name":"B6 · Minimum deviation set exactly at the critical angle","mode":"hw","questions":[
+ {"q":"A prism of index n has its exit face coated with a material of index n/2. The critical angle at that face is","opts":["30°","60°","45°","it depends on n"],"ans":0,"sol":"sin C = μ<sub>outside</sub>/μ<sub>inside</sub> = (n/2)/n = 1/2 → <strong>C = 30°</strong>.<br><br>Notice n cancels completely. Only the <em>ratio</em> matters."},
+ {"q":"At minimum deviation, the angle the ray makes with the normal at the exit face is","opts":["A/2","A","2A","90° − A"],"ans":0,"sol":"At δ<sub>m</sub>, r₁ = r₂ = <strong>A/2</strong>.<br><br>So the words 'at minimum deviation' should immediately make you write r = A/2."},
+ {"q":"If that ray at the exit face is sitting exactly at the critical angle, then","opts":["A/2 = C","A = C","A = 2C only if δm = 0","A/2 = 90° − C"],"ans":0,"sol":"r₂ = C and r₂ = A/2 → <strong>A/2 = C</strong>, i.e. A = 2C.<br><br>This is the same A<sub>max</sub> = 2C you met in ladder A3, now reached from the minimum-deviation side."},
+ {"q":"Using A = 2C with C = 30°, the prism angle is","opts":["60°","30°","15°","45°"],"ans":0,"sol":"A = 2 × 30° = <strong>60°</strong>."},
+ {"tag":"&#9733; PYQ · JEE Main 2026, 24 Jan","q":"&#9733; <strong>Original:</strong> The exit surface of a prism with refractive index n is coated with a material having refractive index n/2. When this prism is set for the minimum angle of deviation, it exactly meets the condition of the critical angle. The prism angle is ____","diagram":DIAGRAMS.prismCoat({coat:'coating n/2',mu:'prism n',A:'A = ?'}),"opts":["60°","30°","15°","45°"],"ans":0,"sol":"Three short steps, no numbers needed:<br><br>1. sin C = (n/2)/n = 1/2 → C = 30°<br>2. at δ<sub>m</sub>, r₂ = A/2<br>3. r₂ = C → A/2 = 30° → <strong>A = 60°</strong><br><br>Train the class so that 'at minimum deviation' triggers r = A/2 without thinking."}]},
+/* ================= C · THIN PRISM AND DISPERSION ================= */
+{ "name":"C1 · Thin angled prism: δ = (μ − 1)A","mode":"class","questions":[
+ {"q":"For a very small angle θ (in radians), sin θ is","opts":["almost equal to θ itself","much bigger than θ","zero","equal to cos θ"],"ans":0,"sol":"<strong>sin θ ≈ θ</strong> for small angles. This single approximation turns the whole prism formula into one easy line."},
+ {"q":"Put sin θ ≈ θ into μ = sin[(A + δm)/2]/sin(A/2) for a thin prism. You get","opts":["δ = (μ − 1)A","δ = (μ + 1)A","δ = μA","δ = A/μ"],"ans":0,"sol":"μ ≈ [(A + δ)/2]/(A/2) = (A + δ)/A → μA = A + δ → <strong>δ = (μ − 1)A</strong>.<br><br>Big point: for a thin prism the deviation is the <em>same for every angle of incidence</em>. So δ and δ<sub>m</sub> become the same thing."},
+ {"q":"A thin prism of angle 6°, made of glass with μ = 1.5, deviates light by","opts":["3°","9°","6°","1.5°"],"ans":0,"sol":"δ = (1.5 − 1) × 6° = <strong>3°</strong>.<br><br>Handy habit: (μ − 1) ≈ 0.5 for ordinary glass, so a thin glass prism bends light by about <em>half</em> its angle."},
+ {"q":"For that same thin prism, what is the angle of incidence at minimum deviation?","opts":["(A + δm)/2 = 4.5°","6°","3°","9°"],"ans":0,"sol":"i = (A + δ<sub>m</sub>)/2 = (6 + 3)/2 = <strong>4.5°</strong>.<br><br>Now compare: i : δ<sub>m</sub> = 4.5 : 3 = 3 : 2. Hold on to that ratio."},
+ {"tag":"&#9733; PYQ · JEE Main 2026, 2 April","q":"&#9733; <strong>Original:</strong> For a thin symmetric prism made of glass (refractive index 1.5), the ratio of the incident angle and the minimum deviation will be ____","opts":["3 : 2","3 : 4","2 : 1","1 : 2"],"ans":0,"sol":"δ<sub>m</sub> = 0.5A and i = (A + 0.5A)/2 = 0.75A.<br><br>i : δ<sub>m</sub> = 0.75A : 0.5A = <strong>3 : 2</strong><br><br>The prism angle A cancels out, so the answer is the same for <em>every</em> thin glass prism — exactly what rung 4 showed with real numbers."}]},
+
+{ "name":"C2 · Dispersion: why the colours split","mode":"class","questions":[
+ {"q":"Cauchy's relation says μ = A + B/λ². So as the wavelength λ gets bigger, μ","opts":["gets smaller","gets bigger","stays the same","becomes zero"],"ans":0,"sol":"A bigger λ makes B/λ² smaller, so <strong>μ falls as λ rises</strong>.<br><br>In VIBGYOR order, violet has the smallest λ and therefore the biggest μ; red has the biggest λ and the smallest μ."},
+ {"q":"Putting that into δ = (μ − 1)A for a thin prism, which colour is bent the most?","diagram":DIAGRAMS.dispersion(),"opts":["violet","red","green","all equally"],"ans":0,"sol":"Biggest μ → biggest deviation → <strong>violet bends most, red bends least</strong>.<br><br>That is why the spectrum comes out with red on top and violet at the bottom when the prism points down."},
+ {"q":"White light is a mixture of many frequencies. When it enters glass, what changes for each colour?","opts":["the speed and the wavelength change, but the frequency stays the same","the frequency changes","nothing changes","only the colour changes"],"ans":0,"sol":"The source sets the frequency, so <strong>frequency never changes</strong> on refraction. Speed and wavelength both shrink by a factor μ.<br><br>Careful not to mix this with 'red and blue are different colours' — in a <em>vacuum</em> different colours do have different frequencies <em>and</em> different wavelengths."},
+ {"tag":"PYQ · JEE Main 2021, 16 March","q":"Red light differs from blue light as they have","opts":["different frequencies and different wavelengths","different frequencies and same wavelengths","same frequencies and same wavelengths","same frequencies and different wavelengths"],"ans":0,"sol":"Colour <em>is</em> frequency, so the frequencies differ. And since c = νλ, the wavelengths differ too.<br><br>Answer: <strong>different frequencies and different wavelengths</strong>."},
+ {"tag":"&#9733; PYQ · AIEEE 2006","q":"&#9733; <strong>Original:</strong> The refractive index of a glass is 1.520 for red light and 1.525 for blue light. Let D₁ and D₂ be the angles of minimum deviation for red and blue light respectively in a prism of this glass. Then","opts":["D₁ &lt; D₂","D₁ = D₂","D₁ can be less than or greater than D₂ depending upon the angle of the prism","D₁ &gt; D₂"],"ans":0,"sol":"Bigger μ gives bigger deviation, for <em>any</em> prism angle.<br><br>μ<sub>blue</sub> (1.525) &gt; μ<sub>red</sub> (1.520) → <strong>D₁ &lt; D₂</strong>.<br><br>The trap option says it depends on A. It does not — the order is fixed by the indices alone."}]},
+
+{ "name":"C3 · The same thing in a lens: chromatic aberration","mode":"hw","questions":[
+ {"q":"In the lens maker's formula 1/f = (μ − 1)(1/R₁ − 1/R₂), if μ gets bigger then the power of the lens","opts":["gets bigger, so f gets smaller","gets smaller","stays the same","becomes zero"],"ans":0,"sol":"The bracket is fixed by the shape of the lens, so 1/f is directly proportional to (μ − 1).<br><br><strong>Bigger μ → bigger power → smaller f.</strong>"},
+ {"q":"So for a glass lens, the focal length for violet light compared with red light is","opts":["smaller — violet focuses nearer the lens","bigger","the same","zero"],"ans":0,"sol":"μ<sub>violet</sub> &gt; μ<sub>red</sub> → <strong>f<sub>violet</sub> &lt; f<sub>red</sub></strong>.<br><br>Violet comes to a focus closer to the lens, red further away. The spread of focal points is the defect."},
+ {"q":"That spread of focus points for different colours is called","opts":["chromatic aberration","spherical aberration","scattering","dispersion of sound"],"ans":0,"sol":"<strong>Chromatic aberration</strong> — a colour defect.<br><br>Do not mix it with <em>spherical</em> aberration, where rays far from the axis focus differently even for a single colour."},
+ {"tag":"PYQ · JEE Main 2023, 24 Jan","q":"When a beam of white light is allowed to pass through a convex lens parallel to the principal axis, the different colours of light converge at different points on the principal axis after refraction. This is called","opts":["Chromatic aberration","Scattering","Spherical aberration","Polarisation"],"ans":0,"sol":"Different colours, different focal points → <strong>chromatic aberration</strong>, exactly as built in rungs 1 to 3."},
+ {"tag":"&#9733; PYQ · AIEEE 2011 (RS)","q":"&#9733; <strong>Original:</strong> When monochromatic red light is used instead of blue light in a convex lens, its focal length will","opts":["increase","decrease","remain same","not depend on the colour of light"],"ans":0,"sol":"μ<sub>red</sub> &lt; μ<sub>blue</sub> → (μ − 1) smaller → 1/f smaller → <strong>f increases</strong>.<br><br>One line to remember: <em>red light, longer wavelength, weaker lens, longer focal length.</em>"}]},
+
+{ "name":"C4 · Angular dispersion and dispersive power","mode":"hw","questions":[
+ {"q":"For a thin prism, δv = (μv − 1)A and δr = (μr − 1)A. The spread between violet and red is therefore","opts":["θ = (μv − μr)A","θ = (μv + μr)A","θ = (μv − μr)/A","θ = A"],"ans":0,"sol":"Subtract the two: θ = δ<sub>v</sub> − δ<sub>r</sub> = <strong>(μ<sub>v</sub> − μ<sub>r</sub>)A</strong>.<br><br>This is the <strong>angular dispersion</strong> — how wide the spectrum opens out."},
+ {"q":"A thin prism of angle 10° has μv = 1.53 and μr = 1.51. The angular dispersion is","opts":["0.2°","2°","0.02°","1°"],"ans":0,"sol":"θ = (1.53 − 1.51) × 10 = 0.02 × 10 = <strong>0.2°</strong>.<br><br>Notice how small it is compared with the mean deviation: δ<sub>y</sub> ≈ (1.52 − 1) × 10 = 5.2°."},
+ {"q":"Dividing the spread by the mean deviation gives the dispersive power ω = θ/δy. For the prism above, ω is","opts":["about 0.038, and it does not depend on A","0.2","5.2","10"],"ans":0,"sol":"ω = 0.2/5.2 ≈ <strong>0.038</strong>.<br><br>In symbols, <strong>ω = (μ<sub>v</sub> − μ<sub>r</sub>)/(μ<sub>y</sub> − 1)</strong>. The A cancels, so ω has <strong>no units and belongs to the glass, not to the prism</strong>. Flint glass has a higher ω than crown glass."},
+ {"q":"For a thin prism Dm = (μ − 1)A. Since A is just a fixed number, the shape of a Dm-versus-λ graph is","opts":["the same shape as the μ-versus-λ graph","the opposite shape","a straight horizontal line","a straight rising line"],"ans":0,"sol":"Multiplying by a constant and subtracting a constant does not change the <em>shape</em> of a curve.<br><br>So <strong>D<sub>m</sub> copies the μ–λ curve exactly</strong>, just rescaled."},
+ {"tag":"&#9733; PYQ · JEE Main 2019, 11 Jan","q":"&#9733; <strong>Original:</strong> The refractive index of a crown-glass thin prism falls as the wavelength of the incident light increases. Which graph correctly shows D<sub>m</sub> (the angle of minimum deviation) against wavelength λ?","note":"The book's options are graphs; written in words here. Book key: option A.","diagram":DIAGRAMS.muLambda(),"opts":["Dm falls as λ increases, with the same shape as the μ–λ curve","Dm rises as λ increases","Dm stays constant","Dm first rises then falls"],"ans":0,"sol":"μ falls as λ rises, and D<sub>m</sub> copies that shape (rung 4) → <strong>D<sub>m</sub> falls as λ rises</strong>, in the same curved way."}]},
+
+{ "name":"C5 · Dispersion WITHOUT deviation (direct vision)","mode":"class","questions":[
+ {"q":"Two thin prisms are joined, the second one turned upside down. Their deviations then","opts":["subtract from each other","add up","multiply","cancel the dispersion automatically"],"ans":0,"sol":"Turning the second prism over makes it bend the light the opposite way, so the deviations <strong>subtract</strong>: net δ = δ₁ − δ₂."},
+ {"q":"For the mean (yellow) colour to pass straight through, we need δ₁ = δ₂, that is","opts":["(μ − 1)A = (μ′ − 1)A′","(μv − μr)A = (μ′v − μ′r)A′","μA = μ′A′","A = A′"],"ans":0,"sol":"<strong>(μ − 1)A = (μ′ − 1)A′</strong><br><br>Now the yellow ray goes straight, but violet and red are still bent by slightly different amounts — so the colours still spread out.<br><br>This is <strong>dispersion without deviation</strong>: the direct-vision spectroscope."},
+ {"q":"A prism of angle 10° and μ = 1.5 is combined with a prism of μ = 1.6 for direct vision. The second prism's angle must be","opts":["8.33°","10°","12°","6.25°"],"ans":0,"sol":"(1.5 − 1) × 10 = (1.6 − 1) × A′ → 5 = 0.6A′ → A′ = <strong>8.33°</strong>.<br><br>Pattern to notice: the denser glass always needs the <em>smaller</em> angle."},
+ {"tag":"PYQ · JEE Main 2025, 28 Jan","q":"A thin prism P₁ with angle 4°, made of glass of refractive index 1.54, is combined with another thin prism P₂ made of glass of refractive index 1.72 to get dispersion without deviation. The angle of the prism P₂ in degrees is","diagram":DIAGRAMS.twoPrisms({split:true,l1:'4°, 1.54',l2:'A′, 1.72',note:'mean ray goes straight, colours still split'}),"opts":["3","1.5","16/3","4"],"ans":0,"sol":"(1.54 − 1) × 4 = (1.72 − 1) × A′<br><br>2.16 = 0.72 A′ → A′ = <strong>3°</strong>"},
+ {"tag":"&#9733; PYQ · JEE Main 2026, 23 Jan","q":"&#9733; <strong>Original:</strong> A thin prism with angle 5° of refractive index 1.72 is combined with another prism of refractive index 1.9 to produce dispersion without deviation. The angle of the second prism is ____","diagram":DIAGRAMS.twoPrisms({split:true,l1:'5°, 1.72',l2:'A′, 1.9'}),"opts":["4°","5°","4.5°","6°"],"ans":0,"sol":"(1.72 − 1) × 5 = (1.9 − 1) × A′<br><br>3.6 = 0.9 A′ → A′ = <strong>4°</strong><br><br>Same one-line equation as rungs 3 and 4. Drill it till it is automatic."}]},
+
+{ "name":"C6 · Deviation WITHOUT dispersion (achromatic)","mode":"class","questions":[
+ {"q":"Now we want the opposite: the colours must come back together, but the beam may still be bent. The quantity that must cancel is","opts":["the angular dispersion (μv − μr)A","the mean deviation (μ − 1)A","the prism angle A","the dispersive power ω"],"ans":0,"sol":"No colour spread means the two <strong>angular dispersions</strong> must cancel:<br><br><strong>(μ<sub>v</sub> − μ<sub>r</sub>)A = (μ′<sub>v</sub> − μ′<sub>r</sub>)A′</strong><br><br>Keep the two conditions apart: direct vision cancels <em>(μ − 1)A</em>; achromatic cancels <em>(μ<sub>v</sub> − μ<sub>r</sub>)A</em>."},
+ {"q":"Dividing both sides by (μy − 1), the achromatic condition can also be written as","opts":["ω₁δ₁ = ω₂δ₂","ω₁ = ω₂","δ₁ = δ₂","A₁ = A₂"],"ans":0,"sol":"Since ω = (μ<sub>v</sub> − μ<sub>r</sub>)/(μ<sub>y</sub> − 1) and δ = (μ<sub>y</sub> − 1)A, the product ωδ equals (μ<sub>v</sub> − μ<sub>r</sub>)A.<br><br>So the condition is <strong>ω₁δ₁ = ω₂δ₂</strong>. Use whichever form the data suits."},
+ {"q":"Two thin prisms are joined so that the colours recombine. The beam that comes out is","opts":["white again, but bent by δ₁ − δ₂","white and undeviated","still split into colours","blocked"],"ans":0,"sol":"The colours come back together, so you get <strong>white light</strong> — but the two deviations do not cancel, so the beam is still bent by <strong>δ₁ − δ₂</strong>.<br><br>That is <strong>deviation without dispersion</strong>, used in achromatic lens pairs."},
+ {"tag":"PYQ · JEE Main 2022, 27 July","q":"A thin prism of angle 6° and refractive index for yellow light n_Y = 1.5 is combined with another prism of angle 5° and n_Y = 1.55. The combination produces no dispersion. The net average deviation produced by the combination is (1/x)°. The value of x is ____","diagram":DIAGRAMS.twoPrisms({l1:'6°, 1.5',l2:'5°, 1.55',note:'colours recombine, beam still bent'}),"opts":["4","2","8","10"],"ans":0,"sol":"δ₁ = (1.5 − 1) × 6 = 3.00°<br>δ₂ = (1.55 − 1) × 5 = 2.75°<br><br>Net deviation = 3.00 − 2.75 = 0.25° = (1/4)° → <strong>x = 4</strong><br><br>The two prisms are inverted relative to each other, so the deviations subtract (rung 3)."},
+ {"tag":"&#9733; PYQ · JEE Main 2021, 16 March","q":"&#9733; <strong>Original:</strong> A deviation of 2° is produced in the yellow ray when prisms of crown and flint glass are achromatically combined. Taking the dispersive powers of crown and flint glass as 0.02 and 0.03 respectively, and the refractive indices for yellow light as 1.5 and 1.6 respectively, the refracting angle of the crown glass prism will be ____ degrees.","diagram":DIAGRAMS.twoPrisms({l1:'crown ω = 0.02',l2:'flint ω = 0.03'}),"opts":["12","10","6","15"],"ans":0,"sol":"Step 1 — achromatic condition ω₁δ₁ = ω₂δ₂:<br>0.02 × 0.5A₁ = 0.03 × 0.6A₂ → 0.01A₁ = 0.018A₂ → A₂ = 0.5556 A₁<br><br>Step 2 — net deviation δ₁ − δ₂ = 2°:<br>0.5A₁ − 0.6(0.5556A₁) = 0.5A₁ − 0.333A₁ = 0.167A₁ = 2<br><br>A₁ = <strong>12°</strong> (and A₂ ≈ 6.7°)."}]},
+/* ================= D · OPTICAL INSTRUMENTS ================= */
+{ "name":"D1 · Simple microscope (magnifying glass)","mode":"class","questions":[
+ {"q":"Why does a small object look bigger when you bring it closer to your eye?","opts":["because it subtends a bigger angle at the eye","because its real size grows","because light becomes brighter","because the eye's focal length changes"],"ans":0,"sol":"How big a thing <em>looks</em> is decided by the <strong>angle it subtends at the eye</strong>, not by its real size.<br><br>But the eye cannot focus closer than about 25 cm — the near point D. That is the limit a magnifying glass breaks."},
+ {"q":"A convex lens of focal length f lets you hold the object at f instead of at D = 25 cm. The angle therefore grows in the ratio","opts":["D/f","f/D","D × f","D − f"],"ans":0,"sol":"Angle without the lens = h/D. Angle with the lens (image at infinity) = h/f.<br><br>Magnification = (h/f)/(h/D) = <strong>D/f</strong>.<br><br>So a 5 cm lens gives 25/5 = 5×."},
+ {"q":"If instead you adjust it so that the final image sits at the near point D, the magnification becomes","opts":["1 + D/f, which is one more than before","D/f, the same","D/f − 1","f/D + 1"],"ans":0,"sol":"<strong>Image at infinity (relaxed eye): M = D/f.</strong><br><strong>Image at the near point: M = 1 + D/f.</strong><br><br>The near-point setting gives a slightly bigger magnification but tires the eye. Always read the question for which one is meant."},
+ {"tag":"PYQ · JEE Main 2021, 26 Feb","q":"<strong>Assertion (A):</strong> For a simple microscope, the angular size of the object equals the angular size of the image.<br><strong>Reason (R):</strong> Magnification is achieved as the small object can be kept much closer to the eye than 25 cm and hence it subtends a large angle.","diagram":DIAGRAMS.simpleMic(),"opts":["Both A and R are true and R is the correct explanation of A","A is true but R is false","Both A and R are true but R is not the correct explanation of A","A is false but R is true"],"ans":0,"sol":"<strong>(A) is true:</strong> the eye sees the image along the very same rays that leave the object, so object and image subtend the <em>same</em> angle at the eye.<br><br><strong>(R) is true and it explains (A):</strong> the gain is not that the image beats the object in angle — it is that the lens lets you bring the object in to f instead of 25 cm (rung 2).<br><br>So both true, and R explains A."},
+ {"tag":"&#9733; PYQ · JEE Main 2023, 30 Jan","q":"&#9733; <strong>Original:</strong> A person has been using spectacles of power −1.0 dioptre for distant vision and a separate reading glass of power 2.0 dioptres. What is the least distance of distinct vision for this person?","opts":["50 cm","10 cm","40 cm","30 cm"],"ans":0,"sol":"The reading glass has f = 1/2 m = +50 cm. Its job is to take an object at the normal reading distance of 25 cm and put its image at <em>this person's</em> near point.<br><br>1/v − 1/(−25) = 1/50 → 1/v = 1/50 − 1/25 = −1/50 → v = −50 cm.<br><br>So his least distance of distinct vision is <strong>50 cm</strong>.<br><br>The −1.0 D is extra information about his distant vision (far point 100 cm) — not needed here."}]},
+
+{ "name":"D2 · Compound microscope — what each lens does","mode":"class","questions":[
+ {"q":"To get a REAL and ENLARGED image from a convex lens, the object must be placed","opts":["between f and 2f","beyond 2f","inside f","exactly at f"],"ans":0,"sol":"Between f and 2f → real, inverted, enlarged image beyond 2f on the other side.<br><br>In a compound microscope the object is placed <strong>just beyond f₀</strong>, which is deep inside this range, so the objective's image is strongly magnified."},
+ {"q":"That real image inside the tube is then looked at through the eyepiece. The eyepiece acts as","opts":["a simple microscope on that image","a mirror","a second objective","a prism"],"ans":0,"sol":"The eyepiece treats the objective's image as its own object and magnifies it again — exactly like a magnifying glass.<br><br>So the two stages multiply: <strong>M = m₀ × m<sub>e</sub></strong>."},
+ {"q":"Objective with f₀ = 1 cm, object placed at 1.25 cm. Where is the image and what is m₀?","opts":["v₀ = 5 cm, m₀ = 4","v₀ = 1.25 cm, m₀ = 1","v₀ = 2.5 cm, m₀ = 2","v₀ = 10 cm, m₀ = 8"],"ans":0,"sol":"1/v − 1/(−1.25) = 1/1 → 1/v = 1 − 0.8 = 0.2 → v₀ = <strong>5 cm</strong>.<br><br>m₀ = v₀/u₀ = 5/1.25 = <strong>4</strong> (inverted).<br><br>Practise this step — the objective is always done with the plain lens formula."},
+ {"tag":"PYQ · AIEEE 2003","q":"The image formed by the objective of a compound microscope is","diagram":DIAGRAMS.compMic({}),"opts":["real and enlarged","virtual and diminished","real and diminished","virtual and enlarged"],"ans":0,"sol":"Object just beyond f₀ always gives a <strong>real and enlarged</strong> image (rung 1).<br><br>It is that intermediate image which the eyepiece then magnifies a second time."},
+ {"tag":"&#9733; PYQ · JEE Main 2014, 11 April","q":"&#9733; <strong>Original:</strong> In a compound microscope, the focal length of the objective lens is 1.2 cm and the focal length of the eyepiece is 3.0 cm. When the object is kept at 1.25 cm in front of the objective, the final image is formed at infinity. The magnifying power of the compound microscope should be","diagram":DIAGRAMS.compMic({}),"opts":["200","100","400","150"],"ans":0,"sol":"<strong>Objective</strong> (same method as rung 3): u₀ = −1.25, f₀ = 1.2 → 1/v₀ = 1/1.2 − 1/1.25 → v₀ = 30 cm, m₀ = 30/1.25 = 24.<br><br><strong>Eyepiece</strong>, final image at infinity → m<sub>e</sub> = D/f<sub>e</sub> = 25/3.<br><br>M = 24 × 25/3 = <strong>200</strong>."}]},
+
+{ "name":"D3 · Magnification in normal adjustment","mode":"class","questions":[
+ {"q":"'Normal adjustment' for a microscope means","opts":["the final image is at infinity, so the eye is relaxed","the final image is at 25 cm","the object is at the focus of the objective","the two lenses touch"],"ans":0,"sol":"<strong>Final image at infinity</strong> → parallel rays enter the eye → the eye muscle is relaxed. Also called 'minimum strain on the eye'.<br><br>For that, the objective's image must sit exactly at the focus of the eyepiece."},
+ {"q":"In a long microscope the objective's image forms close to the far end, so v₀ ≈ L (the tube length). Then m₀ is about","opts":["L/f₀","f₀/L","L × f₀","L − f₀"],"ans":0,"sol":"m₀ = v₀/u₀, and for an object just beyond the focus, u₀ ≈ f₀. So <strong>m₀ ≈ L/f₀</strong>.<br><br>Putting the two stages together:<br><br><strong>M ≈ (L/f₀) × (D/f<sub>e</sub>)</strong>, with D = 25 cm. JEE questions use this working formula constantly."},
+ {"q":"Tube length 10 cm, two lenses of focal length 2 cm and 5 cm. Which must be the objective, and what is M?","diagram":DIAGRAMS.compMic({L:'L = 10 cm'}),"opts":["the 2 cm lens is the objective, M = 25","the 5 cm lens is the objective, M = 25","the 2 cm lens is the objective, M = 10","either lens, M = 25"],"ans":0,"sol":"The objective must have the <strong>shorter</strong> focal length, so f₀ = 2 cm and f<sub>e</sub> = 5 cm.<br><br>M = (10/2)(25/5) = 5 × 5 = <strong>25</strong>."},
+ {"tag":"PYQ · JEE Main 2026, 24 Jan","q":"In a microscope of tube length 10 cm, two convex lenses of focal length 2 cm and 5 cm are arranged. The total magnification obtained with this system for normal adjustment is 5ᵏ. The value of k is ____","diagram":DIAGRAMS.compMic({L:'L = 10 cm'}),"opts":["2","4","5","3.5"],"ans":0,"sol":"From rung 3, M = 25 = 5² → <strong>k = 2</strong>."},
+ {"tag":"&#9733; PYQ · JEE Main 2026, 21 Jan","q":"&#9733; <strong>Original:</strong> In a microscope the objective has focal length f₀ = 2 cm and the eyepiece has focal length f<sub>e</sub> = 4 cm. The tube length is 32 cm. The magnification produced by this microscope for normal adjustment is ____","diagram":DIAGRAMS.compMic({L:'L = 32 cm'}),"opts":["100","81","125","64"],"ans":0,"sol":"M = (L/f₀)(D/f<sub>e</sub>) = (32/2) × (25/4) = 16 × 6.25 = <strong>100</strong>.<br><br>Note for the class: the exact treatment (objective's image at f<sub>e</sub> from the eyepiece, so v₀ = 28 cm) gives 81.25. The paper wants the standard working formula, which gives a clean 100."}]},
+
+{ "name":"D4 · Finding the eyepiece focal length","mode":"hw","questions":[
+ {"q":"Which eyepiece setting gives the bigger magnification?","opts":["final image at the near point D: me = 1 + D/fe","final image at infinity: me = D/fe","both the same","neither depends on the setting"],"ans":0,"sol":"<strong>1 + D/f<sub>e</sub></strong> is one larger than D/f<sub>e</sub>, so the near-point setting wins — but it tires the eye.<br><br>That little '+1' is what decides which option you land on, so read the question carefully."},
+ {"q":"Working backwards: if (L/f₀) = 30 and the total magnification is 375 with the image at infinity, then fe is (take D = 250 mm)","opts":["20 mm","22 mm","12 mm","25 mm"],"ans":0,"sol":"30 × (250/f<sub>e</sub>) = 375 → 250/f<sub>e</sub> = 12.5 → f<sub>e</sub> = <strong>20 mm</strong>.<br><br>Now redo it with the near-point formula in the next rung and watch the answer shift."},
+ {"q":"Same numbers, but now the final image is at the near point: 30 × (1 + 250/fe) = 375. Then fe is","opts":["about 22 mm","20 mm","12 mm","33 mm"],"ans":0,"sol":"1 + 250/f<sub>e</sub> = 12.5 → 250/f<sub>e</sub> = 11.5 → f<sub>e</sub> = <strong>21.7 ≈ 22 mm</strong>.<br><br>So the two settings give 20 mm and 22 mm. If the option list shows 22 and not 20, the paper means the near-point setting."},
+ {"tag":"PYQ · JEE Main 2020, 7 Jan","q":"If we need a magnification of 375 from a compound microscope of tube length 150 mm and an objective of focal length 5 mm, the focal length of the eyepiece should be close to","opts":["22 mm","12 mm","2 mm","33 mm"],"ans":0,"sol":"L/f₀ = 150/5 = 30, exactly the number used in rungs 2 and 3.<br><br>Since 20 mm is not among the options and 22 mm is, the paper wants the near-point formula → <strong>f<sub>e</sub> ≈ 22 mm</strong>."},
+ {"tag":"&#9733; PYQ · JEE Main 2020, 4 Sept","q":"&#9733; <strong>Original:</strong> In a compound microscope, the magnified virtual image is formed at a distance of 25 cm from the eyepiece. The focal length of its objective lens is 1 cm. If the magnification is 100 and the tube length of the microscope is 20 cm, then the focal length of the eyepiece lens (in cm) is ____","diagram":DIAGRAMS.compMic({L:'L = 20 cm'}),"opts":["4.48","5.00","2.50","3.75"],"ans":0,"sol":"Here the exact chain is needed.<br><br>Eyepiece with v<sub>e</sub> = −25: |u<sub>e</sub>| = 25f<sub>e</sub>/(25 + f<sub>e</sub>) and m<sub>e</sub> = 1 + 25/f<sub>e</sub>.<br>Tube: v₀ = 20 − |u<sub>e</sub>|, and with f₀ = 1, m₀ = v₀ − 1.<br><br>(v₀ − 1)(1 + 25/f<sub>e</sub>) = 100<br><br>Try f<sub>e</sub> = 4.48: |u<sub>e</sub>| = 3.80, v₀ = 16.20, m₀ = 15.2, m<sub>e</sub> = 6.58 → M = 100 ✔<br><br><strong>f<sub>e</sub> ≈ 4.48 cm</strong>"}]},
+
+{ "name":"D5 · How far apart should the two lenses be?","mode":"hw","questions":[
+ {"q":"A lens sends out parallel rays (image at infinity) when its object is placed","opts":["exactly at its focus","at 2f","very far away","touching the lens"],"ans":0,"sol":"<strong>Object at the focus → image at infinity.</strong> This is the single fact behind every 'normal adjustment' question."},
+ {"q":"So for a compound microscope with the final image at infinity, the separation between the two lenses must be","opts":["v₀ + fe","v₀ + f₀","fe − v₀","f₀ + fe"],"ans":0,"sol":"The objective's image must land on the focus of the eyepiece, which is f<sub>e</sub> in front of it.<br><br><strong>Separation = v₀ + f<sub>e</sub></strong>."},
+ {"q":"Objective f₀ = 20 mm with the object at 25 mm. Where is v₀?","opts":["100 mm","50 mm","25 mm","20 mm"],"ans":0,"sol":"1/v − 1/(−25) = 1/20 → 1/v = 1/20 − 1/25 = (5 − 4)/100 = 1/100 → v₀ = <strong>100 mm</strong>."},
+ {"tag":"PYQ · JEE Main 2012 (online)","q":"We wish to make a microscope with the help of two positive lenses, both with a focal length of 20 mm each, and the object is positioned 25 mm from the objective lens. How far apart should the lenses be so that the final image is formed at infinity?","opts":["120 mm","20 mm","100 mm","80 mm"],"ans":0,"sol":"v₀ = 100 mm (rung 3), and f<sub>e</sub> = 20 mm.<br><br>Separation = 100 + 20 = <strong>120 mm</strong>."},
+ {"tag":"&#9733; PYQ · JEE Main 2020, 5 Sept","q":"&#9733; <strong>Original:</strong> A compound microscope consists of an objective lens of focal length 1 cm and an eyepiece of focal length 5 cm with a separation of 10 cm. The distance between the object and the objective lens at which the strain on the eye is minimum is n/40 cm. The value of n is ____","diagram":DIAGRAMS.compMic({L:'separation 10 cm'}),"opts":["50","40","25","60"],"ans":0,"sol":"'Minimum strain' = relaxed eye = final image at infinity.<br><br>So the objective's image must sit at f<sub>e</sub> = 5 cm from the eyepiece → v₀ = 10 − 5 = 5 cm.<br><br>1/5 − 1/u = 1/1 → 1/u = 1/5 − 1 = −4/5 → u = −1.25 cm = 50/40 cm → <strong>n = 50</strong>.<br><br>Here the separation is given and v₀ is worked out backwards — the reverse of rung 4."}]},
+
+{ "name":"D6 · Telescope: magnification and length","mode":"class","questions":[
+ {"q":"A star is effectively at infinity. The objective of a telescope therefore forms its image","opts":["at its focus, f₀ from the lens","at 2f₀","at infinity","on the eyepiece"],"ans":0,"sol":"Parallel rays in → image at the focus. So the first image sits <strong>f₀ behind the objective</strong>, small and inverted."},
+ {"q":"The eyepiece then views that image. For the final image to be at infinity, the separation must be","opts":["f₀ + fe","f₀ − fe","f₀ × fe","fe only"],"ans":0,"sol":"The objective's image must land on the eyepiece's focus → <strong>tube length = f₀ + f<sub>e</sub></strong>.<br><br>Compare the angles before and after: <strong>M = f₀/f<sub>e</sub></strong>.<br><br>So a telescope wants a <em>long</em>-focus objective and a <em>short</em>-focus eyepiece — the opposite of a microscope."},
+ {"q":"A telescope tube is 30 cm long and the magnification is 2. What are f₀ and fe?","diagram":DIAGRAMS.telescope({L:'30 cm'}),"opts":["f₀ = 20 cm, fe = 10 cm","f₀ = 10 cm, fe = 20 cm","f₀ = 15 cm, fe = 15 cm","f₀ = 24 cm, fe = 6 cm"],"ans":0,"sol":"f₀ + f<sub>e</sub> = 30 and f₀/f<sub>e</sub> = 2 → f₀ = 2f<sub>e</sub>.<br><br>3f<sub>e</sub> = 30 → f<sub>e</sub> = 10 → <strong>f₀ = 20 cm</strong>.<br><br>Two equations, two unknowns — the standard telescope pair."},
+ {"tag":"PYQ · JEE Main 2016","q":"An observer looks at a distant tree of height 10 m with a telescope of magnifying power 20. To the observer the tree appears","opts":["20 times nearer","20 times taller","10 times taller","10 times nearer"],"ans":0,"sol":"A telescope cannot make a distant object physically taller. It makes it subtend a 20 times bigger <em>angle</em> — which is exactly how the tree would look if it stood <strong>20 times nearer</strong>.<br><br>The wording trips up a lot of students: angular magnification means 'appears nearer'."},
+ {"tag":"&#9733; PYQ · JEE Main 2022, 28 July","q":"&#9733; <strong>Original:</strong> In normal adjustment, for a refracting telescope, the distance between the objective and the eyepiece is 30 cm. The focal length of the objective, when the angular magnification of the telescope is 2, will be","diagram":DIAGRAMS.telescope({L:'30 cm'}),"opts":["20 cm","30 cm","10 cm","15 cm"],"ans":0,"sol":"Exactly rung 3: f₀ + f<sub>e</sub> = 30, f₀/f<sub>e</sub> = 2 → <strong>f₀ = 20 cm</strong>, f<sub>e</sub> = 10 cm."}]},
+
+{ "name":"D7 · Telescope not in normal adjustment, and the Galilean telescope","mode":"hw","questions":[
+ {"q":"If the object is NOT at infinity (say a scale 2 m away), the first thing to do is","opts":["use the lens formula on the objective with that real u₀","still take v₀ = f₀","ignore the objective","use M = f₀/fe straight away"],"ans":0,"sol":"M = f₀/f<sub>e</sub> is only for a distant object. For a nearby object, <strong>do the objective properly</strong> with 1/v − 1/u = 1/f₀, get v₀ and m₀ = v₀/u₀, and then multiply by the eyepiece magnification."},
+ {"q":"Objective f₀ = 50 cm, object 200 cm away. Then v₀ and m₀ are","opts":["v₀ = 66.7 cm, m₀ = −1/3","v₀ = 50 cm, m₀ = −1","v₀ = 40 cm, m₀ = −1/5","v₀ = 100 cm, m₀ = −1/2"],"ans":0,"sol":"v₀ = u f/(u + f) = (−200)(50)/(−200 + 50) = −10000/−150 = <strong>66.7 cm</strong>.<br><br>m₀ = v₀/u₀ = 66.7/(−200) = <strong>−1/3</strong> (inverted and smaller)."},
+ {"q":"A Galilean telescope uses a CONCAVE eyepiece. Compared with the ordinary astronomical telescope, its final image is","opts":["erect, so the magnification comes out positive","inverted","the same","always smaller"],"ans":0,"sol":"The concave eyepiece turns the image back the right way up, so the final image is <strong>erect</strong> and M is positive. That is why opera glasses are Galilean.<br><br>With the image at D, the bracket also flips sign:<br>astronomical: M = (f₀/f<sub>e</sub>)(1 + f<sub>e</sub>/D)<br><strong>Galilean: M = (f₀/f<sub>e</sub>)(1 − f<sub>e</sub>/D)</strong>"},
+ {"tag":"PYQ · JEE Main 2013, 22 April","q":"The focal lengths of the objective and the eyepiece of a telescope are 50 cm and 5 cm respectively. If the telescope is focussed for distinct vision on a scale 2 m from its objective, then its magnifying power will be","diagram":DIAGRAMS.telescope({}),"opts":["−2","−4","−8","+8"],"ans":0,"sol":"m₀ = −1/3 (rung 2).<br><br>Eyepiece with the image at D = 25 cm: m<sub>e</sub> = 1 + 25/5 = 6.<br><br>M = (−1/3) × 6 = <strong>−2</strong>. The minus sign means the final image is inverted."},
+ {"tag":"&#9733; PYQ · JEE Main 2014, 9 April","q":"&#9733; <strong>Original:</strong> The focal lengths of the objective lens and the eye lens of a Galilean telescope are respectively 30 cm and 3.0 cm. The telescope produces a virtual, erect image of a far-away object at the least distance of distinct vision from the eye lens. In this condition, the magnifying power of the Galilean telescope should be","diagram":DIAGRAMS.telescope({galilean:true,L:'f₀ − fₑ'}),"opts":["+8.8","+11.2","−11.2","−8.8"],"ans":0,"sol":"Galilean → erect → M positive (rung 3).<br><br>M = (f₀/f<sub>e</sub>)(1 − f<sub>e</sub>/D) = (30/3)(1 − 3/25) = 10 × 0.88 = <strong>+8.8</strong><br><br>The option +11.2 comes from using (1 + f<sub>e</sub>/D), which belongs to the astronomical telescope. That is exactly the trap."}]},
+
+{ "name":"D8 · Resolving power","mode":"class","questions":[
+ {"q":"Two stars are very close together. Even with a perfect lens they may blur into one because of","opts":["diffraction — each point becomes a small disc of light","chromatic aberration","low magnification","scattering"],"ans":0,"sol":"Light bends a little at the rim of the objective, so every point source is spread into a tiny disc. If two discs overlap, the two points cannot be told apart.<br><br><strong>Magnification does not help here</strong> — blowing up a blur just gives a bigger blur."},
+ {"q":"The smallest angle a telescope can resolve is θ = 1.22λ/D. So a bigger objective diameter D gives","opts":["a smaller θ, so finer detail is separated","a bigger θ","no change","more magnification"],"ans":0,"sol":"D is on the bottom, so <strong>bigger D → smaller θ → better resolution</strong>.<br><br>Resolving power is just the other way up: <strong>RP = D/1.22λ</strong>."},
+ {"q":"For a microscope the limit is d = 1.22λ/(2μ sin θ), so the resolving power rises when","opts":["μ rises (oil immersion) or λ falls","μ falls","λ rises","the eyepiece is changed"],"ans":0,"sol":"<strong>RP = 2μ sin θ/1.22λ.</strong><br><br>A bigger μ or a shorter λ helps. That is why oil-immersion objectives and blue light are used in good microscopes.<br><br>Again the eyepiece — the magnification — does not appear anywhere."},
+ {"tag":"PYQ · JEE Main 2022, 27 July","q":"A microscope was initially placed in air (refractive index 1). It is then immersed in oil (refractive index 2). For light whose wavelength in air is λ, calculate the change in the microscope's resolving power due to the oil.","opts":["Resolving power will be twice in the oil than it was in the air","Resolving power will be four times in the oil","Resolving power will be half in the oil","Resolving power will be one quarter in the oil"],"ans":0,"sol":"RP ∝ μ (through the numerical aperture 2μ sin θ). μ goes from 1 to 2 → RP becomes <strong>twice</strong>.<br><br>Physically: inside the oil the wavelength shrinks to λ/2, so finer detail is separated."},
+ {"tag":"&#9733; PYQ · JEE Main 2022, 28 June","q":"&#9733; <strong>Original:</strong> The aperture of the objective of a telescope is 24.4 cm. The resolving power of this telescope, if light of wavelength 2440 Å is used to see the object, will be","diagram":DIAGRAMS.aperture(),"opts":["8.2 × 10⁵","8.1 × 10⁶","10.0 × 10⁷","1.0 × 10⁻⁸"],"ans":0,"sol":"RP = D/(1.22λ) = 0.244/(1.22 × 2440 × 10⁻¹⁰) = 0.244/(2.977 × 10⁻⁷) = <strong>8.2 × 10⁵</strong><br><br>Units matter: 2440 Å = 2440 × 10⁻¹⁰ m and 24.4 cm = 0.244 m."}]},
+
+{ "name":"D9 · Aperture and seeing fine detail","mode":"hw","questions":[
+ {"q":"An object of size s sits at distance L. The angle it subtends is","opts":["s/L radians","L/s","sL","s/L degrees"],"ans":0,"sol":"<strong>Angle ≈ s/L radians</strong> for small angles.<br><br>A 2 mm mesh at 80 m subtends 0.002/80 = 2.5 × 10⁻⁵ rad."},
+ {"q":"Two points are resolved by a telescope when the angle they subtend is","opts":["bigger than 1.22λ/D","smaller than 1.22λ/D","equal to the magnification","independent of D"],"ans":0,"sol":"If the object's angle is <strong>bigger than</strong> the telescope's limit 1.22λ/D, the two points are separated; if smaller, they blur into one.<br><br>So the whole method is: compute s/L, compute 1.22λ/D, compare."},
+ {"q":"For D = 3 × 10⁻² m and λ = 5.5 × 10⁻⁷ m, the telescope's limiting angle is","opts":["2.24 × 10⁻⁵ rad","2.24 × 10⁻⁴ rad","1.83 × 10⁻⁵ rad","5.5 × 10⁻⁶ rad"],"ans":0,"sol":"1.22λ/D = 1.22 × 5.5 × 10⁻⁷/3 × 10⁻² = 6.71 × 10⁻⁷/3 × 10⁻² = <strong>2.24 × 10⁻⁵ rad</strong>."},
+ {"tag":"PYQ · AIEEE 2002","q":"An astronomical telescope has a large aperture to","diagram":DIAGRAMS.aperture(),"opts":["have high resolution","reduce spherical aberration","increase the span of observation","have low dispersion"],"ans":0,"sol":"θ = 1.22λ/D: a bigger D makes θ smaller, so finer detail is separated → <strong>high resolution</strong>.<br><br>A large aperture also collects more light so faint stars show up, but the option asked for is resolution."},
+ {"tag":"&#9733; PYQ · JEE Main 2012, 26 May","q":"&#9733; <strong>Original:</strong> A telescope of aperture 3 × 10⁻² m diameter is focused on a window at 80 m distance fitted with a wire mesh of spacing 2 × 10⁻³ m. Given λ = 5.5 × 10⁻⁷ m, which of the following is true for observing the mesh through the telescope?","diagram":DIAGRAMS.mesh(),"opts":["Yes, it is possible with the same aperture size","Possible also with an aperture half the present diameter","No, it is not possible","Given data is not sufficient"],"ans":0,"sol":"Mesh angle (rung 1) = 2 × 10⁻³/80 = <strong>2.5 × 10⁻⁵ rad</strong>.<br><br>Telescope limit (rung 3) = <strong>2.24 × 10⁻⁵ rad</strong>.<br><br>2.5 × 10⁻⁵ &gt; 2.24 × 10⁻⁵ → the mesh is <strong>just resolved — yes, with this aperture</strong>.<br><br>Halving D would double the limit to 4.5 × 10⁻⁵ rad, bigger than 2.5 × 10⁻⁵ → not resolved. So option B is wrong."}]},
+
+{ "name":"D10 · Reflecting telescopes and instrument design","mode":"hw","questions":[
+ {"q":"A mirror reflects every colour by exactly the same law. So a telescope using a concave MIRROR as its objective has","opts":["no chromatic aberration at all","more chromatic aberration","no diffraction","no magnification"],"ans":0,"sol":"Reflection does not depend on μ, so colours are not split → <strong>no chromatic aberration</strong>.<br><br>A lens objective always has some, because μ depends on λ (ladder C3)."},
+ {"q":"A very large glass lens can only be held at its rim, while a large mirror can be supported from behind over its whole back. This means","opts":["big telescopes are built as reflectors","big telescopes are built as refractors","size makes no difference","mirrors cannot be made large"],"ans":0,"sol":"A huge lens sags under its own weight and spoils the image. A mirror is supported everywhere, so it keeps its shape.<br><br>That is why <strong>every big modern telescope is a reflector</strong>."},
+ {"q":"The concave mirror focuses the light back up the tube — right where the observer's head would be. The fix is","opts":["a small secondary mirror that sends the light out to the side or through a hole behind","a bigger eyepiece","a second objective","a prism inside the eyepiece"],"ans":0,"sol":"A small <strong>secondary mirror</strong> turns the converging beam sideways (Newtonian) or back through a hole in the primary (Cassegrain).<br><br>Either way, the <strong>eyepiece ends up outside the tube</strong> where the observer can reach it."},
+ {"tag":"PYQ · JEE Main 2023, 29 Jan","q":"A scientist is observing a bacterium through a compound microscope. For better analysis and to improve its resolving power, he should (select the best option)","opts":["Increase the refractive index of the medium between the object and the objective lens","Increase the wavelength of the light","Decrease the focal length of the eyepiece","Decrease the diameter of the objective lens"],"ans":0,"sol":"RP = 2μ sin θ/1.22λ, so <strong>raising μ</strong> (oil immersion) raises the resolving power.<br><br>Raising λ makes it worse, and changing the eyepiece only changes the magnification.<br><br>Key line for the class: <em>magnification and resolution are not the same thing.</em>"},
+ {"tag":"&#9733; PYQ · JEE Main 2023, 8 April","q":"&#9733; <strong>Original:</strong> In a reflecting telescope, a secondary mirror is used to","opts":["Move the eyepiece outside the telescopic tube","Make chromatic aberration zero","Reduce the problem of mechanical support","Remove spherical aberration"],"ans":0,"sol":"From rung 3: the secondary mirror's job is to <strong>move the eyepiece outside the tube</strong>.<br><br>The other three options are real advantages of the reflecting design itself (rungs 1 and 2), but they are not what the <em>secondary mirror</em> does. That is the whole trick of this question."}]},
+];
+
+
+const STORAGE_KEY = 'padipucast_rayoptics_pyq_prism_disp_instr_v2';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  const LEVELS=['Very easy','Easy','Medium','A bit harder','Almost there'];
+  const _tg=(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; Original question</span>`+_tg
+    : `Rung ${curQ+1} of ${n} &#183; ${q.tag?'Exam level':(LEVELS[curQ]||'Build-up')}`+_tg;
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
