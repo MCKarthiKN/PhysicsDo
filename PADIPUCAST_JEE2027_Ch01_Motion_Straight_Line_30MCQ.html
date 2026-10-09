@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Motion in a Straight Line</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},chtml:{scale:1},options:{enableMenu:false}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root{--bg:#f4efe4;--paper:#fffdf8;--ink:#1d2528;--mute:#5b6668;--line:#e3dccd;--teal:#0f766e;--teal2:#e3f1ee;--amber:#b7791f;--amber2:#fbf0dc;--red:#b42318;--red2:#fbe7e4;--green:#15803d;--green2:#e3f4e8}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(rgba(15,118,110,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(15,118,110,.05) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:16px/1.6 "DM Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;line-height:1.2;margin:0}
+.mono{font-family:"DM Mono",monospace}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:16px}
+.top{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:6px 0 14px;flex-wrap:wrap}
+.brand{font:700 13px "Space Grotesk";letter-spacing:.22em;color:var(--teal)}
+.brand b{color:var(--amber)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 6px 22px rgba(60,50,20,.05)}
+.hidden{display:none!important}
+/* start */
+.hero{padding:28px 26px}
+.hero h1{font-size:clamp(26px,4.4vw,40px)}
+.hero p{color:var(--mute);margin:8px 0 0;max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font:500 12.5px "DM Mono";padding:4px 10px;border-radius:99px;background:var(--teal2);color:var(--teal);white-space:nowrap}
+.chip.am{background:var(--amber2);color:var(--amber)}
+.chip.rd{background:var(--red2);color:var(--red)}
+.chip.gr{background:var(--green2);color:var(--green)}
+.chip.gy{background:#eee9de;color:var(--mute)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.mode{padding:20px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;transition:.15s}
+.mode:hover{border-color:var(--teal);transform:translateY(-1px)}
+.mode h3{font-size:20px}
+.mode p{margin:6px 0 10px;color:var(--mute);font-size:14.5px}
+.mode .go{font:600 14px "Space Grotesk";color:var(--teal)}
+.mode.t .go{color:var(--amber)}
+.mode.t:hover{border-color:var(--amber)}
+.tmap{margin-top:16px;padding:18px 20px}
+.tmap h3{font-size:16px;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dashed var(--line);font-size:14.5px}
+.trow:first-of-type{border-top:0}
+.trow span:last-child{font-family:"DM Mono";color:var(--mute);font-size:13px;white-space:nowrap}
+/* work */
+.bar{position:sticky;top:0;z-index:20;background:rgba(244,239,228,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin:0 -16px 14px;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar .ttl{font:600 15px "Space Grotesk"}
+.clock{font:500 20px "DM Mono";padding:4px 12px;border-radius:10px;background:var(--ink);color:#fff}
+.clock.low{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.75}}
+.btn{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 14px;font-weight:500;color:var(--ink)}
+.btn:hover{border-color:var(--teal)}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.am{background:var(--amber);border-color:var(--amber);color:#fff}
+.btn.sm{padding:5px 10px;font-size:14px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.qcard{padding:22px 24px}
+.qhead{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.qno{font:700 15px "Space Grotesk";color:var(--teal);margin-right:4px}
+.qtext{font-size:17px}
+.qtext p{margin:0 0 8px}
+.dt{border-collapse:collapse;margin:10px 0;font-size:14.5px;background:#fff}
+.dt td,.dt th{border:1px solid var(--line);padding:5px 10px;text-align:left}
+.dt th{background:#f8f4ea;font-weight:600}
+.figwrap{display:flex;justify-content:center;margin:12px 0 4px}
+.fig{width:100%;max-width:330px;height:auto}
+.figwrap .fig.wide{max-width:440px}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opts.og{grid-template-columns:1fr 1fr}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);transition:.12s;min-height:48px}
+.opt:hover{border-color:var(--teal)}
+.opt .lb{font:500 14px "DM Mono";color:var(--mute);flex:0 0 auto;padding-top:2px}
+.opt .ot{flex:1;min-width:0;overflow-x:auto}
+.opts.og .opt{flex-direction:column;align-items:center}
+.opts.og .opt .ot{width:100%}
+.opts.og .fig{max-width:200px;display:block;margin:0 auto}
+.opt.sel{border-color:var(--teal);background:var(--teal2)}
+.opt.ok{border-color:var(--green);background:var(--green2)}
+.opt.no{border-color:var(--red);background:var(--red2)}
+.opt[disabled]{cursor:default}
+.sol{margin-top:16px;border-left:4px solid var(--amber);background:var(--amber2);border-radius:0 12px 12px 0;padding:12px 16px;font-size:15.5px}
+.sol h4{margin:0 0 4px;font:600 14px "Space Grotesk";color:var(--amber);letter-spacing:.04em;text-transform:uppercase}
+.sol p{margin:4px 0}
+.verdict{margin-top:14px;font:600 15px "Space Grotesk"}
+.verdict.ok{color:var(--green)}.verdict.no{color:var(--red)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.side{padding:16px;position:sticky;top:70px}
+.side h3{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.stat{background:#f8f4ea;border-radius:10px;padding:7px 4px;text-align:center}
+.stat b{display:block;font:600 18px "DM Mono"}
+.stat span{font-size:11.5px;color:var(--mute)}
+.tg{font:600 12px "Space Grotesk";color:var(--teal);margin:10px 0 6px;letter-spacing:.03em}
+.dots{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.dot{aspect-ratio:1;border:1.5px solid var(--line);border-radius:9px;background:#fff;font:500 13px "DM Mono";color:var(--ink);padding:0}
+.dot.cur{outline:2.5px solid var(--ink);outline-offset:1px}
+.dot.ans{background:var(--teal);border-color:var(--teal);color:#fff}
+.dot.ok{background:var(--green);border-color:var(--green);color:#fff}
+.dot.no{background:var(--red);border-color:var(--red);color:#fff}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--mute)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.sidebtns{display:grid;gap:8px;margin-top:14px}
+.toggleSide{display:none}
+/* result */
+.res{padding:24px}
+.ringrow{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring{width:150px;height:150px;flex:0 0 auto}
+.msg{font-size:16px;max-width:52ch}
+table.tt{width:100%;border-collapse:collapse;margin-top:16px;font-size:14.5px}
+.tt th,.tt td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+.tt th{font:600 12px "Space Grotesk";color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.tt td.n{font-family:"DM Mono";white-space:nowrap}
+.barmini{height:8px;border-radius:9px;background:#eee7d8;overflow:hidden;min-width:60px}
+.barmini i{display:block;height:100%;background:var(--teal)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 12px}
+.filters .btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rv{padding:18px 20px;margin-bottom:12px}
+.rv .yours{font-size:14px;color:var(--mute);margin-top:10px}
+.modal{position:fixed;inset:0;background:rgba(20,25,28,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal .card{padding:22px;max-width:420px;width:100%}
+.modal p{color:var(--mute)}
+.foot{color:var(--mute);font-size:13px;text-align:center;margin:26px 0 8px}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (max-width:860px){
+ .grid2{grid-template-columns:1fr}
+ .side{position:static}
+ .toggleSide{display:inline-block}
+ .side.closed{display:none}
+}
+@media (max-width:560px){
+ .modes{grid-template-columns:1fr}
+ .qcard{padding:16px}
+ .qtext{font-size:16px}
+ .opts.og{grid-template-columns:1fr 1fr;gap:8px}
+ .opts.og .opt{padding:8px}
+ .dots{grid-template-columns:repeat(6,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top"><div class="brand">PADI<b>PU</b>CAST</div><div class="chip gy">JEE Main PYQ · 2027 prep</div></div>
+
+ <!-- START -->
+ <section id="start">
+  <div class="card hero">
+   <div class="chip am" style="display:inline-block;margin:0 0 10px">Chapter 1 · Kinematics</div>
+   <h1>Motion in a Straight Line</h1>
+   <p>30 high-yield JEE Main PYQs (2014–2022) picked for JEE 2027: calculus in 1D, uniform acceleration, vertical motion, graphs and relative motion. Every answer checked, every solution worked step by step.</p>
+   <div class="chips" id="metaChips"></div>
+   <div class="modes">
+    <button class="mode" id="goPractice"><h3>Practice mode</h3><p>Answer one by one. You see right or wrong at once, with the full working. Your progress is saved on this device.</p><span class="go" id="pracInfo">Start practice →</span></button>
+    <button class="mode t" id="goTest"><h3>Test mode</h3><p>One clock for the whole paper (60 min). +4 right, −1 wrong. Question and option order shuffled. Answers shown only after you submit.</p><span class="go" id="bestInfo">Start test →</span></button>
+   </div>
+  </div>
+  <div class="card tmap"><h3>What this sheet covers</h3><div id="topicMap"></div></div>
+ </section>
+
+ <!-- WORK -->
+ <section id="work" class="hidden">
+  <div class="bar">
+   <div class="ttl" id="barTitle"></div>
+   <div style="display:flex;gap:8px;align-items:center">
+    <button class="btn sm toggleSide" id="toggleSide">Questions</button>
+    <span class="clock hidden" id="clock">60:00</span>
+    <button class="btn sm" id="homeBtn">Home</button>
+   </div>
+  </div>
+  <div class="grid2">
+   <div>
+    <div class="card qcard" id="qcard"></div>
+   </div>
+   <aside class="card side closed" id="side"></aside>
+  </div>
+ </section>
+
+ <!-- RESULT -->
+ <section id="result" class="hidden"></section>
+
+ <div class="foot">PADIPUCAST · Motion in a Straight Line · questions from the JEE Main archive, solutions worked from first principles</div>
+</div>
+
+<div class="modal hidden" id="modal"><div class="card" id="modalCard"></div></div>
+
+<script>
+const R=String.raw;
+const QS=[];
+/* ---- tiny SVG graph helper ----
+ G({x:[x0,x1], y:[y0,y1], xl:'t', yl:'v', s:[{p:[[x,y],...]}|{f:fn,a,b,n}], xt:[[v,'lbl']], yt:[[v,'lbl']],
+    gd:[[x1,y1,x2,y2]], pt:[[x,y,'lbl',dx,dy]], tx:[[x,y,'txt',anchor]], w, h, cls, ar:[[x,y,deg]] })  */
+let _gid=0;
+const INK='#1d2528',TEAL='#0f766e',AMB='#b7791f',RED='#b42318',MUTE='#5b6668';
+function G(o){
+ const W=o.w||250,H=o.h||175,ml=o.ml||34,mr=o.mr||16,mt=o.mt||16,mb=o.mb||26,id='a'+(++_gid);
+ const [x0,x1]=o.x,[y0,y1]=o.y;
+ const X=v=>ml+(v-x0)/(x1-x0)*(W-ml-mr), Y=v=>H-mb-(v-y0)/(y1-y0)*(H-mt-mb);
+ const ox=X(Math.min(Math.max(0,x0),x1)), oy=Y(Math.min(Math.max(0,y0),y1));
+ let s=`<svg class="fig ${o.cls||''}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INK}"/></marker><marker id="${id}c" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="${TEAL}"/></marker></defs>`;
+ (o.gd||[]).forEach(g=>{s+=`<line x1="${X(g[0])}" y1="${Y(g[1])}" x2="${X(g[2])}" y2="${Y(g[3])}" stroke="${MUTE}" stroke-width="1" stroke-dasharray="3 3"/>`});
+ s+=`<line x1="${ml-4}" y1="${oy}" x2="${W-4}" y2="${oy}" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ s+=`<line x1="${ox}" y1="${H-mb+4}" x2="${ox}" y2="6" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ if(o.xl)s+=`<text x="${W-6}" y="${oy+(o.xlUp?-6:15)}" text-anchor="end" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`;
+ if(o.yl)s+=`<text x="${ox+6}" y="13" font-size="12" font-style="italic" fill="${INK}">${o.yl}</text>`;
+ (o.xt||[]).forEach(t=>{s+=`<line x1="${X(t[0])}" y1="${oy-3}" x2="${X(t[0])}" y2="${oy+3}" stroke="${INK}"/><text x="${X(t[0])}" y="${oy+(t[2]||14)}" text-anchor="middle" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.yt||[]).forEach(t=>{s+=`<line x1="${ox-3}" y1="${Y(t[0])}" x2="${ox+3}" y2="${Y(t[0])}" stroke="${INK}"/><text x="${ox-6}" y="${Y(t[0])+3.5}" text-anchor="end" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.fill||[]).forEach(f=>{s+=`<polygon points="${f.p.map(q=>X(q[0])+','+Y(q[1])).join(' ')}" fill="${f.c||TEAL}" opacity="${f.op||.15}"/>`});
+ (o.s||[]).forEach(r=>{
+  let pts=r.p;
+  if(r.f){pts=[];const n=r.n||60;for(let i=0;i<=n;i++){const x=r.a+(r.b-r.a)*i/n;pts.push([x,r.f(x)])}}
+  s+=`<polyline points="${pts.map(q=>X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join(' ')}" fill="none" stroke="${r.c||TEAL}" stroke-width="${r.w||2.2}" stroke-linejoin="round" stroke-linecap="round" ${r.d?'stroke-dasharray="5 4"':''}/>`;
+ });
+ (o.ar||[]).forEach(a=>{s+=`<g transform="translate(${X(a[0])},${Y(a[1])}) rotate(${a[2]})"><path d="M-5,-4 L4,0 L-5,4 z" fill="${a[3]||TEAL}"/></g>`});
+ (o.pt||[]).forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3" fill="${INK}"/>`;if(p[2])s+=`<text x="${X(p[0])+(p[3]||5)}" y="${Y(p[1])+(p[4]||-6)}" font-size="11.5" font-weight="700" fill="${INK}">${p[2]}</text>`});
+ (o.tx||[]).forEach(t=>{s+=`<text x="${X(t[0])}" y="${Y(t[1])}" text-anchor="${t[3]||'middle'}" font-size="${t[4]||11}" fill="${t[5]||INK}">${t[2]}</text>`});
+ return s+'</svg>';
+}
+/* plain SVG wrapper for hand-drawn figures */
+function SV(w,h,body,cls){const id='b'+(++_gid);const mk=(n,c)=>`<marker id="${id}${n}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`;
+ return `<svg class="fig ${cls||''}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs>${mk('k',INK)}${mk('t',TEAL)}${mk('a',AMB)}${mk('r',RED)}</defs>${body.replace(/MK([ktar])/g,(m,c)=>'url(#'+id+c+')')}</svg>`}
+
+</script>
+<script>
+// Ch-01 Motion in a Straight Line — part A: calculus + uniform acceleration
+QS.push(
+{t:'Calculus in 1D motion',y:'JEE Main 2019',
+ q:R`The position of a particle as a function of time $t$ is $x(t)=at+bt^2-ct^3$, where $a$, $b$ and $c$ are constants. When the particle attains zero acceleration, its velocity will be`,
+ o:[R`$a+\dfrac{b^2}{4c}$`,R`$a+\dfrac{b^2}{3c}$`,R`$a+\dfrac{b^2}{2c}$`,R`$a+\dfrac{b^2}{c}$`],a:1,
+ s:R`<p>Velocity: $v=\dfrac{dx}{dt}=a+2bt-3ct^2$. Acceleration: $\dfrac{dv}{dt}=2b-6ct$.</p><p>Zero acceleration when $2b-6ct=0\Rightarrow t=\dfrac{b}{3c}$.</p><p>Put this $t$ in $v$: $v=a+2b\cdot\dfrac{b}{3c}-3c\cdot\dfrac{b^2}{9c^2}=a+\dfrac{2b^2}{3c}-\dfrac{b^2}{3c}=a+\dfrac{b^2}{3c}$.</p>`},
+
+{t:'Calculus in 1D motion',y:'JEE Main 2019',
+ q:R`A particle moves along the positive $x$-axis with speed $v=b\sqrt{x}$. It is at the origin at $t=0$. The speed of the particle at time $t=\tau$ is`,
+ o:[R`$b^2\tau$`,R`$\dfrac{b^2\tau}{4}$`,R`$\dfrac{b^2\tau}{2}$`,R`$\dfrac{b^2\tau}{\sqrt2}$`],a:2,
+ s:R`<p>$\dfrac{dx}{dt}=b\sqrt{x}\Rightarrow\displaystyle\int_0^x\frac{dx}{\sqrt x}=\int_0^\tau b\,dt\Rightarrow 2\sqrt{x}=b\tau\Rightarrow\sqrt x=\frac{b\tau}{2}$.</p><p>So $v=b\sqrt x=\dfrac{b^2\tau}{2}$.</p><p><b>Quick check:</b> $a=v\dfrac{dv}{dx}=b\sqrt x\cdot\dfrac{b}{2\sqrt x}=\dfrac{b^2}{2}$ — constant! Starting from rest, $v=at=\dfrac{b^2\tau}{2}$.</p>`},
+
+{t:'Calculus in 1D motion',y:'JEE Main 2020',
+ q:R`The distance $x$ covered by a particle in one-dimensional motion varies with time $t$ as $x^2=at^2+2bt+c$. If the acceleration of the particle depends on $x$ as $x^{-n}$, where $n$ is an integer, the value of $n$ is`,
+ o:[R`1`,R`2`,R`3`,R`4`],a:2,
+ s:R`<p>Differentiate once: $2x\,v=2at+2b\Rightarrow xv=at+b$.</p><p>Differentiate again: $v^2+x\,\alpha=a$ (here $\alpha$ = acceleration), so $\alpha=\dfrac{a-v^2}{x}$.</p><p>Use $v=\dfrac{at+b}{x}$: $\alpha=\dfrac{ax^2-(at+b)^2}{x^3}$. The top is $a(at^2+2bt+c)-(a^2t^2+2abt+b^2)=ac-b^2$, a constant.</p><p>So $\alpha=\dfrac{ac-b^2}{x^3}\propto x^{-3}$, giving $n=3$.</p>`},
+
+{t:'Calculus in 1D motion',y:'JEE Main 2021',
+ q:R`The relation between time $t$ and distance $x$ for a moving body is $t=mx^2+nx$, where $m$ and $n$ are constants. The retardation of the motion is ($v$ is the velocity)`,
+ o:[R`$2nv^3$`,R`$2mv^3$`,R`$2mnv^3$`,R`$2n^2v^3$`],a:1,
+ s:R`<p>Here $t$ is given as a function of $x$, so start with $\dfrac{dt}{dx}=2mx+n=\dfrac1v$.</p><p>Differentiate both sides with respect to $t$: left side $\dfrac{d}{dt}(2mx+n)=2m\,v$; right side $\dfrac{d}{dt}\Big(\dfrac1v\Big)=-\dfrac{1}{v^2}\dfrac{dv}{dt}$.</p><p>So $-\dfrac{1}{v^2}\dfrac{dv}{dt}=2mv\Rightarrow\dfrac{dv}{dt}=-2mv^3$. Retardation $=2mv^3$.</p>`},
+
+{t:'Calculus in 1D motion',y:'JEE Main 2021',
+ q:R`The velocity of a body is related to its displacement $x$ as $v=\sqrt{5000+24x}$ m/s. The acceleration of the body is`,
+ o:[R`6 m/s²`,R`12 m/s²`,R`24 m/s²`,R`48 m/s²`],a:1,
+ s:R`<p>Square it: $v^2=5000+24x$.</p><p>Use $a=v\dfrac{dv}{dx}=\dfrac12\dfrac{d(v^2)}{dx}=\dfrac12\times24=12$ m/s².</p><p>Remember: whenever $v^2$ is a straight line in $x$, the acceleration is constant and equals half the slope. (24 is the trap — that is the slope, not $a$.)</p>`},
+
+{t:'Calculus in 1D motion',y:'JEE Main 2022',
+ q:R`A particle moves in a straight line so that its velocity increases at the rate of 5 m/s per metre. Its acceleration at a point where its velocity is 20 m/s is`,
+ o:[R`4 m/s²`,R`25 m/s²`,R`100 m/s²`,R`400 m/s²`],a:2,
+ s:R`<p>"Increasing at 5 m/s per metre" means $\dfrac{dv}{dx}=5\ \text{s}^{-1}$ (per metre, not per second).</p><p>$a=\dfrac{dv}{dt}=\dfrac{dv}{dx}\cdot\dfrac{dx}{dt}=v\dfrac{dv}{dx}=20\times5=100$ m/s².</p>`},
+
+{t:'Uniform acceleration',y:'JEE Main 2019',
+ q:R`In a car race on a straight road, car A takes a time $t$ less than car B at the finish and passes the finishing point with a speed $v$ more than car B. Both cars start from rest and travel with constant accelerations $a_1$ and $a_2$ respectively. Then $v$ is equal to`,
+ o:[R`$\dfrac{a_1+a_2}{2}\,t$`,R`$\dfrac{2a_1a_2}{a_1+a_2}\,t$`,R`$\sqrt{2a_1a_2}\;t$`,R`$\sqrt{a_1a_2}\;t$`],a:3,
+ s:R`<p>Let B take time $T$; then A takes $T-t$. Same track length:</p><p>$\tfrac12a_2T^2=\tfrac12a_1(T-t)^2\Rightarrow\sqrt{a_1}\,(T-t)=\sqrt{a_2}\,T$ ...(i)</p><p>Finish speeds: $v_A=a_1(T-t)=\sqrt{a_1a_2}\,T$ (using (i)) and $v_B=a_2T$. So $v=v_A-v_B=\sqrt{a_2}\,T(\sqrt{a_1}-\sqrt{a_2})$.</p><p>From (i): $t=T\,\dfrac{\sqrt{a_1}-\sqrt{a_2}}{\sqrt{a_1}}$.</p><p>Divide: $\dfrac{v}{t}=\sqrt{a_1}\sqrt{a_2}\Rightarrow v=\sqrt{a_1a_2}\;t$.</p>`},
+
+{t:'Uniform acceleration',y:'JEE Main 2021',
+ q:R`An engine of a train, moving with uniform acceleration, passes a signal post with velocity $u$ and the last compartment passes it with velocity $v$. The velocity with which the middle point of the train passes the signal post is`,
+ o:[R`$\sqrt{\dfrac{v^2-u^2}{2}}$`,R`$\dfrac{v-u}{2}$`,R`$\sqrt{\dfrac{v^2+u^2}{2}}$`,R`$\dfrac{u+v}{2}$`],a:2,
+ s:R`<p>Let the train length be $L$ and acceleration $a$. While the whole train passes the post, the train moves $L$: $v^2-u^2=2aL$.</p><p>When the middle passes, the train has moved $L/2$: $v_m^2-u^2=2a\cdot\dfrac L2=\dfrac{v^2-u^2}{2}$.</p><p>So $v_m^2=\dfrac{u^2+v^2}{2}\Rightarrow v_m=\sqrt{\dfrac{u^2+v^2}{2}}$ (rms value, not the plain average).</p>`},
+
+{t:'Uniform acceleration',y:'JEE Main 2021',
+ q:R`A car accelerates from rest at a constant rate $\alpha$ for some time, after which it decelerates at a constant rate $\beta$ and comes to rest. If the total time elapsed is $t$ seconds, the total distance travelled is`,
+ o:[R`$\dfrac{2\alpha\beta}{\alpha+\beta}\,t^2$`,R`$\dfrac{\alpha\beta}{2(\alpha+\beta)}\,t^2$`,R`$\dfrac{\alpha\beta}{4(\alpha+\beta)}\,t^2$`,R`$\dfrac{4\alpha\beta}{\alpha+\beta}\,t^2$`],a:1,
+ s:R`<p>Draw the $v$–$t$ graph: a triangle. Peak speed $v_m=\alpha t_1=\beta t_2$ and $t_1+t_2=t$.</p><p>$v_m\Big(\dfrac1\alpha+\dfrac1\beta\Big)=t\Rightarrow v_m=\dfrac{\alpha\beta\,t}{\alpha+\beta}$.</p><p>Distance = area of triangle $=\tfrac12\,t\,v_m=\dfrac{\alpha\beta}{2(\alpha+\beta)}\,t^2$.</p>`},
+
+{t:'Uniform acceleration',y:'JEE Main 2022',
+ q:R`A small toy starts moving from rest under a constant acceleration. If it travels a distance of 10 m in $t$ s, the distance travelled by the toy in the next $t$ s will be`,
+ o:[R`10 m`,R`20 m`,R`30 m`,R`40 m`],a:2,
+ s:R`<p>From rest: $\tfrac12at^2=10$ m. In time $2t$: $\tfrac12a(2t)^2=4\times10=40$ m.</p><p>Distance in the next $t$ s $=40-10=30$ m.</p><p>Galileo's rule: from rest, distances in equal time intervals go as $1:3:5:\dots$ — so $10\to30$.</p>`},
+
+{t:'Uniform acceleration',y:'JEE Main 2022',
+ q:R`A car covers distance AB with the first one-third at velocity $v_1$, the second one-third at $v_2$ and the last one-third at $v_3$. If $v_3=3v_1$, $v_2=2v_1$ and $v_1=11$ m/s, the average velocity of the car is`,
+ o:[R`16.5 m/s`,R`18 m/s`,R`20 m/s`,R`22 m/s`],a:1,
+ s:R`<p>Equal <b>distances</b>, so do NOT take the plain average. Let each third be $d$.</p><p>Total time $=\dfrac{d}{11}+\dfrac{d}{22}+\dfrac{d}{33}=d\cdot\dfrac{6+3+2}{66}=\dfrac d6$.</p><p>Average velocity $=\dfrac{3d}{d/6}=18$ m/s.</p><p>22 m/s (simple average of 11, 22, 33) is the trap — that works only for equal <b>times</b>.</p>`}
+);
+
+</script>
+<script>
+// Ch-01 part B: vertical motion under gravity
+QS.push(
+{t:'Vertical motion under gravity',y:'JEE Main 2014',
+ q:R`From a tower of height $H$, a particle is thrown vertically upwards with speed $u$. The time taken by the particle to hit the ground is $n$ times the time it takes to reach the highest point of its path. The relation between $H$, $u$ and $n$ is`,
+ o:[R`$2gH=n^2u^2$`,R`$gH=(n-2)^2u^2$`,R`$2gH=nu^2(n-2)$`,R`$gH=(n-2)u^2$`],a:2,
+ s:R`<p>Time to the top: $t_1=\dfrac ug$. Total time is $t=\dfrac{nu}{g}$.</p><p>Take up as $+$; the ground is at $-H$: $-H=ut-\tfrac12gt^2\Rightarrow t=\dfrac{u+\sqrt{u^2+2gH}}{g}$.</p><p>So $u+\sqrt{u^2+2gH}=nu\Rightarrow u^2+2gH=(n-1)^2u^2\Rightarrow 2gH=(n^2-2n)u^2=nu^2(n-2)$.</p>`},
+
+{t:'Vertical motion under gravity',y:'JEE Main 2020',
+ q:R`A helicopter rises from rest on the ground vertically upwards with a constant acceleration $g$. A food packet is dropped from the helicopter when it is at a height $h$. The time taken by the packet to reach the ground is close to`,
+ o:[R`$t=3.4\sqrt{\dfrac hg}$`,R`$t=1.8\sqrt{\dfrac hg}$`,R`$t=\sqrt{\dfrac{2h}{3g}}$`,R`$t=\dfrac23\sqrt{\dfrac hg}$`],a:0,
+ s:R`<p>"Dropped" means the packet keeps the helicopter's velocity at that moment: $v^2=2gh\Rightarrow v=\sqrt{2gh}$ <b>upwards</b>.</p><p>It rises a further $\dfrac{v^2}{2g}=h$, so its top is at $2h$. Time up $=\dfrac vg=\sqrt{\dfrac{2h}{g}}$.</p><p>Fall from $2h$: $\sqrt{\dfrac{2(2h)}{g}}=2\sqrt{\dfrac hg}$.</p><p>Total $=(\sqrt2+2)\sqrt{\dfrac hg}\approx3.4\sqrt{\dfrac hg}$.</p>`},
+
+{t:'Vertical motion under gravity',y:'JEE Main 2020',
+ q:R`A ball is dropped from the top of a 100 m high tower on a planet. In the last $\tfrac12$ s before hitting the ground, it covers a distance of 19 m. The acceleration due to gravity near the surface of that planet is`,
+ o:[R`4 m/s²`,R`8 m/s²`,R`9.8 m/s²`,R`16 m/s²`],a:1,
+ s:R`<p>Let the total fall time be $T$: $\tfrac12gT^2=100\Rightarrow T=\sqrt{200/g}$.</p><p>Up to $\tfrac12$ s before landing it has fallen $100-19=81$ m: $\tfrac12g\big(T-\tfrac12\big)^2=81\Rightarrow T-\tfrac12=\sqrt{162/g}$.</p><p>Subtract: $\dfrac{\sqrt{200}-\sqrt{162}}{\sqrt g}=\dfrac12\Rightarrow\dfrac{10\sqrt2-9\sqrt2}{\sqrt g}=\dfrac12\Rightarrow\sqrt g=2\sqrt2\Rightarrow g=8$ m/s².</p>`},
+
+{t:'Vertical motion under gravity',y:'JEE Main 2021',
+ q:R`A stone is dropped from the top of a building. When it crosses a point 5 m below the top, another stone starts to fall from a point 25 m below the top. Both stones reach the bottom of the building simultaneously. The height of the building is ($g=10$ m/s²)`,
+ o:[R`35 m`,R`45 m`,R`25 m`,R`50 m`],a:1,
+ s:R`<p>After falling 5 m, stone 1 has speed $\sqrt{2\times10\times5}=10$ m/s. Stone 2 starts from rest 20 m below it.</p><p>Both have the same acceleration $g$, so <b>relative</b> acceleration is 0 and relative speed stays 10 m/s. The 20 m gap closes in $20/10=2$ s — exactly when both hit the bottom.</p><p>Stone 2 falls $\tfrac12\times10\times2^2=20$ m. Height $=25+20=45$ m.</p>`},
+
+{t:'Vertical motion under gravity',y:'JEE Main 2021',
+ q:R`A balloon is moving upwards with a uniform velocity of 10 m/s. An object is dropped from it when it is at a height of 75 m above the ground. The height of the balloon when the object strikes the ground is about ($g=10$ m/s²)`,
+ o:[R`250 m`,R`125 m`,R`300 m`,R`200 m`],a:1,
+ s:R`<p>The object starts with the balloon's velocity: 10 m/s <b>up</b>.</p><p>Up $+$: $-75=10t-5t^2\Rightarrow t^2-2t-15=0\Rightarrow t=5$ s.</p><p>In 5 s the balloon rises $10\times5=50$ m. Its height $=75+50=125$ m.</p>`},
+
+{t:'Vertical motion under gravity',y:'JEE Main 2021',
+ q:R`Two small balls of equal mass are thrown upwards along the same vertical line at an interval of 3 s, each with an initial velocity of 35 m/s. The balls collide at a height of (treat them as points; $g=10$ m/s²)`,
+ o:[R`45 m`,R`50 m`,R`60 m`,R`35 m`],a:1,
+ s:R`<p>At $t=3$ s (when ball 2 is thrown): ball 1 is at $35\times3-5\times9=60$ m, moving up at $35-30=5$ m/s.</p><p>Both have acceleration $g$, so relative acceleration is 0. Relative speed $=35-5=30$ m/s, gap 60 m. They meet after $60/30=2$ s.</p><p>Height of ball 2 then: $35\times2-5\times2^2=50$ m. (60 m is the trap — that is only where ball 1 was at 3 s.)</p>`},
+
+{t:'Vertical motion under gravity',y:'JEE Main 2021',
+ q:R`Water drops fall from a shower nozzle onto the floor from a height of 9.8 m, at regular intervals. When the first drop strikes the floor, the third drop just begins to fall. The position of the second drop from the <b>floor</b> at that instant is`,
+ o:[R`2.45 m`,R`7.35 m`,R`2.94 m`,R`4.18 m`],a:1,
+ s:R`<p>Fall time for 9.8 m: $T=\sqrt{\dfrac{2\times9.8}{9.8}}=\sqrt2$ s.</p><p>Drops 1, 2, 3 make two equal gaps in this time, so the interval is $\dfrac{T}{2}=\dfrac1{\sqrt2}$ s.</p><p>Drop 2 has fallen for $\dfrac1{\sqrt2}$ s: $\tfrac12\times9.8\times\tfrac12=2.45$ m below the nozzle.</p><p>Height from floor $=9.8-2.45=7.35$ m. (2.45 m is the trap.)</p>`},
+
+{t:'Vertical motion under gravity',y:'JEE Main 2022',
+ q:R`From the top of a tower, a ball thrown vertically upwards reaches the ground in 6 s. A second ball thrown vertically downwards from the same point with the same speed reaches the ground in 1.5 s. A third ball released from rest from the same point will reach the ground in`,
+ o:[R`2.25 s`,R`3 s`,R`3.75 s`,R`4.5 s`],a:1,
+ s:R`<p>Down $+$, tower height $h$. Up-throw: $h=-ut_1+\tfrac12gt_1^2$. Down-throw: $h=ut_2+\tfrac12gt_2^2$.</p><p>Subtract: $u(t_1+t_2)=\tfrac12g(t_1^2-t_2^2)\Rightarrow u=\tfrac12g(t_1-t_2)$.</p><p>Then $h=\tfrac12g(t_1-t_2)t_2+\tfrac12gt_2^2=\tfrac12g\,t_1t_2$.</p><p>Dropped ball: $\tfrac12gt^2=\tfrac12gt_1t_2\Rightarrow t=\sqrt{t_1t_2}=\sqrt{6\times1.5}=3$ s.</p>`},
+
+{t:'Vertical motion under gravity',y:'JEE Main 2022',
+ q:R`A ball is thrown vertically upwards with a velocity of 19.6 m/s from the top of a tower. It strikes the ground after 6 s. The maximum height from the ground reached by the ball is $\dfrac k5$ m. The value of $k$ is ($g=9.8$ m/s²)`,
+ o:[R`196`,R`294`,R`392`,R`490`],a:2,
+ s:R`<p>Up $+$: $-H=19.6\times6-4.9\times36=117.6-176.4=-58.8\Rightarrow$ tower height $H=58.8$ m.</p><p>Rise above the tower: $\dfrac{u^2}{2g}=\dfrac{19.6^2}{19.6}=19.6$ m.</p><p>Maximum height from ground $=58.8+19.6=78.4$ m $=\dfrac k5\Rightarrow k=392$.</p><p>(294 is the trap: that is $5\times58.8$, the tower alone.)</p>`},
+
+{t:'Vertical motion under gravity',y:'JEE Main 2022',
+ q:R`A ball is thrown up vertically with a certain velocity so that it reaches a maximum height $h$. The ratio of the times at which it is at height $\dfrac h3$ while going up and while coming down is`,
+ o:[R`$\dfrac{\sqrt2-1}{\sqrt2+1}$`,R`$\dfrac{\sqrt3-\sqrt2}{\sqrt3+\sqrt2}$`,R`$\dfrac{\sqrt3-1}{\sqrt3+1}$`,R`$\dfrac13$`],a:1,
+ s:R`<p>Throw speed: $u=\sqrt{2gh}$. At height $\dfrac h3$: $\dfrac h3=ut-\tfrac12gt^2\Rightarrow\tfrac12gt^2-ut+\dfrac h3=0$.</p><p>$t=\dfrac{u\pm\sqrt{u^2-\frac{2gh}{3}}}{g}=\dfrac{\sqrt{2gh}\pm\sqrt{\frac{4gh}{3}}}{g}$.</p><p>Ratio $=\dfrac{\sqrt2-\sqrt{4/3}}{\sqrt2+\sqrt{4/3}}$. Multiply top and bottom by $\sqrt{3/2}$: $\dfrac{\sqrt3-\sqrt2}{\sqrt3+\sqrt2}$.</p><p>This exact question came in 2021 <b>and</b> 2022 — learn the method.</p>`}
+);
+
+</script>
+<script>
+// Ch-01 part C: motion graphs + relative motion in 1D
+(function(){
+const q3=s=>G({x:[0,13.6],y:[0,275],xl:'t (s)',xlUp:1,yl:'y₂ − y₁ (m)',xt:[[8,'8'],[12,'12']],yt:[[240,'240']],gd:[[0,240,8,240],[8,0,8,240]],s:s,w:230,h:165,ml:40});
+const up=[[0,0],[8,240]];
+const vA=s=>G({x:[0,4.7],y:[-2.6,2.6],xl:'t',yl:'a',s:[{p:s}],w:200,h:150,ml:22});
+const ax=p=>G({x:[0,1.35],y:[-1.3,1.3],xl:'x',yl:'a',xt:[[1,'x₀']],s:[{p}],w:200,h:150,ml:22});
+const st=s=>G({x:[0,1.25],y:[0,1.25],xl:'t',yl:'s',s:[s],w:190,h:140,ml:22});
+QS.push(
+{t:'Motion graphs',keep:1,y:'JEE Main 2015',
+ q:R`Two stones are thrown up simultaneously from the edge of a cliff 240 m high, with initial speeds 10 m/s and 40 m/s. Which graph best shows the time variation of the relative position of the second stone with respect to the first? (Stones do not rebound after hitting the ground; no air resistance; $g=10$ m/s². Graphs are schematic.)`,
+ o:[q3([{p:[...up,[12,0]]}]),q3([{p:[[0,0],[12,240],[12,0]]}]),q3([{p:up},{f:t=>40*t-5*t*t+240,a:8,b:12}]),q3([{p:up},{f:t=>240*Math.pow((12-t)/4,2),a:8,b:12}])],a:2,
+ s:R`<p>Stone 1 (10 m/s) lands when $-240=10t-5t^2\Rightarrow t=8$ s. Stone 2 (40 m/s) lands when $-240=40t-5t^2\Rightarrow t=12$ s.</p><p><b>0 to 8 s:</b> both in air, same $g$, so $y_2-y_1=(40-10)t=30t$ — a straight line reaching 240 m at 8 s.</p><p><b>8 to 12 s:</b> stone 1 sits at $-240$ m. $y_2-y_1=40t-5t^2+240$ — a <b>downward-opening parabola</b> (concave down), falling to 0 at 12 s. That is graph (3).</p>`},
+
+{t:'Motion graphs',keep:1,y:'JEE Main 2019',
+ q:R`A particle starts from the origin at $t=0$ and moves along the positive $x$-axis. Its velocity–time graph is shown. What is the position of the particle at $t=5$ s?`,
+ f:G({x:[0,10.6],y:[0,3.6],xl:'t (s)',yl:'v (m/s)',w:320,h:180,xt:[1,2,3,4,5,6,7,8,9,10].map(v=>[v,''+v]),yt:[[1,'1'],[2,'2'],[3,'3']],gd:[[0,1,10,1],[0,2,10,2],[0,3,10,3],...[1,2,3,4,5,6,7,8,9,10].map(v=>[v,0,v,3.4])],s:[{p:[[0,0],[2,2],[4,2],[4,3],[6,3],[6,2],[7,2],[8,0]]}]}),
+ o:[R`9 m`,R`6 m`,R`10 m`,R`3 m`],a:0,
+ s:R`<p>Displacement = area under the $v$–$t$ graph from 0 to 5 s.</p><p>0–2 s triangle: $\tfrac12\times2\times2=2$ m. 2–4 s rectangle: $2\times2=4$ m. 4–5 s rectangle: $3\times1=3$ m.</p><p>Position at 5 s $=2+4+3=9$ m.</p>`},
+
+{t:'Motion graphs',keep:1,y:'JEE Main 2020',
+ q:R`The velocity–time graph of a body in straight-line motion is shown. The point S is at $t=4.333$ s. The total distance covered by the body in 6 s is`,
+ f:G({x:[0,6.7],y:[-2.8,4.9],xl:'t (s)',yl:'v (m/s)',w:300,h:190,xt:[1,2,3,5,6].map(v=>[v,''+v]),yt:[[4,'4'],[2,'2'],[-2,'−2']],gd:[[0,4,2,4],[5,0,5,-2],[0,-2,5,-2]],s:[{p:[[0,0],[2,4],[3,4],[13/3,0],[5,-2],[6,0]]}],pt:[[2,4,'A',-4,-7],[3,4,'B',2,-7],[13/3,0,'S',2,-7],[5,-2,'C',4,10],[6,0,'D',2,-7]]}),
+ o:[R`$\dfrac{37}{3}$ m`,R`11 m`,R`12 m`,R`$\dfrac{49}{4}$ m`],a:0,
+ s:R`<p>Distance = area above the axis + size of the area below the axis.</p><p>Above (0 to $\tfrac{13}{3}$ s): a trapezium with parallel sides AB $=1$ s and base $\tfrac{13}{3}$ s, height 4: $\tfrac12\big(1+\tfrac{13}{3}\big)\times4=\tfrac{32}{3}$ m.</p><p>Below ($\tfrac{13}{3}$ to 6 s): triangle with base $\tfrac53$ s, height 2: $\tfrac12\times\tfrac53\times2=\tfrac53$ m.</p><p>Distance $=\tfrac{32}{3}+\tfrac53=\tfrac{37}{3}$ m. (For <b>displacement</b> you would subtract: 9 m.)</p>`},
+
+{t:'Motion graphs',keep:1,y:'JEE Main 2021',
+ q:R`The velocity–time graph of a body has the shape AMB (straight lines A→M and M→B). What is the shape of the corresponding acceleration–time graph?`,
+ f:G({x:[0,4.7],y:[-2.6,2.7],xl:'t',yl:'v',w:250,h:170,s:[{p:[[0,2],[2,-2],[4,2]]}],gd:[[0,2,4,2]],pt:[[0,2,'A',4,-6],[2,-2,'M',-4,14],[4,2,'B',4,-6]]}),
+ o:[vA([[0,0],[2,2],[4,0]]),G({x:[0,4.7],y:[-2.6,2.6],xl:'t',yl:'a',s:[{f:t=>-2*Math.sin(Math.PI*t/2),a:0,b:4}],w:200,h:150,ml:22}),vA([[0,1.5],[1,1.5],[1,-1.5],[2,-1.5],[2,1.5],[3,1.5],[3,-1.5],[4,-1.5]]),vA([[0,-1.5],[2,-1.5],[2,1.5],[4,1.5]])],a:3,
+ s:R`<p>Acceleration = slope of the $v$–$t$ graph.</p><p>A→M: a straight line going down, so slope is <b>constant and negative</b>. M→B: straight line going up, so slope is <b>constant and positive</b>.</p><p>So $a$–$t$ is a flat negative line that jumps to a flat positive line at M — graph (4).</p>`},
+
+{t:'Motion graphs',keep:1,y:'JEE Main 2021',
+ q:R`A particle moves with constant acceleration $a$. The graph of $v^2$ versus $x$ (displacement) is shown. The acceleration of the particle is`,
+ f:G({x:[-12,35],y:[0,92],xl:'x (m)',yl:'v² (m²/s²)',w:290,h:190,ml:40,xt:[[10,'10'],[20,'20'],[30,'30']],yt:[[20,'20'],[40,'40'],[60,'60'],[80,'80']],gd:[[0,40,10,40],[10,0,10,40],[0,60,20,60],[20,0,20,60],[0,80,30,80],[30,0,30,80]],s:[{p:[[-10,0],[0,20]],d:1},{p:[[0,20],[30,80]]}],pt:[[10,40,'A',-14,-4],[20,60,'B',-14,-4],[30,80,'C',4,-4]]}),
+ o:[R`0.5 m/s²`,R`1 m/s²`,R`2 m/s²`,R`4 m/s²`],a:1,
+ s:R`<p>$v^2=u^2+2ax$, so the slope of the $v^2$–$x$ line is $2a$.</p><p>Slope $=\dfrac{80-40}{30-10}=2\Rightarrow 2a=2\Rightarrow a=1$ m/s².</p><p>(2 m/s² is the trap — that is the slope, not $a$.)</p>`},
+
+{t:'Motion graphs',keep:1,y:'JEE Main 2021',
+ q:R`The velocity–displacement graph of a particle is a straight line, as shown. Which graph represents its acceleration–displacement graph?`,
+ f:G({x:[0,1.35],y:[0,1.3],xl:'x',yl:'v',xt:[[1,'x₀']],yt:[[1,'v₀']],s:[{p:[[0,1],[1,0]]}],w:220,h:160}),
+ o:[ax([[0,.8],[1.25,.8]]),ax([[0,1],[1,0]]),ax([[0,-.8],[1.25,-.8]]),ax([[0,-1],[1,0]])],a:3,
+ s:R`<p>From the graph: $v=v_0\Big(1-\dfrac{x}{x_0}\Big)$, so $\dfrac{dv}{dx}=-\dfrac{v_0}{x_0}$.</p><p>$a=v\dfrac{dv}{dx}=-\dfrac{v_0^2}{x_0}\Big(1-\dfrac{x}{x_0}\Big)=-\dfrac{v_0^2}{x_0}+\dfrac{v_0^2}{x_0^2}\,x$.</p><p>A straight line: negative at $x=0$, rising to zero at $x=x_0$ — graph (4).</p>`},
+
+{t:'Motion graphs',keep:1,y:'JEE Main 2020',
+ q:R`A particle moves in one direction on a horizontal plane under the action of a source supplying <b>constant power</b>. Which displacement ($s$)–time ($t$) graph describes its motion? (Graphs are schematic.)`,
+ o:[st({p:[[0,0],[1.1,1.1]]}),st({f:t=>1.1*Math.sqrt(t/1.1),a:0,b:1.1}),st({f:t=>1.1*Math.pow(t/1.1,1.5),a:0,b:1.1}),st({p:[[0,0],[0,.7],[1.1,.7]]})],a:2,
+ s:R`<p>Constant power: $P=Fv=mv\dfrac{dv}{dt}\Rightarrow\displaystyle\int v\,dv=\frac Pm\int dt\Rightarrow\frac{v^2}{2}=\frac{P}{m}t$.</p><p>So $v\propto t^{1/2}$, and $s=\int v\,dt\propto t^{3/2}$.</p><p>Slope (= $v$) keeps increasing, so the curve bends upwards (concave up) from the origin — graph (3).</p>`},
+
+{t:'Relative motion in 1D',y:'JEE Main 2019',
+ q:R`A passenger train of length 60 m travels at 80 km/h. A freight train of length 120 m travels at 30 km/h. The ratio of the times taken by the passenger train to completely cross the freight train when (i) they move in the same direction and (ii) in opposite directions is`,
+ o:[R`$\dfrac{25}{11}$`,R`$\dfrac52$`,R`$\dfrac{11}{5}$`,R`$\dfrac32$`],a:2,
+ s:R`<p>To cross completely, the relative distance is the sum of lengths: $60+120=180$ m (same in both cases).</p><p>Same direction: relative speed $80-30=50$ km/h. Opposite: $80+30=110$ km/h.</p><p>$\dfrac{t_1}{t_2}=\dfrac{110}{50}=\dfrac{11}{5}$.</p>`},
+
+{t:'Relative motion in 1D',y:'JEE Main 2021',
+ q:R`A boy finds the airport escalator not working and walks up the stationary escalator in time $t_1$. If he stands still on the moving escalator, it takes him up in time $t_2$. The time taken by him to walk up the moving escalator is`,
+ o:[R`$t_2-t_1$`,R`$\dfrac{t_1t_2}{t_2-t_1}$`,R`$\dfrac{t_1+t_2}{2}$`,R`$\dfrac{t_1t_2}{t_2+t_1}$`],a:3,
+ s:R`<p>Let the escalator length be $l$. Boy's speed $=\dfrac l{t_1}$, escalator's speed $=\dfrac l{t_2}$.</p><p>Walking on the moving escalator, speeds add: $t=\dfrac{l}{\frac l{t_1}+\frac l{t_2}}=\dfrac{t_1t_2}{t_1+t_2}$.</p>`}
+);
+})();
+
+</script>
+
+<script>
+(function(){
+const KEY='padipucast_jee27_ch01_straightline_mcq30_v1';
+const N=QS.length, PER=4, NEG=1, MINUTES=60;
+const LBL=['(1)','(2)','(3)','(4)'];
+const $=s=>document.querySelector(s);
+const load=(k,d)=>{try{const v=localStorage.getItem(KEY+k);return v?JSON.parse(v):d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(KEY+k,JSON.stringify(v))}catch(e){}};
+const TOPICS=[...new Set(QS.map(q=>q.t))];
+let mode=null,order=[],cur=0,perm={},ans={},prac=load('_prac',{}),tLeft=0,tick=null,startAt=0,lastRes=null;
+
+function TS(el){const M=window.MathJax;if(M&&M.typesetPromise){if(M.typesetClear)M.typesetClear([el]);M.typesetPromise([el]).catch(()=>{})}else setTimeout(()=>TS(el),300)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){['start','work','result'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0)}
+function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function isFig(s){return typeof s==='string'&&s.trim().startsWith('<svg')}
+
+/* ---------- start screen ---------- */
+function drawStart(){
+ const yrs=QS.map(q=>+(q.y.match(/\d{4}/)||[0])[0]).filter(Boolean);
+ $('#metaChips').innerHTML=`<span class="chip">${N} questions</span><span class="chip">${TOPICS.length} topics</span><span class="chip">${Math.min(...yrs)}–${Math.max(...yrs)} papers</span><span class="chip am">+${PER} / −${NEG}</span>`;
+ $('#topicMap').innerHTML=TOPICS.map(t=>{const qs=QS.filter(q=>q.t===t);return `<div class="trow"><span>${t}</span><span>${qs.length} Qs</span></div>`}).join('');
+ const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+ $('#pracInfo').textContent=done?`Continue practice · ${done}/${N} done, ${ok} right →`:'Start practice →';
+ const b=load('_best',null);
+ $('#bestInfo').textContent=b?`Start test · best ${b.s}/${N*PER} →`:'Start test →';
+}
+
+/* ---------- side panel ---------- */
+function drawSide(){
+ const s=$('#side');
+ let st='';
+ if(mode==='prac'){
+  const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+  st=`<div class="stats"><div class="stat"><b>${done}</b><span>done</span></div><div class="stat"><b style="color:var(--green)">${ok}</b><span>right</span></div><div class="stat"><b style="color:var(--red)">${done-ok}</b><span>wrong</span></div></div>`;
+  st+='<h3>Questions by topic</h3>';
+  TOPICS.forEach(t=>{
+   st+=`<div class="tg">${t}</div><div class="dots">`;
+   order.forEach((qi,pos)=>{if(QS[qi].t!==t)return;const p=prac[qi];const c=p?(p.c===QS[qi].a?'ok':'no'):'';st+=`<button class="dot ${c} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+   st+='</div>';
+  });
+  st+=`<div class="legend"><span><i style="background:var(--green)"></i>right</span><span><i style="background:var(--red)"></i>wrong</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not done</span></div>`;
+  st+=`<div class="sidebtns"><button class="btn sm" id="resetPrac">Clear my practice progress</button></div>`;
+ }else{
+  const a=Object.keys(ans).length;
+  st=`<div class="stats"><div class="stat"><b>${a}</b><span>answered</span></div><div class="stat"><b>${N-a}</b><span>left</span></div><div class="stat"><b>${N}</b><span>total</span></div></div><h3>Jump to</h3><div class="dots">`;
+  order.forEach((qi,pos)=>{st+=`<button class="dot ${ans[qi]!=null?'ans':''} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+  st+=`</div><div class="legend"><span><i style="background:var(--teal)"></i>answered</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not answered</span></div><div class="sidebtns"><button class="btn am" id="submitBtn">Submit paper</button></div>`;
+ }
+ s.innerHTML=st;
+ s.querySelectorAll('.dot').forEach(d=>d.onclick=()=>{if(innerWidth<860)s.classList.add('closed');go(+d.dataset.p)});
+ const rp=$('#resetPrac');if(rp)rp.onclick=()=>confirmBox('Clear practice progress?','All your practice answers for this sheet will be wiped from this device.','Clear',()=>{prac={};save('_prac',prac);drawQ()});
+ const sb=$('#submitBtn');if(sb)sb.onclick=askSubmit;
+}
+
+/* ---------- question ---------- */
+function optHTML(Q,qi,o,pos,cls,dis){return `<button class="opt ${cls}" data-o="${o}" ${dis?'disabled':''}><span class="lb">${LBL[pos]}</span><span class="ot">${Q.o[o]}</span></button>`}
+function drawQ(){
+ const qi=order[cur],Q=QS[qi],c=$('#qcard');
+ const ord=mode==='test'?perm[qi]:[0,1,2,3];
+ const og=Q.og||Q.o.some(isFig);
+ let h=`<div class="qhead"><span class="qno">Q${cur+1} <span style="color:var(--mute);font-weight:500">/ ${N}</span></span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span></div>`;
+ h+=`<div class="qtext">${Q.q}</div>`;
+ if(Q.f)h+=`<div class="figwrap">${Q.f}</div>`;
+ h+=`<div class="opts ${og?'og':''}">`;
+ const p=mode==='prac'?prac[qi]:null;
+ ord.forEach((o,pos)=>{
+  let cls='';
+  if(mode==='prac'&&p){if(o===Q.a)cls='ok';else if(o===p.c)cls='no'}
+  if(mode==='test'&&ans[qi]===o)cls='sel';
+  h+=optHTML(Q,qi,o,pos,cls,mode==='prac'&&p);
+ });
+ h+='</div>';
+ if(mode==='prac'&&p){
+  const right=p.c===Q.a;
+  h+=`<div class="verdict ${right?'ok':'no'}">${right?'✓ Correct!':p.c<0?'Answer shown: '+LBL[Q.a]+' (counted as not solved)':'✗ Not this one. Correct answer: '+LBL[Q.a]}</div>`;
+  h+=`<div class="sol"><h4>Solution</h4>${Q.s}</div>`;
+ }
+ h+=`<div class="nav"><button class="btn" id="prevB" ${cur===0?'disabled':''}>← Prev</button><span style="display:flex;gap:8px">`;
+ if(mode==='prac'&&p)h+=`<button class="btn" id="retryB">Try again</button>`;
+ if(mode==='prac'&&!p)h+=`<button class="btn" id="peekB">Show answer</button>`;
+ if(mode==='test'&&ans[qi]!=null)h+=`<button class="btn" id="clearB">Clear answer</button>`;
+ h+=`</span><button class="btn pri" id="nextB">${cur===N-1?(mode==='test'?'Submit':'Finish'):'Next →'}</button></div>`;
+ c.innerHTML=h;
+ c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.o));
+ $('#prevB').onclick=()=>{if(cur>0)go(cur-1)};
+ $('#nextB').onclick=()=>{if(cur<N-1)go(cur+1);else if(mode==='test')askSubmit();else{show('start');drawStart()}};
+ const r=$('#retryB');if(r)r.onclick=()=>{delete prac[qi];save('_prac',prac);drawQ()};
+ const pk=$('#peekB');if(pk)pk.onclick=()=>{prac[qi]={c:-1};save('_prac',prac);drawQ()};
+ const cl=$('#clearB');if(cl)cl.onclick=()=>{delete ans[qi];drawQ()};
+ drawSide();TS(c);
+}
+function go(p){cur=p;drawQ();const t=$('#qcard').getBoundingClientRect().top;if(t<0||t>innerHeight*.5)window.scrollTo({top:Math.max(0,window.scrollY+t-70),behavior:'smooth'})}
+function pick(o){
+ const qi=order[cur];
+ if(mode==='prac'){if(prac[qi])return;prac[qi]={c:o};save('_prac',prac);drawQ();setTimeout(()=>{const v=document.querySelector('.verdict');if(v)v.scrollIntoView({behavior:'smooth',block:'center'})},60)}
+ else{ans[qi]=o;drawQ()}
+}
+
+/* ---------- modes ---------- */
+function startPractice(){mode='prac';order=QS.map((_,i)=>i);cur=0;const f=order.findIndex(i=>!prac[i]);if(f>0)cur=f;$('#clock').classList.add('hidden');$('#barTitle').textContent='Practice · '+document.title;show('work');drawQ()}
+function startTest(){
+ mode='test';order=shuffle(QS.map((_,i)=>i));perm={};ans={};cur=0;
+ QS.forEach((q,i)=>perm[i]=q.keep?[0,1,2,3]:shuffle([0,1,2,3]));
+ tLeft=MINUTES*60;startAt=Date.now();
+ const ck=$('#clock');ck.classList.remove('hidden','low');ck.textContent=fmt(tLeft);
+ clearInterval(tick);
+ tick=setInterval(()=>{tLeft=MINUTES*60-Math.floor((Date.now()-startAt)/1000);ck.textContent=fmt(tLeft);ck.classList.toggle('low',tLeft<=300);if(tLeft<=0){clearInterval(tick);finish(true)}},500);
+ $('#barTitle').textContent='Test · '+document.title;show('work');drawQ();
+}
+function confirmBox(title,body,okTxt,fn){
+ const m=$('#modal');$('#modalCard').innerHTML=`<h3>${title}</h3><p>${body}</p><div class="nav"><button class="btn" id="mNo">Cancel</button><button class="btn am" id="mYes">${okTxt}</button></div>`;
+ m.classList.remove('hidden');$('#mNo').onclick=()=>m.classList.add('hidden');$('#mYes').onclick=()=>{m.classList.add('hidden');fn()};
+}
+function askSubmit(){const a=Object.keys(ans).length;confirmBox('Submit the paper?',`You have answered ${a} of ${N}. ${N-a?(N-a)+' left blank (no marks lost for blanks).':'All answered.'}`,'Submit',()=>finish(false))}
+
+/* ---------- result ---------- */
+function finish(auto){
+ clearInterval(tick);$('#clock').classList.add('hidden');
+ let ok=0,no=0,sk=0;const by={};TOPICS.forEach(t=>by[t]={ok:0,n:0});
+ QS.forEach((q,i)=>{by[q.t].n++;if(ans[i]==null)sk++;else if(ans[i]===q.a){ok++;by[q.t].ok++}else no++});
+ const score=ok*PER-no*NEG, max=N*PER, used=Math.min(MINUTES*60,Math.floor((Date.now()-startAt)/1000));
+ const best=load('_best',null);if(!best||score>best.s)save('_best',{s:score,d:new Date().toLocaleDateString()});
+ const pct=Math.max(0,score)/max, col=pct>=.7?'var(--green)':pct>=.45?'var(--amber)':'var(--red)';
+ const C=2*Math.PI*62;
+ let msg=pct>=.85?'Excellent. This chapter is exam-ready. Keep revising the ones you got wrong.':pct>=.7?'Very good. A few slips — read the solutions of the wrong ones carefully.':pct>=.45?'Fair attempt. Go topic by topic below and redo the weak topic in practice mode.':'This chapter needs more work. Use practice mode first — read every solution, then take the test again.';
+ if(no>ok&&no>=6)msg+=' Note: wrong answers cost you marks. Skip when you are only guessing.';
+ if(auto)msg='Time up — your paper was submitted automatically. '+msg;
+ let h=`<div class="card res"><div class="ringrow"><svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="#eee7d8" stroke-width="12"/><circle cx="75" cy="75" r="62" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" transform="rotate(-90 75 75)"/><text x="75" y="74" text-anchor="middle" font-family="DM Mono" font-size="30" font-weight="500" fill="#1d2528">${score}</text><text x="75" y="98" text-anchor="middle" font-family="DM Sans" font-size="13" fill="#5b6668">out of ${max}</text></svg><div><h2 style="font-size:26px">Your result</h2><div class="chips"><span class="chip gr">${ok} right</span><span class="chip rd">${no} wrong</span><span class="chip gy">${sk} skipped</span><span class="chip">time ${fmt(used)}</span></div><p class="msg">${msg}</p></div></div>`;
+ h+=`<table class="tt"><tr><th>Topic</th><th>Right</th><th style="width:40%"></th></tr>`;
+ TOPICS.forEach(t=>{const b=by[t];h+=`<tr><td>${t}</td><td class="n">${b.ok} / ${b.n}</td><td><div class="barmini"><i style="width:${100*b.ok/b.n}%"></i></div></td></tr>`});
+ h+=`</table><div class="nav"><button class="btn" id="rHome">Home</button><span style="display:flex;gap:8px"><button class="btn" id="rPrac">Practice mode</button><button class="btn am" id="rTest">Take test again</button></span></div></div>`;
+ h+=`<div class="filters"><button class="btn sm on" data-f="all">All (${N})</button><button class="btn sm" data-f="no">Wrong (${no})</button><button class="btn sm" data-f="sk">Skipped (${sk})</button><button class="btn sm" data-f="ok">Right (${ok})</button></div><div id="rvList"></div>`;
+ $('#result').innerHTML=h;show('result');
+ lastRes={ok,no,sk};
+ $('#rHome').onclick=()=>{show('start');drawStart()};$('#rPrac').onclick=startPractice;$('#rTest').onclick=startTest;
+ document.querySelectorAll('.filters .btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters .btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');drawReview(b.dataset.f)});
+ drawReview('all');
+}
+function drawReview(f){
+ let h='';
+ order.forEach((qi,pos)=>{
+  const Q=QS[qi],a=ans[qi],st=a==null?'sk':a===Q.a?'ok':'no';
+  if(f!=='all'&&f!==st)return;
+  const og=Q.og||Q.o.some(isFig);
+  h+=`<div class="card rv"><div class="qhead"><span class="qno">Q${pos+1}</span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span><span class="chip ${st==='ok'?'gr':st==='no'?'rd':'gy'}">${st==='ok'?'right +'+PER:st==='no'?'wrong −'+NEG:'skipped 0'}</span></div><div class="qtext">${Q.q}</div>${Q.f?`<div class="figwrap">${Q.f}</div>`:''}<div class="opts ${og?'og':''}">`;
+  perm[qi].forEach((o,p)=>{h+=optHTML(Q,qi,o,p,o===Q.a?'ok':o===a?'no':'',true)});
+  const yp=a==null?'—':LBL[perm[qi].indexOf(a)], cp=LBL[perm[qi].indexOf(Q.a)];
+  h+=`</div><div class="yours">Your answer: <b>${yp}</b> · Correct: <b>${cp}</b></div><div class="sol"><h4>Solution</h4>${Q.s}</div></div>`;
+ });
+ const L=$('#rvList');L.innerHTML=h||'<p style="color:var(--mute)">Nothing here.</p>';TS(L);
+}
+
+/* ---------- wiring ---------- */
+$('#goPractice').onclick=startPractice;
+$('#goTest').onclick=startTest;
+$('#homeBtn').onclick=()=>{if(mode==='test')confirmBox('Leave the test?','Your answers in this attempt will be lost.','Leave',()=>{clearInterval(tick);show('start');drawStart()});else{show('start');drawStart()}};
+$('#toggleSide').onclick=()=>$('#side').classList.toggle('closed');
+document.addEventListener('keydown',e=>{
+ if($('#work').classList.contains('hidden')||!$('#modal').classList.contains('hidden'))return;
+ if(['1','2','3','4'].includes(e.key)){const qi=order[cur],ord=mode==='test'?perm[qi]:[0,1,2,3];pick(ord[+e.key-1])}
+ if(e.key==='ArrowRight'&&cur<N-1)go(cur+1);
+ if(e.key==='ArrowLeft'&&cur>0)go(cur-1);
+});
+window.addEventListener('beforeunload',e=>{if(mode==='test'&&!$('#work').classList.contains('hidden')){e.preventDefault();e.returnValue=''}});
+drawStart();
+})();
+</script>
+</body>
+</html>

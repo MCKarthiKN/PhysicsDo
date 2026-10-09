@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Motion in a Plane</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},chtml:{scale:1},options:{enableMenu:false}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root{--bg:#f4efe4;--paper:#fffdf8;--ink:#1d2528;--mute:#5b6668;--line:#e3dccd;--teal:#0f766e;--teal2:#e3f1ee;--amber:#b7791f;--amber2:#fbf0dc;--red:#b42318;--red2:#fbe7e4;--green:#15803d;--green2:#e3f4e8}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(rgba(15,118,110,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(15,118,110,.05) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:16px/1.6 "DM Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;line-height:1.2;margin:0}
+.mono{font-family:"DM Mono",monospace}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:16px}
+.top{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:6px 0 14px;flex-wrap:wrap}
+.brand{font:700 13px "Space Grotesk";letter-spacing:.22em;color:var(--teal)}
+.brand b{color:var(--amber)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 6px 22px rgba(60,50,20,.05)}
+.hidden{display:none!important}
+/* start */
+.hero{padding:28px 26px}
+.hero h1{font-size:clamp(26px,4.4vw,40px)}
+.hero p{color:var(--mute);margin:8px 0 0;max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font:500 12.5px "DM Mono";padding:4px 10px;border-radius:99px;background:var(--teal2);color:var(--teal);white-space:nowrap}
+.chip.am{background:var(--amber2);color:var(--amber)}
+.chip.rd{background:var(--red2);color:var(--red)}
+.chip.gr{background:var(--green2);color:var(--green)}
+.chip.gy{background:#eee9de;color:var(--mute)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.mode{padding:20px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;transition:.15s}
+.mode:hover{border-color:var(--teal);transform:translateY(-1px)}
+.mode h3{font-size:20px}
+.mode p{margin:6px 0 10px;color:var(--mute);font-size:14.5px}
+.mode .go{font:600 14px "Space Grotesk";color:var(--teal)}
+.mode.t .go{color:var(--amber)}
+.mode.t:hover{border-color:var(--amber)}
+.tmap{margin-top:16px;padding:18px 20px}
+.tmap h3{font-size:16px;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dashed var(--line);font-size:14.5px}
+.trow:first-of-type{border-top:0}
+.trow span:last-child{font-family:"DM Mono";color:var(--mute);font-size:13px;white-space:nowrap}
+/* work */
+.bar{position:sticky;top:0;z-index:20;background:rgba(244,239,228,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin:0 -16px 14px;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar .ttl{font:600 15px "Space Grotesk"}
+.clock{font:500 20px "DM Mono";padding:4px 12px;border-radius:10px;background:var(--ink);color:#fff}
+.clock.low{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.75}}
+.btn{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 14px;font-weight:500;color:var(--ink)}
+.btn:hover{border-color:var(--teal)}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.am{background:var(--amber);border-color:var(--amber);color:#fff}
+.btn.sm{padding:5px 10px;font-size:14px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.qcard{padding:22px 24px}
+.qhead{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.qno{font:700 15px "Space Grotesk";color:var(--teal);margin-right:4px}
+.qtext{font-size:17px}
+.qtext p{margin:0 0 8px}
+.dt{border-collapse:collapse;margin:10px 0;font-size:14.5px;background:#fff}
+.dt td,.dt th{border:1px solid var(--line);padding:5px 10px;text-align:left}
+.dt th{background:#f8f4ea;font-weight:600}
+.figwrap{display:flex;justify-content:center;margin:12px 0 4px}
+.fig{width:100%;max-width:330px;height:auto}
+.figwrap .fig.wide{max-width:440px}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opts.og{grid-template-columns:1fr 1fr}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);transition:.12s;min-height:48px}
+.opt:hover{border-color:var(--teal)}
+.opt .lb{font:500 14px "DM Mono";color:var(--mute);flex:0 0 auto;padding-top:2px}
+.opt .ot{flex:1;min-width:0;overflow-x:auto}
+.opts.og .opt{flex-direction:column;align-items:center}
+.opts.og .opt .ot{width:100%}
+.opts.og .fig{max-width:200px;display:block;margin:0 auto}
+.opt.sel{border-color:var(--teal);background:var(--teal2)}
+.opt.ok{border-color:var(--green);background:var(--green2)}
+.opt.no{border-color:var(--red);background:var(--red2)}
+.opt[disabled]{cursor:default}
+.sol{margin-top:16px;border-left:4px solid var(--amber);background:var(--amber2);border-radius:0 12px 12px 0;padding:12px 16px;font-size:15.5px}
+.sol h4{margin:0 0 4px;font:600 14px "Space Grotesk";color:var(--amber);letter-spacing:.04em;text-transform:uppercase}
+.sol p{margin:4px 0}
+.verdict{margin-top:14px;font:600 15px "Space Grotesk"}
+.verdict.ok{color:var(--green)}.verdict.no{color:var(--red)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.side{padding:16px;position:sticky;top:70px}
+.side h3{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.stat{background:#f8f4ea;border-radius:10px;padding:7px 4px;text-align:center}
+.stat b{display:block;font:600 18px "DM Mono"}
+.stat span{font-size:11.5px;color:var(--mute)}
+.tg{font:600 12px "Space Grotesk";color:var(--teal);margin:10px 0 6px;letter-spacing:.03em}
+.dots{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.dot{aspect-ratio:1;border:1.5px solid var(--line);border-radius:9px;background:#fff;font:500 13px "DM Mono";color:var(--ink);padding:0}
+.dot.cur{outline:2.5px solid var(--ink);outline-offset:1px}
+.dot.ans{background:var(--teal);border-color:var(--teal);color:#fff}
+.dot.ok{background:var(--green);border-color:var(--green);color:#fff}
+.dot.no{background:var(--red);border-color:var(--red);color:#fff}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--mute)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.sidebtns{display:grid;gap:8px;margin-top:14px}
+.toggleSide{display:none}
+/* result */
+.res{padding:24px}
+.ringrow{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring{width:150px;height:150px;flex:0 0 auto}
+.msg{font-size:16px;max-width:52ch}
+table.tt{width:100%;border-collapse:collapse;margin-top:16px;font-size:14.5px}
+.tt th,.tt td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+.tt th{font:600 12px "Space Grotesk";color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.tt td.n{font-family:"DM Mono";white-space:nowrap}
+.barmini{height:8px;border-radius:9px;background:#eee7d8;overflow:hidden;min-width:60px}
+.barmini i{display:block;height:100%;background:var(--teal)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 12px}
+.filters .btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rv{padding:18px 20px;margin-bottom:12px}
+.rv .yours{font-size:14px;color:var(--mute);margin-top:10px}
+.modal{position:fixed;inset:0;background:rgba(20,25,28,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal .card{padding:22px;max-width:420px;width:100%}
+.modal p{color:var(--mute)}
+.foot{color:var(--mute);font-size:13px;text-align:center;margin:26px 0 8px}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (max-width:860px){
+ .grid2{grid-template-columns:1fr}
+ .side{position:static}
+ .toggleSide{display:inline-block}
+ .side.closed{display:none}
+}
+@media (max-width:560px){
+ .modes{grid-template-columns:1fr}
+ .qcard{padding:16px}
+ .qtext{font-size:16px}
+ .opts.og{grid-template-columns:1fr 1fr;gap:8px}
+ .opts.og .opt{padding:8px}
+ .dots{grid-template-columns:repeat(6,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top"><div class="brand">PADI<b>PU</b>CAST</div><div class="chip gy">JEE Main PYQ · 2027 prep</div></div>
+
+ <!-- START -->
+ <section id="start">
+  <div class="card hero">
+   <div class="chip am" style="display:inline-block;margin:0 0 10px">Chapter 2 · Kinematics</div>
+   <h1>Motion in a Plane</h1>
+   <p>30 high-yield JEE Main PYQs (2010–2022) picked for JEE 2027: vectors, 2D kinematics, relative motion (river, rain, ships), projectile motion and circular motion. Every answer checked, every solution worked step by step.</p>
+   <div class="chips" id="metaChips"></div>
+   <div class="modes">
+    <button class="mode" id="goPractice"><h3>Practice mode</h3><p>Answer one by one. You see right or wrong at once, with the full working. Your progress is saved on this device.</p><span class="go" id="pracInfo">Start practice →</span></button>
+    <button class="mode t" id="goTest"><h3>Test mode</h3><p>One clock for the whole paper (60 min). +4 right, −1 wrong. Question and option order shuffled. Answers shown only after you submit.</p><span class="go" id="bestInfo">Start test →</span></button>
+   </div>
+  </div>
+  <div class="card tmap"><h3>What this sheet covers</h3><div id="topicMap"></div></div>
+ </section>
+
+ <!-- WORK -->
+ <section id="work" class="hidden">
+  <div class="bar">
+   <div class="ttl" id="barTitle"></div>
+   <div style="display:flex;gap:8px;align-items:center">
+    <button class="btn sm toggleSide" id="toggleSide">Questions</button>
+    <span class="clock hidden" id="clock">60:00</span>
+    <button class="btn sm" id="homeBtn">Home</button>
+   </div>
+  </div>
+  <div class="grid2">
+   <div>
+    <div class="card qcard" id="qcard"></div>
+   </div>
+   <aside class="card side closed" id="side"></aside>
+  </div>
+ </section>
+
+ <!-- RESULT -->
+ <section id="result" class="hidden"></section>
+
+ <div class="foot">PADIPUCAST · Motion in a Plane · questions from the JEE Main archive, solutions worked from first principles</div>
+</div>
+
+<div class="modal hidden" id="modal"><div class="card" id="modalCard"></div></div>
+
+<script>
+const R=String.raw;
+const QS=[];
+/* ---- tiny SVG graph helper ----
+ G({x:[x0,x1], y:[y0,y1], xl:'t', yl:'v', s:[{p:[[x,y],...]}|{f:fn,a,b,n}], xt:[[v,'lbl']], yt:[[v,'lbl']],
+    gd:[[x1,y1,x2,y2]], pt:[[x,y,'lbl',dx,dy]], tx:[[x,y,'txt',anchor]], w, h, cls, ar:[[x,y,deg]] })  */
+let _gid=0;
+const INK='#1d2528',TEAL='#0f766e',AMB='#b7791f',RED='#b42318',MUTE='#5b6668';
+function G(o){
+ const W=o.w||250,H=o.h||175,ml=o.ml||34,mr=o.mr||16,mt=o.mt||16,mb=o.mb||26,id='a'+(++_gid);
+ const [x0,x1]=o.x,[y0,y1]=o.y;
+ const X=v=>ml+(v-x0)/(x1-x0)*(W-ml-mr), Y=v=>H-mb-(v-y0)/(y1-y0)*(H-mt-mb);
+ const ox=X(Math.min(Math.max(0,x0),x1)), oy=Y(Math.min(Math.max(0,y0),y1));
+ let s=`<svg class="fig ${o.cls||''}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INK}"/></marker><marker id="${id}c" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="${TEAL}"/></marker></defs>`;
+ (o.gd||[]).forEach(g=>{s+=`<line x1="${X(g[0])}" y1="${Y(g[1])}" x2="${X(g[2])}" y2="${Y(g[3])}" stroke="${MUTE}" stroke-width="1" stroke-dasharray="3 3"/>`});
+ s+=`<line x1="${ml-4}" y1="${oy}" x2="${W-4}" y2="${oy}" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ s+=`<line x1="${ox}" y1="${H-mb+4}" x2="${ox}" y2="6" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ if(o.xl)s+=`<text x="${W-6}" y="${oy+(o.xlUp?-6:15)}" text-anchor="end" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`;
+ if(o.yl)s+=`<text x="${ox+6}" y="13" font-size="12" font-style="italic" fill="${INK}">${o.yl}</text>`;
+ (o.xt||[]).forEach(t=>{s+=`<line x1="${X(t[0])}" y1="${oy-3}" x2="${X(t[0])}" y2="${oy+3}" stroke="${INK}"/><text x="${X(t[0])}" y="${oy+(t[2]||14)}" text-anchor="middle" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.yt||[]).forEach(t=>{s+=`<line x1="${ox-3}" y1="${Y(t[0])}" x2="${ox+3}" y2="${Y(t[0])}" stroke="${INK}"/><text x="${ox-6}" y="${Y(t[0])+3.5}" text-anchor="end" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.fill||[]).forEach(f=>{s+=`<polygon points="${f.p.map(q=>X(q[0])+','+Y(q[1])).join(' ')}" fill="${f.c||TEAL}" opacity="${f.op||.15}"/>`});
+ (o.s||[]).forEach(r=>{
+  let pts=r.p;
+  if(r.f){pts=[];const n=r.n||60;for(let i=0;i<=n;i++){const x=r.a+(r.b-r.a)*i/n;pts.push([x,r.f(x)])}}
+  s+=`<polyline points="${pts.map(q=>X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join(' ')}" fill="none" stroke="${r.c||TEAL}" stroke-width="${r.w||2.2}" stroke-linejoin="round" stroke-linecap="round" ${r.d?'stroke-dasharray="5 4"':''}/>`;
+ });
+ (o.ar||[]).forEach(a=>{s+=`<g transform="translate(${X(a[0])},${Y(a[1])}) rotate(${a[2]})"><path d="M-5,-4 L4,0 L-5,4 z" fill="${a[3]||TEAL}"/></g>`});
+ (o.pt||[]).forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3" fill="${INK}"/>`;if(p[2])s+=`<text x="${X(p[0])+(p[3]||5)}" y="${Y(p[1])+(p[4]||-6)}" font-size="11.5" font-weight="700" fill="${INK}">${p[2]}</text>`});
+ (o.tx||[]).forEach(t=>{s+=`<text x="${X(t[0])}" y="${Y(t[1])}" text-anchor="${t[3]||'middle'}" font-size="${t[4]||11}" fill="${t[5]||INK}">${t[2]}</text>`});
+ return s+'</svg>';
+}
+/* plain SVG wrapper for hand-drawn figures */
+function SV(w,h,body,cls){const id='b'+(++_gid);const mk=(n,c)=>`<marker id="${id}${n}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`;
+ return `<svg class="fig ${cls||''}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs>${mk('k',INK)}${mk('t',TEAL)}${mk('a',AMB)}${mk('r',RED)}</defs>${body.replace(/MK([ktar])/g,(m,c)=>'url(#'+id+c+')')}</svg>`}
+
+</script>
+<script>
+// Ch-02 Motion in a Plane — part A: vectors + 2D kinematics
+(function(){
+// regular octagon, flat top, A top-left going clockwise
+const L='ABCDEFGH',ang=[112.5,67.5,22.5,-22.5,-67.5,-112.5,-157.5,157.5],cx=110,cy=100,r=72;
+const P=ang.map(a=>[cx+r*Math.cos(a*Math.PI/180),cy-r*Math.sin(a*Math.PI/180)]);
+let oct=`<polygon points="${P.map(p=>p.join(',')).join(' ')}" fill="#fffdf8" stroke="#1d2528" stroke-width="1.8"/>`;
+P.forEach((p,i)=>{if(i)oct+=`<line x1="${P[0][0]}" y1="${P[0][1]}" x2="${p[0]+(P[0][0]-p[0])*.06}" y2="${p[1]+(P[0][1]-p[1])*.06}" stroke="#0f766e" stroke-width="1.3" marker-end="MKt" opacity=".75"/>`});
+P.forEach((p,i)=>{const dx=(p[0]-cx)/r*14,dy=(p[1]-cy)/r*14;oct+=`<text x="${p[0]+dx}" y="${p[1]+dy+4}" text-anchor="middle" font-size="13" font-weight="700" fill="#1d2528">${L[i]}</text>`});
+oct+=`<circle cx="${cx}" cy="${cy}" r="3" fill="#b7791f"/><text x="${cx+8}" y="${cy+16}" font-size="13" font-weight="700" fill="#b7791f">O</text>`;
+const OCT=SV(220,200,oct);
+QS.push(
+{t:'Vectors',y:'JEE Main 2021',
+ q:R`Two vectors $\vec P$ and $\vec Q$ have equal magnitudes. If the magnitude of $\vec P+\vec Q$ is $n$ times the magnitude of $\vec P-\vec Q$, the angle between $\vec P$ and $\vec Q$ is`,
+ o:[R`$\cos^{-1}\!\Big(\dfrac{n^2-1}{n^2+1}\Big)$`,R`$\sin^{-1}\!\Big(\dfrac{n-1}{n+1}\Big)$`,R`$\sin^{-1}\!\Big(\dfrac{n^2-1}{n^2+1}\Big)$`,R`$\cos^{-1}\!\Big(\dfrac{n-1}{n+1}\Big)$`],a:0,
+ s:R`<p>With $|\vec P|=|\vec Q|=P$: $|\vec P+\vec Q|^2=2P^2(1+\cos\theta)$ and $|\vec P-\vec Q|^2=2P^2(1-\cos\theta)$.</p><p>Given $|\vec P+\vec Q|^2=n^2|\vec P-\vec Q|^2$: $1+\cos\theta=n^2(1-\cos\theta)\Rightarrow\cos\theta=\dfrac{n^2-1}{n^2+1}$.</p><p>This idea came in 2019 and twice in 2021 — a sure-shot pattern.</p>`},
+
+{t:'Vectors',y:'JEE Main 2019',
+ q:R`Two forces $P$ and $Q$, of magnitudes $2F$ and $3F$, act at an angle $\theta$ to each other. If the force $Q$ is doubled, their resultant also gets doubled. The angle $\theta$ is`,
+ o:[R`30°`,R`90°`,R`60°`,R`120°`],a:3,
+ s:R`<p>$R^2=4F^2+9F^2+12F^2\cos\theta=13F^2+12F^2\cos\theta$.</p><p>With $Q\to6F$: $(2R)^2=4F^2+36F^2+24F^2\cos\theta=40F^2+24F^2\cos\theta$.</p><p>So $4(13+12\cos\theta)=40+24\cos\theta\Rightarrow52+48\cos\theta=40+24\cos\theta\Rightarrow\cos\theta=-\tfrac12\Rightarrow\theta=120°$.</p>`},
+
+{t:'Vectors',y:'JEE Main 2019',
+ q:R`Let $|\vec A_1|=3$, $|\vec A_2|=5$ and $|\vec A_1+\vec A_2|=5$. The value of $(2\vec A_1+3\vec A_2)\cdot(3\vec A_1-2\vec A_2)$ is`,
+ o:[R`−106.5`,R`−118.5`,R`−99.5`,R`−112.5`],a:1,
+ s:R`<p>First find $\vec A_1\cdot\vec A_2$: $25=9+25+2\vec A_1\cdot\vec A_2\Rightarrow\vec A_1\cdot\vec A_2=-4.5$.</p><p>Expand: $6|\vec A_1|^2-4\vec A_1\cdot\vec A_2+9\vec A_1\cdot\vec A_2-6|\vec A_2|^2=6(9)+5(-4.5)-6(25)$.</p><p>$=54-22.5-150=-118.5$.</p>`},
+
+{t:'Vectors',y:'JEE Main 2021',
+ q:R`If $\vec A$ and $\vec B$ satisfy $\vec A\cdot\vec B=|\vec A\times\vec B|$, then $|\vec A-\vec B|$ is`,
+ o:[R`$\sqrt{A^2+B^2}$`,R`$\sqrt{A^2+B^2-\sqrt2\,AB}$`,R`$\sqrt{A^2+B^2+2AB}$`,R`$\sqrt{A^2+B^2+\sqrt2\,AB}$`],a:1,
+ s:R`<p>$AB\cos\theta=AB\sin\theta\Rightarrow\tan\theta=1\Rightarrow\theta=45°$.</p><p>$|\vec A-\vec B|^2=A^2+B^2-2AB\cos45°=A^2+B^2-\sqrt2\,AB$.</p>`},
+
+{t:'Vectors',y:'JEE Main 2022',
+ q:R`If $\vec A=(2\hat i+3\hat j-\hat k)$ m and $\vec B=(\hat i+2\hat j+2\hat k)$ m, the magnitude of the component of $\vec A$ along $\vec B$ is`,
+ o:[R`1 m`,R`2 m`,R`3 m`,R`6 m`],a:1,
+ s:R`<p>Component of $\vec A$ along $\vec B$ $=\vec A\cdot\hat B=\dfrac{\vec A\cdot\vec B}{|\vec B|}$.</p><p>$\vec A\cdot\vec B=2+6-2=6$; $|\vec B|=\sqrt{1+4+4}=3$. Component $=\dfrac63=2$ m.</p><p>(6 m is the trap — that is the dot product, not the component.)</p>`},
+
+{t:'Vectors',y:'JEE Main 2021',
+ q:R`In a regular octagon ABCDEFGH with centre O, if $\overrightarrow{AO}=2\hat i+3\hat j-4\hat k$, then $\overrightarrow{AB}+\overrightarrow{AC}+\overrightarrow{AD}+\overrightarrow{AE}+\overrightarrow{AF}+\overrightarrow{AG}+\overrightarrow{AH}$ equals`,
+ f:OCT,
+ o:[R`$-16\hat i-24\hat j+32\hat k$`,R`$16\hat i+24\hat j+32\hat k$`,R`$16\hat i+24\hat j-32\hat k$`,R`$16\hat i-24\hat j+32\hat k$`],a:2,
+ s:R`<p>Break each vector through the centre: $\overrightarrow{AX}=\overrightarrow{AO}+\overrightarrow{OX}$.</p><p>Sum of 7 vectors $=7\overrightarrow{AO}+(\overrightarrow{OB}+\overrightarrow{OC}+\dots+\overrightarrow{OH})$.</p><p>All 8 vectors from the centre of a regular polygon add to zero, so $\overrightarrow{OB}+\dots+\overrightarrow{OH}=-\overrightarrow{OA}=\overrightarrow{AO}$.</p><p>Total $=8\overrightarrow{AO}=16\hat i+24\hat j-32\hat k$.</p>`},
+
+{t:'Vectors',y:'JEE Main 2020',
+ q:R`The sum of two forces $\vec P$ and $\vec Q$ is $\vec R$, such that $|\vec R|=|\vec P|$. The angle that the resultant of $2\vec P$ and $\vec Q$ makes with $\vec Q$ is`,
+ o:[R`30°`,R`60°`,R`90°`,R`120°`],a:2,
+ s:R`<p>$|\vec P+\vec Q|=|\vec P|\Rightarrow P^2=P^2+Q^2+2PQ\cos\theta\Rightarrow\cos\theta=-\dfrac{Q}{2P}$.</p><p>Angle $\alpha$ of $(2\vec P+\vec Q)$ with $\vec Q$: $\tan\alpha=\dfrac{2P\sin\theta}{Q+2P\cos\theta}=\dfrac{2P\sin\theta}{Q-Q}\to\infty$.</p><p>So $\alpha=90°$.</p>`},
+
+{t:'2D kinematics',y:'JEE Main 2019',
+ q:R`A particle moves with velocity $\vec v=K(y\,\hat i+x\,\hat j)$, where $K$ is a constant. The general equation of its path is`,
+ o:[R`$y^2=x+\text{constant}$`,R`$y=x^2+\text{constant}$`,R`$y^2=x^2+\text{constant}$`,R`$xy=\text{constant}$`],a:2,
+ s:R`<p>$\dfrac{dx}{dt}=Ky$, $\dfrac{dy}{dt}=Kx$. Divide: $\dfrac{dy}{dx}=\dfrac xy$.</p><p>$y\,dy=x\,dx\Rightarrow\dfrac{y^2}{2}=\dfrac{x^2}{2}+C\Rightarrow y^2=x^2+\text{constant}$.</p><p>Same question was asked in 2010 and 2019.</p>`},
+
+{t:'2D kinematics',y:'JEE Main 2019',
+ q:R`The position coordinates of a particle are $x=a\cos\omega t$, $y=a\sin\omega t$ and $z=a\omega t$. The speed of the particle is`,
+ o:[R`$2a\omega$`,R`$\sqrt2\,a\omega$`,R`$\sqrt3\,a\omega$`,R`$a\omega$`],a:1,
+ s:R`<p>$v_x=-a\omega\sin\omega t$, $v_y=a\omega\cos\omega t$, $v_z=a\omega$.</p><p>$v=\sqrt{a^2\omega^2(\sin^2+\cos^2)+a^2\omega^2}=\sqrt2\,a\omega$ (a helix: circle in $xy$ plus steady drift along $z$).</p>`},
+
+{t:'2D kinematics',y:'JEE Main 2020',
+ q:R`A particle starts from the origin at $t=0$ with an initial velocity of $3.0\,\hat i$ m/s and moves in the $x$-$y$ plane with a constant acceleration $(6.0\,\hat i+4.0\,\hat j)$ m/s². The $x$-coordinate of the particle at the instant its $y$-coordinate is 32 m is $D$ metres. $D$ is`,
+ o:[R`60`,R`32`,R`40`,R`50`],a:0,
+ s:R`<p>Treat $x$ and $y$ separately. Along $y$: $u_y=0$, $a_y=4$: $32=\tfrac12\times4\,t^2\Rightarrow t=4$ s.</p><p>Along $x$: $x=3\times4+\tfrac12\times6\times4^2=12+48=60$ m.</p>`}
+);
+})();
+
+</script>
+<script>
+// Ch-02 part C: projectile motion
+(function(){
+const INC=SV(250,150,`<polygon points="20,132 232,132 232,9.6" fill="#f3ecdc" stroke="#1d2528" stroke-width="1.8"/>
+<path d="M20,132 Q88,22 160,51" fill="none" stroke="#5b6668" stroke-width="1.3" stroke-dasharray="4 3"/>
+<line x1="20" y1="132" x2="70" y2="82" stroke="#0f766e" stroke-width="2.4" marker-end="MKt"/><text x="44" y="88" font-size="12" fill="#0f766e" text-anchor="end">u = 2 m/s</text>
+<path d="M66,132 A46,46 0 0 0 59.8,109" fill="none" stroke="#b42318" stroke-width="1.3"/><text x="72" y="126" font-size="11" fill="#b42318">α = 30°</text>
+<path d="M100,85.8 A92,92 0 0 0 85.1,67" fill="none" stroke="#b7791f" stroke-width="1.3"/><text x="104" y="78" font-size="11" fill="#b7791f">θ = 15°</text>`);
+QS.push(
+{t:'Projectile motion',y:'JEE Main 2013',
+ q:R`A projectile is given an initial velocity of $(\hat i+2\hat j)$ m/s, where $\hat i$ is along the ground and $\hat j$ is vertical. If $g=10$ m/s², the equation of its trajectory is`,
+ o:[R`$y=x-5x^2$`,R`$y=2x-5x^2$`,R`$4y=2x-5x^2$`,R`$4y=2x-25x^2$`],a:1,
+ s:R`<p>$x=u_xt=t$, so $t=x$. $\;y=u_yt-\tfrac12gt^2=2t-5t^2$.</p><p>Put $t=x$: $y=2x-5x^2$.</p>`},
+
+{t:'Projectile motion',y:'JEE Main 2019',
+ q:R`Two guns A and B fire bullets at speeds 1 km/s and 2 km/s. From a point on horizontal ground they are fired in all possible directions. The ratio of the maximum areas covered by the bullets of the two guns on the ground is`,
+ o:[R`1 : 4`,R`1 : 8`,R`1 : 2`,R`1 : 16`],a:3,
+ s:R`<p>Maximum range $R_{\max}=\dfrac{u^2}{g}$ (at 45°). Firing in all directions covers a circle of area $\pi R_{\max}^2\propto u^4$.</p><p>Ratio $=\Big(\dfrac12\Big)^4=1:16$. (1 : 4 is the trap — that is the ratio of ranges.)</p>`},
+
+{t:'Projectile motion',y:'JEE Main 2019',
+ q:R`A plane is inclined at $\alpha=30°$ to the horizontal. A particle is projected from the base of the plane with speed $u=2$ m/s at an angle $\theta=15°$ to the plane, as shown. The distance from the base at which it hits the plane is close to ($g=10$ m/s²)`,
+ f:INC,
+ o:[R`18 cm`,R`20 cm`,R`14 cm`,R`26 cm`],a:1,
+ s:R`<p>Take axes along the incline ($x$) and perpendicular to it ($y$): $a_x=-g\sin30°$, $a_y=-g\cos30°$.</p><p>Time of flight: $T=\dfrac{2u\sin\theta}{g\cos\alpha}=\dfrac{4\sin15°}{10\cos30°}$.</p><p>Range along the plane: $x=u\cos\theta\,T-\tfrac12g\sin\alpha\,T^2$. This simplifies to $\dfrac{2u^2\sin\theta\cos(\theta+\alpha)}{g\cos^2\alpha}=\dfrac{8\times0.259\times0.707}{10\times0.75}\approx0.195$ m $\approx20$ cm.</p>`},
+
+{t:'Projectile motion',y:'JEE Main 2019',
+ q:R`A shell is fired from a fixed gun with speed $u$ so that it hits a target on the ground at distance $R$. If $t_1$ and $t_2$ are the two possible times of flight to hit the target, the product $t_1t_2$ is`,
+ o:[R`$\dfrac{R}{2g}$`,R`$\dfrac{2R}{g}$`,R`$\dfrac Rg$`,R`$\dfrac{R}{4g}$`],a:1,
+ s:R`<p>Same range for $\theta$ and $90°-\theta$. $t_1=\dfrac{2u\sin\theta}{g}$, $t_2=\dfrac{2u\cos\theta}{g}$.</p><p>$t_1t_2=\dfrac{4u^2\sin\theta\cos\theta}{g^2}=\dfrac{2}{g}\cdot\dfrac{u^2\sin2\theta}{g}=\dfrac{2R}{g}$.</p>`},
+
+{keep:1,t:'Projectile motion',y:'JEE Main 2019',
+ q:R`The trajectory of a projectile near the surface of the earth is $y=2x-9x^2$. If it was launched at angle $\theta_0$ with speed $v_0$, then ($g=10$ m/s²)`,
+ o:[R`$\theta_0=\sin^{-1}\!\Big(\dfrac{1}{\sqrt5}\Big)$, $v_0=\dfrac53$ m/s`,R`$\theta_0=\cos^{-1}\!\Big(\dfrac{2}{\sqrt5}\Big)$, $v_0=\dfrac35$ m/s`,R`$\theta_0=\cos^{-1}\!\Big(\dfrac{1}{\sqrt5}\Big)$, $v_0=\dfrac53$ m/s`,R`$\theta_0=\sin^{-1}\!\Big(\dfrac{2}{\sqrt5}\Big)$, $v_0=\dfrac35$ m/s`],a:2,
+ s:R`<p>Compare with $y=x\tan\theta-\dfrac{gx^2}{2v_0^2\cos^2\theta}$.</p><p>$\tan\theta_0=2\Rightarrow\cos\theta_0=\dfrac1{\sqrt5}$, so $\theta_0=\cos^{-1}\dfrac1{\sqrt5}$.</p><p>$\dfrac{g}{2v_0^2\cos^2\theta_0}=9\Rightarrow\dfrac{10}{2v_0^2/5}=9\Rightarrow v_0^2=\dfrac{25}{9}\Rightarrow v_0=\dfrac53$ m/s.</p><p>(Option 4 has the right angle — $\sin^{-1}\frac2{\sqrt5}$ is the same angle — but the wrong speed.)</p>`},
+
+{t:'Projectile motion',y:'JEE Main 2019',
+ q:R`Two particles are projected from the same point with the same speed $u$ so that they have the same range $R$ but different maximum heights $h_1$ and $h_2$. Which is correct?`,
+ o:[R`$R^2=4h_1h_2$`,R`$R^2=16h_1h_2$`,R`$R^2=2h_1h_2$`,R`$R^2=h_1h_2$`],a:1,
+ s:R`<p>Same range means angles $\theta$ and $90°-\theta$. $h_1=\dfrac{u^2\sin^2\theta}{2g}$, $h_2=\dfrac{u^2\cos^2\theta}{2g}$.</p><p>$h_1h_2=\dfrac{u^4\sin^2\theta\cos^2\theta}{4g^2}=\dfrac{1}{16}\Big(\dfrac{u^2\sin2\theta}{g}\Big)^2=\dfrac{R^2}{16}$. So $R^2=16h_1h_2$, i.e. $R=4\sqrt{h_1h_2}$ (asked again as an assertion in 2022).</p>`},
+
+{t:'Projectile motion',y:'JEE Main 2022',
+ q:R`A projectile is launched with velocity 25 m/s at angle $\theta$ with the horizontal. After $t$ seconds its inclination with the horizontal becomes zero. If $R$ is the horizontal range, $\theta$ is ($g=10$ m/s²)`,
+ o:[R`$\tfrac12\sin^{-1}\!\Big[\dfrac{5t^2}{4R}\Big]$`,R`$\tfrac12\sin^{-1}\!\Big[\dfrac{4R}{5t^2}\Big]$`,R`$\tan^{-1}\!\Big[\dfrac{4t^2}{5R}\Big]$`,R`$\cot^{-1}\!\Big[\dfrac{R}{20t^2}\Big]$`],a:3,
+ s:R`<p>Velocity becomes horizontal at the top, so $t$ = time to the top: $u\sin\theta=gt=10t$.</p><p>$R=\dfrac{2(u\sin\theta)(u\cos\theta)}{g}=\dfrac{2(10t)(u\cos\theta)}{10}=2t\,u\cos\theta$.</p><p>And $u\cos\theta=u\sin\theta\cot\theta=10t\cot\theta$. So $R=20t^2\cot\theta\Rightarrow\theta=\cot^{-1}\!\Big(\dfrac{R}{20t^2}\Big)$.</p>`},
+
+{t:'Projectile motion',y:'JEE Main 2022',
+ q:R`A fighter jet flies horizontally at 200 m/s. When it passes directly over an anti-aircraft gun, a bullet is fired from the gun at angle $\theta$ with the horizontal to hit the jet. If the bullet speed is 400 m/s, $\theta$ is`,
+ o:[R`30°`,R`45°`,R`60°`,R`75°`],a:2,
+ s:R`<p>The bullet starts right below the jet. To meet the jet, it must keep pace with it horizontally all the time: $400\cos\theta=200$.</p><p>$\cos\theta=\tfrac12\Rightarrow\theta=60°$. (Seen from the jet, the bullet simply goes straight up.)</p>`},
+
+{t:'Projectile motion',y:'JEE Main 2022',
+ q:R`A projectile is launched at angle $\alpha$ with the horizontal with a velocity of 20 m/s. After 10 s its inclination with the horizontal is $\beta$. The value of $\tan\beta$ is ($g=10$ m/s²)`,
+ o:[R`$\tan\alpha+5\sec\alpha$`,R`$\tan\alpha-5\sec\alpha$`,R`$2\tan\alpha-5\sec\alpha$`,R`$2\tan\alpha+5\sec\alpha$`],a:1,
+ s:R`<p>$v_x=20\cos\alpha$ (never changes). $v_y=20\sin\alpha-10\times10=20\sin\alpha-100$.</p><p>$\tan\beta=\dfrac{v_y}{v_x}=\dfrac{20\sin\alpha-100}{20\cos\alpha}=\tan\alpha-5\sec\alpha$.</p>`},
+
+{t:'Projectile motion',y:'JEE Main 2022',
+ q:R`A ball is projected from the ground with speed 15 m/s at an angle $\theta$ with the horizontal so that its range and maximum height are equal. Then $\tan\theta$ is`,
+ o:[R`$\dfrac14$`,R`$\dfrac12$`,R`2`,R`4`],a:3,
+ s:R`<p>$R=\dfrac{2u^2\sin\theta\cos\theta}{g}$, $H=\dfrac{u^2\sin^2\theta}{2g}$.</p><p>$R=H\Rightarrow2\sin\theta\cos\theta=\dfrac{\sin^2\theta}{2}\Rightarrow\tan\theta=4$. (In general $\dfrac{H}{R}=\dfrac{\tan\theta}{4}$; the speed does not matter.)</p>`},
+
+{t:'Projectile motion',y:'JEE Main 2022',
+ q:R`A ball is projected with kinetic energy $E$ at an angle of 60° to the horizontal. Its kinetic energy at the highest point of its flight is`,
+ o:[R`zero`,R`$\dfrac E2$`,R`$\dfrac E4$`,R`$E$`],a:2,
+ s:R`<p>At the top the vertical velocity is zero; the horizontal part $u\cos60°=\dfrac u2$ remains.</p><p>$KE_{\text{top}}=\tfrac12m\Big(\dfrac u2\Big)^2=\dfrac E4$. In general $KE_{\text{top}}=E\cos^2\theta$.</p>`},
+
+{t:'Projectile motion',y:'JEE Main 2022',
+ q:R`A body is projected from the ground at 45° with the horizontal. Its speed after 2 s is 20 m/s. The maximum height reached by the body is ($g=10$ m/s²)`,
+ o:[R`10 m`,R`20 m`,R`40 m`,R`80 m`],a:1,
+ s:R`<p>At 45°, $u_x=u_y=k$. After 2 s: $v_x=k$, $v_y=k-20$.</p><p>$k^2+(k-20)^2=400\Rightarrow2k^2-40k=0\Rightarrow k=20$ m/s. (So at 2 s, $v_y=0$ — it is exactly at the top.)</p><p>$H=\dfrac{u_y^2}{2g}=\dfrac{400}{20}=20$ m.</p>`}
+);
+})();
+
+</script>
+<script>
+// Ch-02 part B: relative motion in 2D + circular motion
+(function(){
+const RIVER=SV(250,170,`<line x1="10" y1="28" x2="240" y2="28" stroke="#1d2528" stroke-width="2"/><line x1="10" y1="145" x2="240" y2="145" stroke="#1d2528" stroke-width="2"/>
+<line x1="150" y1="86" x2="230" y2="86" stroke="#5b6668" stroke-width="1.4" marker-end="MKk"/><text x="190" y="80" text-anchor="middle" font-size="11" fill="#5b6668">river 2 km/h</text>
+<line x1="120" y1="145" x2="75" y2="67" stroke="#0f766e" stroke-width="2.4" marker-end="MKt"/><text x="72" y="104" font-size="11.5" fill="#0f766e" text-anchor="end">swimmer 4 km/h</text>
+<line x1="75" y1="67" x2="118" y2="67" stroke="#b7791f" stroke-width="2.2" marker-end="MKa"/><text x="98" y="61" text-anchor="middle" font-size="11" fill="#b7791f">2</text>
+<line x1="120" y1="145" x2="120" y2="70" stroke="#1d2528" stroke-width="1.5" stroke-dasharray="4 3" marker-end="MKk"/><text x="126" y="122" font-size="11" fill="#1d2528">resultant (straight across)</text>
+<path d="M120,123 A22,22 0 0 0 108.9,126" fill="none" stroke="#b42318" stroke-width="1.3"/><text x="104" y="138" font-size="11" fill="#b42318" text-anchor="end">30°</text>`);
+const PLANE=SV(270,175,`<line x1="10" y1="150" x2="260" y2="150" stroke="#1d2528" stroke-width="2"/>
+<circle cx="200" cy="150" r="4" fill="#1d2528"/><text x="206" y="166" font-size="12" font-weight="700">O (you)</text>
+<line x1="200" y1="150" x2="200" y2="40" stroke="#5b6668" stroke-dasharray="4 3"/>
+<line x1="136.5" y1="40" x2="196" y2="40" stroke="#0f766e" stroke-width="2.2" marker-end="MKt"/><text x="168" y="33" text-anchor="middle" font-size="11" fill="#0f766e">plane</text>
+<circle cx="136.5" cy="40" r="3.5" fill="#1d2528"/><text x="130" y="36" text-anchor="end" font-size="12" font-weight="700">P</text>
+<circle cx="200" cy="40" r="3.5" fill="#1d2528"/><text x="207" y="36" font-size="12" font-weight="700">A</text><text x="207" y="50" font-size="10.5" fill="#5b6668">(plane now)</text>
+<line x1="136.5" y1="40" x2="197" y2="146" stroke="#b7791f" stroke-width="1.8" marker-end="MKa"/><text x="150" y="104" font-size="11" fill="#b7791f" text-anchor="end">sound</text>
+<path d="M176,150 A24,24 0 0 1 188,129.2" fill="none" stroke="#b42318" stroke-width="1.3"/><text x="170" y="142" font-size="11" fill="#b42318" text-anchor="end">60°</text>
+<text x="18" y="140" font-size="11" fill="#5b6668">← North</text>`);
+const CIRC=SV(230,200,`<line x1="15" y1="100" x2="215" y2="100" stroke="#1d2528" stroke-width="1.2" marker-end="MKk"/><line x1="115" y1="190" x2="115" y2="10" stroke="#1d2528" stroke-width="1.2" marker-end="MKk"/>
+<text x="212" y="116" font-size="12" font-style="italic">x</text><text x="122" y="18" font-size="12" font-style="italic">y</text>
+<circle cx="115" cy="100" r="70" fill="none" stroke="#0f766e" stroke-width="2"/>
+<line x1="115" y1="100" x2="168.6" y2="55" stroke="#5b6668" stroke-dasharray="4 3"/><circle cx="168.6" cy="55" r="4" fill="#1d2528"/>
+<text x="174" y="50" font-size="12" font-weight="700">P(R, θ)</text><path d="M140,100 A25,25 0 0 0 134.2,84" fill="none" stroke="#b42318" stroke-width="1.3"/><text x="144" y="94" font-size="11" fill="#b42318">θ</text>
+<line x1="168.6" y1="55" x2="145" y2="27" stroke="#b7791f" stroke-width="2" marker-end="MKa"/><text x="140" y="24" font-size="11" fill="#b7791f" text-anchor="end">v</text>`);
+QS.push(
+{t:'Relative motion in 2D',y:'JEE Main 2019',
+ q:R`A river flows with a speed of 2 km/h. A swimmer can swim at 4 km/h in still water. In what direction (with respect to the flow of the river) should the swimmer swim to cross the river straight?`,
+ o:[R`60°`,R`90°`,R`150°`,R`120°`],a:3,
+ s:R`<p>"Cross straight" means the resultant is perpendicular to the banks, so the swimmer must cancel the river's push: his component against the flow must be 2 km/h.</p><div class="figwrap">${RIVER}</div><p>$4\sin\phi=2\Rightarrow\phi=30°$ upstream of the perpendicular. Angle with the flow direction $=90°+30°=120°$.</p>`},
+
+{t:'Relative motion in 2D',y:'JEE Main 2020',
+ q:R`When a car is at rest, its driver sees rain drops falling vertically. When the car moves with speed $v$, he sees the drops coming at an angle of 60° from the horizontal. When the car's speed is increased to $(1+\beta)v$, this angle changes to 45°. The value of $\beta$ is close to`,
+ o:[R`0.37`,R`0.41`,R`0.73`,R`0.50`],a:2,
+ s:R`<p>Rain falls vertically with speed $u$ (ground frame). Relative to the car, the rain gets an extra horizontal velocity equal to the car's speed, backwards.</p><p>At speed $v$: $\tan60°=\dfrac uv\Rightarrow u=\sqrt3\,v$.</p><p>At speed $(1+\beta)v$: $\tan45°=\dfrac{u}{(1+\beta)v}\Rightarrow1+\beta=\sqrt3\Rightarrow\beta=0.73$.</p>`},
+
+{t:'Relative motion in 2D',y:'JEE Main 2022',
+ q:R`A girl standing on a road holds her umbrella at 45° with the vertical to keep the rain away. If she starts running without the umbrella at $15\sqrt2$ km/h, the rain drops hit her head vertically. The speed of the rain drops with respect to the moving girl is`,
+ o:[R`30 km/h`,R`$\dfrac{25}{\sqrt2}$ km/h`,R`$\dfrac{30}{\sqrt2}$ km/h`,R`25 km/h`],a:2,
+ s:R`<p>Standing still, the umbrella is tilted 45°, so the rain itself comes at 45° to the vertical: horizontal part = vertical part.</p><p>Running at $15\sqrt2$ km/h makes the rain look vertical, so she has cancelled the horizontal part: horizontal part $=15\sqrt2$ km/h, hence vertical part $=15\sqrt2$ km/h too.</p><p>Relative to her only the vertical part is left: $15\sqrt2=\dfrac{30}{\sqrt2}$ km/h.</p>`},
+
+{t:'Relative motion in 2D',y:'JEE Main 2019',
+ q:R`Ship A sails north-east with velocity $\vec v=30\hat i+50\hat j$ km/h ($\hat i$ = east, $\hat j$ = north). Ship B is 80 km east and 150 km north of ship A and sails west at 10 km/h. A will be at minimum distance from B in`,
+ o:[R`2.2 h`,R`4.2 h`,R`3.2 h`,R`2.6 h`],a:3,
+ s:R`<p>Work in A's frame. Position of B relative to A: $\vec r=80\hat i+150\hat j$. Velocity of B relative to A: $\vec v_{BA}=-10\hat i-(30\hat i+50\hat j)=-40\hat i-50\hat j$.</p><p>Closest approach when $\vec r+\vec v_{BA}t$ is perpendicular to $\vec v_{BA}$: $t=-\dfrac{\vec r\cdot\vec v_{BA}}{|\vec v_{BA}|^2}=\dfrac{3200+7500}{1600+2500}=\dfrac{10700}{4100}\approx2.6$ h.</p>`},
+
+{t:'Relative motion in 2D',y:'JEE Main 2019',
+ q:R`A person on open ground hears the sound of a jet aeroplane coming from the north at an angle of 60° with the ground. But he finds the aeroplane right vertically above him. If $v$ is the speed of sound, the speed of the plane is`,
+ f:PLANE,
+ o:[R`$\dfrac{2v}{\sqrt3}$`,R`$\dfrac{\sqrt3}{2}v$`,R`$\dfrac v2$`,R`$v$`],a:2,
+ s:R`<p>The sound he hears now left the plane when it was at P. In the same time $t$: sound travels $PO=vt$, and the plane flies $PA$.</p><p>In triangle POA, $PA=PO\cos60°=\dfrac{vt}{2}$. So $v_{\text{plane}}\,t=\dfrac{vt}{2}\Rightarrow v_{\text{plane}}=\dfrac v2$.</p>`},
+
+{t:'Circular motion',y:'AIEEE 2010',
+ q:R`For a particle in uniform circular motion (speed $v$, radius $R$), the acceleration $\vec a$ at a point $P(R,\theta)$ on the circle is ($\theta$ is measured from the $x$-axis)`,
+ f:CIRC,
+ o:[R`$\dfrac{v^2}{R}\hat i+\dfrac{v^2}{R}\hat j$`,R`$-\dfrac{v^2}{R}\cos\theta\,\hat i+\dfrac{v^2}{R}\sin\theta\,\hat j$`,R`$-\dfrac{v^2}{R}\sin\theta\,\hat i+\dfrac{v^2}{R}\cos\theta\,\hat j$`,R`$-\dfrac{v^2}{R}\cos\theta\,\hat i-\dfrac{v^2}{R}\sin\theta\,\hat j$`],a:3,
+ s:R`<p>In uniform circular motion the only acceleration is centripetal: size $\dfrac{v^2}{R}$, pointing from P towards the centre.</p><p>Unit vector from the centre to P is $\cos\theta\,\hat i+\sin\theta\,\hat j$, so towards the centre is the negative of it.</p><p>$\vec a=-\dfrac{v^2}{R}\cos\theta\,\hat i-\dfrac{v^2}{R}\sin\theta\,\hat j$.</p>`},
+
+{t:'Circular motion',y:'AIEEE 2010',
+ q:R`A point P moves anticlockwise on a circular path of radius 20 m such that the arc length covered is $s=t^3+5$ ($s$ in m, $t$ in s). The acceleration of P at $t=2$ s is nearly`,
+ o:[R`14 m/s²`,R`13 m/s²`,R`12 m/s²`,R`7.2 m/s²`],a:0,
+ s:R`<p>Speed $v=\dfrac{ds}{dt}=3t^2=12$ m/s at $t=2$. Tangential $a_t=\dfrac{dv}{dt}=6t=12$ m/s².</p><p>Centripetal $a_c=\dfrac{v^2}{R}=\dfrac{144}{20}=7.2$ m/s².</p><p>Net: $a=\sqrt{12^2+7.2^2}=\sqrt{195.8}\approx14$ m/s². (12 and 7.2 are each only one part.)</p>`},
+
+{t:'Circular motion',y:'JEE Main 2019',
+ q:R`A particle moves along a circular path with a constant speed of 10 m/s. The magnitude of the change in its velocity when it moves through an angle of 60° around the centre is`,
+ o:[R`10 m/s`,R`zero`,R`$10\sqrt3$ m/s`,R`$10\sqrt2$ m/s`],a:0,
+ s:R`<p>Speed is constant but direction turns by 60°. $|\Delta\vec v|=2v\sin\dfrac{\theta}{2}=2\times10\times\sin30°=10$ m/s.</p><p>Picture it: $\vec v_1$, $\vec v_2$ and $\Delta\vec v$ form an equilateral triangle (two sides 10, angle 60°).</p>`}
+);
+})();
+
+</script>
+
+<script>
+(function(){
+const KEY='padipucast_jee27_ch02_plane_mcq30_v1';
+const N=QS.length, PER=4, NEG=1, MINUTES=60;
+const LBL=['(1)','(2)','(3)','(4)'];
+const $=s=>document.querySelector(s);
+const load=(k,d)=>{try{const v=localStorage.getItem(KEY+k);return v?JSON.parse(v):d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(KEY+k,JSON.stringify(v))}catch(e){}};
+const TOPICS=[...new Set(QS.map(q=>q.t))];
+let mode=null,order=[],cur=0,perm={},ans={},prac=load('_prac',{}),tLeft=0,tick=null,startAt=0,lastRes=null;
+
+function TS(el){const M=window.MathJax;if(M&&M.typesetPromise){if(M.typesetClear)M.typesetClear([el]);M.typesetPromise([el]).catch(()=>{})}else setTimeout(()=>TS(el),300)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){['start','work','result'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0)}
+function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function isFig(s){return typeof s==='string'&&s.trim().startsWith('<svg')}
+
+/* ---------- start screen ---------- */
+function drawStart(){
+ const yrs=QS.map(q=>+(q.y.match(/\d{4}/)||[0])[0]).filter(Boolean);
+ $('#metaChips').innerHTML=`<span class="chip">${N} questions</span><span class="chip">${TOPICS.length} topics</span><span class="chip">${Math.min(...yrs)}–${Math.max(...yrs)} papers</span><span class="chip am">+${PER} / −${NEG}</span>`;
+ $('#topicMap').innerHTML=TOPICS.map(t=>{const qs=QS.filter(q=>q.t===t);return `<div class="trow"><span>${t}</span><span>${qs.length} Qs</span></div>`}).join('');
+ const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+ $('#pracInfo').textContent=done?`Continue practice · ${done}/${N} done, ${ok} right →`:'Start practice →';
+ const b=load('_best',null);
+ $('#bestInfo').textContent=b?`Start test · best ${b.s}/${N*PER} →`:'Start test →';
+}
+
+/* ---------- side panel ---------- */
+function drawSide(){
+ const s=$('#side');
+ let st='';
+ if(mode==='prac'){
+  const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+  st=`<div class="stats"><div class="stat"><b>${done}</b><span>done</span></div><div class="stat"><b style="color:var(--green)">${ok}</b><span>right</span></div><div class="stat"><b style="color:var(--red)">${done-ok}</b><span>wrong</span></div></div>`;
+  st+='<h3>Questions by topic</h3>';
+  TOPICS.forEach(t=>{
+   st+=`<div class="tg">${t}</div><div class="dots">`;
+   order.forEach((qi,pos)=>{if(QS[qi].t!==t)return;const p=prac[qi];const c=p?(p.c===QS[qi].a?'ok':'no'):'';st+=`<button class="dot ${c} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+   st+='</div>';
+  });
+  st+=`<div class="legend"><span><i style="background:var(--green)"></i>right</span><span><i style="background:var(--red)"></i>wrong</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not done</span></div>`;
+  st+=`<div class="sidebtns"><button class="btn sm" id="resetPrac">Clear my practice progress</button></div>`;
+ }else{
+  const a=Object.keys(ans).length;
+  st=`<div class="stats"><div class="stat"><b>${a}</b><span>answered</span></div><div class="stat"><b>${N-a}</b><span>left</span></div><div class="stat"><b>${N}</b><span>total</span></div></div><h3>Jump to</h3><div class="dots">`;
+  order.forEach((qi,pos)=>{st+=`<button class="dot ${ans[qi]!=null?'ans':''} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+  st+=`</div><div class="legend"><span><i style="background:var(--teal)"></i>answered</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not answered</span></div><div class="sidebtns"><button class="btn am" id="submitBtn">Submit paper</button></div>`;
+ }
+ s.innerHTML=st;
+ s.querySelectorAll('.dot').forEach(d=>d.onclick=()=>{if(innerWidth<860)s.classList.add('closed');go(+d.dataset.p)});
+ const rp=$('#resetPrac');if(rp)rp.onclick=()=>confirmBox('Clear practice progress?','All your practice answers for this sheet will be wiped from this device.','Clear',()=>{prac={};save('_prac',prac);drawQ()});
+ const sb=$('#submitBtn');if(sb)sb.onclick=askSubmit;
+}
+
+/* ---------- question ---------- */
+function optHTML(Q,qi,o,pos,cls,dis){return `<button class="opt ${cls}" data-o="${o}" ${dis?'disabled':''}><span class="lb">${LBL[pos]}</span><span class="ot">${Q.o[o]}</span></button>`}
+function drawQ(){
+ const qi=order[cur],Q=QS[qi],c=$('#qcard');
+ const ord=mode==='test'?perm[qi]:[0,1,2,3];
+ const og=Q.og||Q.o.some(isFig);
+ let h=`<div class="qhead"><span class="qno">Q${cur+1} <span style="color:var(--mute);font-weight:500">/ ${N}</span></span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span></div>`;
+ h+=`<div class="qtext">${Q.q}</div>`;
+ if(Q.f)h+=`<div class="figwrap">${Q.f}</div>`;
+ h+=`<div class="opts ${og?'og':''}">`;
+ const p=mode==='prac'?prac[qi]:null;
+ ord.forEach((o,pos)=>{
+  let cls='';
+  if(mode==='prac'&&p){if(o===Q.a)cls='ok';else if(o===p.c)cls='no'}
+  if(mode==='test'&&ans[qi]===o)cls='sel';
+  h+=optHTML(Q,qi,o,pos,cls,mode==='prac'&&p);
+ });
+ h+='</div>';
+ if(mode==='prac'&&p){
+  const right=p.c===Q.a;
+  h+=`<div class="verdict ${right?'ok':'no'}">${right?'✓ Correct!':p.c<0?'Answer shown: '+LBL[Q.a]+' (counted as not solved)':'✗ Not this one. Correct answer: '+LBL[Q.a]}</div>`;
+  h+=`<div class="sol"><h4>Solution</h4>${Q.s}</div>`;
+ }
+ h+=`<div class="nav"><button class="btn" id="prevB" ${cur===0?'disabled':''}>← Prev</button><span style="display:flex;gap:8px">`;
+ if(mode==='prac'&&p)h+=`<button class="btn" id="retryB">Try again</button>`;
+ if(mode==='prac'&&!p)h+=`<button class="btn" id="peekB">Show answer</button>`;
+ if(mode==='test'&&ans[qi]!=null)h+=`<button class="btn" id="clearB">Clear answer</button>`;
+ h+=`</span><button class="btn pri" id="nextB">${cur===N-1?(mode==='test'?'Submit':'Finish'):'Next →'}</button></div>`;
+ c.innerHTML=h;
+ c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.o));
+ $('#prevB').onclick=()=>{if(cur>0)go(cur-1)};
+ $('#nextB').onclick=()=>{if(cur<N-1)go(cur+1);else if(mode==='test')askSubmit();else{show('start');drawStart()}};
+ const r=$('#retryB');if(r)r.onclick=()=>{delete prac[qi];save('_prac',prac);drawQ()};
+ const pk=$('#peekB');if(pk)pk.onclick=()=>{prac[qi]={c:-1};save('_prac',prac);drawQ()};
+ const cl=$('#clearB');if(cl)cl.onclick=()=>{delete ans[qi];drawQ()};
+ drawSide();TS(c);
+}
+function go(p){cur=p;drawQ();const t=$('#qcard').getBoundingClientRect().top;if(t<0||t>innerHeight*.5)window.scrollTo({top:Math.max(0,window.scrollY+t-70),behavior:'smooth'})}
+function pick(o){
+ const qi=order[cur];
+ if(mode==='prac'){if(prac[qi])return;prac[qi]={c:o};save('_prac',prac);drawQ();setTimeout(()=>{const v=document.querySelector('.verdict');if(v)v.scrollIntoView({behavior:'smooth',block:'center'})},60)}
+ else{ans[qi]=o;drawQ()}
+}
+
+/* ---------- modes ---------- */
+function startPractice(){mode='prac';order=QS.map((_,i)=>i);cur=0;const f=order.findIndex(i=>!prac[i]);if(f>0)cur=f;$('#clock').classList.add('hidden');$('#barTitle').textContent='Practice · '+document.title;show('work');drawQ()}
+function startTest(){
+ mode='test';order=shuffle(QS.map((_,i)=>i));perm={};ans={};cur=0;
+ QS.forEach((q,i)=>perm[i]=q.keep?[0,1,2,3]:shuffle([0,1,2,3]));
+ tLeft=MINUTES*60;startAt=Date.now();
+ const ck=$('#clock');ck.classList.remove('hidden','low');ck.textContent=fmt(tLeft);
+ clearInterval(tick);
+ tick=setInterval(()=>{tLeft=MINUTES*60-Math.floor((Date.now()-startAt)/1000);ck.textContent=fmt(tLeft);ck.classList.toggle('low',tLeft<=300);if(tLeft<=0){clearInterval(tick);finish(true)}},500);
+ $('#barTitle').textContent='Test · '+document.title;show('work');drawQ();
+}
+function confirmBox(title,body,okTxt,fn){
+ const m=$('#modal');$('#modalCard').innerHTML=`<h3>${title}</h3><p>${body}</p><div class="nav"><button class="btn" id="mNo">Cancel</button><button class="btn am" id="mYes">${okTxt}</button></div>`;
+ m.classList.remove('hidden');$('#mNo').onclick=()=>m.classList.add('hidden');$('#mYes').onclick=()=>{m.classList.add('hidden');fn()};
+}
+function askSubmit(){const a=Object.keys(ans).length;confirmBox('Submit the paper?',`You have answered ${a} of ${N}. ${N-a?(N-a)+' left blank (no marks lost for blanks).':'All answered.'}`,'Submit',()=>finish(false))}
+
+/* ---------- result ---------- */
+function finish(auto){
+ clearInterval(tick);$('#clock').classList.add('hidden');
+ let ok=0,no=0,sk=0;const by={};TOPICS.forEach(t=>by[t]={ok:0,n:0});
+ QS.forEach((q,i)=>{by[q.t].n++;if(ans[i]==null)sk++;else if(ans[i]===q.a){ok++;by[q.t].ok++}else no++});
+ const score=ok*PER-no*NEG, max=N*PER, used=Math.min(MINUTES*60,Math.floor((Date.now()-startAt)/1000));
+ const best=load('_best',null);if(!best||score>best.s)save('_best',{s:score,d:new Date().toLocaleDateString()});
+ const pct=Math.max(0,score)/max, col=pct>=.7?'var(--green)':pct>=.45?'var(--amber)':'var(--red)';
+ const C=2*Math.PI*62;
+ let msg=pct>=.85?'Excellent. This chapter is exam-ready. Keep revising the ones you got wrong.':pct>=.7?'Very good. A few slips — read the solutions of the wrong ones carefully.':pct>=.45?'Fair attempt. Go topic by topic below and redo the weak topic in practice mode.':'This chapter needs more work. Use practice mode first — read every solution, then take the test again.';
+ if(no>ok&&no>=6)msg+=' Note: wrong answers cost you marks. Skip when you are only guessing.';
+ if(auto)msg='Time up — your paper was submitted automatically. '+msg;
+ let h=`<div class="card res"><div class="ringrow"><svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="#eee7d8" stroke-width="12"/><circle cx="75" cy="75" r="62" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" transform="rotate(-90 75 75)"/><text x="75" y="74" text-anchor="middle" font-family="DM Mono" font-size="30" font-weight="500" fill="#1d2528">${score}</text><text x="75" y="98" text-anchor="middle" font-family="DM Sans" font-size="13" fill="#5b6668">out of ${max}</text></svg><div><h2 style="font-size:26px">Your result</h2><div class="chips"><span class="chip gr">${ok} right</span><span class="chip rd">${no} wrong</span><span class="chip gy">${sk} skipped</span><span class="chip">time ${fmt(used)}</span></div><p class="msg">${msg}</p></div></div>`;
+ h+=`<table class="tt"><tr><th>Topic</th><th>Right</th><th style="width:40%"></th></tr>`;
+ TOPICS.forEach(t=>{const b=by[t];h+=`<tr><td>${t}</td><td class="n">${b.ok} / ${b.n}</td><td><div class="barmini"><i style="width:${100*b.ok/b.n}%"></i></div></td></tr>`});
+ h+=`</table><div class="nav"><button class="btn" id="rHome">Home</button><span style="display:flex;gap:8px"><button class="btn" id="rPrac">Practice mode</button><button class="btn am" id="rTest">Take test again</button></span></div></div>`;
+ h+=`<div class="filters"><button class="btn sm on" data-f="all">All (${N})</button><button class="btn sm" data-f="no">Wrong (${no})</button><button class="btn sm" data-f="sk">Skipped (${sk})</button><button class="btn sm" data-f="ok">Right (${ok})</button></div><div id="rvList"></div>`;
+ $('#result').innerHTML=h;show('result');
+ lastRes={ok,no,sk};
+ $('#rHome').onclick=()=>{show('start');drawStart()};$('#rPrac').onclick=startPractice;$('#rTest').onclick=startTest;
+ document.querySelectorAll('.filters .btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters .btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');drawReview(b.dataset.f)});
+ drawReview('all');
+}
+function drawReview(f){
+ let h='';
+ order.forEach((qi,pos)=>{
+  const Q=QS[qi],a=ans[qi],st=a==null?'sk':a===Q.a?'ok':'no';
+  if(f!=='all'&&f!==st)return;
+  const og=Q.og||Q.o.some(isFig);
+  h+=`<div class="card rv"><div class="qhead"><span class="qno">Q${pos+1}</span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span><span class="chip ${st==='ok'?'gr':st==='no'?'rd':'gy'}">${st==='ok'?'right +'+PER:st==='no'?'wrong −'+NEG:'skipped 0'}</span></div><div class="qtext">${Q.q}</div>${Q.f?`<div class="figwrap">${Q.f}</div>`:''}<div class="opts ${og?'og':''}">`;
+  perm[qi].forEach((o,p)=>{h+=optHTML(Q,qi,o,p,o===Q.a?'ok':o===a?'no':'',true)});
+  const yp=a==null?'—':LBL[perm[qi].indexOf(a)], cp=LBL[perm[qi].indexOf(Q.a)];
+  h+=`</div><div class="yours">Your answer: <b>${yp}</b> · Correct: <b>${cp}</b></div><div class="sol"><h4>Solution</h4>${Q.s}</div></div>`;
+ });
+ const L=$('#rvList');L.innerHTML=h||'<p style="color:var(--mute)">Nothing here.</p>';TS(L);
+}
+
+/* ---------- wiring ---------- */
+$('#goPractice').onclick=startPractice;
+$('#goTest').onclick=startTest;
+$('#homeBtn').onclick=()=>{if(mode==='test')confirmBox('Leave the test?','Your answers in this attempt will be lost.','Leave',()=>{clearInterval(tick);show('start');drawStart()});else{show('start');drawStart()}};
+$('#toggleSide').onclick=()=>$('#side').classList.toggle('closed');
+document.addEventListener('keydown',e=>{
+ if($('#work').classList.contains('hidden')||!$('#modal').classList.contains('hidden'))return;
+ if(['1','2','3','4'].includes(e.key)){const qi=order[cur],ord=mode==='test'?perm[qi]:[0,1,2,3];pick(ord[+e.key-1])}
+ if(e.key==='ArrowRight'&&cur<N-1)go(cur+1);
+ if(e.key==='ArrowLeft'&&cur>0)go(cur-1);
+});
+window.addEventListener('beforeunload',e=>{if(mode==='test'&&!$('#work').classList.contains('hidden')){e.preventDefault();e.returnValue=''}});
+drawStart();
+})();
+</script>
+</body>
+</html>

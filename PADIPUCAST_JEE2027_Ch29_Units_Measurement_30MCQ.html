@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Units and Measurement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},chtml:{scale:1},options:{enableMenu:false}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root{--bg:#f4efe4;--paper:#fffdf8;--ink:#1d2528;--mute:#5b6668;--line:#e3dccd;--teal:#0f766e;--teal2:#e3f1ee;--amber:#b7791f;--amber2:#fbf0dc;--red:#b42318;--red2:#fbe7e4;--green:#15803d;--green2:#e3f4e8}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(rgba(15,118,110,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(15,118,110,.05) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:16px/1.6 "DM Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;line-height:1.2;margin:0}
+.mono{font-family:"DM Mono",monospace}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:16px}
+.top{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:6px 0 14px;flex-wrap:wrap}
+.brand{font:700 13px "Space Grotesk";letter-spacing:.22em;color:var(--teal)}
+.brand b{color:var(--amber)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 6px 22px rgba(60,50,20,.05)}
+.hidden{display:none!important}
+/* start */
+.hero{padding:28px 26px}
+.hero h1{font-size:clamp(26px,4.4vw,40px)}
+.hero p{color:var(--mute);margin:8px 0 0;max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font:500 12.5px "DM Mono";padding:4px 10px;border-radius:99px;background:var(--teal2);color:var(--teal);white-space:nowrap}
+.chip.am{background:var(--amber2);color:var(--amber)}
+.chip.rd{background:var(--red2);color:var(--red)}
+.chip.gr{background:var(--green2);color:var(--green)}
+.chip.gy{background:#eee9de;color:var(--mute)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.mode{padding:20px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;transition:.15s}
+.mode:hover{border-color:var(--teal);transform:translateY(-1px)}
+.mode h3{font-size:20px}
+.mode p{margin:6px 0 10px;color:var(--mute);font-size:14.5px}
+.mode .go{font:600 14px "Space Grotesk";color:var(--teal)}
+.mode.t .go{color:var(--amber)}
+.mode.t:hover{border-color:var(--amber)}
+.tmap{margin-top:16px;padding:18px 20px}
+.tmap h3{font-size:16px;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dashed var(--line);font-size:14.5px}
+.trow:first-of-type{border-top:0}
+.trow span:last-child{font-family:"DM Mono";color:var(--mute);font-size:13px;white-space:nowrap}
+/* work */
+.bar{position:sticky;top:0;z-index:20;background:rgba(244,239,228,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin:0 -16px 14px;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar .ttl{font:600 15px "Space Grotesk"}
+.clock{font:500 20px "DM Mono";padding:4px 12px;border-radius:10px;background:var(--ink);color:#fff}
+.clock.low{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.75}}
+.btn{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 14px;font-weight:500;color:var(--ink)}
+.btn:hover{border-color:var(--teal)}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.am{background:var(--amber);border-color:var(--amber);color:#fff}
+.btn.sm{padding:5px 10px;font-size:14px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.qcard{padding:22px 24px}
+.qhead{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.qno{font:700 15px "Space Grotesk";color:var(--teal);margin-right:4px}
+.qtext{font-size:17px}
+.qtext p{margin:0 0 8px}
+.dt{border-collapse:collapse;margin:10px 0;font-size:14.5px;background:#fff}
+.dt td,.dt th{border:1px solid var(--line);padding:5px 10px;text-align:left}
+.dt th{background:#f8f4ea;font-weight:600}
+.figwrap{display:flex;justify-content:center;margin:12px 0 4px}
+.fig{width:100%;max-width:330px;height:auto}
+.figwrap .fig.wide{max-width:440px}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opts.og{grid-template-columns:1fr 1fr}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);transition:.12s;min-height:48px}
+.opt:hover{border-color:var(--teal)}
+.opt .lb{font:500 14px "DM Mono";color:var(--mute);flex:0 0 auto;padding-top:2px}
+.opt .ot{flex:1;min-width:0;overflow-x:auto}
+.opts.og .opt{flex-direction:column;align-items:center}
+.opts.og .opt .ot{width:100%}
+.opts.og .fig{max-width:200px;display:block;margin:0 auto}
+.opt.sel{border-color:var(--teal);background:var(--teal2)}
+.opt.ok{border-color:var(--green);background:var(--green2)}
+.opt.no{border-color:var(--red);background:var(--red2)}
+.opt[disabled]{cursor:default}
+.sol{margin-top:16px;border-left:4px solid var(--amber);background:var(--amber2);border-radius:0 12px 12px 0;padding:12px 16px;font-size:15.5px}
+.sol h4{margin:0 0 4px;font:600 14px "Space Grotesk";color:var(--amber);letter-spacing:.04em;text-transform:uppercase}
+.sol p{margin:4px 0}
+.verdict{margin-top:14px;font:600 15px "Space Grotesk"}
+.verdict.ok{color:var(--green)}.verdict.no{color:var(--red)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.side{padding:16px;position:sticky;top:70px}
+.side h3{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.stat{background:#f8f4ea;border-radius:10px;padding:7px 4px;text-align:center}
+.stat b{display:block;font:600 18px "DM Mono"}
+.stat span{font-size:11.5px;color:var(--mute)}
+.tg{font:600 12px "Space Grotesk";color:var(--teal);margin:10px 0 6px;letter-spacing:.03em}
+.dots{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.dot{aspect-ratio:1;border:1.5px solid var(--line);border-radius:9px;background:#fff;font:500 13px "DM Mono";color:var(--ink);padding:0}
+.dot.cur{outline:2.5px solid var(--ink);outline-offset:1px}
+.dot.ans{background:var(--teal);border-color:var(--teal);color:#fff}
+.dot.ok{background:var(--green);border-color:var(--green);color:#fff}
+.dot.no{background:var(--red);border-color:var(--red);color:#fff}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--mute)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.sidebtns{display:grid;gap:8px;margin-top:14px}
+.toggleSide{display:none}
+/* result */
+.res{padding:24px}
+.ringrow{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring{width:150px;height:150px;flex:0 0 auto}
+.msg{font-size:16px;max-width:52ch}
+table.tt{width:100%;border-collapse:collapse;margin-top:16px;font-size:14.5px}
+.tt th,.tt td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+.tt th{font:600 12px "Space Grotesk";color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.tt td.n{font-family:"DM Mono";white-space:nowrap}
+.barmini{height:8px;border-radius:9px;background:#eee7d8;overflow:hidden;min-width:60px}
+.barmini i{display:block;height:100%;background:var(--teal)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 12px}
+.filters .btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rv{padding:18px 20px;margin-bottom:12px}
+.rv .yours{font-size:14px;color:var(--mute);margin-top:10px}
+.modal{position:fixed;inset:0;background:rgba(20,25,28,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal .card{padding:22px;max-width:420px;width:100%}
+.modal p{color:var(--mute)}
+.foot{color:var(--mute);font-size:13px;text-align:center;margin:26px 0 8px}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (max-width:860px){
+ .grid2{grid-template-columns:1fr}
+ .side{position:static}
+ .toggleSide{display:inline-block}
+ .side.closed{display:none}
+}
+@media (max-width:560px){
+ .modes{grid-template-columns:1fr}
+ .qcard{padding:16px}
+ .qtext{font-size:16px}
+ .opts.og{grid-template-columns:1fr 1fr;gap:8px}
+ .opts.og .opt{padding:8px}
+ .dots{grid-template-columns:repeat(6,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top"><div class="brand">PADI<b>PU</b>CAST</div><div class="chip gy">JEE Main PYQ · 2027 prep</div></div>
+
+ <!-- START -->
+ <section id="start">
+  <div class="card hero">
+   <div class="chip am" style="display:inline-block;margin:0 0 10px">Chapter 29 · Units, Errors & Dimensions</div>
+   <h1>Units and Measurement</h1>
+   <p>30 high-yield JEE Main PYQs (2009–2022) picked for JEE 2027: vernier and screw gauge, significant figures, errors and dimensions. Every answer checked, every solution worked step by step.</p>
+   <div class="chips" id="metaChips"></div>
+   <div class="modes">
+    <button class="mode" id="goPractice"><h3>Practice mode</h3><p>Answer one by one. You see right or wrong at once, with the full working. Your progress is saved on this device.</p><span class="go" id="pracInfo">Start practice →</span></button>
+    <button class="mode t" id="goTest"><h3>Test mode</h3><p>One clock for the whole paper (60 min). +4 right, −1 wrong. Question and option order shuffled. Answers shown only after you submit.</p><span class="go" id="bestInfo">Start test →</span></button>
+   </div>
+  </div>
+  <div class="card tmap"><h3>What this sheet covers</h3><div id="topicMap"></div></div>
+ </section>
+
+ <!-- WORK -->
+ <section id="work" class="hidden">
+  <div class="bar">
+   <div class="ttl" id="barTitle"></div>
+   <div style="display:flex;gap:8px;align-items:center">
+    <button class="btn sm toggleSide" id="toggleSide">Questions</button>
+    <span class="clock hidden" id="clock">60:00</span>
+    <button class="btn sm" id="homeBtn">Home</button>
+   </div>
+  </div>
+  <div class="grid2">
+   <div>
+    <div class="card qcard" id="qcard"></div>
+   </div>
+   <aside class="card side closed" id="side"></aside>
+  </div>
+ </section>
+
+ <!-- RESULT -->
+ <section id="result" class="hidden"></section>
+
+ <div class="foot">PADIPUCAST · Units and Measurement · questions from the JEE Main archive, solutions worked from first principles</div>
+</div>
+
+<div class="modal hidden" id="modal"><div class="card" id="modalCard"></div></div>
+
+<script>
+const R=String.raw;
+const QS=[];
+/* ---- tiny SVG graph helper ----
+ G({x:[x0,x1], y:[y0,y1], xl:'t', yl:'v', s:[{p:[[x,y],...]}|{f:fn,a,b,n}], xt:[[v,'lbl']], yt:[[v,'lbl']],
+    gd:[[x1,y1,x2,y2]], pt:[[x,y,'lbl',dx,dy]], tx:[[x,y,'txt',anchor]], w, h, cls, ar:[[x,y,deg]] })  */
+let _gid=0;
+const INK='#1d2528',TEAL='#0f766e',AMB='#b7791f',RED='#b42318',MUTE='#5b6668';
+function G(o){
+ const W=o.w||250,H=o.h||175,ml=o.ml||34,mr=o.mr||16,mt=o.mt||16,mb=o.mb||26,id='a'+(++_gid);
+ const [x0,x1]=o.x,[y0,y1]=o.y;
+ const X=v=>ml+(v-x0)/(x1-x0)*(W-ml-mr), Y=v=>H-mb-(v-y0)/(y1-y0)*(H-mt-mb);
+ const ox=X(Math.min(Math.max(0,x0),x1)), oy=Y(Math.min(Math.max(0,y0),y1));
+ let s=`<svg class="fig ${o.cls||''}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INK}"/></marker><marker id="${id}c" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="${TEAL}"/></marker></defs>`;
+ (o.gd||[]).forEach(g=>{s+=`<line x1="${X(g[0])}" y1="${Y(g[1])}" x2="${X(g[2])}" y2="${Y(g[3])}" stroke="${MUTE}" stroke-width="1" stroke-dasharray="3 3"/>`});
+ s+=`<line x1="${ml-4}" y1="${oy}" x2="${W-4}" y2="${oy}" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ s+=`<line x1="${ox}" y1="${H-mb+4}" x2="${ox}" y2="6" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ if(o.xl)s+=`<text x="${W-6}" y="${oy+(o.xlUp?-6:15)}" text-anchor="end" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`;
+ if(o.yl)s+=`<text x="${ox+6}" y="13" font-size="12" font-style="italic" fill="${INK}">${o.yl}</text>`;
+ (o.xt||[]).forEach(t=>{s+=`<line x1="${X(t[0])}" y1="${oy-3}" x2="${X(t[0])}" y2="${oy+3}" stroke="${INK}"/><text x="${X(t[0])}" y="${oy+(t[2]||14)}" text-anchor="middle" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.yt||[]).forEach(t=>{s+=`<line x1="${ox-3}" y1="${Y(t[0])}" x2="${ox+3}" y2="${Y(t[0])}" stroke="${INK}"/><text x="${ox-6}" y="${Y(t[0])+3.5}" text-anchor="end" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.fill||[]).forEach(f=>{s+=`<polygon points="${f.p.map(q=>X(q[0])+','+Y(q[1])).join(' ')}" fill="${f.c||TEAL}" opacity="${f.op||.15}"/>`});
+ (o.s||[]).forEach(r=>{
+  let pts=r.p;
+  if(r.f){pts=[];const n=r.n||60;for(let i=0;i<=n;i++){const x=r.a+(r.b-r.a)*i/n;pts.push([x,r.f(x)])}}
+  s+=`<polyline points="${pts.map(q=>X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join(' ')}" fill="none" stroke="${r.c||TEAL}" stroke-width="${r.w||2.2}" stroke-linejoin="round" stroke-linecap="round" ${r.d?'stroke-dasharray="5 4"':''}/>`;
+ });
+ (o.ar||[]).forEach(a=>{s+=`<g transform="translate(${X(a[0])},${Y(a[1])}) rotate(${a[2]})"><path d="M-5,-4 L4,0 L-5,4 z" fill="${a[3]||TEAL}"/></g>`});
+ (o.pt||[]).forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3" fill="${INK}"/>`;if(p[2])s+=`<text x="${X(p[0])+(p[3]||5)}" y="${Y(p[1])+(p[4]||-6)}" font-size="11.5" font-weight="700" fill="${INK}">${p[2]}</text>`});
+ (o.tx||[]).forEach(t=>{s+=`<text x="${X(t[0])}" y="${Y(t[1])}" text-anchor="${t[3]||'middle'}" font-size="${t[4]||11}" fill="${t[5]||INK}">${t[2]}</text>`});
+ return s+'</svg>';
+}
+/* plain SVG wrapper for hand-drawn figures */
+function SV(w,h,body,cls){const id='b'+(++_gid);const mk=(n,c)=>`<marker id="${id}${n}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`;
+ return `<svg class="fig ${cls||''}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs>${mk('k',INK)}${mk('t',TEAL)}${mk('a',AMB)}${mk('r',RED)}</defs>${body.replace(/MK([ktar])/g,(m,c)=>'url(#'+id+c+')')}</svg>`}
+
+</script>
+<script>
+// Ch-29 Units and Measurement — part A: instruments + significant figures
+QS.push(
+{t:'Vernier & screw gauge',y:'AIEEE 2009',
+ q:R`In an experiment, angles are measured with an instrument in which 29 divisions of the main scale exactly coincide with 30 divisions of the vernier scale. If the smallest main-scale division is half a degree (0.5°), the least count of the instrument is`,
+ o:[R`half minute`,R`one degree`,R`half degree`,R`one minute`],a:3,
+ s:R`<p>30 VSD = 29 MSD, so 1 VSD $=\dfrac{29}{30}$ MSD.</p><p>LC = 1 MSD − 1 VSD $=\dfrac1{30}$ MSD $=\dfrac{0.5°}{30}=\dfrac{1°}{60}=1$ minute.</p>`},
+
+{t:'Vernier & screw gauge',y:'JEE Main 2014',
+ q:R`A student measured the length of a rod and wrote it as 3.50 cm. Which instrument did he use?`,
+ o:[R`A metre scale`,R`A vernier calliper where 10 vernier divisions match 9 main-scale divisions, and the main scale has 10 divisions in 1 cm`,R`A screw gauge with 100 circular divisions and pitch 1 mm`,R`A screw gauge with 50 circular divisions and pitch 1 mm`],a:1,
+ s:R`<p>3.50 cm is written to 0.01 cm $=0.1$ mm, so the least count must be 0.1 mm.</p><p>Metre scale: 1 mm. Vernier: $1\text{ MSD}-1\text{ VSD}=1-0.9=0.1$ mm ✓. Screw gauges: $\dfrac{1}{100}=0.01$ mm (would write 3.500 cm) and $\dfrac1{50}=0.02$ mm.</p>`},
+
+{t:'Vernier & screw gauge',y:'JEE Main 2016',
+ q:R`A screw gauge of pitch 0.5 mm with 50 circular divisions measures the thickness of an aluminium sheet. Before measuring, with the jaws in contact, the 45th division coincides with the main-scale line and the zero of the main scale is barely visible. What is the thickness of the sheet if the main-scale reading is 0.5 mm and the 25th division coincides with the main-scale line?`,
+ o:[R`0.80 mm`,R`0.70 mm`,R`0.50 mm`,R`0.75 mm`],a:0,
+ s:R`<p>LC $=\dfrac{0.5}{50}=0.01$ mm.</p><p>Jaws closed, 45th division on the line and the main zero just hidden: the circular zero has <b>not reached</b> the line; it is $50-45=5$ divisions short. Zero error $=-5\times0.01=-0.05$ mm.</p><p>Observed $=0.5+25\times0.01=0.75$ mm. True = observed − zero error $=0.75-(-0.05)=0.80$ mm.</p>`},
+
+{t:'Vernier & screw gauge',y:'JEE Main 2019',
+ q:R`The pitch of a screw gauge is 0.5 mm and its circular scale has 100 divisions. When fully tightened without any object, the zero of the circular scale lies 3 divisions <b>below</b> the mean line. The readings for a thin sheet are main scale 5.5 mm and circular scale 48. The thickness of the sheet is`,
+ o:[R`5.725 mm`,R`5.740 mm`,R`5.755 mm`,R`5.950 mm`],a:0,
+ s:R`<p>LC $=\dfrac{0.5}{100}=0.005$ mm.</p><p>Zero 3 divisions below the line means the gauge already reads $+3$ divisions with nothing in it: zero error $=+3\times0.005=+0.015$ mm.</p><p>Observed $=5.5+48\times0.005=5.74$ mm. True $=5.74-0.015=5.725$ mm.</p>`},
+
+{t:'Vernier & screw gauge',y:'JEE Main 2020',
+ q:R`The least count of the main scale of a vernier calliper is 1 mm. Its vernier scale has 10 divisions that coincide with 9 main-scale divisions. With the jaws touching, the 7th vernier division coincides with a main-scale division and the vernier zero lies to the <b>right</b> of the main-scale zero. When measuring a cylinder, the vernier zero lies between 3.1 cm and 3.2 cm and the 4th VSD coincides with a main-scale division. The length of the cylinder is`,
+ o:[R`3.21 cm`,R`2.99 cm`,R`3.07 cm`,R`3.2 cm`],a:2,
+ s:R`<p>LC $=1\text{ mm}\Big(1-\dfrac9{10}\Big)=0.1$ mm.</p><p>Vernier zero to the right of main zero → positive zero error $=+7\times0.1=+0.7$ mm.</p><p>Observed $=31+4\times0.1=31.4$ mm. True $=31.4-0.7=30.7$ mm $=3.07$ cm.</p>`},
+
+{t:'Vernier & screw gauge',y:'JEE Main 2020',
+ q:R`Using a screw gauge of pitch 0.1 cm with 50 divisions on its circular scale, the thickness of an object is measured. It should correctly be recorded as`,
+ o:[R`2.124 cm`,R`2.123 cm`,R`2.125 cm`,R`2.121 cm`],a:0,
+ s:R`<p>LC $=\dfrac{0.1}{50}=0.002$ cm. Every reading is (main scale) + (whole number) × 0.002 cm, so the last digit must be <b>even</b>.</p><p>Only 2.124 cm can come from this gauge.</p>`},
+
+{t:'Significant figures',y:'AIEEE 2010',
+ q:R`The numbers of significant figures in 23.023, 0.0003 and $2.1\times10^{-3}$ are, respectively`,
+ o:[R`4, 4, 2`,R`5, 1, 2`,R`5, 1, 5`,R`5, 5, 2`],a:1,
+ s:R`<p>23.023: zeros between non-zero digits count → 5.</p><p>0.0003: leading zeros only fix the decimal point → 1.</p><p>$2.1\times10^{-3}$: the power of ten never counts → 2.</p>`},
+
+{t:'Significant figures',y:'JEE Main 2019',
+ q:R`The diameter and height of a cylinder, measured with a metre scale, are $12.6\pm0.1$ cm and $34.2\pm0.1$ cm. Its volume, in appropriate significant figures, is`,
+ o:[R`$4264\pm81$ cm³`,R`$4300\pm80$ cm³`,R`$4260\pm80$ cm³`,R`$4264.4\pm81.0$ cm³`],a:2,
+ s:R`<p>$V=\dfrac{\pi D^2h}{4}=\dfrac{\pi}{4}(12.6)^2(34.2)\approx4264.4$ cm³.</p><p>$\dfrac{\Delta V}{V}=2\dfrac{\Delta D}{D}+\dfrac{\Delta h}{h}=\dfrac{0.2}{12.6}+\dfrac{0.1}{34.2}=0.0188\Rightarrow\Delta V\approx80$ cm³.</p><p>The data have 3 significant figures, so $V\approx4260$ cm³, and the error is rounded to the same place: $4260\pm80$ cm³.</p>`},
+
+{t:'Significant figures',y:'JEE Main 2019',
+ q:R`The area of a square is 5.29 cm². The area of 7 such squares, taking significant figures into account, is`,
+ o:[R`37.03 cm²`,R`37.0 cm²`,R`37.030 cm²`,R`37 cm²`],a:1,
+ s:R`<p>7 is an exact count, so it does not limit the significant figures. 5.29 has 3 significant figures.</p><p>$5.29\times7=37.03\to$ 3 significant figures $=37.0$ cm².</p>`},
+
+{t:'Significant figures',y:'JEE Main 2020',
+ q:R`A student measures the diameter of a pencil with a vernier scale and records 5.50 mm, 5.55 mm, 5.45 mm and 5.65 mm. The average is 5.5375 mm and the standard deviation is 0.07395 mm. The average diameter should be recorded as`,
+ o:[R`$(5.5375\pm0.0739)$ mm`,R`$(5.54\pm0.07)$ mm`,R`$(5.538\pm0.074)$ mm`,R`$(5.5375\pm0.0740)$ mm`],a:1,
+ s:R`<p>Each reading is given to 2 decimal places (0.01 mm). A result cannot be more precise than the data.</p><p>Round the mean to 2 decimals: 5.54 mm; round the error to the same place: 0.07 mm. Answer $(5.54\pm0.07)$ mm.</p>`}
+);
+
+</script>
+<script>
+// Ch-29 part B: errors in measurement
+QS.push(
+{t:'Errors & their propagation',y:'JEE Main 2015',
+ q:R`The period of a simple pendulum is $T=2\pi\sqrt{L/g}$. The measured value of $L$ is 20.0 cm, known to 1 mm accuracy, and the time for 100 oscillations is 90 s, measured with a wrist watch of 1 s resolution. The accuracy in the determination of $g$ is`,
+ o:[R`2%`,R`3%`,R`1%`,R`5%`],a:1,
+ s:R`<p>$g=\dfrac{4\pi^2L}{T^2}\Rightarrow\dfrac{\Delta g}{g}=\dfrac{\Delta L}{L}+2\dfrac{\Delta T}{T}$.</p><p>$\dfrac{\Delta L}{L}=\dfrac{0.1}{20.0}=0.5\%$. Use the <b>total</b> time for $\dfrac{\Delta T}{T}$: $\dfrac{1}{90}=1.11\%$, doubled $=2.22\%$.</p><p>Total $\approx2.7\%\approx3\%$.</p>`},
+
+{t:'Errors & their propagation',y:'JEE Main 2016',
+ q:R`A student measures the time for 100 oscillations of a simple pendulum four times: 90 s, 91 s, 95 s and 92 s. If the smallest division of the clock is 1 s, the reported mean time should be`,
+ o:[R`$92\pm5.0$ s`,R`$92\pm1.8$ s`,R`$92\pm3$ s`,R`$92\pm2$ s`],a:3,
+ s:R`<p>Mean $=\dfrac{90+91+95+92}{4}=92$ s.</p><p>Absolute deviations: 2, 1, 3, 0 → mean absolute error $=\dfrac{6}{4}=1.5$ s.</p><p>The clock cannot show less than 1 s, so the error is rounded to a whole second: 2 s. Report $92\pm2$ s.</p>`},
+
+{t:'Errors & their propagation',y:'JEE Main 2018',
+ q:R`The density of a material in the shape of a cube is found by measuring three sides of the cube and its mass. If the relative errors in measuring the mass and the length are 1.5% and 1%, the maximum error in the density is`,
+ o:[R`2.5%`,R`3.5%`,R`4.5%`,R`6%`],a:2,
+ s:R`<p>$\rho=\dfrac{m}{l^3}\Rightarrow\dfrac{\Delta\rho}{\rho}=\dfrac{\Delta m}{m}+3\dfrac{\Delta l}{l}=1.5\%+3(1\%)=4.5\%$.</p>`},
+
+{t:'Errors & their propagation',y:'JEE Main 2020',
+ q:R`A physical quantity $z$ depends on four observables as $z=\dfrac{a^2b^{2/3}}{\sqrt c\,d^3}$. The percentage errors in $a$, $b$, $c$ and $d$ are 2%, 1.5%, 4% and 2.5%. The percentage error in $z$ is`,
+ o:[R`13.5%`,R`14.5%`,R`16.5%`,R`12.25%`],a:1,
+ s:R`<p>Multiply each % error by its power and <b>add</b> all (errors never cancel, even for quantities in the denominator).</p><p>$2(2)+\tfrac23(1.5)+\tfrac12(4)+3(2.5)=4+1+2+7.5=14.5\%$.</p>`},
+
+{t:'Errors & their propagation',y:'JEE Main 2021',
+ q:R`The period of a simple pendulum is $T=2\pi\sqrt{L/g}$. $L$ is measured as 1.0 m with a metre scale of least count 1 mm, and the time of one complete oscillation is 1.95 s, measured with a stopwatch of resolution 0.01 s. The percentage error in $g$ is`,
+ o:[R`1.30%`,R`1.33%`,R`1.13%`,R`1.03%`],a:2,
+ s:R`<p>$\dfrac{\Delta g}{g}=\dfrac{\Delta L}{L}+2\dfrac{\Delta T}{T}=\dfrac{1}{1000}+2\times\dfrac{0.01}{1.95}=0.10\%+1.03\%=1.13\%$.</p><p>(1.03% is the trap — the length error was left out.)</p>`},
+
+{t:'Errors & their propagation',y:'JEE Main 2021',
+ q:R`Two resistors $R_1=(4\pm0.8)\,\Omega$ and $R_2=(4\pm0.4)\,\Omega$ are connected in parallel. The equivalent resistance is`,
+ o:[R`$(4\pm0.4)\,\Omega$`,R`$(2\pm0.4)\,\Omega$`,R`$(2\pm0.3)\,\Omega$`,R`$(4\pm0.3)\,\Omega$`],a:2,
+ s:R`<p>$R=\dfrac{4\times4}{4+4}=2\,\Omega$.</p><p>Differentiate $\dfrac1R=\dfrac1{R_1}+\dfrac1{R_2}$: $\dfrac{\Delta R}{R^2}=\dfrac{\Delta R_1}{R_1^2}+\dfrac{\Delta R_2}{R_2^2}=\dfrac{0.8}{16}+\dfrac{0.4}{16}=0.075$.</p><p>$\Delta R=0.075\times2^2=0.3\,\Omega$. So $R=(2\pm0.3)\,\Omega$.</p>`},
+
+{t:'Errors & their propagation',y:'JEE Main 2021',
+ q:R`A wire of resistance 1 Ω has a length of 1 m. It is stretched until its length increases by 25%. The percentage change in resistance, to the nearest integer, is`,
+ o:[R`76%`,R`56%`,R`12.5%`,R`25%`],a:1,
+ s:R`<p>Stretching keeps the volume fixed: $A=\dfrac{V}{L}$, so $R=\rho\dfrac{L}{A}=\rho\dfrac{L^2}{V}\propto L^2$.</p><p>$\dfrac{R'}{R}=(1.25)^2=1.5625\Rightarrow$ increase $\approx56\%$.</p><p>(25% forgets that the area shrinks; 50% is the small-change rule $2\times25\%$, which fails for a big stretch.)</p>`},
+
+{t:'Errors & their propagation',y:'JEE Main 2021',
+ q:R`If the length of the pendulum in a pendulum clock increases by 0.1%, the error in time per day is`,
+ o:[R`43.2 s`,R`4.32 s`,R`86.4 s`,R`8.64 s`],a:0,
+ s:R`<p>$T\propto\sqrt L\Rightarrow\dfrac{\Delta T}{T}=\tfrac12\times0.1\%=0.05\%$.</p><p>Each tick takes 0.05% longer, so in one day the clock loses $86400\times0.0005=43.2$ s.</p>`},
+
+{t:'Errors & their propagation',y:'JEE Main 2021',
+ q:R`A student finds Young's modulus with the formula $Y=\dfrac{MgL^3}{4bd^3\delta}$, taking $g=9.8$ m/s² without error. His observations are:
+<table class="dt"><tr><th>Quantity</th><th>Least count</th><th>Value</th></tr><tr><td>Mass $M$</td><td>1 g</td><td>2 kg</td></tr><tr><td>Length of bar $L$</td><td>1 mm</td><td>1 m</td></tr><tr><td>Breadth $b$</td><td>0.1 mm</td><td>4 cm</td></tr><tr><td>Thickness $d$</td><td>0.01 mm</td><td>0.4 cm</td></tr><tr><td>Depression $\delta$</td><td>0.01 mm</td><td>5 mm</td></tr></table>
+The fractional error in $Y$ is`,
+ o:[R`0.155`,R`0.0083`,R`0.0155`,R`0.083`],a:2,
+ s:R`<p>$\dfrac{\Delta Y}{Y}=\dfrac{\Delta M}{M}+3\dfrac{\Delta L}{L}+\dfrac{\Delta b}{b}+3\dfrac{\Delta d}{d}+\dfrac{\Delta\delta}{\delta}$ (work in mm or g so units match).</p><p>$=\dfrac{1}{2000}+3\cdot\dfrac{1}{1000}+\dfrac{0.1}{40}+3\cdot\dfrac{0.01}{4}+\dfrac{0.01}{5}$</p><p>$=0.0005+0.003+0.0025+0.0075+0.002=0.0155$.</p>`},
+
+{t:'Errors & their propagation',y:'JEE Main 2022',
+ q:R`A student measures the thickness of a wire with a screw gauge. The readings are 1.22 mm, 1.23 mm, 1.19 mm and 1.20 mm. The percentage error is $\dfrac{x}{121}\%$. The value of $x$ is`,
+ o:[R`15`,R`121`,R`150`,R`1.5`],a:2,
+ s:R`<p>Mean $=\dfrac{1.22+1.23+1.19+1.20}{4}=1.21$ mm.</p><p>Absolute errors: 0.01, 0.02, 0.02, 0.01 → mean absolute error $=0.015$ mm.</p><p>% error $=\dfrac{0.015}{1.21}\times100=\dfrac{1.5}{1.21}=\dfrac{150}{121}\%$, so $x=150$.</p>`}
+);
+
+</script>
+<script>
+// Ch-29 part C: dimensions
+QS.push(
+{t:'Dimensions',y:'JEE Main 2013',
+ q:R`Let $[\varepsilon_0]$ be the dimensional formula of the permittivity of vacuum. With M = mass, L = length, T = time and A = electric current,`,
+ o:[R`$[\varepsilon_0]=[\text{M}^{-1}\text{L}^{-3}\text{T}^{2}\text{A}]$`,R`$[\varepsilon_0]=[\text{M}^{-1}\text{L}^{-3}\text{T}^{4}\text{A}^{2}]$`,R`$[\varepsilon_0]=[\text{M}^{-1}\text{L}^{2}\text{T}^{-1}\text{A}^{-2}]$`,R`$[\varepsilon_0]=[\text{M}^{-1}\text{L}^{2}\text{T}^{-1}\text{A}]$`],a:1,
+ s:R`<p>Coulomb's law: $F=\dfrac{q^2}{4\pi\varepsilon_0r^2}\Rightarrow\varepsilon_0=\dfrac{q^2}{Fr^2}$.</p><p>$[q]=[\text{AT}]$, so $[\varepsilon_0]=\dfrac{\text{A}^2\text{T}^2}{\text{MLT}^{-2}\cdot\text{L}^2}=[\text{M}^{-1}\text{L}^{-3}\text{T}^4\text{A}^2]$.</p>`},
+
+{t:'Dimensions',y:'JEE Main 2019',
+ q:R`An expression for time in terms of $G$ (universal gravitational constant), $h$ (Planck constant) and $c$ (speed of light) is proportional to`,
+ o:[R`$\sqrt{\dfrac{Gh}{c^5}}$`,R`$\sqrt{\dfrac{c^3}{Gh}}$`,R`$\sqrt{\dfrac{Gh}{c^3}}$`,R`$\sqrt{\dfrac{hc^5}{G}}$`],a:0,
+ s:R`<p>$[G]=\text{M}^{-1}\text{L}^3\text{T}^{-2}$, $[h]=\text{ML}^2\text{T}^{-1}$, $[c]=\text{LT}^{-1}$. Let $T\propto G^xh^yc^z$.</p><p>M: $-x+y=0$. L: $3x+2y+z=0$. T: $-2x-y-z=1$.</p><p>So $y=x$, $z=-5x$, and $-3x+5x=1\Rightarrow x=\tfrac12$, $y=\tfrac12$, $z=-\tfrac52$. Time $\propto\sqrt{\dfrac{Gh}{c^5}}$ (the Planck time).</p>`},
+
+{t:'Dimensions',y:'JEE Main 2019',
+ q:R`The density of a material in SI units is 128 kg m⁻³. In a system of units where the unit of length is 25 cm and the unit of mass is 50 g, the numerical value of the density is`,
+ o:[R`640`,R`410`,R`40`,R`16`],a:2,
+ s:R`<p>$n_2=n_1\Big(\dfrac{M_1}{M_2}\Big)\Big(\dfrac{L_1}{L_2}\Big)^{-3}=128\times\dfrac{1000\text{ g}}{50\text{ g}}\times\Big(\dfrac{100\text{ cm}}{25\text{ cm}}\Big)^{-3}$.</p><p>$=128\times20\times\dfrac{1}{64}=40$.</p>`},
+
+{t:'Dimensions',y:'JEE Main 2019',
+ q:R`If speed ($V$), acceleration ($A$) and force ($F$) are taken as the fundamental units, the dimension of Young's modulus is`,
+ o:[R`$V^{-2}A^2F^{-2}$`,R`$V^{-2}A^2F^2$`,R`$V^{-4}A^2F$`,R`$V^{-4}A^{-2}F$`],a:2,
+ s:R`<p>Young's modulus $=\dfrac{\text{force}}{\text{area}}$. Build length from $V$ and $A$: $\text{L}=\dfrac{V^2}{A}$ (as in $v^2=2as$).</p><p>Area $=\text{L}^2=\dfrac{V^4}{A^2}$. So $Y=\dfrac{F}{V^4/A^2}=V^{-4}A^2F$.</p>`},
+
+{t:'Dimensions',y:'JEE Main 2021',
+ q:R`The work done by a gas molecule in an isolated system is $W=\alpha\beta^2e^{-x^2/(\alpha kT)}$, where $x$ is displacement, $k$ the Boltzmann constant and $T$ the temperature; $\alpha$ and $\beta$ are constants. The dimensions of $\beta$ are`,
+ o:[R`$[\text{M}^2\text{LT}^2]$`,R`$[\text{ML}^2\text{T}^{-2}]$`,R`$[\text{MLT}^{-2}]$`,R`$[\text{M}^0\text{LT}^0]$`],a:2,
+ s:R`<p>The power of $e$ must be dimensionless: $[\alpha]=\Big[\dfrac{x^2}{kT}\Big]=\dfrac{\text{L}^2}{\text{ML}^2\text{T}^{-2}}=\text{M}^{-1}\text{T}^2$ ($kT$ is an energy).</p><p>$[\alpha\beta^2]=[W]=\text{ML}^2\text{T}^{-2}\Rightarrow[\beta^2]=\dfrac{\text{ML}^2\text{T}^{-2}}{\text{M}^{-1}\text{T}^2}=\text{M}^2\text{L}^2\text{T}^{-4}$.</p><p>$[\beta]=\text{MLT}^{-2}$ (same as force).</p>`},
+
+{t:'Dimensions',y:'JEE Main 2021',
+ q:R`If $C$ and $V$ are capacitance and voltage, the dimensions of $\lambda$ where $\dfrac CV=\lambda$ are`,
+ o:[R`$[\text{M}^{-1}\text{L}^{-3}\text{I}^{-2}\text{T}^{-7}]$`,R`$[\text{M}^{-2}\text{L}^{-4}\text{I}^{3}\text{T}^{7}]$`,R`$[\text{M}^{-2}\text{L}^{-3}\text{I}^{2}\text{T}^{6}]$`,R`$[\text{M}^{-3}\text{L}^{-4}\text{I}^{3}\text{T}^{7}]$`],a:1,
+ s:R`<p>$[V]=\dfrac{\text{work}}{\text{charge}}=\dfrac{\text{ML}^2\text{T}^{-2}}{\text{IT}}=\text{ML}^2\text{T}^{-3}\text{I}^{-1}$.</p><p>$[C]=\dfrac{Q}{V}=\dfrac{\text{IT}}{\text{ML}^2\text{T}^{-3}\text{I}^{-1}}=\text{M}^{-1}\text{L}^{-2}\text{T}^4\text{I}^2$.</p><p>$\dfrac CV=\text{M}^{-2}\text{L}^{-4}\text{T}^7\text{I}^3$.</p>`},
+
+{keep:1,t:'Dimensions',y:'JEE Main 2021',
+ q:R`Which of these equations is dimensionally <b>incorrect</b>? ($s$ = surface tension, $\theta$ = angle, $\rho$ = density, $a,r$ = radius, $g$ = acceleration due to gravity, $v$ = volume, $p$ = pressure, $\eta$ = viscosity, $W$ = work, $\tau$ = torque, $\varepsilon$ = permittivity, $E$ = electric field, $J$ = current density, $L$ = length, $h$ = height, $t$ = time)`,
+ o:[R`$h=\dfrac{2s\cos\theta}{\rho rg}$`,R`$W=\tau\theta$`,R`$v=\dfrac{\pi pa^4}{8\eta L}$`,R`$J=\varepsilon\dfrac{\partial E}{\partial t}$`],a:2,
+ s:R`<p>(1) Capillary rise — correct. (2) Torque × angle = work — correct. (4) Displacement current density $\varepsilon\dfrac{\partial E}{\partial t}$ has units A/m² — correct.</p><p>(3) Poiseuille's formula $\dfrac{\pi pa^4}{8\eta L}$ gives volume flowing <b>per second</b> ($\text{L}^3\text{T}^{-1}$), not volume ($\text{L}^3$). So (3) is incorrect.</p>`},
+
+{t:'Dimensions',y:'JEE Main 2022',
+ q:R`Which pair of physical quantities has the same dimensions?`,
+ o:[R`Velocity gradient and decay constant`,R`Wien's constant and Stefan's constant`,R`Angular frequency and angular momentum`,R`Wave number and Avogadro number`],a:0,
+ s:R`<p>Velocity gradient $\dfrac{dv}{dx}$: $\dfrac{\text{LT}^{-1}}{\text{L}}=\text{T}^{-1}$. Decay constant from $\dfrac{dN}{dt}=-\lambda N$: $\text{T}^{-1}$. Same ✓.</p><p>Wien's $b$ (m K) vs Stefan's $\sigma$ ($\text{MT}^{-3}\text{K}^{-4}$); $\omega$ ($\text{T}^{-1}$) vs $L$ ($\text{ML}^2\text{T}^{-1}$); wave number ($\text{L}^{-1}$) vs $N_A$ (mol⁻¹) — all different.</p>`},
+
+{t:'Dimensions',y:'JEE Main 2022',
+ q:R`If $L$, $C$ and $R$ are self-inductance, capacitance and resistance, which of the following does <b>not</b> have the dimension of time?`,
+ o:[R`$RC$`,R`$\dfrac LR$`,R`$\sqrt{LC}$`,R`$\dfrac LC$`],a:3,
+ s:R`<p>$RC$ and $\dfrac LR$ are time constants; $\sqrt{LC}=\dfrac1\omega$ is also a time.</p><p>From equal energies $\tfrac12Li^2=\tfrac12CV^2$: $\dfrac LC=\dfrac{V^2}{i^2}=R^2$ — ohm², not time.</p>`},
+
+{t:'Dimensions',y:'JEE Main 2022',
+ q:R`An expression for energy density is $u=\dfrac{\alpha}{\beta}\sin\!\Big(\dfrac{\alpha x}{kt}\Big)$, where $\alpha,\beta$ are constants, $x$ is displacement, $k$ is the Boltzmann constant and $t$ is temperature. The dimensions of $\beta$ are`,
+ o:[R`$[\text{ML}^2\text{T}^{-2}\text{K}^{-1}]$`,R`$[\text{M}^0\text{L}^2\text{T}^{-2}]$`,R`$[\text{M}^0\text{L}^0\text{T}^0]$`,R`$[\text{M}^0\text{L}^2\text{T}^0]$`],a:3,
+ s:R`<p>The angle inside sin is dimensionless: $[\alpha]=\Big[\dfrac{kt}{x}\Big]=\dfrac{\text{energy}}{\text{length}}=\text{MLT}^{-2}$.</p><p>$[u]=\dfrac{\text{energy}}{\text{volume}}=\text{ML}^{-1}\text{T}^{-2}$, and $u=\dfrac\alpha\beta$, so $[\beta]=\dfrac{\text{MLT}^{-2}}{\text{ML}^{-1}\text{T}^{-2}}=\text{L}^2$, i.e. $[\text{M}^0\text{L}^2\text{T}^0]$.</p>`}
+);
+
+</script>
+
+<script>
+(function(){
+const KEY='padipucast_jee27_ch29_units_mcq30_v1';
+const N=QS.length, PER=4, NEG=1, MINUTES=60;
+const LBL=['(1)','(2)','(3)','(4)'];
+const $=s=>document.querySelector(s);
+const load=(k,d)=>{try{const v=localStorage.getItem(KEY+k);return v?JSON.parse(v):d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(KEY+k,JSON.stringify(v))}catch(e){}};
+const TOPICS=[...new Set(QS.map(q=>q.t))];
+let mode=null,order=[],cur=0,perm={},ans={},prac=load('_prac',{}),tLeft=0,tick=null,startAt=0,lastRes=null;
+
+function TS(el){const M=window.MathJax;if(M&&M.typesetPromise){if(M.typesetClear)M.typesetClear([el]);M.typesetPromise([el]).catch(()=>{})}else setTimeout(()=>TS(el),300)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){['start','work','result'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0)}
+function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function isFig(s){return typeof s==='string'&&s.trim().startsWith('<svg')}
+
+/* ---------- start screen ---------- */
+function drawStart(){
+ const yrs=QS.map(q=>+(q.y.match(/\d{4}/)||[0])[0]).filter(Boolean);
+ $('#metaChips').innerHTML=`<span class="chip">${N} questions</span><span class="chip">${TOPICS.length} topics</span><span class="chip">${Math.min(...yrs)}–${Math.max(...yrs)} papers</span><span class="chip am">+${PER} / −${NEG}</span>`;
+ $('#topicMap').innerHTML=TOPICS.map(t=>{const qs=QS.filter(q=>q.t===t);return `<div class="trow"><span>${t}</span><span>${qs.length} Qs</span></div>`}).join('');
+ const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+ $('#pracInfo').textContent=done?`Continue practice · ${done}/${N} done, ${ok} right →`:'Start practice →';
+ const b=load('_best',null);
+ $('#bestInfo').textContent=b?`Start test · best ${b.s}/${N*PER} →`:'Start test →';
+}
+
+/* ---------- side panel ---------- */
+function drawSide(){
+ const s=$('#side');
+ let st='';
+ if(mode==='prac'){
+  const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+  st=`<div class="stats"><div class="stat"><b>${done}</b><span>done</span></div><div class="stat"><b style="color:var(--green)">${ok}</b><span>right</span></div><div class="stat"><b style="color:var(--red)">${done-ok}</b><span>wrong</span></div></div>`;
+  st+='<h3>Questions by topic</h3>';
+  TOPICS.forEach(t=>{
+   st+=`<div class="tg">${t}</div><div class="dots">`;
+   order.forEach((qi,pos)=>{if(QS[qi].t!==t)return;const p=prac[qi];const c=p?(p.c===QS[qi].a?'ok':'no'):'';st+=`<button class="dot ${c} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+   st+='</div>';
+  });
+  st+=`<div class="legend"><span><i style="background:var(--green)"></i>right</span><span><i style="background:var(--red)"></i>wrong</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not done</span></div>`;
+  st+=`<div class="sidebtns"><button class="btn sm" id="resetPrac">Clear my practice progress</button></div>`;
+ }else{
+  const a=Object.keys(ans).length;
+  st=`<div class="stats"><div class="stat"><b>${a}</b><span>answered</span></div><div class="stat"><b>${N-a}</b><span>left</span></div><div class="stat"><b>${N}</b><span>total</span></div></div><h3>Jump to</h3><div class="dots">`;
+  order.forEach((qi,pos)=>{st+=`<button class="dot ${ans[qi]!=null?'ans':''} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+  st+=`</div><div class="legend"><span><i style="background:var(--teal)"></i>answered</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not answered</span></div><div class="sidebtns"><button class="btn am" id="submitBtn">Submit paper</button></div>`;
+ }
+ s.innerHTML=st;
+ s.querySelectorAll('.dot').forEach(d=>d.onclick=()=>{if(innerWidth<860)s.classList.add('closed');go(+d.dataset.p)});
+ const rp=$('#resetPrac');if(rp)rp.onclick=()=>confirmBox('Clear practice progress?','All your practice answers for this sheet will be wiped from this device.','Clear',()=>{prac={};save('_prac',prac);drawQ()});
+ const sb=$('#submitBtn');if(sb)sb.onclick=askSubmit;
+}
+
+/* ---------- question ---------- */
+function optHTML(Q,qi,o,pos,cls,dis){return `<button class="opt ${cls}" data-o="${o}" ${dis?'disabled':''}><span class="lb">${LBL[pos]}</span><span class="ot">${Q.o[o]}</span></button>`}
+function drawQ(){
+ const qi=order[cur],Q=QS[qi],c=$('#qcard');
+ const ord=mode==='test'?perm[qi]:[0,1,2,3];
+ const og=Q.og||Q.o.some(isFig);
+ let h=`<div class="qhead"><span class="qno">Q${cur+1} <span style="color:var(--mute);font-weight:500">/ ${N}</span></span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span></div>`;
+ h+=`<div class="qtext">${Q.q}</div>`;
+ if(Q.f)h+=`<div class="figwrap">${Q.f}</div>`;
+ h+=`<div class="opts ${og?'og':''}">`;
+ const p=mode==='prac'?prac[qi]:null;
+ ord.forEach((o,pos)=>{
+  let cls='';
+  if(mode==='prac'&&p){if(o===Q.a)cls='ok';else if(o===p.c)cls='no'}
+  if(mode==='test'&&ans[qi]===o)cls='sel';
+  h+=optHTML(Q,qi,o,pos,cls,mode==='prac'&&p);
+ });
+ h+='</div>';
+ if(mode==='prac'&&p){
+  const right=p.c===Q.a;
+  h+=`<div class="verdict ${right?'ok':'no'}">${right?'✓ Correct!':p.c<0?'Answer shown: '+LBL[Q.a]+' (counted as not solved)':'✗ Not this one. Correct answer: '+LBL[Q.a]}</div>`;
+  h+=`<div class="sol"><h4>Solution</h4>${Q.s}</div>`;
+ }
+ h+=`<div class="nav"><button class="btn" id="prevB" ${cur===0?'disabled':''}>← Prev</button><span style="display:flex;gap:8px">`;
+ if(mode==='prac'&&p)h+=`<button class="btn" id="retryB">Try again</button>`;
+ if(mode==='prac'&&!p)h+=`<button class="btn" id="peekB">Show answer</button>`;
+ if(mode==='test'&&ans[qi]!=null)h+=`<button class="btn" id="clearB">Clear answer</button>`;
+ h+=`</span><button class="btn pri" id="nextB">${cur===N-1?(mode==='test'?'Submit':'Finish'):'Next →'}</button></div>`;
+ c.innerHTML=h;
+ c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.o));
+ $('#prevB').onclick=()=>{if(cur>0)go(cur-1)};
+ $('#nextB').onclick=()=>{if(cur<N-1)go(cur+1);else if(mode==='test')askSubmit();else{show('start');drawStart()}};
+ const r=$('#retryB');if(r)r.onclick=()=>{delete prac[qi];save('_prac',prac);drawQ()};
+ const pk=$('#peekB');if(pk)pk.onclick=()=>{prac[qi]={c:-1};save('_prac',prac);drawQ()};
+ const cl=$('#clearB');if(cl)cl.onclick=()=>{delete ans[qi];drawQ()};
+ drawSide();TS(c);
+}
+function go(p){cur=p;drawQ();const t=$('#qcard').getBoundingClientRect().top;if(t<0||t>innerHeight*.5)window.scrollTo({top:Math.max(0,window.scrollY+t-70),behavior:'smooth'})}
+function pick(o){
+ const qi=order[cur];
+ if(mode==='prac'){if(prac[qi])return;prac[qi]={c:o};save('_prac',prac);drawQ();setTimeout(()=>{const v=document.querySelector('.verdict');if(v)v.scrollIntoView({behavior:'smooth',block:'center'})},60)}
+ else{ans[qi]=o;drawQ()}
+}
+
+/* ---------- modes ---------- */
+function startPractice(){mode='prac';order=QS.map((_,i)=>i);cur=0;const f=order.findIndex(i=>!prac[i]);if(f>0)cur=f;$('#clock').classList.add('hidden');$('#barTitle').textContent='Practice · '+document.title;show('work');drawQ()}
+function startTest(){
+ mode='test';order=shuffle(QS.map((_,i)=>i));perm={};ans={};cur=0;
+ QS.forEach((q,i)=>perm[i]=q.keep?[0,1,2,3]:shuffle([0,1,2,3]));
+ tLeft=MINUTES*60;startAt=Date.now();
+ const ck=$('#clock');ck.classList.remove('hidden','low');ck.textContent=fmt(tLeft);
+ clearInterval(tick);
+ tick=setInterval(()=>{tLeft=MINUTES*60-Math.floor((Date.now()-startAt)/1000);ck.textContent=fmt(tLeft);ck.classList.toggle('low',tLeft<=300);if(tLeft<=0){clearInterval(tick);finish(true)}},500);
+ $('#barTitle').textContent='Test · '+document.title;show('work');drawQ();
+}
+function confirmBox(title,body,okTxt,fn){
+ const m=$('#modal');$('#modalCard').innerHTML=`<h3>${title}</h3><p>${body}</p><div class="nav"><button class="btn" id="mNo">Cancel</button><button class="btn am" id="mYes">${okTxt}</button></div>`;
+ m.classList.remove('hidden');$('#mNo').onclick=()=>m.classList.add('hidden');$('#mYes').onclick=()=>{m.classList.add('hidden');fn()};
+}
+function askSubmit(){const a=Object.keys(ans).length;confirmBox('Submit the paper?',`You have answered ${a} of ${N}. ${N-a?(N-a)+' left blank (no marks lost for blanks).':'All answered.'}`,'Submit',()=>finish(false))}
+
+/* ---------- result ---------- */
+function finish(auto){
+ clearInterval(tick);$('#clock').classList.add('hidden');
+ let ok=0,no=0,sk=0;const by={};TOPICS.forEach(t=>by[t]={ok:0,n:0});
+ QS.forEach((q,i)=>{by[q.t].n++;if(ans[i]==null)sk++;else if(ans[i]===q.a){ok++;by[q.t].ok++}else no++});
+ const score=ok*PER-no*NEG, max=N*PER, used=Math.min(MINUTES*60,Math.floor((Date.now()-startAt)/1000));
+ const best=load('_best',null);if(!best||score>best.s)save('_best',{s:score,d:new Date().toLocaleDateString()});
+ const pct=Math.max(0,score)/max, col=pct>=.7?'var(--green)':pct>=.45?'var(--amber)':'var(--red)';
+ const C=2*Math.PI*62;
+ let msg=pct>=.85?'Excellent. This chapter is exam-ready. Keep revising the ones you got wrong.':pct>=.7?'Very good. A few slips — read the solutions of the wrong ones carefully.':pct>=.45?'Fair attempt. Go topic by topic below and redo the weak topic in practice mode.':'This chapter needs more work. Use practice mode first — read every solution, then take the test again.';
+ if(no>ok&&no>=6)msg+=' Note: wrong answers cost you marks. Skip when you are only guessing.';
+ if(auto)msg='Time up — your paper was submitted automatically. '+msg;
+ let h=`<div class="card res"><div class="ringrow"><svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="#eee7d8" stroke-width="12"/><circle cx="75" cy="75" r="62" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" transform="rotate(-90 75 75)"/><text x="75" y="74" text-anchor="middle" font-family="DM Mono" font-size="30" font-weight="500" fill="#1d2528">${score}</text><text x="75" y="98" text-anchor="middle" font-family="DM Sans" font-size="13" fill="#5b6668">out of ${max}</text></svg><div><h2 style="font-size:26px">Your result</h2><div class="chips"><span class="chip gr">${ok} right</span><span class="chip rd">${no} wrong</span><span class="chip gy">${sk} skipped</span><span class="chip">time ${fmt(used)}</span></div><p class="msg">${msg}</p></div></div>`;
+ h+=`<table class="tt"><tr><th>Topic</th><th>Right</th><th style="width:40%"></th></tr>`;
+ TOPICS.forEach(t=>{const b=by[t];h+=`<tr><td>${t}</td><td class="n">${b.ok} / ${b.n}</td><td><div class="barmini"><i style="width:${100*b.ok/b.n}%"></i></div></td></tr>`});
+ h+=`</table><div class="nav"><button class="btn" id="rHome">Home</button><span style="display:flex;gap:8px"><button class="btn" id="rPrac">Practice mode</button><button class="btn am" id="rTest">Take test again</button></span></div></div>`;
+ h+=`<div class="filters"><button class="btn sm on" data-f="all">All (${N})</button><button class="btn sm" data-f="no">Wrong (${no})</button><button class="btn sm" data-f="sk">Skipped (${sk})</button><button class="btn sm" data-f="ok">Right (${ok})</button></div><div id="rvList"></div>`;
+ $('#result').innerHTML=h;show('result');
+ lastRes={ok,no,sk};
+ $('#rHome').onclick=()=>{show('start');drawStart()};$('#rPrac').onclick=startPractice;$('#rTest').onclick=startTest;
+ document.querySelectorAll('.filters .btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters .btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');drawReview(b.dataset.f)});
+ drawReview('all');
+}
+function drawReview(f){
+ let h='';
+ order.forEach((qi,pos)=>{
+  const Q=QS[qi],a=ans[qi],st=a==null?'sk':a===Q.a?'ok':'no';
+  if(f!=='all'&&f!==st)return;
+  const og=Q.og||Q.o.some(isFig);
+  h+=`<div class="card rv"><div class="qhead"><span class="qno">Q${pos+1}</span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span><span class="chip ${st==='ok'?'gr':st==='no'?'rd':'gy'}">${st==='ok'?'right +'+PER:st==='no'?'wrong −'+NEG:'skipped 0'}</span></div><div class="qtext">${Q.q}</div>${Q.f?`<div class="figwrap">${Q.f}</div>`:''}<div class="opts ${og?'og':''}">`;
+  perm[qi].forEach((o,p)=>{h+=optHTML(Q,qi,o,p,o===Q.a?'ok':o===a?'no':'',true)});
+  const yp=a==null?'—':LBL[perm[qi].indexOf(a)], cp=LBL[perm[qi].indexOf(Q.a)];
+  h+=`</div><div class="yours">Your answer: <b>${yp}</b> · Correct: <b>${cp}</b></div><div class="sol"><h4>Solution</h4>${Q.s}</div></div>`;
+ });
+ const L=$('#rvList');L.innerHTML=h||'<p style="color:var(--mute)">Nothing here.</p>';TS(L);
+}
+
+/* ---------- wiring ---------- */
+$('#goPractice').onclick=startPractice;
+$('#goTest').onclick=startTest;
+$('#homeBtn').onclick=()=>{if(mode==='test')confirmBox('Leave the test?','Your answers in this attempt will be lost.','Leave',()=>{clearInterval(tick);show('start');drawStart()});else{show('start');drawStart()}};
+$('#toggleSide').onclick=()=>$('#side').classList.toggle('closed');
+document.addEventListener('keydown',e=>{
+ if($('#work').classList.contains('hidden')||!$('#modal').classList.contains('hidden'))return;
+ if(['1','2','3','4'].includes(e.key)){const qi=order[cur],ord=mode==='test'?perm[qi]:[0,1,2,3];pick(ord[+e.key-1])}
+ if(e.key==='ArrowRight'&&cur<N-1)go(cur+1);
+ if(e.key==='ArrowLeft'&&cur>0)go(cur-1);
+});
+window.addEventListener('beforeunload',e=>{if(mode==='test'&&!$('#work').classList.contains('hidden')){e.preventDefault();e.returnValue=''}});
+drawStart();
+})();
+</script>
+</body>
+</html>
