@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Wave Optics &#183; Diffraction &amp; Polarisation Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.starpill{margin-right:14px;}
+.q-label .modepill{margin-left:8px;}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+
+.tc-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.tc-note{font-size:12px;color:var(--text3);line-height:1.55;margin:-4px 0 10px;padding-right:18px;}
+#qs-note{margin-top:12px;background:#fffaf0;border:1px solid #f0dcae;border-left:3px solid #b45309;border-radius:10px;
+padding:12px 15px;font-size:13.5px;line-height:1.7;color:#7a4d09;}
+#qs-note b{color:#5c3a06;}
+.lvl{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+border-radius:5px;padding:2px 8px;margin-left:8px;vertical-align:middle;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);}
+.lvl.star{background:#fdf6e7;color:#b45309;border-color:#f0dcae;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Wave Optics &#183; Diffraction &amp; Polarisation</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Wave Optics &#183; Lecture Ladders<br>Diffraction &amp; Polarisation</h1></div>
+    <p id="home-sub">Ten sessions in teaching order &#8212; five for diffraction, five for polarisation. Teach the idea, then open that session.<br><br>
+Every ladder climbs to one real PYQ (the <strong>&#9733; rung</strong>) from the JEE Main archive or the JEE Advanced bank &#8212; its source is on the card. Before it come <strong>4&#8211;5 build-up rungs</strong>, each teaching one small idea with a simple question, so the PYQ feels like the next easy step.<br><br>
+<span id="home-count"></span> Every rung carries a <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong> badge, taken from its PYQ. The companion PDF shows how to think through every &#9733; question step by step.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+      <div id="qs-note"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  DIAGRAM LIBRARY — mirrors, refraction, TIR
+// ═══════════════════════════════════════════════════════════════════
+const FS='font-family="DM Sans,sans-serif"';
+const C={hot:'#dc2626',cold:'#2563eb',ink:'#334155',dim:'#64748b',g:'#9ca3af',
+         bs:'#475569',amber:'#ea580c',grn:'#16a34a',vio:'#7c3aed',teal:'#0f766e'};
+const AR=(id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="7.5" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const MARKERS=[['aH',C.hot],['aC',C.cold],['aA',C.amber],['aI',C.ink],['aV',C.vio],['aG',C.grn],['aT',C.teal]].map(([i,c])=>AR(i,c)).join('');
+function svg(w,h,inner){return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg"><defs>${MARKERS}</defs>${inner}</svg>`;}
+function T(x,y,s,size,col,anc){return `<text x="${x}" y="${y}" font-size="${size||12}" fill="${col||C.ink}" text-anchor="${anc||'middle'}" ${FS}>${s}</text>`;}
+function L(x1,y1,x2,y2,col,w,dash,mk){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col||C.ink}" stroke-width="${w||1.4}"${dash?` stroke-dasharray="${dash}"`:''}${mk?` marker-end="url(#${mk})"`:''}/>`;}
+function dim(x1,x2,y,label){
+  return L(x1,y,x2,y,C.dim,1)+L(x1,y-4,x1,y+4,C.dim,1)+L(x2,y-4,x2,y+4,C.dim,1)+T((x1+x2)/2,y+14,label,10.5,C.dim);
+}
+function vdim(y1,y2,x,label){
+  return L(x,y1,x,y2,C.dim,1)+L(x-4,y1,x+4,y1,C.dim,1)+L(x-4,y2,x+4,y2,C.dim,1)+T(x-7,(y1+y2)/2+4,label,10.5,C.dim,'end');
+}
+// hatching under a mirror / behind a surface
+function hatch(x1,x2,y,dep,col){let s='';for(let x=x1;x<=x2;x+=9){s+=L(x,y,x-dep,y+dep,col||C.g,1);}return s;}
+const RAD=Math.PI/180;
+
+const D={};
+
+// ── single slit geometry: path difference a sinθ ───────────────────
+D.slitGeom=function(note){
+  const th=25*RAD, top=[92,82], bot=[92,112], len=165;
+  const u=[Math.cos(th),-Math.sin(th)];
+  let s=`<rect x="86" y="14" width="10" height="68" fill="${C.bs}"/><rect x="86" y="112" width="10" height="66" fill="${C.bs}"/>`;
+  [40,150].forEach(y=>{s+=L(16,y,72,y,C.ink,1.4,0,'aI');});
+  s+=T(40,30,'plane wave',10,C.dim);
+  s+=L(top[0],top[1],top[0]+len*u[0],top[1]+len*u[1],C.cold,1.6,0,'aC');
+  s+=L(bot[0],bot[1],bot[0]+len*u[0],bot[1]+len*u[1],C.cold,1.6,0,'aC');
+  const k=30*Math.sin(th), foot=[bot[0]+k*u[0],bot[1]+k*u[1]];
+  s+=L(top[0],top[1],foot[0],foot[1],C.dim,1,'3 2');
+  s+=L(bot[0],bot[1],foot[0],foot[1],C.hot,3);
+  s+=T(foot[0]+12,foot[1]+20,'a sin&#952;',10.5,C.hot,'start');
+  s+=L(96,97,200,97,C.g,1,'5 4');
+  s+=L(96,97,96+150*u[0],97+150*u[1],C.cold,1,'3 3');
+  s+=`<path d="M 150 97 A 54 54 0 0 0 ${(96+54*Math.cos(th)).toFixed(1)} ${(97-54*Math.sin(th)).toFixed(1)}" fill="none" stroke="${C.dim}" stroke-width="1"/>`;
+  s+=T(160,90,'&#952;',11,C.ink);
+  s+=L(78,82,78,112,C.dim,1)+L(74,82,82,82,C.dim,1)+L(74,112,82,112,C.dim,1)+T(70,101,'a',11,C.dim,'end');
+  s+=L(292,14,292,178,C.ink,2)+T(300,30,'screen',10,C.dim,'start');
+  s+=T(176,190,note||'dark band when a sin&#952; = n&#955;',10.5,C.dim);
+  return svg(340,198,s);
+};
+
+// ── single slit intensity pattern (amplitude scale, schematic) ─────
+D.pattern=function(o){
+  o=o||{};
+  const cx=160, ay=132, sc=52, H=96;
+  const f=u=>{if(Math.abs(u)<1e-6)return 1;const x=Math.PI*u;return Math.abs(Math.sin(x)/x);};
+  let d='';
+  for(let i=0;i<=520;i++){const u=-2.7+5.4*i/520;const x=cx+u*sc,y=ay-H*f(u);d+=(i?' L ':'M ')+x.toFixed(1)+' '+y.toFixed(1);}
+  let s=L(14,ay,306,ay,C.g,1.2,0,'aI')+T(310,ay+4,'sin&#952;',10,C.dim,'start');
+  s+=`<path d="${d}" fill="#fde68a" fill-opacity="0.45" stroke="${C.amber}" stroke-width="1.8"/>`;
+  [[-2,'&#8722;2&#955;/a'],[-1,'&#8722;&#955;/a'],[1,'&#955;/a'],[2,'2&#955;/a']].forEach(([u,l])=>{
+    s+=L(cx+u*sc,ay-4,cx+u*sc,ay+4,C.ink,1.2)+T(cx+u*sc,ay+17,l,9.5,C.dim);});
+  s+=T(cx,ay+17,'0',9.5,C.dim);
+  if(o.width){s+=L(cx-sc,ay+30,cx+sc,ay+30,C.hot,1.3)+L(cx-sc,ay+25,cx-sc,ay+35,C.hot,1.2)+L(cx+sc,ay+25,cx+sc,ay+35,C.hot,1.2)+T(cx,ay+44,o.width,10.5,C.hot);}
+  if(o.sec){const u=1.5,x=cx+u*sc,y=ay-H*f(u);
+    s+=`<circle cx="${x}" cy="${y.toFixed(1)}" r="3" fill="${C.cold}"/>`+L(x,y-6,x+18,y-40,C.cold,1)+T(x+10,y-58,'1st secondary max',9.5,C.cold,'start')+T(x+10,y-46,'a sin&#952; &#8776; 3&#955;/2',9.5,C.cold,'start');}
+  s+=T(cx,16,'central maximum',10.5,C.dim);
+  s+=T(350,16,'(not to scale)',9,C.g,'end');
+  return svg(360,o.width?186:162,s);
+};
+
+// ── double slit fringes inside the single-slit envelope ────────────
+D.envelope=function(){
+  const cx=170, ay=128, sc=56, H=98, r=4.8;
+  const env=u=>{if(Math.abs(u)<1e-6)return 1;const x=Math.PI*u;return Math.abs(Math.sin(x)/x);};
+  let d='',e='';
+  for(let i=0;i<=900;i++){const u=-2.6+5.2*i/900;const x=cx+u*sc;
+    d+=(i?' L ':'M ')+x.toFixed(1)+' '+(ay-H*env(u)*Math.pow(Math.cos(Math.PI*u*r),2)).toFixed(1);
+    e+=(i?' L ':'M ')+x.toFixed(1)+' '+(ay-H*env(u)).toFixed(1);}
+  let s=`<rect x="${cx+sc}" y="22" width="${sc}" height="${ay-22}" fill="#dcfce7" opacity="0.7"/>`;
+  s+=L(16,ay,324,ay,C.g,1.2,0,'aI');
+  s+=`<path d="${e}" fill="none" stroke="${C.dim}" stroke-width="1.1" stroke-dasharray="4 3"/>`;
+  s+=`<path d="${d}" fill="none" stroke="${C.cold}" stroke-width="1.5"/>`;
+  [[1,'1st min'],[2,'2nd min']].forEach(([u,l])=>{s+=L(cx+u*sc,ay-4,cx+u*sc,ay+4,C.ink,1.2)+T(cx+u*sc,ay+16,l,9.5,C.dim);});
+  s+=T(cx+1.5*sc,16,'count fringes here',10,C.grn);
+  s+=T(8,22,'dashed = single-slit envelope',9.5,C.dim,'start');
+  s+=T(cx,ay+34,'fringes: angular width &#955;/d &#183; envelope: minima every &#955;/a',10,C.dim);
+  return svg(340,174,s);
+};
+
+// ── pinhole camera spot ────────────────────────────────────────────
+D.pinhole=function(){
+  let s=`<rect x="70" y="26" width="214" height="124" fill="#f8fafc" stroke="${C.bs}" stroke-width="1.6"/>`;
+  s+=`<rect x="66" y="26" width="8" height="54" fill="${C.bs}"/><rect x="66" y="96" width="8" height="54" fill="${C.bs}"/>`;
+  [82,88,94].forEach(y=>{s+=L(14,y,62,y,C.ink,1.2,0,'aI');});
+  s+=L(74,80,284,80,C.cold,1.2)+L(74,96,284,96,C.cold,1.2);
+  s+=L(74,80,284,56,C.hot,1.2,'4 3')+L(74,96,284,120,C.hot,1.2,'4 3');
+  s+=`<rect x="280" y="56" width="7" height="64" fill="${C.hot}" opacity="0.8"/>`;
+  s+=T(296,92,'spot b',10.5,C.hot,'start');
+  s+=T(178,92,'geometric: a',9,C.cold)+T(196,138,'diffraction adds L&#955;/a',9.5,C.hot);
+  s+=dim(74,284,164,'L')+T(56,72,'a',11,C.ink,'end');
+  return svg(340,188,s);
+};
+
+// ── resolving two points ───────────────────────────────────────────
+D.resolve=function(lab1,lab2){
+  let s=`<circle cx="40" cy="64" r="4" fill="${C.hot}"/><circle cx="40" cy="108" r="4" fill="${C.hot}"/>`;
+  s+=L(44,64,262,86,C.hot,1.1)+L(44,108,262,86,C.hot,1.1);
+  s+=`<ellipse cx="266" cy="86" rx="7" ry="30" fill="#dbeafe" stroke="${C.bs}" stroke-width="1.5"/>`;
+  s+=`<path d="M 222 81.6 A 44 44 0 0 1 222 90.4" fill="none" stroke="${C.ink}" stroke-width="1"/>`+T(212,90,'&#952;',11,C.ink,'end');
+  s+=L(28,64,28,108,C.dim,1)+L(24,64,32,64,C.dim,1)+L(24,108,32,108,C.dim,1)+T(22,90,'x',11,C.dim,'end');
+  s+=dim(40,266,142,lab1||'distance');
+  s+=T(266,46,lab2||'aperture D',10,C.bs);
+  s+=T(170,168,'just resolved when &#952; = 1.22&#955;/D, and x = (distance) &#215; &#952;',10,C.dim);
+  return svg(340,178,s);
+};
+
+// ── chain of polaroids (face-on discs, axis drawn inside) ──────────
+// items: [{name, ang (deg from vertical), sub}]; ins: label of incoming; outs: labels after each
+D.polaroids=function(items,ins,outs){
+  const n=items.length, gap=104, x0=96, cy=84, R=30;
+  const W=x0+(n-1)*gap+R+96;
+  let s=L(12,cy,x0-R-4,cy,C.ink,1.6,0,'aI')+T(10,cy-38,ins,10,C.ink,'start');
+  items.forEach((it,i)=>{
+    const x=x0+i*gap, a=(it.ang||0)*RAD;
+    s+=`<circle cx="${x}" cy="${cy}" r="${R}" fill="#eef2ff" stroke="${C.bs}" stroke-width="1.6"/>`;
+    s+=L(x-(R-6)*Math.sin(a),cy+(R-6)*Math.cos(a),x+(R-6)*Math.sin(a),cy-(R-6)*Math.cos(a),C.vio,2.4);
+    s+=T(x,cy+R+16,it.name,11,C.ink)+(it.sub?T(x,cy+R+30,it.sub,10,C.vio):'');
+    const xe=(i<n-1)?x+gap-R-4:x+R+76;
+    s+=L(x+R+2,cy,xe,cy,C.cold,1.6,0,'aC');
+    if(outs&&outs[i])s+=T((x+R+xe)/2+(i===n-1?6:0),cy-42+(i%2?0:0),outs[i],10,C.cold);
+  });
+  s+=T(W/2,16,'violet line = pass axis',9.5,C.dim);
+  return svg(Math.max(W,240),150,s);
+};
+
+// ── two perpendicular beams and a turned polaroid axis ─────────────
+D.axes30=function(){
+  const c=[130,104];
+  let s=`<circle cx="${c[0]}" cy="${c[1]}" r="74" fill="#eef2ff" stroke="${C.bs}" stroke-width="1.4"/>`;
+  s+=L(c[0],c[1]+70,c[0],c[1]-70,C.cold,2,0,'aC')+T(c[0]+8,c[1]-74,'A',12,C.cold,'start');
+  s+=L(c[0]-70,c[1],c[0]+70,c[1],C.hot,2,0,'aH')+T(c[0]+80,c[1]+4,'B',12,C.hot,'start');
+  const a=30*RAD;
+  s+=L(c[0]-70*Math.sin(a),c[1]+70*Math.cos(a),c[0]+70*Math.sin(a),c[1]-70*Math.cos(a),C.vio,2.6);
+  s+=T(c[0]+40,c[1]-70,'polaroid axis',10,C.vio,'start');
+  s+=`<path d="M ${c[0]} ${c[1]-36} A 36 36 0 0 1 ${(c[0]+36*Math.sin(a)).toFixed(1)} ${(c[1]-36*Math.cos(a)).toFixed(1)}" fill="none" stroke="${C.ink}" stroke-width="1"/>`;
+  s+=T(c[0]+10,c[1]-42,'30&#176;',10,C.ink,'start');
+  s+=`<path d="M ${c[0]+48} ${c[1]} A 48 48 0 0 0 ${(c[0]+48*Math.sin(a)).toFixed(1)} ${(c[1]-48*Math.cos(a)).toFixed(1)}" fill="none" stroke="${C.ink}" stroke-width="1"/>`;
+  s+=T(c[0]+52,c[1]-24,'60&#176;',10,C.ink,'start');
+  return svg(300,200,s);
+};
+
+// ── rotating polariser in a polarised beam ─────────────────────────
+D.rotPol=function(){
+  let s=L(14,90,116,90,C.cold,1.8,0,'aC')+T(14,62,'plane polarised',10,C.cold,'start')+T(14,76,'3.3 W/m&#178;',10,C.cold,'start');
+  s+=`<circle cx="160" cy="90" r="40" fill="#eef2ff" stroke="${C.bs}" stroke-width="1.6"/>`;
+  s+=L(160,124,160,56,C.vio,2.4);
+  s+=`<path d="M 200 64 A 48 48 0 0 1 208 100" fill="none" stroke="${C.amber}" stroke-width="1.6" marker-end="url(#aA)"/>`;
+  s+=T(222,72,'&#969; = 31.4 rad/s',10,C.amber,'start');
+  s+=L(202,90,300,90,C.cold,1.6,0,'aC')+T(250,116,'I = I&#8320;cos&#178;&#969;t',10.5,C.ink);
+  s+=T(160,150,'area 3 &#215; 10&#8315;&#8308; m&#178;',10,C.dim);
+  return svg(320,162,s);
+};
+
+// ── Brewster's angle: reflected ⟂ refracted ────────────────────────
+D.brewster=function(top,bot){
+  const P=[160,104], i=56*RAD, r=34*RAD, l=86;
+  let s=`<rect x="20" y="104" width="280" height="80" fill="#dbeafe"/>`;
+  s+=L(20,104,300,104,C.bs,2)+L(160,22,160,184,C.dim,1,'5 4');
+  s+=T(28,40,top||'medium 1 (&#956;&#8321;)',10.5,C.dim,'start')+T(28,176,bot||'medium 2 (&#956;&#8322;)',10.5,C.dim,'start');
+  const A=[P[0]-l*Math.sin(i),P[1]-l*Math.cos(i)], Rf=[P[0]+l*Math.sin(i),P[1]-l*Math.cos(i)], Tr=[P[0]+l*Math.sin(r),P[1]+l*Math.cos(r)];
+  s+=L(A[0],A[1],P[0],P[1],C.ink,1.7,0,'aI')+L(P[0],P[1],Rf[0],Rf[1],C.cold,1.7,0,'aC')+L(P[0],P[1],Tr[0],Tr[1],C.hot,1.7,0,'aH');
+  [0.3,0.55,0.8].forEach(t=>{const x=P[0]+(Rf[0]-P[0])*t,y=P[1]+(Rf[1]-P[1])*t;s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6" fill="${C.cold}"/>`;});
+  [0.35,0.65].forEach(t=>{const x=A[0]+(P[0]-A[0])*t,y=A[1]+(P[1]-A[1])*t;s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.4" fill="${C.ink}"/>`+L(x-6*Math.cos(i),y+6*Math.sin(i),x+6*Math.cos(i),y-6*Math.sin(i),C.ink,1.2);});
+  const ur=[Math.sin(i),-Math.cos(i)], ut=[Math.sin(r),Math.cos(r)], q=12;
+  s+=`<path d="M ${P[0]+q*ur[0]} ${P[1]+q*ur[1]} L ${P[0]+q*ur[0]+q*ut[0]} ${P[1]+q*ur[1]+q*ut[1]} L ${P[0]+q*ut[0]} ${P[1]+q*ut[1]}" fill="none" stroke="${C.ink}" stroke-width="1"/>`;
+  s+=`<path d="M 160 70 A 34 34 0 0 0 ${(160-34*Math.sin(i)).toFixed(1)} ${(104-34*Math.cos(i)).toFixed(1)}" fill="none" stroke="${C.dim}" stroke-width="1"/>`;
+  s+=T(142,62,'i&#8346;',11,C.ink);
+  s+=T(184,116,'90&#176;',10,C.ink,'start');
+  s+=T(Rf[0]+4,Rf[1]-6,'reflected: only dots',9.5,C.cold,'start');
+  s+=T(Tr[0]+6,Tr[1]-4,'refracted',9.5,C.hot,'start');
+  s+=T(160,198,'tan i&#8346; = &#956;&#8322;/&#956;&#8321;  (Brewster)',10.5,C.dim);
+  return svg(330,206,s);
+};
+
+// ── glass tank, liquid on a glass bottom ───────────────────────────
+D.tank=function(){
+  let s=`<rect x="40" y="60" width="240" height="90" fill="#dbeafe" stroke="none"/>`;
+  s+=`<rect x="40" y="150" width="240" height="26" fill="#cbd5e1" stroke="${C.bs}" stroke-width="1.4"/>`;
+  s+=L(40,30,40,176,C.bs,2)+L(280,30,280,176,C.bs,2)+L(40,60,280,60,C.bs,1.2,'5 4');
+  s+=T(270,100,'liquid, &#956;',10.5,C.bs,'end')+T(260,168,'glass, 1.5',10.5,C.ink,'end');
+  const P=[110,60], Q=[150,150];
+  s+=L(60,24,P[0],P[1],C.ink,1.6,0,'aI');
+  s+=L(P[0],46,P[0],86,C.dim,1,'4 3')+T(96,40,'i',11,C.ink);
+  s+=L(P[0],P[1],Q[0],Q[1],C.hot,1.6);
+  s+=L(Q[0],Q[1],190,60,C.cold,1.6,0,'aC')+T(186,128,'reflected at the bottom',9.5,C.cold,'start');
+  s+=L(Q[0],128,Q[0],168,C.dim,1,'4 3');
+  s+=T(160,196,'never completely polarised, for any i',10.5,C.dim);
+  return svg(320,204,s);
+};
+
+// ── layered media (JEE Adv 2026) ───────────────────────────────────
+D.layers=function(){
+  const ys=[20,60,100,140,176], names=['n<tspan font-size="8" dy="3">p</tspan><tspan dy="-3"> = 4/&#8730;3</tspan>','n<tspan font-size="8" dy="3">w</tspan><tspan dy="-3"> = 4/3</tspan>','n<tspan font-size="8" dy="3">g</tspan><tspan dy="-3"> = 1.5</tspan>','n<tspan font-size="8" dy="3">w</tspan><tspan dy="-3"> = 4/3</tspan>'];
+  const fills=['#fff7ed','#e0f2fe','#fef08a','#e0f2fe'];
+  let s='';
+  for(let k=0;k<4;k++){s+=`<rect x="10" y="${ys[k]}" width="320" height="${ys[k+1]-ys[k]}" fill="${fills[k]}" stroke="${C.bs}" stroke-width="0.8"/>`+T(16,ys[k]+16,names[k],10,C.ink,'start');}
+  const ti=Math.tan(60*RAD), tg=Math.tan(Math.asin((4/3)*Math.sin(60*RAD)/1.5));
+  const p0=[22,176], p1=[p0[0]+36*ti,140];
+  const p2=[p1[0]+40*tg,100], p3=[p2[0]+40*ti,60];
+  s+=L(p0[0],p0[1],p1[0],p1[1],C.ink,1.7,0,'aI')+L(p1[0],p1[1],p2[0],p2[1],C.ink,1.7)+L(p2[0],p2[1],p3[0],p3[1],C.ink,1.7);
+  s+=L(p3[0],p3[1],p3[0]+40*Math.tan(30*RAD),20,C.amber,1.6,0,'aA');
+  s+=L(p3[0],p3[1],p3[0]+40*ti,100,C.cold,1.6,0,'aC');
+  [0.35,0.7].forEach(t=>{s+=`<circle cx="${(p3[0]+40*ti*t).toFixed(1)}" cy="${(60+40*t).toFixed(1)}" r="2.6" fill="${C.cold}"/>`;});
+  s+=L(p1[0],126,p1[0],156,C.dim,1,'4 3')+T(p1[0]-10,166,'i',11,C.ink);
+  s+=L(p3[0],40,p3[0],80,C.dim,1,'4 3')+T(p3[0]-8,80,'&#952;',11,C.ink,'end');
+  s+=T(p3[0]+74,112,'polarised',9.5,C.cold,'start');
+  s+=T(170,196,'find i so that the reflected ray is fully polarised',10,C.dim);
+  return svg(340,204,s);
+};
+
+// ── sky: scattering at 90° gives polarised light ───────────────────
+D.sky=function(){
+  let s=`<circle cx="44" cy="58" r="20" fill="#fde047" stroke="${C.amber}" stroke-width="1.4"/>`;
+  for(let k=0;k<8;k++){const a=k*Math.PI/4;s+=L(44+24*Math.cos(a),58+24*Math.sin(a),44+31*Math.cos(a),58+31*Math.sin(a),C.amber,1.4);}
+  s+=T(44,104,'sun',10,C.dim);
+  s+=L(72,58,192,58,C.ink,1.7,0,'aI')+T(130,48,'unpolarised sunlight',9.5,C.ink);
+  s+=`<circle cx="200" cy="58" r="5" fill="${C.cold}"/>`+T(212,52,'air molecule',9.5,C.cold,'start');
+  s+=L(205,58,280,58,C.g,1.1,'4 3',0)+L(204,62,256,92,C.g,1.1,'4 3');
+  s+=L(200,64,200,156,C.cold,1.7,0,'aC');
+  [92,112,132].forEach(y=>{s+=`<circle cx="200" cy="${y}" r="4" fill="${C.vio}"/>`;});
+  s+=`<path d="M 200 82 L 216 82 L 216 64" fill="none" stroke="${C.ink}" stroke-width="1"/>`+T(222,80,'90&#176;',10,C.ink,'start');
+  s+=`<ellipse cx="200" cy="166" rx="14" ry="7" fill="#fff" stroke="${C.ink}" stroke-width="1.3"/><circle cx="200" cy="166" r="3" fill="${C.ink}"/>`;
+  s+=T(222,170,'observer',10,C.dim,'start');
+  s+=T(120,110,'dots = vibration in and',9.5,C.vio,'middle');
+  s+=T(120,122,'out of the page only',9.5,C.vio,'middle');
+  s+=T(120,134,'&#8594; plane polarised',9.5,C.vio,'middle');
+  return svg(320,186,s);
+};
+
+// ── the four size regimes (λ vs object) ────────────────────────────
+D.sizeScale=function(){
+  let s=L(20,70,320,70,C.g,1.4,0,'aI')+T(320,92,'size of object',10,C.dim,'end');
+  [[60,'&#8810; &#955;','scattering',C.vio],[170,'&#8776; &#955;','diffraction',C.grn],[280,'&#8811; &#955;','ray optics',C.cold]].forEach(([x,a,b,c])=>{
+    s+=`<circle cx="${x}" cy="70" r="5" fill="${c}"/>`+T(x,52,a,11,c)+T(x,30,b,11,c);});
+  return svg(340,100,s);
+};
+
+// ── ladder builder: build-ups first, the PYQ as the ★ rung ─────────
+// Every option list is written with the CORRECT option first (index 0); the engine shuffles at runtime.
+function LAD(c){
+  const out=c.b.map((b,i)=>({q:b.q,diagram:b.d||null,opts:b.o,ans:0,sol:b.s,mode:c.mode,
+      lvl:'Build-up '+(i+1),star:false,tag:'leads to '+c.tag,note:b.n||''}));
+  out.push({q:c.s.q,diagram:c.s.d||null,opts:c.s.o,ans:0,sol:c.s.s,mode:c.mode,
+      lvl:c.exam,star:true,tag:c.tag,note:c.s.n||''});
+  return out;
+}
+const NUM=`<b>Note.</b> In the paper this is a numerical-answer question. Options are added here so it works in the DPP.`;
+
+const TOPICS=[];
+
+// ═════════════════════════ DIFFRACTION ═════════════════════════════
+TOPICS.push({
+ name:`Single slit &#8212; where the dark bands fall`,
+ note:`Derive a sin&#952; = n&#955; for the <b>dark</b> bands first. Tell them clearly: it is the same formula as YDSE bright fringes, but here it means DARK. Two ladders &#8212; finding an angle, then counting the minima.`,
+ session:1,
+ questions:[
+ ...LAD({mode:'class',exam:'JEE Main 2020',tag:'Archive Q32',
+  b:[
+   {q:`In single slit diffraction (slit width a), the condition for the n-th <b>dark</b> band is:`,
+    d:D.slitGeom(),
+    o:[`a sin&#952; = n&#955;`,`a sin&#952; = (2n + 1)&#955;/2`,`a sin&#952; = n&#955;/2`,`a cos&#952; = n&#955;`],
+    s:`Cut the slit into two halves. If the path difference across the full slit is &#955;, every point of the top half has a partner in the bottom half that is &#955;/2 behind it. All pairs cancel &#8594; <strong>dark</strong>. So dark when <strong>a sin&#952; = n&#955;</strong>.<br>Be careful: in YDSE, d sin&#952; = n&#955; gives a BRIGHT fringe. Same look, opposite meaning.`},
+   {q:`Light of wavelength 500 nm falls on a slit of width 1 &#956;m. The first dark band is at an angle:`,
+    o:[`30&#176;`,`60&#176;`,`45&#176;`,`15&#176;`],
+    s:`n = 1: sin&#952; = &#955;/a = 0.5 &#956;m / 1 &#956;m = 0.5. So &#952; = <strong>30&#176;</strong>. Just one division, nothing more.`},
+   {q:`The <b>second</b> dark band (n = 2) is seen where sin&#952; = 0.6, with &#955; = 600 nm. The slit width is:`,
+    o:[`2 &#956;m`,`1 &#956;m`,`0.5 &#956;m`,`3 &#956;m`],
+    s:`a sin&#952; = 2&#955; &#8594; a = 2 &#215; 600 nm / 0.6 = 2000 nm = <strong>2 &#956;m</strong>. Do not forget the n = 2.`},
+   {q:`Same slit, same light. For the 1st and 2nd dark bands, the ratio sin&#952;&#8322; : sin&#952;&#8321; is:`,
+    o:[`2 : 1`,`1 : 2`,`4 : 1`,`&#8730;2 : 1`],
+    s:`sin&#952; = n&#955;/a, so <strong>sin&#952; is proportional to n</strong>. sin&#952;&#8322; : sin&#952;&#8321; = 2 : 1.<br>Note it is the <em>sine</em> that doubles, not the angle. The next question uses exactly this.`}
+  ],
+  s:{q:`Visible light of wavelength 6000 &#215; 10&#8315;&#8312; cm falls normally on a single slit and produces a diffraction pattern. It is found that the second diffraction minimum is at 60&#176; from the central maximum. If the first minimum is produced at &#952;&#8321;, then &#952;&#8321; is close to:`,
+     o:[`25&#176;`,`30&#176;`,`20&#176;`,`45&#176;`],
+     s:`<strong>Step 1 &#8212; write the dark-band rule for both.</strong> 2nd minimum: a sin60&#176; = 2&#955;. 1st minimum: a sin&#952;&#8321; = &#955;.<br><strong>Step 2 &#8212; divide.</strong> sin&#952;&#8321; = sin60&#176;/2 = (&#8730;3/2)/2 = &#8730;3/4 &#8776; 0.433.<br><strong>Step 3 &#8212; read the angle.</strong> sin25&#176; &#8776; 0.42 and sin30&#176; = 0.5, so &#952;&#8321; &#8776; <strong>25&#176;</strong>.<br>See &#8212; we never needed &#955; or a. The ratio does the whole job.<br><strong>Trap:</strong> halving the angle (60&#176; &#8594; 30&#176;). Sine is proportional to n, the angle is not.`}
+ }),
+ ...LAD({mode:'hw',exam:'JEE Main 2020',tag:'Archive Q42',
+  b:[
+   {q:`In single slit diffraction, sin&#952; = n&#955;/a. The biggest value sin&#952; can ever take is:`,
+    o:[`1`,`0`,`0.5`,`no limit`],
+    s:`sin&#952; can never cross <strong>1</strong> (&#952; = 90&#176;). So n&#955;/a must stay below 1 &#8212; this puts a ceiling on how many dark bands exist.`},
+   {q:`For a slit with a = 3&#955;, how many dark bands can be seen on <b>one</b> side of the central maximum?`,
+    o:[`2`,`3`,`6`,`1`],
+    s:`sin&#952; = n/3. n = 1 &#8594; 1/3, n = 2 &#8594; 2/3. n = 3 &#8594; sin&#952; = 1, &#952; = 90&#176;: that light runs along the slit plane and never reaches the screen. So only <strong>2</strong> on one side.`},
+   {q:`For the same slit (a = 3&#955;), the total number of dark bands on <b>both</b> sides is:`,
+    o:[`4`,`6`,`2`,`3`],
+    s:`The pattern is symmetric. 2 on the left + 2 on the right = <strong>4</strong>.`},
+   {q:`&#955; = 500 nm and a = 0.05 mm. The value of a/&#955; is:`,
+    o:[`100`,`10`,`1000`,`50`],
+    s:`a/&#955; = (0.05 &#215; 10&#8315;&#179;)/(500 &#215; 10&#8315;&#8313;) = (5 &#215; 10&#8315;&#8309;)/(5 &#215; 10&#8315;&#8311;) = <strong>100</strong>. Write both in powers of 10 and the numbers become easy.`}
+  ],
+  s:{q:`Orange light of wavelength 6000 &#215; 10&#8315;&#185;&#8304; m illuminates a single slit of width 0.6 &#215; 10&#8315;&#8308; m. The maximum possible number of diffraction minima produced on both sides of the central maximum is:`,
+     o:[`198`,`200`,`100`,`99`],n:NUM,
+     s:`<strong>Step 1.</strong> sin&#952; = n&#955;/a, and a/&#955; = (0.6 &#215; 10&#8315;&#8308;)/(6 &#215; 10&#8315;&#8311;) = 100. So sin&#952; = n/100.<br><strong>Step 2.</strong> sin&#952; &lt; 1 for the band to reach the screen. n = 100 gives &#952; = 90&#176; &#8212; not on the screen. So n = 1, 2, &#8230;, <strong>99</strong> on one side.<br><strong>Step 3.</strong> Both sides: 2 &#215; 99 = <strong>198</strong>.<br><strong>Traps:</strong> 200 counts n = 100 also. 99 forgets the other side.`}
+ })
+ ]});
+
+TOPICS.push({
+ name:`Single slit &#8212; central width, secondary maxima, measuring the slit`,
+ note:`After the central width 2&#955;/a and the secondary maxima at a sin&#952; &#8776; (2n + 1)&#955;/2. The second ladder is a JEE Advanced error question &#8212; revise the error rule once before it.`,
+ session:2,
+ questions:[
+ ...LAD({mode:'class',exam:'JEE Main 2022',tag:'Archive Q63',
+  b:[
+   {q:`The central bright band runs from the first minimum on one side to the first minimum on the other side. Its angular width is:`,
+    d:D.pattern({width:'angular width = 2&#955;/a'}),
+    o:[`2&#955;/a`,`&#955;/a`,`&#955;/2a`,`a/&#955;`],
+    s:`First minimum at &#952; = &#955;/a on each side (small angle). Left to right: <strong>2&#955;/a</strong>. The central maximum is twice as wide as any other band.`},
+   {q:`On a screen at distance D, the <b>linear</b> width of the central maximum is:`,
+    o:[`2&#955;D/a`,`&#955;D/a`,`2aD/&#955;`,`&#955;D/2a`],
+    s:`Linear = distance &#215; angle = D &#215; 2&#955;/a = <strong>2&#955;D/a</strong>. Remember: smaller slit &#8594; wider central band.`},
+   {q:`Secondary maxima sit roughly midway between two dark bands. The <b>first</b> secondary maximum is at about:`,
+    d:D.pattern({sec:true}),
+    o:[`a sin&#952; = 3&#955;/2`,`a sin&#952; = &#955;`,`a sin&#952; = &#955;/2`,`a sin&#952; = 2&#955;`],
+    s:`Between the 1st dark band (&#955;) and the 2nd (2&#955;) the midpoint is <strong>3&#955;/2</strong>. In general a sin&#952; &#8776; (2n + 1)&#955;/2 for the n-th secondary maximum.<br>Careful: a sin&#952; = &#955;/2 is NOT a maximum &#8212; that region is still inside the central bright band.`},
+   {q:`The first secondary maximum is at y = 3&#955;D/2a on the screen. If &#955; increases by a small amount &#916;&#955;, this position moves by:`,
+    o:[`3D&#916;&#955;/2a`,`D&#916;&#955;/a`,`3D&#916;&#955;/a`,`2D&#916;&#955;/3a`],
+    s:`y is directly proportional to &#955;. So &#916;y = (3D/2a) &#215; &#916;&#955; = <strong>3D&#916;&#955;/2a</strong>. Two colours &#8594; two positions; the gap is this &#916;y.`}
+  ],
+  s:{q:`Sodium light of wavelengths 650 nm and 655 nm is used to study diffraction at a single slit of aperture 0.5 mm. The distance between the slit and the screen is 2.0 m. The separation between the positions of the first maxima of the diffraction pattern obtained in the two cases is ____ &#215; 10&#8315;&#8309; m.`,
+     o:[`3`,`1.5`,`6`,`0.3`],n:NUM+` The paper calls it "sodium light", but sodium is 589 nm. Just use the numbers given.`,
+     s:`"First maxima" means the first <em>secondary</em> maximum &#8212; the central maximum is at the same place for both colours.<br><strong>Step 1.</strong> Position: y = 3&#955;D/2a.<br><strong>Step 2.</strong> &#916;y = 3D&#916;&#955;/2a = 3 &#215; 2 &#215; (5 &#215; 10&#8315;&#8313;) / (2 &#215; 0.5 &#215; 10&#8315;&#179;).<br><strong>Step 3.</strong> = (30 &#215; 10&#8315;&#8313;)/(10&#8315;&#179;) = 3 &#215; 10&#8315;&#8309; m. Answer <strong>3</strong>.<br><strong>Trap:</strong> using &#955;D/a (that is the first <em>minimum</em>) gives 2 &#215; 10&#8315;&#8309; m.`}
+ }),
+ ...LAD({mode:'class',exam:'JEE Adv 2025 P1',tag:'Adv bank Q4',
+  b:[
+   {q:`If Z = A&#183;B / C, the maximum fractional error in Z is:`,
+    o:[`&#916;A/A + &#916;B/B + &#916;C/C`,`&#916;A/A + &#916;B/B &#8722; &#916;C/C`,`&#916;A + &#916;B + &#916;C`,`(&#916;A/A)(&#916;B/B)/(&#916;C/C)`],
+    s:`For products and quotients, the <strong>fractional errors always add</strong> &#8212; even for the quantity in the denominator. Errors never cancel each other in the worst case.`},
+   {q:`A distance of 1 m is measured with a scale of least count 1 cm. The fractional error is:`,
+    o:[`0.01`,`0.1`,`1`,`0.001`],
+    s:`&#916;D/D = 1 cm / 100 cm = <strong>0.01</strong> (1%). Always bring both to the same unit first.`},
+   {q:`A distance of 5 mm is measured with a scale of least count 1 mm. The fractional error is:`,
+    o:[`0.2`,`0.02`,`0.5`,`5`],
+    s:`1 mm / 5 mm = <strong>0.2</strong> (20%). A small reading with a coarse scale gives a BIG fractional error. This term will dominate the next question.`},
+   {q:`From bd/D = m&#955; we get the slit width b = m&#955;D/d. If m and &#955; are known exactly, then &#916;b/b equals:`,
+    o:[`&#916;D/D + &#916;d/d`,`&#916;D/D &#8722; &#916;d/d`,`&#916;d/d only`,`&#916;D/D only`],
+    s:`Exact quantities have zero error. Only the measured ones remain: <strong>&#916;b/b = &#916;D/D + &#916;d/d</strong>. Find b first, then &#916;b = b &#215; (fractional error).`}
+  ],
+  s:{q:`A single slit diffraction experiment is performed to determine the slit width using the equation bd/D = m&#955;, where b is the slit width, D the shortest distance between the slit and the screen, d the distance between the m-th diffraction maximum and the central maximum, and &#955; is the wavelength. D and d are measured with scales of least count 1 cm and 1 mm, respectively. The values of &#955; and m are known precisely to be 600 nm and 3, respectively. The absolute error (in &#956;m) in the value of b estimated using the diffraction maximum that occurs for m = 3 with d = 5 mm and D = 1 m is:`,
+     o:[`75.60 &#956;m`,`72.00 &#956;m`,`3.60 &#956;m`,`151.2 &#956;m`],n:NUM+` The official answer is 75.60.`,
+     s:`<strong>Step 1 &#8212; the value.</strong> b = m&#955;D/d = 3 &#215; 600 &#215; 10&#8315;&#8313; &#215; 1 / (5 &#215; 10&#8315;&#179;) = 3.6 &#215; 10&#8315;&#8308; m = 360 &#956;m.<br><strong>Step 2 &#8212; the fractional error.</strong> &#916;b/b = &#916;D/D + &#916;d/d = 0.01 + 0.20 = 0.21.<br><strong>Step 3 &#8212; the absolute error.</strong> &#916;b = 0.21 &#215; 360 = <strong>75.6 &#956;m</strong>.<br><strong>Traps:</strong> 72.0 forgets D; 3.6 forgets d. The 5 mm reading with a 1 mm scale gives almost all of the error.`}
+ })
+ ]});
+
+TOPICS.push({
+ name:`Single slit meets double slit`,
+ note:`After you show that a real double slit = YDSE fringes sitting inside the single-slit envelope. Ladder 1 joins the single-slit angle with &#946; = &#955;D/d. Ladder 2 counts fringes inside the envelope.`,
+ session:3,
+ questions:[
+ ...LAD({mode:'class',exam:'JEE Main 2018',tag:'Archive Q18',
+  b:[
+   {q:`The angular width of the central maximum of a single slit is 60&#176;. The first minimum is at &#952; =`,
+    o:[`30&#176;`,`60&#176;`,`120&#176;`,`15&#176;`],
+    s:`Angular width covers both sides of the centre. Half of it is the first minimum: <strong>30&#176;</strong>.`},
+   {q:`First minimum at 30&#176; with slit width a = 1 &#956;m. The wavelength is:`,
+    o:[`500 nm`,`1000 nm`,`250 nm`,`866 nm`],
+    s:`a sin30&#176; = &#955; &#8594; &#955; = 1 &#956;m &#215; 0.5 = 0.5 &#956;m = <strong>500 nm</strong>. Angle is big here, so use sin, not the small-angle shortcut.`},
+   {q:`In YDSE, &#955; = 500 nm, D = 1 m, d = 0.5 mm. The fringe width &#946; = &#955;D/d is:`,
+    o:[`1 mm`,`0.1 mm`,`10 mm`,`0.5 mm`],
+    s:`&#946; = (5 &#215; 10&#8315;&#8311; &#215; 1)/(5 &#215; 10&#8315;&#8308;) = 10&#8315;&#179; m = <strong>1 mm</strong>.`},
+   {q:`Rearranging &#946; = &#955;D/d to get the slit separation:`,
+    o:[`d = &#955;D/&#946;`,`d = &#946;D/&#955;`,`d = &#955;&#946;/D`,`d = D/&#955;&#946;`],
+    s:`Multiply both sides by d and divide by &#946;: <strong>d = &#955;D/&#946;</strong>. Now you have everything for the PYQ.`}
+  ],
+  s:{q:`The angular width of the central maximum in a single slit diffraction pattern is 60&#176;. The width of the slit is 1 &#956;m. The slit is illuminated by monochromatic plane waves. If another slit of same width is made near it, Young's fringes can be observed on a screen placed at a distance 50 cm from the slits. If the observed fringe width is 1 cm, what is the slit separation distance? (i.e. distance between the centres of each slit.)`,
+     o:[`25 &#956;m`,`50 &#956;m`,`75 &#956;m`,`100 &#956;m`],
+     s:`<strong>Step 1 &#8212; the single slit gives &#955;.</strong> Half-angle 30&#176;: a sin30&#176; = &#955; &#8594; &#955; = 0.5 &#956;m.<br><strong>Step 2 &#8212; the double slit gives d.</strong> d = &#955;D/&#946; = (0.5 &#215; 10&#8315;&#8310;)(0.5)/(10&#8315;&#178;) = 25 &#215; 10&#8315;&#8310; m = <strong>25 &#956;m</strong>.<br><strong>Trap:</strong> using the full 60&#176; in a sin&#952; = &#955;. The width is measured edge to edge; the formula needs the half-angle.`}
+ }),
+ ...LAD({mode:'class',exam:'JEE Main 2019',tag:'Archive Q26',
+  b:[
+   {q:`Two slits, each of width a, separated by d (d &gt; a). The pattern on the screen is:`,
+    d:D.envelope(),
+    o:[`YDSE fringes whose brightness follows the single-slit pattern`,`Only the single-slit pattern`,`Only equal-brightness YDSE fringes`,`Uniform light, no fringes`],
+    s:`Each slit itself diffracts (single-slit envelope), and the two slits interfere (fine fringes). What you see: <strong>fine YDSE fringes, bright in the middle, fading as the envelope falls</strong>.`},
+   {q:`The angular width of one double-slit fringe is:`,
+    o:[`&#955;/d`,`&#955;/a`,`2&#955;/a`,`d/&#955;`],
+    s:`From &#946; = &#955;D/d, angle = &#946;/D = <strong>&#955;/d</strong>. Separation d decides the fine fringes.`},
+   {q:`The angular gap between the 1st and 2nd diffraction minima (same side) is:`,
+    o:[`&#955;/a`,`2&#955;/a`,`&#955;/d`,`&#955;/2a`],
+    s:`Minima at &#955;/a and 2&#955;/a. Gap = <strong>&#955;/a</strong>. Width a decides the envelope.`},
+   {q:`So the number of fringes that fit in that gap is (&#955;/a) &#247; (&#955;/d) =`,
+    o:[`d/a`,`a/d`,`2d/a`,`d/2a`],
+    s:`&#955; cancels: <strong>d/a</strong>. The wavelength does not matter for this count at all.`},
+   {q:`d/a works out to 4.8. How many complete bright fringes can you count in that gap?`,
+    o:[`4`,`5`,`9`,`10`],
+    s:`You can only count whole fringes: <strong>4</strong>. Do not round up 4.8 to 5 &#8212; the fifth one is cut by the minimum.`}
+  ],
+  s:{q:`In a double-slit experiment, green light (5303 &#197;) falls on a double slit having a separation of 19.44 &#956;m and a width of 4.05 &#956;m. The number of bright fringes between the first and the second diffraction minima is:`,
+     o:[`04`,`05`,`09`,`10`],
+     s:`<strong>Step 1.</strong> Gap between the 1st and 2nd diffraction minima = &#955;/a.<br><strong>Step 2.</strong> One fringe = &#955;/d. Number = d/a = 19.44/4.05 = 4.8.<br><strong>Step 3.</strong> Whole fringes only &#8594; <strong>4</strong>. The 5303 &#197; is just there to scare you &#8212; it cancels.<br><strong>Trap:</strong> 9 (from 2d/a = 9.6) is the count inside the <em>central</em> maximum. Read which region is asked.`}
+ })
+ ]});
+
+TOPICS.push({
+ name:`How big is the spread &#8212; size vs &#955;, pinholes`,
+ note:`Diffraction is clear only when the opening is near &#955; in size. Show the size scale: much smaller &#8594; scattering, comparable &#8594; diffraction, much bigger &#8594; ray optics. Mention the Fresnel distance z = a&#178;/&#955;. Three ladders.`,
+ session:4,
+ questions:[
+ ...LAD({mode:'hw',exam:'JEE Main 2022',tag:'Archive Q67',
+  b:[
+   {q:`The wavelength of a 3 GHz electromagnetic wave in free space is:`,
+    o:[`10 cm`,`1 m`,`1 cm`,`3 cm`],
+    s:`&#955; = c/f = (3 &#215; 10&#8312;)/(3 &#215; 10&#8313;) = 0.1 m = <strong>10 cm</strong>.`},
+   {q:`Diffraction is most clearly seen when the size of the obstacle or opening is:`,
+    d:D.sizeScale(),
+    o:[`comparable to &#955;`,`much bigger than &#955;`,`much smaller than &#955;`,`exactly zero`],
+    s:`Bending around edges is strong when size &#8776; &#955;. That is why sound (&#955; ~ 1 m) bends around doors but light (&#955; ~ 500 nm) does not.`},
+   {q:`When the object is <b>much larger</b> than &#955; (a mirror for light), the wave mostly:`,
+    o:[`reflects / refracts &#8212; ray optics works`,`scatters in all directions`,`diffracts strongly`,`stops completely`],
+    s:`Large object &#8594; the edges are a tiny part of the story. <strong>Ray optics</strong> (reflection, refraction) is enough.`},
+   {q:`When the object is <b>much smaller</b> than &#955; (an air molecule for sunlight), the wave mostly:`,
+    o:[`gets scattered in all directions`,`reflects like a mirror`,`refracts like a lens`,`passes without any effect`],
+    s:`A tiny object cannot reflect or bend a wave neatly. It just shakes with the wave and sends it out in all directions &#8212; <strong>scattering</strong>. Blue sky comes from this.`}
+  ],
+  s:{q:`In free space, an electromagnetic wave of 3 GHz frequency strikes over the edge of an object of size &#955;/100, where &#955; is the wavelength of the wave in free space. The phenomenon, which happens there will be:`,
+     o:[`Scattering`,`Reflection`,`Refraction`,`Diffraction`],
+     s:`<strong>Step 1.</strong> &#955; = 10 cm, so the object is 1 mm &#8212; one hundred times smaller than &#955;.<br><strong>Step 2.</strong> Much smaller than &#955; &#8594; <strong>scattering</strong>.<br><strong>Trap:</strong> "strikes over the edge" makes students choose diffraction. Diffraction needs size &#8776; &#955;. Here size &#8810; &#955;.`}
+ }),
+ ...LAD({mode:'hw',exam:'JEE Main 2021',tag:'Archive Q49',
+  b:[
+   {q:`For a circular hole of diameter D, the angular radius of the central bright disc is about:`,
+    o:[`1.22&#955;/D`,`D/&#955;`,`&#955;D`,`2D/&#955;`],
+    s:`For a circle the first dark ring is at sin&#952; = <strong>1.22&#955;/D</strong>. Like a single slit (&#955;/a), just with an extra factor 1.22.`},
+   {q:`If the hole's diameter is doubled, the angular size of the diffraction pattern:`,
+    o:[`becomes half`,`doubles`,`stays the same`,`becomes four times`],
+    s:`&#952; &#8733; 1/D. Double D &#8594; pattern <strong>halves</strong>. Bigger opening, less spreading.`},
+   {q:`If the hole's diameter is doubled, the light that gets through (hole area) becomes:`,
+    o:[`4 times`,`2 times`,`half`,`same`],
+    s:`Area &#8733; D&#178;. Double D &#8594; <strong>4 times</strong> the light.`},
+   {q:`More light packed into a smaller pattern makes the pattern look:`,
+    o:[`brighter`,`dimmer`,`the same`,`it disappears`],
+    s:`More energy, less area &#8594; <strong>brighter</strong>.`}
+  ],
+  s:{q:`Consider the diffraction pattern obtained from the sunlight incident on a pinhole of diameter 0.1 &#956;m. If the diameter of the pinhole is slightly increased, it will affect the diffraction pattern such that:`,
+     o:[`its size decreases, but intensity increases`,`its size decreases, and intensity decreases`,`its size increases, and intensity increases`,`its size increases, but intensity decreases`],
+     s:`<strong>Size:</strong> angular radius 1.22&#955;/D &#8594; bigger D, <strong>smaller</strong> pattern.<br><strong>Intensity:</strong> more light enters through a bigger hole, and it falls on a smaller patch &#8594; <strong>brighter</strong>.<br>So: size decreases, intensity increases.`}
+ }),
+ ...LAD({mode:'class',exam:'JEE Main 2016',tag:'Archive Q14',
+  b:[
+   {q:`A parallel beam passes a hole of radius a. With <b>no</b> diffraction, the spot on the far wall has radius:`,
+    d:D.pinhole(),
+    o:[`a`,`2a`,`a/2`,`zero`],
+    s:`Parallel rays go straight. The spot is the same size as the hole: <strong>a</strong>. This is the geometric part.`},
+   {q:`Diffraction spreads the light by an angle of about &#955;/a. Over a distance L this adds an extra spread of:`,
+    o:[`L&#955;/a`,`a&#955;/L`,`L/a&#955;`,`&#955;/aL`],
+    s:`Spread = distance &#215; angle = <strong>L&#955;/a</strong>.`},
+   {q:`So the spot size is b = a + L&#955;/a. When a is made very, very small, b:`,
+    o:[`becomes very large`,`becomes zero`,`becomes equal to L`,`does not change`],
+    s:`L&#955;/a blows up as a &#8594; 0. A tiny hole gives a big blurred spot because diffraction takes over. Too big a hole also gives a big spot (the a term). So there is a best size in between.`},
+   {q:`For y = x + k/x (x &gt; 0, k a constant), the smallest value of y occurs at:`,
+    o:[`x = &#8730;k, and y&#8344;&#7522;&#8345; = 2&#8730;k`,`x = k, and y&#8344;&#7522;&#8345; = 2k`,`x = &#8730;k, and y&#8344;&#7522;&#8345; = &#8730;k`,`x = k/2, and y&#8344;&#7522;&#8345; = k`],
+    s:`dy/dx = 1 &#8722; k/x&#178; = 0 &#8594; x = &#8730;k. Then y = &#8730;k + k/&#8730;k = <strong>2&#8730;k</strong>. (AM&#8211;GM says the same: x + k/x &#8805; 2&#8730;k.)`}
+  ],
+  s:{q:`The box of a pin hole camera, of length L, has a hole of radius a. It is assumed that when the hole is illuminated by a parallel beam of light of wavelength &#955; the spread of the spot (obtained on the opposite wall of the camera) is the sum of its geometrical spread and the spread due to diffraction. The spot would then have its minimum size (say b&#8344;&#7522;&#8345;) when:`,
+     o:[`a = &#8730;(&#955;L) and b&#8344;&#7522;&#8345; = &#8730;(4&#955;L)`,`a = &#8730;(&#955;L) and b&#8344;&#7522;&#8345; = 2&#955;&#178;/L`,`a = &#955;&#178;/L and b&#8344;&#7522;&#8345; = &#8730;(4&#955;L)`,`a = &#955;&#178;/L and b&#8344;&#7522;&#8345; = 2&#955;&#178;/L`],
+     s:`<strong>Step 1 &#8212; write b.</strong> b = a + &#955;L/a (geometric + diffraction).<br><strong>Step 2 &#8212; minimise.</strong> db/da = 1 &#8722; &#955;L/a&#178; = 0 &#8594; <strong>a = &#8730;(&#955;L)</strong>.<br><strong>Step 3 &#8212; put back.</strong> b&#8344;&#7522;&#8345; = &#8730;(&#955;L) + &#8730;(&#955;L) = 2&#8730;(&#955;L) = <strong>&#8730;(4&#955;L)</strong>.<br><strong>Link:</strong> a = &#8730;(&#955;L) means L = a&#178;/&#955; &#8212; this is the Fresnel distance. At that distance the two spreads are equal.`}
+ })
+ ]});
+
+TOPICS.push({
+ name:`Resolving power &#8212; eye, telescope, microscope`,
+ note:`Rayleigh's criterion, limit of resolution 1.22&#955;/D, resolving power = 1/limit. For a microscope, RP = 2&#956; sin&#952; / 1.22&#955;. Four ladders. Ladder 4 has a key issue &#8212; read the amber box before class.`,
+ session:5,
+ questions:[
+ ...LAD({mode:'class',exam:'JEE Main 2015',tag:'Archive Q13',
+  b:[
+   {q:`By Rayleigh's criterion, two point objects are "just resolved" when:`,
+    o:[`the central maximum of one falls on the first minimum of the other`,`their central maxima fall on each other`,`their first minima fall on each other`,`their images do not touch at all`],
+    s:`Rayleigh's rule: <strong>centre of one pattern on the first dark ring of the other</strong>. Any closer, the two blobs merge into one.`},
+   {q:`The smallest angle a circular aperture of diameter D can resolve (limit of resolution) is:`,
+    d:D.resolve(),
+    o:[`1.22&#955;/D`,`&#955;/2D`,`D/1.22&#955;`,`2.44&#955;/D`],
+    s:`&#952;&#8344;&#7522;&#8345; = <strong>1.22&#955;/D</strong>. Smaller &#952; = better eye or telescope.`},
+   {q:`A pupil has radius 0.25 cm. The D to put in 1.22&#955;/D is:`,
+    o:[`0.5 cm`,`0.25 cm`,`0.125 cm`,`1 cm`],
+    s:`D is the <strong>diameter</strong> = 2 &#215; 0.25 = <strong>0.5 cm</strong>. Using the radius doubles your answer &#8212; a very common slip.`},
+   {q:`A small angle &#952; (in radian) seen from a distance x covers a separation of:`,
+    o:[`x&#952;`,`x/&#952;`,`&#952;/x`,`&#952;`],
+    s:`Arc = radius &#215; angle. Separation = <strong>x&#952;</strong>.`}
+  ],
+  s:{q:`Assuming human pupil to have a radius of 0.25 cm and a comfortable viewing distance of 25 cm, the minimum separation between two objects that human eye can resolve at 500 nm wavelength is:`,
+     o:[`30 &#956;m`,`1 &#956;m`,`100 &#956;m`,`300 &#956;m`],d:D.resolve('25 cm','pupil, D = 0.5 cm'),
+     s:`<strong>Step 1.</strong> D = 0.5 cm = 5 &#215; 10&#8315;&#179; m.<br><strong>Step 2.</strong> &#952; = 1.22&#955;/D = 1.22 &#215; 5 &#215; 10&#8315;&#8311; / 5 &#215; 10&#8315;&#179; = 1.22 &#215; 10&#8315;&#8308; rad.<br><strong>Step 3.</strong> x = 25 cm &#215; &#952; = 0.25 &#215; 1.22 &#215; 10&#8315;&#8308; = 3.05 &#215; 10&#8315;&#8309; m &#8776; <strong>30 &#956;m</strong>.<br><strong>Trap:</strong> putting the radius in for D gives about 61 &#956;m.`}
+ }),
+ ...LAD({mode:'hw',exam:'JEE Main 2022',tag:'Archive Q83',
+  b:[
+   {q:`The resolving power of a telescope with objective diameter D is:`,
+    o:[`D/1.22&#955;`,`1.22&#955;/D`,`1.22D/&#955;`,`&#955;/D`],
+    s:`Resolving power = 1 / (limit of resolution) = <strong>D/1.22&#955;</strong>. It has no unit.`},
+   {q:`To see finer detail with a telescope, you should:`,
+    o:[`use a bigger objective`,`use a smaller objective`,`use longer wavelength`,`use a longer tube`],
+    s:`RP &#8733; D. That is why big observatories build <strong>huge objectives</strong>.`},
+   {q:`If the wavelength used is made shorter, the resolving power:`,
+    o:[`increases`,`decreases`,`stays same`,`becomes zero`],
+    s:`RP &#8733; 1/&#955;. Shorter &#955; &#8594; <strong>higher RP</strong>.`},
+   {q:`1.22 &#215; 2440 &#197;, in metre, is about:`,
+    o:[`2.98 &#215; 10&#8315;&#8311; m`,`2.98 &#215; 10&#8315;&#8310; m`,`2.98 &#215; 10&#8315;&#185;&#8304; m`,`2.98 &#215; 10&#8315;&#8312; m`],
+    s:`2440 &#197; = 2.44 &#215; 10&#8315;&#8311; m. &#215; 1.22 &#8776; <strong>2.98 &#215; 10&#8315;&#8311; m</strong>. (1 &#197; = 10&#8315;&#185;&#8304; m.)`}
+  ],
+  s:{q:`The aperture of the objective is 24.4 cm. The resolving power of this telescope, if a light of wavelength 2440 &#197; is used to see the object will be:`,
+     o:[`8.2 &#215; 10&#8309;`,`8.1 &#215; 10&#8310;`,`10.0 &#215; 10&#8311;`,`1.0 &#215; 10&#8315;&#8312;`],
+     s:`<strong>Step 1.</strong> RP = D/(1.22&#955;).<br><strong>Step 2.</strong> D/&#955; = 0.244 / (2.44 &#215; 10&#8315;&#8311;) = 10&#8310;. Nice numbers!<br><strong>Step 3.</strong> RP = 10&#8310;/1.22 &#8776; <strong>8.2 &#215; 10&#8309;</strong>.<br>Look at how 24.4 and 2440 are chosen so the division is clean. Spot such pairs to save time.`}
+ }),
+ ...LAD({mode:'hw',exam:'JEE Main 2021',tag:'Archive Q51',
+  b:[
+   {q:`Resolving power of a microscope depends on the wavelength used as:`,
+    o:[`RP &#8733; 1/&#955;`,`RP &#8733; &#955;`,`RP &#8733; &#955;&#178;`,`RP does not depend on &#955;`],
+    s:`RP = 2&#956; sin&#952; / 1.22&#955;, so <strong>RP &#8733; 1/&#955;</strong>. Shorter wave, finer detail.`},
+   {q:`The de Broglie wavelength of a particle of momentum p is:`,
+    o:[`&#955; = h/p`,`&#955; = p/h`,`&#955; = hp`,`&#955; = h/p&#178;`],
+    s:`<strong>&#955; = h/p</strong>. Fast electrons have big p, so tiny &#955;.`},
+   {q:`An electron accelerated through 100 V has a wavelength of about:`,
+    o:[`1.23 &#197;`,`500 nm`,`1.23 mm`,`12.3 m`],
+    s:`&#955; = 12.27/&#8730;V &#197; = 12.27/10 &#8776; <strong>1.23 &#197;</strong> = 0.123 nm.`},
+   {q:`Visible light (&#955; &#8776; 500 nm) compared with a 0.1 nm electron wave is about:`,
+    o:[`5000 times longer`,`50 times longer`,`5 times longer`,`5 lakh times longer`],
+    s:`500 / 0.1 = <strong>5000</strong>. So an electron microscope can, in principle, resolve thousands of times finer detail.`}
+  ],
+  s:{q:`Given below are two statements: one is labelled as Assertion A and the other is labelled as Reason R.<br><b>Assertion A:</b> An electron microscope can achieve better resolving power than an optical microscope.<br><b>Reason R:</b> The de Broglie's wavelength of the electrons emitted from an electron gun is much less than wavelength of visible light.<br>In the light of the above statements, choose the correct answer:`,
+     o:[`Both A and R are true and R is the correct explanation of A`,`Both A and R are true but R is NOT the correct explanation of A`,`A is false but R is true`,`A is true but R is false`],
+     s:`<strong>A:</strong> true &#8212; electron microscopes see far finer detail.<br><strong>R:</strong> true &#8212; electron &#955; is around 0.1 nm against 500 nm for light.<br><strong>Link:</strong> RP &#8733; 1/&#955;, so the smaller &#955; is exactly WHY A is true. R explains A.`}
+ }),
+ ...LAD({mode:'class',exam:'JEE Main 2022',tag:'Archive Q75',
+  b:[
+   {q:`In RP = 2&#956; sin&#952; / 1.22&#955; for a microscope, &#956; is the refractive index of:`,
+    o:[`the medium between the object and the objective`,`the objective lens glass`,`the eyepiece`,`the eye`],
+    s:`&#956; belongs to the <strong>medium filling the gap</strong> between the object and the objective. &#956; sin&#952; is called the numerical aperture.`},
+   {q:`The &#955; in the same formula is the wavelength in:`,
+    o:[`vacuum (air)`,`the oil`,`the glass`,`the eye`],
+    s:`It is the <strong>vacuum (air) wavelength</strong>. The effect of the medium is already carried by &#956;. If you also change &#955; to &#955;/&#956;, you count the medium twice.`},
+   {q:`If &#956; goes from 1 to 1.5, keeping everything else same, RP becomes:`,
+    o:[`1.5 times`,`2.25 times`,`1/1.5 times`,`unchanged`],
+    s:`RP &#8733; &#956;, so <strong>1.5 times</strong>. Not 1.5&#178;.`},
+   {q:`Why do biologists use oil-immersion objectives?`,
+    o:[`Higher &#956; gives higher resolving power`,`Oil makes the image brighter only`,`Oil cleans the lens`,`Oil makes the wavelength longer`],
+    s:`Oil raises &#956; &#8594; raises RP &#8594; finer detail like bacteria becomes visible.`}
+  ],
+  s:{q:`A microscope was initially placed in air (refractive index 1). It is then immersed in oil (refractive index 2). For a light whose wavelength in air is &#955;, calculate the change of microscope's resolving power due to oil and choose the correct option.`,
+     o:[`Resolving power will be twice in the oil than it was in the air.`,`Resolving power will be four times in the oil than it was in the air.`,`Resolving power will be 1/2 in the oil than it was in the air.`,`Resolving power will be 1/4 in the oil than it was in the air.`],
+     n:`<b>Key check.</b> The Aakash archive marks "four times". Its worked solution multiplies by &#956;&#8322;/&#956;&#8321; twice &#8212; once for &#956; and once more for the wavelength in oil &#8212; so it counts the oil twice. With RP = 2&#956; sin&#952; / 1.22&#955; (&#955; in air) the answer is <b>twice</b>. Please confirm with the NTA final key before class.`,
+     s:`<strong>Step 1.</strong> RP = 2&#956; sin&#952; / 1.22&#955;, &#955; = air wavelength (given).<br><strong>Step 2.</strong> Only &#956; changes: 1 &#8594; 2. Everything else is the same.<br><strong>Step 3.</strong> RP&#8322;/RP&#8321; = 2/1 &#8594; <strong>twice</strong>.<br><strong>Trap:</strong> keeping &#956; in the formula AND also replacing &#955; by the wavelength in oil, &#955;/&#956;. That gives &#956;&#178; = 4 &#8212; the oil got counted two times.`}
+ })
+ ]});
+
+// ═════════════════════════ POLARISATION ═══════════════════════════
+TOPICS.push({
+ name:`Polarisation &amp; Malus' law &#8212; one and two polaroids`,
+ note:`Teach: light is transverse, so it can be polarised. Unpolarised light through one polaroid &#8594; I/2. Polarised light through an analyser at &#952; &#8594; I cos&#178;&#952; (Malus). Three ladders, all one or two polaroids.`,
+ session:6,
+ questions:[
+ ...LAD({mode:'class',exam:'JEE Main 2013',tag:'Archive Q9',
+  b:[
+   {q:`Polarisation of light proves that light is:`,
+    o:[`a transverse wave`,`a longitudinal wave`,`a stream of particles only`,`a sound-like wave`],
+    s:`Only a <strong>transverse</strong> wave has a vibration direction that can be picked out. Sound (longitudinal) can never be polarised.`},
+   {q:`Unpolarised light of intensity I&#8320; passes through one ideal polaroid. The transmitted intensity is:`,
+    d:D.polaroids([{name:'P',ang:0}],'I&#8320; (unpolarised)',['?']),
+    o:[`I&#8320;/2`,`I&#8320;`,`I&#8320;/4`,`zero`],
+    s:`Unpolarised light has vibrations in all directions. The average of cos&#178;&#952; over all directions is 1/2. So <strong>I&#8320;/2</strong> &#8212; whatever the polaroid's angle.`},
+   {q:`Plane polarised light of intensity I&#8321; falls on an analyser whose axis is at &#952; to the light's vibration. Transmitted intensity:`,
+    o:[`I&#8321; cos&#178;&#952;`,`I&#8321; cos&#952;`,`I&#8321; sin&#178;&#952;`,`I&#8321;/2`],
+    s:`<strong>Malus' law: I = I&#8321; cos&#178;&#952;</strong>. The amplitude goes as cos&#952;, and intensity &#8733; amplitude&#178;.`},
+   {q:`cos&#178;45&#176; =`,
+    o:[`1/2`,`1/&#8730;2`,`1`,`1/4`],
+    s:`cos45&#176; = 1/&#8730;2, so cos&#178;45&#176; = <strong>1/2</strong>. Keep cos&#178; of 30&#176;, 45&#176;, 60&#176; on your finger tips: 3/4, 1/2, 1/4.`}
+  ],
+  s:{q:`A beam of unpolarized light of intensity I&#8320; is passed through a polaroid A and then through another polaroid B which is oriented so that its principal plane makes an angle of 45&#176; relative to that of A. The intensity of the emergent light is:`,
+     d:D.polaroids([{name:'A',ang:0},{name:'B',ang:45,sub:'45&#176; to A'}],'I&#8320; (unpolarised)',['?','?']),
+     o:[`I&#8320;/4`,`I&#8320;`,`I&#8320;/2`,`I&#8320;/8`],
+     s:`<strong>Step 1 &#8212; first polaroid.</strong> Unpolarised &#8594; I&#8320;/2. Now it is polarised along A.<br><strong>Step 2 &#8212; second polaroid (Malus).</strong> (I&#8320;/2) &#215; cos&#178;45&#176; = (I&#8320;/2)(1/2) = <strong>I&#8320;/4</strong>.<br><strong>Rule:</strong> the first polaroid always halves unpolarised light. Malus starts only from the second one.`}
+ }),
+ ...LAD({mode:'hw',exam:'JEE Main 2022',tag:'Archive Q80',
+  b:[
+   {q:`An unpolarised beam of intensity 2I&#8320; passes through one polaroid. The output is:`,
+    o:[`I&#8320;`,`2I&#8320;`,`I&#8320;/2`,`4I&#8320;`],
+    s:`Half of 2I&#8320; = <strong>I&#8320;</strong>. Read the input intensity carefully &#8212; it is 2I&#8320;, not I&#8320;.`},
+   {q:`cos&#178;30&#176; =`,
+    o:[`3/4`,`1/4`,`&#8730;3/2`,`1/2`],
+    s:`cos30&#176; = &#8730;3/2, squared = <strong>3/4</strong>. Do not stop at &#8730;3/2 &#8212; Malus needs the square.`},
+   {q:`Polarised light of intensity I&#8320; meets an analyser at 60&#176; to its vibration. Output:`,
+    o:[`I&#8320;/4`,`3I&#8320;/4`,`I&#8320;/2`,`zero`],
+    s:`cos&#178;60&#176; = 1/4, so <strong>I&#8320;/4</strong>.`},
+   {q:`Two polaroids are crossed (pass axes at 90&#176;). Output:`,
+    o:[`zero`,`I&#8320;/2`,`I&#8320;/4`,`I&#8320;`],
+    s:`cos&#178;90&#176; = 0. Crossed polaroids give <strong>darkness</strong>.`}
+  ],
+  s:{q:`An unpolarised light beam of intensity 2I&#8320; is passed through a polaroid P and then through another polaroid Q which is oriented in such a way that its passing axis makes an angle of 30&#176; relative to that of P. The intensity of the emergent light is:`,
+     d:D.polaroids([{name:'P',ang:0},{name:'Q',ang:30,sub:'30&#176; to P'}],'2I&#8320; (unpolarised)',['?','?']),
+     o:[`3I&#8320;/4`,`I&#8320;/4`,`I&#8320;/2`,`3I&#8320;/2`],
+     s:`<strong>Step 1.</strong> Through P: 2I&#8320;/2 = I&#8320;.<br><strong>Step 2.</strong> Through Q: I&#8320; cos&#178;30&#176; = <strong>3I&#8320;/4</strong>.<br><strong>Trap:</strong> 3I&#8320;/2 comes from forgetting the halving at P.`}
+ }),
+ ...LAD({mode:'hw',exam:'JEE Main 2021',tag:'Archive Q46',
+  b:[
+   {q:`Polariser and analyser have parallel axes. Unpolarised light of intensity I enters. Output:`,
+    o:[`I/2`,`I`,`I/4`,`zero`],
+    s:`The polariser halves it. The analyser is parallel (cos&#178;0&#176; = 1), so it passes all: <strong>I/2</strong>.`},
+   {q:`With polariser and analyser parallel, 100 lumens come out of the analyser. The light leaving the polariser is:`,
+    o:[`100 lumens`,`200 lumens`,`50 lumens`,`zero`],
+    s:`A parallel analyser passes everything. So the polariser also gives <strong>100 lumens</strong>. This is the I&#8321; for Malus.`},
+   {q:`Rotating the analyser about the beam direction changes:`,
+    o:[`the angle &#952; between the two pass axes`,`the wavelength`,`the light from the polariser`,`nothing`],
+    s:`Turning it just changes <strong>&#952;</strong>. The polariser's output does not change at all.`},
+   {q:`Polarised light of 80 units meets an analyser turned 60&#176; from parallel. Output:`,
+    o:[`20 units`,`40 units`,`60 units`,`80 units`],
+    s:`80 &#215; cos&#178;60&#176; = 80 &#215; 1/4 = <strong>20</strong>.`}
+  ],
+  s:{q:`An unpolarized light beam is incident on the polarizer of a polarization experiment and the intensity of light beam emerging from the analyzer is measured as 100 Lumens. Now, if the analyzer is rotated around the horizontal axis (direction of light) by 30&#176; in clockwise direction, the intensity of emerging light will be ____ Lumens.`,
+     o:[`75`,`50`,`25`,`86.6`],n:NUM+` The question assumes the polariser and analyser start <b>parallel</b> (that is the official reading).`,
+     s:`<strong>Step 1.</strong> Axes parallel at the start, so the polariser's output = 100 lumens.<br><strong>Step 2.</strong> Turn the analyser 30&#176;: 100 &#215; cos&#178;30&#176; = 100 &#215; 3/4 = <strong>75 lumens</strong>.<br>Clockwise or anticlockwise does not matter &#8212; cos&#178; is the same.<br><strong>Trap:</strong> 86.6 uses cos30&#176; without squaring.`}
+ })
+ ]});
+
+TOPICS.push({
+ name:`Malus' law &#8212; ratios, two beams, turning a polaroid`,
+ note:`Same two rules, now used for comparing two beams and for working backwards to an angle. Three ladders.`,
+ session:7,
+ questions:[
+ ...LAD({mode:'class',exam:'JEE Main 2014',tag:'Archive Q11',
+  b:[
+   {q:`Beams A and B are plane polarised with vibrations at 90&#176; to each other. The polaroid axis is along A. What comes through?`,
+    o:[`All of A, none of B`,`Half of each`,`None of A, all of B`,`All of both`],
+    s:`A: cos&#178;0&#176; = 1. B: cos&#178;90&#176; = 0. So <strong>all of A, none of B</strong>.`},
+   {q:`Now the polaroid is turned by 30&#176; from A. The angle between the polaroid axis and B is:`,
+    d:D.axes30(),
+    o:[`60&#176;`,`30&#176;`,`90&#176;`,`120&#176;`],
+    s:`A and B are 90&#176; apart. Axis is 30&#176; from A, so 90&#176; &#8722; 30&#176; = <strong>60&#176;</strong> from B.`},
+   {q:`After the 30&#176; turn, beam A gives:`,
+    o:[`I<sub>A</sub> cos&#178;30&#176; = 3I<sub>A</sub>/4`,`I<sub>A</sub> cos&#178;60&#176; = I<sub>A</sub>/4`,`I<sub>A</sub>/2`,`I<sub>A</sub>`],
+    s:`A is 30&#176; from the axis: <strong>3I<sub>A</sub>/4</strong>.`},
+   {q:`After the same turn, beam B gives:`,
+    o:[`I<sub>B</sub> cos&#178;60&#176; = I<sub>B</sub>/4`,`I<sub>B</sub> cos&#178;30&#176; = 3I<sub>B</sub>/4`,`zero`,`I<sub>B</sub>/2`],
+    s:`B is 60&#176; from the axis: <strong>I<sub>B</sub>/4</strong>. Now just set the two equal.`}
+  ],
+  s:{q:`Two beams, A and B, of plane polarized light with mutually perpendicular planes of polarization are seen through a polaroid. From the position when the beam A has maximum intensity (and beam B has zero intensity), a rotation of polaroid through 30&#176; makes the two beams appear equally bright. If the initial intensities of the two beams are I<sub>A</sub> and I<sub>B</sub> respectively, then I<sub>A</sub>/I<sub>B</sub> equals:`,
+     d:D.axes30(),
+     o:[`1/3`,`3`,`3/2`,`1`],
+     s:`<strong>Step 1.</strong> A after turn: I<sub>A</sub> cos&#178;30&#176; = 3I<sub>A</sub>/4.<br><strong>Step 2.</strong> B after turn: I<sub>B</sub> cos&#178;60&#176; = I<sub>B</sub>/4.<br><strong>Step 3.</strong> Equal: 3I<sub>A</sub>/4 = I<sub>B</sub>/4 &#8594; I<sub>A</sub>/I<sub>B</sub> = <strong>1/3</strong>.<br>Sense check: A gets the bigger factor (3/4), so A must be the weaker beam to look equal. Yes, 1/3.<br><strong>Trap:</strong> 3 is the upside-down ratio.`}
+ }),
+ ...LAD({mode:'hw',exam:'JEE Adv 2024 P1',tag:'Adv bank Q7',
+  b:[
+   {q:`A point source sends light equally in all directions. Intensity at distance r varies as:`,
+    o:[`1/r&#178;`,`1/r`,`r`,`does not change`],
+    s:`The power spreads over 4&#960;r&#178;. So <strong>I &#8733; 1/r&#178;</strong>. That is why A and B can have different intensities to start with &#8212; but we don't need the distances here.`},
+   {q:`Unpolarised light I<sub>B</sub> passes a polaroid. Output:`,
+    o:[`I<sub>B</sub>/2`,`I<sub>B</sub>`,`I<sub>B</sub>/4`,`zero`],
+    s:`Halving rule: <strong>I<sub>B</sub>/2</strong>.`},
+   {q:`That light then passes a second polaroid at 45&#176; to the first. Output:`,
+    o:[`I<sub>B</sub>/4`,`I<sub>B</sub>/2`,`I<sub>B</sub>/8`,`I<sub>B</sub>/&#8730;2`],
+    s:`(I<sub>B</sub>/2) &#215; cos&#178;45&#176; = <strong>I<sub>B</sub>/4</strong>.`},
+   {q:`A ratio I<sub>A</sub>/I<sub>B</sub> was 3. Now B is halved and A is untouched. New ratio:`,
+    o:[`6`,`3/2`,`3`,`9`],
+    s:`Smaller denominator, bigger ratio: 3 &#247; (1/2) = <strong>6</strong>. Same idea in the PYQ with a factor 1/4.`}
+  ],
+  s:{q:`A point source S emits unpolarized light uniformly in all directions. At two points A and B, the ratio r = I<sub>A</sub>/I<sub>B</sub> of the intensities of light is 2. If a set of two polaroids having 45&#176; angle between their pass-axes is placed just before point B, then the new value of r will be ____.`,
+     d:D.polaroids([{name:'P&#8321;',ang:0},{name:'P&#8322;',ang:45,sub:'45&#176;'}],'light going to B (I_B)',['','?']),
+     o:[`8`,`4`,`16`,`2`],n:NUM,
+     s:`<strong>Step 1.</strong> At B: first polaroid &#8594; I<sub>B</sub>/2, second (45&#176;) &#8594; I<sub>B</sub>/4.<br><strong>Step 2.</strong> I<sub>A</sub> is not touched.<br><strong>Step 3.</strong> r&#8242; = I<sub>A</sub>/(I<sub>B</sub>/4) = 4r = 4 &#215; 2 = <strong>8</strong>.<br><strong>Trap:</strong> 4 forgets the first halving. 16 multiplies again by 2 for no reason.`}
+ }),
+ ...LAD({mode:'class',exam:'JEE Main 2021',tag:'Archive Q59',
+  b:[
+   {q:`A source gives intensity I on a screen. Two polaroids with <b>parallel</b> axes are put in between. Screen intensity:`,
+    o:[`I/2`,`I`,`I/4`,`zero`],
+    s:`First one halves, second (parallel) passes all: <strong>I/2</strong>. So "I/2 on the screen" tells you the two start parallel.`},
+   {q:`Now P&#8322; is turned by &#952;. Screen intensity becomes:`,
+    o:[`(I/2) cos&#178;&#952;`,`I cos&#178;&#952;`,`(I/2) cos&#952;`,`(I/2) sin&#178;&#952;`],
+    s:`Malus on the second polaroid: <strong>(I/2) cos&#178;&#952;</strong>.`},
+   {q:`If (I/2) cos&#178;&#952; = I/4, then cos&#178;&#952; =`,
+    o:[`1/2`,`1/4`,`1/8`,`2`],
+    s:`Divide both sides by I/2: cos&#178;&#952; = <strong>1/2</strong>. (&#952; = 45&#176;.)`},
+   {q:`cos&#178;&#952; = 1/4 gives &#952; =`,
+    o:[`60&#176;`,`30&#176;`,`45&#176;`,`75&#176;`],
+    s:`cos&#952; = 1/2 &#8594; <strong>60&#176;</strong>. Always take the square root first, then the angle.`}
+  ],
+  s:{q:`A source of light is placed in front of a screen. Intensity of light on the screen is I. Two Polaroids P&#8321; and P&#8322; are so placed in between the source of light and screen that the intensity of light on screen is I/2. P&#8322; should be rotated by an angle of ____ (degrees) so that the intensity of light on the screen becomes 3I/8.`,
+     o:[`30&#176;`,`45&#176;`,`60&#176;`,`15&#176;`],n:NUM,
+     s:`<strong>Step 1.</strong> I/2 on the screen &#8594; the polaroids are parallel to begin with.<br><strong>Step 2.</strong> (I/2) cos&#178;&#952; = 3I/8 &#8594; cos&#178;&#952; = 3/4.<br><strong>Step 3.</strong> cos&#952; = &#8730;3/2 &#8594; &#952; = <strong>30&#176;</strong>.<br><strong>Trap:</strong> 60&#176; comes from sin&#178;&#952; = 3/4.`}
+ })
+ ]});
+
+TOPICS.push({
+ name:`Three polaroids &amp; a rotating polaroid`,
+ note:`The surprise: put a third polaroid between two crossed ones and light comes back. Work polaroid by polaroid &#8212; halve once, then one cos&#178; per polaroid. Three ladders.`,
+ session:8,
+ questions:[
+ ...LAD({mode:'class',exam:'JEE Main 2018',tag:'Archive Q17',
+  b:[
+   {q:`Unpolarised I passes polaroids A then B; I/2 comes out. The axes of A and B are:`,
+    o:[`parallel`,`crossed`,`at 45&#176;`,`at 60&#176;`],
+    s:`A gives I/2. To keep all of it, B must be <strong>parallel</strong> (cos&#178;0&#176; = 1).`},
+   {q:`C is put between them, at &#952; to A. Since A &#8741; B, the angle between C and B is:`,
+    o:[`&#952;`,`90&#176; &#8722; &#952;`,`2&#952;`,`zero`],
+    s:`A and B point the same way, so C makes the same angle <strong>&#952;</strong> with both.`},
+   {q:`Intensity after A, C, B:`,
+    d:D.polaroids([{name:'A',ang:0},{name:'C',ang:35,sub:'&#952;'},{name:'B',ang:0}],'I',['I/2','','?']),
+    o:[`(I/2) cos&#8308;&#952;`,`(I/2) cos&#178;&#952;`,`I cos&#8308;&#952;`,`(I/2) cos&#178;2&#952;`],
+    s:`A: I/2. C: &#215; cos&#178;&#952;. B: &#215; cos&#178;&#952; again. Total <strong>(I/2) cos&#8308;&#952;</strong>.`},
+   {q:`If cos&#8308;&#952; = 1/4, then cos&#178;&#952; =`,
+    o:[`1/2`,`1/4`,`1/16`,`1/&#8730;2`],
+    s:`Square root of both sides: cos&#178;&#952; = <strong>1/2</strong>.`}
+  ],
+  s:{q:`Unpolarized light of intensity I passes through an ideal polarizer A. Another identical polarizer B is placed behind A. The intensity of light beyond B is found to be I/2. Now another identical polarizer C is placed between A and B. The intensity beyond B is now found to be I/8. The angle between polarizer A and C is:`,
+     o:[`45&#176;`,`0&#176;`,`30&#176;`,`60&#176;`],
+     s:`<strong>Step 1.</strong> I/2 beyond B &#8594; A &#8741; B.<br><strong>Step 2.</strong> With C at &#952;: (I/2) cos&#8308;&#952; = I/8 &#8594; cos&#8308;&#952; = 1/4.<br><strong>Step 3.</strong> cos&#178;&#952; = 1/2 &#8594; &#952; = <strong>45&#176;</strong>.<br><strong>Trap:</strong> using cos&#178;&#952; = 1/4 (only one Malus factor) gives 60&#176;.`}
+ }),
+ ...LAD({mode:'hw',exam:'JEE Main 2019',tag:'Archive Q31',
+  b:[
+   {q:`Two crossed polaroids pass:`,
+    o:[`nothing`,`half`,`a quarter`,`everything`],
+    s:`cos&#178;90&#176; = 0 &#8594; <strong>nothing</strong>.`},
+   {q:`A third polaroid at 45&#176; is slipped <b>between</b> two crossed polaroids. Unpolarised I&#8320; enters. Output:`,
+    d:D.polaroids([{name:'P&#8321;',ang:0},{name:'P&#8322;',ang:45,sub:'45&#176;'},{name:'P&#8323;',ang:90,sub:'90&#176;'}],'I&#8320;',['I&#8320;/2','','?']),
+    o:[`I&#8320;/8`,`zero`,`I&#8320;/4`,`I&#8320;/2`],
+    s:`I&#8320;/2 &#8594; &#215; cos&#178;45&#176; = I&#8320;/4 &#8594; &#215; cos&#178;45&#176; = <strong>I&#8320;/8</strong>. Light comes back! The middle polaroid gives the light a new direction that is not crossed with the last one.`},
+   {q:`P&#8321; &#8869; P&#8323;, and P&#8322; is at 60&#176; to P&#8323;. The angle between P&#8321; and P&#8322; is:`,
+    o:[`30&#176;`,`60&#176;`,`90&#176;`,`120&#176;`],
+    s:`P&#8321; to P&#8323; is 90&#176;. P&#8322; is 60&#176; from P&#8323;, so 90&#176; &#8722; 60&#176; = <strong>30&#176;</strong> from P&#8321;.`},
+   {q:`For that set-up, the two Malus factors to use are:`,
+    o:[`cos&#178;30&#176; (P&#8321;&#8594;P&#8322;) and cos&#178;60&#176; (P&#8322;&#8594;P&#8323;)`,`cos&#178;60&#176; twice`,`cos&#178;90&#176; and cos&#178;60&#176;`,`cos&#178;30&#176; twice`],
+    s:`Each factor uses the angle between <strong>neighbouring</strong> polaroids only: 30&#176; then 60&#176;.`}
+  ],
+  s:{q:`A system of three polarizers P&#8321;, P&#8322;, P&#8323; is set up such that the pass axis of P&#8323; is crossed with respect to that of P&#8321;. The pass axis of P&#8322; is inclined at 60&#176; to the pass axis of P&#8323;. When a beam of unpolarized light of intensity I&#8320; is incident on P&#8321;, the intensity of light transmitted by the three polarizers is I. The ratio (I&#8320;/I) equals (nearly):`,
+     d:D.polaroids([{name:'P&#8321;',ang:0},{name:'P&#8322;',ang:30,sub:'60&#176; to P&#8323;'},{name:'P&#8323;',ang:90,sub:'&#8869; P&#8321;'}],'I&#8320;',['','','I = ?']),
+     o:[`10.67`,`1.80`,`5.33`,`16.00`],
+     s:`<strong>Step 1.</strong> P&#8321;: I&#8320;/2.<br><strong>Step 2.</strong> P&#8322; (30&#176; from P&#8321;): &#215; 3/4 &#8594; 3I&#8320;/8.<br><strong>Step 3.</strong> P&#8323; (60&#176; from P&#8322;): &#215; 1/4 &#8594; I = 3I&#8320;/32.<br><strong>Step 4.</strong> I&#8320;/I = 32/3 = <strong>10.67</strong>.<br>(The paper prints "60&#176;C" &#8212; just a typo for 60&#176;.)`}
+ }),
+ ...LAD({mode:'hw',exam:'JEE Main 2020',tag:'Archive Q39',
+  b:[
+   {q:`Plane polarised light falls on a polariser spinning at &#969;. The transmitted intensity at time t is:`,
+    d:D.rotPol(),
+    o:[`I&#8320; cos&#178;&#969;t`,`I&#8320; cos&#969;t`,`I&#8320;/2 always`,`I&#8320; &#969;t`],
+    s:`The angle keeps changing: &#952; = &#969;t. Malus gives <strong>I&#8320; cos&#178;&#969;t</strong>.`},
+   {q:`The average value of cos&#178;&#969;t over one full turn is:`,
+    o:[`1/2`,`1`,`0`,`1/&#8730;2`],
+    s:`Average of cos&#178; over a full cycle = <strong>1/2</strong>. So on average half the light gets through.`},
+   {q:`Time for one revolution at &#969; = 31.4 rad/s:`,
+    o:[`0.2 s`,`5 s`,`0.1 s`,`31.4 s`],
+    s:`T = 2&#960;/&#969; = 6.28/31.4 = <strong>0.2 s</strong>.`},
+   {q:`Energy that passes through an area A in time t, with average intensity &#295;:`,
+    o:[`&#295; &#215; A &#215; t`,`&#295;/(A t)`,`&#295; &#215; A`,`&#295; &#215; t`],
+    s:`Intensity is power per area. Power = &#295;A. Energy = power &#215; time = <strong>&#295;At</strong>.`}
+  ],
+  s:{q:`A beam of plane polarised light of large cross-sectional area and uniform intensity of 3.3 W m&#8315;&#178; falls normally on a polariser (cross sectional area 3 &#215; 10&#8315;&#8308; m&#178;) which rotates about its axis with an angular speed of 31.4 rad/s. The energy of light passing through the polariser per revolution, is close to:`,
+     d:D.rotPol(),
+     o:[`1.0 &#215; 10&#8315;&#8308; J`,`1.0 &#215; 10&#8315;&#8309; J`,`5.0 &#215; 10&#8315;&#8308; J`,`1.5 &#215; 10&#8315;&#8308; J`],
+     s:`<strong>Step 1.</strong> Average intensity = 3.3/2 = 1.65 W/m&#178;.<br><strong>Step 2.</strong> Power = 1.65 &#215; 3 &#215; 10&#8315;&#8308; = 4.95 &#215; 10&#8315;&#8308; W.<br><strong>Step 3.</strong> One revolution = 0.2 s. Energy = 4.95 &#215; 10&#8315;&#8308; &#215; 0.2 = 9.9 &#215; 10&#8315;&#8309; &#8776; <strong>1.0 &#215; 10&#8315;&#8308; J</strong>.<br><strong>Trap:</strong> 5.0 &#215; 10&#8315;&#8308; is the power, not the energy.`}
+ })
+ ]});
+
+TOPICS.push({
+ name:`Brewster's law &#8212; polarisation by reflection`,
+ note:`At i<sub>p</sub> the reflected and refracted rays are at 90&#176;, so tan i<sub>p</sub> = &#956;&#8322;/&#956;&#8321;. The reflected light has only the vibrations perpendicular to the plane of incidence (dots). Three ladders &#8212; the last two need careful geometry.`,
+ session:9,
+ questions:[
+ ...LAD({mode:'class',exam:'JEE Main 2022',tag:'Archive Q66',
+  b:[
+   {q:`At Brewster's angle, the reflected and refracted rays are:`,
+    d:D.brewster(),
+    o:[`perpendicular to each other`,`parallel`,`along the same line`,`at 45&#176;`],
+    s:`That is the defining picture: reflected &#8869; refracted, so i<sub>p</sub> + r = 90&#176;.`},
+   {q:`Brewster's law is:`,
+    o:[`tan i<sub>p</sub> = &#956;&#8322;/&#956;&#8321;`,`sin i<sub>p</sub> = &#956;&#8321;/&#956;&#8322;`,`cos i<sub>p</sub> = &#956;&#8322;/&#956;&#8321;`,`sin i<sub>p</sub> = 1/&#956;`],
+    s:`&#956;&#8321; sin i = &#956;&#8322; sin r with r = 90&#176; &#8722; i gives &#956;&#8321; sin i = &#956;&#8322; cos i &#8594; <strong>tan i<sub>p</sub> = &#956;&#8322;/&#956;&#8321;</strong>. Do not mix it with sin C = 1/&#956; (critical angle).`},
+   {q:`At Brewster's angle, the reflected light is:`,
+    o:[`completely plane polarised, vibrating perpendicular to the plane of incidence`,`unpolarised`,`polarised in the plane of incidence`,`absent`],
+    s:`Only the vibrations <strong>perpendicular to the plane of incidence</strong> (the dots) are reflected. The in-plane ones go fully into the glass.`},
+   {q:`So, at Brewster's angle, light vibrating <b>in</b> the plane of incidence is:`,
+    o:[`not reflected at all &#8212; fully transmitted`,`fully reflected`,`half reflected`,`absorbed`],
+    s:`Reflection for that vibration is <strong>zero</strong>. All of it is transmitted. The PYQ is built on this.`}
+  ],
+  s:{q:`A light whose electric field vectors are completely removed by using a good polaroid, allowed to incident on the surface of the prism at Brewster's angle. Choose the most suitable option for the phenomenon related to the prism.`,
+     o:[`No reflection, and there will be total transmission of light.`,`Reflected and refracted rays will be perpendicular to each other.`,`Wave will propagate along the surface of prism.`,`No refraction, and there will be total reflection of light.`],
+     n:`<b>Wording.</b> The language is loose. Read it as: the polaroid has removed the vibrations perpendicular to the plane of incidence, so only the in-plane vibration is left.`,
+     s:`<strong>Step 1.</strong> After the polaroid, only the in-plane vibration remains.<br><strong>Step 2.</strong> At Brewster's angle, the in-plane vibration is not reflected.<br><strong>Step 3.</strong> So there is <strong>no reflection and full transmission</strong>.<br>Option 2 describes normal Brewster geometry, but here there is no reflected ray at all.`}
+ }),
+ ...LAD({mode:'class',exam:'JEE Main 2019',tag:'Archive Q19',
+  b:[
+   {q:`Glass (&#956; = 1.5) in air: Brewster's angle satisfies tan i<sub>p</sub> =`,
+    o:[`1.5`,`1/1.5`,`2.25`,`&#8730;1.5`],
+    s:`Light goes air &#8594; glass, so tan i<sub>p</sub> = 1.5/1 = <strong>1.5</strong> (i<sub>p</sub> &#8776; 56&#176;).`},
+   {q:`Light in a liquid (&#956;) hits a glass bottom (1.5). Brewster's angle at that boundary:`,
+    d:D.tank(),
+    o:[`tan &#952;<sub>p</sub> = 1.5/&#956;`,`tan &#952;<sub>p</sub> = &#956;/1.5`,`tan &#952;<sub>p</sub> = 1.5&#956;`,`sin &#952;<sub>p</sub> = 1.5/&#956;`],
+    s:`Always "the medium it goes INTO" on top: <strong>tan &#952;<sub>p</sub> = 1.5/&#956;</strong>.`},
+   {q:`Light enters the liquid from air at any angle i (up to 90&#176;). The biggest angle r it can have inside the liquid satisfies:`,
+    o:[`sin r = 1/&#956;`,`sin r = &#956;`,`tan r = 1/&#956;`,`r = 90&#176;`],
+    s:`i = 90&#176; gives the largest r: 1 &#215; sin90&#176; = &#956; sin r &#8594; <strong>sin r = 1/&#956;</strong>. The bottom is parallel to the top, so the ray hits the bottom at this same r.`},
+   {q:`If even the largest r is smaller than &#952;<sub>p</sub> at the bottom, the reflection from the bottom is:`,
+    o:[`never completely polarised`,`always completely polarised`,`completely polarised for one i`,`absent`],
+    s:`Full polarisation needs r = &#952;<sub>p</sub> exactly. If r can never reach &#952;<sub>p</sub>, it is <strong>never</strong> completely polarised.`},
+   {q:`If sin r = 1/&#956;, then tan r =`,
+    o:[`1/&#8730;(&#956;&#178; &#8722; 1)`,`&#8730;(&#956;&#178; &#8722; 1)`,`1/&#956;&#178;`,`&#956;/&#8730;(&#956;&#178; + 1)`],
+    s:`Opposite 1, hypotenuse &#956;, so adjacent &#8730;(&#956;&#178; &#8722; 1). tan r = <strong>1/&#8730;(&#956;&#178; &#8722; 1)</strong>. Now compare two tans.`}
+  ],
+  s:{q:`Consider a tank made of glass (refractive index 1.5) with a thick bottom. It is filled with a liquid of refractive index &#956;. A student finds that, irrespective of what the incident angle i (see figure) is for a beam of light entering the liquid, the light reflected from the liquid&#8211;glass interface is never completely polarized. For this to happen, the minimum value of &#956; is:`,
+     d:D.tank(),
+     o:[`3/&#8730;5`,`4/3`,`&#8730;(5/3)`,`5/&#8730;3`],
+     s:`<strong>Step 1.</strong> Brewster at the bottom: tan &#952;<sub>p</sub> = 1.5/&#956;.<br><strong>Step 2.</strong> Largest angle in the liquid: sin r = 1/&#956;, tan r = 1/&#8730;(&#956;&#178; &#8722; 1).<br><strong>Step 3.</strong> Never polarised &#8594; r&#8344;&#8336;&#8339; &lt; &#952;<sub>p</sub>: 1/&#8730;(&#956;&#178; &#8722; 1) &lt; 1.5/&#956;.<br><strong>Step 4.</strong> Square: &#956;&#178; &lt; 2.25(&#956;&#178; &#8722; 1) &#8594; 1.25&#956;&#178; &gt; 2.25 &#8594; &#956;&#178; &gt; 9/5 &#8594; &#956; &gt; <strong>3/&#8730;5</strong> &#8776; 1.34.<br>A denser liquid bends the ray more, so it reaches the bottom too steeply to ever touch &#952;<sub>p</sub>.`}
+ }),
+ ...LAD({mode:'class',exam:'JEE Adv 2026 P2',tag:'Adv bank Q2',
+  b:[
+   {q:`Light crosses several parallel layers. By Snell's law, which quantity stays the same in every layer?`,
+    o:[`&#956; sin&#952;`,`sin&#952;`,`&#956; cos&#952;`,`&#952;/&#956;`],
+    s:`&#956;&#8321; sin&#952;&#8321; = &#956;&#8322; sin&#952;&#8322; = &#956;&#8323; sin&#952;&#8323; = &#8230; So <strong>&#956; sin&#952; is constant</strong> across parallel layers.`},
+   {q:`Light goes water &#8594; glass slab &#8594; water again. The angle in the second water layer compared with the first:`,
+    o:[`the same`,`bigger`,`smaller`,`depends on the slab thickness`],
+    s:`Same &#956;, same &#956; sin&#952; &#8594; <strong>same angle</strong>. A parallel slab only shifts the ray, it does not turn it.`},
+   {q:`Brewster's angle for water (4/3) &#8594; glass (1.5): tan &#952; =`,
+    o:[`9/8`,`8/9`,`2`,`1.5`],
+    s:`tan &#952; = 1.5/(4/3) = <strong>9/8</strong>. Medium it goes into, divided by the medium it comes from.`},
+   {q:`In the figure, dots on the reflected ray mean its vibrations are:`,
+    d:D.layers(),
+    o:[`perpendicular to the plane of incidence &#8212; Brewster reflection`,`in the plane of incidence`,`random (unpolarised)`,`along the ray`],
+    s:`Dots = vibration in and out of the page = <strong>perpendicular to the plane of incidence</strong>. That is the signature of Brewster's angle.`}
+  ],
+  s:{q:`As shown in the figure, a ray AB of unpolarized light enters from water of refractive index n<sub>w</sub> = 4/3 into a medium of refractive index n<sub>p</sub> = 4/&#8730;3 after passing through a glass plate of refractive index n<sub>g</sub> = 1.5 and a layer of water. At a particular incident angle i the reflected ray CD is polarized in the direction as shown in the figure. The value of i (in degrees) is:`,
+     d:D.layers(),
+     o:[`60&#176;`,`30&#176;`,`45&#176;`,`53&#176;`],n:NUM+` (Subscripts: water, p-medium, glass.)`,
+     s:`<strong>Step 1 &#8212; where is the polarising reflection?</strong> At water &#8594; n<sub>p</sub>. Brewster: tan&#952; = (4/&#8730;3)/(4/3) = &#8730;3 &#8594; &#952; = 60&#176;.<br><strong>Step 2 &#8212; carry the angle back.</strong> n<sub>w</sub> sin i = n<sub>g</sub> sin r&#8336; = n<sub>w</sub> sin&#952;. Both ends are water, so sin i = sin&#952;.<br><strong>Step 3.</strong> i = <strong>60&#176;</strong>. The glass plate is only a distraction.`}
+ })
+ ]});
+
+TOPICS.push({
+ name:`Polarisation by scattering &#8212; the sky`,
+ note:`Small molecules scatter blue the most (&#8733; 1/&#955;&#8308;), and light scattered at 90&#176; to the sun is plane polarised. End with a matching question that mixes all the wave-optics words. Two ladders.`,
+ session:10,
+ questions:[
+ ...LAD({mode:'hw',exam:'AIEEE 2011',tag:'Archive Q6',
+  b:[
+   {q:`Scattering of sunlight by air molecules is strongest for:`,
+    o:[`blue (short &#955;)`,`red (long &#955;)`,`all colours equally`,`infrared`],
+    s:`Rayleigh scattering &#8733; 1/&#955;&#8308;. Short &#955; = <strong>blue</strong> scatters most. Hence the blue sky.`},
+   {q:`Sunlight scattered at 90&#176; to the sun's direction reaches you. This light is:`,
+    d:D.sky(),
+    o:[`plane polarised`,`unpolarised`,`circularly polarised`,`monochromatic red`],
+    s:`At 90&#176;, only one vibration direction can reach your eye (see the next rung), so the light is <strong>plane polarised</strong>.`},
+   {q:`Why only one direction? Light vibrates across its path, and the molecule cannot send a vibration along your line of sight. So the vibration reaching you must be:`,
+    o:[`perpendicular to both the sunlight and your line of sight`,`along your line of sight`,`along the sunlight`,`in all directions`],
+    s:`Sunlight's vibrations are already across the sunbeam. Light reaching you can't vibrate along its own path. Only <strong>one direction</strong> is left, perpendicular to both.`},
+   {q:`Partly polarised light is seen through a polaroid that is slowly rotated. The brightness:`,
+    o:[`rises and falls`,`stays exactly the same`,`goes to zero and stays`,`keeps increasing`],
+    s:`A polaroid (or a calcite crystal, which also separates two polarisations) acts as an analyser. Polarised light &#8594; brightness <strong>changes with rotation</strong>.`}
+  ],
+  s:{q:`<b>Statement-1:</b> On viewing the clear blue portion of the sky through a Calcite Crystal, the intensity of transmitted light varies as the crystal is rotated.<br><b>Statement-2:</b> The light coming from the sky is polarized due to scattering of sunlight by particles in the atmosphere. The scattering is largest for blue light.`,
+     o:[`Statement-1 is true, Statement-2 is true; Statement-2 is the correct explanation of Statement-1`,`Statement-1 is true, Statement-2 is true; Statement-2 is not the correct explanation of Statement-1`,`Statement-1 is false, Statement-2 is true`,`Statement-1 is true, Statement-2 is false`],
+     s:`<strong>S-1:</strong> true. The crystal acts as an analyser, so polarised skylight changes brightness as it turns.<br><strong>S-2:</strong> true. Skylight is polarised by scattering, and blue scatters most.<br><strong>Link:</strong> the light changes in S-1 <em>because</em> it is polarised (S-2). So S-2 explains S-1.`}
+ }),
+ ...LAD({mode:'hw',exam:'JEE Adv 2026 P1',tag:'Adv bank Q1',
+  b:[
+   {q:`The blue colour of the clear sky is due to:`,
+    o:[`scattering of light by molecules`,`reflection from clouds`,`dispersion by water drops`,`diffraction by dust`],
+    s:`Molecules scatter short wavelengths most &#8594; <strong>scattering</strong>.`},
+   {q:`Colours of a thin soap film are due to:`,
+    o:[`interference`,`total internal reflection`,`polarisation`,`scattering`],
+    s:`Light reflected from the top and bottom of the film <strong>interferes</strong>.`},
+   {q:`White light splitting into colours in a glass prism is due to:`,
+    o:[`dispersion`,`diffraction`,`scattering`,`polarisation`],
+    s:`&#956; depends on &#955;, so each colour bends by a different amount: <strong>dispersion</strong>.`},
+   {q:`Bright and dark bands near the sharp edge of a razor blade are due to:`,
+    o:[`diffraction`,`dispersion`,`scattering`,`total internal reflection`],
+    s:`Light bending around the edge and adding up &#8594; <strong>diffraction</strong> fringes.`},
+   {q:`A neon sign glows red. That light comes from:`,
+    o:[`emission by excited atoms falling back to lower levels`,`reflection of daylight`,`scattering by gas molecules`,`diffraction in the tube`],
+    s:`Electrons hit the neon atoms, excite them, and the atoms <strong>emit</strong> light of their own colours. The aurora works the same way, high in the sky.`}
+  ],
+  s:{q:`In List-I, four optical effects are mentioned. The physical phenomena of light which are essential to describe these optical effects are given in List-II. Choose the correct match.<br><b>List-I:</b> (P) Colourful sky in the north polar region (Aurora Borealis) &#160;(Q) Partially polarized sun light &#160;(R) Rainbow &#160;(S) Dark and bright fringes<br><b>List-II:</b> (1) Dispersion and reflection &#160;(2) Total internal reflection &#160;(3) Diffraction &#160;(4) Scattering of light by molecules in the atmosphere &#160;(5) Emission of radiation from oxygen and nitrogen atoms excited by charged particles`,
+     o:[`P&#8594;5, Q&#8594;4, R&#8594;1, S&#8594;3`,`P&#8594;4, Q&#8594;2, R&#8594;1, S&#8594;3`,`P&#8594;4, Q&#8594;1, R&#8594;2, S&#8594;3`,`P&#8594;5, Q&#8594;4, R&#8594;1, S&#8594;2`],
+     s:`<strong>P (aurora):</strong> solar charged particles excite O and N atoms, which emit &#8594; 5.<br><strong>Q (partly polarised sunlight):</strong> scattering by molecules &#8594; 4.<br><strong>R (rainbow):</strong> dispersion on entering the drop, reflection at the back &#8594; 1.<br><strong>S (fringes):</strong> diffraction &#8594; 3.<br><strong>Trap:</strong> "total internal reflection" for the rainbow. Inside a raindrop the ray meets the back surface below the critical angle &#8212; it is ordinary partial reflection, not TIR.`}
+ })
+ ]});
+
+const STORAGE_KEY = 'padipucast_waveoptics_diffraction_polarisation_ladder_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw,qi)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||'', mode:raw.mode||'hw', lvl:raw.lvl||'', star:!!raw.star};
+  })
+}));
+
+TOPICS_SHUFFLED.forEach(t=>{let L=1,r=1;const ls=[];t.questions.forEach(q=>{q.ladder=L;q.rung=r;r++;if(q.star){ls.push(r-1);L++;r=1;}});
+  t.questions.forEach(q=>{q.ladderLen=ls[q.ladder-1];});t.nLadders=ls.length;
+  t.nClass=t.questions.filter(q=>q.star&&q.mode==='class').length;t.nHw=t.questions.filter(q=>q.star&&q.mode!=='class').length;});
+(function(){const el=document.getElementById('home-count');if(!el)return;
+  const nr=TOPICS.reduce((s,t)=>s+t.questions.length,0),ns=TOPICS.reduce((s,t)=>s+t.questions.filter(q=>q.star).length,0);
+  el.innerHTML='Sessions 1&#8211;'+TOPICS.length+': <strong>'+ns+' PYQ ladders</strong>, '+(nr-ns)+' build-up rungs, <strong>'+nr+' rungs</strong> in all.';})();
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsNote=document.getElementById('qs-note');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Session ${String(topic.session).padStart(2,'0')} &#183; ${topic.session<=5?'Diffraction':'Polarisation'} &#183; ${topic.nLadders} ladders</div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-chips">${topic.nClass?`<span class="modepill mp-class">${topic.nClass} in class</span>`:''}${topic.nHw?`<span class="modepill mp-hw">${topic.nHw} homework</span>`:''}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Session ${String(curTopic.session).padStart(2,'0')} &#183; ${curTopic.nLadders} ladders &#183; ${n} rungs`;
+  qsTitle.innerHTML='Session '+curTopic.session+' &#183; '+curTopic.name;
+  qsNote.innerHTML='<b>After this lecture.</b> '+curTopic.note;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    const qq=curTopic.questions[i];
+    pill.className='q-pill'+(qq.star&&i<n-1?' starpill':'')+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=qq.star?'&#9733;':qq.rung;
+    pill.title='Ladder '+qq.ladder+(qq.star?' · PYQ':' · build-up '+qq.rung);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=`Ladder ${q.ladder} &#183; Rung ${q.rung} of ${q.ladderLen}<span class="lvl${q.star?' star':''}">${q.star?'&#9733; '+q.lvl:q.lvl}</span>`
+    +`<span class="modepill ${q.mode==='class'?'mp-class':'mp-hw'}">${q.mode==='class'?'Discuss in class':'Homework'}</span>`
+    +(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
