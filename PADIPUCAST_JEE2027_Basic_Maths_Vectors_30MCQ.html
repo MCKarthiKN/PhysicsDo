@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Basic Maths & Vectors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},chtml:{scale:1},options:{enableMenu:false}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root{--bg:#f4efe4;--paper:#fffdf8;--ink:#1d2528;--mute:#5b6668;--line:#e3dccd;--teal:#0f766e;--teal2:#e3f1ee;--amber:#b7791f;--amber2:#fbf0dc;--red:#b42318;--red2:#fbe7e4;--green:#15803d;--green2:#e3f4e8}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(rgba(15,118,110,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(15,118,110,.05) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:16px/1.6 "DM Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;line-height:1.2;margin:0}
+.mono{font-family:"DM Mono",monospace}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:16px}
+.top{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:6px 0 14px;flex-wrap:wrap}
+.brand{font:700 13px "Space Grotesk";letter-spacing:.22em;color:var(--teal)}
+.brand b{color:var(--amber)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 6px 22px rgba(60,50,20,.05)}
+.hidden{display:none!important}
+/* start */
+.hero{padding:28px 26px}
+.hero h1{font-size:clamp(26px,4.4vw,40px)}
+.hero p{color:var(--mute);margin:8px 0 0;max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font:500 12.5px "DM Mono";padding:4px 10px;border-radius:99px;background:var(--teal2);color:var(--teal);white-space:nowrap}
+.chip.am{background:var(--amber2);color:var(--amber)}
+.chip.rd{background:var(--red2);color:var(--red)}
+.chip.gr{background:var(--green2);color:var(--green)}
+.chip.gy{background:#eee9de;color:var(--mute)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.mode{padding:20px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;transition:.15s}
+.mode:hover{border-color:var(--teal);transform:translateY(-1px)}
+.mode h3{font-size:20px}
+.mode p{margin:6px 0 10px;color:var(--mute);font-size:14.5px}
+.mode .go{font:600 14px "Space Grotesk";color:var(--teal)}
+.mode.t .go{color:var(--amber)}
+.mode.t:hover{border-color:var(--amber)}
+.tmap{margin-top:16px;padding:18px 20px}
+.tmap h3{font-size:16px;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dashed var(--line);font-size:14.5px}
+.trow:first-of-type{border-top:0}
+.trow span:last-child{font-family:"DM Mono";color:var(--mute);font-size:13px;white-space:nowrap}
+/* work */
+.bar{position:sticky;top:0;z-index:20;background:rgba(244,239,228,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin:0 -16px 14px;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar .ttl{font:600 15px "Space Grotesk"}
+.clock{font:500 20px "DM Mono";padding:4px 12px;border-radius:10px;background:var(--ink);color:#fff}
+.clock.low{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.75}}
+.btn{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 14px;font-weight:500;color:var(--ink)}
+.btn:hover{border-color:var(--teal)}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.am{background:var(--amber);border-color:var(--amber);color:#fff}
+.btn.sm{padding:5px 10px;font-size:14px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.qcard{padding:22px 24px}
+.qhead{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.qno{font:700 15px "Space Grotesk";color:var(--teal);margin-right:4px}
+.qtext{font-size:17px}
+.qtext p{margin:0 0 8px}
+.dt{border-collapse:collapse;margin:10px 0;font-size:14.5px;background:#fff}
+.dt td,.dt th{border:1px solid var(--line);padding:5px 10px;text-align:left}
+.dt th{background:#f8f4ea;font-weight:600}
+.figwrap{display:flex;justify-content:center;margin:12px 0 4px}
+.fig{width:100%;max-width:330px;height:auto}
+.figwrap .fig.wide{max-width:440px}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opts.og{grid-template-columns:1fr 1fr}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);transition:.12s;min-height:48px}
+.opt:hover{border-color:var(--teal)}
+.opt .lb{font:500 14px "DM Mono";color:var(--mute);flex:0 0 auto;padding-top:2px}
+.opt .ot{flex:1;min-width:0;overflow-x:auto}
+.opts.og .opt{flex-direction:column;align-items:center}
+.opts.og .opt .ot{width:100%}
+.opts.og .fig{max-width:200px;display:block;margin:0 auto}
+.opt.sel{border-color:var(--teal);background:var(--teal2)}
+.opt.ok{border-color:var(--green);background:var(--green2)}
+.opt.no{border-color:var(--red);background:var(--red2)}
+.opt[disabled]{cursor:default}
+.sol{margin-top:16px;border-left:4px solid var(--amber);background:var(--amber2);border-radius:0 12px 12px 0;padding:12px 16px;font-size:15.5px}
+.sol h4{margin:0 0 4px;font:600 14px "Space Grotesk";color:var(--amber);letter-spacing:.04em;text-transform:uppercase}
+.sol p{margin:4px 0}
+.verdict{margin-top:14px;font:600 15px "Space Grotesk"}
+.verdict.ok{color:var(--green)}.verdict.no{color:var(--red)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.side{padding:16px;position:sticky;top:70px}
+.side h3{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.stat{background:#f8f4ea;border-radius:10px;padding:7px 4px;text-align:center}
+.stat b{display:block;font:600 18px "DM Mono"}
+.stat span{font-size:11.5px;color:var(--mute)}
+.tg{font:600 12px "Space Grotesk";color:var(--teal);margin:10px 0 6px;letter-spacing:.03em}
+.dots{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.dot{aspect-ratio:1;border:1.5px solid var(--line);border-radius:9px;background:#fff;font:500 13px "DM Mono";color:var(--ink);padding:0}
+.dot.cur{outline:2.5px solid var(--ink);outline-offset:1px}
+.dot.ans{background:var(--teal);border-color:var(--teal);color:#fff}
+.dot.ok{background:var(--green);border-color:var(--green);color:#fff}
+.dot.no{background:var(--red);border-color:var(--red);color:#fff}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--mute)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.sidebtns{display:grid;gap:8px;margin-top:14px}
+.toggleSide{display:none}
+/* result */
+.res{padding:24px}
+.ringrow{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring{width:150px;height:150px;flex:0 0 auto}
+.msg{font-size:16px;max-width:52ch}
+table.tt{width:100%;border-collapse:collapse;margin-top:16px;font-size:14.5px}
+.tt th,.tt td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+.tt th{font:600 12px "Space Grotesk";color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.tt td.n{font-family:"DM Mono";white-space:nowrap}
+.barmini{height:8px;border-radius:9px;background:#eee7d8;overflow:hidden;min-width:60px}
+.barmini i{display:block;height:100%;background:var(--teal)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 12px}
+.filters .btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rv{padding:18px 20px;margin-bottom:12px}
+.rv .yours{font-size:14px;color:var(--mute);margin-top:10px}
+.modal{position:fixed;inset:0;background:rgba(20,25,28,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal .card{padding:22px;max-width:420px;width:100%}
+.modal p{color:var(--mute)}
+.foot{color:var(--mute);font-size:13px;text-align:center;margin:26px 0 8px}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (max-width:860px){
+ .grid2{grid-template-columns:1fr}
+ .side{position:static}
+ .toggleSide{display:inline-block}
+ .side.closed{display:none}
+}
+@media (max-width:560px){
+ .modes{grid-template-columns:1fr}
+ .qcard{padding:16px}
+ .qtext{font-size:16px}
+ .opts.og{grid-template-columns:1fr 1fr;gap:8px}
+ .opts.og .opt{padding:8px}
+ .dots{grid-template-columns:repeat(6,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top"><div class="brand">PADI<b>PU</b>CAST</div><div class="chip gy">JEE Main PYQ · 2027 prep</div></div>
+
+ <!-- START -->
+ <section id="start">
+  <div class="card hero">
+   <div class="chip am" style="display:inline-block;margin:0 0 10px">Mathematical Tools · Vectors</div>
+   <h1>Basic Maths & Vectors</h1>
+   <p>19 maths-tools questions from the ALLEN NEET-Nurture (Elite) IT-01 paper (algebra, calculus, graphs, trigonometry) plus 11 vector PYQs from the JEE Main archive. Every answer checked, every solution worked step by step.</p>
+   <div class="chips" id="metaChips"></div>
+   <div class="modes">
+    <button class="mode" id="goPractice"><h3>Practice mode</h3><p>Answer one by one. You see right or wrong at once, with the full working. Your progress is saved on this device.</p><span class="go" id="pracInfo">Start practice →</span></button>
+    <button class="mode t" id="goTest"><h3>Test mode</h3><p>One clock for the whole paper (60 min). +4 right, −1 wrong. Question and option order shuffled. Answers shown only after you submit.</p><span class="go" id="bestInfo">Start test →</span></button>
+   </div>
+  </div>
+  <div class="card tmap"><h3>What this sheet covers</h3><div id="topicMap"></div></div>
+ </section>
+
+ <!-- WORK -->
+ <section id="work" class="hidden">
+  <div class="bar">
+   <div class="ttl" id="barTitle"></div>
+   <div style="display:flex;gap:8px;align-items:center">
+    <button class="btn sm toggleSide" id="toggleSide">Questions</button>
+    <span class="clock hidden" id="clock">60:00</span>
+    <button class="btn sm" id="homeBtn">Home</button>
+   </div>
+  </div>
+  <div class="grid2">
+   <div>
+    <div class="card qcard" id="qcard"></div>
+   </div>
+   <aside class="card side closed" id="side"></aside>
+  </div>
+ </section>
+
+ <!-- RESULT -->
+ <section id="result" class="hidden"></section>
+
+ <div class="foot">PADIPUCAST · Basic Maths & Vectors · every answer checked, solutions worked from first principles</div>
+</div>
+
+<div class="modal hidden" id="modal"><div class="card" id="modalCard"></div></div>
+
+<script>
+const R=String.raw;
+const QS=[];
+/* ---- tiny SVG graph helper ----
+ G({x:[x0,x1], y:[y0,y1], xl:'t', yl:'v', s:[{p:[[x,y],...]}|{f:fn,a,b,n}], xt:[[v,'lbl']], yt:[[v,'lbl']],
+    gd:[[x1,y1,x2,y2]], pt:[[x,y,'lbl',dx,dy]], tx:[[x,y,'txt',anchor]], w, h, cls, ar:[[x,y,deg]] })  */
+let _gid=0;
+const INK='#1d2528',TEAL='#0f766e',AMB='#b7791f',RED='#b42318',MUTE='#5b6668';
+function G(o){
+ const W=o.w||250,H=o.h||175,ml=o.ml||34,mr=o.mr||16,mt=o.mt||16,mb=o.mb||26,id='a'+(++_gid);
+ const [x0,x1]=o.x,[y0,y1]=o.y;
+ const X=v=>ml+(v-x0)/(x1-x0)*(W-ml-mr), Y=v=>H-mb-(v-y0)/(y1-y0)*(H-mt-mb);
+ const ox=X(Math.min(Math.max(0,x0),x1)), oy=Y(Math.min(Math.max(0,y0),y1));
+ let s=`<svg class="fig ${o.cls||''}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INK}"/></marker><marker id="${id}c" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="${TEAL}"/></marker></defs>`;
+ (o.gd||[]).forEach(g=>{s+=`<line x1="${X(g[0])}" y1="${Y(g[1])}" x2="${X(g[2])}" y2="${Y(g[3])}" stroke="${MUTE}" stroke-width="1" stroke-dasharray="3 3"/>`});
+ s+=`<line x1="${ml-4}" y1="${oy}" x2="${W-4}" y2="${oy}" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ s+=`<line x1="${ox}" y1="${H-mb+4}" x2="${ox}" y2="6" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ if(o.xl)s+=o.xlb?`<text x="${(ml+W-mr)/2}" y="${oy+29}" text-anchor="middle" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`:`<text x="${W-6}" y="${oy+(o.xlUp?-6:15)}" text-anchor="end" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`;
+ if(o.yl)s+=`<text x="${ox+6}" y="13" font-size="12" font-style="italic" fill="${INK}">${o.yl}</text>`;
+ (o.xt||[]).forEach(t=>{s+=`<line x1="${X(t[0])}" y1="${oy-3}" x2="${X(t[0])}" y2="${oy+3}" stroke="${INK}"/><text x="${X(t[0])}" y="${oy+(t[2]||14)}" text-anchor="middle" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.yt||[]).forEach(t=>{s+=`<line x1="${ox-3}" y1="${Y(t[0])}" x2="${ox+3}" y2="${Y(t[0])}" stroke="${INK}"/><text x="${ox-6}" y="${Y(t[0])+3.5}" text-anchor="end" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.fill||[]).forEach(f=>{s+=`<polygon points="${f.p.map(q=>X(q[0])+','+Y(q[1])).join(' ')}" fill="${f.c||TEAL}" opacity="${f.op||.15}"/>`});
+ (o.s||[]).forEach(r=>{
+  let pts=r.p;
+  if(r.f){pts=[];const n=r.n||60;for(let i=0;i<=n;i++){const x=r.a+(r.b-r.a)*i/n;pts.push([x,r.f(x)])}}
+  s+=`<polyline points="${pts.map(q=>X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join(' ')}" fill="none" stroke="${r.c||TEAL}" stroke-width="${r.w||2.2}" stroke-linejoin="round" stroke-linecap="round" ${r.d?'stroke-dasharray="5 4"':''}/>`;
+ });
+ (o.ar||[]).forEach(a=>{s+=`<g transform="translate(${X(a[0])},${Y(a[1])}) rotate(${a[2]})"><path d="M-5,-4 L4,0 L-5,4 z" fill="${a[3]||TEAL}"/></g>`});
+ (o.pt||[]).forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3" fill="${INK}"/>`;if(p[2])s+=`<text x="${X(p[0])+(p[3]||5)}" y="${Y(p[1])+(p[4]||-6)}" font-size="11.5" font-weight="700" fill="${INK}">${p[2]}</text>`});
+ (o.tx||[]).forEach(t=>{s+=`<text x="${X(t[0])}" y="${Y(t[1])}" text-anchor="${t[3]||'middle'}" font-size="${t[4]||11}" fill="${t[5]||INK}">${t[2]}</text>`});
+ return s+'</svg>';
+}
+/* plain SVG wrapper for hand-drawn figures */
+function SV(w,h,body,cls){const id='b'+(++_gid);const mk=(n,c)=>`<marker id="${id}${n}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`;
+ return `<svg class="fig ${cls||''}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs>${mk('k',INK)}${mk('t',TEAL)}${mk('a',AMB)}${mk('r',RED)}</defs>${body.replace(/MK([ktar])/g,(m,c)=>'url(#'+id+c+')')}</svg>`}
+
+</script>
+<script>
+// Basic Maths — part A: algebra, series, logs, calculus  (source: ALLEN NEET-Nurture (Elite) IT-01 paper)
+QS.push(
+{t:'Algebra, series & logs',y:'ALLEN IT-01 · Q1',
+ q:R`Find the sum and the product of the roots of the equation $3x^2+2x+6=0$.`,
+ o:[R`$\dfrac23,\;-2$`,R`$-\dfrac23,\;2$`,R`$\dfrac32,\;2$`,R`$-\dfrac32,\;-2$`],a:1,
+ s:R`<p>For $ax^2+bx+c=0$: sum $=-\dfrac ba$, product $=\dfrac ca$.</p><p>Sum $=-\dfrac23$, product $=\dfrac63=2$.</p><p>(The roots here are not real, but the formulas still hold.)</p>`},
+
+{t:'Algebra, series & logs',y:'ALLEN IT-01 · Q2',
+ q:R`Find the sum $S=1+\dfrac1x+\dfrac1{x^2}+\dfrac1{x^3}+\dots\infty$ if $x=2$.`,
+ o:[R`Infinite`,R`$\dfrac12$`,R`2`,R`0.2`],a:2,
+ s:R`<p>Infinite GP with first term $a=1$ and ratio $r=\dfrac12$ (since $|r|\lt 1$, the sum is finite).</p><p>$S=\dfrac{a}{1-r}=\dfrac{1}{1-\frac12}=2$.</p><p>Physics use: total distance of a ball that keeps bouncing, image chains in two mirrors.</p>`},
+
+{t:'Algebra, series & logs',y:'ALLEN IT-01 · Q9',
+ q:R`Find the sum of $3+7+11+15+\dots$ up to 20 terms.`,
+ o:[R`410`,R`1640`,R`500`,R`820`],a:3,
+ s:R`<p>AP with $a=3$, $d=4$, $n=20$.</p><p>$S_n=\dfrac n2\big[2a+(n-1)d\big]=10\,[6+76]=820$.</p><p>(Same idea as the distance in the $n$th second: $s_n=u+\frac a2(2n-1)$.)</p>`},
+
+{t:'Algebra, series & logs',y:'ALLEN IT-01 · Q43',
+ q:R`The sum of three numbers in AP is 12 and the sum of their cubes is 288. Find the numbers.`,
+ o:[R`3, 4, 5`,R`2, 4, 6`,R`2, 5, 8`,R`3, 6, 9`],a:1,
+ s:R`<p>Take the numbers as $a-d,\;a,\;a+d$. Sum $=3a=12\Rightarrow a=4$.</p><p>Cubes: $(4-d)^3+64+(4+d)^3=288$. The odd powers of $d$ cancel: $2(64)+2\cdot3\cdot4\,d^2+64=288\Rightarrow192+24d^2=288\Rightarrow d^2=4$.</p><p>$d=\pm2$ → numbers 2, 4, 6. (Quick check: $8+64+216=288$ ✓.)</p>`},
+
+{t:'Algebra, series & logs',y:'ALLEN IT-01 · Q10',
+ q:R`If $\log_c b=x$, then`,
+ o:[R`$b=c^x$`,R`$c=b^x$`,R`$x^c=b$`,R`$x^b=c$`],a:0,
+ s:R`<p>Read it as: "$x$ is the power to which $c$ must be raised to get $b$". So $c^x=b$.</p><p>Example: $\log_2 8=3$ because $2^3=8$. (You will use this in decibels, half-life and RC circuits.)</p>`},
+
+{t:'Calculus',y:'ALLEN IT-01 · Q3',
+ q:R`Find $\dfrac{dy}{dx}$ if $y=\sin(x^2+5)$.`,
+ o:[R`$\cos(x^2+5)$`,R`$2x\cos(x^2+5)$`,R`$\cos(x^2)$`,R`$2x\cos(x^2)$`],a:1,
+ s:R`<p>Chain rule: differentiate the outside, keep the inside, then multiply by the derivative of the inside.</p><p>$\dfrac{dy}{dx}=\cos(x^2+5)\times\dfrac{d}{dx}(x^2+5)=2x\cos(x^2+5)$.</p>`},
+
+{t:'Calculus',y:'ALLEN IT-01 · Q41',
+ q:R`Find the derivative of $f(x)=\ln(x^2)$.`,
+ o:[R`$\dfrac2x$`,R`$\dfrac1{2x}$`,R`$\dfrac x2$`,R`$\ln2+\ln x$`],a:0,
+ s:R`<p>Way 1 (log rule): $\ln(x^2)=2\ln x\Rightarrow f'(x)=\dfrac2x$.</p><p>Way 2 (chain rule): $\dfrac{1}{x^2}\times2x=\dfrac2x$.</p>`},
+
+{t:'Calculus',y:'ALLEN IT-01 · Q6',
+ q:R`The slope of the tangent to the curve $y=\dfrac{x^2}{2}+3x+5$ at $x=2$ is`,
+ o:[R`2`,R`3`,R`4`,R`5`],a:3,
+ s:R`<p>Slope of the tangent $=\dfrac{dy}{dx}=x+3$.</p><p>At $x=2$: slope $=5$. (In physics: slope of $x$–$t$ = velocity, slope of $v$–$t$ = acceleration.)</p>`},
+
+{t:'Calculus',y:'ALLEN IT-01 · Q45',
+ q:R`The radius of a circle increases at the rate of 0.2 cm/s. The rate of change of its area when the radius is 1 cm is`,
+ o:[R`$0.6\pi$ cm²/s`,R`$0.4\pi$ cm²/s`,R`0.4 cm²/s`,R`0.2 cm²/s`],a:1,
+ s:R`<p>$A=\pi r^2\Rightarrow\dfrac{dA}{dt}=2\pi r\dfrac{dr}{dt}$.</p><p>$=2\pi(1)(0.2)=0.4\pi$ cm²/s. (0.4 cm²/s forgets the $\pi$.)</p>`},
+
+{t:'Calculus',y:'ALLEN IT-01 · Q25',
+ q:R`Evaluate $\displaystyle\int(e^x+x)\,dx$.`,
+ o:[R`$e^x+\dfrac{x^2}{2}+C$`,R`$e^x+x+C$`,R`$e^x+x^2+C$`,R`$e^x+\ln x+C$`],a:0,
+ s:R`<p>Integrate term by term: $\displaystyle\int e^x\,dx=e^x$ and $\displaystyle\int x\,dx=\frac{x^2}{2}$.</p><p>Answer: $e^x+\dfrac{x^2}{2}+C$. Check by differentiating back: $e^x+x$ ✓.</p>`}
+);
+
+</script>
+<script>
+// Basic Maths — part B: graphs, coordinate geometry, trigonometry (ALLEN IT-01)
+(function(){
+const LN=(m,c)=>G({x:[-3.5,3.5],y:[-4,4],xl:'x',yl:'y',s:[{p:[[-2.8,m*-2.8+c],[2.8,m*2.8+c]]}],w:180,h:150,ml:16,mr:14,mt:14,mb:14});
+const SINE=G({x:[0,6.8],y:[-1.35,1.45],xl:'x',yl:'y',w:300,h:170,ml:20,s:[{f:Math.sin,a:0,b:6.25,n:80}],pt:[[Math.PI/2,1,'A',-4,-9],[Math.PI,0,'B',5,-7],[1.75*Math.PI,Math.sin(1.75*Math.PI),'C',5,14]]});
+const DX=s=>G({x:[0,1.25],y:[0,1.25],xl:'t',yl:'dx/dt',s:[s],w:180,h:140,ml:18,mt:18});
+QS.push(
+{t:'Graphs & coordinate geometry',y:'ALLEN IT-01 · Q4',
+ q:R`The equation of a straight line is $2x-3y=5$. Its graph is`,
+ o:[LN(2/3,5/3),LN(2/3,-5/3),LN(-2/3,5/3),LN(-2/3,-5/3)],a:1,keep:1,
+ s:R`<p>Write it as $y=mx+c$: $y=\dfrac23x-\dfrac53$.</p><p>Slope $+\dfrac23$ → line goes up to the right. Intercept $-\dfrac53$ → it cuts the $y$-axis <b>below</b> the origin (and the $x$-axis at $x=2.5$, to the right).</p><p>Only graph (2) has both features.</p>`},
+
+{t:'Graphs & coordinate geometry',y:'ALLEN IT-01 · Q5',
+ q:R`The graph of $y=\sin x$ is shown, with points A (the peak), B (where the curve crosses the axis going down) and C (just after the lowest point). Which statement is correct?`,
+ f:SINE,
+ o:[R`Slope at A is non-zero and positive`,R`Slope at B is zero`,R`Slope at B is negative`,R`Slope at C is negative`],a:2,
+ s:R`<p>Slope $=\dfrac{dy}{dx}=\cos x$.</p><p>A is the top: tangent is flat, slope 0. B ($x=\pi$): $\cos\pi=-1$, slope negative ✓. C is after the bottom, where the curve is rising: slope positive.</p><p>Physics link: for SHM drawn as $x$–$t$, slope 0 at the extremes and largest at the mean position.</p>`},
+
+{t:'Graphs & coordinate geometry',y:'ALLEN IT-01 · Q40',
+ q:R`If $x=t^2$, the graph between $\dfrac{dx}{dt}$ and $t$ will be`,
+ o:[DX({f:t=>0.1/(t+0.05),a:0.06,b:1.15}),DX({p:[[0,1.05],[1.05,0]]}),DX({f:t=>t*t*0.9,a:0,b:1.1}),DX({p:[[0,0],[1.1,1.1]]})],a:3,keep:1,
+ s:R`<p>$\dfrac{dx}{dt}=2t$ — a straight line through the origin with slope 2. That is graph (4).</p><p>Graph (3) is the shape of $x$ itself ($x=t^2$), a common mix-up.</p>`},
+
+{t:'Graphs & coordinate geometry',y:'ALLEN IT-01 · Q42',
+ q:R`Two opposite vertices of a rectangle are (1, 3) and (5, 1). If the other two vertices lie on the line $y-x+\lambda=0$, then $\lambda$ is`,
+ o:[R`−1`,R`2`,R`1`,R`None of these`],a:2,
+ s:R`<p>The diagonals of a rectangle bisect each other. The line through the other two vertices is the other diagonal, so it passes through the midpoint of (1, 3) and (5, 1): $(3,\,2)$.</p><p>$2-3+\lambda=0\Rightarrow\lambda=1$.</p>`},
+
+{t:'Trigonometry',y:'ALLEN IT-01 · Q7',
+ q:R`Find the maximum value of $5\cos\theta+12\sin\theta$.`,
+ o:[R`12`,R`13`,R`14`,R`15`],a:1,
+ s:R`<p>$a\cos\theta+b\sin\theta$ always lies between $-\sqrt{a^2+b^2}$ and $+\sqrt{a^2+b^2}$.</p><p>Max $=\sqrt{25+144}=13$. (Used for resultant of two perpendicular SHMs and in max range problems.)</p>`},
+
+{t:'Trigonometry',y:'ALLEN IT-01 · Q35',
+ q:R`What are the maximum and minimum values of $3-\cos^2\theta$?`,
+ o:[R`3, 3`,R`3, 2`,R`2, 3`,R`4, 2`],a:1,
+ s:R`<p>$\cos^2\theta$ goes from 0 to 1.</p><p>Max when $\cos^2\theta=0$: $3-0=3$. Min when $\cos^2\theta=1$: $3-1=2$.</p>`},
+
+{t:'Trigonometry',y:'ALLEN IT-01 · Q38',
+ q:R`$\tan15°$ is equal to`,
+ o:[R`$\dfrac{\sqrt3-1}{\sqrt3+1}$`,R`$5+\sqrt3$`,R`$\dfrac{5-\sqrt3}{2}$`,R`$\dfrac{5+\sqrt3}{2}$`],a:0,
+ s:R`<p>$\tan(45°-30°)=\dfrac{\tan45°-\tan30°}{1+\tan45°\tan30°}=\dfrac{1-\frac1{\sqrt3}}{1+\frac1{\sqrt3}}=\dfrac{\sqrt3-1}{\sqrt3+1}$.</p><p>This also equals $2-\sqrt3\approx0.27$. Quick check: $\tan15°$ must be small (less than $\tan30°=0.58$), so the large options are out at once.</p>`},
+
+{t:'Trigonometry',y:'ALLEN IT-01 · Q36',
+ q:R`Match each value in Column I with its description in Column II.
+<table class="dt"><tr><th>Column I</th><th>Column II</th></tr><tr><td>(A) $\sin390°$</td><td>(P) Positive</td></tr><tr><td>(B) $\sin(-30°)$</td><td>(Q) Negative</td></tr><tr><td>(C) $\cos120°$</td><td>(R) Zero</td></tr><tr><td>(D) $\tan(-120°)$</td><td>(S) Modulus greater than one</td></tr><tr><td></td><td>(T) Modulus less than one</td></tr></table>`,
+ o:[R`A → PT, B → QT, C → QT, D → PS`,R`A → PT, B → QS, C → QT, D → PS`,R`A → QT, B → QS, C → PT, D → P`,R`A → QS, B → PT, C → QT, D → PS`],a:0,
+ s:R`<p>(A) $\sin390°=\sin(360°+30°)=+\tfrac12$ → P, T.</p><p>(B) $\sin(-30°)=-\tfrac12$ → Q, T.</p><p>(C) $\cos120°=-\tfrac12$ → Q, T.</p><p>(D) $\tan(-120°)=-\tan120°=-(-\sqrt3)=+\sqrt3$ → P, S.</p>`},
+
+{t:'Trigonometry',y:'ALLEN IT-01 · Q34',
+ q:R`Match the columns (use the small-angle idea where needed).
+<table class="dt"><tr><th>Column I</th><th>Column II</th></tr><tr><td>(a) $\sin2°$</td><td>(p) $\dfrac45$</td></tr><tr><td>(b) $\sin53°$</td><td>(q) $\dfrac{\pi}{90}$</td></tr><tr><td>(c) $\tan4°$</td><td>(r) $-\dfrac12$</td></tr><tr><td>(d) $\cos120°$</td><td>(s) $\dfrac{\pi}{45}$</td></tr></table>`,
+ o:[R`(a)–(q), (b)–(p), (c)–(s), (d)–(r)`,R`(a)–(s), (b)–(r), (c)–(p), (d)–(q)`,R`(a)–(s), (b)–(p), (c)–(q), (d)–(r)`,R`(a)–(q), (b)–(p), (c)–(r), (d)–(s)`],a:0,
+ s:R`<p>For small angles, $\sin\theta\approx\tan\theta\approx\theta$ in <b>radians</b>, and $1°=\dfrac{\pi}{180}$ rad.</p><p>(a) $\sin2°\approx\dfrac{2\pi}{180}=\dfrac{\pi}{90}$. (c) $\tan4°\approx\dfrac{4\pi}{180}=\dfrac{\pi}{45}$.</p><p>(b) $\sin53°=\dfrac45$ (3-4-5 triangle). (d) $\cos120°=-\dfrac12$.</p>`}
+);
+})();
+
+</script>
+<script>
+// Basic Maths — part C: vectors (JEE Main PYQs from the Motion in a Plane bank)
+(function(){
+const P=(x,y)=>x.toFixed(1)+','+y.toFixed(1);
+// ---- cube (Q9) ----
+const a=80,ox=100,oy=132,X=[-0.62,0.42],Yv=[1,0],Z=[0,-1];
+const pt=(x,y,z)=>[ox+a*(x*X[0]+y*Yv[0]+z*Z[0]),oy+a*(x*X[1]+y*Yv[1]+z*Z[1])];
+const O=pt(0,0,0),D=pt(1,0,0),F=pt(0,1,0),B=pt(0,0,1),A=pt(1,0,1),E=pt(0,1,1),Hb=pt(1,1,0),Ht=pt(1,1,1);
+const Gc=pt(.5,0,.5),Hc=pt(0,.5,.5);
+const ln=(p,q,ex)=>`<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="#1d2528" stroke-width="1.6" ${ex||''}/>`;
+const lb=(p,t,dx,dy,c)=>`<text x="${p[0]+dx}" y="${p[1]+dy}" font-size="13" font-weight="700" fill="${c||'#1d2528'}">${t}</text>`;
+let cube=ln(A,B)+ln(B,E)+ln(E,Ht)+ln(Ht,A)+ln(A,D)+ln(D,Hb)+ln(Hb,Ht)+ln(E,F)+ln(F,Hb);
+cube+=ln(O,B,'stroke-dasharray="4 3" opacity=".6"')+ln(O,D,'stroke-dasharray="4 3" opacity=".6"')+ln(O,F,'stroke-dasharray="4 3" opacity=".6"');
+cube+=`<line x1="${B[0]}" y1="${B[1]}" x2="${B[0]}" y2="${B[1]-22}" stroke="#5b6668" stroke-width="1.2" marker-end="MKk"/><text x="${B[0]+5}" y="${B[1]-18}" font-size="12" font-style="italic">z</text>`;
+cube+=`<line x1="${F[0]}" y1="${F[1]}" x2="${F[0]+26}" y2="${F[1]}" stroke="#5b6668" stroke-width="1.2" marker-end="MKk"/><text x="${F[0]+22}" y="${F[1]+15}" font-size="12" font-style="italic">y</text>`;
+cube+=`<line x1="${D[0]}" y1="${D[1]}" x2="${D[0]-14}" y2="${D[1]+10}" stroke="#5b6668" stroke-width="1.2" marker-end="MKk"/><text x="${D[0]-26}" y="${D[1]+16}" font-size="12" font-style="italic">x</text>`;
+const dg=(p,q)=>`<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="#b7791f" stroke-width="1" stroke-dasharray="2 3" opacity=".8"/>`;
+cube+=dg(A,O)+dg(B,D)+dg(B,F)+dg(E,O);
+cube+=`<line x1="${Gc[0]}" y1="${Gc[1]}" x2="${Hc[0]-3}" y2="${Hc[1]+1}" stroke="#0f766e" stroke-width="2.2" marker-end="MKt"/><circle cx="${Gc[0]}" cy="${Gc[1]}" r="3" fill="#b7791f"/><circle cx="${Hc[0]}" cy="${Hc[1]}" r="3" fill="#b7791f"/>`;
+cube+=lb(A,'A',-14,-4)+lb(B,'B',-14,-4)+lb(E,'E',5,-4)+lb(D,'D',-6,16)+lb(F,'F',6,14)+lb(O,'O',6,-6)+lb(Gc,'G',-15,4,'#b7791f')+lb(Hc,'H',5,-6,'#b7791f');
+cube+=`<text x="${(E[0]+F[0])/2+6}" y="${(E[1]+F[1])/2}" font-size="11" fill="#5b6668">a</text>`;
+const CUBE=SV(220,190,cube);
+// ---- OA, OB, OC (Q48) ----
+const c0=[110,90],R0=72,dir=d=>[c0[0]+R0*Math.cos(d*Math.PI/180),c0[1]-R0*Math.sin(d*Math.PI/180)];
+const vA=dir(30),vB=dir(-60),vC=dir(135);
+let oabc=`<line x1="20" y1="90" x2="210" y2="90" stroke="#5b6668" stroke-dasharray="4 3"/><line x1="110" y1="10" x2="110" y2="175" stroke="#5b6668" stroke-dasharray="4 3"/><text x="204" y="104" font-size="12" font-style="italic">x</text><text x="116" y="18" font-size="12" font-style="italic">y</text>`;
+[[vA,'A'],[vB,'B'],[vC,'C']].forEach(([p,l])=>{oabc+=`<line x1="110" y1="90" x2="${p[0]}" y2="${p[1]}" stroke="#0f766e" stroke-width="2.2" marker-end="MKt"/><text x="${p[0]+(p[0]>110?6:-14)}" y="${p[1]+(p[1]>90?12:-2)}" font-size="13" font-weight="700">${l}</text>`});
+oabc+=`<path d="M138,90 A28,28 0 0 0 134.2,76" fill="none" stroke="#b42318" stroke-width="1.2"/><text x="142" y="82" font-size="11" fill="#b42318">30°</text>`;
+oabc+=`<path d="M124,90 A14,14 0 0 1 117,102.1" fill="none" stroke="#b42318" stroke-width="1.2"/><text x="122" y="114" font-size="11" fill="#b42318">60°</text>`;
+oabc+=`<path d="M82,90 A28,28 0 0 1 90.2,70.2" fill="none" stroke="#b42318" stroke-width="1.2"/><text x="62" y="80" font-size="11" fill="#b42318">45°</text><text x="98" y="104" font-size="12" font-weight="700">O</text>`;
+const OABC=SV(220,180,oabc);
+// ---- A, B at 60° and A − B (Q49) ----
+const AB=SV(240,170,`<line x1="30" y1="80" x2="150" y2="80" stroke="#0f766e" stroke-width="2.3" marker-end="MKt"/><text x="150" y="74" font-size="13" font-weight="700" fill="#0f766e">A</text>
+<line x1="30" y1="80" x2="70" y2="10.7" stroke="#b7791f" stroke-width="2.3" marker-end="MKa"/><text x="76" y="16" font-size="13" font-weight="700" fill="#b7791f">B</text>
+<line x1="30" y1="80" x2="110" y2="149.3" stroke="#1d2528" stroke-width="2" stroke-dasharray="6 4" marker-end="MKk"/><text x="116" y="156" font-size="13" font-weight="700">A − B</text>
+<path d="M58,80 A28,28 0 0 0 44,55.8" fill="none" stroke="#b42318" stroke-width="1.3"/><text x="62" y="62" font-size="11" fill="#b42318">60°</text>
+<path d="M60,80 A30,30 0 0 1 52.7,99.6" fill="none" stroke="#1d2528" stroke-width="1.3"/><text x="62" y="106" font-size="12">β</text><circle cx="30" cy="80" r="2.5" fill="#1d2528"/>`);
+// ---- four triangles (Q45) ----
+let tri='';
+const arr=(p,q,l,c,mk,lx,ly)=>{const dx=q[0]-p[0],dy=q[1]-p[1],L=Math.hypot(dx,dy),e=[q[0]-dx/L*3,q[1]-dy/L*3];return `<line x1="${p[0]}" y1="${p[1]}" x2="${e[0]}" y2="${e[1]}" stroke="${c}" stroke-width="2" marker-end="${mk}"/><text x="${(p[0]+q[0])/2+lx}" y="${(p[1]+q[1])/2+ly}" font-size="12" font-weight="700" fill="${c}" text-anchor="middle">${l}</text>`};
+const sets=[['A','C','B',0],['A','B','C',1],['B','C','A',0],['A','B','C',0]];
+['(i)','(ii)','(iii)','(iv)'].forEach((n,i)=>{const x0=8+i*104,V0=[x0+8,78],V1=[x0+78,78],V2=[x0+78,22],[b,v,h,closed]=sets[i];
+ tri+=`<text x="${x0+4}" y="16" font-size="12" font-weight="700">${n}</text>`;
+ tri+=arr(V0,V1,b,'#0f766e','MKt',0,14)+arr(V1,V2,v,'#b7791f','MKa',10,4);
+ tri+=closed?arr(V2,V0,h,'#b42318','MKr',-8,-6):arr(V0,V2,h,'#b42318','MKr',-8,-6);});
+const TRI=SV(424,96,tri,'wide');
+QS.push(
+{t:'Components, dot product & 3D',y:'AIEEE 2009',
+ q:R`A particle has an initial velocity of $3\hat i+4\hat j$ and an acceleration of $0.4\hat i+0.3\hat j$. Its speed after 10 s is`,
+ o:[R`$7\sqrt2$ units`,R`7 units`,R`8.5 units`,R`10 units`],a:0,
+ s:R`<p>$\vec v=\vec u+\vec at$ works component by component: $v_x=3+0.4\times10=7$, $v_y=4+0.3\times10=7$.</p><p>Speed $=\sqrt{7^2+7^2}=7\sqrt2$. (Adding the magnitudes $5+0.5\times10=10$ is wrong — the directions differ.)</p>`},
+
+{t:'Components, dot product & 3D',y:'JEE Main 2019',
+ q:R`In the cube of side $a$ shown (O is the origin; $x$, $y$, $z$ along OD, OF, OB), find the vector from G, the centre of face ABOD, to H, the centre of face BEFO.`,
+ f:CUBE,
+ o:[R`$\tfrac12a(\hat j-\hat i)$`,R`$\tfrac12a(\hat i-\hat k)$`,R`$\tfrac12a(\hat j-\hat k)$`,R`$\tfrac12a(\hat k-\hat i)$`],a:0,
+ s:R`<p>Face ABOD lies in the $xz$-plane ($y=0$): centre $G=\Big(\dfrac a2,0,\dfrac a2\Big)$.</p><p>Face BEFO lies in the $yz$-plane ($x=0$): centre $H=\Big(0,\dfrac a2,\dfrac a2\Big)$.</p><p>$\overrightarrow{GH}=H-G=\Big(-\dfrac a2,\dfrac a2,0\Big)=\tfrac12a(\hat j-\hat i)$.</p>`},
+
+{t:'Components, dot product & 3D',y:'JEE Main 2021',
+ q:R`What is the projection of the vector $\vec A=\hat i+\hat j+\hat k$ on the vector $\vec B=\hat i+\hat j$?`,
+ o:[R`$\sqrt2(\hat i+\hat j+\hat k)$`,R`$(\hat i+\hat j)$`,R`$\sqrt2(\hat i+\hat j)$`,R`$2(\hat i+\hat j+\hat k)$`],a:1,
+ s:R`<p>Projection (as a vector) $=(\vec A\cdot\hat B)\,\hat B=\dfrac{\vec A\cdot\vec B}{|\vec B|^2}\,\vec B$.</p><p>$\vec A\cdot\vec B=1+1+0=2$, $|\vec B|^2=2$. Projection $=\dfrac22(\hat i+\hat j)=\hat i+\hat j$.</p><p>Its size is $\sqrt2$; writing $\sqrt2(\hat i+\hat j)$ multiplies by $\sqrt2$ a second time — a common slip.</p>`},
+
+{t:'Components, dot product & 3D',y:'JEE Main 2021',
+ q:R`The incident ray, the reflected ray and the outward normal to a mirror are along the unit vectors $\vec a$, $\vec b$ and $\vec c$. The correct relation between them is`,
+ o:[R`$\vec b=\vec a+2\vec c$`,R`$\vec b=2\vec a+\vec c$`,R`$\vec b=\vec a-2(\vec a\cdot\vec c)\vec c$`,R`$\vec b=\vec a-\vec c$`],a:2,
+ s:R`<p>Split $\vec a$ into a part along the normal, $(\vec a\cdot\vec c)\vec c$, and a part along the mirror.</p><p>On reflection, the part along the mirror stays the same and the part along the normal flips sign.</p><p>$\vec b=\vec a-2(\vec a\cdot\vec c)\vec c$. (Check: $|\vec b|=1$ ✓; the other three choices do not even give a unit vector in general.)</p>`},
+
+{t:'Components, dot product & 3D',y:'JEE Main 2021',
+ q:R`A mosquito moves with velocity $\vec v=0.5t^2\,\hat i+3t\,\hat j+9\,\hat k$ m/s. What is its direction of motion after 2 s?`,
+ o:[R`$\tan^{-1}\!\Big(\dfrac{\sqrt{85}}{6}\Big)$ from the $y$-axis`,R`$\tan^{-1}\!\Big(\dfrac52\Big)$ from the $y$-axis`,R`$\tan^{-1}\!\Big(\dfrac52\Big)$ from the $x$-axis`,R`$\tan^{-1}\!\Big(\dfrac23\Big)$ from the $x$-axis`],a:0,
+ s:R`<p>At $t=2$: $\vec v=2\hat i+6\hat j+9\hat k$, $|\vec v|=\sqrt{4+36+81}=11$.</p><p>Angle with the $y$-axis: $\cos\beta=\dfrac6{11}$. The part perpendicular to $y$ is $\sqrt{2^2+9^2}=\sqrt{85}$, so $\tan\beta=\dfrac{\sqrt{85}}{6}$.</p>`},
+
+{t:'Vector addition & resultant',y:'JEE Main 2021',
+ q:R`Two vectors $\vec X$ and $\vec Y$ have equal magnitude. The magnitude of $(\vec X-\vec Y)$ is $n$ times the magnitude of $(\vec X+\vec Y)$. The angle between $\vec X$ and $\vec Y$ is`,
+ o:[R`$\cos^{-1}\!\Big(\dfrac{n^2+1}{n^2-1}\Big)$`,R`$\cos^{-1}\!\Big(\dfrac{n^2+1}{-n^2-1}\Big)$`,R`$\cos^{-1}\!\Big(\dfrac{-n^2-1}{n^2-1}\Big)$`,R`$\cos^{-1}\!\Big(\dfrac{n^2-1}{-n^2-1}\Big)$`],a:3,
+ s:R`<p>Equal sizes $X$: $|\vec X-\vec Y|^2=2X^2(1-\cos\theta)$, $|\vec X+\vec Y|^2=2X^2(1+\cos\theta)$.</p><p>$1-\cos\theta=n^2(1+\cos\theta)\Rightarrow\cos\theta=\dfrac{1-n^2}{1+n^2}=\dfrac{n^2-1}{-n^2-1}$.</p><p>This is the "minus" twin of the $|\vec P+\vec Q|=n|\vec P-\vec Q|$ question in the Plane sheet.</p>`},
+
+{t:'Vector addition & resultant',y:'JEE Main 2021',
+ q:R`The vectors $\overrightarrow{OA}$, $\overrightarrow{OB}$ and $\overrightarrow{OC}$ in the figure have equal magnitudes. The direction of $\overrightarrow{OA}+\overrightarrow{OB}-\overrightarrow{OC}$ with the $x$-axis is`,
+ f:OABC,
+ o:[R`$\tan^{-1}\dfrac{1+\sqrt3-\sqrt2}{1-\sqrt3-\sqrt2}$`,R`$\tan^{-1}\dfrac{\sqrt3-1+\sqrt2}{1+\sqrt3-\sqrt2}$`,R`$\tan^{-1}\dfrac{\sqrt3-1+\sqrt2}{1-\sqrt3+\sqrt2}$`,R`$\tan^{-1}\dfrac{1-\sqrt3-\sqrt2}{1+\sqrt3+\sqrt2}$`],a:3,
+ s:R`<p>Take each magnitude as 1. OA at $30°$, OB at $-60°$, OC at $135°$.</p><p>$x$: $\cos30°+\cos60°-\cos135°=\dfrac{\sqrt3}{2}+\dfrac12+\dfrac{\sqrt2}{2}$.</p><p>$y$: $\sin30°-\sin60°-\sin135°=\dfrac12-\dfrac{\sqrt3}{2}-\dfrac{\sqrt2}{2}$.</p><p>$\tan\phi=\dfrac{y}{x}=\dfrac{1-\sqrt3-\sqrt2}{1+\sqrt3+\sqrt2}$.</p>`},
+
+{t:'Vector addition & resultant',y:'JEE Main 2021',
+ q:R`The angle between $\vec A$ and $\vec B$ is 60°, as shown. The angle $\beta$ between $\vec A$ and $(\vec A-\vec B)$ is`,
+ f:AB,
+ o:[R`$\tan^{-1}\!\left(\dfrac{-B/2}{A-B\frac{\sqrt3}{2}}\right)$`,R`$\tan^{-1}\!\Big(\dfrac{\sqrt3B}{2A-B}\Big)$`,R`$\tan^{-1}\!\Big(\dfrac{B\cos\theta}{A-B\sin\theta}\Big)$`,R`$\tan^{-1}\!\Big(\dfrac{A}{0.7B}\Big)$`],a:1,
+ s:R`<p>$\vec A-\vec B=\vec A+(-\vec B)$. Angle between $\vec A$ and $-\vec B$ is $180°-60°=120°$.</p><p>$\tan\beta=\dfrac{B\sin120°}{A+B\cos120°}=\dfrac{\frac{\sqrt3}{2}B}{A-\frac B2}=\dfrac{\sqrt3B}{2A-B}$.</p><p>(In the original paper the figure marks 120° — the angle between $\vec A$ and $-\vec B$.)</p>`},
+
+{t:'Vector addition & resultant',y:'JEE Main 2021',
+ q:R`Match List I with List II (figures below).
+<table class="dt"><tr><th>List I</th></tr><tr><td>(a) $\vec C-\vec A-\vec B=0$</td></tr><tr><td>(b) $\vec A-\vec C-\vec B=0$</td></tr><tr><td>(c) $\vec B-\vec A-\vec C=0$</td></tr><tr><td>(d) $\vec A+\vec B=-\vec C$</td></tr></table>List II:`,
+ f:TRI,
+ o:[R`(a)→(iv), (b)→(i), (c)→(iii), (d)→(ii)`,R`(a)→(i), (b)→(iv), (c)→(ii), (d)→(iii)`,R`(a)→(iii), (b)→(ii), (c)→(iv), (d)→(i)`,R`(a)→(iv), (b)→(iii), (c)→(i), (d)→(ii)`],a:3,
+ s:R`<p>Rewrite each as "one vector = sum of the other two" (triangle law: the sum goes from the tail of the first to the head of the second).</p><p>(a) $\vec C=\vec A+\vec B$ → (iv). (b) $\vec A=\vec B+\vec C$ → (iii). (c) $\vec B=\vec A+\vec C$ → (i).</p><p>(d) $\vec A+\vec B+\vec C=0$ → all three arrows go round the triangle in one direction → (ii).</p><p>(Figures redrawn here to match these relations.)</p>`},
+
+{t:'Vector addition & resultant',y:'JEE Main 2021',
+ q:R`<b>Statement I:</b> If three forces $\vec F_1$, $\vec F_2$ and $\vec F_3$ are represented by the three sides of a triangle and $\vec F_1+\vec F_2=-\vec F_3$, then these three forces are concurrent and satisfy the condition for equilibrium.<br><b>Statement II:</b> A triangle made up of three forces $\vec F_1$, $\vec F_2$ and $\vec F_3$ as its sides taken in the same order satisfies the condition for translatory equilibrium.<br>Choose the most appropriate answer.`,
+ o:[R`Statement I is false but Statement II is true`,R`Both statements are false`,R`Both statements are true`,R`Statement I is true but Statement II is false`],a:2,
+ s:R`<p>$\vec F_1+\vec F_2=-\vec F_3$ means $\vec F_1+\vec F_2+\vec F_3=0$: net force zero → translatory equilibrium. For a body acted on at one point (concurrent forces) this is the equilibrium condition. Statement I is true.</p><p>Sides of a triangle taken in order always add to zero (polygon law). Statement II is also true.</p>`},
+
+{t:'Vector addition & resultant',y:'JEE Main 2021',
+ q:R`<b>Statement I:</b> Two forces $(\vec P+\vec Q)$ and $(\vec P-\vec Q)$, where $\vec P\perp\vec Q$, give a resultant of magnitude $\sqrt{3(P^2+Q^2)}$ when they act at an angle $\theta_1$ to each other, and $\sqrt{2(P^2+Q^2)}$ when they act at an angle $\theta_2$. This is possible only when $\theta_1\lt\theta_2$.<br><b>Statement II:</b> In the above situation, $\theta_1=60°$ and $\theta_2=90°$.<br>Choose the most appropriate answer.`,
+ o:[R`Both Statement I and Statement II are true`,R`Statement I is true but Statement II is false`,R`Statement I is false but Statement II is true`,R`Both statements are false`],a:0,
+ s:R`<p>Since $\vec P\perp\vec Q$, both forces have the same size $k=\sqrt{P^2+Q^2}$. Two equal forces at angle $\theta$ give $2k\cos\dfrac\theta2$.</p><p>$2k\cos\dfrac{\theta_1}{2}=\sqrt3\,k\Rightarrow\theta_1=60°$. $2k\cos\dfrac{\theta_2}{2}=\sqrt2\,k\Rightarrow\theta_2=90°$.</p><p>Bigger resultant needs a smaller angle, so $\theta_1\lt\theta_2$. Both statements are true.</p>`}
+);
+})();
+
+</script>
+
+<script>
+(function(){
+const KEY='padipucast_jee27_basicmaths_vectors_mcq30_v1';
+const N=QS.length, PER=4, NEG=1, MINUTES=60;
+const LBL=['(1)','(2)','(3)','(4)'];
+const $=s=>document.querySelector(s);
+const load=(k,d)=>{try{const v=localStorage.getItem(KEY+k);return v?JSON.parse(v):d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(KEY+k,JSON.stringify(v))}catch(e){}};
+const TOPICS=[...new Set(QS.map(q=>q.t))];
+let mode=null,order=[],cur=0,perm={},ans={},prac=load('_prac',{}),tLeft=0,tick=null,startAt=0,lastRes=null;
+
+function TS(el){const M=window.MathJax;if(M&&M.typesetPromise){if(M.typesetClear)M.typesetClear([el]);M.typesetPromise([el]).catch(()=>{})}else setTimeout(()=>TS(el),300)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){['start','work','result'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0)}
+function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function isFig(s){return typeof s==='string'&&s.trim().startsWith('<svg')}
+
+/* ---------- start screen ---------- */
+function drawStart(){
+ const yrs=QS.map(q=>+(q.y.match(/\d{4}/)||[0])[0]).filter(Boolean);
+ const yc=yrs.length===N?`${Math.min(...yrs)}–${Math.max(...yrs)} papers`:`${yrs.length} JEE PYQs (${Math.min(...yrs)}–${Math.max(...yrs)})</span><span class="chip">${N-yrs.length} from test paper`;
+ $('#metaChips').innerHTML=`<span class="chip">${N} questions</span><span class="chip">${TOPICS.length} topics</span><span class="chip">${yc}</span><span class="chip am">+${PER} / −${NEG}</span>`;
+ $('#topicMap').innerHTML=TOPICS.map(t=>{const qs=QS.filter(q=>q.t===t);return `<div class="trow"><span>${t}</span><span>${qs.length} Qs</span></div>`}).join('');
+ const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+ $('#pracInfo').textContent=done?`Continue practice · ${done}/${N} done, ${ok} right →`:'Start practice →';
+ const b=load('_best',null);
+ $('#bestInfo').textContent=b?`Start test · best ${b.s}/${N*PER} →`:'Start test →';
+}
+
+/* ---------- side panel ---------- */
+function drawSide(){
+ const s=$('#side');
+ let st='';
+ if(mode==='prac'){
+  const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+  st=`<div class="stats"><div class="stat"><b>${done}</b><span>done</span></div><div class="stat"><b style="color:var(--green)">${ok}</b><span>right</span></div><div class="stat"><b style="color:var(--red)">${done-ok}</b><span>wrong</span></div></div>`;
+  st+='<h3>Questions by topic</h3>';
+  TOPICS.forEach(t=>{
+   st+=`<div class="tg">${t}</div><div class="dots">`;
+   order.forEach((qi,pos)=>{if(QS[qi].t!==t)return;const p=prac[qi];const c=p?(p.c===QS[qi].a?'ok':'no'):'';st+=`<button class="dot ${c} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+   st+='</div>';
+  });
+  st+=`<div class="legend"><span><i style="background:var(--green)"></i>right</span><span><i style="background:var(--red)"></i>wrong</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not done</span></div>`;
+  st+=`<div class="sidebtns"><button class="btn sm" id="resetPrac">Clear my practice progress</button></div>`;
+ }else{
+  const a=Object.keys(ans).length;
+  st=`<div class="stats"><div class="stat"><b>${a}</b><span>answered</span></div><div class="stat"><b>${N-a}</b><span>left</span></div><div class="stat"><b>${N}</b><span>total</span></div></div><h3>Jump to</h3><div class="dots">`;
+  order.forEach((qi,pos)=>{st+=`<button class="dot ${ans[qi]!=null?'ans':''} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+  st+=`</div><div class="legend"><span><i style="background:var(--teal)"></i>answered</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not answered</span></div><div class="sidebtns"><button class="btn am" id="submitBtn">Submit paper</button></div>`;
+ }
+ s.innerHTML=st;
+ s.querySelectorAll('.dot').forEach(d=>d.onclick=()=>{if(innerWidth<860)s.classList.add('closed');go(+d.dataset.p)});
+ const rp=$('#resetPrac');if(rp)rp.onclick=()=>confirmBox('Clear practice progress?','All your practice answers for this sheet will be wiped from this device.','Clear',()=>{prac={};save('_prac',prac);drawQ()});
+ const sb=$('#submitBtn');if(sb)sb.onclick=askSubmit;
+}
+
+/* ---------- question ---------- */
+function optHTML(Q,qi,o,pos,cls,dis){return `<button class="opt ${cls}" data-o="${o}" ${dis?'disabled':''}><span class="lb">${LBL[pos]}</span><span class="ot">${Q.o[o]}</span></button>`}
+function drawQ(){
+ const qi=order[cur],Q=QS[qi],c=$('#qcard');
+ const ord=mode==='test'?perm[qi]:[0,1,2,3];
+ const og=Q.og||Q.o.some(isFig);
+ let h=`<div class="qhead"><span class="qno">Q${cur+1} <span style="color:var(--mute);font-weight:500">/ ${N}</span></span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span></div>`;
+ h+=`<div class="qtext">${Q.q}</div>`;
+ if(Q.f)h+=`<div class="figwrap">${Q.f}</div>`;
+ h+=`<div class="opts ${og?'og':''}">`;
+ const p=mode==='prac'?prac[qi]:null;
+ ord.forEach((o,pos)=>{
+  let cls='';
+  if(mode==='prac'&&p){if(o===Q.a)cls='ok';else if(o===p.c)cls='no'}
+  if(mode==='test'&&ans[qi]===o)cls='sel';
+  h+=optHTML(Q,qi,o,pos,cls,mode==='prac'&&p);
+ });
+ h+='</div>';
+ if(mode==='prac'&&p){
+  const right=p.c===Q.a;
+  h+=`<div class="verdict ${right?'ok':'no'}">${right?'✓ Correct!':p.c<0?'Answer shown: '+LBL[Q.a]+' (counted as not solved)':'✗ Not this one. Correct answer: '+LBL[Q.a]}</div>`;
+  h+=`<div class="sol"><h4>Solution</h4>${Q.s}</div>`;
+ }
+ h+=`<div class="nav"><button class="btn" id="prevB" ${cur===0?'disabled':''}>← Prev</button><span style="display:flex;gap:8px">`;
+ if(mode==='prac'&&p)h+=`<button class="btn" id="retryB">Try again</button>`;
+ if(mode==='prac'&&!p)h+=`<button class="btn" id="peekB">Show answer</button>`;
+ if(mode==='test'&&ans[qi]!=null)h+=`<button class="btn" id="clearB">Clear answer</button>`;
+ h+=`</span><button class="btn pri" id="nextB">${cur===N-1?(mode==='test'?'Submit':'Finish'):'Next →'}</button></div>`;
+ c.innerHTML=h;
+ c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.o));
+ $('#prevB').onclick=()=>{if(cur>0)go(cur-1)};
+ $('#nextB').onclick=()=>{if(cur<N-1)go(cur+1);else if(mode==='test')askSubmit();else{show('start');drawStart()}};
+ const r=$('#retryB');if(r)r.onclick=()=>{delete prac[qi];save('_prac',prac);drawQ()};
+ const pk=$('#peekB');if(pk)pk.onclick=()=>{prac[qi]={c:-1};save('_prac',prac);drawQ()};
+ const cl=$('#clearB');if(cl)cl.onclick=()=>{delete ans[qi];drawQ()};
+ drawSide();TS(c);
+}
+function go(p){cur=p;drawQ();const t=$('#qcard').getBoundingClientRect().top;if(t<0||t>innerHeight*.5)window.scrollTo({top:Math.max(0,window.scrollY+t-70),behavior:'smooth'})}
+function pick(o){
+ const qi=order[cur];
+ if(mode==='prac'){if(prac[qi])return;prac[qi]={c:o};save('_prac',prac);drawQ();setTimeout(()=>{const v=document.querySelector('.verdict');if(v)v.scrollIntoView({behavior:'smooth',block:'center'})},60)}
+ else{ans[qi]=o;drawQ()}
+}
+
+/* ---------- modes ---------- */
+function startPractice(){mode='prac';order=QS.map((_,i)=>i);cur=0;const f=order.findIndex(i=>!prac[i]);if(f>0)cur=f;$('#clock').classList.add('hidden');$('#barTitle').textContent='Practice · '+document.title;show('work');drawQ()}
+function startTest(){
+ mode='test';order=shuffle(QS.map((_,i)=>i));perm={};ans={};cur=0;
+ QS.forEach((q,i)=>perm[i]=q.keep?[0,1,2,3]:shuffle([0,1,2,3]));
+ tLeft=MINUTES*60;startAt=Date.now();
+ const ck=$('#clock');ck.classList.remove('hidden','low');ck.textContent=fmt(tLeft);
+ clearInterval(tick);
+ tick=setInterval(()=>{tLeft=MINUTES*60-Math.floor((Date.now()-startAt)/1000);ck.textContent=fmt(tLeft);ck.classList.toggle('low',tLeft<=300);if(tLeft<=0){clearInterval(tick);finish(true)}},500);
+ $('#barTitle').textContent='Test · '+document.title;show('work');drawQ();
+}
+function confirmBox(title,body,okTxt,fn){
+ const m=$('#modal');$('#modalCard').innerHTML=`<h3>${title}</h3><p>${body}</p><div class="nav"><button class="btn" id="mNo">Cancel</button><button class="btn am" id="mYes">${okTxt}</button></div>`;
+ m.classList.remove('hidden');$('#mNo').onclick=()=>m.classList.add('hidden');$('#mYes').onclick=()=>{m.classList.add('hidden');fn()};
+}
+function askSubmit(){const a=Object.keys(ans).length;confirmBox('Submit the paper?',`You have answered ${a} of ${N}. ${N-a?(N-a)+' left blank (no marks lost for blanks).':'All answered.'}`,'Submit',()=>finish(false))}
+
+/* ---------- result ---------- */
+function finish(auto){
+ clearInterval(tick);$('#clock').classList.add('hidden');
+ let ok=0,no=0,sk=0;const by={};TOPICS.forEach(t=>by[t]={ok:0,n:0});
+ QS.forEach((q,i)=>{by[q.t].n++;if(ans[i]==null)sk++;else if(ans[i]===q.a){ok++;by[q.t].ok++}else no++});
+ const score=ok*PER-no*NEG, max=N*PER, used=Math.min(MINUTES*60,Math.floor((Date.now()-startAt)/1000));
+ const best=load('_best',null);if(!best||score>best.s)save('_best',{s:score,d:new Date().toLocaleDateString()});
+ const pct=Math.max(0,score)/max, col=pct>=.7?'var(--green)':pct>=.45?'var(--amber)':'var(--red)';
+ const C=2*Math.PI*62;
+ let msg=pct>=.85?'Excellent. This chapter is exam-ready. Keep revising the ones you got wrong.':pct>=.7?'Very good. A few slips — read the solutions of the wrong ones carefully.':pct>=.45?'Fair attempt. Go topic by topic below and redo the weak topic in practice mode.':'This chapter needs more work. Use practice mode first — read every solution, then take the test again.';
+ if(no>ok&&no>=6)msg+=' Note: wrong answers cost you marks. Skip when you are only guessing.';
+ if(auto)msg='Time up — your paper was submitted automatically. '+msg;
+ let h=`<div class="card res"><div class="ringrow"><svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="#eee7d8" stroke-width="12"/><circle cx="75" cy="75" r="62" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" transform="rotate(-90 75 75)"/><text x="75" y="74" text-anchor="middle" font-family="DM Mono" font-size="30" font-weight="500" fill="#1d2528">${score}</text><text x="75" y="98" text-anchor="middle" font-family="DM Sans" font-size="13" fill="#5b6668">out of ${max}</text></svg><div><h2 style="font-size:26px">Your result</h2><div class="chips"><span class="chip gr">${ok} right</span><span class="chip rd">${no} wrong</span><span class="chip gy">${sk} skipped</span><span class="chip">time ${fmt(used)}</span></div><p class="msg">${msg}</p></div></div>`;
+ h+=`<table class="tt"><tr><th>Topic</th><th>Right</th><th style="width:40%"></th></tr>`;
+ TOPICS.forEach(t=>{const b=by[t];h+=`<tr><td>${t}</td><td class="n">${b.ok} / ${b.n}</td><td><div class="barmini"><i style="width:${100*b.ok/b.n}%"></i></div></td></tr>`});
+ h+=`</table><div class="nav"><button class="btn" id="rHome">Home</button><span style="display:flex;gap:8px"><button class="btn" id="rPrac">Practice mode</button><button class="btn am" id="rTest">Take test again</button></span></div></div>`;
+ h+=`<div class="filters"><button class="btn sm on" data-f="all">All (${N})</button><button class="btn sm" data-f="no">Wrong (${no})</button><button class="btn sm" data-f="sk">Skipped (${sk})</button><button class="btn sm" data-f="ok">Right (${ok})</button></div><div id="rvList"></div>`;
+ $('#result').innerHTML=h;show('result');
+ lastRes={ok,no,sk};
+ $('#rHome').onclick=()=>{show('start');drawStart()};$('#rPrac').onclick=startPractice;$('#rTest').onclick=startTest;
+ document.querySelectorAll('.filters .btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters .btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');drawReview(b.dataset.f)});
+ drawReview('all');
+}
+function drawReview(f){
+ let h='';
+ order.forEach((qi,pos)=>{
+  const Q=QS[qi],a=ans[qi],st=a==null?'sk':a===Q.a?'ok':'no';
+  if(f!=='all'&&f!==st)return;
+  const og=Q.og||Q.o.some(isFig);
+  h+=`<div class="card rv"><div class="qhead"><span class="qno">Q${pos+1}</span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span><span class="chip ${st==='ok'?'gr':st==='no'?'rd':'gy'}">${st==='ok'?'right +'+PER:st==='no'?'wrong −'+NEG:'skipped 0'}</span></div><div class="qtext">${Q.q}</div>${Q.f?`<div class="figwrap">${Q.f}</div>`:''}<div class="opts ${og?'og':''}">`;
+  perm[qi].forEach((o,p)=>{h+=optHTML(Q,qi,o,p,o===Q.a?'ok':o===a?'no':'',true)});
+  const yp=a==null?'—':LBL[perm[qi].indexOf(a)], cp=LBL[perm[qi].indexOf(Q.a)];
+  h+=`</div><div class="yours">Your answer: <b>${yp}</b> · Correct: <b>${cp}</b></div><div class="sol"><h4>Solution</h4>${Q.s}</div></div>`;
+ });
+ const L=$('#rvList');L.innerHTML=h||'<p style="color:var(--mute)">Nothing here.</p>';TS(L);
+}
+
+/* ---------- wiring ---------- */
+$('#goPractice').onclick=startPractice;
+$('#goTest').onclick=startTest;
+$('#homeBtn').onclick=()=>{if(mode==='test')confirmBox('Leave the test?','Your answers in this attempt will be lost.','Leave',()=>{clearInterval(tick);show('start');drawStart()});else{show('start');drawStart()}};
+$('#toggleSide').onclick=()=>$('#side').classList.toggle('closed');
+document.addEventListener('keydown',e=>{
+ if($('#work').classList.contains('hidden')||!$('#modal').classList.contains('hidden'))return;
+ if(['1','2','3','4'].includes(e.key)){const qi=order[cur],ord=mode==='test'?perm[qi]:[0,1,2,3];pick(ord[+e.key-1])}
+ if(e.key==='ArrowRight'&&cur<N-1)go(cur+1);
+ if(e.key==='ArrowLeft'&&cur>0)go(cur-1);
+});
+window.addEventListener('beforeunload',e=>{if(mode==='test'&&!$('#work').classList.contains('hidden')){e.preventDefault();e.returnValue=''}});
+drawStart();
+})();
+</script>
+</body>
+</html>

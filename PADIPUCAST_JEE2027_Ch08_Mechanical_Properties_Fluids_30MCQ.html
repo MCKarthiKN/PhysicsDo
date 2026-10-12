@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mechanical Properties of Fluids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},chtml:{scale:1},options:{enableMenu:false}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root{--bg:#f4efe4;--paper:#fffdf8;--ink:#1d2528;--mute:#5b6668;--line:#e3dccd;--teal:#0f766e;--teal2:#e3f1ee;--amber:#b7791f;--amber2:#fbf0dc;--red:#b42318;--red2:#fbe7e4;--green:#15803d;--green2:#e3f4e8}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(rgba(15,118,110,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(15,118,110,.05) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:16px/1.6 "DM Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;line-height:1.2;margin:0}
+.mono{font-family:"DM Mono",monospace}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:16px}
+.top{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:6px 0 14px;flex-wrap:wrap}
+.brand{font:700 13px "Space Grotesk";letter-spacing:.22em;color:var(--teal)}
+.brand b{color:var(--amber)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 6px 22px rgba(60,50,20,.05)}
+.hidden{display:none!important}
+/* start */
+.hero{padding:28px 26px}
+.hero h1{font-size:clamp(26px,4.4vw,40px)}
+.hero p{color:var(--mute);margin:8px 0 0;max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font:500 12.5px "DM Mono";padding:4px 10px;border-radius:99px;background:var(--teal2);color:var(--teal);white-space:nowrap}
+.chip.am{background:var(--amber2);color:var(--amber)}
+.chip.rd{background:var(--red2);color:var(--red)}
+.chip.gr{background:var(--green2);color:var(--green)}
+.chip.gy{background:#eee9de;color:var(--mute)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.mode{padding:20px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;transition:.15s}
+.mode:hover{border-color:var(--teal);transform:translateY(-1px)}
+.mode h3{font-size:20px}
+.mode p{margin:6px 0 10px;color:var(--mute);font-size:14.5px}
+.mode .go{font:600 14px "Space Grotesk";color:var(--teal)}
+.mode.t .go{color:var(--amber)}
+.mode.t:hover{border-color:var(--amber)}
+.tmap{margin-top:16px;padding:18px 20px}
+.tmap h3{font-size:16px;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dashed var(--line);font-size:14.5px}
+.trow:first-of-type{border-top:0}
+.trow span:last-child{font-family:"DM Mono";color:var(--mute);font-size:13px;white-space:nowrap}
+/* work */
+.bar{position:sticky;top:0;z-index:20;background:rgba(244,239,228,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin:0 -16px 14px;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar .ttl{font:600 15px "Space Grotesk"}
+.clock{font:500 20px "DM Mono";padding:4px 12px;border-radius:10px;background:var(--ink);color:#fff}
+.clock.low{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.75}}
+.btn{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 14px;font-weight:500;color:var(--ink)}
+.btn:hover{border-color:var(--teal)}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.am{background:var(--amber);border-color:var(--amber);color:#fff}
+.btn.sm{padding:5px 10px;font-size:14px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.qcard{padding:22px 24px}
+.qhead{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.qno{font:700 15px "Space Grotesk";color:var(--teal);margin-right:4px}
+.qtext{font-size:17px}
+.qtext p{margin:0 0 8px}
+.dt{border-collapse:collapse;margin:10px 0;font-size:14.5px;background:#fff}
+.dt td,.dt th{border:1px solid var(--line);padding:5px 10px;text-align:left}
+.dt th{background:#f8f4ea;font-weight:600}
+.figwrap{display:flex;justify-content:center;margin:12px 0 4px}
+.fig{width:100%;max-width:330px;height:auto}
+.figwrap .fig.wide{max-width:440px}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opts.og{grid-template-columns:1fr 1fr}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);transition:.12s;min-height:48px}
+.opt:hover{border-color:var(--teal)}
+.opt .lb{font:500 14px "DM Mono";color:var(--mute);flex:0 0 auto;padding-top:2px}
+.opt .ot{flex:1;min-width:0;overflow-x:auto}
+.opts.og .opt{flex-direction:column;align-items:center}
+.opts.og .opt .ot{width:100%}
+.opts.og .fig{max-width:200px;display:block;margin:0 auto}
+.opt.sel{border-color:var(--teal);background:var(--teal2)}
+.opt.ok{border-color:var(--green);background:var(--green2)}
+.opt.no{border-color:var(--red);background:var(--red2)}
+.opt[disabled]{cursor:default}
+.sol{margin-top:16px;border-left:4px solid var(--amber);background:var(--amber2);border-radius:0 12px 12px 0;padding:12px 16px;font-size:15.5px}
+.sol h4{margin:0 0 4px;font:600 14px "Space Grotesk";color:var(--amber);letter-spacing:.04em;text-transform:uppercase}
+.sol p{margin:4px 0}
+.verdict{margin-top:14px;font:600 15px "Space Grotesk"}
+.verdict.ok{color:var(--green)}.verdict.no{color:var(--red)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.side{padding:16px;position:sticky;top:70px}
+.side h3{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.stat{background:#f8f4ea;border-radius:10px;padding:7px 4px;text-align:center}
+.stat b{display:block;font:600 18px "DM Mono"}
+.stat span{font-size:11.5px;color:var(--mute)}
+.tg{font:600 12px "Space Grotesk";color:var(--teal);margin:10px 0 6px;letter-spacing:.03em}
+.dots{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.dot{aspect-ratio:1;border:1.5px solid var(--line);border-radius:9px;background:#fff;font:500 13px "DM Mono";color:var(--ink);padding:0}
+.dot.cur{outline:2.5px solid var(--ink);outline-offset:1px}
+.dot.ans{background:var(--teal);border-color:var(--teal);color:#fff}
+.dot.ok{background:var(--green);border-color:var(--green);color:#fff}
+.dot.no{background:var(--red);border-color:var(--red);color:#fff}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--mute)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.sidebtns{display:grid;gap:8px;margin-top:14px}
+.toggleSide{display:none}
+/* result */
+.res{padding:24px}
+.ringrow{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring{width:150px;height:150px;flex:0 0 auto}
+.msg{font-size:16px;max-width:52ch}
+table.tt{width:100%;border-collapse:collapse;margin-top:16px;font-size:14.5px}
+.tt th,.tt td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+.tt th{font:600 12px "Space Grotesk";color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.tt td.n{font-family:"DM Mono";white-space:nowrap}
+.barmini{height:8px;border-radius:9px;background:#eee7d8;overflow:hidden;min-width:60px}
+.barmini i{display:block;height:100%;background:var(--teal)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 12px}
+.filters .btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rv{padding:18px 20px;margin-bottom:12px}
+.rv .yours{font-size:14px;color:var(--mute);margin-top:10px}
+.modal{position:fixed;inset:0;background:rgba(20,25,28,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal .card{padding:22px;max-width:420px;width:100%}
+.modal p{color:var(--mute)}
+.foot{color:var(--mute);font-size:13px;text-align:center;margin:26px 0 8px}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (max-width:860px){
+ .grid2{grid-template-columns:1fr}
+ .side{position:static}
+ .toggleSide{display:inline-block}
+ .side.closed{display:none}
+}
+@media (max-width:560px){
+ .modes{grid-template-columns:1fr}
+ .qcard{padding:16px}
+ .qtext{font-size:16px}
+ .opts.og{grid-template-columns:1fr 1fr;gap:8px}
+ .opts.og .opt{padding:8px}
+ .dots{grid-template-columns:repeat(6,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top"><div class="brand">PADI<b>PU</b>CAST</div><div class="chip gy">JEE Main PYQ · 2027 prep</div></div>
+
+ <!-- START -->
+ <section id="start">
+  <div class="card hero">
+   <div class="chip am" style="display:inline-block;margin:0 0 10px">Chapter 8 · Properties of Matter</div>
+   <h1>Mechanical Properties of Fluids</h1>
+   <p>30 high-yield JEE Main PYQs (2011–2022) picked for JEE 2027: pressure and Pascal, buoyancy, continuity and Bernoulli, viscosity and terminal velocity, surface tension and capillarity. Every answer checked, every solution worked step by step.</p>
+   <div class="chips" id="metaChips"></div>
+   <div class="modes">
+    <button class="mode" id="goPractice"><h3>Practice mode</h3><p>Answer one by one. You see right or wrong at once, with the full working. Your progress is saved on this device.</p><span class="go" id="pracInfo">Start practice →</span></button>
+    <button class="mode t" id="goTest"><h3>Test mode</h3><p>One clock for the whole paper (60 min). +4 right, −1 wrong. Question and option order shuffled. Answers shown only after you submit.</p><span class="go" id="bestInfo">Start test →</span></button>
+   </div>
+  </div>
+  <div class="card tmap"><h3>What this sheet covers</h3><div id="topicMap"></div></div>
+ </section>
+
+ <!-- WORK -->
+ <section id="work" class="hidden">
+  <div class="bar">
+   <div class="ttl" id="barTitle"></div>
+   <div style="display:flex;gap:8px;align-items:center">
+    <button class="btn sm toggleSide" id="toggleSide">Questions</button>
+    <span class="clock hidden" id="clock">60:00</span>
+    <button class="btn sm" id="homeBtn">Home</button>
+   </div>
+  </div>
+  <div class="grid2">
+   <div>
+    <div class="card qcard" id="qcard"></div>
+   </div>
+   <aside class="card side closed" id="side"></aside>
+  </div>
+ </section>
+
+ <!-- RESULT -->
+ <section id="result" class="hidden"></section>
+
+ <div class="foot">PADIPUCAST · Mechanical Properties of Fluids · every answer checked, solutions worked from first principles</div>
+</div>
+
+<div class="modal hidden" id="modal"><div class="card" id="modalCard"></div></div>
+
+<script>
+const R=String.raw;
+const QS=[];
+/* ---- tiny SVG graph helper ----
+ G({x:[x0,x1], y:[y0,y1], xl:'t', yl:'v', s:[{p:[[x,y],...]}|{f:fn,a,b,n}], xt:[[v,'lbl']], yt:[[v,'lbl']],
+    gd:[[x1,y1,x2,y2]], pt:[[x,y,'lbl',dx,dy]], tx:[[x,y,'txt',anchor]], w, h, cls, ar:[[x,y,deg]] })  */
+let _gid=0;
+const INK='#1d2528',TEAL='#0f766e',AMB='#b7791f',RED='#b42318',MUTE='#5b6668';
+function G(o){
+ const W=o.w||250,H=o.h||175,ml=o.ml||34,mr=o.mr||16,mt=o.mt||16,mb=o.mb||26,id='a'+(++_gid);
+ const [x0,x1]=o.x,[y0,y1]=o.y;
+ const X=v=>ml+(v-x0)/(x1-x0)*(W-ml-mr), Y=v=>H-mb-(v-y0)/(y1-y0)*(H-mt-mb);
+ const ox=X(Math.min(Math.max(0,x0),x1)), oy=Y(Math.min(Math.max(0,y0),y1));
+ let s=`<svg class="fig ${o.cls||''}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INK}"/></marker><marker id="${id}c" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="${TEAL}"/></marker></defs>`;
+ (o.gd||[]).forEach(g=>{s+=`<line x1="${X(g[0])}" y1="${Y(g[1])}" x2="${X(g[2])}" y2="${Y(g[3])}" stroke="${MUTE}" stroke-width="1" stroke-dasharray="3 3"/>`});
+ s+=`<line x1="${ml-4}" y1="${oy}" x2="${W-4}" y2="${oy}" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ s+=`<line x1="${ox}" y1="${H-mb+4}" x2="${ox}" y2="6" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ if(o.xl)s+=o.xlb?`<text x="${(ml+W-mr)/2}" y="${oy+29}" text-anchor="middle" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`:`<text x="${W-6}" y="${oy+(o.xlUp?-6:15)}" text-anchor="end" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`;
+ if(o.yl)s+=`<text x="${ox+6}" y="13" font-size="12" font-style="italic" fill="${INK}">${o.yl}</text>`;
+ (o.xt||[]).forEach(t=>{s+=`<line x1="${X(t[0])}" y1="${oy-3}" x2="${X(t[0])}" y2="${oy+3}" stroke="${INK}"/><text x="${X(t[0])}" y="${oy+(t[2]||14)}" text-anchor="middle" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.yt||[]).forEach(t=>{s+=`<line x1="${ox-3}" y1="${Y(t[0])}" x2="${ox+3}" y2="${Y(t[0])}" stroke="${INK}"/><text x="${ox-6}" y="${Y(t[0])+3.5}" text-anchor="end" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.fill||[]).forEach(f=>{s+=`<polygon points="${f.p.map(q=>X(q[0])+','+Y(q[1])).join(' ')}" fill="${f.c||TEAL}" opacity="${f.op||.15}"/>`});
+ (o.s||[]).forEach(r=>{
+  let pts=r.p;
+  if(r.f){pts=[];const n=r.n||60;for(let i=0;i<=n;i++){const x=r.a+(r.b-r.a)*i/n;pts.push([x,r.f(x)])}}
+  s+=`<polyline points="${pts.map(q=>X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join(' ')}" fill="none" stroke="${r.c||TEAL}" stroke-width="${r.w||2.2}" stroke-linejoin="round" stroke-linecap="round" ${r.d?'stroke-dasharray="5 4"':''}/>`;
+ });
+ (o.ar||[]).forEach(a=>{s+=`<g transform="translate(${X(a[0])},${Y(a[1])}) rotate(${a[2]})"><path d="M-5,-4 L4,0 L-5,4 z" fill="${a[3]||TEAL}"/></g>`});
+ (o.pt||[]).forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3" fill="${INK}"/>`;if(p[2])s+=`<text x="${X(p[0])+(p[3]||5)}" y="${Y(p[1])+(p[4]||-6)}" font-size="11.5" font-weight="700" fill="${INK}">${p[2]}</text>`});
+ (o.tx||[]).forEach(t=>{s+=`<text x="${X(t[0])}" y="${Y(t[1])}" text-anchor="${t[3]||'middle'}" font-size="${t[4]||11}" fill="${t[5]||INK}">${t[2]}</text>`});
+ return s+'</svg>';
+}
+/* plain SVG wrapper for hand-drawn figures */
+function SV(w,h,body,cls){const id='b'+(++_gid);const mk=(n,c)=>`<marker id="${id}${n}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`;
+ return `<svg class="fig ${cls||''}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs>${mk('k',INK)}${mk('t',TEAL)}${mk('a',AMB)}${mk('r',RED)}</defs>${body.replace(/MK([ktar])/g,(m,c)=>'url(#'+id+c+')')}</svg>`}
+
+</script>
+<script>
+// Ch-08 Mechanical Properties of Fluids — part A: pressure, Pascal, buoyancy
+(function(){
+let dash='',dot='';
+for(let y=34;y<=84;y+=10)dash+=`<line x1="22" y1="${y}" x2="128" y2="${y}" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="7 5"/>`;
+for(let y=104;y<=154;y+=10)dot+=`<line x1="22" y1="${y}" x2="128" y2="${y}" stroke="#b7791f" stroke-width="1.6" stroke-dasharray="1.5 4"/>`;
+const WALL=SV(250,190,`${dash}${dot}<line x1="20" y1="94" x2="134" y2="94" stroke="#1d2528" stroke-width="1"/>
+<rect x="134" y="24" width="8" height="140" fill="#d9d2c2" stroke="#1d2528" stroke-width="1.2"/>
+<text x="148" y="30" font-size="13" font-weight="700">M</text><text x="148" y="99" font-size="13" font-weight="700">N</text><text x="148" y="168" font-size="13" font-weight="700">O</text>
+<line x1="178" y1="26" x2="178" y2="92" stroke="#1d2528" stroke-width="1.2"/><line x1="172" y1="26" x2="184" y2="26" stroke="#1d2528" stroke-width="1.2"/><line x1="172" y1="94" x2="184" y2="94" stroke="#1d2528" stroke-width="1.2"/><text x="186" y="63" font-size="12">5 m</text>
+<line x1="178" y1="96" x2="178" y2="162" stroke="#1d2528" stroke-width="1.2"/><line x1="172" y1="162" x2="184" y2="162" stroke="#1d2528" stroke-width="1.2"/><text x="186" y="133" font-size="12">5 m</text>
+<text x="75" y="62" text-anchor="middle" font-size="12" fill="#0f766e" font-weight="700" paint-order="stroke" stroke="#fffdf8" stroke-width="4">ρ₁</text><text x="75" y="133" text-anchor="middle" font-size="12" fill="#b7791f" font-weight="700" paint-order="stroke" stroke="#fffdf8" stroke-width="4">ρ₂ = 2ρ₁</text>`);
+QS.push(
+{t:'Pressure & Pascal’s law',y:'JEE Main 2019',
+ q:R`A submarine experiences a pressure of $5.05\times10^6$ Pa at a depth $d_1$ in the sea. When it goes further to a depth $d_2$, it experiences a pressure of $8.08\times10^6$ Pa. Then $d_2-d_1$ is approximately ($\rho=10^3$ kg/m³, $g=10$ m/s²)`,
+ o:[R`600 m`,R`500 m`,R`300 m`,R`400 m`],a:2,
+ s:R`<p>Atmospheric pressure is common to both, so it cancels in the difference.</p><p>$\Delta P=\rho g(d_2-d_1)\Rightarrow d_2-d_1=\dfrac{(8.08-5.05)\times10^6}{10^4}=303\approx300$ m.</p>`},
+
+{t:'Pressure & Pascal’s law',y:'JEE Main 2021',
+ q:R`The pressure acting on a submarine is $3\times10^5$ Pa at a certain depth. If the depth is doubled, the percentage increase in the pressure on the submarine is (atmospheric pressure $=1\times10^5$ Pa, $\rho=10^3$ kg/m³, $g=10$ m/s²)`,
+ o:[R`$\dfrac{200}{5}\%$`,R`$\dfrac{3}{200}\%$`,R`$\dfrac{200}{3}\%$`,R`$\dfrac{5}{200}\%$`],a:2,
+ s:R`<p>Total $=P_0+\rho gh$: $3\times10^5=1\times10^5+\rho gh\Rightarrow\rho gh=2\times10^5$ Pa.</p><p>Double depth: $P'=1\times10^5+4\times10^5=5\times10^5$ Pa.</p><p>Increase $=\dfrac{2\times10^5}{3\times10^5}\times100=\dfrac{200}{3}\%$. (Doubling only the water part, not the air part.)</p>`},
+
+{t:'Pressure & Pascal’s law',y:'JEE Main 2020',
+ q:R`Two liquids of densities $\rho_1$ and $\rho_2$ ($\rho_2=2\rho_1$) are filled behind a square wall of side 10 m, as shown. Each liquid has a height of 5 m (the lighter liquid on top; they do not mix). The ratio of the force exerted on the upper part MN to that on the lower part NO is`,
+ f:WALL,
+ o:[R`$\dfrac14$`,R`$\dfrac12$`,R`$\dfrac23$`,R`$\dfrac13$`],a:0,
+ s:R`<p>Force on a vertical strip = (average pressure) × area. Each part has area $5\times10=50$ m².</p><p>MN: pressure goes from 0 to $5\rho_1g$, average $2.5\rho_1g$ → $F_1=125\rho_1g$.</p><p>NO: pressure goes from $5\rho_1g$ to $5\rho_1g+5\rho_2g=15\rho_1g$, average $10\rho_1g$ → $F_2=500\rho_1g$.</p><p>$\dfrac{F_1}{F_2}=\dfrac14$.</p>`},
+
+{t:'Pressure & Pascal’s law',y:'JEE Main 2021',
+ q:R`A hydraulic press can lift 100 kg when a mass $m$ is placed on the smaller piston. How much can it lift if the diameter of the larger piston is increased 4 times and that of the smaller piston is decreased 4 times, keeping the same mass $m$ on the smaller piston?`,
+ o:[R`400 kg`,R`1600 kg`,R`6400 kg`,R`25600 kg`],a:3,
+ s:R`<p>Pascal: $\dfrac{W}{A_{\text{big}}}=\dfrac{mg}{A_{\text{small}}}\Rightarrow W=mg\Big(\dfrac{D}{d}\Big)^2$.</p><p>$\dfrac Dd$ becomes $4\times4=16$ times, so $W$ becomes $16^2=256$ times.</p><p>$100\times256=25600$ kg.</p>`},
+
+{t:'Pressure & Pascal’s law',y:'JEE Main 2019',
+ q:R`A long cylindrical vessel is half filled with a liquid. When the vessel is rotated about its own vertical axis, the liquid rises near the wall. If the radius of the vessel is 5 cm and it makes 2 rotations per second, the difference in heights between the centre and the sides is about ($g=10$ m/s²)`,
+ o:[R`1.2 cm`,R`0.1 cm`,R`0.4 cm`,R`2.0 cm`],a:3,
+ s:R`<p>In a rotating liquid the surface is a parabola: $h=\dfrac{\omega^2r^2}{2g}$.</p><p>$\omega=2\pi\times2=4\pi$ rad/s. $h=\dfrac{16\pi^2\times(0.05)^2}{20}=\dfrac{158\times0.0025}{20}\approx0.0197$ m $\approx2.0$ cm.</p>`},
+
+{t:'Buoyancy & floating',y:'JEE Main 2019',
+ q:R`A wooden block floating in a bucket of water has $\dfrac45$ of its volume submerged. When some oil is poured into the bucket, the block is just under the oil surface, with half of its volume in water and half in oil. The density of the oil relative to water is`,
+ o:[R`0.5`,R`0.8`,R`0.7`,R`0.6`],a:3,
+ s:R`<p>First case: $\rho_b=\dfrac45\rho_w=0.8\rho_w$.</p><p>Second case (weight = total buoyancy): $\rho_bV=\dfrac V2\rho_w+\dfrac V2\rho_o\Rightarrow0.8=0.5+0.5\,\dfrac{\rho_o}{\rho_w}$.</p><p>$\dfrac{\rho_o}{\rho_w}=0.6$.</p>`},
+
+{t:'Buoyancy & floating',y:'JEE Main 2019',
+ q:R`A cubical block of side 0.5 m floats on water with 30% of its volume under water. The maximum weight that can be put on the block without fully submerging it is ($\rho_w=10^3$ kg/m³)`,
+ o:[R`30.1 kg`,R`46.3 kg`,R`87.5 kg`,R`65.4 kg`],a:2,
+ s:R`<p>Volume $=0.125$ m³. Fully under water, extra buoyancy comes from the remaining 70% of the volume.</p><p>Extra mass $=0.70\times0.125\times1000=87.5$ kg.</p>`},
+
+{t:'Buoyancy & floating',y:'JEE Main 2020',
+ q:R`A solid sphere of radius $R$ has density $\rho(r)=\rho_0\Big(1-\dfrac{r^2}{R^2}\Big)$, $0\lt r\le R$. The minimum density of a liquid in which it will float is`,
+ o:[R`$\dfrac{2\rho_0}{5}$`,R`$\dfrac{\rho_0}{3}$`,R`$\dfrac{\rho_0}{5}$`,R`$\dfrac{2\rho_0}{3}$`],a:0,
+ s:R`<p>It floats if the liquid is at least as dense as the sphere's <b>average</b> density.</p><p>Mass $=\displaystyle\int_0^R\rho_0\Big(1-\frac{r^2}{R^2}\Big)4\pi r^2dr=4\pi\rho_0\Big(\frac{R^3}{3}-\frac{R^3}{5}\Big)=\frac{8\pi\rho_0R^3}{15}$.</p><p>Average density $=\dfrac{8\pi\rho_0R^3/15}{4\pi R^3/3}=\dfrac{2\rho_0}{5}$.</p>`},
+
+{t:'Buoyancy & floating',y:'JEE Main 2020',
+ q:R`A leak-proof cylinder of length 1 m, made of a metal with very low expansion, floats vertically in water at 0 °C with 20 cm above the water surface. When the water is heated to 4 °C, the height above the surface becomes 21 cm. The density of water at 4 °C relative to that at 0 °C is close to`,
+ o:[R`1.04`,R`1.03`,R`1.26`,R`1.01`],a:3,
+ s:R`<p>Weight is fixed, so (submerged length) × (density) is fixed: $80\,\rho_0=79\,\rho_4$.</p><p>$\dfrac{\rho_4}{\rho_0}=\dfrac{80}{79}=1.013\approx1.01$. (Water is densest at 4 °C, so the cylinder rises.)</p>`},
+
+{t:'Buoyancy & floating',y:'JEE Main 2020',
+ q:R`An air bubble of radius 1 cm in water has an upward acceleration of 9.8 cm/s². The density of water is 1 g/cm³ and water offers negligible drag on the bubble. The mass of the bubble is ($g=980$ cm/s²)`,
+ o:[R`1.52 g`,R`4.51 g`,R`3.15 g`,R`4.15 g`],a:3,
+ s:R`<p>Buoyancy $B=V\rho_wg=\tfrac43\pi(1)^3\times1\times980=4105$ dyne.</p><p>$B-mg=ma\Rightarrow m=\dfrac{B}{g+a}=\dfrac{4105}{989.8}\approx4.15$ g.</p>`}
+);
+})();
+
+</script>
+<script>
+// Ch-08 part B: fluid flow (continuity, Bernoulli, Torricelli) + viscosity
+(function(){
+const VENT=SV(280,120,`<path d="M10,30 L100,30 C125,30 130,45 150,45 L270,45" fill="none" stroke="#1d2528" stroke-width="2"/>
+<path d="M10,90 L100,90 C125,90 130,75 150,75 L270,75" fill="none" stroke="#1d2528" stroke-width="2"/>
+<line x1="20" y1="60" x2="80" y2="60" stroke="#0f766e" stroke-width="2" marker-end="MKt"/><line x1="180" y1="60" x2="260" y2="60" stroke="#0f766e" stroke-width="2.4" marker-end="MKt"/>
+<text x="60" y="22" text-anchor="middle" font-size="12" font-weight="700">A</text><text x="60" y="108" text-anchor="middle" font-size="11">40 cm²</text>
+<text x="210" y="37" text-anchor="middle" font-size="12" font-weight="700">B</text><text x="210" y="92" text-anchor="middle" font-size="11">20 cm²</text>`);
+const JET=SV(260,170,`<ellipse cx="90" cy="32" rx="62" ry="10" fill="#fffdf8" stroke="#1d2528" stroke-width="1.6"/>
+<line x1="28" y1="32" x2="28" y2="140" stroke="#1d2528" stroke-width="1.6"/><line x1="152" y1="32" x2="152" y2="128" stroke="#1d2528" stroke-width="1.6"/>
+<path d="M28,140 Q90,152 152,140" fill="none" stroke="#1d2528" stroke-width="1.6"/>
+<rect x="30" y="58" width="120" height="84" fill="#0f766e" opacity=".12"/>
+<line x1="152" y1="128" x2="200" y2="128" stroke="#1d2528" stroke-width="1.4"/><line x1="152" y1="138" x2="200" y2="138" stroke="#1d2528" stroke-width="1.4"/>
+<line x1="200" y1="133" x2="246" y2="133" stroke="#0f766e" stroke-width="2.4" marker-end="MKt"/><text x="226" y="122" text-anchor="middle" font-size="11" fill="#0f766e">jet, area a</text>
+<text x="90" y="100" text-anchor="middle" font-size="12">base area A</text><text x="90" y="164" text-anchor="middle" font-size="11" fill="#5b6668">rough floor</text>
+<line x1="40" y1="128" x2="10" y2="128" stroke="#b42318" stroke-width="2" marker-end="MKr"/><text x="12" y="120" font-size="11" fill="#b42318">f</text>`);
+QS.push(
+{t:'Fluid flow & Bernoulli',y:'JEE Main 2019',
+ q:R`The top of a water tank is open to air and its water level is kept constant. It gives out 0.74 m³ of water per minute through a circular opening of radius 2 cm in its wall. The depth of the centre of the opening below the water level is close to`,
+ o:[R`9.6 m`,R`2.9 m`,R`4.8 m`,R`6.0 m`],a:2,
+ s:R`<p>Speed of efflux: $v=\dfrac{Q}{a}=\dfrac{0.74/60}{\pi(0.02)^2}=\dfrac{0.01233}{0.001257}\approx9.8$ m/s.</p><p>Torricelli: $v^2=2gh\Rightarrow h=\dfrac{9.8^2}{2\times9.8}=4.9$ m $\approx4.8$ m.</p>`},
+
+{t:'Fluid flow & Bernoulli',y:'JEE Main 2019',
+ q:R`Water from a tap comes out vertically downwards with an initial speed of 1.0 m/s. The cross-sectional area of the tap is $10^{-4}$ m². Assuming constant pressure in the stream and streamline flow, the cross-sectional area of the stream 0.15 m below the tap is ($g=10$ m/s²)`,
+ o:[R`$1\times10^{-5}$ m²`,R`$5\times10^{-5}$ m²`,R`$5\times10^{-4}$ m²`,R`$2\times10^{-5}$ m²`],a:1,
+ s:R`<p>The water speeds up as it falls: $v^2=1^2+2\times10\times0.15=4\Rightarrow v=2$ m/s.</p><p>Continuity: $A_1v_1=A_2v_2\Rightarrow A_2=\dfrac{10^{-4}\times1}{2}=5\times10^{-5}$ m². (That is why a falling stream gets thinner.)</p>`},
+
+{t:'Fluid flow & Bernoulli',y:'JEE Main 2020',
+ q:R`Water flows in a horizontal tube as shown. The pressure changes by 700 N/m² between A and B, where the areas of cross-section are 40 cm² and 20 cm². The rate of flow of water through the tube is ($\rho=1000$ kg/m³)`,
+ f:VENT,
+ o:[R`3020 cm³/s`,R`1810 cm³/s`,R`2720 cm³/s`,R`2420 cm³/s`],a:2,
+ s:R`<p>Continuity: area halves, so $v_B=2v_A$.</p><p>Bernoulli: $P_A-P_B=\tfrac12\rho(v_B^2-v_A^2)=\tfrac12\rho(3v_A^2)\Rightarrow700=1500\,v_A^2\Rightarrow v_A=0.683$ m/s.</p><p>$Q=A_Av_A=40\times68.3\approx2732$ cm³/s $\approx2720$ cm³/s.</p>`},
+
+{t:'Fluid flow & Bernoulli',y:'JEE Main 2021',
+ q:R`Water is filled up to a height of 12 m in a tank with vertical side walls. A hole is made in one wall at a depth $h$ below the water level. For the emerging stream to strike the ground at the maximum range, $h$ should be`,
+ o:[R`6 m`,R`4 m`,R`8 m`,R`3 m`],a:0,
+ s:R`<p>Efflux speed $v=\sqrt{2gh}$. The hole is at height $H-h$, so the fall time is $\sqrt{\dfrac{2(H-h)}{g}}$.</p><p>Range $=v\,t=2\sqrt{h(H-h)}$, largest when $h=\dfrac H2=6$ m. Then $R_{\max}=H=12$ m.</p>`},
+
+{t:'Fluid flow & Bernoulli',y:'JEE Main 2022',
+ q:R`The cross-sectional area of a large tank is 0.5 m². It has a narrow opening near the bottom of area 1 cm². A load of 25 kg is placed on the water surface at the top. Neglecting the speed of water in the tank, the speed of the water coming out of the opening when the water level is 40 cm above the bottom is ($g=10$ m/s²)`,
+ o:[R`283 cm/s`,R`300 cm/s`,R`316 cm/s`,R`200 cm/s`],a:1,
+ s:R`<p>The load adds pressure $\dfrac{mg}{A}=\dfrac{250}{0.5}=500$ Pa on top.</p><p>Bernoulli: $\tfrac12\rho v^2=\rho gh+500\Rightarrow v^2=2\Big(10\times0.4+\dfrac{500}{1000}\Big)=9\Rightarrow v=3$ m/s $=300$ cm/s.</p><p>(283 cm/s forgets the load. A 2021 paper asked the same with 24 kg on 0.4 m².)</p>`},
+
+{t:'Fluid flow & Bernoulli',y:'JEE Main 2019',
+ q:R`A liquid of density $\rho$ comes out of a hose pipe of radius $a$ with horizontal speed $v$ and hits a mesh. 50% of the liquid passes through unaffected, 25% loses all its momentum and 25% comes back with the same speed. The resultant pressure on the mesh is`,
+ o:[R`$\dfrac34\rho v^2$`,R`$\dfrac14\rho v^2$`,R`$\dfrac12\rho v^2$`,R`$\rho v^2$`],a:0,
+ s:R`<p>Momentum hitting per second per unit area $=\rho v\cdot v=\rho v^2$.</p><p>25% stops: change $=0.25\rho v^2$. 25% bounces back: change $=0.25\times2\rho v^2=0.5\rho v^2$. 50% passes: no change.</p><p>Pressure = force per area $=0.75\rho v^2=\dfrac34\rho v^2$.</p>`},
+
+{t:'Fluid flow & Bernoulli',y:'JEE Main 2021',
+ q:R`A light cylindrical vessel with base area $A$ stands on a horizontal surface. A hole of cross-sectional area $a$ is made just at its bottom side ($a\ll A$). The minimum coefficient of friction needed to stop the vessel from sliding due to the reaction of the emerging liquid is`,
+ f:JET,
+ o:[R`$\dfrac{A}{2a}$`,R`None of these`,R`$\dfrac{2a}{A}$`,R`$\dfrac aA$`],a:2,
+ s:R`<p>Jet thrust $=\rho av^2=\rho a(2gh)$ (Torricelli). The vessel is light, so normal reaction $=$ weight of water $=\rho Ahg$.</p><p>No sliding: $\mu\rho Ahg\ge2\rho agh\Rightarrow\mu\ge\dfrac{2a}{A}$.</p>`},
+
+{t:'Viscosity & terminal velocity',y:'AIEEE 2011',
+ q:R`A steel ball (density 7.8 g/cm³) attains a terminal velocity of 10 cm/s when falling in water ($\eta=8.5\times10^{-4}$ Pa s). Its terminal velocity in glycerine ($\rho=1.2$ g/cm³, $\eta=13.2$ Pa s) would be nearly`,
+ o:[R`$1.5\times10^{-5}$ cm/s`,R`$1.6\times10^{-5}$ cm/s`,R`$6.25\times10^{-4}$ cm/s`,R`$6.45\times10^{-4}$ cm/s`],a:2,
+ s:R`<p>$v_t=\dfrac{2r^2(\rho-\sigma)g}{9\eta}\propto\dfrac{\rho-\sigma}{\eta}$ for the same ball.</p><p>$v_2=10\times\dfrac{7.8-1.2}{7.8-1.0}\times\dfrac{8.5\times10^{-4}}{13.2}=10\times0.97\times6.44\times10^{-5}\approx6.25\times10^{-4}$ cm/s.</p><p>(6.45 forgets the change in buoyancy.)</p>`},
+
+{t:'Viscosity & terminal velocity',y:'JEE Main 2019',
+ q:R`A solid sphere of radius $R$ acquires a terminal velocity $v_1$ when falling through a viscous fluid. The sphere is broken into 27 identical solid spheres. If each of these acquires a terminal velocity $v_2$ in the same fluid, the ratio $\dfrac{v_1}{v_2}$ is`,
+ o:[R`$\dfrac1{27}$`,R`9`,R`$\dfrac19$`,R`27`],a:1,
+ s:R`<p>Volume is shared: $27\cdot\tfrac43\pi r^3=\tfrac43\pi R^3\Rightarrow r=\dfrac R3$.</p><p>$v_t\propto r^2\Rightarrow\dfrac{v_1}{v_2}=\Big(\dfrac Rr\Big)^2=9$.</p>`},
+
+{t:'Viscosity & terminal velocity',y:'JEE Main 2020',
+ q:R`In an experiment to verify Stokes' law, a small ball of radius $r$ and density $\rho$ falls through a height $h$ in air before entering a tank of water. If its terminal velocity in water equals its speed just before entering the water, then $h$ is proportional to (ignore air viscosity)`,
+ o:[R`$r^4$`,R`$r^3$`,R`$r$`,R`$r^2$`],a:0,
+ s:R`<p>Speed after falling $h$: $v=\sqrt{2gh}$. Terminal speed in water: $v_t\propto r^2$.</p><p>$\sqrt{2gh}\propto r^2\Rightarrow h\propto r^4$.</p><p>(A 2022 paper asked the numerical version — radius 0.1 mm, answer $h=20$ m.)</p>`},
+
+{t:'Viscosity & terminal velocity',y:'JEE Main 2021',
+ q:R`A raindrop of radius $R=0.2$ mm falls from a cloud 2000 m above the ground. Assume it stays spherical and neglect buoyancy. Its terminal speed is ($\rho_w=1000$ kg/m³, $\rho_{\text{air}}=1.2$ kg/m³, $g=10$ m/s², $\eta_{\text{air}}=1.8\times10^{-5}$ N s/m²)`,
+ o:[R`250.6 m/s`,R`14.4 m/s`,R`43.56 m/s`,R`4.94 m/s`],a:3,
+ s:R`<p>$v_t=\dfrac{2R^2\rho_wg}{9\eta}=\dfrac{2\times(2\times10^{-4})^2\times1000\times10}{9\times1.8\times10^{-5}}=\dfrac{8\times10^{-4}}{1.62\times10^{-4}}\approx4.94$ m/s.</p><p>The 2000 m height is extra data — terminal speed does not depend on it (200 m/s from free fall would be absurd).</p>`},
+
+{t:'Viscosity & terminal velocity',y:'JEE Main 2022',
+ q:R`An air bubble of diameter 2 mm rises steadily through a solution of density 1750 kg/m³ at the rate of 0.35 cm/s. The coefficient of viscosity of the solution is about (density of air negligible)`,
+ o:[R`11 poise`,R`1.1 poise`,R`110 poise`,R`0.11 poise`],a:0,
+ s:R`<p>Rising steadily = terminal velocity: $v=\dfrac{2r^2(\sigma-\rho_{\text{air}})g}{9\eta}$.</p><p>$\eta=\dfrac{2\times(10^{-3})^2\times1750\times10}{9\times0.35\times10^{-2}}=\dfrac{0.035}{0.0315}=1.11$ Pa s.</p><p>1 Pa s = 10 poise, so $\eta\approx11$ poise. (1.1 is the value in Pa s — check your units.)</p>`},
+
+{t:'Viscosity & terminal velocity',y:'JEE Main 2019',
+ q:R`Water from a pipe comes out at 100 litres per minute. If the radius of the pipe is 5 cm, the Reynolds number for the flow is of the order of ($\rho=1000$ kg/m³, $\eta=1$ mPa s)`,
+ o:[R`$10^2$`,R`$10^4$`,R`$10^3$`,R`$10^6$`],a:1,
+ s:R`<p>$v=\dfrac{Q}{\pi r^2}=\dfrac{100\times10^{-3}/60}{\pi(0.05)^2}=\dfrac{1.67\times10^{-3}}{7.85\times10^{-3}}=0.21$ m/s.</p><p>$Re=\dfrac{\rho vD}{\eta}=\dfrac{1000\times0.21\times0.10}{10^{-3}}\approx2.1\times10^4$ → order $10^4$ (turbulent).</p>`}
+);
+})();
+
+</script>
+<script>
+// Ch-08 part C: surface tension, excess pressure, capillarity
+(function(){
+const FILM=SV(200,180,`<defs><pattern id="hz" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#0f766e" stroke-width="1" opacity=".55"/></pattern></defs>
+<path d="M50,120 L50,70 A50,50 0 0 1 150,70 L150,120 Z" fill="url(#hz)"/>
+<path d="M50,150 L50,70 A50,50 0 0 1 150,70 L150,150" fill="none" stroke="#1d2528" stroke-width="2.2"/>
+<line x1="44" y1="120" x2="156" y2="120" stroke="#b7791f" stroke-width="4" stroke-linecap="round"/>
+<text x="100" y="82" text-anchor="middle" font-size="12" font-weight="700" paint-order="stroke" stroke="#fffdf8" stroke-width="4">FILM</text>
+<line x1="100" y1="120" x2="100" y2="146" stroke="#1d2528" stroke-width="1.3"/><rect x="92" y="146" width="16" height="12" fill="#5b6668"/><text x="114" y="157" font-size="12">W</text>
+<text x="40" y="118" text-anchor="end" font-size="11" fill="#b7791f">slider</text><text x="40" y="132" text-anchor="end" font-size="11" fill="#b7791f">30 cm</text>`);
+const BUB=SV(200,170,`<circle cx="100" cy="85" r="72" fill="#0f766e" fill-opacity=".05" stroke="#0f766e" stroke-width="2"/>
+<circle cx="100" cy="85" r="36" fill="#b7791f" fill-opacity=".10" stroke="#b7791f" stroke-width="2"/>
+<line x1="100" y1="85" x2="136" y2="85" stroke="#1d2528" stroke-width="1.2"/><text x="118" y="80" text-anchor="middle" font-size="11">3 cm</text>
+<line x1="100" y1="85" x2="49" y2="134" stroke="#1d2528" stroke-width="1.2"/><text x="64" y="132" font-size="11">6 cm</text><circle cx="100" cy="85" r="2.5" fill="#1d2528"/>`);
+QS.push(
+{t:'Surface tension & capillarity',y:'AIEEE 2011',
+ q:R`Two mercury drops, each of radius $r$, merge to form a bigger drop. If $T$ is the surface tension, the surface energy of the bigger drop is`,
+ o:[R`$2^{8/3}\pi r^2T$`,R`$2^{5/3}\pi r^2T$`,R`$4\pi r^2T$`,R`$2\pi r^2T$`],a:0,
+ s:R`<p>Volume is kept: $\tfrac43\pi R^3=2\cdot\tfrac43\pi r^3\Rightarrow R=2^{1/3}r$.</p><p>Surface energy $=4\pi R^2T=4\pi\cdot2^{2/3}r^2T=2^2\cdot2^{2/3}\pi r^2T=2^{8/3}\pi r^2T$.</p><p>(A 2021 question asked the ratio before : after $=2\cdot4\pi r^2:2^{8/3}\pi r^2=2^{1/3}:1$.)</p>`},
+
+{t:'Surface tension & capillarity',y:'AIEEE 2012',
+ q:R`A thin liquid film formed between a U-shaped wire and a light slider supports a weight of $1.5\times10^{-2}$ N, as shown. The length of the slider is 30 cm and its weight is negligible. The surface tension of the liquid film is`,
+ f:FILM,
+ o:[R`0.1 N/m`,R`0.05 N/m`,R`0.025 N/m`,R`0.0125 N/m`],a:2,
+ s:R`<p>A film has <b>two</b> surfaces (front and back), so the pull on the slider is $2TL$.</p><p>$2TL=W\Rightarrow T=\dfrac{1.5\times10^{-2}}{2\times0.30}=0.025$ N/m. (0.05 forgets the two surfaces.)</p>`},
+
+{t:'Surface tension & capillarity',y:'JEE Main 2019',
+ q:R`The ratio of surface tensions of mercury and water is 7.5 and the ratio of their densities is 13.6. Their contact angles with glass are close to 135° and 0°. Mercury is depressed by $h$ in a capillary of radius $r_1$, while water rises by the same $h$ in a capillary of radius $r_2$. The ratio $\dfrac{r_1}{r_2}$ is close to`,
+ o:[R`$\dfrac45$`,R`$\dfrac23$`,R`$\dfrac35$`,R`$\dfrac25$`],a:3,
+ s:R`<p>$h=\dfrac{2T|\cos\theta|}{r\rho g}\Rightarrow r=\dfrac{2T|\cos\theta|}{h\rho g}$. Same $h$, so $r\propto\dfrac{T|\cos\theta|}{\rho}$.</p><p>$\dfrac{r_1}{r_2}=7.5\times\dfrac{\cos45°}{1}\times\dfrac1{13.6}=\dfrac{7.5\times0.707}{13.6}=0.39\approx\dfrac25$.</p>`},
+
+{t:'Surface tension & capillarity',y:'JEE Main 2020',
+ q:R`A small spherical droplet of density $d$ floats exactly half immersed in a liquid of density $\rho$ and surface tension $T$. The radius of the droplet is (surface tension gives an upward force on the droplet)`,
+ o:[R`$r=\sqrt{\dfrac{3T}{(2d-\rho)g}}$`,R`$r=\sqrt{\dfrac{T}{(d+\rho)g}}$`,R`$r=\sqrt{\dfrac{T}{(d-\rho)g}}$`,R`$r=\sqrt{\dfrac{2T}{3(d+\rho)g}}$`],a:0,
+ s:R`<p>Upward: buoyancy on half the volume $\tfrac23\pi r^3\rho g$ + surface tension along the waterline circle $T\times2\pi r$. Downward: weight $\tfrac43\pi r^3dg$.</p><p>$\tfrac43\pi r^3dg=\tfrac23\pi r^3\rho g+2\pi rT\Rightarrow\tfrac23\pi r^2g(2d-\rho)=2\pi T$.</p><p>$r^2=\dfrac{3T}{(2d-\rho)g}$. (Asked again in 2022 with numbers.)</p>`},
+
+{t:'Surface tension & capillarity',y:'JEE Main 2020',
+ q:R`A glass capillary tube of radius 0.15 mm is dipped vertically in methylene iodide (surface tension 0.05 N/m, density 667 kg/m³), which rises to a height $h$. The two tangents drawn at the liquid–glass contact points (from opposite sides of the tube) make an angle of 60° with each other. Then $h$ is close to ($g=10$ m/s²)`,
+ o:[R`0.049 m`,R`0.087 m`,R`0.137 m`,R`0.172 m`],a:1,
+ s:R`<p>Each tangent makes the contact angle $\theta$ with the vertical wall; together they make $2\theta=60°$, so $\theta=30°$.</p><p>$h=\dfrac{2T\cos\theta}{r\rho g}=\dfrac{2\times0.05\times0.866}{1.5\times10^{-4}\times667\times10}=\dfrac{0.0866}{1.0}\approx0.087$ m.</p><p>(0.049 m uses $\cos60°$ by mistake.)</p>`},
+
+{t:'Surface tension & capillarity',y:'JEE Main 2022',
+ q:R`A spherical soap bubble of radius 3 cm is formed inside another soap bubble of radius 6 cm. The internal pressure of the smaller bubble equals the internal pressure of a single soap bubble of radius $r$ cm. The value of $r$ is`,
+ f:BUB,
+ o:[R`2`,R`1.5`,R`4.5`,R`9`],a:0,
+ s:R`<p>Excess pressure of a soap bubble $=\dfrac{4T}{R}$ (two surfaces). Pressures stack from outside in:</p><p>Inside small bubble $=P_0+\dfrac{4T}{6}+\dfrac{4T}{3}=P_0+4T\Big(\dfrac16+\dfrac13\Big)=P_0+\dfrac{4T}{2}$.</p><p>So it matches a single bubble of radius $r=2$ cm. (Same as $\dfrac1r=\dfrac1{r_1}+\dfrac1{r_2}$.)</p>`},
+
+{t:'Surface tension & capillarity',y:'JEE Main 2022',
+ q:R`A water drop of diameter 2 cm is broken into 64 equal droplets. The surface tension of water is 0.075 N/m. The gain in surface energy in this process is`,
+ o:[R`$2.8\times10^{-4}$ J`,R`$1.5\times10^{-3}$ J`,R`$1.9\times10^{-4}$ J`,R`$9.4\times10^{-5}$ J`],a:0,
+ s:R`<p>$R=1$ cm. Volume kept: $64r^3=R^3\Rightarrow r=\dfrac R4$.</p><p>New area $=64\times4\pi\dfrac{R^2}{16}=4\times(4\pi R^2)$. Increase $=3\times4\pi R^2=12\pi\times10^{-4}$ m².</p><p>$\Delta E=T\Delta A=0.075\times12\pi\times10^{-4}\approx2.8\times10^{-4}$ J. (In general: area grows by the factor $n^{1/3}$.)</p>`}
+);
+})();
+
+</script>
+
+<script>
+(function(){
+const KEY='padipucast_jee27_ch08_fluids_mcq30_v1';
+const N=QS.length, PER=4, NEG=1, MINUTES=60;
+const LBL=['(1)','(2)','(3)','(4)'];
+const $=s=>document.querySelector(s);
+const load=(k,d)=>{try{const v=localStorage.getItem(KEY+k);return v?JSON.parse(v):d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(KEY+k,JSON.stringify(v))}catch(e){}};
+const TOPICS=[...new Set(QS.map(q=>q.t))];
+let mode=null,order=[],cur=0,perm={},ans={},prac=load('_prac',{}),tLeft=0,tick=null,startAt=0,lastRes=null;
+
+function TS(el){const M=window.MathJax;if(M&&M.typesetPromise){if(M.typesetClear)M.typesetClear([el]);M.typesetPromise([el]).catch(()=>{})}else setTimeout(()=>TS(el),300)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){['start','work','result'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0)}
+function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function isFig(s){return typeof s==='string'&&s.trim().startsWith('<svg')}
+
+/* ---------- start screen ---------- */
+function drawStart(){
+ const yrs=QS.map(q=>+(q.y.match(/\d{4}/)||[0])[0]).filter(Boolean);
+ const yc=yrs.length===N?`${Math.min(...yrs)}–${Math.max(...yrs)} papers`:`${yrs.length} JEE PYQs (${Math.min(...yrs)}–${Math.max(...yrs)})</span><span class="chip">${N-yrs.length} from test paper`;
+ $('#metaChips').innerHTML=`<span class="chip">${N} questions</span><span class="chip">${TOPICS.length} topics</span><span class="chip">${yc}</span><span class="chip am">+${PER} / −${NEG}</span>`;
+ $('#topicMap').innerHTML=TOPICS.map(t=>{const qs=QS.filter(q=>q.t===t);return `<div class="trow"><span>${t}</span><span>${qs.length} Qs</span></div>`}).join('');
+ const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+ $('#pracInfo').textContent=done?`Continue practice · ${done}/${N} done, ${ok} right →`:'Start practice →';
+ const b=load('_best',null);
+ $('#bestInfo').textContent=b?`Start test · best ${b.s}/${N*PER} →`:'Start test →';
+}
+
+/* ---------- side panel ---------- */
+function drawSide(){
+ const s=$('#side');
+ let st='';
+ if(mode==='prac'){
+  const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+  st=`<div class="stats"><div class="stat"><b>${done}</b><span>done</span></div><div class="stat"><b style="color:var(--green)">${ok}</b><span>right</span></div><div class="stat"><b style="color:var(--red)">${done-ok}</b><span>wrong</span></div></div>`;
+  st+='<h3>Questions by topic</h3>';
+  TOPICS.forEach(t=>{
+   st+=`<div class="tg">${t}</div><div class="dots">`;
+   order.forEach((qi,pos)=>{if(QS[qi].t!==t)return;const p=prac[qi];const c=p?(p.c===QS[qi].a?'ok':'no'):'';st+=`<button class="dot ${c} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+   st+='</div>';
+  });
+  st+=`<div class="legend"><span><i style="background:var(--green)"></i>right</span><span><i style="background:var(--red)"></i>wrong</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not done</span></div>`;
+  st+=`<div class="sidebtns"><button class="btn sm" id="resetPrac">Clear my practice progress</button></div>`;
+ }else{
+  const a=Object.keys(ans).length;
+  st=`<div class="stats"><div class="stat"><b>${a}</b><span>answered</span></div><div class="stat"><b>${N-a}</b><span>left</span></div><div class="stat"><b>${N}</b><span>total</span></div></div><h3>Jump to</h3><div class="dots">`;
+  order.forEach((qi,pos)=>{st+=`<button class="dot ${ans[qi]!=null?'ans':''} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+  st+=`</div><div class="legend"><span><i style="background:var(--teal)"></i>answered</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not answered</span></div><div class="sidebtns"><button class="btn am" id="submitBtn">Submit paper</button></div>`;
+ }
+ s.innerHTML=st;
+ s.querySelectorAll('.dot').forEach(d=>d.onclick=()=>{if(innerWidth<860)s.classList.add('closed');go(+d.dataset.p)});
+ const rp=$('#resetPrac');if(rp)rp.onclick=()=>confirmBox('Clear practice progress?','All your practice answers for this sheet will be wiped from this device.','Clear',()=>{prac={};save('_prac',prac);drawQ()});
+ const sb=$('#submitBtn');if(sb)sb.onclick=askSubmit;
+}
+
+/* ---------- question ---------- */
+function optHTML(Q,qi,o,pos,cls,dis){return `<button class="opt ${cls}" data-o="${o}" ${dis?'disabled':''}><span class="lb">${LBL[pos]}</span><span class="ot">${Q.o[o]}</span></button>`}
+function drawQ(){
+ const qi=order[cur],Q=QS[qi],c=$('#qcard');
+ const ord=mode==='test'?perm[qi]:[0,1,2,3];
+ const og=Q.og||Q.o.some(isFig);
+ let h=`<div class="qhead"><span class="qno">Q${cur+1} <span style="color:var(--mute);font-weight:500">/ ${N}</span></span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span></div>`;
+ h+=`<div class="qtext">${Q.q}</div>`;
+ if(Q.f)h+=`<div class="figwrap">${Q.f}</div>`;
+ h+=`<div class="opts ${og?'og':''}">`;
+ const p=mode==='prac'?prac[qi]:null;
+ ord.forEach((o,pos)=>{
+  let cls='';
+  if(mode==='prac'&&p){if(o===Q.a)cls='ok';else if(o===p.c)cls='no'}
+  if(mode==='test'&&ans[qi]===o)cls='sel';
+  h+=optHTML(Q,qi,o,pos,cls,mode==='prac'&&p);
+ });
+ h+='</div>';
+ if(mode==='prac'&&p){
+  const right=p.c===Q.a;
+  h+=`<div class="verdict ${right?'ok':'no'}">${right?'✓ Correct!':p.c<0?'Answer shown: '+LBL[Q.a]+' (counted as not solved)':'✗ Not this one. Correct answer: '+LBL[Q.a]}</div>`;
+  h+=`<div class="sol"><h4>Solution</h4>${Q.s}</div>`;
+ }
+ h+=`<div class="nav"><button class="btn" id="prevB" ${cur===0?'disabled':''}>← Prev</button><span style="display:flex;gap:8px">`;
+ if(mode==='prac'&&p)h+=`<button class="btn" id="retryB">Try again</button>`;
+ if(mode==='prac'&&!p)h+=`<button class="btn" id="peekB">Show answer</button>`;
+ if(mode==='test'&&ans[qi]!=null)h+=`<button class="btn" id="clearB">Clear answer</button>`;
+ h+=`</span><button class="btn pri" id="nextB">${cur===N-1?(mode==='test'?'Submit':'Finish'):'Next →'}</button></div>`;
+ c.innerHTML=h;
+ c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.o));
+ $('#prevB').onclick=()=>{if(cur>0)go(cur-1)};
+ $('#nextB').onclick=()=>{if(cur<N-1)go(cur+1);else if(mode==='test')askSubmit();else{show('start');drawStart()}};
+ const r=$('#retryB');if(r)r.onclick=()=>{delete prac[qi];save('_prac',prac);drawQ()};
+ const pk=$('#peekB');if(pk)pk.onclick=()=>{prac[qi]={c:-1};save('_prac',prac);drawQ()};
+ const cl=$('#clearB');if(cl)cl.onclick=()=>{delete ans[qi];drawQ()};
+ drawSide();TS(c);
+}
+function go(p){cur=p;drawQ();const t=$('#qcard').getBoundingClientRect().top;if(t<0||t>innerHeight*.5)window.scrollTo({top:Math.max(0,window.scrollY+t-70),behavior:'smooth'})}
+function pick(o){
+ const qi=order[cur];
+ if(mode==='prac'){if(prac[qi])return;prac[qi]={c:o};save('_prac',prac);drawQ();setTimeout(()=>{const v=document.querySelector('.verdict');if(v)v.scrollIntoView({behavior:'smooth',block:'center'})},60)}
+ else{ans[qi]=o;drawQ()}
+}
+
+/* ---------- modes ---------- */
+function startPractice(){mode='prac';order=QS.map((_,i)=>i);cur=0;const f=order.findIndex(i=>!prac[i]);if(f>0)cur=f;$('#clock').classList.add('hidden');$('#barTitle').textContent='Practice · '+document.title;show('work');drawQ()}
+function startTest(){
+ mode='test';order=shuffle(QS.map((_,i)=>i));perm={};ans={};cur=0;
+ QS.forEach((q,i)=>perm[i]=q.keep?[0,1,2,3]:shuffle([0,1,2,3]));
+ tLeft=MINUTES*60;startAt=Date.now();
+ const ck=$('#clock');ck.classList.remove('hidden','low');ck.textContent=fmt(tLeft);
+ clearInterval(tick);
+ tick=setInterval(()=>{tLeft=MINUTES*60-Math.floor((Date.now()-startAt)/1000);ck.textContent=fmt(tLeft);ck.classList.toggle('low',tLeft<=300);if(tLeft<=0){clearInterval(tick);finish(true)}},500);
+ $('#barTitle').textContent='Test · '+document.title;show('work');drawQ();
+}
+function confirmBox(title,body,okTxt,fn){
+ const m=$('#modal');$('#modalCard').innerHTML=`<h3>${title}</h3><p>${body}</p><div class="nav"><button class="btn" id="mNo">Cancel</button><button class="btn am" id="mYes">${okTxt}</button></div>`;
+ m.classList.remove('hidden');$('#mNo').onclick=()=>m.classList.add('hidden');$('#mYes').onclick=()=>{m.classList.add('hidden');fn()};
+}
+function askSubmit(){const a=Object.keys(ans).length;confirmBox('Submit the paper?',`You have answered ${a} of ${N}. ${N-a?(N-a)+' left blank (no marks lost for blanks).':'All answered.'}`,'Submit',()=>finish(false))}
+
+/* ---------- result ---------- */
+function finish(auto){
+ clearInterval(tick);$('#clock').classList.add('hidden');
+ let ok=0,no=0,sk=0;const by={};TOPICS.forEach(t=>by[t]={ok:0,n:0});
+ QS.forEach((q,i)=>{by[q.t].n++;if(ans[i]==null)sk++;else if(ans[i]===q.a){ok++;by[q.t].ok++}else no++});
+ const score=ok*PER-no*NEG, max=N*PER, used=Math.min(MINUTES*60,Math.floor((Date.now()-startAt)/1000));
+ const best=load('_best',null);if(!best||score>best.s)save('_best',{s:score,d:new Date().toLocaleDateString()});
+ const pct=Math.max(0,score)/max, col=pct>=.7?'var(--green)':pct>=.45?'var(--amber)':'var(--red)';
+ const C=2*Math.PI*62;
+ let msg=pct>=.85?'Excellent. This chapter is exam-ready. Keep revising the ones you got wrong.':pct>=.7?'Very good. A few slips — read the solutions of the wrong ones carefully.':pct>=.45?'Fair attempt. Go topic by topic below and redo the weak topic in practice mode.':'This chapter needs more work. Use practice mode first — read every solution, then take the test again.';
+ if(no>ok&&no>=6)msg+=' Note: wrong answers cost you marks. Skip when you are only guessing.';
+ if(auto)msg='Time up — your paper was submitted automatically. '+msg;
+ let h=`<div class="card res"><div class="ringrow"><svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="#eee7d8" stroke-width="12"/><circle cx="75" cy="75" r="62" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" transform="rotate(-90 75 75)"/><text x="75" y="74" text-anchor="middle" font-family="DM Mono" font-size="30" font-weight="500" fill="#1d2528">${score}</text><text x="75" y="98" text-anchor="middle" font-family="DM Sans" font-size="13" fill="#5b6668">out of ${max}</text></svg><div><h2 style="font-size:26px">Your result</h2><div class="chips"><span class="chip gr">${ok} right</span><span class="chip rd">${no} wrong</span><span class="chip gy">${sk} skipped</span><span class="chip">time ${fmt(used)}</span></div><p class="msg">${msg}</p></div></div>`;
+ h+=`<table class="tt"><tr><th>Topic</th><th>Right</th><th style="width:40%"></th></tr>`;
+ TOPICS.forEach(t=>{const b=by[t];h+=`<tr><td>${t}</td><td class="n">${b.ok} / ${b.n}</td><td><div class="barmini"><i style="width:${100*b.ok/b.n}%"></i></div></td></tr>`});
+ h+=`</table><div class="nav"><button class="btn" id="rHome">Home</button><span style="display:flex;gap:8px"><button class="btn" id="rPrac">Practice mode</button><button class="btn am" id="rTest">Take test again</button></span></div></div>`;
+ h+=`<div class="filters"><button class="btn sm on" data-f="all">All (${N})</button><button class="btn sm" data-f="no">Wrong (${no})</button><button class="btn sm" data-f="sk">Skipped (${sk})</button><button class="btn sm" data-f="ok">Right (${ok})</button></div><div id="rvList"></div>`;
+ $('#result').innerHTML=h;show('result');
+ lastRes={ok,no,sk};
+ $('#rHome').onclick=()=>{show('start');drawStart()};$('#rPrac').onclick=startPractice;$('#rTest').onclick=startTest;
+ document.querySelectorAll('.filters .btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters .btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');drawReview(b.dataset.f)});
+ drawReview('all');
+}
+function drawReview(f){
+ let h='';
+ order.forEach((qi,pos)=>{
+  const Q=QS[qi],a=ans[qi],st=a==null?'sk':a===Q.a?'ok':'no';
+  if(f!=='all'&&f!==st)return;
+  const og=Q.og||Q.o.some(isFig);
+  h+=`<div class="card rv"><div class="qhead"><span class="qno">Q${pos+1}</span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span><span class="chip ${st==='ok'?'gr':st==='no'?'rd':'gy'}">${st==='ok'?'right +'+PER:st==='no'?'wrong −'+NEG:'skipped 0'}</span></div><div class="qtext">${Q.q}</div>${Q.f?`<div class="figwrap">${Q.f}</div>`:''}<div class="opts ${og?'og':''}">`;
+  perm[qi].forEach((o,p)=>{h+=optHTML(Q,qi,o,p,o===Q.a?'ok':o===a?'no':'',true)});
+  const yp=a==null?'—':LBL[perm[qi].indexOf(a)], cp=LBL[perm[qi].indexOf(Q.a)];
+  h+=`</div><div class="yours">Your answer: <b>${yp}</b> · Correct: <b>${cp}</b></div><div class="sol"><h4>Solution</h4>${Q.s}</div></div>`;
+ });
+ const L=$('#rvList');L.innerHTML=h||'<p style="color:var(--mute)">Nothing here.</p>';TS(L);
+}
+
+/* ---------- wiring ---------- */
+$('#goPractice').onclick=startPractice;
+$('#goTest').onclick=startTest;
+$('#homeBtn').onclick=()=>{if(mode==='test')confirmBox('Leave the test?','Your answers in this attempt will be lost.','Leave',()=>{clearInterval(tick);show('start');drawStart()});else{show('start');drawStart()}};
+$('#toggleSide').onclick=()=>$('#side').classList.toggle('closed');
+document.addEventListener('keydown',e=>{
+ if($('#work').classList.contains('hidden')||!$('#modal').classList.contains('hidden'))return;
+ if(['1','2','3','4'].includes(e.key)){const qi=order[cur],ord=mode==='test'?perm[qi]:[0,1,2,3];pick(ord[+e.key-1])}
+ if(e.key==='ArrowRight'&&cur<N-1)go(cur+1);
+ if(e.key==='ArrowLeft'&&cur>0)go(cur-1);
+});
+window.addEventListener('beforeunload',e=>{if(mode==='test'&&!$('#work').classList.contains('hidden')){e.preventDefault();e.returnValue=''}});
+drawStart();
+})();
+</script>
+</body>
+</html>

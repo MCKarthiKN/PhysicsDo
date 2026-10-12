@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mechanical Properties of Solids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},chtml:{scale:1},options:{enableMenu:false}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root{--bg:#f4efe4;--paper:#fffdf8;--ink:#1d2528;--mute:#5b6668;--line:#e3dccd;--teal:#0f766e;--teal2:#e3f1ee;--amber:#b7791f;--amber2:#fbf0dc;--red:#b42318;--red2:#fbe7e4;--green:#15803d;--green2:#e3f4e8}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(rgba(15,118,110,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(15,118,110,.05) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:16px/1.6 "DM Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;line-height:1.2;margin:0}
+.mono{font-family:"DM Mono",monospace}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:16px}
+.top{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:6px 0 14px;flex-wrap:wrap}
+.brand{font:700 13px "Space Grotesk";letter-spacing:.22em;color:var(--teal)}
+.brand b{color:var(--amber)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 6px 22px rgba(60,50,20,.05)}
+.hidden{display:none!important}
+/* start */
+.hero{padding:28px 26px}
+.hero h1{font-size:clamp(26px,4.4vw,40px)}
+.hero p{color:var(--mute);margin:8px 0 0;max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font:500 12.5px "DM Mono";padding:4px 10px;border-radius:99px;background:var(--teal2);color:var(--teal);white-space:nowrap}
+.chip.am{background:var(--amber2);color:var(--amber)}
+.chip.rd{background:var(--red2);color:var(--red)}
+.chip.gr{background:var(--green2);color:var(--green)}
+.chip.gy{background:#eee9de;color:var(--mute)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.mode{padding:20px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;transition:.15s}
+.mode:hover{border-color:var(--teal);transform:translateY(-1px)}
+.mode h3{font-size:20px}
+.mode p{margin:6px 0 10px;color:var(--mute);font-size:14.5px}
+.mode .go{font:600 14px "Space Grotesk";color:var(--teal)}
+.mode.t .go{color:var(--amber)}
+.mode.t:hover{border-color:var(--amber)}
+.tmap{margin-top:16px;padding:18px 20px}
+.tmap h3{font-size:16px;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dashed var(--line);font-size:14.5px}
+.trow:first-of-type{border-top:0}
+.trow span:last-child{font-family:"DM Mono";color:var(--mute);font-size:13px;white-space:nowrap}
+/* work */
+.bar{position:sticky;top:0;z-index:20;background:rgba(244,239,228,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin:0 -16px 14px;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar .ttl{font:600 15px "Space Grotesk"}
+.clock{font:500 20px "DM Mono";padding:4px 12px;border-radius:10px;background:var(--ink);color:#fff}
+.clock.low{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.75}}
+.btn{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 14px;font-weight:500;color:var(--ink)}
+.btn:hover{border-color:var(--teal)}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.am{background:var(--amber);border-color:var(--amber);color:#fff}
+.btn.sm{padding:5px 10px;font-size:14px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.qcard{padding:22px 24px}
+.qhead{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.qno{font:700 15px "Space Grotesk";color:var(--teal);margin-right:4px}
+.qtext{font-size:17px}
+.qtext p{margin:0 0 8px}
+.dt{border-collapse:collapse;margin:10px 0;font-size:14.5px;background:#fff}
+.dt td,.dt th{border:1px solid var(--line);padding:5px 10px;text-align:left}
+.dt th{background:#f8f4ea;font-weight:600}
+.figwrap{display:flex;justify-content:center;margin:12px 0 4px}
+.fig{width:100%;max-width:330px;height:auto}
+.figwrap .fig.wide{max-width:440px}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opts.og{grid-template-columns:1fr 1fr}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);transition:.12s;min-height:48px}
+.opt:hover{border-color:var(--teal)}
+.opt .lb{font:500 14px "DM Mono";color:var(--mute);flex:0 0 auto;padding-top:2px}
+.opt .ot{flex:1;min-width:0;overflow-x:auto}
+.opts.og .opt{flex-direction:column;align-items:center}
+.opts.og .opt .ot{width:100%}
+.opts.og .fig{max-width:200px;display:block;margin:0 auto}
+.opt.sel{border-color:var(--teal);background:var(--teal2)}
+.opt.ok{border-color:var(--green);background:var(--green2)}
+.opt.no{border-color:var(--red);background:var(--red2)}
+.opt[disabled]{cursor:default}
+.sol{margin-top:16px;border-left:4px solid var(--amber);background:var(--amber2);border-radius:0 12px 12px 0;padding:12px 16px;font-size:15.5px}
+.sol h4{margin:0 0 4px;font:600 14px "Space Grotesk";color:var(--amber);letter-spacing:.04em;text-transform:uppercase}
+.sol p{margin:4px 0}
+.verdict{margin-top:14px;font:600 15px "Space Grotesk"}
+.verdict.ok{color:var(--green)}.verdict.no{color:var(--red)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.side{padding:16px;position:sticky;top:70px}
+.side h3{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.stat{background:#f8f4ea;border-radius:10px;padding:7px 4px;text-align:center}
+.stat b{display:block;font:600 18px "DM Mono"}
+.stat span{font-size:11.5px;color:var(--mute)}
+.tg{font:600 12px "Space Grotesk";color:var(--teal);margin:10px 0 6px;letter-spacing:.03em}
+.dots{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.dot{aspect-ratio:1;border:1.5px solid var(--line);border-radius:9px;background:#fff;font:500 13px "DM Mono";color:var(--ink);padding:0}
+.dot.cur{outline:2.5px solid var(--ink);outline-offset:1px}
+.dot.ans{background:var(--teal);border-color:var(--teal);color:#fff}
+.dot.ok{background:var(--green);border-color:var(--green);color:#fff}
+.dot.no{background:var(--red);border-color:var(--red);color:#fff}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--mute)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.sidebtns{display:grid;gap:8px;margin-top:14px}
+.toggleSide{display:none}
+/* result */
+.res{padding:24px}
+.ringrow{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring{width:150px;height:150px;flex:0 0 auto}
+.msg{font-size:16px;max-width:52ch}
+table.tt{width:100%;border-collapse:collapse;margin-top:16px;font-size:14.5px}
+.tt th,.tt td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+.tt th{font:600 12px "Space Grotesk";color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.tt td.n{font-family:"DM Mono";white-space:nowrap}
+.barmini{height:8px;border-radius:9px;background:#eee7d8;overflow:hidden;min-width:60px}
+.barmini i{display:block;height:100%;background:var(--teal)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 12px}
+.filters .btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rv{padding:18px 20px;margin-bottom:12px}
+.rv .yours{font-size:14px;color:var(--mute);margin-top:10px}
+.modal{position:fixed;inset:0;background:rgba(20,25,28,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal .card{padding:22px;max-width:420px;width:100%}
+.modal p{color:var(--mute)}
+.foot{color:var(--mute);font-size:13px;text-align:center;margin:26px 0 8px}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (max-width:860px){
+ .grid2{grid-template-columns:1fr}
+ .side{position:static}
+ .toggleSide{display:inline-block}
+ .side.closed{display:none}
+}
+@media (max-width:560px){
+ .modes{grid-template-columns:1fr}
+ .qcard{padding:16px}
+ .qtext{font-size:16px}
+ .opts.og{grid-template-columns:1fr 1fr;gap:8px}
+ .opts.og .opt{padding:8px}
+ .dots{grid-template-columns:repeat(6,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top"><div class="brand">PADI<b>PU</b>CAST</div><div class="chip gy">JEE Main PYQ · 2027 prep</div></div>
+
+ <!-- START -->
+ <section id="start">
+  <div class="card hero">
+   <div class="chip am" style="display:inline-block;margin:0 0 10px">Chapter 7 · Properties of Matter</div>
+   <h1>Mechanical Properties of Solids</h1>
+   <p>30 high-yield JEE Main PYQs (2009–2022) picked for JEE 2027: stress–strain ratios, breaking stress, wires in series, thermal stress, bulk and shear modulus, and elastic energy. Every answer checked, every solution worked step by step.</p>
+   <div class="chips" id="metaChips"></div>
+   <div class="modes">
+    <button class="mode" id="goPractice"><h3>Practice mode</h3><p>Answer one by one. You see right or wrong at once, with the full working. Your progress is saved on this device.</p><span class="go" id="pracInfo">Start practice →</span></button>
+    <button class="mode t" id="goTest"><h3>Test mode</h3><p>One clock for the whole paper (60 min). +4 right, −1 wrong. Question and option order shuffled. Answers shown only after you submit.</p><span class="go" id="bestInfo">Start test →</span></button>
+   </div>
+  </div>
+  <div class="card tmap"><h3>What this sheet covers</h3><div id="topicMap"></div></div>
+ </section>
+
+ <!-- WORK -->
+ <section id="work" class="hidden">
+  <div class="bar">
+   <div class="ttl" id="barTitle"></div>
+   <div style="display:flex;gap:8px;align-items:center">
+    <button class="btn sm toggleSide" id="toggleSide">Questions</button>
+    <span class="clock hidden" id="clock">60:00</span>
+    <button class="btn sm" id="homeBtn">Home</button>
+   </div>
+  </div>
+  <div class="grid2">
+   <div>
+    <div class="card qcard" id="qcard"></div>
+   </div>
+   <aside class="card side closed" id="side"></aside>
+  </div>
+ </section>
+
+ <!-- RESULT -->
+ <section id="result" class="hidden"></section>
+
+ <div class="foot">PADIPUCAST · Mechanical Properties of Solids · every answer checked, solutions worked from first principles</div>
+</div>
+
+<div class="modal hidden" id="modal"><div class="card" id="modalCard"></div></div>
+
+<script>
+const R=String.raw;
+const QS=[];
+/* ---- tiny SVG graph helper ----
+ G({x:[x0,x1], y:[y0,y1], xl:'t', yl:'v', s:[{p:[[x,y],...]}|{f:fn,a,b,n}], xt:[[v,'lbl']], yt:[[v,'lbl']],
+    gd:[[x1,y1,x2,y2]], pt:[[x,y,'lbl',dx,dy]], tx:[[x,y,'txt',anchor]], w, h, cls, ar:[[x,y,deg]] })  */
+let _gid=0;
+const INK='#1d2528',TEAL='#0f766e',AMB='#b7791f',RED='#b42318',MUTE='#5b6668';
+function G(o){
+ const W=o.w||250,H=o.h||175,ml=o.ml||34,mr=o.mr||16,mt=o.mt||16,mb=o.mb||26,id='a'+(++_gid);
+ const [x0,x1]=o.x,[y0,y1]=o.y;
+ const X=v=>ml+(v-x0)/(x1-x0)*(W-ml-mr), Y=v=>H-mb-(v-y0)/(y1-y0)*(H-mt-mb);
+ const ox=X(Math.min(Math.max(0,x0),x1)), oy=Y(Math.min(Math.max(0,y0),y1));
+ let s=`<svg class="fig ${o.cls||''}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INK}"/></marker><marker id="${id}c" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="${TEAL}"/></marker></defs>`;
+ (o.gd||[]).forEach(g=>{s+=`<line x1="${X(g[0])}" y1="${Y(g[1])}" x2="${X(g[2])}" y2="${Y(g[3])}" stroke="${MUTE}" stroke-width="1" stroke-dasharray="3 3"/>`});
+ s+=`<line x1="${ml-4}" y1="${oy}" x2="${W-4}" y2="${oy}" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ s+=`<line x1="${ox}" y1="${H-mb+4}" x2="${ox}" y2="6" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ if(o.xl)s+=o.xlb?`<text x="${(ml+W-mr)/2}" y="${oy+29}" text-anchor="middle" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`:`<text x="${W-6}" y="${oy+(o.xlUp?-6:15)}" text-anchor="end" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`;
+ if(o.yl)s+=`<text x="${ox+6}" y="13" font-size="12" font-style="italic" fill="${INK}">${o.yl}</text>`;
+ (o.xt||[]).forEach(t=>{s+=`<line x1="${X(t[0])}" y1="${oy-3}" x2="${X(t[0])}" y2="${oy+3}" stroke="${INK}"/><text x="${X(t[0])}" y="${oy+(t[2]||14)}" text-anchor="middle" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.yt||[]).forEach(t=>{s+=`<line x1="${ox-3}" y1="${Y(t[0])}" x2="${ox+3}" y2="${Y(t[0])}" stroke="${INK}"/><text x="${ox-6}" y="${Y(t[0])+3.5}" text-anchor="end" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.fill||[]).forEach(f=>{s+=`<polygon points="${f.p.map(q=>X(q[0])+','+Y(q[1])).join(' ')}" fill="${f.c||TEAL}" opacity="${f.op||.15}"/>`});
+ (o.s||[]).forEach(r=>{
+  let pts=r.p;
+  if(r.f){pts=[];const n=r.n||60;for(let i=0;i<=n;i++){const x=r.a+(r.b-r.a)*i/n;pts.push([x,r.f(x)])}}
+  s+=`<polyline points="${pts.map(q=>X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join(' ')}" fill="none" stroke="${r.c||TEAL}" stroke-width="${r.w||2.2}" stroke-linejoin="round" stroke-linecap="round" ${r.d?'stroke-dasharray="5 4"':''}/>`;
+ });
+ (o.ar||[]).forEach(a=>{s+=`<g transform="translate(${X(a[0])},${Y(a[1])}) rotate(${a[2]})"><path d="M-5,-4 L4,0 L-5,4 z" fill="${a[3]||TEAL}"/></g>`});
+ (o.pt||[]).forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3" fill="${INK}"/>`;if(p[2])s+=`<text x="${X(p[0])+(p[3]||5)}" y="${Y(p[1])+(p[4]||-6)}" font-size="11.5" font-weight="700" fill="${INK}">${p[2]}</text>`});
+ (o.tx||[]).forEach(t=>{s+=`<text x="${X(t[0])}" y="${Y(t[1])}" text-anchor="${t[3]||'middle'}" font-size="${t[4]||11}" fill="${t[5]||INK}">${t[2]}</text>`});
+ return s+'</svg>';
+}
+/* plain SVG wrapper for hand-drawn figures */
+function SV(w,h,body,cls){const id='b'+(++_gid);const mk=(n,c)=>`<marker id="${id}${n}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`;
+ return `<svg class="fig ${cls||''}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs>${mk('k',INK)}${mk('t',TEAL)}${mk('a',AMB)}${mk('r',RED)}</defs>${body.replace(/MK([ktar])/g,(m,c)=>'url(#'+id+c+')')}</svg>`}
+
+</script>
+<script>
+// Ch-07 Mechanical Properties of Solids — part A: stress, strain, Y + breaking stress
+(function(){
+const PAN=SV(200,190,`<line x1="40" y1="14" x2="160" y2="14" stroke="#1d2528" stroke-width="2"/>${[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>`<line x1="${44+i*10}" y1="14" x2="${38+i*10}" y2="6" stroke="#1d2528" stroke-width="1.2"/>`).join('')}
+<line x1="100" y1="14" x2="100" y2="58" stroke="#0f766e" stroke-width="2"/><text x="86" y="40" text-anchor="end" font-size="12" font-weight="700">W₁</text>
+<rect x="70" y="58" width="60" height="24" fill="#f3ecdc" stroke="#1d2528" stroke-width="1.5"/><text x="138" y="75" font-size="12">20 kg</text>
+<line x1="100" y1="82" x2="100" y2="112" stroke="#0f766e" stroke-width="2"/><text x="86" y="101" text-anchor="end" font-size="12" font-weight="700">W₂</text>
+<rect x="82" y="112" width="36" height="22" fill="#f3ecdc" stroke="#1d2528" stroke-width="1.5"/><text x="126" y="128" font-size="12">10 kg</text>
+<line x1="100" y1="134" x2="100" y2="150" stroke="#1d2528" stroke-width="1.5"/><path d="M84,166 L100,150 L116,166 Z" fill="none" stroke="#1d2528" stroke-width="1.5"/><text x="124" y="166" font-size="12">pan</text>`);
+const SEARLE=G({x:[0,5.6],y:[0,1.42],xl:'wire length (m)',xlb:1,mb:38,h:212,yl:'(extension / load) × 10⁻⁵ m/N',w:300,ml:44,xt:[1,2,3,4,5].map(v=>[v,''+v]),yt:[[.25,'0.25'],[.5,'0.50'],[.75,'0.75'],[1,'1.00'],[1.25,'1.25']],gd:[1,2,3,4,5].map(v=>[v,0,v,v/4]).concat([1,2,3,4,5].map(v=>[0,v/4,v,v/4])),s:[{p:[[0,0],[5.3,1.325]]}],pt:[1,2,3,4,5].map(v=>[v,v/4])});
+QS.push(
+{t:'Stress, strain & Young’s modulus',y:'AIEEE 2009',
+ q:R`Two wires are made of the same material and have the same volume. Wire 1 has cross-sectional area $A$ and wire 2 has cross-sectional area $3A$. If the length of wire 1 increases by $\Delta x$ on applying force $F$, how much force is needed to stretch wire 2 by the same amount?`,
+ o:[R`$4F$`,R`$6F$`,R`$9F$`,R`$F$`],a:2,
+ s:R`<p>$\Delta l=\dfrac{FL}{AY}\Rightarrow F=\dfrac{AY\,\Delta l}{L}$.</p><p>Same volume: $AL=3A\cdot L_2\Rightarrow L_2=\dfrac L3$.</p><p>$\dfrac{F_2}{F}=\dfrac{A_2}{A}\cdot\dfrac{L}{L_2}=3\times3=9\Rightarrow F_2=9F$.</p><p>Short cut: at fixed volume, $L=V/A$, so $F\propto A^2$.</p>`},
+
+{t:'Stress, strain & Young’s modulus',y:'JEE Main 2017',
+ q:R`A man grows into a giant such that his linear dimensions increase by a factor of 9. Assuming that his density remains the same, the stress in his leg will change by a factor of`,
+ o:[R`9`,R`$\dfrac19$`,R`81`,R`$\dfrac1{81}$`],a:0,
+ s:R`<p>Weight $\propto$ volume $\propto L^3$, so it becomes $9^3$ times. Area of the leg $\propto L^2$, so it becomes $9^2$ times.</p><p>Stress $=\dfrac{\text{weight}}{\text{area}}\propto\dfrac{L^3}{L^2}=L$ → becomes 9 times.</p><p>(This is why giants cannot exist — bones would break.)</p>`},
+
+{t:'Stress, strain & Young’s modulus',y:'JEE Main 2019',
+ q:R`Young's moduli of two wires A and B are in the ratio 7 : 4. Wire A is 2 m long and has radius $R$. Wire B is 1.5 m long and has radius 2 mm. If the two wires stretch by the same length for a given load, the value of $R$ is close to`,
+ o:[R`1.3 mm`,R`1.9 mm`,R`1.5 mm`,R`1.7 mm`],a:3,
+ s:R`<p>Same load, same stretch: $\dfrac{L_A}{Y_A\,\pi R^2}=\dfrac{L_B}{Y_B\,\pi r_B^2}$.</p><p>$R^2=r_B^2\cdot\dfrac{L_A}{L_B}\cdot\dfrac{Y_B}{Y_A}=4\times\dfrac{2}{1.5}\times\dfrac47=\dfrac{32}{10.5}=3.05\ \text{mm}^2$.</p><p>$R\approx1.7$ mm.</p>`},
+
+{t:'Stress, strain & Young’s modulus',y:'JEE Main 2021',
+ q:R`A uniform metallic wire is elongated by 0.04 m when subjected to a linear force $F$. If its length and diameter are both doubled and it is subjected to the same force, the elongation will be`,
+ o:[R`2 cm`,R`4 cm`,R`1 cm`,R`8 cm`],a:0,
+ s:R`<p>$\Delta l=\dfrac{FL}{AY}\propto\dfrac{L}{d^2}$.</p><p>Length ×2 and diameter ×2 → $\Delta l$ becomes $\dfrac{2}{4}=\dfrac12$ times.</p><p>New elongation $=\dfrac{4\text{ cm}}{2}=2$ cm. (8 cm forgets the diameter; 4 cm treats area as ∝ $d$.)</p>`},
+
+{t:'Stress, strain & Young’s modulus',y:'JEE Main 2022',
+ q:R`A wire of length $L$ and radius $r$ is clamped rigidly at one end. When the other end is pulled by a force $F$, its length increases by 5 cm. Another wire of the same material, of length $4L$ and radius $4r$, is pulled by a force $4F$. The increase in length of this wire is`,
+ o:[R`5 cm`,R`20 cm`,R`1.25 cm`,R`80 cm`],a:0,
+ s:R`<p>$\Delta l\propto\dfrac{FL}{r^2}$. New factor $=\dfrac{4\times4}{4^2}=1$.</p><p>So the increase is again 5 cm. (20 cm comes from forgetting to square the radius.)</p>`},
+
+{t:'Stress, strain & Young’s modulus',y:'JEE Main 2022',
+ q:R`The elongation of a wire hanging a load on the surface of the earth is $10^{-4}$ m. The same wire with the same load is elongated by $6\times10^{-5}$ m on another planet. The acceleration due to gravity on that planet is (take $g=10$ m/s² on earth)`,
+ o:[R`6 m/s²`,R`16.7 m/s²`,R`4 m/s²`,R`10 m/s²`],a:0,
+ s:R`<p>Load force $=Mg$, so $\Delta l=\dfrac{MgL}{AY}\propto g$.</p><p>$\dfrac{g_p}{10}=\dfrac{6\times10^{-5}}{10^{-4}}=0.6\Rightarrow g_p=6$ m/s².</p>`},
+
+{t:'Stress, strain & Young’s modulus',y:'JEE Main 2019',
+ q:R`A load of mass $M$ kg is suspended from a steel wire of length 2 m and radius 1.0 mm in Searle's apparatus. The increase in length is 4.0 mm. Now the load is fully immersed in a liquid of relative density 2. The relative density of the material of the load is 8. The new increase in length of the wire is`,
+ o:[R`4.0 mm`,R`Zero`,R`5.0 mm`,R`3.0 mm`],a:3,
+ s:R`<p>Extension $\propto$ tension. In air, $T_1=Mg=V(8\rho_w)g$.</p><p>In the liquid, buoyancy $=V(2\rho_w)g$, so $T_2=V(8-2)\rho_wg=\dfrac68\,T_1$.</p><p>New extension $=4.0\times\dfrac68=3.0$ mm.</p>`},
+
+{t:'Stress, strain & Young’s modulus',y:'JEE Main 2022',
+ q:R`To find Young's modulus, steel wires of lengths 1, 2, 3, 4 and 5 m, all of cross-section 2 mm², were taken. For each, the slope (extension/load) was found and plotted against the wire length, as shown. If Young's modulus of steel is $x\times10^{11}$ N/m², the value of $x$ is`,
+ f:SEARLE,
+ o:[R`2`,R`4`,R`0.5`,R`1`],a:0,
+ s:R`<p>$\Delta l=\dfrac{WL}{AY}\Rightarrow\dfrac{\Delta l}{W}=\dfrac{L}{AY}$. So the graph's slope is $\dfrac1{AY}$.</p><p>From the graph: at $L=1$ m, $\dfrac{\Delta l}{W}=0.25\times10^{-5}$ m/N. So $\dfrac1{AY}=0.25\times10^{-5}$.</p><p>$Y=\dfrac{1}{2\times10^{-6}\times0.25\times10^{-5}}=2\times10^{11}$ N/m², so $x=2$.</p>`},
+
+{t:'Breaking stress & rotation',y:'JEE Main 2019',
+ q:R`The elastic limit of brass is 379 MPa. What should be the minimum diameter of a brass rod if it is to support a 400 N load without exceeding its elastic limit?`,
+ o:[R`0.90 mm`,R`1.16 mm`,R`1.00 mm`,R`1.36 mm`],a:1,
+ s:R`<p>Stress must not cross the limit: $\dfrac{F}{\pi d^2/4}\le379\times10^6$.</p><p>$d^2\ge\dfrac{4\times400}{\pi\times379\times10^6}=1.34\times10^{-6}\ \text{m}^2\Rightarrow d\ge1.16$ mm.</p>`},
+
+{t:'Breaking stress & rotation',y:'JEE Main 2020',
+ q:R`A body of mass 10 kg is attached to one end of a wire of length 0.3 m. The maximum angular speed with which it can be rotated about the other end in a space station is (breaking stress of the wire $=4.8\times10^7$ N/m², area of cross-section $=10^{-2}$ cm²)`,
+ o:[R`4 rad/s`,R`16 rad/s`,R`2 rad/s`,R`8 rad/s`],a:0,
+ s:R`<p>In a space station there is no weight; the tension only gives the centripetal force: $T=m\omega^2l$.</p><p>Max tension $=4.8\times10^7\times10^{-6}=48$ N ($10^{-2}$ cm² $=10^{-6}$ m²).</p><p>$\omega^2=\dfrac{48}{10\times0.3}=16\Rightarrow\omega=4$ rad/s. (16 is $\omega^2$, the trap.)</p>`},
+
+{t:'Breaking stress & rotation',y:'JEE Main 2021',
+ q:R`Wires W₁ and W₂ are made of the same material with breaking stress $1.25\times10^9$ N/m². W₁ and W₂ have cross-sectional areas $8\times10^{-7}$ m² and $4\times10^{-7}$ m². Masses of 20 kg and 10 kg hang from them as shown. The maximum mass that can be placed in the pan without breaking either wire is ($g=10$ m/s²)`,
+ f:PAN,
+ o:[R`40 kg`,R`70 kg`,R`30 kg`,R`50 kg`],a:0,
+ s:R`<p>Let the pan mass be $m$ (pan itself light).</p><p>W₁ holds everything: $(m+30)\times10\le1.25\times10^9\times8\times10^{-7}=1000\Rightarrow m\le70$ kg.</p><p>W₂ holds 10 kg + pan: $(m+10)\times10\le1.25\times10^9\times4\times10^{-7}=500\Rightarrow m\le40$ kg.</p><p>Both must survive, so the smaller value wins: 40 kg.</p>`},
+
+{t:'Breaking stress & rotation',y:'JEE Main 2022',
+ q:R`A string of cross-sectional area 4 mm² and length 0.5 m is tied to a body of mass 2 kg, which is whirled in a vertical circle of radius 0.5 m. Its speed at the bottom is 5 m/s. The strain in the string at the bottom is ($Y=10^{11}$ N/m², $g=10$ m/s²)`,
+ o:[R`$30\times10^{-5}$`,R`$25\times10^{-5}$`,R`$5\times10^{-5}$`,R`$20\times10^{-5}$`],a:0,
+ s:R`<p>At the bottom: $T-mg=\dfrac{mv^2}{r}\Rightarrow T=20+\dfrac{2\times25}{0.5}=120$ N.</p><p>Strain $=\dfrac{T}{AY}=\dfrac{120}{4\times10^{-6}\times10^{11}}=3\times10^{-4}=30\times10^{-5}$.</p><p>(25 forgets $mg$; 20 subtracts it.)</p>`},
+
+{t:'Breaking stress & rotation',y:'JEE Main 2022',
+ q:R`A metal wire of length 0.5 m and cross-sectional area $10^{-4}$ m² has breaking stress $5\times10^8$ N/m². A 10 kg block tied to one end is whirled in a horizontal circle (the other end fixed). The maximum linear speed of the block is`,
+ o:[R`50 m/s`,R`25 m/s`,R`70.7 m/s`,R`100 m/s`],a:0,
+ s:R`<p>Max tension $=5\times10^8\times10^{-4}=5\times10^4$ N.</p><p>$\dfrac{mv^2}{l}=5\times10^4\Rightarrow v^2=\dfrac{5\times10^4\times0.5}{10}=2500\Rightarrow v=50$ m/s.</p>`}
+);
+})();
+
+</script>
+<script>
+// Ch-07 part B: wires in series, natural length, thermal stress, own weight
+QS.push(
+{t:'Wires in series & natural length',y:'JEE Main 2019',
+ q:R`Brass and steel wires, each 1 m long with cross-section 1 mm², are joined in series. One end is fixed to a rigid support and the other end is pulled. The stress required to produce a net elongation of 0.2 mm is ($Y_{\text{steel}}=120\times10^9$ N/m², $Y_{\text{brass}}=60\times10^9$ N/m²)`,
+ o:[R`$1.8\times10^6$ N/m²`,R`$1.2\times10^6$ N/m²`,R`$8.0\times10^6$ N/m²`,R`$0.2\times10^6$ N/m²`],a:2,
+ s:R`<p>In series, the same force and same area → same stress $\sigma$ in both wires. Extensions add:</p><p>$\sigma\Big(\dfrac{L}{Y_s}+\dfrac{L}{Y_b}\Big)=0.2\times10^{-3}\Rightarrow\sigma\Big(\dfrac{1}{120}+\dfrac{1}{60}\Big)\times10^{-9}=0.2\times10^{-3}$.</p><p>$\sigma\times\dfrac{1}{40\times10^9}=2\times10^{-4}\Rightarrow\sigma=8\times10^6$ N/m².</p>`},
+
+{t:'Wires in series & natural length',y:'JEE Main 2021',
+ q:R`Two wires of the same length and radius are joined end to end and loaded. Their Young's moduli are $Y_1$ and $Y_2$. If the combination behaves as a single wire, its Young's modulus is`,
+ o:[R`$Y=\dfrac{2Y_1Y_2}{3(Y_1+Y_2)}$`,R`$Y=\dfrac{Y_1Y_2}{2(Y_1+Y_2)}$`,R`$Y=\dfrac{2Y_1Y_2}{Y_1+Y_2}$`,R`$Y=\dfrac{Y_1Y_2}{Y_1+Y_2}$`],a:2,
+ s:R`<p>Same force $F$, same area $A$. The combined wire has length $2L$.</p><p>$\dfrac{F(2L)}{AY}=\dfrac{FL}{AY_1}+\dfrac{FL}{AY_2}\Rightarrow\dfrac2Y=\dfrac1{Y_1}+\dfrac1{Y_2}\Rightarrow Y=\dfrac{2Y_1Y_2}{Y_1+Y_2}$.</p><p>(Don't forget the doubled length — that is where the 2 comes from.)</p>`},
+
+{t:'Wires in series & natural length',y:'JEE Main 2022',
+ q:R`A steel wire of length 3.2 m ($Y_s=2.0\times10^{11}$ N/m²) and a copper wire of length 4.4 m ($Y_c=1.1\times10^{11}$ N/m²), both of radius 1.4 mm, are joined end to end. When stretched by a load, the net elongation is 1.4 mm. The load applied is (take $\pi=\tfrac{22}{7}$)`,
+ o:[R`360 N`,R`180 N`,R`1080 N`,R`154 N`],a:3,
+ s:R`<p>$\dfrac{W}{A}\Big(\dfrac{3.2}{2\times10^{11}}+\dfrac{4.4}{1.1\times10^{11}}\Big)=1.4\times10^{-3}$.</p><p>Bracket $=1.6\times10^{-11}+4\times10^{-11}=5.6\times10^{-11}$. Area $=\tfrac{22}{7}\times(1.4\times10^{-3})^2=6.16\times10^{-6}$ m².</p><p>$W=\dfrac{1.4\times10^{-3}\times6.16\times10^{-6}}{5.6\times10^{-11}}=154$ N.</p>`},
+
+{t:'Wires in series & natural length',y:'JEE Main 2021',
+ q:R`The length of a metal wire is $l_1$ when the tension in it is $T_1$, and $l_2$ when the tension is $T_2$. The natural length of the wire is`,
+ o:[R`$\sqrt{l_1l_2}$`,R`$\dfrac{l_1T_2-l_2T_1}{T_2-T_1}$`,R`$\dfrac{l_1+l_2}{2}$`,R`$\dfrac{l_1T_2+l_2T_1}{T_2+T_1}$`],a:1,
+ s:R`<p>A wire behaves like a spring: $T=k(l-l_0)$.</p><p>$T_1=k(l_1-l_0)$, $T_2=k(l_2-l_0)$. Divide: $\dfrac{T_1}{T_2}=\dfrac{l_1-l_0}{l_2-l_0}$.</p><p>$T_1l_2-T_1l_0=T_2l_1-T_2l_0\Rightarrow l_0(T_2-T_1)=l_1T_2-l_2T_1\Rightarrow l_0=\dfrac{l_1T_2-l_2T_1}{T_2-T_1}$.</p><p>Check: if $T_1=0$, $l_0=l_1$ ✓. This appeared twice in 2021.</p>`},
+
+{t:'Wires in series & natural length',y:'JEE Main 2022',
+ q:R`A wire of natural length $L$ hangs from a fixed support. Its length becomes $L_1$ and $L_2$ when masses of 1 kg and 2 kg are hung from its free end. Then $L$ is equal to`,
+ o:[R`$\sqrt{L_1L_2}$`,R`$\dfrac{L_1+L_2}{2}$`,R`$2L_1-L_2$`,R`$3L_1-2L_2$`],a:2,
+ s:R`<p>Extension $\propto$ load: $L_1-L=x$ and $L_2-L=2x$.</p><p>So $L_2-L=2(L_1-L)\Rightarrow L=2L_1-L_2$.</p><p>(Same idea as the previous question, with $T_2=2T_1$.)</p>`},
+
+{t:'Thermal stress, own weight & columns',y:'JEE Main 2019',
+ q:R`A rod of length $L$ and area of cross-section $A$ is made of a metal with coefficient of linear expansion $\alpha$ /°C. A compressive force $F$ applied on each end stops any change in the length of the rod when its temperature rises by $\Delta T$ K. Young's modulus of the metal is`,
+ o:[R`$\dfrac{F}{A\alpha(\Delta T-273)}$`,R`$\dfrac{F}{A\alpha\Delta T}$`,R`$\dfrac{2F}{A\alpha\Delta T}$`,R`$\dfrac{F}{2A\alpha\Delta T}$`],a:1,
+ s:R`<p>Heating alone would expand the rod by $L\alpha\Delta T$. The force must squeeze it back by the same amount: $\dfrac{FL}{AY}=L\alpha\Delta T$.</p><p>$Y=\dfrac{F}{A\alpha\Delta T}$. (A change of $\Delta T$ is the same in K and °C — never subtract 273 from a <b>difference</b>.)</p>`},
+
+{t:'Thermal stress, own weight & columns',y:'JEE Main 2022',
+ q:R`A uniform heavy rod of mass 20 kg, cross-sectional area 0.4 m² and length 20 m hangs from a fixed support. Neglecting lateral contraction, the elongation of the rod due to its own weight is ($Y=2\times10^{11}$ N/m², $g=10$ m/s²)`,
+ o:[R`$25\times10^{-9}$ m`,R`$50\times10^{-9}$ m`,R`$12.5\times10^{-9}$ m`,R`$100\times10^{-9}$ m`],a:0,
+ s:R`<p>Tension is not the same everywhere: it is $Mg$ at the top and 0 at the bottom. On average it is $\dfrac{Mg}{2}$.</p><p>$\Delta l=\dfrac{MgL}{2AY}=\dfrac{20\times10\times20}{2\times0.4\times2\times10^{11}}=2.5\times10^{-8}=25\times10^{-9}$ m.</p><p>(50 forgets the ½. A 2021 paper asked the same idea.)</p>`},
+
+{t:'Thermal stress, own weight & columns',y:'JEE Main 2021',
+ q:R`Four identical hollow cylindrical columns of mild steel support a big structure of mass $50\times10^3$ kg. The inner and outer radii of each column are 50 cm and 100 cm. Assuming the load is shared equally, the compression strain of each column is ($Y=2.0\times10^{11}$ Pa, $g=9.8$ m/s²)`,
+ o:[R`$3.60\times10^{-8}$`,R`$1.87\times10^{-3}$`,R`$7.07\times10^{-4}$`,R`$2.60\times10^{-7}$`],a:3,
+ s:R`<p>Force on each column $=\dfrac{50\times10^3\times9.8}{4}=1.225\times10^5$ N.</p><p>Area (a ring) $=\pi(1^2-0.5^2)=0.75\pi=2.36$ m².</p><p>Strain $=\dfrac{F}{AY}=\dfrac{1.225\times10^5}{2.36\times2\times10^{11}}=2.6\times10^{-7}$.</p>`}
+);
+
+</script>
+<script>
+// Ch-07 part C: bulk & shear modulus, elastic energy
+(function(){
+const SLAB=SV(240,170,`<line x1="30" y1="150" x2="200" y2="150" stroke="#1d2528" stroke-width="2"/>${[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16].map(i=>`<line x1="${34+i*10}" y1="150" x2="${28+i*10}" y2="158" stroke="#1d2528" stroke-width="1"/>`).join('')}
+<rect x="60" y="40" width="110" height="110" fill="#f3ecdc" stroke="#1d2528" stroke-width="1.6"/>
+<polygon points="60,150 170,150 182,40 72,40" fill="none" stroke="#b42318" stroke-width="1.3" stroke-dasharray="4 3"/>
+<line x1="70" y1="30" x2="160" y2="30" stroke="#0f766e" stroke-width="2.4" marker-end="MKt"/><text x="115" y="22" text-anchor="middle" font-size="12" fill="#0f766e">F = 18 × 10⁴ N</text>
+<text x="115" y="100" text-anchor="middle" font-size="12">60 cm × 60 cm</text><text x="115" y="116" text-anchor="middle" font-size="11" fill="#5b6668">thickness 15 cm</text>
+<text x="186" y="52" font-size="11" fill="#b42318">Δx</text><text x="30" y="168" font-size="11" fill="#5b6668">riveted edge</text>`);
+const SS=G({x:[0,95],y:[0,4.8],xl:'stress (N/m²)',xlb:1,mb:38,yl:'strain (× 10⁻¹⁰)',w:290,h:202,ml:36,xt:[[20,'20'],[40,'40'],[60,'60'],[80,'80']],yt:[[1,'1'],[2,'2'],[3,'3'],[4,'4']],gd:[[0,1,20,1],[0,2,40,2],[0,3,60,3],[0,4,80,4],[20,0,20,1],[40,0,40,2],[60,0,60,3],[80,0,80,4]],s:[{p:[[0,0],[88,4.4]]}],pt:[[20,1],[40,2],[60,3],[80,4]]});
+QS.push(
+{t:'Bulk & shear modulus',y:'JEE Main 2018',
+ q:R`A solid sphere of radius $r$, made of a soft material of bulk modulus $K$, is surrounded by a liquid in a cylindrical container. A massless piston of area $a$ floats on the liquid, covering the whole cross-section. When a mass $m$ is placed on the piston to compress the liquid, the fractional decrease in the radius of the sphere, $\dfrac{dr}{r}$, is`,
+ o:[R`$\dfrac{Ka}{mg}$`,R`$\dfrac{Ka}{3mg}$`,R`$\dfrac{mg}{3Ka}$`,R`$\dfrac{mg}{Ka}$`],a:2,
+ s:R`<p>Extra pressure everywhere in the liquid (Pascal): $P=\dfrac{mg}{a}$.</p><p>$\dfrac{dV}{V}=\dfrac PK=\dfrac{mg}{Ka}$.</p><p>$V\propto r^3\Rightarrow\dfrac{dV}{V}=3\dfrac{dr}{r}\Rightarrow\dfrac{dr}{r}=\dfrac{mg}{3Ka}$.</p>`},
+
+{t:'Bulk & shear modulus',y:'JEE Main 2020',
+ q:R`A cube of metal is subjected to a hydrostatic pressure of 4 GPa. The percentage change in the length of a side of the cube is close to (bulk modulus $B=8\times10^{10}$ Pa)`,
+ o:[R`0.6`,R`20`,R`1.67`,R`5`],a:2,
+ s:R`<p>Volume change: $\dfrac{\Delta V}{V}=\dfrac PB=\dfrac{4\times10^9}{8\times10^{10}}=0.05=5\%$.</p><p>$V=l^3\Rightarrow\dfrac{\Delta l}{l}=\dfrac13\cdot\dfrac{\Delta V}{V}=\dfrac53\%\approx1.67\%$. (5 is the volume change, not the side.)</p>`},
+
+{t:'Bulk & shear modulus',y:'JEE Main 2021',
+ q:R`The normal density of a material is $\rho$ and its bulk modulus is $K$. The increase in density of the material when a pressure $P$ is applied uniformly on all sides is`,
+ o:[R`$\dfrac{\rho P}{K}$`,R`$\dfrac{\rho K}{P}$`,R`$\dfrac{K}{\rho P}$`,R`$\dfrac{PK}{\rho}$`],a:0,
+ s:R`<p>Mass stays the same, so $\rho V=$ constant $\Rightarrow\dfrac{\Delta\rho}{\rho}=-\dfrac{\Delta V}{V}$.</p><p>And $-\dfrac{\Delta V}{V}=\dfrac PK$. So $\Delta\rho=\dfrac{\rho P}{K}$.</p>`},
+
+{t:'Bulk & shear modulus',y:'JEE Main 2021',
+ q:R`An object is 2 km beneath the surface of water. If the fractional compression $\dfrac{\Delta V}{V}$ is 1.36%, the ratio of hydraulic stress to the corresponding hydraulic strain is ($\rho_w=1000$ kg/m³, $g=9.8$ m/s²)`,
+ o:[R`$1.44\times10^7$ N/m²`,R`$2.26\times10^9$ N/m²`,R`$1.96\times10^7$ N/m²`,R`$1.44\times10^9$ N/m²`],a:3,
+ s:R`<p>Hydraulic stress = extra pressure $=\rho gh=1000\times9.8\times2000=1.96\times10^7$ Pa.</p><p>Stress/strain $=\dfrac{1.96\times10^7}{0.0136}=1.44\times10^9$ N/m² (this is the bulk modulus).</p><p>(1.96 × 10⁷ is only the stress.)</p>`},
+
+{t:'Bulk & shear modulus',keep:1,y:'JEE Main 2021',
+ q:R`If $Y$, $K$ and $\eta$ are Young's modulus, bulk modulus and modulus of rigidity of a material, the correct relation is`,
+ o:[R`$Y=\dfrac{9K\eta}{3K-\eta}$`,R`$Y=\dfrac{9K\eta}{2\eta+3K}$`,R`$K=\dfrac{Y\eta}{9\eta-3Y}$`,R`$\eta=\dfrac{3YK}{9K+Y}$`],a:2,
+ s:R`<p>Standard result: $\dfrac9Y=\dfrac1K+\dfrac3\eta$, i.e. $Y=\dfrac{9K\eta}{3K+\eta}$. Options 1 and 2 have the wrong denominator.</p><p>Solve for $K$: $Y(3K+\eta)=9K\eta\Rightarrow K(9\eta-3Y)=Y\eta\Rightarrow K=\dfrac{Y\eta}{9\eta-3Y}$.</p><p>Check option 4: from the same relation $\eta=\dfrac{3YK}{9K-Y}$ (minus, not plus).</p>`},
+
+{t:'Bulk & shear modulus',y:'JEE Main 2022',
+ q:R`A square aluminium slab (shear modulus $25\times10^9$ N/m²) of side 60 cm and thickness 15 cm has its lower edge riveted to the floor. A shearing force of $18.0\times10^4$ N acts on its narrow top face. The displacement of the upper edge is`,
+ f:SLAB,
+ o:[R`48 μm`,R`12 μm`,R`192 μm`,R`4.8 μm`],a:0,
+ s:R`<p>Force acts on the top face: area $A=0.60\times0.15=0.09$ m². Height of the slab $L=0.60$ m.</p><p>$\eta=\dfrac{F/A}{\Delta x/L}\Rightarrow\Delta x=\dfrac{FL}{\eta A}=\dfrac{18\times10^4\times0.6}{25\times10^9\times0.09}=4.8\times10^{-5}$ m $=48$ μm.</p>`},
+
+{t:'Elastic potential energy',y:'JEE Main 2020',
+ q:R`Two steel wires of the same length hang from a ceiling under the same load. If the ratio of their energy stored per unit volume is 1 : 4, the ratio of their diameters is`,
+ o:[R`$\sqrt2:1$`,R`2 : 1`,R`$1:\sqrt2$`,R`1 : 2`],a:0,
+ s:R`<p>Energy per unit volume $u=\tfrac12\,\text{stress}\times\text{strain}=\dfrac{\sigma^2}{2Y}$, and $\sigma=\dfrac{F}{\pi d^2/4}$. So $u\propto\dfrac{1}{d^4}$.</p><p>$\dfrac{u_1}{u_2}=\Big(\dfrac{d_2}{d_1}\Big)^4=\dfrac14\Rightarrow\dfrac{d_1}{d_2}=4^{1/4}=\sqrt2$.</p>`},
+
+{t:'Elastic potential energy',y:'JEE Main 2022',
+ q:R`The linear stress–strain behaviour of a material is shown. The energy density for a linear strain of $5\times10^{-4}$ is (assume the material is elastic up to this strain)`,
+ f:SS,
+ o:[R`25 kJ/m³`,R`50 kJ/m³`,R`12.5 kJ/m³`,R`2.5 kJ/m³`],a:0,
+ s:R`<p>Here strain is on the $y$-axis, so $Y=\dfrac{\text{stress}}{\text{strain}}=\dfrac{80}{4\times10^{-10}}=2\times10^{11}$ N/m².</p><p>$u=\tfrac12Y\varepsilon^2=\tfrac12\times2\times10^{11}\times(5\times10^{-4})^2=2.5\times10^4$ J/m³ $=25$ kJ/m³.</p><p>(50 forgets the ½.)</p>`},
+
+{t:'Elastic potential energy',y:'JEE Main 2019',
+ q:R`A boy's catapult is made of a rubber cord 42 cm long, with a cross-section of 6 mm diameter and negligible mass. He puts a 0.02 kg stone on it and stretches the cord by 20 cm. When released, the stone flies off at 20 m/s. Neglect the change in cross-section. Young's modulus of rubber is closest to`,
+ o:[R`$10^4$ N/m²`,R`$10^3$ N/m²`,R`$10^8$ N/m²`,R`$10^6$ N/m²`],a:3,
+ s:R`<p>Stored elastic energy becomes kinetic energy: $\tfrac12\Big(\dfrac{YA}{L}\Big)(\Delta l)^2=\tfrac12mv^2$.</p><p>$Y=\dfrac{mv^2L}{A(\Delta l)^2}=\dfrac{0.02\times400\times0.42}{\pi(3\times10^{-3})^2\times(0.2)^2}=\dfrac{3.36}{1.13\times10^{-6}}\approx3\times10^6$ N/m².</p><p>Order of magnitude: $10^6$ N/m².</p>`}
+);
+})();
+
+</script>
+
+<script>
+(function(){
+const KEY='padipucast_jee27_ch07_solids_mcq30_v1';
+const N=QS.length, PER=4, NEG=1, MINUTES=60;
+const LBL=['(1)','(2)','(3)','(4)'];
+const $=s=>document.querySelector(s);
+const load=(k,d)=>{try{const v=localStorage.getItem(KEY+k);return v?JSON.parse(v):d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(KEY+k,JSON.stringify(v))}catch(e){}};
+const TOPICS=[...new Set(QS.map(q=>q.t))];
+let mode=null,order=[],cur=0,perm={},ans={},prac=load('_prac',{}),tLeft=0,tick=null,startAt=0,lastRes=null;
+
+function TS(el){const M=window.MathJax;if(M&&M.typesetPromise){if(M.typesetClear)M.typesetClear([el]);M.typesetPromise([el]).catch(()=>{})}else setTimeout(()=>TS(el),300)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){['start','work','result'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0)}
+function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function isFig(s){return typeof s==='string'&&s.trim().startsWith('<svg')}
+
+/* ---------- start screen ---------- */
+function drawStart(){
+ const yrs=QS.map(q=>+(q.y.match(/\d{4}/)||[0])[0]).filter(Boolean);
+ const yc=yrs.length===N?`${Math.min(...yrs)}–${Math.max(...yrs)} papers`:`${yrs.length} JEE PYQs (${Math.min(...yrs)}–${Math.max(...yrs)})</span><span class="chip">${N-yrs.length} from test paper`;
+ $('#metaChips').innerHTML=`<span class="chip">${N} questions</span><span class="chip">${TOPICS.length} topics</span><span class="chip">${yc}</span><span class="chip am">+${PER} / −${NEG}</span>`;
+ $('#topicMap').innerHTML=TOPICS.map(t=>{const qs=QS.filter(q=>q.t===t);return `<div class="trow"><span>${t}</span><span>${qs.length} Qs</span></div>`}).join('');
+ const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+ $('#pracInfo').textContent=done?`Continue practice · ${done}/${N} done, ${ok} right →`:'Start practice →';
+ const b=load('_best',null);
+ $('#bestInfo').textContent=b?`Start test · best ${b.s}/${N*PER} →`:'Start test →';
+}
+
+/* ---------- side panel ---------- */
+function drawSide(){
+ const s=$('#side');
+ let st='';
+ if(mode==='prac'){
+  const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+  st=`<div class="stats"><div class="stat"><b>${done}</b><span>done</span></div><div class="stat"><b style="color:var(--green)">${ok}</b><span>right</span></div><div class="stat"><b style="color:var(--red)">${done-ok}</b><span>wrong</span></div></div>`;
+  st+='<h3>Questions by topic</h3>';
+  TOPICS.forEach(t=>{
+   st+=`<div class="tg">${t}</div><div class="dots">`;
+   order.forEach((qi,pos)=>{if(QS[qi].t!==t)return;const p=prac[qi];const c=p?(p.c===QS[qi].a?'ok':'no'):'';st+=`<button class="dot ${c} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+   st+='</div>';
+  });
+  st+=`<div class="legend"><span><i style="background:var(--green)"></i>right</span><span><i style="background:var(--red)"></i>wrong</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not done</span></div>`;
+  st+=`<div class="sidebtns"><button class="btn sm" id="resetPrac">Clear my practice progress</button></div>`;
+ }else{
+  const a=Object.keys(ans).length;
+  st=`<div class="stats"><div class="stat"><b>${a}</b><span>answered</span></div><div class="stat"><b>${N-a}</b><span>left</span></div><div class="stat"><b>${N}</b><span>total</span></div></div><h3>Jump to</h3><div class="dots">`;
+  order.forEach((qi,pos)=>{st+=`<button class="dot ${ans[qi]!=null?'ans':''} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+  st+=`</div><div class="legend"><span><i style="background:var(--teal)"></i>answered</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not answered</span></div><div class="sidebtns"><button class="btn am" id="submitBtn">Submit paper</button></div>`;
+ }
+ s.innerHTML=st;
+ s.querySelectorAll('.dot').forEach(d=>d.onclick=()=>{if(innerWidth<860)s.classList.add('closed');go(+d.dataset.p)});
+ const rp=$('#resetPrac');if(rp)rp.onclick=()=>confirmBox('Clear practice progress?','All your practice answers for this sheet will be wiped from this device.','Clear',()=>{prac={};save('_prac',prac);drawQ()});
+ const sb=$('#submitBtn');if(sb)sb.onclick=askSubmit;
+}
+
+/* ---------- question ---------- */
+function optHTML(Q,qi,o,pos,cls,dis){return `<button class="opt ${cls}" data-o="${o}" ${dis?'disabled':''}><span class="lb">${LBL[pos]}</span><span class="ot">${Q.o[o]}</span></button>`}
+function drawQ(){
+ const qi=order[cur],Q=QS[qi],c=$('#qcard');
+ const ord=mode==='test'?perm[qi]:[0,1,2,3];
+ const og=Q.og||Q.o.some(isFig);
+ let h=`<div class="qhead"><span class="qno">Q${cur+1} <span style="color:var(--mute);font-weight:500">/ ${N}</span></span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span></div>`;
+ h+=`<div class="qtext">${Q.q}</div>`;
+ if(Q.f)h+=`<div class="figwrap">${Q.f}</div>`;
+ h+=`<div class="opts ${og?'og':''}">`;
+ const p=mode==='prac'?prac[qi]:null;
+ ord.forEach((o,pos)=>{
+  let cls='';
+  if(mode==='prac'&&p){if(o===Q.a)cls='ok';else if(o===p.c)cls='no'}
+  if(mode==='test'&&ans[qi]===o)cls='sel';
+  h+=optHTML(Q,qi,o,pos,cls,mode==='prac'&&p);
+ });
+ h+='</div>';
+ if(mode==='prac'&&p){
+  const right=p.c===Q.a;
+  h+=`<div class="verdict ${right?'ok':'no'}">${right?'✓ Correct!':p.c<0?'Answer shown: '+LBL[Q.a]+' (counted as not solved)':'✗ Not this one. Correct answer: '+LBL[Q.a]}</div>`;
+  h+=`<div class="sol"><h4>Solution</h4>${Q.s}</div>`;
+ }
+ h+=`<div class="nav"><button class="btn" id="prevB" ${cur===0?'disabled':''}>← Prev</button><span style="display:flex;gap:8px">`;
+ if(mode==='prac'&&p)h+=`<button class="btn" id="retryB">Try again</button>`;
+ if(mode==='prac'&&!p)h+=`<button class="btn" id="peekB">Show answer</button>`;
+ if(mode==='test'&&ans[qi]!=null)h+=`<button class="btn" id="clearB">Clear answer</button>`;
+ h+=`</span><button class="btn pri" id="nextB">${cur===N-1?(mode==='test'?'Submit':'Finish'):'Next →'}</button></div>`;
+ c.innerHTML=h;
+ c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.o));
+ $('#prevB').onclick=()=>{if(cur>0)go(cur-1)};
+ $('#nextB').onclick=()=>{if(cur<N-1)go(cur+1);else if(mode==='test')askSubmit();else{show('start');drawStart()}};
+ const r=$('#retryB');if(r)r.onclick=()=>{delete prac[qi];save('_prac',prac);drawQ()};
+ const pk=$('#peekB');if(pk)pk.onclick=()=>{prac[qi]={c:-1};save('_prac',prac);drawQ()};
+ const cl=$('#clearB');if(cl)cl.onclick=()=>{delete ans[qi];drawQ()};
+ drawSide();TS(c);
+}
+function go(p){cur=p;drawQ();const t=$('#qcard').getBoundingClientRect().top;if(t<0||t>innerHeight*.5)window.scrollTo({top:Math.max(0,window.scrollY+t-70),behavior:'smooth'})}
+function pick(o){
+ const qi=order[cur];
+ if(mode==='prac'){if(prac[qi])return;prac[qi]={c:o};save('_prac',prac);drawQ();setTimeout(()=>{const v=document.querySelector('.verdict');if(v)v.scrollIntoView({behavior:'smooth',block:'center'})},60)}
+ else{ans[qi]=o;drawQ()}
+}
+
+/* ---------- modes ---------- */
+function startPractice(){mode='prac';order=QS.map((_,i)=>i);cur=0;const f=order.findIndex(i=>!prac[i]);if(f>0)cur=f;$('#clock').classList.add('hidden');$('#barTitle').textContent='Practice · '+document.title;show('work');drawQ()}
+function startTest(){
+ mode='test';order=shuffle(QS.map((_,i)=>i));perm={};ans={};cur=0;
+ QS.forEach((q,i)=>perm[i]=q.keep?[0,1,2,3]:shuffle([0,1,2,3]));
+ tLeft=MINUTES*60;startAt=Date.now();
+ const ck=$('#clock');ck.classList.remove('hidden','low');ck.textContent=fmt(tLeft);
+ clearInterval(tick);
+ tick=setInterval(()=>{tLeft=MINUTES*60-Math.floor((Date.now()-startAt)/1000);ck.textContent=fmt(tLeft);ck.classList.toggle('low',tLeft<=300);if(tLeft<=0){clearInterval(tick);finish(true)}},500);
+ $('#barTitle').textContent='Test · '+document.title;show('work');drawQ();
+}
+function confirmBox(title,body,okTxt,fn){
+ const m=$('#modal');$('#modalCard').innerHTML=`<h3>${title}</h3><p>${body}</p><div class="nav"><button class="btn" id="mNo">Cancel</button><button class="btn am" id="mYes">${okTxt}</button></div>`;
+ m.classList.remove('hidden');$('#mNo').onclick=()=>m.classList.add('hidden');$('#mYes').onclick=()=>{m.classList.add('hidden');fn()};
+}
+function askSubmit(){const a=Object.keys(ans).length;confirmBox('Submit the paper?',`You have answered ${a} of ${N}. ${N-a?(N-a)+' left blank (no marks lost for blanks).':'All answered.'}`,'Submit',()=>finish(false))}
+
+/* ---------- result ---------- */
+function finish(auto){
+ clearInterval(tick);$('#clock').classList.add('hidden');
+ let ok=0,no=0,sk=0;const by={};TOPICS.forEach(t=>by[t]={ok:0,n:0});
+ QS.forEach((q,i)=>{by[q.t].n++;if(ans[i]==null)sk++;else if(ans[i]===q.a){ok++;by[q.t].ok++}else no++});
+ const score=ok*PER-no*NEG, max=N*PER, used=Math.min(MINUTES*60,Math.floor((Date.now()-startAt)/1000));
+ const best=load('_best',null);if(!best||score>best.s)save('_best',{s:score,d:new Date().toLocaleDateString()});
+ const pct=Math.max(0,score)/max, col=pct>=.7?'var(--green)':pct>=.45?'var(--amber)':'var(--red)';
+ const C=2*Math.PI*62;
+ let msg=pct>=.85?'Excellent. This chapter is exam-ready. Keep revising the ones you got wrong.':pct>=.7?'Very good. A few slips — read the solutions of the wrong ones carefully.':pct>=.45?'Fair attempt. Go topic by topic below and redo the weak topic in practice mode.':'This chapter needs more work. Use practice mode first — read every solution, then take the test again.';
+ if(no>ok&&no>=6)msg+=' Note: wrong answers cost you marks. Skip when you are only guessing.';
+ if(auto)msg='Time up — your paper was submitted automatically. '+msg;
+ let h=`<div class="card res"><div class="ringrow"><svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="#eee7d8" stroke-width="12"/><circle cx="75" cy="75" r="62" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" transform="rotate(-90 75 75)"/><text x="75" y="74" text-anchor="middle" font-family="DM Mono" font-size="30" font-weight="500" fill="#1d2528">${score}</text><text x="75" y="98" text-anchor="middle" font-family="DM Sans" font-size="13" fill="#5b6668">out of ${max}</text></svg><div><h2 style="font-size:26px">Your result</h2><div class="chips"><span class="chip gr">${ok} right</span><span class="chip rd">${no} wrong</span><span class="chip gy">${sk} skipped</span><span class="chip">time ${fmt(used)}</span></div><p class="msg">${msg}</p></div></div>`;
+ h+=`<table class="tt"><tr><th>Topic</th><th>Right</th><th style="width:40%"></th></tr>`;
+ TOPICS.forEach(t=>{const b=by[t];h+=`<tr><td>${t}</td><td class="n">${b.ok} / ${b.n}</td><td><div class="barmini"><i style="width:${100*b.ok/b.n}%"></i></div></td></tr>`});
+ h+=`</table><div class="nav"><button class="btn" id="rHome">Home</button><span style="display:flex;gap:8px"><button class="btn" id="rPrac">Practice mode</button><button class="btn am" id="rTest">Take test again</button></span></div></div>`;
+ h+=`<div class="filters"><button class="btn sm on" data-f="all">All (${N})</button><button class="btn sm" data-f="no">Wrong (${no})</button><button class="btn sm" data-f="sk">Skipped (${sk})</button><button class="btn sm" data-f="ok">Right (${ok})</button></div><div id="rvList"></div>`;
+ $('#result').innerHTML=h;show('result');
+ lastRes={ok,no,sk};
+ $('#rHome').onclick=()=>{show('start');drawStart()};$('#rPrac').onclick=startPractice;$('#rTest').onclick=startTest;
+ document.querySelectorAll('.filters .btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters .btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');drawReview(b.dataset.f)});
+ drawReview('all');
+}
+function drawReview(f){
+ let h='';
+ order.forEach((qi,pos)=>{
+  const Q=QS[qi],a=ans[qi],st=a==null?'sk':a===Q.a?'ok':'no';
+  if(f!=='all'&&f!==st)return;
+  const og=Q.og||Q.o.some(isFig);
+  h+=`<div class="card rv"><div class="qhead"><span class="qno">Q${pos+1}</span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span><span class="chip ${st==='ok'?'gr':st==='no'?'rd':'gy'}">${st==='ok'?'right +'+PER:st==='no'?'wrong −'+NEG:'skipped 0'}</span></div><div class="qtext">${Q.q}</div>${Q.f?`<div class="figwrap">${Q.f}</div>`:''}<div class="opts ${og?'og':''}">`;
+  perm[qi].forEach((o,p)=>{h+=optHTML(Q,qi,o,p,o===Q.a?'ok':o===a?'no':'',true)});
+  const yp=a==null?'—':LBL[perm[qi].indexOf(a)], cp=LBL[perm[qi].indexOf(Q.a)];
+  h+=`</div><div class="yours">Your answer: <b>${yp}</b> · Correct: <b>${cp}</b></div><div class="sol"><h4>Solution</h4>${Q.s}</div></div>`;
+ });
+ const L=$('#rvList');L.innerHTML=h||'<p style="color:var(--mute)">Nothing here.</p>';TS(L);
+}
+
+/* ---------- wiring ---------- */
+$('#goPractice').onclick=startPractice;
+$('#goTest').onclick=startTest;
+$('#homeBtn').onclick=()=>{if(mode==='test')confirmBox('Leave the test?','Your answers in this attempt will be lost.','Leave',()=>{clearInterval(tick);show('start');drawStart()});else{show('start');drawStart()}};
+$('#toggleSide').onclick=()=>$('#side').classList.toggle('closed');
+document.addEventListener('keydown',e=>{
+ if($('#work').classList.contains('hidden')||!$('#modal').classList.contains('hidden'))return;
+ if(['1','2','3','4'].includes(e.key)){const qi=order[cur],ord=mode==='test'?perm[qi]:[0,1,2,3];pick(ord[+e.key-1])}
+ if(e.key==='ArrowRight'&&cur<N-1)go(cur+1);
+ if(e.key==='ArrowLeft'&&cur>0)go(cur-1);
+});
+window.addEventListener('beforeunload',e=>{if(mode==='test'&&!$('#work').classList.contains('hidden')){e.preventDefault();e.returnValue=''}});
+drawStart();
+})();
+</script>
+</body>
+</html>
