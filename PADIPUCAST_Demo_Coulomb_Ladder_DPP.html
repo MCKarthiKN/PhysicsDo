@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coulomb's Law · Demo Ladder DPP · PADIPUCAST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{
+  --cream:#f6f0e1; --paper:#fffdf7; --ink:#1d2b2f; --muted:#5f6b6d; --line:#e4dccb;
+  --teal:#0f766e; --teal-soft:#dff1ed; --amber:#d97706; --amber-soft:#fdf1dc;
+  --red:#c2410c; --red-soft:#fde6dd; --green:#15803d; --green-soft:#e1f3e7;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--cream); color:var(--ink);
+  font:16px/1.55 'DM Sans',system-ui,sans-serif;
+  background-image:
+    linear-gradient(rgba(180,165,130,.13) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(180,165,130,.13) 1px,transparent 1px);
+  background-size:26px 26px;
+  min-height:100vh;
+}
+button{font:inherit;cursor:pointer}
+.hidden{display:none !important}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:5;background:rgba(246,240,225,.94);backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font:700 14px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:var(--teal)}
+.title{font:700 17px 'Space Grotesk',sans-serif;flex:1;min-width:180px}
+.sync{font:500 12px 'DM Mono',monospace;padding:5px 10px;border-radius:999px;border:1px solid var(--line);
+  background:var(--paper);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.sync::before{content:"";width:8px;height:8px;border-radius:50%;background:#9ca3af}
+.sync.ok::before{background:var(--green)} .sync.wait::before{background:var(--amber)}
+.sync.send::before{background:var(--teal);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 60px}
+
+/* name screen */
+.who{max-width:460px;margin:7vh auto 0;background:var(--paper);border:1px solid var(--line);
+  border-radius:18px;padding:28px 24px;box-shadow:0 10px 30px rgba(60,45,10,.07)}
+.who h1{font:700 26px 'Space Grotesk',sans-serif;margin:0 0 4px}
+.who p{margin:0 0 18px;color:var(--muted)}
+.who label{display:block;font-weight:700;margin:14px 0 6px}
+.who input{width:100%;font:inherit;font-size:18px;padding:12px 14px;border:1.5px solid var(--line);
+  border-radius:12px;background:#fff;color:var(--ink)}
+.who input:focus{outline:none;border-color:var(--teal)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+.chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;
+  border-radius:12px;border:none;background:var(--teal);color:#fff;font-weight:700}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--teal);border:1.5px solid var(--teal)}
+.btn.amber{background:var(--amber)}
+.who .btn{width:100%;margin-top:22px;font-size:17px}
+.err{color:var(--red);font-size:14px;margin-top:8px;min-height:1em}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
+
+/* work screen */
+.work{display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start}
+.side{position:sticky;top:76px;display:flex;flex-direction:column;gap:8px}
+.side h3{font:700 12px 'DM Mono',monospace;letter-spacing:.12em;color:var(--muted);margin:0 0 2px}
+.lad{text-align:left;background:var(--paper);border:1.5px solid var(--line);border-radius:12px;
+  padding:10px 12px;color:var(--ink)}
+.lad.on{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+.lad .n{font:500 12px 'DM Mono',monospace;color:var(--teal)}
+.lad .t{font-weight:700;display:block;margin:2px 0 6px}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--teal);border-radius:9px}
+.stat{background:var(--paper);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+.stat b{font-family:'DM Mono',monospace}
+
+.card{scroll-margin-top:110px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px;
+  box-shadow:0 10px 30px rgba(60,45,10,.06)}
+.rungs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.pill{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:#fff;
+  font:700 15px 'DM Mono',monospace;color:var(--ink)}
+.pill.cur{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+.pill.ok{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.pill.bad{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.pill.star{width:auto;padding:0 12px;border-radius:999px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.tag{font:500 12px 'DM Mono',monospace;padding:4px 10px;border-radius:999px;background:var(--teal-soft);color:var(--teal)}
+.tag.lvl{background:var(--amber-soft);color:#92400e}
+.tag.ex{background:var(--ink);color:#fff}
+.q{font-size:18px;margin:6px 0 12px}
+.dia{display:flex;justify-content:center;margin:6px 0 14px}
+.dia svg{width:100%;max-width:380px;height:auto}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;padding:12px 14px;border-radius:12px;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:16px}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt .k{font:700 13px 'DM Mono',monospace;width:26px;height:26px;border-radius:50%;flex:none;
+  display:flex;align-items:center;justify-content:center;background:var(--cream)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--green);background:var(--green-soft)}
+.opt.wrong{border-color:var(--red);background:var(--red-soft)}
+.sol{margin-top:16px;padding:14px 16px;border-radius:12px;border-left:5px solid var(--teal);background:var(--teal-soft)}
+.sol.bad{border-left-color:var(--red);background:#fff4ef}
+.sol h4{margin:0 0 4px;font:700 15px 'Space Grotesk',sans-serif}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+
+/* result */
+.res{max-width:560px;margin:4vh auto 0;background:var(--paper);border:1px solid var(--line);
+  border-radius:18px;padding:28px 24px;text-align:center;box-shadow:0 10px 30px rgba(60,45,10,.07)}
+.res h2{font:700 24px 'Space Grotesk',sans-serif;margin:8px 0 4px}
+.ring{width:150px;height:150px;margin:0 auto}
+.ring text{font-family:'Space Grotesk',sans-serif}
+.msg{color:var(--muted);margin:6px 0 16px}
+.wl{text-align:left;margin:14px 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.wl button{border:1.5px solid var(--red);background:var(--red-soft);color:var(--red);
+  border-radius:999px;padding:6px 12px;font:500 13px 'DM Mono',monospace}
+.sendline{font:500 13px 'DM Mono',monospace;margin:12px 0 18px;padding:8px 12px;border-radius:10px;background:var(--cream)}
+.res .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+footer{text-align:center;font:500 12px 'DM Mono',monospace;color:var(--muted);margin-top:30px}
+
+@media (max-width:780px){
+  .work{grid-template-columns:1fr}
+  .side{position:static;flex-direction:row;overflow-x:auto;padding-bottom:4px}
+  .side h3,.stat{display:none}
+  .lad{min-width:200px}
+  .card{padding:16px}
+  .q{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <span class="brand">PADIPUCAST</span>
+    <span class="title">Coulomb's Law · Demo Ladder DPP</span>
+    <span class="sync" id="sync">Not set up</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 1. who are you -->
+  <section id="scrWho" class="who">
+    <h1>Before you start</h1>
+    <p>Your teacher will see your name and score for this DPP.</p>
+    <label for="inName">Your name</label>
+    <input id="inName" autocomplete="name" maxlength="40">
+    <label>Your batch</label>
+    <div class="chips" id="batchChips"></div>
+    <div class="err" id="whoErr"></div>
+    <button class="btn" id="btnStart">Start</button>
+    <div class="note">Use the same name every time, so your work is counted together.</div>
+  </section>
+
+  <!-- 2. ladders -->
+  <section id="scrWork" class="work hidden">
+    <aside class="side" id="side"></aside>
+    <div class="card" id="card"></div>
+  </section>
+
+  <!-- 3. result -->
+  <section id="scrRes" class="res hidden"></section>
+
+  <footer>PADIPUCAST · Madurai</footer>
+</main>
+
+<script>
+/* =========================================================
+   SETTINGS — change these for every new DPP file
+   ========================================================= */
+const CFG = {
+  file:  'PADIPUCAST_Demo_Coulomb_Ladder_DPP.html',      // shows in the Google Sheet
+  title: "Coulomb's Law · Demo Ladder DPP",              // shows in the Google Sheet
+  storeKey: 'padipucast_demo_coulomb_ladder_v1',         // unique per file
+  // Paste your Apps Script Web app URL here (ends with /exec):
+  loggerUrl: 'https://script.google.com/macros/s/AKfycbxe5tksOyqZ86dH1oyGdr-z4bdOrC32weaCFINlRudLQvQ3DHuAGBxbxglmn4RXVJqD/exec',
+  loggerKey: 'padipucast-2026',                          // same as SECRET in Code.gs
+  // shared by all PADIPUCAST files (same as the index page):
+  nameKey:   'padipucast_name_v1',
+  batchKey:  'padipucast_batch_v1',
+  outboxKey: 'padipucast_outbox_v1',
+  batches:   ['JEE', 'NEET', 'Class 9', 'Other']
+};
+
+/* =========================================================
+   DIAGRAMS
+   ========================================================= */
+const D = {
+  charge(x, y, label, fill) {
+    return `<circle cx="${x}" cy="${y}" r="22" fill="${fill || '#dff1ed'}" stroke="#0f766e" stroke-width="2"/>
+            <text x="${x}" y="${y + 5}" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="#1d2b2f">${label}</text>`;
+  },
+  gap(x1, x2, y, label) {
+    return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#5f6b6d" stroke-width="1.5"/>
+            <line x1="${x1}" y1="${y - 6}" x2="${x1}" y2="${y + 6}" stroke="#5f6b6d" stroke-width="1.5"/>
+            <line x1="${x2}" y1="${y - 6}" x2="${x2}" y2="${y + 6}" stroke="#5f6b6d" stroke-width="1.5"/>
+            <rect x="${(x1 + x2) / 2 - 26}" y="${y - 11}" width="52" height="22" fill="#fffdf7"/>
+            <text x="${(x1 + x2) / 2}" y="${y + 5}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14" fill="#1d2b2f">${label}</text>`;
+  },
+  pair(a, b, r, medium) {
+    const box = medium
+      ? `<rect x="14" y="6" width="292" height="112" rx="14" fill="#fdf1dc" stroke="#d97706" stroke-dasharray="5 4"/>
+         <text x="294" y="26" text-anchor="end" font-family="DM Mono,monospace" font-size="12" fill="#92400e">${medium}</text>`
+      : '';
+    return `<svg viewBox="0 0 320 124" xmlns="http://www.w3.org/2000/svg">${box}
+      <line x1="80" y1="52" x2="240" y2="52" stroke="#e4dccb" stroke-width="2" stroke-dasharray="4 4"/>
+      ${D.charge(70, 52, a)}${D.charge(250, 52, b)}${D.gap(70, 250, 98, r)}</svg>`;
+  },
+  line3() {
+    return `<svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg">
+      <line x1="50" y1="50" x2="270" y2="50" stroke="#e4dccb" stroke-width="2"/>
+      ${D.charge(50, 50, '+q')}${D.charge(160, 50, '+Q', '#fdf1dc')}${D.charge(270, 50, '+q')}
+      <text x="50" y="92" text-anchor="middle" font-size="13" font-family="DM Mono,monospace">A</text>
+      <text x="160" y="92" text-anchor="middle" font-size="13" font-family="DM Mono,monospace">B</text>
+      <text x="270" y="92" text-anchor="middle" font-size="13" font-family="DM Mono,monospace">C</text>
+      ${D.gap(50, 160, 114, 'd')}${D.gap(160, 270, 114, 'd')}</svg>`;
+  },
+  nullPoint(showQ) {
+    const q = showQ
+      ? `<circle cx="200" cy="50" r="9" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="3 3"/>
+         <text x="200" y="28" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" fill="#92400e">?</text>`
+      : '';
+    return `<svg viewBox="0 0 340 120" xmlns="http://www.w3.org/2000/svg">
+      <line x1="10" y1="50" x2="330" y2="50" stroke="#5f6b6d" stroke-width="1.5"/>
+      <polygon points="330,50 322,46 322,54" fill="#5f6b6d"/>
+      <text x="326" y="72" text-anchor="end" font-family="DM Mono,monospace" font-size="12" fill="#5f6b6d">x</text>
+      ${D.charge(60, 50, '4μC')}${D.charge(280, 50, '1μC')}${q}
+      <text x="60" y="94" text-anchor="middle" font-family="DM Mono,monospace" font-size="12">x = 0</text>
+      <text x="280" y="94" text-anchor="middle" font-family="DM Mono,monospace" font-size="12">x = 3 m</text></svg>`;
+  }
+};
+
+/* =========================================================
+   QUESTIONS — 2 ladders × 5 rungs (last rung = exam level ★)
+   ans = index of the correct option as written here
+   ========================================================= */
+const LADDERS = [
+  {
+    title: 'Force between two charges',
+    tag: "Coulomb's law",
+    rungs: [
+      { level: 'Very easy',
+        q: 'Two point charges are kept at a distance \\(r\\). How does the force between them depend on \\(r\\)?',
+        dia: () => D.pair('q₁', 'q₂', 'r'),
+        opts: ['\\(F \\propto \\dfrac{1}{r^2}\\)', '\\(F \\propto \\dfrac{1}{r}\\)', '\\(F \\propto r\\)', '\\(F \\propto r^2\\)'],
+        ans: 0,
+        why: "Coulomb's law: \\(F = k\\dfrac{q_1 q_2}{r^2}\\). The distance is at the bottom, and it is squared. More distance means much less force." },
+      { level: 'Easy',
+        q: 'Two charges of \\(1\\,\\mu C\\) each are kept \\(1\\) m apart in air. Find the force. (Take \\(k = 9\\times10^{9}\\) N m²/C²)',
+        dia: () => D.pair('1μC', '1μC', '1 m'),
+        opts: ['\\(9\\times10^{-3}\\) N', '\\(9\\times10^{-6}\\) N', '\\(9\\times10^{3}\\) N', '\\(9\\) N'],
+        ans: 0,
+        why: '\\(F = 9\\times10^{9}\\times\\dfrac{(10^{-6})(10^{-6})}{1^2} = 9\\times10^{9}\\times10^{-12} = 9\\times10^{-3}\\) N. Remember: micro means \\(10^{-6}\\).' },
+      { level: 'Medium',
+        q: 'The force between two charges is \\(F\\). Now the distance between them is made double. What is the new force?',
+        dia: () => D.pair('q₁', 'q₂', '2r'),
+        opts: ['\\(F/4\\)', '\\(F/2\\)', '\\(2F\\)', '\\(4F\\)'],
+        ans: 0,
+        why: '\\(F \\propto 1/r^2\\). If \\(r\\) becomes \\(2r\\), then \\(r^2\\) becomes \\(4r^2\\). So the force becomes \\(F/4\\).' },
+      { level: 'A bit harder',
+        q: 'Each charge is made double, and the distance is also made double. What happens to the force \\(F\\)?',
+        dia: () => D.pair('2q₁', '2q₂', '2r'),
+        opts: ['It stays \\(F\\)', '\\(2F\\)', '\\(4F\\)', '\\(F/2\\)'],
+        ans: 0,
+        why: 'Top: \\(2q_1 \\times 2q_2 = 4\\,q_1q_2\\), so ×4. Bottom: \\((2r)^2 = 4r^2\\), so ÷4. ×4 and ÷4 cancel. Force stays \\(F\\).' },
+      { level: 'Exam level', star: true,
+        q: 'Two identical small metal spheres carry charges \\(+q\\) and \\(+3q\\). At distance \\(r\\), the force between them is \\(F\\). They are touched together and then put back at the same distance \\(r\\). What is the new force?',
+        dia: () => D.pair('+q', '+3q', 'r'),
+        opts: ['\\(\\dfrac{4F}{3}\\)', '\\(F\\)', '\\(\\dfrac{3F}{4}\\)', '\\(2F\\)'],
+        ans: 0,
+        why: 'When identical spheres touch, the charge is shared equally: each gets \\(\\dfrac{q+3q}{2} = 2q\\).<br>Before: \\(F = k\\dfrac{q\\cdot3q}{r^2} = \\dfrac{3kq^2}{r^2}\\).<br>After: \\(F\' = k\\dfrac{2q\\cdot2q}{r^2} = \\dfrac{4kq^2}{r^2} = \\dfrac{4F}{3}\\).' }
+    ]
+  },
+  {
+    title: 'Medium and many charges',
+    tag: 'Superposition',
+    rungs: [
+      { level: 'Very easy',
+        q: 'Two charges have force \\(F\\) in air. The same charges, at the same distance, are now put in a medium of dielectric constant \\(K\\). New force?',
+        dia: () => D.pair('q₁', 'q₂', 'r', 'medium K'),
+        opts: ['\\(F/K\\)', '\\(KF\\)', '\\(F\\)', '\\(F/K^2\\)'],
+        ans: 0,
+        why: 'In a medium, \\(F_{medium} = \\dfrac{1}{K}\\cdot k\\dfrac{q_1q_2}{r^2} = \\dfrac{F}{K}\\). The medium makes the force weaker.' },
+      { level: 'Easy',
+        q: 'The force between two charges in air is \\(10\\) N. The same set-up is put in a medium with \\(K = 2.5\\). Find the force.',
+        dia: () => D.pair('q₁', 'q₂', 'r', 'K = 2.5'),
+        opts: ['\\(4\\) N', '\\(25\\) N', '\\(10\\) N', '\\(7.5\\) N'],
+        ans: 0,
+        why: '\\(F = \\dfrac{10}{2.5} = 4\\) N. Divide, do not multiply.' },
+      { level: 'Medium',
+        q: 'Charge \\(+q\\) is at A and charge \\(+q\\) is at C. A small charge \\(+Q\\) is kept at B, the midpoint of AC. What is the net force on \\(+Q\\)?',
+        dia: () => D.line3(),
+        opts: ['Zero', 'Towards A', 'Towards C', 'Perpendicular to AC'],
+        ans: 0,
+        why: 'A pushes \\(+Q\\) towards C. C pushes \\(+Q\\) towards A. Same charge, same distance, so the two pushes are equal and opposite. Net force = 0.' },
+      { level: 'A bit harder',
+        q: '\\(+4\\,\\mu C\\) is at \\(x = 0\\) and \\(+1\\,\\mu C\\) is at \\(x = 3\\) m. A third charge is to be kept where the net force on it is zero. Where should it be?',
+        dia: () => D.nullPoint(false),
+        opts: ['Between them, nearer the \\(1\\,\\mu C\\)', 'Between them, nearer the \\(4\\,\\mu C\\)', 'To the left of the \\(4\\,\\mu C\\)', 'To the right of the \\(1\\,\\mu C\\)'],
+        ans: 0,
+        why: 'Both charges are positive (like charges). Only between them do the two pushes go in opposite directions. The \\(4\\,\\mu C\\) charge pushes harder, so the zero point must be farther from it — that is, nearer the \\(1\\,\\mu C\\).' },
+      { level: 'Exam level', star: true,
+        q: 'Same set-up: \\(+4\\,\\mu C\\) at \\(x = 0\\) and \\(+1\\,\\mu C\\) at \\(x = 3\\) m. Find the position \\(x\\) where the net force on a third charge is zero.',
+        dia: () => D.nullPoint(true),
+        opts: ['\\(x = 2\\) m', '\\(x = 1\\) m', '\\(x = 1.5\\) m', '\\(x = 6\\) m'],
+        ans: 0,
+        why: 'Let the point be at \\(x\\). Equal pushes: \\(\\dfrac{k\\cdot4}{x^2} = \\dfrac{k\\cdot1}{(3-x)^2}\\).<br>Take square root: \\(\\dfrac{2}{x} = \\dfrac{1}{3-x}\\) → \\(6 - 2x = x\\) → \\(x = 2\\) m.<br>Check: \\(4/2^2 = 1\\) and \\(1/1^2 = 1\\). ✓' }
+    ]
+  }
+];
+
+/* =========================================================
+   ENGINE — normally no need to change below this line
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const TOTAL = LADDERS.reduce((s, l) => s + l.rungs.length, 0);
+const LETTERS = ['A', 'B', 'C', 'D', 'E'];
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  getRaw(k) { try { const v = localStorage.getItem(k); if (v === null) return ''; try { const j = JSON.parse(v); return typeof j === 'string' ? j : v; } catch (e) { return v; } } catch (e) { return ''; } },
+  setRaw(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+
+const getName = () => store.getRaw(CFG.nameKey).trim();
+const getBatch = () => store.getRaw(CFG.batchKey).trim();
+
+function sid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function freshState() { return { session: sid(), startedAt: null, answers: {}, order: {}, cur: { l: 0, r: 0 }, finished: false, seconds: 0 }; }
+let state = (() => { const s = store.get(CFG.storeKey, null); return s && s.session ? s : freshState(); })();
+function save() { store.set(CFG.storeKey, state); }
+
+const qid = (l, r) => 'L' + (l + 1) + 'R' + (r + 1);
+function counts() {
+  const v = Object.values(state.answers);
+  return { done: v.length, right: v.filter(x => x.ok).length };
+}
+function orderFor(l, r) {
+  const id = qid(l, r);
+  if (!state.order[id]) {
+    const a = LADDERS[l].rungs[r].opts.map((_, i) => i);
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    state.order[id] = a; save();
+  }
+  return state.order[id];
+}
+function tex(el) {
+  if (window.MathJax && MathJax.typesetPromise) {
+    if (MathJax.typesetClear) MathJax.typesetClear([el]);
+    MathJax.typesetPromise([el]).catch(() => {});
+  }
+}
+function show(id) {
+  ['#scrWho', '#scrWork', '#scrRes'].forEach(s => $(s).classList.toggle('hidden', s !== id));
+  window.scrollTo(0, 0);
+}
+
+/* ---------- sending to the teacher's Google Sheet ---------- */
+const loggerReady = () => /^https:\/\/script\.google(usercontent)?\.com\//.test(CFG.loggerUrl);
+function setSync(mode) {
+  const el = $('#sync');
+  el.className = 'sync ' + mode;
+  el.textContent = { off: 'Logger not set up (demo)', send: 'Sending…', ok: 'Sent to teacher ✓', wait: 'Saved here · will send when online' }[mode];
+  const line = $('#sendLine');
+  if (line) line.textContent = el.textContent;
+}
+function logEvent(event, extra) {
+  const p = Object.assign({
+    key: CFG.loggerKey, name: getName(), batch: getBatch(),
+    file: CFG.file, title: CFG.title, event: event,
+    session: state.session, clientTime: new Date().toISOString()
+  }, extra || {});
+  const box = store.get(CFG.outboxKey, []);
+  box.push(p);
+  store.set(CFG.outboxKey, box.slice(-200));
+  flush();
+}
+let flushing = false;
+async function flush() {
+  if (!loggerReady()) { setSync('off'); return; }
+  if (flushing) return;
+  flushing = true;
+  let box = store.get(CFG.outboxKey, []);
+  if (box.length) setSync('send');
+  while (box.length) {
+    try {
+      await fetch(CFG.loggerUrl, {
+        method: 'POST', mode: 'no-cors', keepalive: true,
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(box[0])
+      });
+      box = store.get(CFG.outboxKey, []);
+      box.shift();
+      store.set(CFG.outboxKey, box);
+    } catch (e) {
+      flushing = false; setSync('wait'); return;
+    }
+  }
+  flushing = false; setSync('ok');
+}
+window.addEventListener('online', flush);
+
+/* ---------- screen 1: name ---------- */
+let pickedBatch = '';
+function renderWho() {
+  $('#inName').value = getName();
+  pickedBatch = getBatch();
+  $('#batchChips').innerHTML = CFG.batches.map(b =>
+    `<button type="button" class="chip${b === pickedBatch ? ' on' : ''}" data-b="${b}">${b}</button>`).join('');
+  const done = counts().done;
+  $('#btnStart').textContent = state.finished ? 'See my result' : done ? `Continue (${done}/${TOTAL} done)` : 'Start';
+}
+$('#batchChips').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  pickedBatch = b.dataset.b;
+  document.querySelectorAll('#batchChips .chip').forEach(c => c.classList.toggle('on', c === b));
+});
+let openedSent = false;
+$('#btnStart').addEventListener('click', () => {
+  const name = $('#inName').value.replace(/\s+/g, ' ').trim();
+  if (name.length < 2) { $('#whoErr').textContent = 'Please type your name.'; return; }
+  if (!pickedBatch) { $('#whoErr').textContent = 'Please pick your batch.'; return; }
+  $('#whoErr').textContent = '';
+  store.setRaw(CFG.nameKey, name);
+  store.setRaw(CFG.batchKey, pickedBatch);
+  if (!state.startedAt) { state.startedAt = Date.now(); save(); }
+  if (!openedSent) { logEvent('opened'); openedSent = true; }
+  if (state.finished) renderResult(); else { renderWork(); show('#scrWork'); }
+});
+$('#inName').addEventListener('keydown', e => { if (e.key === 'Enter') $('#btnStart').click(); });
+
+/* ---------- screen 2: ladders ---------- */
+function renderWork() {
+  const { l, r } = state.cur;
+  const lad = LADDERS[l], rung = lad.rungs[r];
+  const id = qid(l, r), a = state.answers[id];
+  const c = counts();
+
+  // side
+  $('#side').innerHTML = '<h3>LADDERS</h3>' + LADDERS.map((L, i) => {
+    const d = L.rungs.filter((_, j) => state.answers[qid(i, j)]).length;
+    return `<button class="lad${i === l ? ' on' : ''}" data-l="${i}">
+      <span class="n">Ladder ${i + 1} · ${L.tag}</span><span class="t">${L.title}</span>
+      <span class="bar"><i style="width:${d / L.rungs.length * 100}%"></i></span></button>`;
+  }).join('') + `<div class="stat">Answered <b>${c.done}/${TOTAL}</b><br>Correct <b>${c.right}</b></div>`;
+
+  // pills
+  const pills = lad.rungs.map((R, j) => {
+    const x = state.answers[qid(l, j)];
+    const cls = ['pill', R.star ? 'star' : '', j === r ? 'cur' : '', x ? (x.ok ? 'ok' : 'bad') : ''].join(' ');
+    return `<button class="${cls}" data-r="${j}">${R.star ? '★ ' + (j + 1) : j + 1}</button>`;
+  }).join('');
+
+  // options
+  const order = orderFor(l, r);
+  const opts = order.map((oi, k) => {
+    let cls = 'opt';
+    if (a) { if (oi === rung.ans) cls += ' right'; else if (oi === a.pick) cls += ' wrong'; }
+    return `<button class="${cls}" data-o="${oi}" ${a ? 'disabled' : ''}><span class="k">${LETTERS[k]}</span><span>${rung.opts[oi]}</span></button>`;
+  }).join('');
+
+  const sol = a ? `<div class="sol${a.ok ? '' : ' bad'}"><h4>${a.ok ? 'Correct ✓' : 'Not quite ✗'}</h4>${rung.why}</div>` : '';
+
+  const isLastRung = r === lad.rungs.length - 1, isLastLad = l === LADDERS.length - 1;
+  let nextLabel = isLastRung ? (isLastLad ? '' : 'Next ladder →') : 'Next rung →';
+  if (state.finished) nextLabel = isLastRung && isLastLad ? 'See my result →' : nextLabel;
+  if (!state.finished && c.done === TOTAL) nextLabel = 'See my result →';
+  if (!nextLabel && c.done < TOTAL) nextLabel = 'Next unanswered →';
+
+  $('#card').innerHTML = `
+    <div class="rungs">${pills}</div>
+    <div class="meta">
+      <span class="tag">Rung ${r + 1} of ${lad.rungs.length}</span>
+      <span class="tag ${rung.star ? 'ex' : 'lvl'}">${rung.star ? '★ ' : ''}${rung.level}</span>
+    </div>
+    <div class="q">${rung.q}</div>
+    <div class="dia">${rung.dia ? rung.dia() : ''}</div>
+    <div class="opts">${opts}</div>
+    ${sol}
+    <div class="nav">
+      <button class="btn ghost" id="btnPrev" ${l === 0 && r === 0 ? 'disabled' : ''}>← Back</button>
+      ${nextLabel ? `<button class="btn${nextLabel.startsWith('See') ? ' amber' : ''}" id="btnNext">${nextLabel}</button>` : ''}
+    </div>`;
+  tex($('#card'));
+}
+
+$('#side').addEventListener('click', e => {
+  const b = e.target.closest('.lad'); if (!b) return;
+  const l = +b.dataset.l;
+  const firstOpen = LADDERS[l].rungs.findIndex((_, j) => !state.answers[qid(l, j)]);
+  state.cur = { l, r: firstOpen < 0 ? 0 : firstOpen }; save(); renderWork();
+});
+$('#card').addEventListener('click', e => {
+  const pill = e.target.closest('.pill');
+  if (pill) { state.cur.r = +pill.dataset.r; save(); renderWork(); return; }
+  const opt = e.target.closest('.opt');
+  if (opt && !opt.disabled) { answer(+opt.dataset.o); return; }
+  if (e.target.closest('#btnPrev')) { step(-1); return; }
+  const nx = e.target.closest('#btnNext');
+  if (nx) {
+    if (nx.textContent.startsWith('See')) renderResult();
+    else if (nx.textContent.startsWith('Next unanswered')) gotoUnanswered();
+    else step(1);
+  }
+});
+function step(dir) {
+  let { l, r } = state.cur;
+  r += dir;
+  if (r >= LADDERS[l].rungs.length) { l++; r = 0; }
+  if (r < 0) { l--; r = LADDERS[l].rungs.length - 1; }
+  state.cur = { l, r }; save(); renderWork();
+  $('#card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function gotoUnanswered() {
+  for (let i = 0; i < LADDERS.length; i++)
+    for (let j = 0; j < LADDERS[i].rungs.length; j++)
+      if (!state.answers[qid(i, j)]) { state.cur = { l: i, r: j }; save(); renderWork(); return; }
+}
+function answer(oi) {
+  const { l, r } = state.cur, id = qid(l, r);
+  if (state.answers[id]) return;
+  state.answers[id] = { pick: oi, ok: oi === LADDERS[l].rungs[r].ans };
+  save();
+  if (!state.finished && counts().done === TOTAL) finishAttempt();
+  renderWork();
+}
+function wrongList() {
+  const w = [];
+  LADDERS.forEach((L, i) => L.rungs.forEach((_, j) => { const x = state.answers[qid(i, j)]; if (x && !x.ok) w.push(qid(i, j)); }));
+  return w;
+}
+function finishAttempt() {
+  state.finished = true;
+  state.seconds = Math.round((Date.now() - (state.startedAt || Date.now())) / 1000);
+  save();
+  logEvent('finished', { score: counts().right, total: TOTAL, seconds: state.seconds, wrong: wrongList().join(', ') });
+}
+
+/* ---------- screen 3: result ---------- */
+function renderResult() {
+  const c = counts(), pct = Math.round(c.right / TOTAL * 100);
+  const col = pct >= 70 ? '#15803d' : pct >= 40 ? '#d97706' : '#c2410c';
+  const C = 2 * Math.PI * 62, off = C * (1 - c.right / TOTAL);
+  const msg = pct >= 80 ? 'Strong work. You climbed both ladders well.'
+            : pct >= 50 ? 'Good. Go back to the red rungs below and read the solution once more.'
+            : 'No problem. Start again from rung 1 of each ladder. Go slowly — one idea at a time.';
+  const w = wrongList();
+  const mins = Math.max(1, Math.round(state.seconds / 60));
+  $('#scrRes').innerHTML = `
+    <svg class="ring" viewBox="0 0 150 150">
+      <circle cx="75" cy="75" r="62" fill="none" stroke="#e4dccb" stroke-width="12"/>
+      <circle cx="75" cy="75" r="62" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round"
+        stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 75 75)"/>
+      <text x="75" y="80" text-anchor="middle" font-size="30" font-weight="700" fill="#1d2b2f">${c.right}/${TOTAL}</text>
+      <text x="75" y="102" text-anchor="middle" font-size="13" fill="#5f6b6d">${pct}%</text>
+    </svg>
+    <h2>Well done, ${getName() || 'student'}!</h2>
+    <p class="msg">${msg}<br>Time taken: about ${mins} min.</p>
+    ${w.length ? `<div><b>Rungs to look at again:</b></div><div class="wl">${w.map(id => `<button data-id="${id}">${id.replace('L', 'Ladder ').replace('R', ' · Rung ')}</button>`).join('')}</div>` : ''}
+    <div class="sendline" id="sendLine"></div>
+    <div class="row">
+      <button class="btn ghost" id="btnReview">Review answers</button>
+      <button class="btn" id="btnAgain">Try again</button>
+    </div>`;
+  show('#scrRes');
+  flush();
+  setSync(!loggerReady() ? 'off' : store.get(CFG.outboxKey, []).length ? 'wait' : 'ok');
+}
+$('#scrRes').addEventListener('click', e => {
+  const wb = e.target.closest('.wl button');
+  if (wb) {
+    const m = wb.dataset.id.match(/L(\d+)R(\d+)/);
+    state.cur = { l: +m[1] - 1, r: +m[2] - 1 }; save(); renderWork(); show('#scrWork'); return;
+  }
+  if (e.target.closest('#btnReview')) { state.cur = { l: 0, r: 0 }; save(); renderWork(); show('#scrWork'); return; }
+  if (e.target.closest('#btnAgain')) {
+    state = freshState(); state.startedAt = Date.now(); save();
+    logEvent('opened');
+    renderWork(); show('#scrWork');
+  }
+});
+
+/* ---------- start ---------- */
+renderWho();
+flush();          // send anything left over from last time (any PADIPUCAST file)
+</script>
+</body>
+</html>
