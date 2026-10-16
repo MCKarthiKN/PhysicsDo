@@ -384,6 +384,115 @@ function openZoom(src){ $('zimg').src=src; $('zoom').classList.add('open'); }
 function closeZoom(e,force){ if(force||e.target.id==='zoom'){ $('zoom').classList.remove('open'); } }
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') $('zoom').classList.remove('open'); });
 
+
+/* =====================================================================
+   PADIPUCAST LOGGER — sends "opened" + "finished" (score) to sir's Google Sheet
+   Same block works for every Day file — it reads DAY by itself.
+   ===================================================================== */
+const LOGCFG = {
+  url:     'https://script.google.com/macros/s/AKfycbxe5tksOyqZ86dH1oyGdr-z4bdOrC32weaCFINlRudLQvQ3DHuAGBxbxglmn4RXVJqD/exec',
+  key:     'padipucast-2026',            // same as SECRET in Code.gs
+  batch:   'JEE',                        // JEE or NEET
+  course:  'JEE',
+  chapter: 'Work, Energy & Power (Daily HW)',
+  prefix:  'WPE_HW',                     // file name in the Sheet = WPE_HW_Day13_mixed
+  outbox:  'padipucast_outbox_v1',       // shared by all PADIPUCAST files
+  nameKey: 'padipucast_name_v1'          // shared with the index page
+};
+const LOGKEY = KEY + '_log';
+const DD = String(DAY).padStart(2, '0');
+const SETNAME = { mixed: '10 mixed', medium: '7 medium' };
+
+function lsJ(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+function lsW(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+let logState = lsJ(LOGKEY, null) || { sid: Date.now().toString(36) + Math.random().toString(36).slice(2, 7), opened: {}, finished: {}, t0: {} };
+function saveLog() { lsW(LOGKEY, logState); }
+
+function sendEvent(event, tr, extra) {
+  const p = Object.assign({
+    key: LOGCFG.key, name: store.name || '', batch: LOGCFG.batch,
+    course: LOGCFG.course, chapter: LOGCFG.chapter,
+    file: LOGCFG.prefix + '_Day' + DD + '_' + tr,
+    title: 'WPE HW · Day ' + DD + ' · ' + SETNAME[tr],
+    event: event, session: logState.sid + '_' + tr, clientTime: new Date().toISOString()
+  }, extra || {});
+  const box = lsJ(LOGCFG.outbox, []);
+  box.push(p);
+  lsW(LOGCFG.outbox, box.slice(-200));
+  flushLog();
+}
+let flushing = false, lastSync = 'idle';
+async function flushLog() {
+  if (flushing) return;
+  flushing = true;
+  let box = lsJ(LOGCFG.outbox, []);
+  while (box.length) {
+    try {
+      await fetch(LOGCFG.url, {
+        method: 'POST', mode: 'no-cors', keepalive: true,
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(box[0])
+      });
+      box = lsJ(LOGCFG.outbox, []); box.shift(); lsW(LOGCFG.outbox, box);
+    } catch (e) { flushing = false; setSync('wait'); return; }
+  }
+  flushing = false; setSync('ok');
+}
+function setSync(s) {
+  lastSync = s;
+  const el = document.getElementById('syncline');
+  if (!el) return;
+  el.textContent = s === 'ok' ? '✓ Score sent to sir' : s === 'wait' ? 'Saved on this phone · will send to sir when internet comes' : 'Sending to sir…';
+  el.style.color = s === 'ok' ? 'var(--c)' : 'var(--amb)';
+}
+window.addEventListener('online', flushLog);
+
+// 1) when a set is started → "opened" (once per set on this phone)
+startTrack = (function (orig) {
+  return function (tr) {
+    orig(tr);
+    if (track !== tr || !store.name) return;          // name was empty → not started
+    try { localStorage.setItem(LOGCFG.nameKey, store.name); } catch (e) {}
+    if (!logState.t0[tr]) logState.t0[tr] = Date.now();
+    if (!logState.opened[tr]) { logState.opened[tr] = true; saveLog(); sendEvent('opened', tr); }
+    else saveLog();
+  };
+})(startTrack);
+
+// 2) when all questions of a set are answered → "finished" with score (once per set)
+finish = (function (orig) {
+  return function () {
+    orig();
+    if (!document.getElementById('syncline')) {
+      const d = document.createElement('div');
+      d.id = 'syncline';
+      d.style.cssText = 'margin-top:14px;font-size:13px;font-weight:600;';
+      document.querySelector('#s-res .acts').after(d);
+    }
+    const tr = track, ids = SETS[tr], a = store[tr];
+    const left = a.filter(x => !x).length;
+    if (left === 0 && !logState.finished[tr]) {
+      logState.finished[tr] = true; saveLog();
+      const ok = a.filter(x => x && x.ok).length;
+      const wrong = ids.map((id, i) => a[i] && !a[i].ok ? 'Q' + (i + 1) + '(#' + id + ')' : null).filter(Boolean).join(', ');
+      const secs = logState.t0[tr] ? Math.round((Date.now() - logState.t0[tr]) / 1000) : '';
+      setSync('send');
+      sendEvent('finished', tr, { score: ok, total: ids.length, seconds: secs, wrong: wrong });
+    } else if (left === 0) {
+      setSync(lsJ(LOGCFG.outbox, []).length ? 'wait' : 'ok');
+    } else {
+      const el = document.getElementById('syncline');
+      el.textContent = 'Finish all ' + ids.length + ' questions — then your score goes to sir.';
+      el.style.color = 'var(--text2)';
+    }
+  };
+})(finish);
+
+// use the saved name from other PADIPUCAST sheets, if this one is empty
+if (!store.name) { try { const n = localStorage.getItem(LOGCFG.nameKey); if (n) { store.name = n.replace(/^"|"$/g, ''); save(); } } catch (e) {} }
+flushLog();                                            // send anything left over from before
+/* ===================== end of PADIPUCAST LOGGER ===================== */
+
 buildStart();
 </script>
 </body>
