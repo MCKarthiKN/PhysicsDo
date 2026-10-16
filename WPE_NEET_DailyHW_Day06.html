@@ -61,6 +61,12 @@ h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,5vw,36px);line-he
 .rrow{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
 .dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
 .hidden{display:none}
+.namebox{margin:22px 0 4px;max-width:420px}
+.namebox label{display:block;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin-bottom:6px}
+.namebox input{width:100%;font:inherit;font-size:17px;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.namebox input:focus{outline:none;border-color:var(--teal)}
+.namebox .err{color:var(--red);font-size:14px;min-height:1.3em;margin-top:6px}
+#syncline{margin-top:14px;font-size:14px;font-weight:700}
 </style>
 </head>
 <body>
@@ -70,6 +76,11 @@ h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,5vw,36px);line-he
   <section id="home">
     <h1>Daily HW &#183; Day 6<br>Collisions — 1D and 2D</h1>
     <p class="lede">Stick-together, bounce height, oblique collisions. All questions are real NEET / AIPMT PYQs. <b>Pick one track for today</b> &#8212; not both.</p>
+    <div class="namebox">
+      <label for="nm">Your name</label>
+      <input id="nm" placeholder="Type your full name" autocomplete="name" maxlength="40">
+      <div class="err" id="nmErr"></div>
+    </div>
     <div class="tracks">
       <button class="track a" data-t="A"><div class="tag">Track A</div><h2>10 questions</h2><p>Mixed &#8212; starts easy, ends with a tough one. Good if you want speed and confidence.</p><div class="best" id="bestA"></div></button>
       <button class="track b" data-t="B"><div class="tag">Track B</div><h2>7 questions</h2><p>All medium. Fewer questions, every one needs real thinking.</p><div class="best" id="bestB"></div></button>
@@ -98,6 +109,7 @@ h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,5vw,36px);line-he
         <button class="btn ghost" id="review">Review answers</button>
         <button class="btn" id="redo">Try again</button>
       </div>
+      <div id="syncline"></div>
     </div>
   </section>
 </div>
@@ -198,6 +210,125 @@ $('next').addEventListener('click', () => { if (cur < list().length - 1){ cur++;
 $('home-btn').addEventListener('click', home);
 $('review').addEventListener('click', () => { cur = 0; show('quiz'); render(); });
 $('redo').addEventListener('click', () => { store[track] = {}; save(); start(track); });
+
+/* =====================================================================
+   PADIPUCAST LOGGER — sends "opened" + "finished" (score) to sir's Google Sheet
+   Same block works for every NEET WPE Day file — it reads DAY by itself.
+   ===================================================================== */
+const LOGCFG = {
+  url:     'https://script.google.com/macros/s/AKfycbxe5tksOyqZ86dH1oyGdr-z4bdOrC32weaCFINlRudLQvQ3DHuAGBxbxglmn4RXVJqD/exec',
+  key:     'padipucast-2026',            // same as SECRET in Code.gs
+  batch:   'NEET',
+  course:  'NEET',
+  chapter: 'Work, Energy & Power (Daily HW)',
+  prefix:  'WPE_NEET_HW',                // file name in the Sheet = WPE_NEET_HW_Day06_A
+  outbox:  'padipucast_outbox_v1',       // shared by all PADIPUCAST files
+  nameKey: 'padipucast_name_v1'          // shared with the index page
+};
+const LOGKEY = KEY + '_log';
+const DD = String(DAY).padStart(2, '0');
+
+function lsJ(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+function lsW(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+let logState = lsJ(LOGKEY, null) || { sid: Date.now().toString(36) + Math.random().toString(36).slice(2, 7), name: '', opened: {}, finished: {}, t0: {} };
+function saveLog() { lsW(LOGKEY, logState); }
+function sharedName() { try { const n = localStorage.getItem(LOGCFG.nameKey) || ''; return n.replace(/^"|"$/g, ''); } catch (e) { return ''; } }
+
+function sendEvent(event, t, extra) {
+  const p = Object.assign({
+    key: LOGCFG.key, name: logState.name || '', batch: LOGCFG.batch,
+    course: LOGCFG.course, chapter: LOGCFG.chapter,
+    file: LOGCFG.prefix + '_Day' + DD + '_' + t,
+    title: 'WPE NEET HW · Day ' + DD + ' · Track ' + t + ' (' + TRACKS[t].length + ' Qs)',
+    event: event, session: logState.sid + '_' + t, clientTime: new Date().toISOString()
+  }, extra || {});
+  const box = lsJ(LOGCFG.outbox, []);
+  box.push(p);
+  lsW(LOGCFG.outbox, box.slice(-200));
+  flushLog();
+}
+let flushing = false;
+async function flushLog() {
+  if (flushing) return;
+  flushing = true;
+  let box = lsJ(LOGCFG.outbox, []);
+  while (box.length) {
+    try {
+      await fetch(LOGCFG.url, {
+        method: 'POST', mode: 'no-cors', keepalive: true,
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(box[0])
+      });
+      box = lsJ(LOGCFG.outbox, []); box.shift(); lsW(LOGCFG.outbox, box);
+    } catch (e) { flushing = false; setSync('wait'); return; }
+  }
+  flushing = false; setSync('ok');
+}
+function setSync(s) {
+  const el = document.getElementById('syncline');
+  if (!el || !el.dataset.on) return;
+  el.textContent = s === 'ok' ? '✓ Score sent to sir' : s === 'wait' ? 'Saved on this phone · will send to sir when internet comes' : 'Sending to sir…';
+  el.style.color = s === 'ok' ? 'var(--grn)' : 'var(--amb)';
+}
+window.addEventListener('online', flushLog);
+
+// name box on the home screen
+const nmIn = document.getElementById('nm');
+nmIn.value = logState.name || sharedName();
+nmIn.addEventListener('input', () => { document.getElementById('nmErr').textContent = ''; });
+
+// 1) starting a track → needs a name, then "opened" (once per track on this phone)
+start = (function (orig) {
+  return function (t) {
+    const n = nmIn.value.replace(/\s+/g, ' ').trim();
+    if (n.length < 2) {
+      show('home'); nmIn.focus();
+      document.getElementById('nmErr').textContent = 'Please type your name first.';
+      return;
+    }
+    logState.name = n;
+    try { localStorage.setItem(LOGCFG.nameKey, n); } catch (e) {}
+    if (!logState.t0[t]) logState.t0[t] = Date.now();
+    const first = !logState.opened[t];
+    logState.opened[t] = true; saveLog();
+    orig(t);
+    if (first) sendEvent('opened', t);
+  };
+})(start);
+
+// 2) all questions answered → "finished" with score (once per attempt)
+finish = (function (orig) {
+  return function () {
+    orig();
+    const L = list(), tot = L.length, doneN = answered().length;
+    const el = document.getElementById('syncline');
+    el.dataset.on = '1';
+    if (doneN < tot) {
+      el.textContent = 'Answer all ' + tot + ' questions — then your score goes to sir.';
+      el.style.color = 'var(--soft)';
+      return;
+    }
+    if (!logState.finished[track]) {
+      logState.finished[track] = true; saveLog();
+      const sc = right();
+      const wrong = L.map((n, i) => store[track][n] !== QS[n].a ? 'Q' + (i + 1) + '(Book Q' + n + ')' : null).filter(Boolean).join(', ');
+      const secs = logState.t0[track] ? Math.round((Date.now() - logState.t0[track]) / 1000) : '';
+      setSync('send');
+      sendEvent('finished', track, { score: sc, total: tot, seconds: secs, wrong: wrong });
+    } else {
+      setSync(lsJ(LOGCFG.outbox, []).length ? 'wait' : 'ok');
+    }
+  };
+})(finish);
+
+// "Try again" → a new attempt; the next finish is sent again
+document.getElementById('redo').addEventListener('click', () => {
+  logState.finished[track] = false; logState.t0[track] = Date.now(); saveLog();
+});
+
+flushLog();                                            // send anything left over from before
+/* ===================== end of PADIPUCAST LOGGER ===================== */
+
 home();
 </script>
 </body>
