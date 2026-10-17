@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Collision &#183; Lecture Flow Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Centre of Mass &#183; Collision</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Collision &#183; Step by Step<br>From the first hit to the oblique hit</h1></div>
+    <p id="home-sub">Your collision notes, put in <strong>one climbing order</strong> &#8212; the same order you teach it. The flow goes: what a collision is &#8594; kinds of collision &#8594; deformation and restitution &#8594; momentum is conserved &#8594; e, the coefficient of restitution &#8594; elastic collision and its special cases &#8594; inelastic and perfectly inelastic &#8594; bullet in a pendulum bob, particle on a wedge &#8594; ball bouncing on the floor &#8594; oblique collision.<br><br>Each idea is a <strong>ladder</strong>: 3 build-up rungs, then the &#9733; question from your notes (Illustration, JEE Main PYQ, or a concept check). Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 17 ladders &#215; 4 rungs = 68 questions. Take g = 10 m/s<sup>2</sup> and right as positive.<br><br><em>One rule runs through all 17: momentum is conserved in every collision. Kinetic energy is conserved only when e = 1. e = speed of separation &#247; speed of approach &#8212; it tells you how much bounce is left.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Collision  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1d4ed8';
+const FILL_T='#e6f1f4', FILL_B='#c9e2e9', FILL_C='#fbe7cc';
+
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+const _f = n => Math.round(n*10)/10;
+
+// hatched ground line
+function _hatch(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y+9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+function _ln(x0,y0,x1,y1,c,w,dash){
+  return `<line x1="${_f(x0)}" y1="${_f(y0)}" x2="${_f(x1)}" y2="${_f(y1)}" stroke="${c}" stroke-width="${w||1.6}"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+}
+function _tx(x,y,t,o){
+  o=o||{};
+  return `<text x="${_f(x)}" y="${_f(y)}" font-size="${o.s||11}" text-anchor="${o.a||'middle'}" fill="${o.c||INK}" ${FS}${o.b?' font-weight="700"':''}${o.i?' font-style="italic"':''}>${t}</text>`;
+}
+function _ar(x0,y0,x1,y1,c,w){
+  const id=_nid();
+  return `<defs>${AR(id,c)}</defs><line x1="${_f(x0)}" y1="${_f(y0)}" x2="${_f(x1)}" y2="${_f(y1)}" stroke="${c}" stroke-width="${w||2.2}" marker-end="url(#${id})"/>`;
+}
+function _ball(cx,cy,r,lbl,sub,fill){
+  let s=`<circle cx="${_f(cx)}" cy="${_f(cy)}" r="${r}" fill="${fill||FILL_T}" stroke="${INK}" stroke-width="1.7"/>`;
+  if(lbl) s+=_tx(cx,cy+(sub?-1:4),lbl,{s:11.5,b:1});
+  if(sub) s+=_tx(cx,cy+12,sub,{s:9.5,c:GREY});
+  return s;
+}
+// velocity arrow drawn ABOVE a ball, so two approaching balls never clash
+function _vel(cx,cy,r,dir,lbl,c,len){
+  if(!dir) return _tx(cx,cy+r+14,lbl||'at rest',{s:10,c:GREY});
+  len=len||38; c=c||RED;
+  const y=cy-r-9, x0=cx-dir*len*0.45, x1=cx+dir*len*0.55;
+  return _ar(x0,y,x1,y,c)+_tx(cx+dir*3,y-7,lbl,{s:11,c:c,b:1});
+}
+// a ball flattened against its partner at x = xf (side: 'L' = ball on the left)
+function _flat(xf,cy,r,d,side,fill){
+  const h=Math.sqrt(r*r-d*d);
+  return `<path d="M ${xf} ${_f(cy-h)} A ${r} ${r} 0 1 ${side==='L'?0:1} ${xf} ${_f(cy+h)} Z" fill="${fill}" stroke="${INK}" stroke-width="1.7"/>`;
+}
+const _svg=(W,H,s)=>`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+
+const DIAGRAMS = {
+
+// ---- force-time spike of a collision ----------------------------------------
+ftSpike:()=>{
+  const ox=48, oy=136; let s='';
+  s+=_ar(ox,oy,310,oy,GREY,1.3)+_ar(ox,oy,ox,14,GREY,1.3);
+  s+=_tx(314,oy+16,'t',{s:11,c:GREY})+_tx(ox-12,22,'F',{s:11,c:GREY,b:1});
+  const spike=`C 160 ${oy} 161 30 170 30 C 179 30 180 ${oy} 190 ${oy}`;
+  s+=`<path d="M 150 ${oy} ${spike} Z" fill="${RED}" fill-opacity="0.12"/>`;
+  s+=`<path d="M ${ox} ${oy} L 150 ${oy} ${spike} L 300 ${oy}" fill="none" stroke="${RED}" stroke-width="2.4"/>`;
+  s+=_tx(188,34,'very large force',{s:10.5,a:'start',c:RED,b:1});
+  s+=_ln(150,oy+7,150,oy+17,GREY,1)+_ln(190,oy+7,190,oy+17,GREY,1)+_ln(150,oy+12,190,oy+12,GREY,1);
+  s+=_tx(170,oy+30,'&#916;t &#8776; 10&#8315;&#179; s',{s:10.5,b:1});
+  s+=_ln(178,100,232,92,GREY,1)+_tx(236,95,'area = impulse = &#916;p',{s:10.5,a:'start',c:GREY});
+  return _svg(340,178,s);
+},
+
+// ---- alpha particle turned back by a nucleus (indirect collision) -----------
+alpha:()=>{
+  const id=_nid(); let s=`<defs>${AR(id,RED)}</defs>`;
+  s+=`<path d="M 18 84 L 150 84 C 222 84 228 50 176 30 L 102 12" fill="none" stroke="${RED}" stroke-width="2" marker-end="url(#${id})"/>`;
+  s+=`<circle cx="226" cy="92" r="9" fill="${AMB}" stroke="${INK}" stroke-width="1.2"/>`+_tx(226,96.5,'+',{s:13,c:'#fff',b:1});
+  s+=_tx(226,118,'gold nucleus (+)',{s:10.5,c:GREY});
+  s+=_tx(66,76,'&#945;-particle (+)',{s:11,c:RED,b:1});
+  s+=_ln(222,84,212,66,GREY,1,'3 3')+_tx(244,62,'never touches',{s:10,a:'start',c:GREY});
+  s+=_tx(170,140,'huge repulsive push for a very short time &#8212; still a collision',{s:10.5,c:INK});
+  return _svg(340,150,s);
+},
+
+// ---- head-on vs oblique -----------------------------------------------------
+kinds:()=>{
+  let s='';
+  s+=_tx(95,16,'head-on (1D)',{s:11,b:1});
+  s+=_ln(16,70,176,70,AMB,1.2,'5 4');
+  s+=_ball(58,70,18,'1','',FILL_T)+_ball(132,70,18,'2','',FILL_B);
+  s+=_vel(58,70,18,1,'u&#8321;',RED,32)+_vel(132,70,18,-1,'u&#8322;',RED,32);
+  s+=_tx(95,112,'both centres on one line',{s:10,c:GREY});
+  s+=_ln(192,8,192,118,'#e8e6e0',1);
+  s+=_tx(285,16,'oblique (2D)',{s:11,b:1});
+  const c1x=244,c1y=84, a=-32*Math.PI/180, ex=Math.cos(a), ey=Math.sin(a), c2x=c1x+36*ex, c2y=c1y+36*ey;
+  s+=_ln(206,c1y,370,c1y,'#d4d1c8',1,'4 4');
+  s+=_ln(c1x-26*ex,c1y-26*ey,c2x+46*ex,c2y+46*ey,AMB,1.2,'5 4');
+  s+=_tx(c2x+30,c2y-34,'line of centres',{s:10,a:'start',c:AMB});
+  s+=_ball(c1x,c1y,18,'1','',FILL_T)+_ball(c2x,c2y,18,'2','',FILL_B);
+  s+=_ar(c1x-52,c1y,c1x-22,c1y,RED)+_tx(c1x-38,c1y-8,'u&#8321;',{s:11,c:RED,b:1});
+  s+=_tx(285,118,'line of centres at an angle to the motion',{s:10,c:GREY});
+  return _svg(380,126,s);
+},
+
+// ---- e from 0 to 1 ----------------------------------------------------------
+eScale:()=>{
+  const y=52, x0=40, x1=340; let s='';
+  s+=`<rect x="${x0}" y="${y-5}" width="${x1-x0}" height="10" rx="5" fill="#f0ede8" stroke="${INK}" stroke-width="1.2"/>`;
+  s+=`<circle cx="${x0}" cy="${y}" r="7" fill="${RED}"/><circle cx="${x1}" cy="${y}" r="7" fill="${GRN}"/>`;
+  s+=_tx(x0,y-16,'e = 0',{s:11,b:1,c:RED})+_tx(190,y-16,'0 &lt; e &lt; 1',{s:11,b:1,c:AMB})+_tx(x1,y-16,'e = 1',{s:11,b:1,c:GRN});
+  s+=_tx(18,y+26,'perfectly inelastic',{s:10.5,a:'start'})+_tx(18,y+40,'stick &#183; max KE lost',{s:10,a:'start',c:GREY});
+  s+=_tx(190,y+26,'inelastic',{s:10.5})+_tx(190,y+40,'some KE lost',{s:10,c:GREY});
+  s+=_tx(362,y+26,'elastic',{s:10.5,a:'end'})+_tx(362,y+40,'no KE lost',{s:10,a:'end',c:GREY});
+  s+=_tx(190,y+66,'momentum is conserved in all three',{s:10.5,b:1});
+  return _svg(380,128,s);
+},
+
+// ---- the three stages of a collision ----------------------------------------
+phases:()=>{
+  const cy=58, r=22; let s='';
+  s+=_ball(48,cy,r,'m&#8321;','',FILL_T)+_ball(92,cy,r,'m&#8322;','',FILL_B);
+  s+=_vel(48,cy,r,1,'u&#8321;',RED,40)+_vel(92,cy,r,1,'u&#8322;',RED,26);
+  const xf=195, d=16;
+  s+=_flat(xf,cy,r,d,'L',FILL_T)+_flat(xf,cy,r,d,'R',FILL_B);
+  s+=_tx(xf-d-3,cy+4,'m&#8321;',{s:11.5,b:1})+_tx(xf+d+3,cy+4,'m&#8322;',{s:11.5,b:1});
+  s+=_vel(xf,cy,r,1,'u (same)',AMB,40);
+  s+=_ball(290,cy,r,'m&#8321;','',FILL_T)+_ball(348,cy,r,'m&#8322;','',FILL_B);
+  s+=_vel(290,cy,r,1,'v&#8321;',GRN,26)+_vel(348,cy,r,1,'v&#8322;',GRN,44);
+  s+=_tx(70,cy+r+22,'impact begins',{s:10.5,b:1})+_tx(195,cy+r+22,'maximum deformation',{s:10.5,b:1})+_tx(319,cy+r+22,'separation',{s:10.5,b:1});
+  s+=_tx(70,cy+r+36,'u&#8321; &gt; u&#8322;',{s:10,c:GREY})+_tx(195,cy+r+36,'same velocity u',{s:10,c:GREY})+_tx(319,cy+r+36,'v&#8322; &#8805; v&#8321;',{s:10,c:GREY});
+  s+=_ar(76,136,186,136,GRN,1.6)+_ar(204,136,314,136,GRN,1.6);
+  s+=_tx(131,152,'deformation (force D)',{s:10.5,c:GRN,b:1})+_tx(259,152,'restitution (force R)',{s:10.5,c:GRN,b:1});
+  return _svg(390,162,s);
+},
+
+// ---- equal and opposite deformation impulses ---------------------------------
+impulsePair:()=>{
+  const cy=62, r=36, xf=170, d=22; let s='';
+  s+=_flat(xf,cy,r,d,'L',FILL_T)+_flat(xf,cy,r,d,'R',FILL_B);
+  s+=_tx(xf-d-6,cy+4,'m&#8321;',{s:12,b:1})+_tx(xf+d+6,cy+4,'m&#8322;',{s:12,b:1});
+  s+=_ar(108,cy,58,cy,GRN)+_tx(83,cy-9,'&#8747;D dt',{s:11,c:GRN,b:1})+_tx(83,cy+18,'on m&#8321;',{s:10,c:GREY});
+  s+=_ar(232,cy,282,cy,GRN)+_tx(257,cy-9,'&#8747;D dt',{s:11,c:GRN,b:1})+_tx(257,cy+18,'on m&#8322;',{s:10,c:GREY});
+  s+=_tx(170,cy+r+28,'same size, opposite direction &#8594; they cancel for the pair',{s:10.5,c:INK});
+  return _svg(340,136,s);
+},
+
+// ---- generic two-ball picture: before (and optionally after) ----------------
+twoBalls:(o)=>{
+  const W=380, two=!!o.after, X=o.x||[130,250], cyB=66, cyA=160;
+  const H = two ? (o.cap?226:210) : (o.cap?130:114);
+  let s='';
+  const row=(cy,arr,col)=>{
+    let t=_ln(two?56:36,cy,W-24,cy,'#d4d1c8',1,'4 4');
+    if(arr.stuck){
+      const r1=arr.r1||22, r2=arr.r2||22, mid=(X[0]+X[1])/2, xt=mid-r2+r1;
+      t+=_ball(xt-r1,cy,r1,arr.l1,arr.s1,FILL_T)+_ball(xt+r2,cy,r2,arr.l2,arr.s2,FILL_B);
+      t+=_vel(mid,cy,Math.max(r1,r2),arr.d,arr.v,col,44);
+      return t;
+    }
+    arr.forEach((b,i)=>{
+      const r=b.r||22;
+      t+=_ball(X[i],cy,r,b.l,b.s,b.f||(i?FILL_B:FILL_T));
+      t+=_vel(X[i],cy,r,b.d,b.v,b.c||col,b.len);
+    });
+    return t;
+  };
+  if(two){
+    s+=_tx(12,cyB+4,'before',{s:10,a:'start',c:GREY})+_tx(12,cyA+4,'after',{s:10,a:'start',c:GREY});
+    s+=_ln(30,113,W-20,113,'#e8e6e0',1);
+  }
+  s+=row(cyB,o.before,RED);
+  if(two) s+=row(cyA,o.after,GRN);
+  if(o.cap) s+=_tx(W/2,H-9,o.cap,{s:10.5,c:GREY});
+  return _svg(W,H,s);
+},
+
+// ---- one ball into a row of identical balls ----------------------------------
+cradle:(o)=>{
+  o=o||{}; const r=15, after=o.after!==false, cyB=48, cyA=128; let s='';
+  if(after) s+=_tx(8,cyB+4,'before',{s:10,a:'start',c:GREY})+_tx(8,cyA+4,'after',{s:10,a:'start',c:GREY});
+  s+=_ln(56,cyB,364,cyB,'#d4d1c8',1,'4 4');
+  s+=_ball(76,cyB,r,'m','',FILL_C)+_vel(76,cyB,r,1,'v',RED,34);
+  for(let i=0;i<5;i++) s+=_ball(140+30*i,cyB,r,'m','',FILL_T);
+  s+=_tx(200,cyB+r+16,'five identical balls at rest, just touching',{s:10,c:GREY});
+  if(after){
+    s+=_ln(30,90,364,90,'#e8e6e0',1);
+    s+=_ln(56,cyA,364,cyA,'#d4d1c8',1,'4 4');
+    s+=_ball(110,cyA,r,'m','',FILL_C);
+    for(let i=0;i<4;i++) s+=_ball(140+30*i,cyA,r,'m','',FILL_T);
+    s+=_ball(300,cyA,r,'m','',FILL_C)+_vel(300,cyA,r,1,'v',GRN,34);
+    s+=_tx(170,cyA+r+16,'all at rest',{s:10,c:GREY});
+  }
+  return _svg(380,after?170:88,s);
+},
+
+// ---- bullet into a pendulum bob --------------------------------------------
+pendulum:(o)=>{
+  o=o||{}; const px=200, py=16, L=107, by=py+L; let s='';
+  s+=_ln(150,py,250,py,INK,2);
+  for(let x=156;x<250;x+=10) s+=_ln(x,py,x+7,py-8,INK,1.1);
+  s+=_ln(px,py,px,by-11,INK,1.4);
+  s+=`<rect x="${px-15}" y="${by-11}" width="30" height="22" fill="${FILL_C}" stroke="${INK}" stroke-width="1.6" rx="2"/>`;
+  s+=_tx(px,by+4,o.bob||'M',{s:9.5,b:1});
+  const a=37*Math.PI/180, sx=px+L*Math.sin(a), sy=py+L*Math.cos(a);
+  s+=_ln(px,py,px+(L-11)*Math.sin(a),py+(L-11)*Math.cos(a),GREY,1.2,'4 3');
+  s+=`<rect x="${_f(sx-15)}" y="${_f(sy-11)}" width="30" height="22" fill="none" stroke="${GREY}" stroke-width="1.3" stroke-dasharray="4 3" rx="2"/>`;
+  s+=_ln(px+18,by,322,by,GREY,1,'3 3')+_ln(sx+18,sy,322,sy,GREY,1,'3 3');
+  s+=_ln(316,sy,316,by,INK,1.3)+_ln(311,sy,321,sy,INK,1.3)+_ln(311,by,321,by,INK,1.3);
+  s+=_tx(326,(sy+by)/2+4,'h',{s:12,a:'start',b:1,i:1});
+  s+=`<rect x="90" y="${by-3}" width="16" height="6" rx="2" fill="${INK}"/>`;
+  s+=_ar(112,by,168,by,RED)+_tx(140,by-9,o.u||'u',{s:11,c:RED,b:1});
+  s+=_tx(98,by+20,o.bullet||'bullet',{s:10,c:GREY});
+  s+=_ar(186,by+24,228,by+24,GRN,2)+_tx(207,by+40,'v just after',{s:10,c:GRN,b:1});
+  s+=_tx(170,184,'&#9312; bullet sticks: momentum      &#9313; bob rises: energy',{s:10.5,c:INK});
+  return _svg(340,192,s);
+},
+
+// ---- particle sliding up a free wedge ---------------------------------------
+wedge:()=>{
+  const gy=160; let s='';
+  s+=_hatch(20,360,gy);
+  s+=`<polygon points="130,${gy} 320,${gy} 320,46" fill="${FILL_B}" stroke="${INK}" stroke-width="1.7"/>`;
+  s+=_tx(282,146,'M = 4m',{s:11.5,b:1});
+  s+=_ball(96,gy-8,8,'','',FILL_C)+_vel(96,gy-8,8,1,'v',RED,34)+_tx(82,gy-4,'m',{s:11,b:1,a:'end'});
+  s+=`<circle cx="245.9" cy="81.1" r="8" fill="none" stroke="${GREY}" stroke-width="1.3" stroke-dasharray="3 2"/>`;
+  s+=_ln(206,81.1,238,81.1,GREY,1,'3 3')+_ln(104,152,218,152,GREY,1,'3 3');
+  s+=_ln(212,81.1,212,152,INK,1.3)+_ln(207,81.1,217,81.1,INK,1.3)+_ln(207,152,217,152,INK,1.3);
+  s+=_tx(204,122,'h',{s:12,a:'end',b:1,i:1});
+  s+=_tx(196,26,'at the top: particle and wedge move together',{s:10.5,c:AMB,b:1});
+  s+=_tx(190,188,'smooth floor, smooth wedge',{s:10.5,c:GREY});
+  return _svg(380,196,s);
+},
+
+// ---- ball bouncing on the floor ---------------------------------------------
+bounce:()=>{
+  const gy=166, top=40, e=0.6, w=60; let s='';
+  s+=_hatch(36,340,gy);
+  const h0=gy-top; let x=60;
+  let d=`M ${x} ${top} Q ${x+w/2} ${top} ${x+w} ${gy}`;
+  x+=w; const xs=[x], hs=[h0];
+  for(let n=1;n<=6;n++){
+    const H=h0*Math.pow(e,2*n), ww=2*w*Math.pow(e,n);
+    d+=` Q ${_f(x+ww/2)} ${_f(gy-2*H)} ${_f(x+ww)} ${gy}`;
+    hs.push(H); x+=ww; xs.push(x);
+  }
+  s+=`<path d="${d}" fill="none" stroke="${RED}" stroke-width="2"/>`;
+  s+=`<circle cx="60" cy="${top}" r="6" fill="${FILL_C}" stroke="${INK}" stroke-width="1.3"/>`;
+  s+=_ln(40,top,40,gy,INK,1.2)+_ln(35,top,45,top,INK,1.2);
+  s+=_tx(32,(top+gy)/2+4,'h&#8320;',{s:11.5,a:'end',b:1,i:1});
+  const p1x=xs[0]+w*e, p1y=gy-hs[1], p2x=xs[1]+w*e*e, p2y=gy-hs[2];
+  s+=_ln(p1x,p1y,300,p1y,GREY,1,'3 3')+_tx(304,p1y+4,'h&#8321; = e&#178;h&#8320;',{s:10.5,a:'start',c:INK});
+  s+=_ln(p2x,p2y,300,p2y,GREY,1,'3 3')+_tx(304,p2y+4,'h&#8322; = e&#8308;h&#8320;',{s:10.5,a:'start',c:INK});
+  s+=_tx(xs[0],gy+24,'v&#8320;',{s:10.5,b:1,c:RED})+_tx(xs[1],gy+24,'v&#8321;',{s:10.5,b:1,c:RED})+_tx(xs[2],gy+24,'v&#8322;',{s:10.5,b:1,c:RED});
+  s+=_tx(366,52,'v&#8345; = e&#8319; v&#8320;',{s:11,a:'end',b:1})+_tx(366,70,'h&#8345; = e&#178;&#8319; h&#8320;',{s:11,a:'end',b:1});
+  s+=_tx(366,88,'floor: fixed',{s:10,a:'end',c:GREY});
+  return _svg(380,198,s);
+},
+
+// ---- oblique collision, after the hit ---------------------------------------
+obliqueAfter:(o)=>{
+  o=o||{}; const ox=150, oy=106, D=70; let s='';
+  s+=_ln(24,oy,340,oy,'#d4d1c8',1,'4 4');
+  s+=_ball(62,oy,13,'1','',FILL_T)+_ar(80,oy,118,oy,RED)+_tx(99,oy-8,o.u||'u',{s:11,c:RED,b:1});
+  s+=`<circle cx="${ox}" cy="${oy}" r="13" fill="none" stroke="${GREY}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+  s+=_tx(ox-34,oy+30,'2 was at rest here',{s:9.5,c:GREY});
+  const t1=(o.th||48)*Math.PI/180, t2=(o.ph||42)*Math.PI/180;
+  const c1=Math.cos(t1), s1=Math.sin(t1), c2=Math.cos(t2), s2=Math.sin(t2);
+  const b1x=ox+D*c1, b1y=oy-D*s1, b2x=ox+D*c2, b2y=oy+D*s2;
+  s+=_ln(ox,oy,b1x,b1y,GREY,1,'3 3')+_ln(ox,oy,b2x,b2y,GREY,1,'3 3');
+  s+=_ball(b1x,b1y,13,'1','',FILL_T)+_ball(b2x,b2y,13,'2','',FILL_B);
+  s+=_ar(b1x+14*c1,b1y-14*s1,b1x+40*c1,b1y-40*s1,GRN)+_tx(b1x+43*c1+8,b1y-43*s1+4,o.v1||'v&#8321;',{s:11,c:GRN,b:1,a:'start'});
+  s+=_ar(b2x+14*c2,b2y+14*s2,b2x+40*c2,b2y+40*s2,GRN)+_tx(b2x+43*c2+8,b2y+43*s2+6,o.v2||'v&#8322;',{s:11,c:GRN,b:1,a:'start'});
+  s+=`<path d="M ${ox+34} ${oy} A 34 34 0 0 0 ${_f(ox+34*c1)} ${_f(oy-34*s1)}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`;
+  s+=`<path d="M ${ox+34} ${oy} A 34 34 0 0 1 ${_f(ox+34*c2)} ${_f(oy+34*s2)}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`;
+  s+=_tx(ox+47*Math.cos(t1/2),oy-47*Math.sin(t1/2)+4,'&#952;',{s:12,c:AMB,b:1});
+  s+=_tx(ox+47*Math.cos(t2/2),oy+47*Math.sin(t2/2)+5,'&#966;',{s:12,c:AMB,b:1});
+  s+=_tx(330,oy-6,'x',{s:10.5,c:GREY,i:1});
+  s+=_tx(18,204,o.cap||'conserve momentum along x and along y separately',{s:10,a:'start',c:GREY});
+  return _svg(360,212,s);
+},
+
+// ---- momentum triangle for identical balls ----------------------------------
+momTriangle:()=>{
+  let s='';
+  const A=[50,160], B=[310,160], C=[119,45.2];
+  s+=_ar(A[0],A[1],B[0],B[1],INK,2.2);
+  s+=_ar(A[0],A[1],C[0],C[1],BLU,2.2);
+  s+=_ar(C[0],C[1],B[0],B[1],GRN,2.2);
+  s+=`<path d="M 112.8 55.5 L 123.1 61.7 L 129.3 51.4" fill="none" stroke="${INK}" stroke-width="1.2"/>`;
+  s+=_tx(76,98,'p&#8321; = m v&#8321;',{s:11,a:'end',c:BLU,b:1});
+  s+=_tx(226,96,'p&#8322; = m v&#8322;',{s:11,a:'start',c:GRN,b:1});
+  s+=_tx(180,178,'p = m u   (before the hit)',{s:11,b:1});
+  s+=_tx(180,198,'p&#178; = p&#8321;&#178; + p&#8322;&#178;  &#8594;  the angle at the top is 90&#176;',{s:10.5,c:GREY});
+  return _svg(360,206,s);
+}
+
+};
+
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "What makes it a collision?",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Two bodies collide. Look at the force–time graph of the push between them. Which statement is correct?",
+   "diagram": DIAGRAMS.ftSpike(),
+   "opts": ["The force is very large and acts for a very short time (about 10<sup>−3</sup> s)","The force is small and acts for a long time","The force is very large and acts for a long time","The force is small and acts for a very short time"],
+   "ans": 0,
+   "sol": "This is the definition in your notes: <strong>a huge force for a very short time</strong>, around 10<sup>−3</sup> s.<br><br>The area under the F–t graph is the impulse, ∫F dt = Δp. A tall, thin spike can still have a big area. That is how a short hit changes momentum so much."
+  },
+  {
+   "q": "During a collision, gravity and friction also act on the bodies. Why can we still say the total momentum of the two bodies is conserved?",
+   "opts": ["The push between the bodies is huge and the time is tiny, so outside forces give almost no impulse in that time","Gravity and friction switch off during the collision","Momentum is conserved whatever outside forces act","Because kinetic energy is conserved"],
+   "ans": 0,
+   "sol": "Impulse = force × time. Friction of a few newtons acting for 10<sup>−3</sup> s gives an impulse of only about 10<sup>−3</sup> N s. That is nothing compared with what the collision force does.<br><br>The collision force is <strong>internal</strong> (A on B, B on A), so it cancels for the pair. So, for the short time of the collision, <strong>total momentum before = total momentum after</strong>. Every ladder ahead uses this one idea."
+  },
+  {
+   "q": "A 0.2 kg ball hits a bat at 20 m/s and goes back at 30 m/s. Contact lasts 10<sup>−3</sup> s. The average force of the bat on the ball is",
+   "opts": ["10<sup>4</sup> N","2 × 10<sup>3</sup> N","10 N","2 N"],
+   "ans": 0,
+   "sol": "Take 'away from the bat' as positive. Before: −20 m/s. After: +30 m/s.<br>Δp = 0.2 × (30 − (−20)) = 0.2 × 50 = 10 N s<br>F = Δp / Δt = 10 / 10<sup>−3</sup> = <strong>10<sup>4</sup> N</strong><br><br>The ball's weight is only 2 N. The bat's push is 5000 times bigger. That is what 'huge force' means.<br><br>2 × 10<sup>3</sup> N is the trap: it forgets that the velocity reverses (30 − 20 instead of 30 + 20)."
+  },
+  {
+   "tag": "Notes · definition",
+   "lbl": "From your notes",
+   "q": "★ <strong>From your notes:</strong> Which of these is an <strong>indirect</strong> collision, where the bodies never actually touch?",
+   "diagram": DIAGRAMS.alpha(),
+   "opts": ["An α-particle fired at a gold nucleus and turned back","A rubber ball hitting a wall","Two billiard balls hitting each other","A hammer hitting a nail"],
+   "ans": 0,
+   "sol": "The α-particle and the nucleus are both positive. As they come close they repel strongly, and the α-particle turns back <strong>without touching</strong>.<br><br>It is still a collision: a huge force acts for a very short time, and momentum passes from one body to the other.<br><br><em>Collision does not mean touching. It means a big, short interaction.</em> The rubber ball, the billiard balls and the hammer are direct collisions."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Sorting collisions — by direction and by kinetic energy",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Two balls move along the same straight line, and that line passes through both centres. When they hit, the collision is",
+   "diagram": DIAGRAMS.kinds(),
+   "opts": ["Head-on (one dimensional)","Oblique (two dimensional)","Perfectly inelastic","Indirect"],
+   "ans": 0,
+   "sol": "When the motion is along the line joining the centres, the balls stay on that line after the hit too. Everything happens in <strong>one dimension</strong>. This is a <strong>head-on collision</strong>.<br><br>Head-on / oblique is about <em>direction</em>. Elastic / inelastic is about <em>energy</em>. The two ways of sorting are separate: a head-on collision can be elastic or inelastic."
+  },
+  {
+   "q": "Ball 1 hits ball 2 a little off-centre. After the hit, the two balls fly off at different angles. This is",
+   "opts": ["An oblique (2D) collision","A head-on (1D) collision","An indirect collision","Not a collision, since they move apart"],
+   "ans": 0,
+   "sol": "At the moment of contact, the line joining the centres makes an angle with the motion. The balls get pushed sideways, so the motion spreads into a plane, which is <strong>two dimensions</strong>. This is an <strong>oblique collision</strong>.<br><br>We handle it at the end of this sheet (Ladder 17): conserve momentum along x and along y separately."
+  },
+  {
+   "q": "Match the value of e (coefficient of restitution) with the type of collision.",
+   "diagram": DIAGRAMS.eScale(),
+   "opts": ["e = 1 → elastic;  0 &lt; e &lt; 1 → inelastic;  e = 0 → perfectly inelastic","e = 0 → elastic;  0 &lt; e &lt; 1 → inelastic;  e = 1 → perfectly inelastic","e = 1 → perfectly inelastic;  e = 0 → elastic;  e &gt; 1 → inelastic","e = 1 → inelastic;  e = 0 → elastic;  0 &lt; e &lt; 1 → perfectly inelastic"],
+   "ans": 0,
+   "sol": "e measures how much 'bounce' is left. Ladder 06 defines it properly.<br>• e = 1 → full bounce → <strong>elastic</strong>, no KE lost<br>• 0 &lt; e &lt; 1 → partial bounce → <strong>inelastic</strong>, some KE lost<br>• e = 0 → no bounce, bodies stick → <strong>perfectly inelastic</strong>, maximum KE lost<br><br>In a normal collision e is never more than 1. That would need energy from inside, like an explosion."
+  },
+  {
+   "tag": "Notes · classification",
+   "lbl": "From your notes",
+   "q": "★ <strong>From your notes:</strong> No outside force acts on two colliding bodies. Which statement is true for <strong>every</strong> such collision?",
+   "opts": ["Total momentum is conserved; kinetic energy is conserved only when e = 1","Both momentum and kinetic energy are always conserved","Momentum is conserved only in elastic collisions","Kinetic energy is conserved, but momentum is not"],
+   "ans": 0,
+   "sol": "<strong>Momentum is always conserved</strong> — elastic, inelastic or perfectly inelastic, head-on or oblique. The internal pushes cancel.<br><br><strong>Kinetic energy is conserved only in an elastic collision</strong> (e = 1). In the other cases some KE becomes heat, sound and a permanent change of shape.<br><br>Write this on the board and keep it there for the whole chapter. Most mistakes in collision problems come from using KE conservation where it does not hold."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Inside the collision — squash, then spring back",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "From the moment of impact, the first part of a collision is called deformation. During deformation the two bodies",
+   "diagram": DIAGRAMS.phases(),
+   "opts": ["press into each other and change shape","move apart","stick together for ever","both stop"],
+   "ans": 0,
+   "sol": "In the first phase the faster body behind is still catching up. So the bodies <strong>squash into each other</strong>, and a deformation force D acts on each one, equal and opposite.<br><br>Deformation goes on as long as the bodies are still coming closer."
+  },
+  {
+   "q": "At the instant of maximum deformation, the two bodies",
+   "diagram": DIAGRAMS.phases(),
+   "opts": ["have the same velocity u (common velocity)","are both at rest","still have their original velocities","move in opposite directions"],
+   "ans": 0,
+   "sol": "Deformation stops growing when the bodies stop coming closer. That happens exactly when their <strong>velocities become equal</strong>. Your notes call this common velocity u.<br><br>Equal velocity does not mean zero velocity. Both can be moving — just together, for that one instant."
+  },
+  {
+   "q": "After maximum deformation comes restitution. What happens in this phase?",
+   "opts": ["A restoring force R pushes the bodies apart and they get back their shape, fully or partly","The deformation force keeps squeezing them more","The bodies move together for the rest of the motion","The bodies exchange their masses"],
+   "ans": 0,
+   "sol": "Like a squeezed spring, the bodies push back. The <strong>restoring force R</strong> acts until they separate.<br><br>• Full recovery → elastic (e = 1)<br>• Partial recovery → inelastic (0 &lt; e &lt; 1)<br>• No recovery, they stay stuck → perfectly inelastic (e = 0). Here the restitution phase never happens at all."
+  },
+  {
+   "tag": "Notes · phases",
+   "lbl": "From your notes",
+   "q": "★ <strong>From your notes:</strong> At the moment of maximum deformation, the total kinetic energy of the two bodies is",
+   "opts": ["Minimum — part of it is stored as deformation (strain) energy","Maximum","Exactly the same as before the collision","Always zero"],
+   "ans": 0,
+   "sol": "Momentum stays the same, but now both bodies share one velocity u. For a fixed momentum, KE is lowest when the bodies move together. The 'missing' KE is stored in the squashed shape.<br><br>During restitution some or all of it comes back:<br>• elastic → all of it comes back<br>• inelastic → only part comes back<br><br>'Always zero' is wrong. The KE at that moment is zero only if the total momentum is zero, for example equal and opposite momenta."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "From the deformation impulse to momentum conservation",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "During deformation, body A pushes body B with force D. The force of B on A is",
+   "diagram": DIAGRAMS.impulsePair(),
+   "opts": ["Equal to D and opposite in direction (Newton's third law)","Smaller than D, because B is the one pushed","Zero","Larger than D, if A is moving faster"],
+   "ans": 0,
+   "sol": "Action and reaction: <strong>same size, opposite direction</strong>, at every instant. So the two impulses ∫D dt are also equal and opposite.<br><br>It does not matter which body is heavier or faster. Newton's third law has no exceptions."
+  },
+  {
+   "q": "In your notes, the deformation impulse on A is −∫D dt = m<sub>A</sub>u − m<sub>A</sub>u<sub>A</sub>, and on B it is +∫D dt = m<sub>B</sub>u − m<sub>B</sub>u<sub>B</sub>. Adding the two equations gives",
+   "opts": ["m<sub>A</sub>u<sub>A</sub> + m<sub>B</sub>u<sub>B</sub> = (m<sub>A</sub> + m<sub>B</sub>)u","m<sub>A</sub>u<sub>A</sub> − m<sub>B</sub>u<sub>B</sub> = (m<sub>A</sub> − m<sub>B</sub>)u","m<sub>A</sub>u<sub>A</sub> = m<sub>B</sub>u<sub>B</sub>","u = u<sub>A</sub> + u<sub>B</sub>"],
+   "ans": 0,
+   "sol": "The left sides add to zero: −∫D dt + ∫D dt = 0. So<br>0 = m<sub>A</sub>u − m<sub>A</sub>u<sub>A</sub> + m<sub>B</sub>u − m<sub>B</sub>u<sub>B</sub><br>⇒ <strong>m<sub>A</sub>u<sub>A</sub> + m<sub>B</sub>u<sub>B</sub> = (m<sub>A</sub> + m<sub>B</sub>)u</strong> — result (A) in your notes.<br><br>The same steps with the restoring impulse ∫R dt give (m<sub>A</sub> + m<sub>B</sub>)u = m<sub>A</sub>v<sub>A</sub> + m<sub>B</sub>v<sub>B</sub> — result (B). Join (A) and (B): momentum before = momentum after.<br><br>We used only Newton's third law — no e, no KE. That is why this holds for <em>every</em> collision."
+  },
+  {
+   "q": "A 2 kg ball moving at 6 m/s hits a 1 kg ball at rest. Using result (A), the common velocity at maximum deformation is",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',s:'2 kg',v:'6 m/s',d:1},{l:'m₂',s:'1 kg',d:0,r:18}]}),
+   "opts": ["4 m/s","6 m/s","3 m/s","2 m/s"],
+   "ans": 0,
+   "sol": "u = (m<sub>A</sub>u<sub>A</sub> + m<sub>B</sub>u<sub>B</sub>) / (m<sub>A</sub> + m<sub>B</sub>) = (2 × 6 + 1 × 0) / 3 = <strong>4 m/s</strong><br><br>This is the same as the velocity of the centre of mass. At maximum deformation both bodies move exactly with their centre of mass.<br><br>3 m/s is the trap — the plain average of 6 and 0, ignoring the masses."
+  },
+  {
+   "tag": "Notes · result (A)",
+   "lbl": "From your notes",
+   "q": "★ <strong>From your notes:</strong> A 3 kg ball moving at 4 m/s collides head on with a 1 kg ball moving at 2 m/s in the <em>opposite</em> direction. The velocity of both balls at the instant of maximum deformation is",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',s:'3 kg',v:'4 m/s',d:1,r:26},{l:'m₂',s:'1 kg',v:'2 m/s',d:-1,r:18}]}),
+   "opts": ["2.5 m/s, in the 3 kg ball's direction","3.5 m/s, in the 3 kg ball's direction","2.5 m/s, in the 1 kg ball's direction","zero"],
+   "ans": 0,
+   "sol": "Take the 3 kg ball's direction as positive. Then the 1 kg ball has u = −2 m/s.<br>u = (3 × 4 + 1 × (−2)) / (3 + 1) = 10/4 = <strong>2.5 m/s</strong>, positive.<br><br>3.5 m/s comes from forgetting the minus sign: (12 + 2)/4.<br><br>In head-on problems, <strong>fix a positive direction first</strong> and put a sign on every velocity. Then the formula does the rest."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Momentum alone is enough",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A body of mass m₁ moving with velocity v₁ hits a body of mass m₂ moving with velocity v₂ along the same line. After the collision their velocities are v₃ and v₄. Momentum conservation says",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',v:'v₁',d:1},{l:'m₂',v:'v₂',d:1,r:18}],after:[{l:'m₁',v:'v₃',d:1},{l:'m₂',v:'v₄',d:1,r:18}]}),
+   "opts": ["m₁v₁ + m₂v₂ = m₁v₃ + m₂v₄","m₁v₁ − m₂v₂ = m₁v₃ − m₂v₄","m₁v₁ + m₂v₂ = (m₁ + m₂)v₃","m₁v₁<sup>2</sup> + m₂v₂<sup>2</sup> = m₁v₃<sup>2</sup> + m₂v₄<sup>2</sup>"],
+   "ans": 0,
+   "sol": "Each body keeps its own mass. Before: m₁v₁ + m₂v₂. After: m₁v₃ + m₂v₄. Set them equal.<br><br>The last option is the KE equation (multiplied by 2). It is true only for an elastic collision, and nothing in this question says elastic."
+  },
+  {
+   "q": "If m₂ = 0.5 m₁, dividing the momentum equation by m₁ gives",
+   "opts": ["v₁ + 0.5v₂ = v₃ + 0.5v₄","v₁ + 2v₂ = v₃ + 2v₄","0.5v₁ + v₂ = 0.5v₃ + v₄","v₁ + v₂ = v₃ + v₄"],
+   "ans": 0,
+   "sol": "m₁v₁ + 0.5m₁v₂ = m₁v₃ + 0.5m₁v₄. Every term has m₁ — cancel it:<br><strong>v₁ + 0.5v₂ = v₃ + 0.5v₄</strong><br><br>When the masses are given only as a ratio, take it as a hint: they will cancel, and the answer will be in velocities only."
+  },
+  {
+   "q": "With m₂ = 0.5 m₁, take v₂ = 2 m/s, v₃ = 3 m/s and v₄ = 6 m/s. Then v₁ is",
+   "opts": ["5 m/s","4 m/s","7 m/s","2 m/s"],
+   "ans": 0,
+   "sol": "v₁ + 0.5(2) = 3 + 0.5(6)<br>v₁ + 1 = 6 ⇒ <strong>v₁ = 5 m/s</strong><br><br>Check it makes sense: before, the 5 m/s body was catching up with the 2 m/s body. After, the front body (6 m/s) is faster than the back body (3 m/s), so they separate. ✓"
+  },
+  {
+   "tag": "JEE Main 2019",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A body of mass m₁ moving with an unknown velocity v₁î undergoes a collinear collision with a body of mass m₂ moving with a velocity v₂î. After collision, m₁ and m₂ move with velocities of v₃î and v₄î, respectively. If m₂ = 0.5 m₁ and v₃ = 0.5 v₁, then v₁ is",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',v:'v₁',d:1},{l:'m₂',v:'v₂',d:1,r:18}],after:[{l:'m₁',v:'v₃',d:1},{l:'m₂',v:'v₄',d:1,r:18}]}),
+   "opts": ["v₄ − v₂","v₄ − v₂/4","v₄ + v₂","v₄ − v₂/2"],
+   "ans": 0,
+   "sol": "From rung 2: v₁ + 0.5v₂ = v₃ + 0.5v₄<br>Put v₃ = 0.5v₁:<br>v₁ + 0.5v₂ = 0.5v₁ + 0.5v₄<br>0.5v₁ = 0.5v₄ − 0.5v₂ ⇒ <strong>v₁ = v₄ − v₂</strong><br><br>No e, no KE — just one momentum equation. In JEE, when the question says nothing about the type of collision, it is telling you that momentum alone is enough."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "e — the coefficient of restitution",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Two balls move to the right along the same line: ball 1 behind at u₁, ball 2 in front at u₂. For a collision to happen at all,",
+   "opts": ["u₁ &gt; u₂ — the ball behind must be faster","u₂ &gt; u₁","u₁ = u₂","it always happens"],
+   "ans": 0,
+   "sol": "The back ball has to catch up. So <strong>u₁ &gt; u₂</strong> — the condition boxed in your notes.<br><br>Then u₁ − u₂ is the <strong>speed of approach</strong>. After the collision the front ball must be at least as fast, and v₂ − v₁ is the <strong>speed of separation</strong>."
+  },
+  {
+   "q": "Your notes define e = (recovery impulse) / (deformation impulse) = ∫R dt / ∫D dt. If the deformation impulse is 10 N s and the recovery impulse is 6 N s, then e is",
+   "opts": ["0.6","1.67","0.4","16"],
+   "ans": 0,
+   "sol": "e = 6/10 = <strong>0.6</strong><br><br>The recovery impulse can at most equal the deformation impulse (full spring-back). So e lies between 0 and 1. If you got 1.67, the fraction is upside down — recovery goes on top."
+  },
+  {
+   "q": "Two identical balls collide head on. Before: u₁ = 6 m/s, u₂ = 2 m/s. After: v₁ = 3 m/s, v₂ = 5 m/s. Find e.",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'1',v:'6 m/s',d:1},{l:'2',v:'2 m/s',d:1}],after:[{l:'1',v:'3 m/s',d:1},{l:'2',v:'5 m/s',d:1}],cap:'speed of approach from the top row · speed of separation from the bottom row'}),
+   "opts": ["0.5","2","0.75","1"],
+   "ans": 0,
+   "sol": "e = (speed of separation) / (speed of approach) = (v₂ − v₁)/(u₁ − u₂) = (5 − 3)/(6 − 2) = 2/4 = <strong>0.5</strong><br><br>The impulse ratio and the velocity ratio give the same e. Your notes show why: each impulse is written as a change in momentum, and the masses cancel.<br><br>Check momentum (equal masses): 6 + 2 = 8 and 3 + 5 = 8. ✓"
+  },
+  {
+   "tag": "Notes · e = |v₂ − v₁| / |u₁ − u₂|",
+   "lbl": "From your notes",
+   "q": "★ <strong>From your notes:</strong> A ball moving at 8 m/s hits an identical ball at rest, head on. After the collision the first ball moves on at 2 m/s in the same direction. The coefficient of restitution is",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'1',v:'8 m/s',d:1},{l:'2',d:0}]}),
+   "opts": ["0.5","0.25","0.75","1"],
+   "ans": 0,
+   "sol": "Step 1 — momentum (equal masses cancel): 8 + 0 = 2 + v₂ ⇒ v₂ = 6 m/s<br>Step 2 — e = (6 − 2)/(8 − 0) = 4/8 = <strong>0.5</strong><br><br>v₂ was not given, so momentum had to come first. This two-step pattern — momentum, then e — is how almost every head-on problem is solved.<br><br>0.25 is the trap: 2/8, using v₁ alone instead of the speed of separation."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "Elastic collision — the two results",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "In an elastic collision (e = 1), which quantities are conserved?",
+   "opts": ["Both linear momentum and kinetic energy","Only kinetic energy","Only linear momentum","Neither"],
+   "ans": 0,
+   "sol": "Momentum is conserved in every collision. In an elastic collision the bodies spring back fully, so <strong>KE is conserved too</strong>.<br><br>That gives two equations — exactly enough to find the two unknowns v₁ and v₂."
+  },
+  {
+   "q": "Your notes divide the KE equation m₁(u₁<sup>2</sup> − v₁<sup>2</sup>) = m₂(v₂<sup>2</sup> − u₂<sup>2</sup>) by the momentum equation m₁(u₁ − v₁) = m₂(v₂ − u₂). The result u₁ + v₁ = u₂ + v₂ means",
+   "opts": ["v₂ − v₁ = u₁ − u₂: the speed of separation equals the speed of approach (e = 1)","v₁ = u₁ and v₂ = u₂: nothing changes","the bodies move together after the collision","v₁ + v₂ = 0 always"],
+   "ans": 0,
+   "sol": "Rearrange: u₁ − u₂ = v₂ − v₁. The bodies leave each other just as fast as they came together. That is <strong>e = 1</strong>.<br><br>Big advantage: this is a <em>linear</em> equation. Use it along with momentum instead of the squared KE equation, and you never have to solve a quadratic."
+  },
+  {
+   "q": "A 1 kg ball moving at 4 m/s makes an elastic head-on collision with a 3 kg ball at rest. Using v₁ = [(m₁ − m₂)u₁ + 2m₂u₂]/(m₁ + m₂) and v₂ = [(m₂ − m₁)u₂ + 2m₁u₁]/(m₁ + m₂), the velocities after are",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',s:'1 kg',v:'4 m/s',d:1,r:18},{l:'m₂',s:'3 kg',d:0,r:28}]}),
+   "opts": ["v₁ = −2 m/s (bounces back), v₂ = 2 m/s","v₁ = 2 m/s, v₂ = −2 m/s","v₁ = 0, v₂ = 4/3 m/s","v₁ = 1 m/s, v₂ = 1 m/s"],
+   "ans": 0,
+   "sol": "v₁ = (1 − 3)(4)/4 = <strong>−2 m/s</strong> — the light ball bounces back.<br>v₂ = 2(1)(4)/4 = <strong>2 m/s</strong><br><br>Check 1 (momentum): 1(4) = 1(−2) + 3(2) = 4 ✓<br>Check 2 (separation = approach): 2 − (−2) = 4 = 4 − 0 ✓<br><br>1 m/s for both is what happens if they stick (perfectly inelastic), not elastic."
+  },
+  {
+   "tag": "Illustration 1",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> Two balls each of mass 5 kg moving in opposite directions with equal speeds 5 m/s collide head on with each other. Find out the final velocities of the balls if the collision is perfectly elastic.",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'A',s:'5 kg',v:'5 m/s',d:1},{l:'B',s:'5 kg',v:'5 m/s',d:-1}]}),
+   "opts": ["Each ball turns back with 5 m/s — they exchange velocities","Both balls stop","Each ball turns back with 2.5 m/s","Both move together at 5 m/s"],
+   "ans": 0,
+   "sol": "Put m₁ = m₂ = m in the v₁ formula. The first term has (m₁ − m₂) = 0, so it drops out:<br>v₁ = 2m u₂ / 2m = <strong>u₂ = −5 m/s</strong>, and in the same way <strong>v₂ = u₁ = +5 m/s</strong>.<br><br>Equal masses in an elastic collision <strong>exchange velocities</strong>. Each ball goes back the way it came at 5 m/s.<br><br>'Both stop' keeps momentum (0 = 0) but destroys all the KE. That would be perfectly inelastic, not elastic."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "Elastic special cases — read them off the formulas",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A billiard ball moving at 3 m/s hits an identical ball at rest, head on and elastically. After the collision",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'1',v:'3 m/s',d:1},{l:'2',d:0}]}),
+   "opts": ["the first ball stops and the second moves at 3 m/s","both move at 1.5 m/s","the first bounces back at 3 m/s and the second stays at rest","the first moves at 3 m/s and the second at 6 m/s"],
+   "ans": 0,
+   "sol": "Equal masses exchange velocities: v₁ = u₂ = 0 and v₂ = u₁ = 3 m/s. The first ball <strong>stops dead</strong>, and the second takes all its velocity.<br><br>You see this in carrom and billiards: hit a coin at rest straight on, and the striker stops on the spot."
+  },
+  {
+   "q": "A very heavy truck moving at 20 m/s hits a ping-pong ball at rest, head on and elastically (m₁ ≫ m₂). After the collision, the ball moves at about",
+   "opts": ["40 m/s","20 m/s","10 m/s","0"],
+   "ans": 0,
+   "sol": "Put m₂ ≈ 0 in the formulas:<br>v₁ = (m₁ − 0)u₁/m₁ = u₁ → the truck carries on at 20 m/s<br>v₂ = 2m₁u₁/m₁ = <strong>2u₁ = 40 m/s</strong><br><br>Easy way to see it: sit on the truck. The ball comes at you at 20 m/s and bounces back at 20 m/s (e = 1). Now add the truck's 20 m/s back — the ball has 40 m/s on the ground."
+  },
+  {
+   "q": "A ball hits a massive wall (m₂ ≫ m₁) at 10 m/s, head on and elastically. After the collision",
+   "opts": ["the ball comes back at 10 m/s and the wall stays at rest","the ball stops and the wall moves","the ball comes back at 20 m/s","both stop"],
+   "ans": 0,
+   "sol": "Put m₁ ≈ 0 compared with m₂:<br>v₁ = (0 − m₂)u₁/m₂ = <strong>−u₁</strong> → back at 10 m/s<br>v₂ = 2m₁u₁/m₂ ≈ 0 → the wall does not move<br><br>The ball's momentum changes by 2mu₁. The wall takes that momentum, but it is so heavy that its speed is practically zero."
+  },
+  {
+   "tag": "JEE Main 2019",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A body of mass 2 kg makes an elastic collision with a second body at rest and continues to move in the original direction but with one fourth of its original speed. What is the mass of the second body?",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',s:'2 kg',v:'v',d:1},{l:'m₂',s:'?',d:0,r:19}]}),
+   "opts": ["1.2 kg","1.5 kg","1.8 kg","1.0 kg"],
+   "ans": 0,
+   "sol": "u₂ = 0, so v₁ = (m₁ − m₂)u₁/(m₁ + m₂).<br>v/4 = (2 − m)v/(2 + m)<br>2 + m = 4(2 − m) = 8 − 4m ⇒ 5m = 6 ⇒ <strong>m = 1.2 kg</strong><br><br>Quick sense check: the first body kept moving forward, so m₂ &lt; m₁ — the answer must be less than 2 kg. Hitting a heavier body, it would have bounced back.<br><br>Then v₂ = 2(2)v/3.2 = 1.25v. KE check: ½(2)(v/4)<sup>2</sup> + ½(1.2)(1.25v)<sup>2</sup> = v<sup>2</sup>/16 + 15v<sup>2</sup>/16 = v<sup>2</sup> = ½(2)v<sup>2</sup>. ✓"
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "One ball hits a row of identical balls",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Ball 1 (mass m, speed v) hits ball 2 (mass m, at rest) head on and elastically. Right after this collision",
+   "opts": ["ball 1 stops and ball 2 moves with v","both move with v/2","ball 1 bounces back with v","ball 2 moves with 2v"],
+   "ans": 0,
+   "sol": "Equal masses, elastic, one at rest: <strong>the velocities are exchanged</strong>. Ball 1 stops, and ball 2 moves off with v."
+  },
+  {
+   "q": "Now ball 2 (speed v) hits ball 3 (mass m, at rest), again elastically. After that",
+   "opts": ["ball 2 stops and ball 3 moves with v","ball 2 and ball 3 both move with v/2","ball 3 moves with 2v","ball 2 bounces back"],
+   "ans": 0,
+   "sol": "Same situation again, so the same result: <strong>ball 2 stops, ball 3 moves with v</strong>. The velocity is handed on, like a relay baton."
+  },
+  {
+   "q": "Someone says: 'In a row, all the balls will simply move together.' If the first ball hit 5 balls and all 6 moved together at v/6, momentum m v = 6m(v/6) works. What goes wrong?",
+   "opts": ["KE becomes ½(6m)(v/6)<sup>2</sup> = mv<sup>2</sup>/12, much less than ½mv<sup>2</sup>, so it cannot be an elastic collision","Momentum is not conserved","Nothing — that is the correct answer","The balls would have to move at 6v"],
+   "ans": 0,
+   "sol": "Before: KE = ½mv<sup>2</sup>. After, all moving together: ½(6m)(v/6)<sup>2</sup> = mv<sup>2</sup>/12. Five-sixths of the KE has vanished.<br><br>That is a perfectly inelastic result. For an <strong>elastic</strong> row, both momentum <em>and</em> KE must be kept. The only way: one ball leaves with the full velocity v."
+  },
+  {
+   "tag": "Board sketch · Newton's cradle",
+   "lbl": "From your notes",
+   "q": "★ <strong>From your notes:</strong> A ball of mass m moving with speed v hits a row of five identical balls at rest, placed in a straight line and just touching. All collisions are elastic and head on. What is the final state?",
+   "diagram": DIAGRAMS.cradle({after:false}),
+   "opts": ["The last ball moves off with speed v; all the other balls are at rest","All six balls move together with speed v/6","The first ball bounces back with speed v; the row stays at rest","The last two balls move off with v/2 each"],
+   "ans": 0,
+   "sol": "Each collision is equal masses, elastic, one at rest → exchange of velocities. The velocity passes down the line: 1 → 2 → 3 → 4 → 5 → 6. <strong>Only the last ball moves, with v. All the rest are at rest.</strong><br><br>'Last two at v/2' keeps momentum (2 × m × v/2 = mv) but not KE: 2 × ½m(v/2)<sup>2</sup> = mv<sup>2</sup>/4, not ½mv<sup>2</sup>.<br><br>This is Newton's cradle. Pull back two balls, and exactly two fly out on the other side — the only way to keep both momentum and KE."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "Inelastic collision (0 &lt; e &lt; 1)",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A 2 kg ball at 6 m/s hits a 1 kg ball at rest, with e = 0.5. From your notes, v₂ − v₁ = e(u₁ − u₂). The speed of separation after the collision is",
+   "opts": ["3 m/s","6 m/s","12 m/s","1.5 m/s"],
+   "ans": 0,
+   "sol": "v₂ − v₁ = 0.5 × (6 − 0) = <strong>3 m/s</strong><br><br>This is the e-equation written the useful way: v₂ = v₁ + e(u₁ − u₂), equation ① in your notes. It takes the place of KE conservation, which does not hold here."
+  },
+  {
+   "q": "Same collision: 2 kg at 6 m/s, 1 kg at rest, e = 0.5. Using momentum together with v₂ − v₁ = 3 m/s, the velocities after are",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',s:'2 kg',v:'6 m/s',d:1},{l:'m₂',s:'1 kg',d:0,r:18}],cap:'e = 0.5'}),
+   "opts": ["v₁ = 3 m/s, v₂ = 6 m/s","v₁ = 4 m/s, v₂ = 4 m/s","v₁ = 2 m/s, v₂ = 8 m/s","v₁ = 6 m/s, v₂ = 0"],
+   "ans": 0,
+   "sol": "Momentum: 2(6) + 0 = 2v₁ + v₂ ⇒ 2v₁ + v₂ = 12<br>e-equation: v₂ = v₁ + 3<br>⇒ 3v₁ + 3 = 12 ⇒ <strong>v₁ = 3 m/s, v₂ = 6 m/s</strong><br><br>Formula check: v₁ = (m₁ − em₂)u₁/(m₁ + m₂) = (2 − 0.5)(6)/3 = 3 ✓<br><br>4 m/s for both is the stuck (e = 0) answer. Two equations, two unknowns — that is all an inelastic collision is."
+  },
+  {
+   "q": "Your notes give v₁ = [(m₁ − em₂)u₁ + (1 + e)m₂u₂] / (m₁ + m₂). Put e = 0. You get",
+   "opts": ["v₁ = (m₁u₁ + m₂u₂)/(m₁ + m₂) — the common velocity of a perfectly inelastic collision","v₁ = (m₁ − m₂)u₁/(m₁ + m₂) — the elastic result","v₁ = u₁","v₁ = 0"],
+   "ans": 0,
+   "sol": "With e = 0: v₁ = (m₁u₁ + m₂u₂)/(m₁ + m₂). That is <strong>the common velocity</strong> — the bodies stick.<br>With e = 1: (1 + e) = 2 and you get back the elastic formula.<br><br>So one formula covers all three types. No need to memorise three separate results — just this one and the value of e."
+  },
+  {
+   "tag": "Illustration 3",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A ball of mass 2 kg moving with a speed of 5 m/s collides directly with another ball of mass 3 kg moving in the same direction with a speed of 4 m/s. The coefficient of restitution is 2/3. Find the velocities after collision.",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',s:'2 kg',v:'5 m/s',d:1,r:20},{l:'m₂',s:'3 kg',v:'4 m/s',d:1,r:25}],cap:'e = 2/3'}),
+   "opts": ["v₁ = 4 m/s, v₂ = 14/3 m/s","v₁ = 14/3 m/s, v₂ = 4 m/s","both 4.4 m/s","v₁ = 4 m/s, v₂ = 5 m/s"],
+   "ans": 0,
+   "sol": "v₁ = [(2 − ⅔·3)(5) + (1 + ⅔)(3)(4)]/5 = [0 + 20]/5 = <strong>4 m/s</strong><br>v₂ = [(3 − ⅔·2)(4) + (1 + ⅔)(2)(5)]/5 = [20/3 + 50/3]/5 = <strong>14/3 m/s</strong><br><br>Check momentum: 2(5) + 3(4) = 22 and 2(4) + 3(14/3) = 8 + 14 = 22 ✓<br>Check e: (14/3 − 4)/(5 − 4) = 2/3 ✓<br><br>4.4 m/s for both is the e = 0 answer (22/5). Always finish with these two checks — 20 seconds, and you know the answer is right."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ "name": "How much kinetic energy is lost",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Your notes give the KE loss as ΔKE = ½ · [m₁m₂/(m₁ + m₂)] · (u₁ − u₂)<sup>2</sup> · (1 − e<sup>2</sup>). For m₁ = 2 kg and m₂ = 3 kg, the factor m₁m₂/(m₁ + m₂) is",
+   "opts": ["1.2 kg","5 kg","6 kg","0.83 kg"],
+   "ans": 0,
+   "sol": "m₁m₂/(m₁ + m₂) = 6/5 = <strong>1.2 kg</strong><br><br>This is called the <strong>reduced mass</strong>. It is always smaller than the lighter of the two masses."
+  },
+  {
+   "q": "In the KE-loss formula, for which value of e is the loss largest, and for which is it zero?",
+   "opts": ["Largest at e = 0; zero at e = 1","Largest at e = 1; zero at e = 0","Largest at e = 0.5; zero at e = 0","It does not depend on e"],
+   "ans": 0,
+   "sol": "The factor (1 − e<sup>2</sup>) is 1 when e = 0 → <strong>maximum loss</strong> (bodies stick).<br>It is 0 when e = 1 → <strong>no loss</strong> (elastic).<br><br>So for a perfectly inelastic collision the loss is ½·[m₁m₂/(m₁ + m₂)]·(u₁ − u₂)<sup>2</sup> — exactly the formula in your notes for that case."
+  },
+  {
+   "q": "A 2 kg ball at 4 m/s hits a 2 kg ball at rest, and they stick together. The KE lost is",
+   "opts": ["8 J","16 J","4 J","0"],
+   "ans": 0,
+   "sol": "Reduced mass = (2 × 2)/4 = 1 kg, and e = 0:<br>ΔKE = ½ × 1 × (4 − 0)<sup>2</sup> × 1 = <strong>8 J</strong><br><br>Check directly: before, ½(2)(16) = 16 J. After, they move at 2 m/s: ½(4)(4) = 8 J. Lost = 8 J ✓<br><br>Whenever equal masses stick and one was at rest, exactly half the KE is lost."
+  },
+  {
+   "tag": "Notes formula · on Illustration 3",
+   "lbl": "From your notes",
+   "q": "★ <strong>From your notes:</strong> In Illustration 3 (2 kg at 5 m/s, 3 kg at 4 m/s in the same direction, e = 2/3), how much kinetic energy is lost in the collision?",
+   "opts": ["1/3 J","0.6 J","4/15 J","49 J"],
+   "ans": 0,
+   "sol": "ΔKE = ½ × 1.2 × (5 − 4)<sup>2</sup> × (1 − 4/9) = 0.6 × 5/9 = <strong>1/3 J</strong><br><br>Check directly with the answers from Ladder 10 (4 m/s and 14/3 m/s):<br>before = ½(2)(25) + ½(3)(16) = 25 + 24 = 49 J<br>after = ½(2)(16) + ½(3)(196/9) = 16 + 98/3 = 146/3 J<br>lost = 49 − 146/3 = 1/3 J ✓<br><br>Traps: 0.6 J forgets the (1 − e<sup>2</sup>) factor; 4/15 J uses e<sup>2</sup> instead of (1 − e<sup>2</sup>). The loss is small here because the balls approach each other at only 1 m/s."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 12 ---------------------------------- */
+{
+ "name": "Perfectly inelastic — the bodies stick",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "In a perfectly inelastic collision e = 0. From e = (v₂ − v₁)/(u₁ − u₂), this means",
+   "opts": ["v₁ = v₂ — the bodies move off together","v₁ = −v₂","both bodies stop","v₁ = u₁ and v₂ = u₂"],
+   "ans": 0,
+   "sol": "e = 0 ⇒ v₂ − v₁ = 0 ⇒ <strong>v₁ = v₂</strong>. There is no speed of separation — the bodies stick and move as one.<br><br>They do not have to stop. They stop only if the total momentum was zero."
+  },
+  {
+   "q": "A 3 kg block moving at 4 m/s hits a 1 kg block at rest, and they stick. Their common velocity is",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',s:'3 kg',v:'4 m/s',d:1,r:25},{l:'m₂',s:'1 kg',d:0,r:18}]}),
+   "opts": ["3 m/s","4 m/s","12 m/s","1 m/s"],
+   "ans": 0,
+   "sol": "(m₁ + m₂)v = m₁u₁ + m₂u₂<br>4v = 3(4) + 0 ⇒ <strong>v = 3 m/s</strong>"
+  },
+  {
+   "q": "A 2 kg ball moving right at 5 m/s hits a 3 kg ball moving left at 2 m/s, and they stick. The combined body moves with",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',s:'2 kg',v:'5 m/s',d:1,r:20},{l:'m₂',s:'3 kg',v:'2 m/s',d:-1,r:25}],cap:'take right as positive'}),
+   "opts": ["0.8 m/s to the right","3.2 m/s to the right","0.8 m/s to the left","1.4 m/s to the left"],
+   "ans": 0,
+   "sol": "Right = positive. v = [2(5) + 3(−2)]/5 = (10 − 6)/5 = <strong>0.8 m/s</strong>, positive → to the right.<br><br>3.2 m/s comes from adding the momenta without the sign (16/5). The 2 kg ball had more momentum (10 against 6), so the pair moves its way."
+  },
+  {
+   "tag": "Illustration 4",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A body of 2 kg mass having velocity 3 m/s collides with a body of 1 kg mass moving with a velocity of 4 m/s in the opposite direction. After collision both bodies stick together and move with a common velocity. Find the velocity in m/s.",
+   "diagram": DIAGRAMS.twoBalls({before:[{l:'m₁',s:'2 kg',v:'3 m/s',d:1},{l:'m₂',s:'1 kg',v:'4 m/s',d:-1,r:18}]}),
+   "opts": ["2/3 m/s, in the direction of the 2 kg body","10/3 m/s, in the direction of the 2 kg body","2/3 m/s, in the direction of the 1 kg body","zero"],
+   "ans": 0,
+   "sol": "Take the 2 kg body's direction as positive:<br>v = [2(3) + 1(−4)]/(2 + 1) = 2/3 m/s — <strong>positive, so along the 2 kg body's direction</strong>.<br><br>KE lost: ½ × (2 × 1/3) × (3 − (−4))<sup>2</sup> = ½ × (2/3) × 49 = 49/3 ≈ 16.3 J, out of 17 J. Almost all the KE is gone.<br><br>Note u₁ − u₂ = 3 − (−4) = 7. When bodies come from opposite sides, their speeds <em>add</em> to give the speed of approach."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 13 ---------------------------------- */
+{
+ "name": "Bullet into a pendulum bob — two stages",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A bullet hits a wooden bob hanging from a string and gets stuck inside it. During the very short time of the hit, which quantity is conserved?",
+   "diagram": DIAGRAMS.pendulum({bullet:'bullet m',bob:'M',u:'u'}),
+   "opts": ["Linear momentum (not kinetic energy)","Kinetic energy (not momentum)","Both momentum and kinetic energy","Neither"],
+   "ans": 0,
+   "sol": "The bullet gets embedded → <strong>perfectly inelastic</strong>. Momentum is conserved, because the hit is too short for gravity or the string to give any sideways impulse. KE is <strong>not</strong> conserved — most of it goes into heating and breaking the wood.<br><br>Stage ① is a collision. Treat it with momentum only."
+  },
+  {
+   "q": "A 20 g bullet moving at 100 m/s gets embedded in a 0.98 kg block hanging at rest. The velocity of the block (with the bullet) just after the hit is",
+   "opts": ["2 m/s","4 m/s","100 m/s","0.02 m/s"],
+   "ans": 0,
+   "sol": "First convert: 20 g = 0.02 kg.<br>(0.02 + 0.98)v = 0.02 × 100 + 0 ⇒ 1.00 × v = 2 ⇒ <strong>v = 2 m/s</strong><br><br>100 m/s would mean the block moves as fast as the bullet — impossible, the block is about 50 times heavier."
+  },
+  {
+   "q": "Stage ②: the block now starts with 2 m/s and swings up. Which law do you use now, and how high does it rise? (g = 10 m/s<sup>2</sup>)",
+   "opts": ["Energy conservation: h = v<sup>2</sup>/2g = 0.2 m","Momentum conservation: h = 2 m","Energy conservation: h = v<sup>2</sup>/g = 0.4 m","Momentum conservation: h = 0.4 m"],
+   "ans": 0,
+   "sol": "After the hit, the string's tension does no work (it is always perpendicular to the motion), and gravity is conservative. So <strong>mechanical energy is conserved</strong>:<br>½(M + m)v<sup>2</sup> = (M + m)gh ⇒ h = v<sup>2</sup>/2g = 4/20 = <strong>0.2 m</strong><br><br>Momentum is <em>not</em> conserved in stage ②. Gravity and the string act for a long time and slow the bob down."
+  },
+  {
+   "tag": "Illustration 2",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A simple pendulum of length 1 m has a wooden bob of mass 1 kg. It is struck by a bullet of mass 10<sup>−2</sup> kg moving with a speed of 2 × 10<sup>2</sup> m/s. The bullet gets embedded within the bob. Obtain the height to which the bob rises before swinging back.",
+   "diagram": DIAGRAMS.pendulum({bullet:'10 g',bob:'1 kg',u:'200 m/s'}),
+   "opts": ["≈ 0.2 m","≈ 19.8 m","1 m","≈ 0.02 m"],
+   "ans": 0,
+   "sol": "Stage ① (momentum): (1 + 0.01)v = 0.01 × 200 ⇒ v = 2/1.01 ≈ 1.98 m/s<br>Stage ② (energy): h = v<sup>2</sup>/2g = (1.98)<sup>2</sup>/20 ≈ 0.196 m ≈ <strong>0.2 m</strong><br><br>Trap 19.8 m: putting the bullet's KE (½ × 0.01 × 200<sup>2</sup> = 200 J) straight into mgh. That skips stage ①. In fact about 198 J of those 200 J are lost inside the wood — only about 2 J is left to lift the bob.<br><br>The length 1 m is needed only to check that h &lt; L (0.2 m &lt; 1 m), so the bob swings up normally without the string going slack."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 14 ---------------------------------- */
+{
+ "name": "Particle on a moving wedge — the highest point",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A particle of mass m slides onto a smooth wedge of mass M resting on a smooth floor. During the motion, which momentum of the (particle + wedge) system is conserved?",
+   "diagram": DIAGRAMS.wedge(),
+   "opts": ["Horizontal momentum only","Vertical momentum only","Both horizontal and vertical momentum","Neither"],
+   "ans": 0,
+   "sol": "Outside forces on the system: gravity (vertical) and the floor's normal reaction (vertical). There is <strong>no outside horizontal force</strong>, so horizontal momentum is conserved.<br><br>Vertical momentum is not conserved — the floor pushes up harder while the particle is climbing."
+  },
+  {
+   "q": "When the particle reaches its highest point on the wedge,",
+   "opts": ["it is at rest relative to the wedge — both move with the same horizontal velocity","it is at rest relative to the ground","the wedge stops","the particle's speed is maximum"],
+   "ans": 0,
+   "sol": "At the top the particle stops climbing, so it has no velocity <em>along the wedge</em>. It simply moves with the wedge: <strong>common velocity</strong>.<br><br>This is the same idea as maximum deformation in Ladder 03 — the moment of 'no relative motion'. Think of the wedge as a very soft, slow spring."
+  },
+  {
+   "q": "Take M = 4m. The particle starts with speed v and the wedge is at rest. The common velocity at the highest point is",
+   "opts": ["v/5","v/4","v","zero"],
+   "ans": 0,
+   "sol": "Horizontal momentum: mv + 4m(0) = (m + 4m)V ⇒ <strong>V = v/5</strong><br><br>Exactly like a perfectly inelastic collision: m₁u₁ + m₂u₂ = (m₁ + m₂)V."
+  },
+  {
+   "tag": "JEE Main 2019",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A wedge of mass M = 4m lies on a frictionless plane. A particle of mass m approaches the wedge with speed v. There is no friction between the particle and the plane or between the particle and the wedge. The maximum height climbed by the particle on the wedge is given by",
+   "diagram": DIAGRAMS.wedge(),
+   "opts": ["2v<sup>2</sup>/5g","v<sup>2</sup>/g","2v<sup>2</sup>/7g","v<sup>2</sup>/2g"],
+   "ans": 0,
+   "sol": "All surfaces are smooth, so energy is conserved:<br>½mv<sup>2</sup> = ½(5m)(v/5)<sup>2</sup> + mgh<br>v<sup>2</sup>/2 = v<sup>2</sup>/10 + gh ⇒ gh = 4v<sup>2</sup>/10 ⇒ <strong>h = 2v<sup>2</sup>/5g</strong><br><br>v<sup>2</sup>/2g is the answer for a <em>fixed</em> wedge. Here the wedge moves and keeps part of the KE (½ · 5m · (v/5)<sup>2</sup> = mv<sup>2</sup>/10), so the particle climbs less.<br><br>Shortcut: h = [M/(M + m)] · v<sup>2</sup>/2g = (4/5)(v<sup>2</sup>/2g). The KE 'lost' is the same ½·[mM/(m + M)]·v<sup>2</sup> as in a perfectly inelastic collision — only here it is stored as height, not lost as heat."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 15 ---------------------------------- */
+{
+ "name": "Ball bouncing on the floor — speed and height after n bounces",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A ball is dropped from a height of 20 m. It hits the floor with speed (g = 10 m/s<sup>2</sup>)",
+   "opts": ["20 m/s","200 m/s","10 m/s","400 m/s"],
+   "ans": 0,
+   "sol": "mgh = ½mv<sup>2</sup> ⇒ v₀ = √(2gh₀) = √(2 × 10 × 20) = √400 = <strong>20 m/s</strong>"
+  },
+  {
+   "q": "The floor does not move (u₂ = v₂ = 0), so e = v₁/v₀. If e = 0.5 and the ball hits the floor at 20 m/s, it leaves the floor at",
+   "diagram": DIAGRAMS.bounce(),
+   "opts": ["10 m/s","20 m/s","5 m/s","40 m/s"],
+   "ans": 0,
+   "sol": "e = (speed of separation)/(speed of approach) = v₁/v₀, since the floor stays still.<br>v₁ = ev₀ = 0.5 × 20 = <strong>10 m/s</strong><br><br>Each bounce multiplies the speed by e again: v₂ = ev₁ = e<sup>2</sup>v₀, v₃ = e<sup>3</sup>v₀ … So <strong>v<sub>n</sub> = e<sup>n</sup>v₀</strong>."
+  },
+  {
+   "q": "Height depends on speed squared (h = v<sup>2</sup>/2g). If the speed after a bounce is e times the speed before it, the height after the n-th bounce is",
+   "opts": ["h<sub>n</sub> = e<sup>2n</sup>h₀","h<sub>n</sub> = e<sup>n</sup>h₀","h<sub>n</sub> = h₀/e<sup>n</sup>","h<sub>n</sub> = e<sup>2</sup>h₀ for every bounce"],
+   "ans": 0,
+   "sol": "h<sub>n</sub> = v<sub>n</sub><sup>2</sup>/2g = (e<sup>n</sup>v₀)<sup>2</sup>/2g = e<sup>2n</sup> · (v₀<sup>2</sup>/2g) = <strong>e<sup>2n</sup>h₀</strong><br><br>The speed is multiplied by e each bounce, but the height by e<sup>2</sup>. With e = 0.5, the height falls to one-quarter every bounce."
+  },
+  {
+   "tag": "Illustration 1 (i) & (ii)",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A ball of mass 1 kg is dropped from 20 m height. Find (i) the velocity of the ball after the second collision and (ii) the maximum height attained by the ball after the second collision. (e = 0.5, g = 10 m/s<sup>2</sup>)",
+   "diagram": DIAGRAMS.bounce(),
+   "opts": ["5 m/s and 1.25 m","10 m/s and 5 m","5 m/s and 5 m","2.5 m/s and 1.25 m"],
+   "ans": 0,
+   "sol": "v₀ = √(2 × 10 × 20) = 20 m/s<br>(i) v₂ = e<sup>2</sup>v₀ = (1/4)(20) = <strong>5 m/s</strong><br>(ii) h₂ = e<sup>4</sup>h₀ = (1/16)(20) = <strong>1.25 m</strong><br><br>Check one against the other: h₂ = v₂<sup>2</sup>/2g = 25/20 = 1.25 m ✓<br><br>10 m/s and 5 m are the answers after the <em>first</em> collision. Count carefully — n is the number of times the ball has hit the floor. The mass 1 kg is not needed."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 16 ---------------------------------- */
+{
+ "name": "Total distance, total time and average speed",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A ball dropped from h₀ keeps bouncing. Total distance S = h₀ + 2h₁ + 2h₂ + … = h₀(1 + e<sup>2</sup>)/(1 − e<sup>2</sup>). For h₀ = 20 m and e = 0.5, S is",
+   "diagram": DIAGRAMS.bounce(),
+   "opts": ["100/3 m ≈ 33.3 m","20 m","40 m","80/3 m ≈ 26.7 m"],
+   "ans": 0,
+   "sol": "S = 20 × (1 + 0.25)/(1 − 0.25) = 20 × 1.25/0.75 = <strong>100/3 ≈ 33.3 m</strong><br><br>Why 2h₁, 2h₂ …? After the first fall, every bounce goes up <em>and</em> comes down. Adding: 20 + 2(5 + 1.25 + 0.3125 + …) = 20 + 2 × 5/(1 − 0.25) = 20 + 40/3 = 100/3 ✓<br><br>80/3 m is the trap: it drops the (1 + e<sup>2</sup>) on top."
+  },
+  {
+   "q": "Total time until the ball stops: T = √(2h₀/g) · (1 + e)/(1 − e). For h₀ = 20 m, e = 0.5, g = 10 m/s<sup>2</sup>, T is",
+   "opts": ["6 s","2 s","4 s","10 s"],
+   "ans": 0,
+   "sol": "√(2 × 20/10) = 2 s — the time of the first fall.<br>T = 2 × (1.5/0.5) = 2 × 3 = <strong>6 s</strong><br><br>Check by adding: after bounce n, each up-and-down takes 2v<sub>n</sub>/g = 4e<sup>n</sup> s → 4(0.5 + 0.25 + …) = 4 s. Total 2 + 4 = 6 s ✓"
+  },
+  {
+   "tag": "Illustration 1 (iii)",
+   "q": "So in Illustration 1 the ball covers 100/3 m in 6 s. Its average speed for the whole motion is",
+   "opts": ["50/9 ≈ 5.6 m/s","50/3 ≈ 16.7 m/s","50 m/s","20 m/s"],
+   "ans": 0,
+   "sol": "Average speed = total distance / total time = (100/3)/6 = <strong>50/9 ≈ 5.6 m/s</strong><br><br>As one formula: v<sub>av</sub> = S/T = √(gh₀/2) · (1 + e<sup>2</sup>)/(1 + e)<sup>2</sup>. With h₀ = 20: 10 × 1.25/2.25 = 50/9 ✓<br><br><strong>Please check your notes page here.</strong> It has (1 − e)<sup>2</sup> in the denominator and the answer written as 50/3. With (1 − e)<sup>2</sup> you get 50 m/s — faster than the ball ever moves (its top speed is 20 m/s), so it cannot be an average. The denominator should be (1 + e)<sup>2</sup>, and the answer 50/9 m/s."
+  },
+  {
+   "tag": "Illustration 3",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A particle falls from a height h upon a fixed horizontal plane and rebounds. If e = 0.2 is the coefficient of restitution, find the total distance travelled before rebounding has stopped.",
+   "opts": ["13h/12","3h/2","25h/24","2h"],
+   "ans": 0,
+   "sol": "S = h(1 + e<sup>2</sup>)/(1 − e<sup>2</sup>) = h(1 + 0.04)/(1 − 0.04) = h × 1.04/0.96 = <strong>13h/12</strong><br><br>Traps: 3h/2 uses (1 + e)/(1 − e) — that factor belongs to the <em>time</em> formula, not distance. 25h/24 forgets the (1 + e<sup>2</sup>) on top.<br><br>With e = 0.2 the bounces are tiny (h₁ = 0.04h), so the total is only a little more than h. Good sense check: e small → S close to h; e close to 1 → S very large."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 17 ---------------------------------- */
+{
+ "name": "Oblique collision — identical balls fly off at 90°",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Ball 1, moving along x, hits ball 2 (at rest) obliquely. After the hit, ball 1 moves at angle θ above the x-axis with speed v₁, and ball 2 at angle φ below it with speed v₂. Conservation of momentum along y gives",
+   "diagram": DIAGRAMS.obliqueAfter(),
+   "opts": ["0 = m₁v₁ sin θ − m₂v₂ sin φ","m₁u₁ = m₁v₁ sin θ + m₂v₂ sin φ","0 = m₁v₁ cos θ − m₂v₂ cos φ","m₁u₁ = m₁v₁ + m₂v₂"],
+   "ans": 0,
+   "sol": "Before the hit, nothing moves along y, so total y-momentum = 0. After, ball 1 goes up (+m₁v₁ sin θ) and ball 2 goes down (−m₂v₂ sin φ):<br><strong>0 = m₁v₁ sin θ − m₂v₂ sin φ</strong><br><br>Along x: m₁u₁ = m₁v₁ cos θ + m₂v₂ cos φ.<br><br>Momentum is a vector — conserve it separately along x and along y. If you write the y-equation with a '+' as in your notes, remember that the y-velocity of the ball going below the axis is negative."
+  },
+  {
+   "q": "A 1 kg ball at 10 m/s hits an identical ball at rest. After the hit, the first ball moves at 5 m/s at 60° to its original line. The second ball moves with",
+   "diagram": DIAGRAMS.obliqueAfter({th:60,ph:30,u:'10 m/s',v1:'5 m/s',v2:'v₂ = ?'}),
+   "opts": ["5√3 ≈ 8.66 m/s at 30° on the other side of the line","5 m/s at 60° on the other side of the line","7.5 m/s along the original line","10 m/s at 30° on the other side of the line"],
+   "ans": 0,
+   "sol": "x: 10 = 5 cos 60° + v<sub>2x</sub> ⇒ v<sub>2x</sub> = 7.5 m/s<br>y: 0 = 5 sin 60° − v<sub>2y</sub> ⇒ v<sub>2y</sub> = 4.33 m/s<br>v₂ = √(7.5<sup>2</sup> + 4.33<sup>2</sup>) = √75 = <strong>5√3 ≈ 8.66 m/s</strong>, at tan<sup>−1</sup>(4.33/7.5) = <strong>30°</strong><br><br>Now look: 60° + 30° = 90°. And KE: before ½(1)(100) = 50 J; after ½(25) + ½(75) = 50 J — this collision was elastic. Coincidence? The next two rungs show it is not."
+  },
+  {
+   "q": "Equal masses, ball 2 at rest. Momentum (vectors): <strong>p</strong> = <strong>p₁</strong> + <strong>p₂</strong>. Elastic, and KE = p<sup>2</sup>/2m with the same m for both: p<sup>2</sup> = p₁<sup>2</sup> + p₂<sup>2</sup>. What do these two together tell you?",
+   "diagram": DIAGRAMS.momTriangle(),
+   "opts": ["<strong>p₁</strong> · <strong>p₂</strong> = 0 — the two balls move at right angles","<strong>p₁</strong> = <strong>p₂</strong> — they move with the same velocity","p₁ = p₂ = p/2","the balls move along the same line"],
+   "ans": 0,
+   "sol": "Square the vector equation: p<sup>2</sup> = p₁<sup>2</sup> + p₂<sup>2</sup> + 2 <strong>p₁</strong>·<strong>p₂</strong>.<br>Compare with the KE equation p<sup>2</sup> = p₁<sup>2</sup> + p₂<sup>2</sup>. So <strong>2 p₁·p₂ = 0 ⇒ p₁ ⊥ p₂</strong>.<br><br>In the picture, <strong>p₁</strong> and <strong>p₂</strong> make a triangle with <strong>p</strong>, and the sides obey Pythagoras — so the angle between them must be 90°."
+  },
+  {
+   "tag": "Illustration 2 (oblique)",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A body strikes obliquely with another identical stationary body elastically. Prove that they will move perpendicular to each other after collision. Which line is the heart of the proof?",
+   "diagram": DIAGRAMS.obliqueAfter({cap:'identical balls · ball 2 at rest · elastic'}),
+   "opts": ["Momentum gives u<sup>2</sup> = v₁<sup>2</sup> + v₂<sup>2</sup> + 2<strong>v₁</strong>·<strong>v₂</strong>, KE gives u<sup>2</sup> = v₁<sup>2</sup> + v₂<sup>2</sup>, so <strong>v₁</strong>·<strong>v₂</strong> = 0 and θ + φ = 90°","Momentum along x alone gives θ = φ = 45°","KE alone gives v₁ = v₂, so the two angles are equal","θ + φ = 180°, because the balls move apart"],
+   "ans": 0,
+   "sol": "Write the proof in three lines:<br>1. Momentum (vectors): m<strong>u</strong> = m<strong>v₁</strong> + m<strong>v₂</strong> ⇒ <strong>u</strong> = <strong>v₁</strong> + <strong>v₂</strong> ⇒ u<sup>2</sup> = v₁<sup>2</sup> + v₂<sup>2</sup> + 2<strong>v₁</strong>·<strong>v₂</strong><br>2. KE (elastic): ½mu<sup>2</sup> = ½mv₁<sup>2</sup> + ½mv₂<sup>2</sup> ⇒ u<sup>2</sup> = v₁<sup>2</sup> + v₂<sup>2</sup><br>3. Subtract: 2<strong>v₁</strong>·<strong>v₂</strong> = 0 ⇒ <strong>θ + φ = 90°</strong><br><br>All three conditions are needed: <strong>equal masses, one at rest, elastic</strong>. Drop any one and the 90° goes.<br><br>Head-on is the special case where ball 1 stops (v₁ = 0), so there is no angle to talk about — matching Ladder 08."
+  }
+ ]
+}
+
+];
+
+
+const STORAGE_KEY = 'padipucast_collision_lecture_ladder_v1';
+
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||'', lbl:raw.lbl||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; ${q.lbl||'Original question'}</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
