@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kinetic Theory of Gases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},chtml:{scale:1},options:{enableMenu:false}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root{--bg:#f4efe4;--paper:#fffdf8;--ink:#1d2528;--mute:#5b6668;--line:#e3dccd;--teal:#0f766e;--teal2:#e3f1ee;--amber:#b7791f;--amber2:#fbf0dc;--red:#b42318;--red2:#fbe7e4;--green:#15803d;--green2:#e3f4e8}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(rgba(15,118,110,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(15,118,110,.05) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:16px/1.6 "DM Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;line-height:1.2;margin:0}
+.mono{font-family:"DM Mono",monospace}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:16px}
+.top{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:6px 0 14px;flex-wrap:wrap}
+.brand{font:700 13px "Space Grotesk";letter-spacing:.22em;color:var(--teal)}
+.brand b{color:var(--amber)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 6px 22px rgba(60,50,20,.05)}
+.hidden{display:none!important}
+/* start */
+.hero{padding:28px 26px}
+.hero h1{font-size:clamp(26px,4.4vw,40px)}
+.hero p{color:var(--mute);margin:8px 0 0;max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font:500 12.5px "DM Mono";padding:4px 10px;border-radius:99px;background:var(--teal2);color:var(--teal);white-space:nowrap}
+.chip.am{background:var(--amber2);color:var(--amber)}
+.chip.rd{background:var(--red2);color:var(--red)}
+.chip.gr{background:var(--green2);color:var(--green)}
+.chip.gy{background:#eee9de;color:var(--mute)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.mode{padding:20px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;transition:.15s}
+.mode:hover{border-color:var(--teal);transform:translateY(-1px)}
+.mode h3{font-size:20px}
+.mode p{margin:6px 0 10px;color:var(--mute);font-size:14.5px}
+.mode .go{font:600 14px "Space Grotesk";color:var(--teal)}
+.mode.t .go{color:var(--amber)}
+.mode.t:hover{border-color:var(--amber)}
+.tmap{margin-top:16px;padding:18px 20px}
+.tmap h3{font-size:16px;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dashed var(--line);font-size:14.5px}
+.trow:first-of-type{border-top:0}
+.trow span:last-child{font-family:"DM Mono";color:var(--mute);font-size:13px;white-space:nowrap}
+/* work */
+.bar{position:sticky;top:0;z-index:20;background:rgba(244,239,228,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin:0 -16px 14px;padding:10px 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bar .ttl{font:600 15px "Space Grotesk"}
+.clock{font:500 20px "DM Mono";padding:4px 12px;border-radius:10px;background:var(--ink);color:#fff}
+.clock.low{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.75}}
+.btn{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 14px;font-weight:500;color:var(--ink)}
+.btn:hover{border-color:var(--teal)}
+.btn.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.am{background:var(--amber);border-color:var(--amber);color:#fff}
+.btn.sm{padding:5px 10px;font-size:14px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.qcard{padding:22px 24px}
+.qhead{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.qno{font:700 15px "Space Grotesk";color:var(--teal);margin-right:4px}
+.qtext{font-size:17px}
+.qtext p{margin:0 0 8px}
+.dt{border-collapse:collapse;margin:10px 0;font-size:14.5px;background:#fff}
+.dt td,.dt th{border:1px solid var(--line);padding:5px 10px;text-align:left}
+.dt th{background:#f8f4ea;font-weight:600}
+.figwrap{display:flex;justify-content:center;margin:12px 0 4px}
+.fig{width:100%;max-width:330px;height:auto}
+.figwrap .fig.wide{max-width:440px}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opts.og{grid-template-columns:1fr 1fr}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);transition:.12s;min-height:48px}
+.opt:hover{border-color:var(--teal)}
+.opt .lb{font:500 14px "DM Mono";color:var(--mute);flex:0 0 auto;padding-top:2px}
+.opt .ot{flex:1;min-width:0;overflow-x:auto}
+.opts.og .opt{flex-direction:column;align-items:center}
+.opts.og .opt .ot{width:100%}
+.opts.og .fig{max-width:200px;display:block;margin:0 auto}
+.opt.sel{border-color:var(--teal);background:var(--teal2)}
+.opt.ok{border-color:var(--green);background:var(--green2)}
+.opt.no{border-color:var(--red);background:var(--red2)}
+.opt[disabled]{cursor:default}
+.sol{margin-top:16px;border-left:4px solid var(--amber);background:var(--amber2);border-radius:0 12px 12px 0;padding:12px 16px;font-size:15.5px}
+.sol h4{margin:0 0 4px;font:600 14px "Space Grotesk";color:var(--amber);letter-spacing:.04em;text-transform:uppercase}
+.sol p{margin:4px 0}
+.verdict{margin-top:14px;font:600 15px "Space Grotesk"}
+.verdict.ok{color:var(--green)}.verdict.no{color:var(--red)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.side{padding:16px;position:sticky;top:70px}
+.side h3{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.stat{background:#f8f4ea;border-radius:10px;padding:7px 4px;text-align:center}
+.stat b{display:block;font:600 18px "DM Mono"}
+.stat span{font-size:11.5px;color:var(--mute)}
+.tg{font:600 12px "Space Grotesk";color:var(--teal);margin:10px 0 6px;letter-spacing:.03em}
+.dots{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.dot{aspect-ratio:1;border:1.5px solid var(--line);border-radius:9px;background:#fff;font:500 13px "DM Mono";color:var(--ink);padding:0}
+.dot.cur{outline:2.5px solid var(--ink);outline-offset:1px}
+.dot.ans{background:var(--teal);border-color:var(--teal);color:#fff}
+.dot.ok{background:var(--green);border-color:var(--green);color:#fff}
+.dot.no{background:var(--red);border-color:var(--red);color:#fff}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--mute)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.sidebtns{display:grid;gap:8px;margin-top:14px}
+.toggleSide{display:none}
+/* result */
+.res{padding:24px}
+.ringrow{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring{width:150px;height:150px;flex:0 0 auto}
+.msg{font-size:16px;max-width:52ch}
+table.tt{width:100%;border-collapse:collapse;margin-top:16px;font-size:14.5px}
+.tt th,.tt td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+.tt th{font:600 12px "Space Grotesk";color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.tt td.n{font-family:"DM Mono";white-space:nowrap}
+.barmini{height:8px;border-radius:9px;background:#eee7d8;overflow:hidden;min-width:60px}
+.barmini i{display:block;height:100%;background:var(--teal)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 12px}
+.filters .btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rv{padding:18px 20px;margin-bottom:12px}
+.rv .yours{font-size:14px;color:var(--mute);margin-top:10px}
+.modal{position:fixed;inset:0;background:rgba(20,25,28,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal .card{padding:22px;max-width:420px;width:100%}
+.modal p{color:var(--mute)}
+.foot{color:var(--mute);font-size:13px;text-align:center;margin:26px 0 8px}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (max-width:860px){
+ .grid2{grid-template-columns:1fr}
+ .side{position:static}
+ .toggleSide{display:inline-block}
+ .side.closed{display:none}
+}
+@media (max-width:560px){
+ .modes{grid-template-columns:1fr}
+ .qcard{padding:16px}
+ .qtext{font-size:16px}
+ .opts.og{grid-template-columns:1fr 1fr;gap:8px}
+ .opts.og .opt{padding:8px}
+ .dots{grid-template-columns:repeat(6,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top"><div class="brand">PADI<b>PU</b>CAST</div><div class="chip gy">JEE Main PYQ · 2027 prep</div></div>
+
+ <!-- START -->
+ <section id="start">
+  <div class="card hero">
+   <div class="chip am" style="display:inline-block;margin:0 0 10px">Chapter 12 · Thermal Physics</div>
+   <h1>Kinetic Theory of Gases</h1>
+   <p>30 high-yield JEE Main PYQs (2009–2022) picked for JEE 2027: gas laws and mixtures, pressure and internal energy, molecular speeds, degrees of freedom and specific heats, mean free path. Every answer checked, every solution worked step by step.</p>
+   <div class="chips" id="metaChips"></div>
+   <div class="modes">
+    <button class="mode" id="goPractice"><h3>Practice mode</h3><p>Answer one by one. You see right or wrong at once, with the full working. Your progress is saved on this device.</p><span class="go" id="pracInfo">Start practice →</span></button>
+    <button class="mode t" id="goTest"><h3>Test mode</h3><p>One clock for the whole paper (60 min). +4 right, −1 wrong. Question and option order shuffled. Answers shown only after you submit.</p><span class="go" id="bestInfo">Start test →</span></button>
+   </div>
+  </div>
+  <div class="card tmap"><h3>What this sheet covers</h3><div id="topicMap"></div></div>
+ </section>
+
+ <!-- WORK -->
+ <section id="work" class="hidden">
+  <div class="bar">
+   <div class="ttl" id="barTitle"></div>
+   <div style="display:flex;gap:8px;align-items:center">
+    <button class="btn sm toggleSide" id="toggleSide">Questions</button>
+    <span class="clock hidden" id="clock">60:00</span>
+    <button class="btn sm" id="homeBtn">Home</button>
+   </div>
+  </div>
+  <div class="grid2">
+   <div>
+    <div class="card qcard" id="qcard"></div>
+   </div>
+   <aside class="card side closed" id="side"></aside>
+  </div>
+ </section>
+
+ <!-- RESULT -->
+ <section id="result" class="hidden"></section>
+
+ <div class="foot">PADIPUCAST · Kinetic Theory of Gases · every answer checked, solutions worked from first principles</div>
+</div>
+
+<div class="modal hidden" id="modal"><div class="card" id="modalCard"></div></div>
+
+<script>
+const R=String.raw;
+const QS=[];
+/* ---- tiny SVG graph helper ----
+ G({x:[x0,x1], y:[y0,y1], xl:'t', yl:'v', s:[{p:[[x,y],...]}|{f:fn,a,b,n}], xt:[[v,'lbl']], yt:[[v,'lbl']],
+    gd:[[x1,y1,x2,y2]], pt:[[x,y,'lbl',dx,dy]], tx:[[x,y,'txt',anchor]], w, h, cls, ar:[[x,y,deg]] })  */
+let _gid=0;
+const INK='#1d2528',TEAL='#0f766e',AMB='#b7791f',RED='#b42318',MUTE='#5b6668';
+function G(o){
+ const W=o.w||250,H=o.h||175,ml=o.ml||34,mr=o.mr||16,mt=o.mt||16,mb=o.mb||26,id='a'+(++_gid);
+ const [x0,x1]=o.x,[y0,y1]=o.y;
+ const X=v=>ml+(v-x0)/(x1-x0)*(W-ml-mr), Y=v=>H-mb-(v-y0)/(y1-y0)*(H-mt-mb);
+ const ox=X(Math.min(Math.max(0,x0),x1)), oy=Y(Math.min(Math.max(0,y0),y1));
+ let s=`<svg class="fig ${o.cls||''}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs><marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INK}"/></marker><marker id="${id}c" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="${TEAL}"/></marker></defs>`;
+ (o.gd||[]).forEach(g=>{s+=`<line x1="${X(g[0])}" y1="${Y(g[1])}" x2="${X(g[2])}" y2="${Y(g[3])}" stroke="${MUTE}" stroke-width="1" stroke-dasharray="3 3"/>`});
+ s+=`<line x1="${ml-4}" y1="${oy}" x2="${W-4}" y2="${oy}" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ s+=`<line x1="${ox}" y1="${H-mb+4}" x2="${ox}" y2="6" stroke="${INK}" stroke-width="1.3" marker-end="url(#${id})"/>`;
+ if(o.xl)s+=o.xlb?`<text x="${(ml+W-mr)/2}" y="${oy+29}" text-anchor="middle" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`:`<text x="${W-6}" y="${oy+(o.xlUp?-6:15)}" text-anchor="end" font-size="12" font-style="italic" fill="${INK}">${o.xl}</text>`;
+ if(o.yl)s+=`<text x="${ox+6}" y="13" font-size="12" font-style="italic" fill="${INK}">${o.yl}</text>`;
+ (o.xt||[]).forEach(t=>{s+=`<line x1="${X(t[0])}" y1="${oy-3}" x2="${X(t[0])}" y2="${oy+3}" stroke="${INK}"/><text x="${X(t[0])}" y="${oy+(t[2]||14)}" text-anchor="middle" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.yt||[]).forEach(t=>{s+=`<line x1="${ox-3}" y1="${Y(t[0])}" x2="${ox+3}" y2="${Y(t[0])}" stroke="${INK}"/><text x="${ox-6}" y="${Y(t[0])+3.5}" text-anchor="end" font-size="10.5" fill="${INK}">${t[1]}</text>`});
+ (o.fill||[]).forEach(f=>{s+=`<polygon points="${f.p.map(q=>X(q[0])+','+Y(q[1])).join(' ')}" fill="${f.c||TEAL}" opacity="${f.op||.15}"/>`});
+ (o.s||[]).forEach(r=>{
+  let pts=r.p;
+  if(r.f){pts=[];const n=r.n||60;for(let i=0;i<=n;i++){const x=r.a+(r.b-r.a)*i/n;pts.push([x,r.f(x)])}}
+  s+=`<polyline points="${pts.map(q=>X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join(' ')}" fill="none" stroke="${r.c||TEAL}" stroke-width="${r.w||2.2}" stroke-linejoin="round" stroke-linecap="round" ${r.d?'stroke-dasharray="5 4"':''}/>`;
+ });
+ (o.ar||[]).forEach(a=>{s+=`<g transform="translate(${X(a[0])},${Y(a[1])}) rotate(${a[2]})"><path d="M-5,-4 L4,0 L-5,4 z" fill="${a[3]||TEAL}"/></g>`});
+ (o.pt||[]).forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3" fill="${INK}"/>`;if(p[2])s+=`<text x="${X(p[0])+(p[3]||5)}" y="${Y(p[1])+(p[4]||-6)}" font-size="11.5" font-weight="700" fill="${INK}">${p[2]}</text>`});
+ (o.tx||[]).forEach(t=>{s+=`<text x="${X(t[0])}" y="${Y(t[1])}" text-anchor="${t[3]||'middle'}" font-size="${t[4]||11}" fill="${t[5]||INK}">${t[2]}</text>`});
+ return s+'</svg>';
+}
+/* plain SVG wrapper for hand-drawn figures */
+function SV(w,h,body,cls){const id='b'+(++_gid);const mk=(n,c)=>`<marker id="${id}${n}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`;
+ return `<svg class="fig ${cls||''}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif"><defs>${mk('k',INK)}${mk('t',TEAL)}${mk('a',AMB)}${mk('r',RED)}</defs>${body.replace(/MK([ktar])/g,(m,c)=>'url(#'+id+c+')')}</svg>`}
+
+</script>
+<script>
+// Ch-12 Kinetic Theory of Gases — part A: gas laws, mixtures, pressure & internal energy
+(function(){
+const TUBE=SV(300,190,`<rect x="10" y="120" width="120" height="60" fill="#d9d2c2" opacity=".6"/><text x="16" y="172" font-size="11" fill="#5b6668">mercury</text>
+<rect x="58" y="72" width="22" height="108" fill="none" stroke="#1d2528" stroke-width="1.6"/><rect x="59" y="120" width="20" height="60" fill="#b7791f" opacity=".35"/>
+<line x1="56" y1="72" x2="82" y2="72" stroke="#1d2528" stroke-width="3"/><text x="88" y="100" font-size="11">8 cm air</text><text x="70" y="62" text-anchor="middle" font-size="11" font-weight="700">before</text>
+<rect x="170" y="120" width="120" height="60" fill="#d9d2c2" opacity=".6"/>
+<rect x="218" y="16" width="22" height="134" fill="none" stroke="#1d2528" stroke-width="1.6"/><line x1="216" y1="16" x2="242" y2="16" stroke="#1d2528" stroke-width="3"/>
+<rect x="219" y="62" width="20" height="88" fill="#b7791f" opacity=".35"/><text x="246" y="42" font-size="11">air, l = ?</text>
+<line x1="270" y1="62" x2="270" y2="120" stroke="#b42318" stroke-width="1.2"/><line x1="264" y1="62" x2="276" y2="62" stroke="#b42318"/><line x1="264" y1="120" x2="276" y2="120" stroke="#b42318"/><text x="280" y="95" font-size="10.5" fill="#b42318">h</text>
+<text x="229" y="10" text-anchor="middle" font-size="11" font-weight="700">after (raised 46 cm)</text>`);
+QS.push(
+{t:'Gas laws & mixtures',y:'JEE Main 2014',
+ q:R`An open glass tube is dipped in mercury so that 8 cm of it stays above the mercury level. The open top is then sealed and the tube is raised vertically by a further 46 cm. What is the length of the air column above the mercury in the tube now? (Atmospheric pressure = 76 cm of Hg)`,
+ f:TUBE,
+ o:[R`16 cm`,R`22 cm`,R`38 cm`,R`6 cm`],a:0,
+ s:R`<p>Top of the tube is now $8+46=54$ cm above the outside level. If the air length is $l$, mercury inside stands $h=54-l$ above the outside level.</p><p>Air pressure $=76-h=76-54+l=22+l$ cm of Hg.</p><p>Boyle's law: $76\times8=(22+l)\,l\Rightarrow l^2+22l-608=0\Rightarrow l=\dfrac{-22+54}{2}=16$ cm.</p>`},
+
+{t:'Gas laws & mixtures',y:'JEE Main 2017',
+ q:R`The temperature of an open room of volume 30 m³ increases from 17 °C to 27 °C due to sunshine. The pressure in the room stays at $1\times10^5$ Pa. If $n_i$ and $n_f$ are the numbers of molecules in the room before and after heating, then $n_f-n_i$ is`,
+ o:[R`$-1.61\times10^{23}$`,R`$1.38\times10^{23}$`,R`$2.5\times10^{25}$`,R`$-2.5\times10^{25}$`],a:3,
+ s:R`<p>Open room → $P$ and $V$ fixed, so molecules leave as it warms. $N=\dfrac{PV}{kT}$.</p><p>$n_f-n_i=\dfrac{PV}{k}\Big(\dfrac1{300}-\dfrac1{290}\Big)=\dfrac{10^5\times30}{1.38\times10^{-23}}\times\Big(-\dfrac{10}{87000}\Big)\approx-2.5\times10^{25}$.</p><p>Negative, because molecules go out.</p>`},
+
+{t:'Gas laws & mixtures',y:'JEE Main 2021',
+ q:R`A container is divided into two chambers by a partition. The first chamber (4.5 L) holds 3.0 moles of gas at 2.0 atm; the second (5.5 L) holds 4.0 moles of the same gas at 3.0 atm. The partition is removed and the mixture reaches equilibrium. The common pressure is $x\times10^{-1}$ atm. The value of $x$ is`,
+ o:[R`25.5`,R`25.0`,R`25.7`,R`28.0`],a:0,
+ s:R`<p>The two parts are at <b>different</b> temperatures, so don't use one $T$. Use energy instead: the walls are rigid and no heat flows, so total internal energy is fixed.</p><p>For the same gas, $U=\dfrac f2PV$. So $P(V_1+V_2)=P_1V_1+P_2V_2$.</p><p>$P=\dfrac{2\times4.5+3\times5.5}{10}=\dfrac{25.5}{10}=2.55$ atm → $x=25.5$.</p>`},
+
+{t:'Gas laws & mixtures',y:'JEE Main 2021',
+ q:R`A balloon carries a total load of 185 kg at normal pressure and 27 °C. What load will it carry on rising to a height where the barometric pressure is 45 cm of Hg and the temperature is −7 °C? (Volume constant)`,
+ o:[R`214.15 kg`,R`181.46 kg`,R`219.07 kg`,R`123.54 kg`],a:3,
+ s:R`<p>Load it can lift $\propto$ buoyancy $\propto$ density of air $\propto\dfrac PT$ (same volume).</p><p>New load $=185\times\dfrac{45}{76}\times\dfrac{300}{266}=185\times0.592\times1.128\approx123.5$ kg.</p>`},
+
+{t:'Gas laws & mixtures',y:'JEE Main 2021',
+ q:R`A mixture of hydrogen and oxygen has volume 500 cm³, temperature 300 K, pressure 400 kPa and mass 0.76 g. The ratio of the masses of oxygen to hydrogen is`,
+ o:[R`3 : 16`,R`16 : 3`,R`3 : 8`,R`8 : 3`],a:1,
+ s:R`<p>Total moles: $n=\dfrac{PV}{RT}=\dfrac{4\times10^5\times5\times10^{-4}}{8.3\times300}=0.080$ mol.</p><p>$x$ mol H₂, $y$ mol O₂: $x+y=0.080$ and $2x+32y=0.76$ → $30y=0.60\Rightarrow y=0.020$, $x=0.060$.</p><p>Masses: O₂ $=0.64$ g, H₂ $=0.12$ g → $16:3$. (In 2022 they asked the mole ratio H₂ : O₂ $=3:1$ with the same numbers.)</p>`},
+
+{t:'Gas laws & mixtures',y:'JEE Main 2021',
+ q:R`An ideal gas expands such that $PT^3=$ constant. The coefficient of volume expansion of the gas is`,
+ o:[R`$\dfrac4T$`,R`$\dfrac3T$`,R`$\dfrac1T$`,R`$\dfrac2T$`],a:0,
+ s:R`<p>Put $P=\dfrac{nRT}{V}$: $\dfrac{T}{V}\cdot T^3=$ const $\Rightarrow V\propto T^4$.</p><p>$\gamma_V=\dfrac1V\dfrac{dV}{dT}=\dfrac4T$. (At constant pressure it would be $\dfrac1T$.)</p>`},
+
+{t:'Pressure & internal energy',y:'JEE Main 2018',
+ q:R`The mass of a hydrogen molecule is $3.32\times10^{-27}$ kg. If $10^{23}$ hydrogen molecules strike a fixed wall of area 2 cm² per second, at 45° to the normal, and rebound elastically with speed $10^3$ m/s, the pressure on the wall is nearly`,
+ o:[R`$2.35\times10^3$ N/m²`,R`$4.70\times10^3$ N/m²`,R`$2.35\times10^2$ N/m²`,R`$4.70\times10^2$ N/m²`],a:0,
+ s:R`<p>Only the normal part of velocity reverses: change per molecule $=2mv\cos45°=2\times3.32\times10^{-27}\times10^3\times0.707=4.7\times10^{-24}$ kg m/s.</p><p>Force $=10^{23}\times4.7\times10^{-24}=0.47$ N. Pressure $=\dfrac{0.47}{2\times10^{-4}}=2.35\times10^3$ N/m².</p><p>(4.70 × 10³ forgets the cos 45°.)</p>`},
+
+{t:'Pressure & internal energy',y:'AIEEE 2009',
+ q:R`One kg of a diatomic gas is at a pressure of $8\times10^4$ N/m². The density of the gas is 4 kg/m³. The energy of the gas due to its thermal motion is`,
+ o:[R`$5\times10^4$ J`,R`$6\times10^4$ J`,R`$7\times10^4$ J`,R`$3\times10^4$ J`],a:0,
+ s:R`<p>Volume $=\dfrac{1}{4}=0.25$ m³. Diatomic: $U=\dfrac52nRT=\dfrac52PV$.</p><p>$U=2.5\times8\times10^4\times0.25=5\times10^4$ J.</p><p>(A 2019 paper asked the monoatomic version: $U=\tfrac32PV$.)</p>`},
+
+{t:'Pressure & internal energy',y:'JEE Main 2019',
+ q:R`A gas mixture has 3 moles of oxygen and 5 moles of argon at temperature $T$. Counting only translational and rotational modes, the total internal energy of the system is`,
+ o:[R`$4RT$`,R`$12RT$`,R`$15RT$`,R`$20RT$`],a:2,
+ s:R`<p>O₂ (rigid diatomic, $f=5$): $3\times\dfrac52RT=7.5RT$. Ar (monoatomic, $f=3$): $5\times\dfrac32RT=7.5RT$.</p><p>Total $=15RT$. (Asked again word for word in 2020.)</p>`},
+
+{t:'Pressure & internal energy',y:'JEE Main 2020',
+ q:R`A diatomic gas is in a cylinder of volume $V_1$ at pressure $P_1$ and temperature 250 K. 25% of the molecules dissociate, changing the number of moles. The pressure of the resulting gas at 2000 K in volume $2V_1$ is $P_2$. The ratio $\dfrac{P_2}{P_1}$ is`,
+ o:[R`5`,R`4`,R`10`,R`2.5`],a:0,
+ s:R`<p>Moles: $0.75n$ stay as molecules, $0.25n$ break into $0.5n$ atoms → total $1.25n$.</p><p>$\dfrac{P_2}{P_1}=\dfrac{n_2}{n_1}\cdot\dfrac{T_2}{T_1}\cdot\dfrac{V_1}{V_2}=1.25\times8\times\dfrac12=5$.</p><p>(4 forgets the extra moles from dissociation.)</p>`},
+
+{t:'Pressure & internal energy',y:'JEE Main 2021',
+ q:R`For an ideal gas the change in pressure with volume follows $\dfrac{dp}{dv}=-ap$. If $p=p_0$ at $v=0$, the maximum temperature one mole of the gas can attain is ($R$ = gas constant)`,
+ o:[R`Infinity`,R`$\dfrac{ap_0}{eR}$`,R`0 °C`,R`$\dfrac{p_0}{aeR}$`],a:3,
+ s:R`<p>Integrate: $p=p_0e^{-av}$. Then $T=\dfrac{pv}{R}=\dfrac{p_0}{R}\,v\,e^{-av}$.</p><p>$\dfrac{dT}{dv}=0\Rightarrow e^{-av}(1-av)=0\Rightarrow v=\dfrac1a$.</p><p>$T_{\max}=\dfrac{p_0}{R}\cdot\dfrac1a\cdot e^{-1}=\dfrac{p_0}{aeR}$.</p>`}
+);
+})();
+
+</script>
+<script>
+// Ch-12 part B: molecular speeds + degrees of freedom & specific heats
+QS.push(
+{t:'Molecular speeds',y:'JEE Main 2019',
+ q:R`The temperature at which the rms speed of hydrogen molecules equals their escape speed from the earth is closest to ($k_B=1.38\times10^{-23}$ J/K, $N_A=6.02\times10^{26}$ /kg-mol, $R_E=6.4\times10^6$ m, $g=10$ m/s²)`,
+ o:[R`$10^4$ K`,R`650 K`,R`800 K`,R`$3\times10^5$ K`],a:0,
+ s:R`<p>Escape speed: $v_e^2=2gR_E=2\times10\times6.4\times10^6=1.28\times10^8$ m²/s².</p><p>Mass of H₂ molecule $=\dfrac{2}{6.02\times10^{26}}=3.32\times10^{-27}$ kg.</p><p>$\dfrac{3kT}{m}=v_e^2\Rightarrow T=\dfrac{mv_e^2}{3k}=\dfrac{3.32\times10^{-27}\times1.28\times10^8}{4.14\times10^{-23}}\approx10^4$ K.</p>`},
+
+{t:'Molecular speeds',y:'JEE Main 2019',
+ q:R`For a gas at 1 atm, the rms speed of the molecules is 200 m/s at 127 °C. At 2 atm and 227 °C, the rms speed will be`,
+ o:[R`$100\sqrt5$ m/s`,R`100 m/s`,R`$80\sqrt5$ m/s`,R`80 m/s`],a:0,
+ s:R`<p>$v_{\text{rms}}=\sqrt{\dfrac{3RT}{M}}$ depends only on $T$ — pressure does not matter.</p><p>$v=200\sqrt{\dfrac{500}{400}}=200\times\dfrac{\sqrt5}{2}=100\sqrt5$ m/s. (Asked again in 2021 with 27 °C → 127 °C.)</p>`},
+
+{t:'Molecular speeds',y:'JEE Main 2019',
+ q:R`An HCl molecule has rotational, translational and vibrational motions. If the rms velocity of HCl molecules in the gas is $\bar v$, $m$ is the mass of a molecule and $k_B$ is Boltzmann's constant, the temperature is`,
+ o:[R`$\dfrac{m\bar v^2}{5k_B}$`,R`$\dfrac{m\bar v^2}{6k_B}$`,R`$\dfrac{m\bar v^2}{7k_B}$`,R`$\dfrac{m\bar v^2}{3k_B}$`],a:3,
+ s:R`<p>rms speed comes only from <b>translational</b> motion: $\tfrac12m\bar v^2=\tfrac32k_BT$, whatever the rotation or vibration.</p><p>$T=\dfrac{m\bar v^2}{3k_B}$. (The 7 is the trap — that counts all degrees of freedom, which belong to energy, not speed.)</p>`},
+
+{t:'Molecular speeds',y:'JEE Main 2021',
+ q:R`Consider oxygen behaving as an ideal gas at 300 K. The ratio of the rms velocity to the average velocity of the molecules is`,
+ o:[R`$\sqrt{\dfrac{8\pi}{3}}$`,R`$\sqrt{\dfrac33}$`,R`$\sqrt{\dfrac83}$`,R`$\sqrt{\dfrac{3\pi}{8}}$`],a:3,
+ s:R`<p>$v_{\text{rms}}=\sqrt{\dfrac{3RT}{M}}$, $v_{\text{avg}}=\sqrt{\dfrac{8RT}{\pi M}}$.</p><p>Ratio $=\sqrt{\dfrac{3}{8/\pi}}=\sqrt{\dfrac{3\pi}{8}}\approx1.09$. It is the same for every gas at every temperature.</p><p>Order to remember: $v_p\lt v_{\text{avg}}\lt v_{\text{rms}}$ as $\sqrt2:\sqrt{8/\pi}:\sqrt3$.</p>`},
+
+{t:'Molecular speeds',y:'JEE Main 2022',
+ q:R`The rms speed of smoke particles of mass $5\times10^{-17}$ kg in their Brownian motion in air at NTP is approximately ($k=1.38\times10^{-23}$ J/K)`,
+ o:[R`60 mm/s`,R`12 mm/s`,R`15 mm/s`,R`36 mm/s`],a:2,
+ s:R`<p>Each particle behaves like a giant gas molecule: $v=\sqrt{\dfrac{3kT}{m}}$ with $T=273$ K.</p><p>$v=\sqrt{\dfrac{3\times1.38\times10^{-23}\times273}{5\times10^{-17}}}=\sqrt{2.26\times10^{-4}}\approx0.015$ m/s $=15$ mm/s.</p>`},
+
+{t:'Molecular speeds',y:'JEE Main 2022',
+ q:R`Sound travels in a mixture of 2 moles of helium and $n$ moles of hydrogen (rigid). If the rms speed of the gas molecules in the mixture is $\sqrt2$ times the speed of sound, the value of $n$ is`,
+ o:[R`1`,R`2`,R`3`,R`4`],a:1,
+ s:R`<p>$v_{\text{rms}}=\sqrt{\dfrac{3RT}{M}}$ and $v_{\text{sound}}=\sqrt{\dfrac{\gamma RT}{M}}$ (same mixture, same $M$).</p><p>$\dfrac{3}{\gamma}=2\Rightarrow\gamma=1.5$.</p><p>Mixture: $\gamma=\dfrac{2\cdot\frac52+n\cdot\frac72}{2\cdot\frac32+n\cdot\frac52}=\dfrac{5+3.5n}{3+2.5n}=1.5\Rightarrow5+3.5n=4.5+3.75n\Rightarrow n=2$.</p>`},
+
+{t:'Molecular speeds',y:'JEE Main 2022',
+ q:R`<b>Statement I:</b> The average momentum of a molecule in a sample of an ideal gas depends on temperature.<br><b>Statement II:</b> The rms speed of oxygen molecules in a gas is $v$. If the temperature is doubled and the oxygen molecules dissociate into oxygen atoms, the rms speed becomes $2v$.<br>Choose the correct answer.`,
+ o:[R`Both Statement I and Statement II are true`,R`Both Statement I and Statement II are false`,R`Statement I is true but Statement II is false`,R`Statement I is false but Statement II is true`],a:3,
+ s:R`<p>Statement I: momentum is a vector; molecules move in all directions equally, so the <b>average momentum is zero</b> at any temperature. False.</p><p>Statement II: $v_{\text{rms}}\propto\sqrt{T/M}$. $T$ doubles and $M$ halves → $\sqrt{4}=2$ times. True.</p>`},
+
+{t:'Degrees of freedom & specific heats',y:'JEE Main 2019',
+ q:R`Two moles of helium are mixed with three moles of hydrogen molecules (taken as rigid). The molar specific heat of the mixture at constant volume is ($R=8.3$ J/mol K)`,
+ o:[R`19.7 J/mol K`,R`21.6 J/mol K`,R`15.7 J/mol K`,R`17.4 J/mol K`],a:3,
+ s:R`<p>Mixture $C_V=\dfrac{n_1C_{V1}+n_2C_{V2}}{n_1+n_2}=\dfrac{2\cdot\frac32R+3\cdot\frac52R}{5}=\dfrac{10.5R}{5}=2.1R$.</p><p>$2.1\times8.3=17.4$ J/mol K.</p>`},
+
+{t:'Degrees of freedom & specific heats',y:'JEE Main 2020',
+ q:R`Two moles of an ideal gas with $\dfrac{C_P}{C_V}=\dfrac53$ are mixed with 3 moles of another ideal gas with $\dfrac{C_P}{C_V}=\dfrac43$. The value of $\dfrac{C_P}{C_V}$ for the mixture is`,
+ o:[R`1.47`,R`1.42`,R`1.50`,R`1.45`],a:1,
+ s:R`<p>Never average the $\gamma$'s directly — average $C_V$ (and $C_P$) by moles.</p><p>$\gamma=\dfrac53\Rightarrow C_V=\dfrac32R$; $\gamma=\dfrac43\Rightarrow C_V=3R$.</p><p>$C_V=\dfrac{2(1.5R)+3(3R)}{5}=2.4R$, $C_P=3.4R$ → $\gamma=\dfrac{3.4}{2.4}=1.42$.</p>`},
+
+{t:'Degrees of freedom & specific heats',y:'JEE Main 2020',
+ q:R`To raise the temperature of a certain mass of gas by 50 °C at constant pressure, 160 cal of heat is needed. When the same mass is cooled by 100 °C at constant volume, 240 cal is released. How many degrees of freedom does each molecule of this gas have?`,
+ o:[R`6`,R`7`,R`3`,R`5`],a:0,
+ s:R`<p>$nC_P(50)=160\Rightarrow nC_P=3.2$; $nC_V(100)=240\Rightarrow nC_V=2.4$.</p><p>$\gamma=\dfrac{3.2}{2.4}=\dfrac43$. Then $f=\dfrac{2}{\gamma-1}=6$.</p>`},
+
+{t:'Degrees of freedom & specific heats',y:'JEE Main 2020',
+ q:R`Match $\dfrac{C_p}{C_v}$ for ideal gases with the type of molecule.
+<table class="dt"><tr><th>Molecule type</th><th>$C_p/C_v$</th></tr><tr><td>(A) Monatomic</td><td>(I) 7/5</td></tr><tr><td>(B) Diatomic rigid</td><td>(II) 9/7</td></tr><tr><td>(C) Diatomic non-rigid</td><td>(III) 4/3</td></tr><tr><td>(D) Triatomic rigid</td><td>(IV) 5/3</td></tr></table>`,
+ o:[R`(A)–(II), (B)–(III), (C)–(I), (D)–(IV)`,R`(A)–(IV), (B)–(II), (C)–(I), (D)–(III)`,R`(A)–(IV), (B)–(I), (C)–(II), (D)–(III)`,R`(A)–(III), (B)–(IV), (C)–(II), (D)–(I)`],a:2,
+ s:R`<p>Use $\gamma=1+\dfrac2f$.</p><p>Monatomic $f=3$ → 5/3. Diatomic rigid $f=5$ → 7/5. Diatomic with vibration $f=7$ → 9/7. Triatomic rigid (non-linear) $f=6$ → 4/3.</p>`},
+
+{t:'Degrees of freedom & specific heats',y:'JEE Main 2021',
+ q:R`A polyatomic ideal gas has 24 vibrational modes. The value of $\gamma$ is`,
+ o:[R`1.30`,R`10.3`,R`1.37`,R`1.03`],a:3,
+ s:R`<p>Non-linear polyatomic: 3 translational + 3 rotational. Each vibrational mode adds 2 (kinetic + potential).</p><p>$f=3+3+2\times24=54\Rightarrow\gamma=1+\dfrac{2}{54}=1.037\approx1.03$ (nearest option).</p><p>(With 2 vibrational modes, a 2021 paper got $f=10$, $\gamma=1.2$.)</p>`},
+
+{t:'Degrees of freedom & specific heats',y:'JEE Main 2022',
+ q:R`A vessel contains 14 g of nitrogen at 27 °C. The heat needed to double the rms speed of its molecules is ($R=8.32$ J/mol K)`,
+ o:[R`2229 J`,R`5616 J`,R`9360 J`,R`13104 J`],a:2,
+ s:R`<p>$v_{\text{rms}}\propto\sqrt T$: doubling it needs $T\to4T$, i.e. 300 K → 1200 K, $\Delta T=900$ K.</p><p>Closed vessel → constant volume: $Q=nC_V\Delta T=0.5\times\dfrac52\times8.32\times900=9360$ J.</p><p>(13104 J uses $C_P$; a vessel does not expand.)</p>`},
+
+{t:'Degrees of freedom & specific heats',y:'JEE Main 2022',
+ q:R`A thermally insulated vessel contains an ideal gas of molecular mass $M$ with $\gamma=1.4$. The vessel moves with speed $v$ and is suddenly stopped. Assuming no heat is lost, the temperature of the gas rises by ($R$ = universal gas constant)`,
+ o:[R`$\dfrac{Mv^2}{7R}$`,R`$\dfrac{Mv^2}{5R}$`,R`$2\dfrac{Mv^2}{7R}$`,R`$7\dfrac{Mv^2}{5R}$`],a:1,
+ s:R`<p>The ordered kinetic energy of the gas turns into random (internal) energy. For one mole: $\tfrac12Mv^2=C_V\Delta T$.</p><p>$\gamma=1.4\Rightarrow C_V=\dfrac52R$. So $\Delta T=\dfrac{Mv^2}{5R}$.</p>`}
+);
+
+</script>
+<script>
+// Ch-12 part C: mean free path & collisions
+QS.push(
+{t:'Mean free path & collisions',y:'JEE Main 2015',
+ q:R`An ideal gas in an isolated closed chamber expands adiabatically. The average time between collisions of molecules increases as $V^q$, where $V$ is the volume. The value of $q$ is $\Big(\gamma=\dfrac{C_P}{C_V}\Big)$`,
+ o:[R`$\dfrac{3\gamma+5}{6}$`,R`$\dfrac{3\gamma-5}{6}$`,R`$\dfrac{\gamma+1}{2}$`,R`$\dfrac{\gamma-1}{2}$`],a:2,
+ s:R`<p>Mean time $\tau=\dfrac{\lambda}{v}$. Mean free path $\lambda\propto\dfrac1n\propto V$; speed $v\propto\sqrt T$.</p><p>Adiabatic: $TV^{\gamma-1}=$ const → $\sqrt T\propto V^{-(\gamma-1)/2}$.</p><p>$\tau\propto\dfrac{V}{V^{-(\gamma-1)/2}}=V^{(\gamma+1)/2}$. (A 2020 paper asked $\tau_2/\tau_1$ when $V$ doubles: $2^{(\gamma+1)/2}$.)</p>`},
+
+{t:'Mean free path & collisions',y:'JEE Main 2019',
+ q:R`An ideal gas in a cylinder is at 2 atm and 300 K. The mean time between two successive collisions is $6\times10^{-8}$ s. If the pressure is doubled and the temperature is raised to 500 K, the mean time between collisions will be close to`,
+ o:[R`$2\times10^{-7}$ s`,R`$3\times10^{-6}$ s`,R`$0.5\times10^{-8}$ s`,R`$4\times10^{-8}$ s`],a:3,
+ s:R`<p>$\lambda=\dfrac{kT}{\sqrt2\pi d^2P}\propto\dfrac TP$ and $v\propto\sqrt T$, so $\tau=\dfrac{\lambda}{v}\propto\dfrac{\sqrt T}{P}$.</p><p>$\tau_2=6\times10^{-8}\times\sqrt{\dfrac{500}{300}}\times\dfrac12=6\times10^{-8}\times0.645\approx3.9\times10^{-8}$ s ≈ $4\times10^{-8}$ s.</p>`},
+
+{t:'Mean free path & collisions',y:'JEE Main 2020',
+ q:R`Argon (atomic radius 0.07 nm, atomic weight 40) and xenon (atomic radius 0.1 nm, atomic weight 140) have the same number density and temperature. The ratio of their mean free times (argon : xenon) is closest to`,
+ o:[R`1.09`,R`4.67`,R`2.3`,R`3.67`],a:0,
+ s:R`<p>$\tau=\dfrac{\lambda}{v}=\dfrac{1}{\sqrt2\pi d^2n\,v}$ with $v\propto\dfrac{1}{\sqrt M}$. Same $n$ and $T$.</p><p>$\dfrac{\tau_{Ar}}{\tau_{Xe}}=\Big(\dfrac{d_{Xe}}{d_{Ar}}\Big)^2\sqrt{\dfrac{M_{Ar}}{M_{Xe}}}=\Big(\dfrac{0.1}{0.07}\Big)^2\sqrt{\dfrac{40}{140}}=2.04\times0.535\approx1.09$.</p>`},
+
+{t:'Mean free path & collisions',y:'JEE Main 2020',
+ q:R`An ideal gas in a closed container is slowly heated. As its temperature increases, which statements are true?<br>(A) The mean free path of the molecules decreases.<br>(B) The mean collision time between the molecules decreases.<br>(C) The mean free path remains unchanged.<br>(D) The mean collision time remains unchanged.`,
+ o:[R`(C) and (D)`,R`(A) and (D)`,R`(B) and (C)`,R`(A) and (B)`],a:2,
+ s:R`<p>Closed container → number density $n$ is fixed, so $\lambda=\dfrac{1}{\sqrt2\pi d^2n}$ does not change. (C) is true.</p><p>Molecules move faster, so they cover the same $\lambda$ in less time: $\tau=\dfrac{\lambda}{v}$ decreases. (B) is true.</p>`},
+
+{t:'Mean free path & collisions',y:'JEE Main 2021',
+ q:R`Find the mean free path of oxygen molecules at 27 °C and $1.01\times10^5$ Pa. Take the molecular diameter as 0.3 nm and treat the gas as ideal ($k=1.38\times10^{-23}$ J/K).`,
+ o:[R`86 nm`,R`32 nm`,R`58 nm`,R`102 nm`],a:3,
+ s:R`<p>$\lambda=\dfrac{kT}{\sqrt2\,\pi d^2P}=\dfrac{1.38\times10^{-23}\times300}{1.414\times\pi\times(0.3\times10^{-9})^2\times1.01\times10^5}$.</p><p>$=\dfrac{4.14\times10^{-21}}{4.04\times10^{-14}}\approx1.02\times10^{-7}$ m $=102$ nm.</p><p>(Without the $\sqrt2$ you get about 145 nm.)</p>`}
+);
+
+</script>
+
+<script>
+(function(){
+const KEY='padipucast_jee27_ch12_ktg_mcq30_v1';
+const N=QS.length, PER=4, NEG=1, MINUTES=60;
+const LBL=['(1)','(2)','(3)','(4)'];
+const $=s=>document.querySelector(s);
+const load=(k,d)=>{try{const v=localStorage.getItem(KEY+k);return v?JSON.parse(v):d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(KEY+k,JSON.stringify(v))}catch(e){}};
+const TOPICS=[...new Set(QS.map(q=>q.t))];
+let mode=null,order=[],cur=0,perm={},ans={},prac=load('_prac',{}),tLeft=0,tick=null,startAt=0,lastRes=null;
+
+function TS(el){const M=window.MathJax;if(M&&M.typesetPromise){if(M.typesetClear)M.typesetClear([el]);M.typesetPromise([el]).catch(()=>{})}else setTimeout(()=>TS(el),300)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){['start','work','result'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0)}
+function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function isFig(s){return typeof s==='string'&&s.trim().startsWith('<svg')}
+
+/* ---------- start screen ---------- */
+function drawStart(){
+ const yrs=QS.map(q=>+(q.y.match(/\d{4}/)||[0])[0]).filter(Boolean);
+ const yc=yrs.length===N?`${Math.min(...yrs)}–${Math.max(...yrs)} papers`:`${yrs.length} JEE PYQs (${Math.min(...yrs)}–${Math.max(...yrs)})</span><span class="chip">${N-yrs.length} from test paper`;
+ $('#metaChips').innerHTML=`<span class="chip">${N} questions</span><span class="chip">${TOPICS.length} topics</span><span class="chip">${yc}</span><span class="chip am">+${PER} / −${NEG}</span>`;
+ $('#topicMap').innerHTML=TOPICS.map(t=>{const qs=QS.filter(q=>q.t===t);return `<div class="trow"><span>${t}</span><span>${qs.length} Qs</span></div>`}).join('');
+ const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+ $('#pracInfo').textContent=done?`Continue practice · ${done}/${N} done, ${ok} right →`:'Start practice →';
+ const b=load('_best',null);
+ $('#bestInfo').textContent=b?`Start test · best ${b.s}/${N*PER} →`:'Start test →';
+}
+
+/* ---------- side panel ---------- */
+function drawSide(){
+ const s=$('#side');
+ let st='';
+ if(mode==='prac'){
+  const done=Object.keys(prac).length, ok=Object.keys(prac).filter(i=>prac[i].c===QS[i].a).length;
+  st=`<div class="stats"><div class="stat"><b>${done}</b><span>done</span></div><div class="stat"><b style="color:var(--green)">${ok}</b><span>right</span></div><div class="stat"><b style="color:var(--red)">${done-ok}</b><span>wrong</span></div></div>`;
+  st+='<h3>Questions by topic</h3>';
+  TOPICS.forEach(t=>{
+   st+=`<div class="tg">${t}</div><div class="dots">`;
+   order.forEach((qi,pos)=>{if(QS[qi].t!==t)return;const p=prac[qi];const c=p?(p.c===QS[qi].a?'ok':'no'):'';st+=`<button class="dot ${c} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+   st+='</div>';
+  });
+  st+=`<div class="legend"><span><i style="background:var(--green)"></i>right</span><span><i style="background:var(--red)"></i>wrong</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not done</span></div>`;
+  st+=`<div class="sidebtns"><button class="btn sm" id="resetPrac">Clear my practice progress</button></div>`;
+ }else{
+  const a=Object.keys(ans).length;
+  st=`<div class="stats"><div class="stat"><b>${a}</b><span>answered</span></div><div class="stat"><b>${N-a}</b><span>left</span></div><div class="stat"><b>${N}</b><span>total</span></div></div><h3>Jump to</h3><div class="dots">`;
+  order.forEach((qi,pos)=>{st+=`<button class="dot ${ans[qi]!=null?'ans':''} ${pos===cur?'cur':''}" data-p="${pos}">${pos+1}</button>`});
+  st+=`</div><div class="legend"><span><i style="background:var(--teal)"></i>answered</span><span><i style="background:#fff;border:1px solid var(--line)"></i>not answered</span></div><div class="sidebtns"><button class="btn am" id="submitBtn">Submit paper</button></div>`;
+ }
+ s.innerHTML=st;
+ s.querySelectorAll('.dot').forEach(d=>d.onclick=()=>{if(innerWidth<860)s.classList.add('closed');go(+d.dataset.p)});
+ const rp=$('#resetPrac');if(rp)rp.onclick=()=>confirmBox('Clear practice progress?','All your practice answers for this sheet will be wiped from this device.','Clear',()=>{prac={};save('_prac',prac);drawQ()});
+ const sb=$('#submitBtn');if(sb)sb.onclick=askSubmit;
+}
+
+/* ---------- question ---------- */
+function optHTML(Q,qi,o,pos,cls,dis){return `<button class="opt ${cls}" data-o="${o}" ${dis?'disabled':''}><span class="lb">${LBL[pos]}</span><span class="ot">${Q.o[o]}</span></button>`}
+function drawQ(){
+ const qi=order[cur],Q=QS[qi],c=$('#qcard');
+ const ord=mode==='test'?perm[qi]:[0,1,2,3];
+ const og=Q.og||Q.o.some(isFig);
+ let h=`<div class="qhead"><span class="qno">Q${cur+1} <span style="color:var(--mute);font-weight:500">/ ${N}</span></span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span></div>`;
+ h+=`<div class="qtext">${Q.q}</div>`;
+ if(Q.f)h+=`<div class="figwrap">${Q.f}</div>`;
+ h+=`<div class="opts ${og?'og':''}">`;
+ const p=mode==='prac'?prac[qi]:null;
+ ord.forEach((o,pos)=>{
+  let cls='';
+  if(mode==='prac'&&p){if(o===Q.a)cls='ok';else if(o===p.c)cls='no'}
+  if(mode==='test'&&ans[qi]===o)cls='sel';
+  h+=optHTML(Q,qi,o,pos,cls,mode==='prac'&&p);
+ });
+ h+='</div>';
+ if(mode==='prac'&&p){
+  const right=p.c===Q.a;
+  h+=`<div class="verdict ${right?'ok':'no'}">${right?'✓ Correct!':p.c<0?'Answer shown: '+LBL[Q.a]+' (counted as not solved)':'✗ Not this one. Correct answer: '+LBL[Q.a]}</div>`;
+  h+=`<div class="sol"><h4>Solution</h4>${Q.s}</div>`;
+ }
+ h+=`<div class="nav"><button class="btn" id="prevB" ${cur===0?'disabled':''}>← Prev</button><span style="display:flex;gap:8px">`;
+ if(mode==='prac'&&p)h+=`<button class="btn" id="retryB">Try again</button>`;
+ if(mode==='prac'&&!p)h+=`<button class="btn" id="peekB">Show answer</button>`;
+ if(mode==='test'&&ans[qi]!=null)h+=`<button class="btn" id="clearB">Clear answer</button>`;
+ h+=`</span><button class="btn pri" id="nextB">${cur===N-1?(mode==='test'?'Submit':'Finish'):'Next →'}</button></div>`;
+ c.innerHTML=h;
+ c.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.o));
+ $('#prevB').onclick=()=>{if(cur>0)go(cur-1)};
+ $('#nextB').onclick=()=>{if(cur<N-1)go(cur+1);else if(mode==='test')askSubmit();else{show('start');drawStart()}};
+ const r=$('#retryB');if(r)r.onclick=()=>{delete prac[qi];save('_prac',prac);drawQ()};
+ const pk=$('#peekB');if(pk)pk.onclick=()=>{prac[qi]={c:-1};save('_prac',prac);drawQ()};
+ const cl=$('#clearB');if(cl)cl.onclick=()=>{delete ans[qi];drawQ()};
+ drawSide();TS(c);
+}
+function go(p){cur=p;drawQ();const t=$('#qcard').getBoundingClientRect().top;if(t<0||t>innerHeight*.5)window.scrollTo({top:Math.max(0,window.scrollY+t-70),behavior:'smooth'})}
+function pick(o){
+ const qi=order[cur];
+ if(mode==='prac'){if(prac[qi])return;prac[qi]={c:o};save('_prac',prac);drawQ();setTimeout(()=>{const v=document.querySelector('.verdict');if(v)v.scrollIntoView({behavior:'smooth',block:'center'})},60)}
+ else{ans[qi]=o;drawQ()}
+}
+
+/* ---------- modes ---------- */
+function startPractice(){mode='prac';order=QS.map((_,i)=>i);cur=0;const f=order.findIndex(i=>!prac[i]);if(f>0)cur=f;$('#clock').classList.add('hidden');$('#barTitle').textContent='Practice · '+document.title;show('work');drawQ()}
+function startTest(){
+ mode='test';order=shuffle(QS.map((_,i)=>i));perm={};ans={};cur=0;
+ QS.forEach((q,i)=>perm[i]=q.keep?[0,1,2,3]:shuffle([0,1,2,3]));
+ tLeft=MINUTES*60;startAt=Date.now();
+ const ck=$('#clock');ck.classList.remove('hidden','low');ck.textContent=fmt(tLeft);
+ clearInterval(tick);
+ tick=setInterval(()=>{tLeft=MINUTES*60-Math.floor((Date.now()-startAt)/1000);ck.textContent=fmt(tLeft);ck.classList.toggle('low',tLeft<=300);if(tLeft<=0){clearInterval(tick);finish(true)}},500);
+ $('#barTitle').textContent='Test · '+document.title;show('work');drawQ();
+}
+function confirmBox(title,body,okTxt,fn){
+ const m=$('#modal');$('#modalCard').innerHTML=`<h3>${title}</h3><p>${body}</p><div class="nav"><button class="btn" id="mNo">Cancel</button><button class="btn am" id="mYes">${okTxt}</button></div>`;
+ m.classList.remove('hidden');$('#mNo').onclick=()=>m.classList.add('hidden');$('#mYes').onclick=()=>{m.classList.add('hidden');fn()};
+}
+function askSubmit(){const a=Object.keys(ans).length;confirmBox('Submit the paper?',`You have answered ${a} of ${N}. ${N-a?(N-a)+' left blank (no marks lost for blanks).':'All answered.'}`,'Submit',()=>finish(false))}
+
+/* ---------- result ---------- */
+function finish(auto){
+ clearInterval(tick);$('#clock').classList.add('hidden');
+ let ok=0,no=0,sk=0;const by={};TOPICS.forEach(t=>by[t]={ok:0,n:0});
+ QS.forEach((q,i)=>{by[q.t].n++;if(ans[i]==null)sk++;else if(ans[i]===q.a){ok++;by[q.t].ok++}else no++});
+ const score=ok*PER-no*NEG, max=N*PER, used=Math.min(MINUTES*60,Math.floor((Date.now()-startAt)/1000));
+ const best=load('_best',null);if(!best||score>best.s)save('_best',{s:score,d:new Date().toLocaleDateString()});
+ const pct=Math.max(0,score)/max, col=pct>=.7?'var(--green)':pct>=.45?'var(--amber)':'var(--red)';
+ const C=2*Math.PI*62;
+ let msg=pct>=.85?'Excellent. This chapter is exam-ready. Keep revising the ones you got wrong.':pct>=.7?'Very good. A few slips — read the solutions of the wrong ones carefully.':pct>=.45?'Fair attempt. Go topic by topic below and redo the weak topic in practice mode.':'This chapter needs more work. Use practice mode first — read every solution, then take the test again.';
+ if(no>ok&&no>=6)msg+=' Note: wrong answers cost you marks. Skip when you are only guessing.';
+ if(auto)msg='Time up — your paper was submitted automatically. '+msg;
+ let h=`<div class="card res"><div class="ringrow"><svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="#eee7d8" stroke-width="12"/><circle cx="75" cy="75" r="62" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" transform="rotate(-90 75 75)"/><text x="75" y="74" text-anchor="middle" font-family="DM Mono" font-size="30" font-weight="500" fill="#1d2528">${score}</text><text x="75" y="98" text-anchor="middle" font-family="DM Sans" font-size="13" fill="#5b6668">out of ${max}</text></svg><div><h2 style="font-size:26px">Your result</h2><div class="chips"><span class="chip gr">${ok} right</span><span class="chip rd">${no} wrong</span><span class="chip gy">${sk} skipped</span><span class="chip">time ${fmt(used)}</span></div><p class="msg">${msg}</p></div></div>`;
+ h+=`<table class="tt"><tr><th>Topic</th><th>Right</th><th style="width:40%"></th></tr>`;
+ TOPICS.forEach(t=>{const b=by[t];h+=`<tr><td>${t}</td><td class="n">${b.ok} / ${b.n}</td><td><div class="barmini"><i style="width:${100*b.ok/b.n}%"></i></div></td></tr>`});
+ h+=`</table><div class="nav"><button class="btn" id="rHome">Home</button><span style="display:flex;gap:8px"><button class="btn" id="rPrac">Practice mode</button><button class="btn am" id="rTest">Take test again</button></span></div></div>`;
+ h+=`<div class="filters"><button class="btn sm on" data-f="all">All (${N})</button><button class="btn sm" data-f="no">Wrong (${no})</button><button class="btn sm" data-f="sk">Skipped (${sk})</button><button class="btn sm" data-f="ok">Right (${ok})</button></div><div id="rvList"></div>`;
+ $('#result').innerHTML=h;show('result');
+ lastRes={ok,no,sk};
+ $('#rHome').onclick=()=>{show('start');drawStart()};$('#rPrac').onclick=startPractice;$('#rTest').onclick=startTest;
+ document.querySelectorAll('.filters .btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters .btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');drawReview(b.dataset.f)});
+ drawReview('all');
+}
+function drawReview(f){
+ let h='';
+ order.forEach((qi,pos)=>{
+  const Q=QS[qi],a=ans[qi],st=a==null?'sk':a===Q.a?'ok':'no';
+  if(f!=='all'&&f!==st)return;
+  const og=Q.og||Q.o.some(isFig);
+  h+=`<div class="card rv"><div class="qhead"><span class="qno">Q${pos+1}</span><span class="chip">${Q.t}</span><span class="chip gy">${Q.y}</span><span class="chip ${st==='ok'?'gr':st==='no'?'rd':'gy'}">${st==='ok'?'right +'+PER:st==='no'?'wrong −'+NEG:'skipped 0'}</span></div><div class="qtext">${Q.q}</div>${Q.f?`<div class="figwrap">${Q.f}</div>`:''}<div class="opts ${og?'og':''}">`;
+  perm[qi].forEach((o,p)=>{h+=optHTML(Q,qi,o,p,o===Q.a?'ok':o===a?'no':'',true)});
+  const yp=a==null?'—':LBL[perm[qi].indexOf(a)], cp=LBL[perm[qi].indexOf(Q.a)];
+  h+=`</div><div class="yours">Your answer: <b>${yp}</b> · Correct: <b>${cp}</b></div><div class="sol"><h4>Solution</h4>${Q.s}</div></div>`;
+ });
+ const L=$('#rvList');L.innerHTML=h||'<p style="color:var(--mute)">Nothing here.</p>';TS(L);
+}
+
+/* ---------- wiring ---------- */
+$('#goPractice').onclick=startPractice;
+$('#goTest').onclick=startTest;
+$('#homeBtn').onclick=()=>{if(mode==='test')confirmBox('Leave the test?','Your answers in this attempt will be lost.','Leave',()=>{clearInterval(tick);show('start');drawStart()});else{show('start');drawStart()}};
+$('#toggleSide').onclick=()=>$('#side').classList.toggle('closed');
+document.addEventListener('keydown',e=>{
+ if($('#work').classList.contains('hidden')||!$('#modal').classList.contains('hidden'))return;
+ if(['1','2','3','4'].includes(e.key)){const qi=order[cur],ord=mode==='test'?perm[qi]:[0,1,2,3];pick(ord[+e.key-1])}
+ if(e.key==='ArrowRight'&&cur<N-1)go(cur+1);
+ if(e.key==='ArrowLeft'&&cur>0)go(cur-1);
+});
+window.addEventListener('beforeunload',e=>{if(mode==='test'&&!$('#work').classList.contains('hidden')){e.preventDefault();e.returnValue=''}});
+drawStart();
+})();
+</script>
+</body>
+</html>
