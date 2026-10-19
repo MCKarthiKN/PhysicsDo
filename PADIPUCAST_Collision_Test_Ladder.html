@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Collision &#183; Test Question Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+.mt{border-collapse:collapse;margin:12px 0 4px;font-size:13.5px;}
+.mt th,.mt td{border:1px solid var(--border2);padding:6px 10px;text-align:left;vertical-align:top;}
+.mt th{background:var(--tag-bg);font-weight:600;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Collision &#183; Question Ladders</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Collision &#183; Question Ladders<br>14 questions, step by step</h1></div>
+    <p id="home-sub">Every collision question from the <strong>NEET Leader Major Test-02 (14-10-2026)</strong> &#8212; Q6, Q7, Q9, Q10, Q11, Q43, Q44 &#8212; plus your <strong>7 collision questions</strong>, laddered in teaching order: momentum &amp; kinds of collision &#8594; perfectly inelastic (1D, bullet in block, pendulum, 2D) &#8594; explosion &#8594; elastic (KE kept, KE lost, the 2v result, mass ratio, circular tube) &#8594; oblique &#8594; projectile bouncing on the field.<br><br>Each ladder has <strong>5 build-up rungs</strong>, each teaching one small idea, then the &#9733; question. Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 14 ladders &#215; 6 rungs = 84 questions. Take g = 10 m/s<sup>2</sup> and forward / right as positive.<br><br><em>Momentum is conserved in every collision. Kinetic energy is conserved only when e = 1.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">6</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 6</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Collision  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1d4ed8';
+const FILL_T='#e6f1f4', FILL_B='#c9e2e9', FILL_C='#fbe7cc';
+
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+const _f = n => Math.round(n*10)/10;
+
+// hatched ground line
+function _hatch(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y+9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+function _ln(x0,y0,x1,y1,c,w,dash){
+  return `<line x1="${_f(x0)}" y1="${_f(y0)}" x2="${_f(x1)}" y2="${_f(y1)}" stroke="${c}" stroke-width="${w||1.6}"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+}
+function _tx(x,y,t,o){
+  o=o||{};
+  return `<text x="${_f(x)}" y="${_f(y)}" font-size="${o.s||11}" text-anchor="${o.a||'middle'}" fill="${o.c||INK}" ${FS}${o.b?' font-weight="700"':''}${o.i?' font-style="italic"':''}>${t}</text>`;
+}
+function _ar(x0,y0,x1,y1,c,w){
+  const id=_nid();
+  return `<defs>${AR(id,c)}</defs><line x1="${_f(x0)}" y1="${_f(y0)}" x2="${_f(x1)}" y2="${_f(y1)}" stroke="${c}" stroke-width="${w||2.2}" marker-end="url(#${id})"/>`;
+}
+function _ball(cx,cy,r,lbl,sub,fill){
+  let s=`<circle cx="${_f(cx)}" cy="${_f(cy)}" r="${r}" fill="${fill||FILL_T}" stroke="${INK}" stroke-width="1.7"/>`;
+  if(lbl) s+=_tx(cx,cy+(sub?-1:4),lbl,{s:11.5,b:1});
+  if(sub) s+=_tx(cx,cy+12,sub,{s:9.5,c:GREY});
+  return s;
+}
+// velocity arrow drawn ABOVE a ball, so two approaching balls never clash
+function _vel(cx,cy,r,dir,lbl,c,len){
+  if(!dir) return _tx(cx,cy+r+14,lbl||'at rest',{s:10,c:GREY});
+  len=len||38; c=c||RED;
+  const y=cy-r-9, x0=cx-dir*len*0.45, x1=cx+dir*len*0.55;
+  return _ar(x0,y,x1,y,c)+_tx(cx+dir*3,y-7,lbl,{s:11,c:c,b:1});
+}
+// a ball flattened against its partner at x = xf (side: 'L' = ball on the left)
+function _flat(xf,cy,r,d,side,fill){
+  const h=Math.sqrt(r*r-d*d);
+  return `<path d="M ${xf} ${_f(cy-h)} A ${r} ${r} 0 1 ${side==='L'?0:1} ${xf} ${_f(cy+h)} Z" fill="${fill}" stroke="${INK}" stroke-width="1.7"/>`;
+}
+const _svg=(W,H,s)=>`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+
+const DIAGRAMS = {
+
+// ---- bullet into a block on a smooth floor ----------------------------------
+bulletBlock:(o)=>{
+  o=o||{}; const gy=112; let s='';
+  s+=_hatch(20,360,gy);
+  s+=`<rect x="210" y="${gy-52}" width="80" height="52" fill="${FILL_C}" stroke="${INK}" stroke-width="1.7" rx="2"/>`;
+  s+=_tx(250,gy-30,o.M||'M',{s:12,b:1})+_tx(250,gy-14,'at rest',{s:10,c:GREY});
+  s+=`<rect x="70" y="${gy-29}" width="22" height="7" rx="3" fill="${INK}"/>`;
+  s+=_tx(81,gy-38,o.m||'m',{s:11,b:1});
+  s+=_ar(100,gy-26,172,gy-26,RED)+_tx(136,gy-34,o.v||'v',{s:11,c:RED,b:1});
+  s+=_tx(190,gy+26,'bullet gets stuck inside the block &#183; smooth floor',{s:10.5,c:GREY});
+  return _svg(380,gy+36,s);
+},
+
+// ---- pendulum 1 released, hits pendulum 2 and sticks ------------------------
+twoPend:()=>{
+  const px=200, py=18, L=140; let s='';
+  s+=_ln(140,py,262,py,INK,2);
+  for(let x=146;x<262;x+=10) s+=_ln(x,py,x+7,py-8,INK,1.1);
+  const a=50*Math.PI/180, bx=px-L*Math.sin(a), by=py+L*Math.cos(a), b2y=py+L;
+  s+=`<path d="M ${_f(bx)} ${_f(by)} A ${L} ${L} 0 0 0 ${px} ${b2y}" fill="none" stroke="${GREY}" stroke-width="1.1" stroke-dasharray="4 3"/>`;
+  s+=_ln(px,py,bx,by,INK,1.4)+_ln(px,py,px,b2y,INK,1.4);
+  s+=_ball(bx,by,10,'','',FILL_C)+_ball(px,b2y,10,'','',FILL_T);
+  s+=_tx(bx-14,by+4,'m&#8321;',{s:12,b:1,a:'end'})+_tx(px,b2y+28,'m&#8322;',{s:12,b:1});
+  s+=_tx(136,66,'(1)',{s:10.5,c:GREY})+_tx(214,96,'(2)',{s:10.5,c:GREY});
+  s+=_ln(bx+11,by,250,by,GREY,1,'3 3')+_ln(px+11,b2y,250,b2y,GREY,1,'3 3');
+  const mid=(by+b2y)/2;
+  s+=_ar(244,mid,244,by+3,INK,1.3)+_ar(244,mid,244,b2y-3,INK,1.3);
+  s+=_tx(252,mid+4,'d',{s:13,a:'start',b:1,i:1});
+  s+=_tx(180,200,'released from rest &#183; sticks to m&#8322; at the bottom',{s:10.5,c:GREY});
+  return _svg(340,208,s);
+},
+
+// ---- two bodies at right angles stick together ------------------------------
+perpStick:()=>{
+  const ox=150, oy=150; let s='';
+  s+=_ball(62,oy,14,'m','',FILL_T)+_ar(80,oy,126,oy,RED)+_tx(103,oy-8,'u',{s:11,c:RED,b:1});
+  s+=_ball(ox,214,16,'M','',FILL_B)+_ar(ox,196,ox,166,RED)+_tx(ox+8,186,'V',{s:11,c:RED,b:1,a:'start'});
+  s+=`<circle cx="${ox}" cy="${oy}" r="4" fill="${INK}"/>`;
+  const a=50*Math.PI/180, ex=ox+110*Math.cos(a), ey=oy-110*Math.sin(a);
+  s+=_ln(ox,oy,ex,oy,GREY,1,'4 3')+_ln(ex,oy,ex,ey,GREY,1,'4 3');
+  s+=_ar(ox,oy,ex,ey,GRN,2.4);
+  s+=_tx(ex+6,ey-4,'stuck pair (m + M)',{s:10.5,c:GRN,b:1,a:'start'});
+  s+=_tx((ox+ex)/2+8,oy+16,'mu',{s:10.5,c:GREY});
+  s+=_tx(ex+6,(oy+ey)/2+4,'MV',{s:10.5,c:GREY,a:'start'});
+  s+=`<path d="M ${ox+28} ${oy} A 28 28 0 0 0 ${_f(ox+28*Math.cos(a))} ${_f(oy-28*Math.sin(a))}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`;
+  s+=_tx(ox+42*Math.cos(a/2),oy-42*Math.sin(a/2)+4,'&#952;',{s:12,c:AMB,b:1});
+  s+=_tx(ox-12,oy-32,'meet and stick here',{s:10,c:GREY,a:'end'});
+  return _svg(360,238,s);
+},
+
+// ---- bomb at rest breaks into two pieces ------------------------------------
+bomb:()=>{
+  const cy=74; let s='';
+  s+=_tx(70,16,'before',{s:10.5,c:GREY})+_tx(262,16,'after',{s:10.5,c:GREY});
+  s+=_ball(70,cy,26,'9 kg','at rest',FILL_C);
+  s+=_ln(140,8,140,112,'#e8e6e0',1);
+  s+=_ball(208,cy,16,'3 kg','',FILL_T)+_vel(208,cy,16,-1,'v&#8321;',GRN,42);
+  s+=_ball(312,cy,22,'6 kg','',FILL_B)+_vel(312,cy,22,1,'v&#8322;',GRN,42);
+  s+=_tx(190,124,'total momentum is 0 before, so it is 0 after',{s:10.5});
+  return _svg(380,132,s);
+},
+
+// ---- two balls inside a smooth circular tube --------------------------------
+tube:()=>{
+  const cx=170, cy=138, rm=90; let s='';
+  const P=(deg,r)=>[cx+r*Math.cos(deg*Math.PI/180), cy-r*Math.sin(deg*Math.PI/180)];
+  s+=`<circle cx="${cx}" cy="${cy}" r="102" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<circle cx="${cx}" cy="${cy}" r="78" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+  const [ax,ay]=P(140,rm), [bx,by]=P(75,rm), [rx,ry]=P(250,rm);
+  s+=_ln(cx,cy,rx,ry,GREY,1,'4 3')+_tx((cx+rx)/2-8,(cy+ry)/2,'R',{s:12,b:1,i:1,a:'end'});
+  s+=`<circle cx="${cx}" cy="${cy}" r="2.5" fill="${INK}"/>`;
+  s+=_ball(ax,ay,8,'','',FILL_T)+_ball(bx,by,11,'','',FILL_B);
+  const tx=Math.sin(140*Math.PI/180), ty=Math.cos(140*Math.PI/180);
+  s+=_ar(ax+11*tx,ay+11*ty,ax+38*tx,ay+38*ty,RED,2);
+  s+=_tx(ax+30*tx-14,ay+30*ty-4,'v&#8320;',{s:11,c:RED,b:1,a:'end'});
+  const [la,lb]=P(150,120), [ma,mb]=P(140,62), [na,nb]=P(75,60), [ka,kb]=P(92,118), [va,vb]=P(62,112);
+  s+=_tx(la,lb+4,'A',{s:12,b:1})+_tx(ma,mb+4,'m',{s:12,b:1})+_tx(na,nb+4,'3m',{s:12,b:1});
+  s+=_tx(ka,kb,'B',{s:12,b:1})+_tx(va,vb,'v = 0',{s:10.5,c:GREY,a:'start'});
+  s+=_tx(cx,268,'smooth tube &#183; elastic hit',{s:10.5,c:GREY});
+  return _svg(340,276,s);
+},
+
+// ---- projectile lands, bounces, lands again ---------------------------------
+projBounce:()=>{
+  const gy=170; let s='';
+  s+=_hatch(16,370,gy);
+  s+=`<path d="M 30 ${gy} Q 130 -50 230 ${gy}" fill="none" stroke="${RED}" stroke-width="2"/>`;
+  s+=`<path d="M 230 ${gy} Q 280 115 330 ${gy}" fill="none" stroke="${RED}" stroke-width="2" stroke-dasharray="5 3"/>`;
+  s+=_ar(30,gy,47,gy-37,INK,2)+_tx(38,gy-42,'u',{s:12,b:1,a:'end'});
+  s+=_tx(56,gy-6,'&#952;',{s:12,c:AMB,b:1});
+  s+=`<circle cx="230" cy="${gy}" r="3.5" fill="${INK}"/><circle cx="330" cy="${gy}" r="3.5" fill="${INK}"/>`;
+  s+=_tx(252,92,'after the bounce:',{s:10,c:GRN,b:1,a:'start'})+_tx(252,106,'horizontal part: same',{s:10,c:GRN,a:'start'})+_tx(252,120,'vertical part: e times',{s:10,c:GRN,a:'start'});
+  s+=_ln(30,gy+16,230,gy+16,GREY,1)+_ln(30,gy+11,30,gy+21,GREY,1)+_ln(230,gy+11,230,gy+21,GREY,1)+_ln(330,gy+11,330,gy+21,GREY,1)+_ln(230,gy+16,330,gy+16,GREY,1);
+  s+=_tx(130,gy+31,'R&#8321; (first flight)',{s:10.5,b:1})+_tx(280,gy+31,'R&#8322; (second hop)',{s:10.5,b:1});
+  s+=_tx(230,gy+46,'1st landing',{s:9.5,c:GREY})+_tx(330,gy+46,'2nd landing',{s:9.5,c:GREY});
+  return _svg(380,222,s);
+},
+
+
+// ---- force-time spike of a collision ----------------------------------------
+ftSpike:()=>{
+  const ox=48, oy=136; let s='';
+  s+=_ar(ox,oy,310,oy,GREY,1.3)+_ar(ox,oy,ox,14,GREY,1.3);
+  s+=_tx(314,oy+16,'t',{s:11,c:GREY})+_tx(ox-12,22,'F',{s:11,c:GREY,b:1});
+  const spike=`C 160 ${oy} 161 30 170 30 C 179 30 180 ${oy} 190 ${oy}`;
+  s+=`<path d="M 150 ${oy} ${spike} Z" fill="${RED}" fill-opacity="0.12"/>`;
+  s+=`<path d="M ${ox} ${oy} L 150 ${oy} ${spike} L 300 ${oy}" fill="none" stroke="${RED}" stroke-width="2.4"/>`;
+  s+=_tx(188,34,'very large force',{s:10.5,a:'start',c:RED,b:1});
+  s+=_ln(150,oy+7,150,oy+17,GREY,1)+_ln(190,oy+7,190,oy+17,GREY,1)+_ln(150,oy+12,190,oy+12,GREY,1);
+  s+=_tx(170,oy+30,'&#916;t &#8776; 10&#8315;&#179; s',{s:10.5,b:1});
+  s+=_ln(178,100,232,92,GREY,1)+_tx(236,95,'area = impulse = &#916;p',{s:10.5,a:'start',c:GREY});
+  return _svg(340,178,s);
+},
+
+// ---- alpha particle turned back by a nucleus (indirect collision) -----------
+alpha:()=>{
+  const id=_nid(); let s=`<defs>${AR(id,RED)}</defs>`;
+  s+=`<path d="M 18 84 L 150 84 C 222 84 228 50 176 30 L 102 12" fill="none" stroke="${RED}" stroke-width="2" marker-end="url(#${id})"/>`;
+  s+=`<circle cx="226" cy="92" r="9" fill="${AMB}" stroke="${INK}" stroke-width="1.2"/>`+_tx(226,96.5,'+',{s:13,c:'#fff',b:1});
+  s+=_tx(226,118,'gold nucleus (+)',{s:10.5,c:GREY});
+  s+=_tx(66,76,'&#945;-particle (+)',{s:11,c:RED,b:1});
+  s+=_ln(222,84,212,66,GREY,1,'3 3')+_tx(244,62,'never touches',{s:10,a:'start',c:GREY});
+  s+=_tx(170,140,'huge repulsive push for a very short time &#8212; still a collision',{s:10.5,c:INK});
+  return _svg(340,150,s);
+},
+
+// ---- head-on vs oblique -----------------------------------------------------
+kinds:()=>{
+  let s='';
+  s+=_tx(95,16,'head-on (1D)',{s:11,b:1});
+  s+=_ln(16,70,176,70,AMB,1.2,'5 4');
+  s+=_ball(58,70,18,'1','',FILL_T)+_ball(132,70,18,'2','',FILL_B);
+  s+=_vel(58,70,18,1,'u&#8321;',RED,32)+_vel(132,70,18,-1,'u&#8322;',RED,32);
+  s+=_tx(95,112,'both centres on one line',{s:10,c:GREY});
+  s+=_ln(192,8,192,118,'#e8e6e0',1);
+  s+=_tx(285,16,'oblique (2D)',{s:11,b:1});
+  const c1x=244,c1y=84, a=-32*Math.PI/180, ex=Math.cos(a), ey=Math.sin(a), c2x=c1x+36*ex, c2y=c1y+36*ey;
+  s+=_ln(206,c1y,370,c1y,'#d4d1c8',1,'4 4');
+  s+=_ln(c1x-26*ex,c1y-26*ey,c2x+46*ex,c2y+46*ey,AMB,1.2,'5 4');
+  s+=_tx(c2x+30,c2y-34,'line of centres',{s:10,a:'start',c:AMB});
+  s+=_ball(c1x,c1y,18,'1','',FILL_T)+_ball(c2x,c2y,18,'2','',FILL_B);
+  s+=_ar(c1x-52,c1y,c1x-22,c1y,RED)+_tx(c1x-38,c1y-8,'u&#8321;',{s:11,c:RED,b:1});
+  s+=_tx(285,118,'line of centres at an angle to the motion',{s:10,c:GREY});
+  return _svg(380,126,s);
+},
+
+// ---- e from 0 to 1 ----------------------------------------------------------
+eScale:()=>{
+  const y=52, x0=40, x1=340; let s='';
+  s+=`<rect x="${x0}" y="${y-5}" width="${x1-x0}" height="10" rx="5" fill="#f0ede8" stroke="${INK}" stroke-width="1.2"/>`;
+  s+=`<circle cx="${x0}" cy="${y}" r="7" fill="${RED}"/><circle cx="${x1}" cy="${y}" r="7" fill="${GRN}"/>`;
+  s+=_tx(x0,y-16,'e = 0',{s:11,b:1,c:RED})+_tx(190,y-16,'0 &lt; e &lt; 1',{s:11,b:1,c:AMB})+_tx(x1,y-16,'e = 1',{s:11,b:1,c:GRN});
+  s+=_tx(18,y+26,'perfectly inelastic',{s:10.5,a:'start'})+_tx(18,y+40,'stick &#183; max KE lost',{s:10,a:'start',c:GREY});
+  s+=_tx(190,y+26,'inelastic',{s:10.5})+_tx(190,y+40,'some KE lost',{s:10,c:GREY});
+  s+=_tx(362,y+26,'elastic',{s:10.5,a:'end'})+_tx(362,y+40,'no KE lost',{s:10,a:'end',c:GREY});
+  s+=_tx(190,y+66,'momentum is conserved in all three',{s:10.5,b:1});
+  return _svg(380,128,s);
+},
+
+// ---- the three stages of a collision ----------------------------------------
+phases:()=>{
+  const cy=58, r=22; let s='';
+  s+=_ball(48,cy,r,'m&#8321;','',FILL_T)+_ball(92,cy,r,'m&#8322;','',FILL_B);
+  s+=_vel(48,cy,r,1,'u&#8321;',RED,40)+_vel(92,cy,r,1,'u&#8322;',RED,26);
+  const xf=195, d=16;
+  s+=_flat(xf,cy,r,d,'L',FILL_T)+_flat(xf,cy,r,d,'R',FILL_B);
+  s+=_tx(xf-d-3,cy+4,'m&#8321;',{s:11.5,b:1})+_tx(xf+d+3,cy+4,'m&#8322;',{s:11.5,b:1});
+  s+=_vel(xf,cy,r,1,'u (same)',AMB,40);
+  s+=_ball(290,cy,r,'m&#8321;','',FILL_T)+_ball(348,cy,r,'m&#8322;','',FILL_B);
+  s+=_vel(290,cy,r,1,'v&#8321;',GRN,26)+_vel(348,cy,r,1,'v&#8322;',GRN,44);
+  s+=_tx(70,cy+r+22,'impact begins',{s:10.5,b:1})+_tx(195,cy+r+22,'maximum deformation',{s:10.5,b:1})+_tx(319,cy+r+22,'separation',{s:10.5,b:1});
+  s+=_tx(70,cy+r+36,'u&#8321; &gt; u&#8322;',{s:10,c:GREY})+_tx(195,cy+r+36,'same velocity u',{s:10,c:GREY})+_tx(319,cy+r+36,'v&#8322; &#8805; v&#8321;',{s:10,c:GREY});
+  s+=_ar(76,136,186,136,GRN,1.6)+_ar(204,136,314,136,GRN,1.6);
+  s+=_tx(131,152,'deformation (force D)',{s:10.5,c:GRN,b:1})+_tx(259,152,'restitution (force R)',{s:10.5,c:GRN,b:1});
+  return _svg(390,162,s);
+},
+
+// ---- equal and opposite deformation impulses ---------------------------------
+impulsePair:()=>{
+  const cy=62, r=36, xf=170, d=22; let s='';
+  s+=_flat(xf,cy,r,d,'L',FILL_T)+_flat(xf,cy,r,d,'R',FILL_B);
+  s+=_tx(xf-d-6,cy+4,'m&#8321;',{s:12,b:1})+_tx(xf+d+6,cy+4,'m&#8322;',{s:12,b:1});
+  s+=_ar(108,cy,58,cy,GRN)+_tx(83,cy-9,'&#8747;D dt',{s:11,c:GRN,b:1})+_tx(83,cy+18,'on m&#8321;',{s:10,c:GREY});
+  s+=_ar(232,cy,282,cy,GRN)+_tx(257,cy-9,'&#8747;D dt',{s:11,c:GRN,b:1})+_tx(257,cy+18,'on m&#8322;',{s:10,c:GREY});
+  s+=_tx(170,cy+r+28,'same size, opposite direction &#8594; they cancel for the pair',{s:10.5,c:INK});
+  return _svg(340,136,s);
+},
+
+// ---- generic two-ball picture: before (and optionally after) ----------------
+twoBalls:(o)=>{
+  const W=380, two=!!o.after, X=o.x||[130,250], cyB=66, cyA=160;
+  const H = two ? (o.cap?226:210) : (o.cap?130:114);
+  let s='';
+  const row=(cy,arr,col)=>{
+    let t=_ln(two?56:36,cy,W-24,cy,'#d4d1c8',1,'4 4');
+    if(arr.stuck){
+      const r1=arr.r1||22, r2=arr.r2||22, mid=(X[0]+X[1])/2, xt=mid-r2+r1;
+      t+=_ball(xt-r1,cy,r1,arr.l1,arr.s1,FILL_T)+_ball(xt+r2,cy,r2,arr.l2,arr.s2,FILL_B);
+      t+=_vel(mid,cy,Math.max(r1,r2),arr.d,arr.v,col,44);
+      return t;
+    }
+    arr.forEach((b,i)=>{
+      const r=b.r||22;
+      t+=_ball(X[i],cy,r,b.l,b.s,b.f||(i?FILL_B:FILL_T));
+      t+=_vel(X[i],cy,r,b.d,b.v,b.c||col,b.len);
+    });
+    return t;
+  };
+  if(two){
+    s+=_tx(12,cyB+4,'before',{s:10,a:'start',c:GREY})+_tx(12,cyA+4,'after',{s:10,a:'start',c:GREY});
+    s+=_ln(30,113,W-20,113,'#e8e6e0',1);
+  }
+  s+=row(cyB,o.before,RED);
+  if(two) s+=row(cyA,o.after,GRN);
+  if(o.cap) s+=_tx(W/2,H-9,o.cap,{s:10.5,c:GREY});
+  return _svg(W,H,s);
+},
+
+// ---- one ball into a row of identical balls ----------------------------------
+cradle:(o)=>{
+  o=o||{}; const r=15, after=o.after!==false, cyB=48, cyA=128; let s='';
+  if(after) s+=_tx(8,cyB+4,'before',{s:10,a:'start',c:GREY})+_tx(8,cyA+4,'after',{s:10,a:'start',c:GREY});
+  s+=_ln(56,cyB,364,cyB,'#d4d1c8',1,'4 4');
+  s+=_ball(76,cyB,r,'m','',FILL_C)+_vel(76,cyB,r,1,'v',RED,34);
+  for(let i=0;i<5;i++) s+=_ball(140+30*i,cyB,r,'m','',FILL_T);
+  s+=_tx(200,cyB+r+16,'five identical balls at rest, just touching',{s:10,c:GREY});
+  if(after){
+    s+=_ln(30,90,364,90,'#e8e6e0',1);
+    s+=_ln(56,cyA,364,cyA,'#d4d1c8',1,'4 4');
+    s+=_ball(110,cyA,r,'m','',FILL_C);
+    for(let i=0;i<4;i++) s+=_ball(140+30*i,cyA,r,'m','',FILL_T);
+    s+=_ball(300,cyA,r,'m','',FILL_C)+_vel(300,cyA,r,1,'v',GRN,34);
+    s+=_tx(170,cyA+r+16,'all at rest',{s:10,c:GREY});
+  }
+  return _svg(380,after?170:88,s);
+},
+
+// ---- bullet into a pendulum bob --------------------------------------------
+pendulum:(o)=>{
+  o=o||{}; const px=200, py=16, L=107, by=py+L; let s='';
+  s+=_ln(150,py,250,py,INK,2);
+  for(let x=156;x<250;x+=10) s+=_ln(x,py,x+7,py-8,INK,1.1);
+  s+=_ln(px,py,px,by-11,INK,1.4);
+  s+=`<rect x="${px-15}" y="${by-11}" width="30" height="22" fill="${FILL_C}" stroke="${INK}" stroke-width="1.6" rx="2"/>`;
+  s+=_tx(px,by+4,o.bob||'M',{s:9.5,b:1});
+  const a=37*Math.PI/180, sx=px+L*Math.sin(a), sy=py+L*Math.cos(a);
+  s+=_ln(px,py,px+(L-11)*Math.sin(a),py+(L-11)*Math.cos(a),GREY,1.2,'4 3');
+  s+=`<rect x="${_f(sx-15)}" y="${_f(sy-11)}" width="30" height="22" fill="none" stroke="${GREY}" stroke-width="1.3" stroke-dasharray="4 3" rx="2"/>`;
+  s+=_ln(px+18,by,322,by,GREY,1,'3 3')+_ln(sx+18,sy,322,sy,GREY,1,'3 3');
+  s+=_ln(316,sy,316,by,INK,1.3)+_ln(311,sy,321,sy,INK,1.3)+_ln(311,by,321,by,INK,1.3);
+  s+=_tx(326,(sy+by)/2+4,'h',{s:12,a:'start',b:1,i:1});
+  s+=`<rect x="90" y="${by-3}" width="16" height="6" rx="2" fill="${INK}"/>`;
+  s+=_ar(112,by,168,by,RED)+_tx(140,by-9,o.u||'u',{s:11,c:RED,b:1});
+  s+=_tx(98,by+20,o.bullet||'bullet',{s:10,c:GREY});
+  s+=_ar(186,by+24,228,by+24,GRN,2)+_tx(207,by+40,'v just after',{s:10,c:GRN,b:1});
+  s+=_tx(170,184,'&#9312; bullet sticks: momentum      &#9313; bob rises: energy',{s:10.5,c:INK});
+  return _svg(340,192,s);
+},
+
+// ---- particle sliding up a free wedge ---------------------------------------
+wedge:()=>{
+  const gy=160; let s='';
+  s+=_hatch(20,360,gy);
+  s+=`<polygon points="130,${gy} 320,${gy} 320,46" fill="${FILL_B}" stroke="${INK}" stroke-width="1.7"/>`;
+  s+=_tx(282,146,'M = 4m',{s:11.5,b:1});
+  s+=_ball(96,gy-8,8,'','',FILL_C)+_vel(96,gy-8,8,1,'v',RED,34)+_tx(82,gy-4,'m',{s:11,b:1,a:'end'});
+  s+=`<circle cx="245.9" cy="81.1" r="8" fill="none" stroke="${GREY}" stroke-width="1.3" stroke-dasharray="3 2"/>`;
+  s+=_ln(206,81.1,238,81.1,GREY,1,'3 3')+_ln(104,152,218,152,GREY,1,'3 3');
+  s+=_ln(212,81.1,212,152,INK,1.3)+_ln(207,81.1,217,81.1,INK,1.3)+_ln(207,152,217,152,INK,1.3);
+  s+=_tx(204,122,'h',{s:12,a:'end',b:1,i:1});
+  s+=_tx(196,26,'at the top: particle and wedge move together',{s:10.5,c:AMB,b:1});
+  s+=_tx(190,188,'smooth floor, smooth wedge',{s:10.5,c:GREY});
+  return _svg(380,196,s);
+},
+
+// ---- ball bouncing on the floor ---------------------------------------------
+bounce:()=>{
+  const gy=166, top=40, e=0.6, w=60; let s='';
+  s+=_hatch(36,340,gy);
+  const h0=gy-top; let x=60;
+  let d=`M ${x} ${top} Q ${x+w/2} ${top} ${x+w} ${gy}`;
+  x+=w; const xs=[x], hs=[h0];
+  for(let n=1;n<=6;n++){
+    const H=h0*Math.pow(e,2*n), ww=2*w*Math.pow(e,n);
+    d+=` Q ${_f(x+ww/2)} ${_f(gy-2*H)} ${_f(x+ww)} ${gy}`;
+    hs.push(H); x+=ww; xs.push(x);
+  }
+  s+=`<path d="${d}" fill="none" stroke="${RED}" stroke-width="2"/>`;
+  s+=`<circle cx="60" cy="${top}" r="6" fill="${FILL_C}" stroke="${INK}" stroke-width="1.3"/>`;
+  s+=_ln(40,top,40,gy,INK,1.2)+_ln(35,top,45,top,INK,1.2);
+  s+=_tx(32,(top+gy)/2+4,'h&#8320;',{s:11.5,a:'end',b:1,i:1});
+  const p1x=xs[0]+w*e, p1y=gy-hs[1], p2x=xs[1]+w*e*e, p2y=gy-hs[2];
+  s+=_ln(p1x,p1y,300,p1y,GREY,1,'3 3')+_tx(304,p1y+4,'h&#8321; = e&#178;h&#8320;',{s:10.5,a:'start',c:INK});
+  s+=_ln(p2x,p2y,300,p2y,GREY,1,'3 3')+_tx(304,p2y+4,'h&#8322; = e&#8308;h&#8320;',{s:10.5,a:'start',c:INK});
+  s+=_tx(xs[0],gy+24,'v&#8320;',{s:10.5,b:1,c:RED})+_tx(xs[1],gy+24,'v&#8321;',{s:10.5,b:1,c:RED})+_tx(xs[2],gy+24,'v&#8322;',{s:10.5,b:1,c:RED});
+  s+=_tx(366,52,'v&#8345; = e&#8319; v&#8320;',{s:11,a:'end',b:1})+_tx(366,70,'h&#8345; = e&#178;&#8319; h&#8320;',{s:11,a:'end',b:1});
+  s+=_tx(366,88,'floor: fixed',{s:10,a:'end',c:GREY});
+  return _svg(380,198,s);
+},
+
+// ---- oblique collision, after the hit ---------------------------------------
+obliqueAfter:(o)=>{
+  o=o||{}; const ox=150, oy=106, D=70; let s='';
+  s+=_ln(24,oy,340,oy,'#d4d1c8',1,'4 4');
+  s+=_ball(62,oy,13,'1','',FILL_T)+_ar(80,oy,118,oy,RED)+_tx(99,oy-8,o.u||'u',{s:11,c:RED,b:1});
+  s+=`<circle cx="${ox}" cy="${oy}" r="13" fill="none" stroke="${GREY}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+  s+=_tx(ox-34,oy+30,'2 was at rest here',{s:9.5,c:GREY});
+  const t1=(o.th||48)*Math.PI/180, t2=(o.ph||42)*Math.PI/180;
+  const c1=Math.cos(t1), s1=Math.sin(t1), c2=Math.cos(t2), s2=Math.sin(t2);
+  const b1x=ox+D*c1, b1y=oy-D*s1, b2x=ox+D*c2, b2y=oy+D*s2;
+  s+=_ln(ox,oy,b1x,b1y,GREY,1,'3 3')+_ln(ox,oy,b2x,b2y,GREY,1,'3 3');
+  s+=_ball(b1x,b1y,13,'1','',FILL_T)+_ball(b2x,b2y,13,'2','',FILL_B);
+  s+=_ar(b1x+14*c1,b1y-14*s1,b1x+40*c1,b1y-40*s1,GRN)+_tx(b1x+43*c1+8,b1y-43*s1+4,o.v1||'v&#8321;',{s:11,c:GRN,b:1,a:'start'});
+  s+=_ar(b2x+14*c2,b2y+14*s2,b2x+40*c2,b2y+40*s2,GRN)+_tx(b2x+43*c2+8,b2y+43*s2+6,o.v2||'v&#8322;',{s:11,c:GRN,b:1,a:'start'});
+  s+=`<path d="M ${ox+34} ${oy} A 34 34 0 0 0 ${_f(ox+34*c1)} ${_f(oy-34*s1)}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`;
+  s+=`<path d="M ${ox+34} ${oy} A 34 34 0 0 1 ${_f(ox+34*c2)} ${_f(oy+34*s2)}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`;
+  s+=_tx(ox+47*Math.cos(t1/2),oy-47*Math.sin(t1/2)+4,'&#952;',{s:12,c:AMB,b:1});
+  s+=_tx(ox+47*Math.cos(t2/2),oy+47*Math.sin(t2/2)+5,'&#966;',{s:12,c:AMB,b:1});
+  s+=_tx(330,oy-6,'x',{s:10.5,c:GREY,i:1});
+  s+=_tx(18,204,o.cap||'conserve momentum along x and along y separately',{s:10,a:'start',c:GREY});
+  return _svg(360,212,s);
+},
+
+// ---- momentum triangle for identical balls ----------------------------------
+momTriangle:()=>{
+  let s='';
+  const A=[50,160], B=[310,160], C=[119,45.2];
+  s+=_ar(A[0],A[1],B[0],B[1],INK,2.2);
+  s+=_ar(A[0],A[1],C[0],C[1],BLU,2.2);
+  s+=_ar(C[0],C[1],B[0],B[1],GRN,2.2);
+  s+=`<path d="M 112.8 55.5 L 123.1 61.7 L 129.3 51.4" fill="none" stroke="${INK}" stroke-width="1.2"/>`;
+  s+=_tx(76,98,'p&#8321; = m v&#8321;',{s:11,a:'end',c:BLU,b:1});
+  s+=_tx(226,96,'p&#8322; = m v&#8322;',{s:11,a:'start',c:GRN,b:1});
+  s+=_tx(180,178,'p = m u   (before the hit)',{s:11,b:1});
+  s+=_tx(180,198,'p&#178; = p&#8321;&#178; + p&#8322;&#178;  &#8594;  the angle at the top is 90&#176;',{s:10.5,c:GREY});
+  return _svg(360,206,s);
+}
+
+};
+
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ name: `Momentum, impulse and the kinds of collision`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A 2 kg ball moves at 3 m/s. Its linear momentum is`,
+   opts: [`6 kg m/s`,`1.5 kg m/s`,`9 kg m/s`,`18 kg m/s`],
+   ans: 0,
+   sol: `p = mv = 2 × 3 = <strong>6 kg m/s</strong>.<br><br>Momentum = mass × velocity. It points the same way as the velocity.<br><br>9 is ½mv² and 18 is mv². Those are energy ideas, not momentum.`
+  },
+  {
+   q: `The same 2 kg ball speeds up from 3 m/s to 7 m/s, in the same direction. The impulse on it is`,
+   opts: [`8 N s`,`20 N s`,`14 N s`,`4 N s`],
+   ans: 0,
+   sol: `Impulse = change in momentum = m(v₂ − v₁) = 2 × (7 − 3) = <strong>8 N s</strong>.<br><br>Final minus initial. 20 N s adds the speeds — wrong when both are in the same direction. 14 N s is only the final momentum.`
+  },
+  {
+   q: `A 0.5 kg ball hits a wall at 4 m/s and comes straight back at 4 m/s. The size of the impulse from the wall is`,
+   opts: [`4 N s`,`0`,`2 N s`,`8 N s`],
+   ans: 0,
+   sol: `Take 'away from the wall' as +. Before: −4 m/s. After: +4 m/s.<br>Impulse = 0.5 × (4 − (−4)) = 0.5 × 8 = <strong>4 N s</strong>.<br><br>The speed is the same, but the velocity has turned round. So the momentum has changed. '0' is the trap — it forgets the direction. 8 N s forgets the mass 0.5 kg.`
+  },
+  {
+   q: `In an <strong>elastic</strong> collision, which quantities are conserved?`,
+   opts: [`Both momentum and kinetic energy`,`Only momentum`,`Only kinetic energy`,`Neither`],
+   ans: 0,
+   sol: `Momentum is conserved in every collision. In an elastic collision the bodies spring back fully, so <strong>kinetic energy is also conserved</strong> (e = 1).`
+  },
+  {
+   q: `A lump of clay hits a trolley and sticks to it. Which quantity is conserved in this hit?`,
+   opts: [`Only momentum`,`Both momentum and kinetic energy`,`Only kinetic energy`,`Neither`],
+   ans: 0,
+   sol: `This is an <strong>inelastic</strong> collision (here perfectly inelastic — they stick). Some KE turns into heat, sound and change of shape. So KE is <em>not</em> conserved.<br><br>Momentum is still conserved — during the short hit no big outside force acts.<br><br>Rule: inelastic → <strong>only momentum</strong>.`
+  },
+  {
+   tag: `NEET Major Test-02 · Q9`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> Match the column:<table class="mt"><tr><th>Column I</th><th>Column II</th></tr><tr><td>A. Momentum</td><td>P. m(v₂ − v₁)</td></tr><tr><td>B. Impulse</td><td>Q. only momentum is conserved</td></tr><tr><td>C. Elastic collision</td><td>R. momentum and kinetic energy both are conserved</td></tr><tr><td>D. Inelastic collision</td><td>S. mv</td></tr></table>`,
+   opts: [`A → S, B → P, C → R, D → Q`,`A → S, B → R, C → Q, D → R`,`A → P, B → S, C → R, D → Q`,`A → S, B → S, C → Q, D → R`],
+   ans: 0,
+   sol: `Each line is one rung above:<br>• A. Momentum = mv → <strong>S</strong> (rung 1)<br>• B. Impulse = change in momentum = m(v₂ − v₁) → <strong>P</strong> (rungs 2, 3)<br>• C. Elastic → momentum and KE both → <strong>R</strong> (rung 4)<br>• D. Inelastic → only momentum → <strong>Q</strong> (rung 5)<br><br>Common slip: swapping A and B. mv is the momentum itself. m(v₂ − v₁) is the <em>change</em> in momentum — that is impulse.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ name: `Which collisions are perfectly inelastic?`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `In a perfectly inelastic collision, what happens just after the hit?`,
+   opts: [`The bodies stick and move with one common velocity`,`The bodies always stop`,`The bodies bounce apart with the same speeds`,`Kinetic energy is fully conserved`],
+   ans: 0,
+   sol: `Perfectly inelastic means e = 0. There is no speed of separation, so the bodies <strong>stick and move as one body</strong>.<br><br>They stop only if the total momentum was zero to begin with. Usually they keep moving.`
+  },
+  {
+   q: `Two lumps of wet clay hit each other and become one lump. This collision is`,
+   opts: [`Perfectly inelastic`,`Elastic`,`Nearly elastic`,`Not a collision`],
+   ans: 0,
+   sol: `After the hit there is one body. They move together → <strong>perfectly inelastic</strong>. Clay does not spring back at all.`
+  },
+  {
+   q: `A bullet enters a sand bag hanging from a rope and stays inside it. After the hit, the bullet and the bag`,
+   opts: [`move together — perfectly inelastic`,`move separately — elastic`,`bullet comes back out — elastic`,`both stop dead`],
+   ans: 0,
+   sol: `The bullet is <strong>embedded</strong>. Bullet + bag move with one common velocity → perfectly inelastic.<br><br>They do not stop: the bullet's momentum is now shared by the bag.`
+  },
+  {
+   q: `A man runs and jumps onto a moving cart and stays on it. The man–cart 'collision' is`,
+   opts: [`Perfectly inelastic — after the jump they move together`,`Elastic`,`Not a collision, since nothing is hit`,`Elastic, because the man lands softly`],
+   ans: 0,
+   sol: `Any time two bodies end up moving as <strong>one</strong>, it is perfectly inelastic. Momentum: m·v + M·V = (m + M)·V′.<br><br>A collision does not have to look like two balls hitting.`
+  },
+  {
+   q: `Which pair is closest to an <strong>elastic</strong> collision?`,
+   opts: [`Two hard glass (or steel) balls`,`Two lumps of clay`,`A ball of chewing gum and a wall`,`A bullet and a wooden block it gets stuck in`],
+   ans: 0,
+   sol: `Hard, springy bodies get their shape back after the hit. Almost all the KE comes back, so e is close to 1. They <strong>bounce apart</strong>.<br><br>Clay, gum and the bullet in wood all stick — e = 0.`
+  },
+  {
+   tag: `NEET Major Test-02 · Q44`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> Which of the following is <strong>not</strong> a perfectly inelastic collision?`,
+   opts: [`Striking of two glass balls`,`A bullet striking a bag of sand`,`Collision between two lumps of clay`,`A man jumping onto a moving cart`],
+   ans: 0,
+   sol: `Use one test: <strong>after the hit, do they move as one body?</strong><br>• Bullet in sand bag → yes (rung 3)<br>• Two lumps of clay → yes (rung 2)<br>• Man on cart → yes (rung 4)<br>• Two glass balls → <strong>no</strong>, they bounce apart (rung 5)<br><br>So the glass balls are the odd one out. That hit is nearly elastic.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ name: `Kinetic energy lost when bodies stick`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A 2 kg ball moving at 6 m/s hits a 4 kg ball at rest. They stick. Their common velocity is`,
+   diagram: DIAGRAMS.twoBalls({before:[{l:'2 kg',v:'6 m/s',d:1,r:20},{l:'4 kg',d:0,r:26}],after:{stuck:true,l1:'2',l2:'4',r1:20,r2:26,v:'v = ?',d:1}}),
+   opts: [`2 m/s`,`3 m/s`,`6 m/s`,`12 m/s`],
+   ans: 0,
+   sol: `Momentum: (2 + 4)v = 2 × 6 + 4 × 0 = 12 ⇒ <strong>v = 2 m/s</strong>.<br><br>3 m/s is the trap: the plain average of 6 and 0. It ignores the masses.`
+  },
+  {
+   q: `What was the kinetic energy of the 2 kg ball <em>before</em> the hit (speed 6 m/s)?`,
+   opts: [`36 J`,`12 J`,`72 J`,`6 J`],
+   ans: 0,
+   sol: `KE = ½mv² = ½ × 2 × 36 = <strong>36 J</strong>. The 4 kg ball was at rest, so total KE before = 36 J.`
+  },
+  {
+   q: `After the hit, the 6 kg pair moves at 2 m/s. The KE after the hit and the KE lost are`,
+   opts: [`12 J after; 24 J lost`,`36 J after; nothing lost`,`24 J after; 12 J lost`,`6 J after; 30 J lost`],
+   ans: 0,
+   sol: `KE after = ½ × 6 × 2² = <strong>12 J</strong>.<br>KE lost = 36 − 12 = <strong>24 J</strong>.<br><br>Momentum was kept (12 = 12), but two-thirds of the KE went into heat, sound and change of shape.`
+  },
+  {
+   q: `Shortcut from your notes: KE lost = ½ · [m₁m₂/(m₁ + m₂)] · (u₁ − u₂)². For 2 kg and 4 kg with u₁ − u₂ = 6 m/s, this gives`,
+   opts: [`24 J`,`36 J`,`48 J`,`12 J`],
+   ans: 0,
+   sol: `m₁m₂/(m₁ + m₂) = 8/6 = 4/3 kg.<br>KE lost = ½ × (4/3) × 36 = <strong>24 J</strong> — the same as rung 3.<br><br>The shortcut skips finding v. Use whichever is faster.`
+  },
+  {
+   q: `When the second body is at rest, the <strong>fraction</strong> of KE lost = m₂/(m₁ + m₂). For the 2 kg ball hitting the 4 kg ball, the fraction lost is`,
+   opts: [`2/3`,`1/3`,`1/2`,`1`],
+   ans: 0,
+   sol: `4/(2 + 4) = <strong>2/3</strong>. Check: 24 J out of 36 J = 2/3 ✓<br><br>Why: KE after/KE before = m₁/(m₁ + m₂), so the lost part is m₂/(m₁ + m₂).<br><br>The heavier the body at rest, the more KE is lost.`
+  },
+  {
+   tag: `Collision set · Q1`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A ball of mass 5 kg moving with speed 8 m/s collides head on with another stationary ball of mass 15 kg. If the collision is perfectly inelastic, then the loss in kinetic energy is`,
+   diagram: DIAGRAMS.twoBalls({before:[{l:'5 kg',v:'8 m/s',d:1,r:20},{l:'15 kg',d:0,r:28}]}),
+   opts: [`120 J`,`160 J`,`80 J`,`40 J`],
+   ans: 0,
+   sol: `Step 1: v = 5 × 8/20 = 2 m/s<br>Step 2: KE before = ½ × 5 × 64 = 160 J; KE after = ½ × 20 × 4 = 40 J<br>Step 3: KE lost = 160 − 40 = <strong>120 J</strong><br><br>Shortcut: fraction lost = 15/20 = 3/4, and 3/4 × 160 = 120 J ✓<br><br>Traps: 160 J is all the KE (not all of it is lost). 40 J is the KE <em>left</em>, not lost.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ name: `Bullet stuck in a block — how much KE is left?`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `A 10 g bullet moving at 400 m/s gets stuck in a 990 g block at rest on a smooth floor. The block (with the bullet) moves off at`,
+   diagram: DIAGRAMS.bulletBlock({m:'10 g',v:'400 m/s',M:'990 g'}),
+   opts: [`4 m/s`,`400 m/s`,`40 m/s`,`0.4 m/s`],
+   ans: 0,
+   sol: `Convert first: 10 g = 0.01 kg, 990 g = 0.99 kg.<br>(0.01 + 0.99)V = 0.01 × 400 ⇒ 1 × V = 4 ⇒ <strong>V = 4 m/s</strong>.`
+  },
+  {
+   q: `In general: a bullet of mass m and speed v sticks in a block of mass M at rest. The common velocity is`,
+   opts: [`V = mv/(m + M)`,`V = Mv/(m + M)`,`V = v`,`V = mv/M`],
+   ans: 0,
+   sol: `Momentum: mv + 0 = (m + M)V ⇒ <strong>V = mv/(m + M)</strong>.<br><br>Check with rung 1: 0.01 × 400/1 = 4 m/s ✓. Do not forget the bullet's own mass in the bottom.`
+  },
+  {
+   q: `In rung 1, the KE of block + bullet just after the hit (1 kg at 4 m/s) is ___, while the bullet alone had ___ before.`,
+   opts: [`8 J; 800 J`,`800 J; 800 J`,`8 J; 8 J`,`16 J; 800 J`],
+   ans: 0,
+   sol: `After: ½ × 1 × 4² = <strong>8 J</strong>.<br>Before: ½ × 0.01 × 400² = ½ × 0.01 × 160000 = <strong>800 J</strong>.<br><br>Only 1% of the KE is left! 99% goes into heat and breaking the wood.`
+  },
+  {
+   q: `Put V = mv/(m + M) into KE = ½(m + M)V². You get`,
+   opts: [`½ m²v²/(m + M)`,`½ (m + M)v²`,`½ mv²`,`½ M²v²/(m + M)`],
+   ans: 0,
+   sol: `½(m + M) × m²v²/(m + M)² — one (m + M) cancels:<br>KE = <strong>½ m²v²/(m + M)</strong>.`
+  },
+  {
+   q: `Write ½m²v²/(m + M) as (bullet's KE, ½mv²) × (a fraction). The fraction is`,
+   opts: [`m/(m + M)`,`M/(m + M)`,`(m + M)/M`,`1`],
+   ans: 0,
+   sol: `½m²v²/(m + M) = ½mv² × <strong>m/(m + M)</strong>.<br><br>Check with rung 3: m/(m + M) = 0.01/1 = 1/100 → 800 × 1/100 = 8 J ✓<br><br>The other part, M/(m + M), is the fraction <em>lost</em>.`
+  },
+  {
+   tag: `NEET Major Test-02 · Q43`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A bullet of mass m moving with velocity v strikes a block of mass M at rest and gets embedded into it. The kinetic energy of the composite block will be`,
+   diagram: DIAGRAMS.bulletBlock({}),
+   opts: [`½mv² × m/(m + M)`,`½mv² × M/(m + M)`,`½mv² × (M + m)/M`,`½Mv² × m/(m + M)`],
+   ans: 0,
+   sol: `Momentum: V = mv/(m + M).<br>KE = ½(m + M)V² = ½m²v²/(m + M) = <strong>½mv² × m/(m + M)</strong>.<br><br>Trap: ½mv² × M/(m + M) is the KE <em>lost</em>, not the KE left. The last option uses M in place of the bullet's mass.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ name: `Pendulum hits pendulum and sticks — how high does it go?`,
+ mode: 'class',
+ questions: [
+  {
+   q: `Bob m₁ is pulled aside so it is d = 0.8 m above its lowest point, then let go. Its speed at the bottom is (g = 10 m/s²)`,
+   diagram: DIAGRAMS.twoPend(),
+   opts: [`4 m/s`,`8 m/s`,`16 m/s`,`2 m/s`],
+   ans: 0,
+   sol: `Energy: m₁gd = ½m₁v² ⇒ v = √(2gd) = √(2 × 10 × 0.8) = √16 = <strong>4 m/s</strong>.<br><br>16 is v², not v.`
+  },
+  {
+   q: `At the bottom, m₁ hits m₂ and they stick. For the hit itself we must use`,
+   opts: [`Momentum conservation — KE is not conserved when they stick`,`Energy conservation`,`Both momentum and KE`,`Neither`],
+   ans: 0,
+   sol: `Sticking = perfectly inelastic. Momentum is conserved; KE is <strong>not</strong>.<br><br>So the problem has three stages: ① swing down (energy), ② hit (momentum), ③ swing up (energy). Never use energy across stage ②.`
+  },
+  {
+   q: `Take m₁ = 1 kg (speed 4 m/s at the bottom) and m₂ = 3 kg at rest. Just after sticking, the pair moves at`,
+   opts: [`1 m/s`,`4 m/s`,`4/3 m/s`,`2 m/s`],
+   ans: 0,
+   sol: `(1 + 3)V = 1 × 4 ⇒ <strong>V = 1 m/s</strong>.`
+  },
+  {
+   q: `The 4 kg pair starts at 1 m/s and swings up. Its centre of mass rises by (g = 10 m/s²)`,
+   opts: [`0.05 m`,`0.8 m`,`0.1 m`,`0.2 m`],
+   ans: 0,
+   sol: `Stage ③, energy: h = V²/2g = 1/20 = <strong>0.05 m</strong>.<br><br>Compare with d = 0.8 m: 0.05/0.8 = 1/16 = (1/4)², and 1/4 = m₁/(m₁ + m₂). Keep this in mind for the ★.<br><br>0.1 m is the trap h = V²/g.`
+  },
+  {
+   q: `If the two bobs have <strong>equal</strong> mass, the stuck pair rises to`,
+   opts: [`d/4`,`d/2`,`d`,`d/8`],
+   ans: 0,
+   sol: `Equal masses → V = v/2.<br>h = (v/2)²/2g = ¼ × (v²/2g) = ¼ × d = <strong>d/4</strong>.<br><br>Half the speed gives one-quarter of the height, because height goes with speed squared.`
+  },
+  {
+   tag: `NEET Major Test-02 · Q10`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> Two pendulums each of length ℓ are initially situated as shown in figure. The first pendulum is released and strikes the second pendulum. Assume that the collision is perfectly inelastic and neglect mass of string and any frictional effect. How high does the centre of mass rise after the collision?`,
+   diagram: DIAGRAMS.twoPend(),
+   opts: [`d[m₁/(m₁ + m₂)]²`,`d[m₁/(m₁ + m₂)]<sup>1/2</sup>`,`d[(m₁ + m₂)/m₂]²`,`d[m₂/(m₁ + m₂)]<sup>1/2</sup>`],
+   ans: 0,
+   sol: `① Swing down: v = √(2gd)<br>② Stick: V = m₁v/(m₁ + m₂)<br>③ Swing up: h = V²/2g = [m₁/(m₁ + m₂)]² × v²/2g = <strong>d[m₁/(m₁ + m₂)]²</strong><br><br>Check with the rungs: 1 kg and 3 kg → 0.8 × (1/4)² = 0.05 m ✓. Equal masses → d/4 ✓.<br><br>The ½-power options come from forgetting that height goes with V².`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ name: `Sticking at right angles — perfectly inelastic in 2D`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A 1 kg ball moves along +x at 3 m/s. A 2 kg ball moves along +y at 2 m/s. Before they meet, the total momentum along x and along y is`,
+   diagram: DIAGRAMS.perpStick(),
+   opts: [`pₓ = 3 kg m/s, along y = 4 kg m/s`,`pₓ = 3 kg m/s, along y = 2 kg m/s`,`pₓ = 7 kg m/s, along y = 0`,`pₓ = 5 kg m/s, along y = 5 kg m/s`],
+   ans: 0,
+   sol: `Along x only the 1 kg ball moves: 1 × 3 = <strong>3 kg m/s</strong>.<br>Along y only the 2 kg ball moves: 2 × 2 = <strong>4 kg m/s</strong>.<br><br>Momentum is a vector. Keep x and y separate.`
+  },
+  {
+   q: `They stick. Momentum along x stays 3 and along y stays 4. The size of the stuck pair's momentum is`,
+   opts: [`5 kg m/s`,`7 kg m/s`,`1 kg m/s`,`25 kg m/s`],
+   ans: 0,
+   sol: `p = √(3² + 4²) = √25 = <strong>5 kg m/s</strong>.<br><br>7 is the trap — adding 3 and 4 as plain numbers. They are at 90°, so use Pythagoras. In letters: p = √((mu)² + (MV)²).`
+  },
+  {
+   q: `The stuck pair (3 kg) moves with speed ___, at angle θ to the x-axis with tan θ = ___.`,
+   opts: [`5/3 m/s; tan θ = 4/3`,`5 m/s; tan θ = 4/3`,`5/3 m/s; tan θ = 3/4`,`7/3 m/s; tan θ = 1`],
+   ans: 0,
+   sol: `Speed = p/(total mass) = 5/3 m/s.<br>tan θ = (momentum along y)/(momentum along x) = 4/3 → θ = 53°.<br><br>In letters: <strong>tan θ = MV/mu</strong>. The y-part goes on top.`
+  },
+  {
+   q: `KE before = ½(1)(3²) + ½(2)(2²) = 8.5 J. KE after = p²/2(total mass). The KE lost is`,
+   opts: [`13/3 J ≈ 4.33 J`,`8.5 J`,`25/6 J ≈ 4.17 J`,`0`],
+   ans: 0,
+   sol: `KE after = 25/(2 × 3) = 25/6 J.<br>KE lost = 51/6 − 25/6 = 26/6 = <strong>13/3 J</strong>.<br><br>25/6 J is the KE that is <em>left</em>.`
+  },
+  {
+   q: `Shortcut: KE lost = ½ · [mM/(m + M)] · (relative speed)². The two velocities are at 90°, so (relative speed)² = u² + V². For 1 kg at 3 m/s and 2 kg at 2 m/s this gives`,
+   opts: [`13/3 J`,`13 J`,`2 J`,`26/3 J`],
+   ans: 0,
+   sol: `mM/(m + M) = 2/3 kg. u² + V² = 9 + 4 = 13.<br>KE lost = ½ × (2/3) × 13 = <strong>13/3 J</strong> — same as rung 4 ✓<br><br>Why u² + V²: the velocity of one ball as seen from the other is u (along x) and V (along −y). These are at 90°, so its size² = u² + V².`
+  },
+  {
+   tag: `Collision set · Q5`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A body of mass m moving with a velocity u in the +x-direction collides with a body of mass M moving with velocity V in the +y-direction. They stick together during collision. Then :`,
+   diagram: DIAGRAMS.perpStick(),
+   opts: [`All the above choices are correct`,`the loss of kinetic energy as a result of collision is ½[Mm/(M + m)](V² + u²) — only this one`,`the composite body moves in a direction making an angle θ = tan⁻¹(MV/mu) with the x-axis — only this one`,`the magnitude of momentum of the composite body is √((mu)² + (MV)²) — only this one`],
+   ans: 0,
+   sol: `Check each statement with a rung:<br>• Momentum = √((mu)² + (MV)²) ✓ (rung 2)<br>• Direction tan θ = MV/mu ✓ (rung 3)<br>• KE loss = ½[mM/(m + M)](u² + V²) ✓ (rung 5)<br><br>All three are true → <strong>(4) All the above</strong>.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ name: `Explosion — sticking played backwards`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `A bomb at rest explodes into two pieces. The total momentum of the two pieces just after is`,
+   diagram: DIAGRAMS.bomb(),
+   opts: [`Zero — it was zero before`,`Equal to the energy released`,`Equal to the momentum of the bigger piece`,`Cannot be found`],
+   ans: 0,
+   sol: `The explosion forces are internal. So momentum is conserved: 0 before → <strong>0 after</strong>.<br><br>That means the two pieces have <strong>equal and opposite momenta</strong>. KE is not conserved — it comes from the chemical energy of the bomb.`
+  },
+  {
+   q: `A 9 kg bomb at rest breaks into 3 kg and 6 kg pieces. The 6 kg piece moves at 2 m/s. The 3 kg piece moves at`,
+   opts: [`4 m/s, in the opposite direction`,`2 m/s, in the opposite direction`,`1 m/s, in the same direction`,`4 m/s, in the same direction`],
+   ans: 0,
+   sol: `Equal momenta: 3 × v = 6 × 2 ⇒ <strong>v = 4 m/s</strong>, opposite to the 6 kg piece.<br><br>Half the mass → double the speed.`
+  },
+  {
+   q: `KE of the 3 kg piece (4 m/s) and of the 6 kg piece (2 m/s) are`,
+   opts: [`24 J and 12 J`,`12 J and 24 J`,`24 J and 24 J`,`6 J and 12 J`],
+   ans: 0,
+   sol: `3 kg: ½ × 3 × 16 = <strong>24 J</strong>. 6 kg: ½ × 6 × 4 = <strong>12 J</strong>.<br><br>Same momentum, but the <strong>lighter piece gets more KE</strong>.`
+  },
+  {
+   q: `Another form of KE: KE = p²/2m. If the 3 kg piece has KE 24 J, its momentum is`,
+   opts: [`12 kg m/s`,`72 kg m/s`,`8 kg m/s`,`144 kg m/s`],
+   ans: 0,
+   sol: `p² = 2m × KE = 2 × 3 × 24 = 144 ⇒ <strong>p = 12 kg m/s</strong>. Check: 3 × 4 = 12 ✓<br><br>144 is p², not p.`
+  },
+  {
+   q: `Both pieces have the same p. From KE = p²/2m, KE ∝ 1/m. A shell breaks into 2 kg and 8 kg pieces. KE(2 kg) : KE(8 kg) is`,
+   opts: [`4 : 1`,`1 : 4`,`1 : 1`,`16 : 1`],
+   ans: 0,
+   sol: `KE₁/KE₂ = m₂/m₁ = 8/2 = <strong>4 : 1</strong>.<br><br>The masses go the opposite way round. 16 : 1 would come from squaring by mistake.`
+  },
+  {
+   tag: `Collision set · Q4`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A bomb of mass 9 kg initially at rest explodes into two pieces of masses 3 kg and 6 kg. The kinetic energy of the 3 kg mass is 216 J. The kinetic energy of the 6 kg mass will be :-`,
+   diagram: DIAGRAMS.bomb(),
+   opts: [`108 J`,`213 J`,`432 J`,`54 J`],
+   ans: 0,
+   sol: `Same p, so KE ∝ 1/m: KE(6 kg) = 216 × 3/6 = <strong>108 J</strong>.<br><br>Long way: p² = 2 × 3 × 216 = 1296 ⇒ p = 36. KE(6 kg) = 1296/(2 × 6) = 108 J ✓<br><br>432 J multiplies by 2 instead of dividing — the heavy piece always gets <em>less</em> KE.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ name: `Elastic hit — how much KE does the moving body keep?`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `A 3 kg ball at 4 m/s hits a 1 kg ball at rest, head on and elastically. Using v₁ = (m₁ − m₂)u/(m₁ + m₂), the 3 kg ball moves on at`,
+   diagram: DIAGRAMS.twoBalls({before:[{l:'3 kg',v:'4 m/s',d:1,r:24},{l:'1 kg',d:0,r:16}]}),
+   opts: [`2 m/s`,`4 m/s`,`1 m/s`,`2 m/s, backwards`],
+   ans: 0,
+   sol: `v₁ = (3 − 1) × 4/4 = <strong>2 m/s</strong>, forward. The heavier ball keeps moving forward — it does not bounce back.`
+  },
+  {
+   q: `Using v₂ = 2m₁u/(m₁ + m₂), the 1 kg ball moves off at`,
+   opts: [`6 m/s`,`2 m/s`,`8 m/s`,`4 m/s`],
+   ans: 0,
+   sol: `v₂ = 2 × 3 × 4/4 = <strong>6 m/s</strong>.<br><br>Check e = 1: separation 6 − 2 = 4 = approach 4 − 0 ✓`
+  },
+  {
+   q: `The 3 kg ball had 24 J of KE before. After the hit its KE is`,
+   opts: [`6 J (one-fourth)`,`24 J`,`18 J`,`12 J`],
+   ans: 0,
+   sol: `½ × 3 × 2² = <strong>6 J</strong>. The 1 kg ball gets ½ × 1 × 36 = 18 J. Total 6 + 18 = 24 J ✓ (elastic, no loss).<br><br>18 J is what the <em>other</em> ball gets.`
+  },
+  {
+   q: `KE = ½mv², and m is the same before and after. So (KE kept)/(KE before) = (v₁/u)² =`,
+   opts: [`[(m₁ − m₂)/(m₁ + m₂)]²`,`(m₁ − m₂)/(m₁ + m₂)`,`[2m₁/(m₁ + m₂)]²`,`m₂/(m₁ + m₂)`],
+   ans: 0,
+   sol: `v₁/u = (m₁ − m₂)/(m₁ + m₂), and KE goes with v², so square it: <strong>[(m₁ − m₂)/(m₁ + m₂)]²</strong>.<br><br>Check: (2/4)² = 1/4 → 24 × 1/4 = 6 J ✓. Do not forget the square.`
+  },
+  {
+   q: `The KE handed to the ball at rest is the rest of it: 4m₁m₂/(m₁ + m₂)². For 3 kg hitting 1 kg, this fraction is`,
+   opts: [`3/4`,`1/4`,`1/2`,`1`],
+   ans: 0,
+   sol: `4 × 3 × 1/16 = 12/16 = <strong>3/4</strong>. Check: 18 J out of 24 J ✓<br><br>Kept + given = 1/4 + 3/4 = 1, since nothing is lost.`
+  },
+  {
+   tag: `Collision set · Q7`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A moving mass of 8 kg collides elastically with a stationary mass of 2 kg. If E be the initial kinetic energy of the moving mass, the kinetic energy left with it after the collision will be`,
+   diagram: DIAGRAMS.twoBalls({before:[{l:'8 kg',v:'u',d:1,r:28},{l:'2 kg',d:0,r:16}]}),
+   opts: [`0.36E`,`0.80E`,`0.64E`,`0.08E`],
+   ans: 0,
+   sol: `v₁/u = (8 − 2)/(8 + 2) = 0.6.<br>KE left = (0.6)² E = <strong>0.36E</strong>.<br><br>Trap: 0.64E is the KE <em>given to the 2 kg ball</em> (4 × 8 × 2/100 = 0.64). The question asks for the KE <em>left with</em> the 8 kg ball.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ name: `Neutron hits a nucleus — fraction of KE lost`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A neutron has mass m. A deuteron is a nucleus made of 1 proton and 1 neutron. Its mass is about`,
+   opts: [`2m`,`m`,`m/2`,`4m`],
+   ans: 0,
+   sol: `A proton and a neutron have almost the same mass, m. So a deuteron ≈ <strong>2m</strong>. (An α-particle, 2p + 2n, is about 4m.)`
+  },
+  {
+   q: `A neutron hits a proton (same mass m) at rest, head on and elastically. After the hit the neutron`,
+   diagram: DIAGRAMS.twoBalls({before:[{l:'n',s:'m',v:'u',d:1,r:18},{l:'p',s:'m',d:0,r:18}]}),
+   opts: [`stops — it gives away all its KE`,`bounces back at the same speed`,`moves on at half speed`,`moves on at the same speed`],
+   ans: 0,
+   sol: `Equal masses, elastic, one at rest → <strong>velocities are exchanged</strong>. The neutron stops; the proton takes all the KE. Fraction lost = 1.<br><br>That is why hydrogen-rich materials (water, paraffin) are good at slowing neutrons.`
+  },
+  {
+   q: `A neutron (m) at speed u hits an α-particle (4m) at rest, head on and elastically. The neutron's velocity after is`,
+   opts: [`3u/5, back the way it came`,`3u/5, forward`,`u/5, back`,`2u/5, forward`],
+   ans: 0,
+   sol: `v₁ = (m − 4m)u/(m + 4m) = −3u/5. The minus sign means <strong>it comes back</strong> at 3u/5.<br><br>A light body hitting a heavy one always bounces back.`
+  },
+  {
+   q: `In rung 3 the neutron keeps (3/5)² = 9/25 of its KE. The fraction of KE it <strong>loses</strong> is`,
+   opts: [`16/25`,`9/25`,`3/5`,`2/5`],
+   ans: 0,
+   sol: `Lost = 1 − 9/25 = <strong>16/25</strong>.<br><br>2/5 is the trap: 1 − 3/5 uses speed, not speed². KE goes with v².`
+  },
+  {
+   q: `Shortcut: fraction lost = 4m₁m₂/(m₁ + m₂)². It gives 16/25 for the α-particle (check!). For a carbon nucleus (12m), the fraction lost is`,
+   opts: [`48/169`,`16/25`,`12/13`,`1/13`],
+   ans: 0,
+   sol: `α: 4 × 1 × 4/25 = 16/25 ✓<br>Carbon: 4 × 1 × 12/13² = <strong>48/169</strong> ≈ 0.28.<br><br>The closer the target's mass is to the neutron's, the more KE the neutron loses.`
+  },
+  {
+   tag: `NEET Major Test-02 · Q6`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A neutron makes a head on elastic collision with a stationary deuteron. The fractional energy loss of the neutron in the collision is`,
+   diagram: DIAGRAMS.twoBalls({before:[{l:'n',s:'m',v:'u',d:1,r:16},{l:'d',s:'2m',d:0,r:22}]}),
+   opts: [`8/9`,`4/9`,`8/27`,`2/3`],
+   ans: 0,
+   sol: `v₁ = (m − 2m)u/3m = −u/3. KE kept = (1/3)² = 1/9.<br>Fraction lost = 1 − 1/9 = <strong>8/9</strong>.<br><br>Shortcut: 4 × m × 2m/(3m)² = 8/9 ✓<br><br>2/3 is the speed trap: 1 − 1/3 without squaring.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ name: `Massive ball hits a tiny ball — the 2v result`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `Elastic, head on, m₂ at rest: v₂ = 2m₁u/(m₁ + m₂). If m₁ = m₂, the second ball moves at`,
+   opts: [`u`,`2u`,`u/2`,`0`],
+   ans: 0,
+   sol: `v₂ = 2mu/2m = <strong>u</strong>. Equal masses exchange velocities.`
+  },
+  {
+   q: `Now m₁ = 3m₂. Then v₂ =`,
+   opts: [`1.5u`,`2u`,`3u`,`0.75u`],
+   ans: 0,
+   sol: `v₂ = 2 × 3 × u/4 = <strong>1.5u</strong>. The struck ball moves faster than the ball that hit it.`
+  },
+  {
+   q: `Now m₁ = 9m₂. Then v₂ =`,
+   opts: [`1.8u`,`2u`,`0.9u`,`9u`],
+   ans: 0,
+   sol: `v₂ = 2 × 9 × u/10 = <strong>1.8u</strong>. As m₁ grows, v₂ climbs: u → 1.5u → 1.8u → …`
+  },
+  {
+   q: `Divide top and bottom by m₁: v₂ = 2u/(1 + m₂/m₁). When m₁ is very much bigger than m₂, m₂/m₁ → 0. So v₂ gets close to`,
+   opts: [`2u`,`u`,`infinity`,`0`],
+   ans: 0,
+   sol: `v₂ → 2u/(1 + 0) = <strong>2u</strong>. It never goes past 2u.<br><br>Also v₁ = (1 − m₂/m₁)u/(1 + m₂/m₁) → u: the massive ball carries on with almost no change.`
+  },
+  {
+   q: `Another way to see it: sit on the massive ball (its speed v hardly changes). The tiny ball comes at you at v. Since e = 1, it leaves you at v. Seen from the ground, its speed is`,
+   opts: [`v + v = 2v`,`v`,`0`,`v/2`],
+   ans: 0,
+   sol: `Relative to you it goes forward at v. You are yourself moving at v. Ground speed = v + v = <strong>2v</strong>.<br><br>Same answer as rung 4, no formula needed.`
+  },
+  {
+   tag: `NEET Major Test-02 · Q7`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A massive ball moving with speed v collides with a tiny ball which is initially at rest having a mass very much smaller than the mass of first ball. The collision is elastic, then just after the collision, the second ball will move with a speed equal to:`,
+   diagram: DIAGRAMS.twoBalls({before:[{l:'M',s:'massive',v:'v',d:1,r:30},{l:'m',d:0,r:9}]}),
+   opts: [`2v`,`v/2`,`v`,`v/4`],
+   ans: 0,
+   sol: `v₂ = 2Mv/(M + m) ≈ 2Mv/M = <strong>2v</strong>.<br><br>Check with e = 1: the massive ball keeps v, so separation = 2v − v = v = approach ✓<br><br>'v' is the equal-mass answer. Here the masses are not equal.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ name: `Fly apart with equal speeds — find the mass ratio`,
+ mode: 'class',
+ questions: [
+  {
+   q: `Elastic, head on, B at rest: v_A = (m_A − m_B)u/(m_A + m_B). Ball A bounces <strong>back</strong> when`,
+   opts: [`m_A &lt; m_B — A is lighter`,`m_A &gt; m_B`,`m_A = m_B`,`never`],
+   ans: 0,
+   sol: `v_A is negative only when (m_A − m_B) is negative, i.e. <strong>m_A &lt; m_B</strong>. A light ball hitting a heavier one comes back.`
+  },
+  {
+   q: `Elastic means speed of separation = speed of approach: v_B − v_A = u. Take forward as +. A bounces back at 2 m/s (v_A = −2) and B goes forward at 4 m/s. Then u =`,
+   opts: [`6 m/s`,`2 m/s`,`4 m/s`,`8 m/s`],
+   ans: 0,
+   sol: `u = v_B − v_A = 4 − (−2) = <strong>6 m/s</strong>.<br><br>When they move in opposite directions, the speeds add.`
+  },
+  {
+   q: `If A and B fly apart in opposite directions with the <strong>same</strong> speed v (v_A = −v, v_B = +v), the e = 1 equation gives`,
+   opts: [`u = 2v`,`u = v`,`u = 0`,`u = v/2`],
+   ans: 0,
+   sol: `u = v_B − v_A = v − (−v) = <strong>2v</strong>. Each ball leaves with half the speed A came in with.`
+  },
+  {
+   q: `With numbers: m_A = 1 kg at 6 m/s. After the hit A goes back at 2 m/s and B forward at 4 m/s. Momentum gives m_B =`,
+   diagram: DIAGRAMS.twoBalls({before:[{l:'A',s:'1 kg',v:'6 m/s',d:1,r:18},{l:'B',s:'?',d:0,r:24}],after:[{l:'A',v:'2 m/s',d:-1,r:18},{l:'B',v:'4 m/s',d:1,r:24}]}),
+   opts: [`2 kg`,`1 kg`,`4 kg`,`1.5 kg`],
+   ans: 0,
+   sol: `1 × 6 = 1 × (−2) + m_B × 4 ⇒ 4m_B = 8 ⇒ <strong>m_B = 2 kg</strong>.<br><br>KE check: ½(1)(36) = 18 J; after ½(1)(4) + ½(2)(16) = 2 + 16 = 18 J ✓<br><br>Do not drop the minus sign on A's velocity.`
+  },
+  {
+   q: `Again m_A = 1 kg at 6 m/s. This time A goes back at 3 m/s and B goes forward at 3 m/s (equal speeds). Then m_B =`,
+   opts: [`3 kg`,`1 kg`,`2 kg`,`6 kg`],
+   ans: 0,
+   sol: `1 × 6 = 1 × (−3) + m_B × 3 ⇒ 3m_B = 9 ⇒ <strong>m_B = 3 kg</strong>.<br><br>Note u = 6 = 2 × 3, as rung 3 said. KE: 18 = 4.5 + 13.5 ✓`
+  },
+  {
+   tag: `Collision set · Q3`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> Particle A makes a perfectly elastic collision with another stationary particle B. They fly apart in opposite directions with equal speeds. The mass ratio will be :`,
+   diagram: DIAGRAMS.twoBalls({before:[{l:'A',v:'u',d:1,r:16},{l:'B',d:0,r:24}],after:[{l:'A',v:'v',d:-1,r:16},{l:'B',v:'v',d:1,r:24}]}),
+   opts: [`1/3`,`1/2`,`1/4`,`1/√3`],
+   ans: 0,
+   sol: `e = 1: u = v − (−v) = 2v.<br>Momentum: m_A(2v) = m_A(−v) + m_B(v) ⇒ 3m_A = m_B.<br>Mass ratio m_A/m_B = <strong>1/3</strong>.<br><br>Same as rung 5: 1 kg and 3 kg. A must be the lighter one, because it bounced back.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 12 ---------------------------------- */
+{
+ name: `Collision inside a circular tube — when do they meet again?`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A ball m at speed v₀ hits a ball 3m at rest, head on and elastically. The velocity of m just after is`,
+   diagram: DIAGRAMS.tube(),
+   opts: [`v₀/2, turned back`,`v₀/2, forward`,`v₀, turned back`,`zero`],
+   ans: 0,
+   sol: `v₁ = (m − 3m)v₀/(m + 3m) = −v₀/2. <strong>m turns back at v₀/2</strong>.`
+  },
+  {
+   q: `The velocity of 3m just after the hit is`,
+   opts: [`v₀/2, forward`,`v₀/4`,`3v₀/4`,`v₀`],
+   ans: 0,
+   sol: `v₂ = 2m·v₀/4m = <strong>v₀/2</strong>, forward.<br><br>Check e = 1: v₀/2 − (−v₀/2) = v₀ = approach ✓`
+  },
+  {
+   q: `The tube is smooth. The wall only pushes each ball towards the centre, at 90° to its motion. So, going round, each ball's speed`,
+   opts: [`stays the same`,`slowly decreases`,`keeps increasing`,`becomes zero after half a round`],
+   ans: 0,
+   sol: `A force at 90° to the motion does no work. Only the direction changes, not the speed. Both balls keep <strong>v₀/2</strong> all the way round.`
+  },
+  {
+   q: `Two runners start together on a round track 100 m long and run in <strong>opposite</strong> directions at 3 m/s and 2 m/s. They meet again after`,
+   opts: [`20 s`,`100 s`,`50 s`,`33 s`],
+   ans: 0,
+   sol: `To meet, together they must cover the whole track, 100 m. They close the gap at 3 + 2 = 5 m/s. Time = 100/5 = <strong>20 s</strong>.<br><br>100 s uses 3 − 2 = 1 m/s — that is for running the <em>same</em> way.`
+  },
+  {
+   q: `In the tube, after the hit the two balls go round in opposite directions, each at v₀/2. To meet again they must together cover`,
+   opts: [`one full circle, 2πR, closing at speed v₀`,`half a circle, πR, closing at v₀/2`,`2πR, closing at v₀/2`,`πR, closing at v₀`],
+   ans: 0,
+   sol: `Exactly like the runners: total distance = <strong>2πR</strong>, closing speed = v₀/2 + v₀/2 = <strong>v₀</strong>.`
+  },
+  {
+   tag: `Collision set · Q6`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> In a smooth circular tube of radius R, a particle of mass 'm' moving with speed v₀ hits another particle of mass '3m' at rest as shown. The time after which the next collision takes place (assume elastic collision).`,
+   diagram: DIAGRAMS.tube(),
+   opts: [`2πR/v₀`,`πR/v₀`,`πR/2v₀`,`πR/4v₀`],
+   ans: 0,
+   sol: `After the hit: m goes back at v₀/2, 3m goes forward at v₀/2.<br>t = (total distance)/(closing speed) = 2πR/v₀ = <strong>2πR/v₀</strong>.<br><br>Trap πR/v₀: thinking they only need half a circle. They meet only when their two paths add up to one full circle.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 13 ---------------------------------- */
+{
+ name: `Oblique elastic hit with equal masses`,
+ mode: 'class',
+ questions: [
+  {
+   q: `Equal masses, one at rest, elastic, but <em>not</em> head on. After the hit the two bodies move`,
+   diagram: DIAGRAMS.obliqueAfter(),
+   opts: [`at 90° to each other`,`along the same line`,`always at 45° each to the old line`,`in opposite directions`],
+   ans: 0,
+   sol: `This is the result from your lecture (Ladder 17): equal masses + one at rest + elastic → <strong>θ + φ = 90°</strong>. The two angles can be anything, but they always add to 90°.`
+  },
+  {
+   q: `Equal masses M. Momentum (vectors): Mv = Mv₁ + Mv₂. Since v₁ ⊥ v₂, the three speeds form a right triangle, so`,
+   opts: [`v² = v₁² + v₂²`,`v = v₁ + v₂`,`v² = v₁² − v₂²`,`v = v₁ − v₂`],
+   ans: 0,
+   sol: `v₁ and v₂ are the two short sides, v is the long side. Pythagoras: <strong>v² = v₁² + v₂²</strong>.<br><br>v = v₁ + v₂ would be true only if they moved along one line.`
+  },
+  {
+   q: `You get the same rule straight from KE. Elastic: ½Mv² = ½Mv₁² + ½Mv₂². Cancel ½M:`,
+   opts: [`v² = v₁² + v₂² — no angle is needed`,`v = v₁ + v₂`,`v₁ = v₂`,`v² = 2v₁v₂`],
+   ans: 0,
+   sol: `<strong>v² = v₁² + v₂²</strong>.<br><br>Big idea: for equal masses in an elastic hit, KE alone gives you the second speed. You do not need the angle θ at all.`
+  },
+  {
+   q: `Two equal blocks on a smooth floor. Block 1 at 5 m/s hits block 2 at rest elastically and goes off at 3 m/s. Block 2 moves at`,
+   diagram: DIAGRAMS.obliqueAfter({th:53,ph:37,u:'5 m/s',v1:'3 m/s',v2:'v₂ = ?'}),
+   opts: [`4 m/s`,`2 m/s`,`8 m/s`,`5 m/s`],
+   ans: 0,
+   sol: `v₂ = √(5² − 3²) = √16 = <strong>4 m/s</strong>.<br><br>2 m/s is the trap 5 − 3. Subtract the <em>squares</em>, not the speeds.`
+  },
+  {
+   q: `Block 1 at speed v hits an identical block at rest elastically and leaves at v/2. Block 2 moves at`,
+   opts: [`(√3/2)v`,`v/2`,`(3/4)v`,`v`],
+   ans: 0,
+   sol: `v₂² = v² − v²/4 = 3v²/4 ⇒ <strong>v₂ = (√3/2)v</strong>.<br><br>(3/4)v is v₂² written as if it were v₂ — remember the square root.`
+  },
+  {
+   tag: `NEET Major Test-02 · Q11`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> On a frictionless surface, a block of mass M moving at speed v collides elastically with another block of same mass M which is initially at rest. After collision the first block moves at an angle θ to its initial direction and has a speed v/3. The second block's speed after the collision is :-`,
+   diagram: DIAGRAMS.obliqueAfter({th:60,ph:30,u:'v',v1:'v/3',v2:'v₂ = ?',cap:'equal masses · elastic · frictionless'}),
+   opts: [`(2√2/3)v`,`(√3/2)v`,`(3/4)v`,`(3/√2)v`],
+   ans: 0,
+   sol: `KE (elastic, equal masses): v² = (v/3)² + v₂²<br>v₂² = v² − v²/9 = 8v²/9 ⇒ <strong>v₂ = (2√2/3)v</strong>.<br><br>θ is never needed. (√3/2)v is the answer to rung 5, where the first block left with v/2, not v/3.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 14 ---------------------------------- */
+{
+ name: `Projectile bounces on the field — where is the second landing?`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A ball is thrown at u = 10√2 m/s at 45° on level ground. Its range R = u² sin 2θ/g is (g = 10 m/s²)`,
+   diagram: DIAGRAMS.projBounce(),
+   opts: [`20 m`,`10 m`,`40 m`,`20√2 m`],
+   ans: 0,
+   sol: `u² = 200, sin 90° = 1. R = 200/10 = <strong>20 m</strong>.`
+  },
+  {
+   q: `The ground is smooth, so at the bounce it pushes only straight up. Which part of the velocity changes?`,
+   opts: [`Only the vertical part: it turns upward and becomes e times. The horizontal part stays the same`,`Only the horizontal part becomes e times`,`Both parts become e times`,`Nothing changes`],
+   ans: 0,
+   sol: `No sideways force → <strong>horizontal velocity u cos θ stays the same</strong>.<br>Vertical: the ground is fixed, so e = (speed up after)/(speed down before) → vertical becomes <strong>e·u sin θ</strong>, upward.<br><br>Same as the ball bouncing on the floor in your lecture — only now it also moves sideways.`
+  },
+  {
+   q: `Just before landing the ball has horizontal 10 m/s and vertical 10 m/s (downward). With e = 0.5, just after the bounce it has`,
+   opts: [`horizontal 10 m/s, vertical 5 m/s up`,`horizontal 5 m/s, vertical 5 m/s up`,`horizontal 10 m/s, vertical 10 m/s up`,`horizontal 5 m/s, vertical 10 m/s up`],
+   ans: 0,
+   sol: `Horizontal unchanged: <strong>10 m/s</strong>. Vertical: 0.5 × 10 = <strong>5 m/s</strong>, upward.`
+  },
+  {
+   q: `Second hop: time in air = 2 × (vertical speed)/g, distance = (horizontal speed) × time. With 10 m/s horizontal and 5 m/s vertical, the second hop is`,
+   opts: [`10 m long (1 s in the air)`,`20 m long`,`5 m long`,`2.5 m long`],
+   ans: 0,
+   sol: `Time = 2 × 5/10 = 1 s. Distance = 10 × 1 = <strong>10 m</strong>.<br><br>See: 10 m = 0.5 × 20 m = e × R₁. In letters: R₂ = 2(u cos θ)(e u sin θ)/g = e·u² sin 2θ/g = <strong>e·R₁</strong>.<br><br>The hop shrinks by e (not e²), because only the time of flight shrinks; the horizontal speed does not.`
+  },
+  {
+   q: `So, measured from the starting point, where does the ball land the second time?`,
+   opts: [`30 m`,`20 m`,`10 m`,`25 m`],
+   ans: 0,
+   sol: `R₁ + R₂ = 20 + 10 = <strong>30 m</strong> = (1 + e) × R₁.`
+  },
+  {
+   tag: `Collision set · Q2`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A projectile is fired with a speed u at an angle θ above the horizontal field. The coefficient of restitution between the projectile and field is e. Find the position from the starting point when the projectile will land at its second collision.`,
+   diagram: DIAGRAMS.projBounce(),
+   opts: [`(1 + e)u² sin 2θ/g`,`e²u² sin 2θ/g`,`(1 − e²)u² sin 2θ/g`,`(1 − e)u² sin θ cos θ/g`],
+   ans: 0,
+   sol: `First landing: R₁ = u² sin 2θ/g.<br>Second hop: R₂ = e·R₁ (rung 4).<br>Second landing from start: R₁ + eR₁ = <strong>(1 + e)u² sin 2θ/g</strong>.<br><br>Check: 1.5 × 20 = 30 m ✓ (rung 5)<br><br>Trap e²: heights fall as e² after a bounce, but horizontal distance falls only as e.`
+  }
+ ]
+}
+
+];
+
+
+const STORAGE_KEY = 'padipucast_collision_test_ladder_v1';
+
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||'', lbl:raw.lbl||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; ${q.lbl||'Original question'}</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
