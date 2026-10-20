@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Capacitors &#183; Question Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+.mt{border-collapse:collapse;margin:12px 0 4px;font-size:13.5px;}
+.mt th,.mt td{border:1px solid var(--border2);padding:6px 10px;text-align:left;vertical-align:top;}
+.mt th{background:var(--tag-bg);font-weight:600;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Capacitors &#183; Question Ladders</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Capacitors &#183; Question Ladders<br>22 concepts, step by step</h1></div>
+    <p id="home-sub">Every idea from your <strong>Capacitors (structured) notes</strong>, segregated concept by concept, with all <strong>17 questions</strong> from the notes as the &#9733; tops (JEE Main 2019&#8211;2024, Example 47 and your H-W). Teaching order: dielectric slabs (series layers &#8594; side by side &#8594; L-shape &#8594; foil) &#8594; dielectric strength &#8594; slab with battery ON / OFF &#8594; energy &#8594; sharing of charge (like plates, switches, energy loss, unlike plates) &#8594; dielectric + sharing mixes &#8594; battery work &amp; heat &#8594; series / parallel &#8594; redrawing circuits &#8594; symmetric circuits &#8594; KCL &amp; KVL in capacitors.<br><br>Each ladder has <strong>5 build-up rungs</strong>, each teaching one small idea, then the &#9733; question. Four notes-only concepts (unlike plates, isolated plates, symmetry, KCL/KVL) have no PYQ in the notes, so their &#9733; is an <strong>exam-level question</strong> made for that concept. Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 22 ladders &#215; 6 rungs = 132 questions.<br><br><em>Battery connected &#8594; V stays fixed. Battery removed &#8594; Q stays fixed. Heat = W<sub>battery</sub> &#8722; &#916;U.</em></p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">6</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 6</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Capacitors  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1d4ed8';
+const FILL_T='#e6f1f4', FILL_B='#c9e2e9', FILL_C='#fbe7cc', FILL_P='#ece4f6', BG='#f7f6f3';
+let _uid=0;
+function _nid(){ return 'm'+(++_uid); }
+const _svg=(W,H,s)=>`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+function _tx(x,y,t,o){ o=o||{}; return `<text x="${x}" y="${y}" ${FS} font-size="${o.s||13}" fill="${o.c||INK}" text-anchor="${o.a||'middle'}"${o.b?' font-weight="700"':''}${o.i?' font-style="italic"':''}>${t}</text>`; }
+function _ln(x0,y0,x1,y1,c,w,dash){ return `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c||INK}" stroke-width="${w||1.8}"${dash?` stroke-dasharray="${dash}"`:''} stroke-linecap="round"/>`; }
+function _w(pts,c,dash){ return `<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${c||INK}" stroke-width="1.8" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`; }
+function _dot(x,y,c){ return `<circle cx="${x}" cy="${y}" r="3.2" fill="${c||INK}"/>`; }
+// double-headed dimension arrow
+function _dim(x0,y0,x1,y1,c){ c=c||GREY; const a=_nid();
+  return `<defs><marker id="${a}e" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><polygon points="0 0,8 3.5,0 7" fill="${c}"/></marker><marker id="${a}s" markerWidth="8" markerHeight="7" refX="1" refY="3.5" orient="auto"><polygon points="8 0,0 3.5,8 7" fill="${c}"/></marker></defs><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="1.3" marker-start="url(#${a}s)" marker-end="url(#${a}e)"/>`; }
+// capacitor sitting on a wire. v=false: wire is horizontal (plates vertical). v=true: wire is vertical (plates horizontal)
+function _cap(x,y,v,l,o){ o=o||{}; const g=o.slab?8:5, L=13; let s='';
+  if(!v){
+    s+=`<rect x="${x-g-1}" y="${y-L-1}" width="${2*g+2}" height="${2*L+2}" fill="${BG}"/>`;
+    if(o.slab) s+=`<rect x="${x-g+2}" y="${y-L+2}" width="${2*g-4}" height="${2*L-4}" fill="${FILL_C}" stroke="${AMB}" stroke-width="1"/>`;
+    s+=_ln(x-g,y-L,x-g,y+L,o.c||INK,2.6)+_ln(x+g,y-L,x+g,y+L,o.c||INK,2.6);
+    if(o.pm){ s+=_tx(x-g-3,y-L-3,o.pm[0],{s:12,c:RED,b:1,a:'end'})+_tx(x+g+3,y-L-3,o.pm[1],{s:12,c:BLU,b:1,a:'start'}); }
+    if(l) s+=_tx(x+(o.lx||0),y+(o.ly!=null?o.ly:-L-7),l,{s:o.s||12.5});
+  } else {
+    s+=`<rect x="${x-L-1}" y="${y-g-1}" width="${2*L+2}" height="${2*g+2}" fill="${BG}"/>`;
+    if(o.slab) s+=`<rect x="${x-L+2}" y="${y-g+2}" width="${2*L-4}" height="${2*g-4}" fill="${FILL_C}" stroke="${AMB}" stroke-width="1"/>`;
+    s+=_ln(x-L,y-g,x+L,y-g,o.c||INK,2.6)+_ln(x-L,y+g,x+L,y+g,o.c||INK,2.6);
+    if(o.pm){ s+=_tx(x-L-4,y-g+1,o.pm[0],{s:12,c:RED,b:1,a:'end'})+_tx(x-L-4,y+g+11,o.pm[1],{s:12,c:BLU,b:1,a:'end'}); }
+    if(l) s+=_tx(x+(o.lx!=null?o.lx:L+6),y+(o.ly||4),l,{s:o.s||12.5,a:o.a||'start'});
+  }
+  return s; }
+// battery: long plate = +.  flip puts + on the other side
+function _bat(x,y,v,l,o){ o=o||{}; const g=5; let s='';
+  if(!v){ const p=o.flip?1:-1;
+    s+=`<rect x="${x-g-1}" y="${y-15}" width="${2*g+2}" height="30" fill="${BG}"/>`;
+    s+=_ln(x+p*g,y-14,x+p*g,y+14,INK,2)+_ln(x-p*g,y-7,x-p*g,y+7,INK,4.2);
+    s+=_tx(x+p*(g+8),y-9,'+',{s:12,c:RED,b:1});
+    if(l) s+=_tx(x+(o.lx||0),y+(o.ly!=null?o.ly:30),l,{s:12.5});
+  } else { const p=o.flip?1:-1;
+    s+=`<rect x="${x-15}" y="${y-g-1}" width="30" height="${2*g+2}" fill="${BG}"/>`;
+    s+=_ln(x-14,y+p*g,x+14,y+p*g,INK,2)+_ln(x-7,y-p*g,x+7,y-p*g,INK,4.2);
+    s+=(o.a==='start')?_tx(x-20,y+p*g+4,'+',{s:12,c:RED,b:1,a:'end'}):_tx(x+20,y+p*g+4,'+',{s:12,c:RED,b:1,a:'start'});
+    if(l) s+=_tx(x+(o.lx!=null?o.lx:-20),y+(o.ly||4),l,{s:12.5,a:o.a||'end'});
+  }
+  return s; }
+// switch on a horizontal wire between x1 and x2
+function _sw(x1,x2,y,l,open){ let s=`<rect x="${x1}" y="${y-3}" width="${x2-x1}" height="6" fill="${BG}"/>`;
+  s+=_dot(x1,y)+_dot(x2,y)+(open?_ln(x1,y,x2-4,y-14,INK,2):_ln(x1,y,x2,y-3,INK,2));
+  if(l) s+=_tx((x1+x2)/2,y-18,l,{s:12,i:1});
+  return s; }
+
+// ---------- parallel-plate picture with dielectric regions ----------
+// regions: {x:[fx0,fx1], y:[fy0,fy1], f:fill, l:label}; fractions of plate width / gap
+function _plates(o){
+  const W=o.W||330, X0=o.X0||70, X1=o.X1||250, Yt=o.Yt||46, Yb=o.Yb||156, H=o.H||(o.bat?220:200);
+  const gx=f=>X0+f*(X1-X0), gy=f=>Yt+f*(Yb-Yt); let s='';
+  (o.regions||[]).forEach(r=>{
+    s+=`<rect x="${gx(r.x[0])}" y="${gy(r.y[0])}" width="${gx(r.x[1])-gx(r.x[0])}" height="${gy(r.y[1])-gy(r.y[0])}" fill="${r.f||'none'}" stroke="${r.f?AMB:GREY}" stroke-width="0.9"${r.f?'':' stroke-dasharray="3 3"'}/>`;
+    if(r.l) s+=_tx((gx(r.x[0])+gx(r.x[1]))/2,(gy(r.y[0])+gy(r.y[1]))/2+5,r.l,{s:r.s||13.5,c:r.f?INK:GREY,i:!r.f});
+  });
+  (o.foils||[]).forEach(fy=>{ s+=_ln(X0,gy(fy),X1,gy(fy),'#555',3.2); s+=_tx(X0-10,gy(fy)+4,'F',{s:12,a:'end',b:1}); });
+  s+=`<rect x="${X0}" y="${Yt-6}" width="${X1-X0}" height="6" fill="${INK}"/><rect x="${X0}" y="${Yb}" width="${X1-X0}" height="6" fill="${INK}"/>`;
+  const cx=(X0+X1)/2;
+  if(o.bat){
+    const bx=X1+(o.right&&o.right.length?100:60);
+    s+=_w([[cx,Yt-6],[cx,Yt-26],[bx,Yt-26],[bx,Yb+30],[cx,Yb+30],[cx,Yb+6]]);
+    s+=_bat(bx,(Yt+Yb)/2,true,o.bat,{lx:22,a:'start'});
+  } else { s+=_ln(cx,Yt-6,cx,Yt-28)+_ln(cx,Yb+6,cx,Yb+28); }
+  if(o.q){ s+=_tx(X0-8,Yt,o.q[0],{s:13,c:RED,b:1,a:'end'})+_tx(X0-8,Yb+8,o.q[1],{s:13,c:BLU,b:1,a:'end'}); }
+  (o.right||[]).forEach((d,i)=>{ const x=X1+14+(o.bat?0:0)+i*0; s+=_dim(x,gy(d.y[0])+2,x,gy(d.y[1])-2); s+=_tx(x+8,(gy(d.y[0])+gy(d.y[1]))/2+5,d.l,{s:12.5,a:'start'}); });
+  (o.bottom||[]).forEach(d=>{ const y=Yb+(o.bat?44:20); s+=_dim(gx(d.x[0])+2,y,gx(d.x[1])-2,y); s+=_tx((gx(d.x[0])+gx(d.x[1]))/2,y+16,d.l,{s:12.5}); });
+  if(o.top) s+=_tx(cx,14,o.top,{s:12.5,c:GREY});
+  if(o.left) s+=_tx(X0-14,(Yt+Yb)/2+5,o.left,{s:13,a:'end'});
+  return _svg(W,H+(o.bottom&&o.bat?20:0),s);
+}
+
+const DIAGRAMS = {
+ // ---- ladder 1: layers across the gap (series) ----
+ airGap: ()=>_plates({regions:[{x:[0,1],y:[0,1],l:'air'}], right:[{y:[0,1],l:'d'}], top:'plate area A'}),
+ slabFull: ()=>_plates({regions:[{x:[0,1],y:[0,1],f:FILL_B,l:'K'}], right:[{y:[0,1],l:'d'}], top:'plate area A'}),
+ slabT: (k,t,r)=>_plates({regions:[{x:[0,1],y:[0,0.45],f:FILL_B,l:k},{x:[0,1],y:[0.45,1],l:'air'}], right:[{y:[0,0.45],l:t},{y:[0.45,1],l:r}], top:'plate area A'}),
+ twoSlabs: ()=>_plates({regions:[{x:[0,1],y:[0,0.25],f:FILL_C,l:'K₁ = 2',s:12.5},{x:[0,1],y:[0.25,1],f:FILL_B,l:'K₂ = 3'}], right:[{y:[0,0.25],l:'1 mm'},{y:[0.25,1],l:'3 mm'}], top:'A = 30 cm²'}),
+ jee2023: ()=>_plates({regions:[{x:[0,1],y:[0,0.5],f:FILL_B,l:'K = 5'},{x:[0,1],y:[0.5,1],l:'air'}], right:[{y:[0,0.5],l:'1 mm'},{y:[0.5,1],l:'1 mm'}], top:'A = 40 cm²,  d = 2 mm'}),
+ // ---- ladder 2/3: side by side, mixed ----
+ halfK: ()=>_plates({regions:[{x:[0,0.5],y:[0,1],f:FILL_B,l:'K'},{x:[0.5,1],y:[0,1],l:'air'}], right:[{y:[0,1],l:'d'}], bottom:[{x:[0,0.5],l:'A/2'},{x:[0.5,1],l:'A/2'}]}),
+ threeK: ()=>_plates({regions:[{x:[0,0.5],y:[0,1],f:FILL_C,l:'K₃'},{x:[0.5,1],y:[0,0.5],f:FILL_B,l:'K₁'},{x:[0.5,1],y:[0.5,1],f:FILL_T,l:'K₂'}], right:[{y:[0,0.5],l:'d/2'},{y:[0.5,1],l:'d/2'}], bottom:[{x:[0,0.5],l:'A/2'},{x:[0.5,1],l:'A/2'}], top:'air value C = 2 μF'}),
+ lShape: ()=>_plates({regions:[{x:[0,0.5],y:[0,0.5],l:'air'},{x:[0,0.5],y:[0.5,1],f:FILL_B,l:'K'},{x:[0.5,1],y:[0,1],f:FILL_B,l:'K'}], right:[{y:[0,1],l:'d'}], bottom:[{x:[0,0.5],l:'A/2'},{x:[0.5,1],l:'A/2'}], left:'d/2 ↕'}),
+ // ---- ladder 4: foil ----
+ foil: ()=>_plates({regions:[{x:[0,1],y:[0,0.35],f:FILL_C,l:'K₁'},{x:[0,1],y:[0.35,1],f:FILL_B,l:'K₂'}], foils:[0.35], right:[{y:[0,0.35],l:'t₁'},{y:[0.35,1],l:'t₂'}]}),
+ foilBat: ()=>_plates({regions:[{x:[0,1],y:[0,0.34],f:FILL_C,l:'εr₁ = 3',s:12},{x:[0,1],y:[0.34,1],f:FILL_B,l:'εr₂ = 4'}], foils:[0.34], right:[{y:[0,0.34],l:'0.5 mm'},{y:[0.34,1],l:'1 mm'}], bat:'100 V', W:420}),
+ // ---- ladder 5/6/7: plates with battery, isolated plates ----
+ plateV: ()=>_plates({regions:[{x:[0,1],y:[0,1],l:'air'}], right:[{y:[0,1],l:'d'}], bat:'V', W:400}),
+ slabBat: ()=>_plates({regions:[{x:[0,1],y:[0,1],f:FILL_B,l:'K'}], bat:'V (stays)', W:380}),
+ slabIso: ()=>_plates({regions:[{x:[0,1],y:[0,1],f:FILL_B,l:'K'}], q:['+Q','−Q'], top:'battery removed — Q is stuck'}),
+
+ // ---- sharing loop: two capacitors + switch ----
+ sharing: (l1,l2,open)=>{ let s=_w([[130,40],[330,40],[330,170],[130,170],[130,40]]);
+   s+=_sw(210,250,40,'S',open!==false);
+   s+=_cap(130,105,true,l1,{lx:-20,a:'end'})+_cap(330,105,true,l2);
+   return _svg(450,200,s); },
+ // ---- Q11: battery, S1, C1, S2, C2 ----
+ switches3: ()=>{ let s=_w([[50,40],[320,40],[320,170],[50,170],[50,40]])+_ln(190,40,190,170);
+   s+=_sw(95,135,40,'S₁',true)+_sw(235,275,40,'S₂',true)+_dot(190,40)+_dot(190,170);
+   s+=_bat(50,105,true,'10 V')+_cap(190,105,true,'2 μF (C₁)')+_cap(320,105,true,'8 μF (C₂)');
+   return _svg(420,200,s); },
+ // ---- Q24 switch A/B ----
+ switchAB: ()=>{ let s=_w([[50,40],[150,40]])+_w([[190,40],[300,40],[300,180],[50,180],[50,40]])+_w([[170,82],[170,180]]);
+   s+=_dot(150,40)+_dot(190,40)+_dot(170,82)+_ln(170,82,150,42,INK,2.2)+_ln(170,82,188,44,GREY,1.4,'3 3');
+   s+=_tx(146,30,'A',{s:12.5,b:1})+_tx(194,30,'B',{s:12.5,b:1})+_tx(180,96,'S',{s:12,i:1,a:'start'});
+   s+=_bat(50,110,true,'ε')+_cap(170,135,true,'C')+_cap(300,110,true,'3C');
+   s+=_dot(170,180);
+   return _svg(380,210,s); },
+ // ---- unlike plates joined ----
+ unlike: (l1,l2)=>{ let s=_w([[80,50],[80,150]])+_w([[260,50],[260,150]])+_ln(80,50,260,50)+_ln(80,150,260,150);
+   s+=_cap(170,50,false,l1,{pm:['+','−'],ly:-32})+_cap(170,150,false,'',{pm:['−','+']})+_tx(170,182,l2,{s:12.5});
+   s+=_dot(80,100)+_dot(260,100)+_ln(40,100,80,100,GREY,1.4,'3 3')+_ln(260,100,300,100,GREY,1.4,'3 3');
+   return _svg(340,200,s); },
+ // ---- key K circuit (JEE 2022) ----
+ keyK: ()=>{ let s=_w([[50,40],[320,40],[320,175],[50,175],[50,40]])+_ln(185,40,185,175);
+   s+=`<rect x="235" y="33" width="40" height="14" fill="${BG}"/><circle cx="255" cy="40" r="8" fill="none" stroke="${INK}" stroke-width="1.6"/>`+_dot(255,40)+_tx(255,26,'K',{s:12.5,i:1});
+   s+=_dot(185,40)+_dot(185,175)+_bat(50,108,true,'V')+_cap(185,108,true,'C')+_cap(320,108,true,'C');
+   return _svg(400,200,s); },
+ // ---- Example 47 / reversed connection ----
+ recharge: (batL,flip,capPm)=>{ let s=_w([[80,50],[80,150],[260,150],[260,50],[80,50]]);
+   s+=_cap(170,50,false,'C (charged to V)',{pm:capPm||['+','−'],ly:-32})+_bat(170,150,false,batL,{flip:flip});
+   return _svg(340,200,s); },
+ // ---- series chain on a battery ----
+ seriesLoop: (labels,batL,iso)=>{ const n=labels.length, x0=60, x1=320; let s=_w([[x0,50],[x1,50],[x1,160],[x0,160],[x0,50]]);
+   const xs=labels.map((_,i)=>x0+(i+1)*(x1-x0)/(n+1));
+   if(iso) s+=`<ellipse cx="${(xs[0]+xs[1])/2}" cy="50" rx="${(xs[1]-xs[0])/2+4}" ry="24" fill="none" stroke="${AMB}" stroke-width="1.5" stroke-dasharray="4 3"/>`+_tx((xs[0]+xs[1])/2,98,'isolated part',{s:11,c:AMB});
+   labels.forEach((l,i)=>{ s+=_cap(xs[i],50,false,l); });
+   s+=_bat((x0+x1)/2,160,false,batL,{ly:30});
+   return _svg(380,205,s); },
+ // ---- JEE 2019: 4, 8, 4, 6, 12 μF ----
+ mixed2019: ()=>{ let s=_w([[40,40],[310,40],[310,180],[40,180],[40,40]])+_ln(185,40,185,180);
+   s+=_dot(185,40)+_dot(185,180);
+   s+=_bat(40,110,true,'')+_cap(112,40,false,'4 μF')+_cap(250,40,false,'4 μF')+_cap(185,110,true,'8 μF',{lx:-20,a:'end'});
+   s+=_cap(310,85,true,'6 μF')+_cap(310,140,true,'12 μF');
+   s+=`<ellipse cx="282" cy="100" rx="56" ry="88" fill="none" stroke="${RED}" stroke-width="1.3" stroke-dasharray="5 4"/>`;
+   return _svg(400,210,s); },
+ // ---- H-W circuit (Q21/22) ----
+ hwAB: ()=>{ let s=_w([[40,80],[350,80]])+_w([[55,80],[55,36],[235,36],[235,80]])+_w([[145,80],[145,122],[312,122],[312,80]])+_w([[40,80],[40,185],[350,185],[350,80]]);
+   s+=_cap(100,80,false,'C₁ = 10 μF',{ly:24})+_cap(190,80,false,'C₂ = 20 μF',{ly:24,lx:2})+_cap(275,80,false,'C₃ = 30 μF',{ly:-18});
+   s+=_dot(40,80)+_dot(350,80)+_dot(145,80)+_dot(235,80)+_dot(312,80)+_dot(55,80);
+   s+=_tx(30,76,'A',{s:13,b:1,a:'end'})+_tx(360,76,'B',{s:13,b:1,a:'start'})+_bat(195,185,false,'10 V',{ly:30});
+   return _svg(390,225,s); },
+ hwRedraw: ()=>{ let s=_w([[80,30],[80,170]])+_w([[260,30],[260,170]]);
+   [[40,'C₁ = 10 μF'],[100,'C₂ = 20 μF'],[160,'C₃ = 30 μF']].forEach(([y,l])=>{ s+=_ln(80,y,260,y)+_cap(170,y,false,l,{ly:-16}); });
+   s+=_tx(70,104,'A',{s:13,b:1,a:'end'})+_tx(270,104,'B',{s:13,b:1,a:'start'});
+   return _svg(340,190,s); },
+ // ---- capacitor bridge ----
+ bridge: (o)=>{ o=o||{}; const L=60,R=300,T=o.direct?80:40,B=o.direct?180:160,M=(L+R)/2, mid=(T+B)/2; let s='';
+   s+=_w([[L,T],[R,T]])+_w([[L,B],[R,B]])+_ln(L,T,L,B)+_ln(R,T,R,B)+_ln(M,T,M,B);
+   s+=_ln(20,mid,L,mid)+_ln(R,mid,R+40,mid)+_dot(L,mid)+_dot(R,mid)+_dot(M,T)+_dot(M,B);
+   s+=_tx(14,mid+5,'A',{s:13,b:1,a:'end'})+_tx(R+46,mid+5,'B',{s:13,b:1,a:'start'});
+   s+=_cap((L+M)/2,T,false,o.c1)+_cap((M+R)/2,T,false,o.c2)+_cap((L+M)/2,B,false,o.c3,{ly:28})+_cap((M+R)/2,B,false,o.c4,{ly:28})+_cap(M,mid,true,o.c5);
+   if(o.direct){ s+=_w([[L,T],[L,30],[R,30],[R,T]])+_cap(M,30,false,o.direct,{ly:-17}); }
+   return _svg(370,o.direct?225:200,s); },
+ // ---- KCL junction (slide 28) ----
+ junction: ()=>{ let s=_ln(30,80,320,80)+_ln(175,80,175,190);
+   s+=`<ellipse cx="175" cy="92" rx="66" ry="40" fill="none" stroke="${AMB}" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+   s+=_cap(100,80,false,'',{pm:['+q₁','−q₁']})+_cap(250,80,false,'',{pm:['+q₂','−q₂']})+_cap(175,145,true,'',{pm:['+q₃','−q₃']});
+   s+=_dot(175,80)+_ln(5,80,30,80,GREY,1.4,'3 3')+_ln(320,80,345,80,GREY,1.4,'3 3')+_ln(175,190,175,210,GREY,1.4,'3 3');
+   s+=_tx(250,130,'isolated junction',{s:11,c:AMB,a:'start'});
+   return _svg(360,215,s); },
+ // ---- single loop with two batteries ----
+ loop2bat: ()=>{ let s=_w([[60,50],[300,50],[300,170],[60,170],[60,50]]);
+   s+=_bat(60,110,true,'10 V')+_bat(300,110,true,'4 V',{lx:22,a:'start'})+_cap(180,50,false,'2 μF');
+   return _svg(370,200,s); },
+ // ---- three branches between X and Y ----
+ threeBranch: ()=>{ let s=_w([[120,40],[360,40]])+_w([[120,190],[360,190]])+_ln(120,40,120,190)+_ln(240,40,240,190)+_ln(360,40,360,190);
+   s+=_cap(120,85,true,'C₁ = 2 μF',{lx:-20,a:'end'})+_bat(120,148,true,'12 V')+_cap(240,115,true,'C₂ = 2 μF')+_cap(360,85,true,'C₃ = 2 μF')+_bat(360,148,true,'6 V',{lx:22,a:'start'});
+   s+=_dot(240,40)+_dot(240,190)+_tx(240,28,'X',{s:13,b:1})+_tx(240,210,'Y',{s:13,b:1});
+   return _svg(440,220,s); },
+};
+
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ name: `Dielectric slab across the gap (layers in series)`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A parallel plate capacitor has plate area A and gap d, with air between the plates. Its capacitance is`,
+   diagram: DIAGRAMS.airGap(),
+   opts: [`ε₀A/d`,`ε₀d/A`,`A/(ε₀d)`,`ε₀Ad`],
+   ans: 0,
+   sol: `<strong>C = ε₀A/d</strong>.<br><br>Bigger plates → more C. Bigger gap → less C. So A is on top and d is at the bottom.`
+  },
+  {
+   q: `Now the <strong>full gap</strong> is filled with a dielectric of constant K. The new capacitance is`,
+   diagram: DIAGRAMS.slabFull(),
+   opts: [`Kε₀A/d`,`ε₀A/(Kd)`,`ε₀A/d`,`K²ε₀A/d`],
+   ans: 0,
+   sol: `C′ = <strong>Kε₀A/d = KC</strong>.<br><br>Easy way to remember: a dielectric makes the gap <em>look</em> K times thinner. Gap d behaves like d/K, so C becomes K times.`
+  },
+  {
+   q: `A slab of thickness t and constant K is put in the gap. It covers the full plate area. The rest of the gap (d − t) is air. The gap now <strong>behaves like</strong> an air gap of`,
+   diagram: DIAGRAMS.slabT('K','t','d − t'),
+   opts: [`t/K + (d − t)`,`Kt + (d − t)`,`d − t`,`d/K`],
+   ans: 0,
+   sol: `Each layer acts like air of thickness (its thickness ÷ its K).<br>Slab part → t/K. Air part → (d − t)/1.<br>Total = <strong>t/K + (d − t)</strong>.<br><br>So C = ε₀A / [t/K + (d − t)]. This is the formula from your notes.`
+  },
+  {
+   q: `Gap d = 4 mm. A slab of thickness 2 mm and K = 2 is put in. The rest is air. The gap behaves like an air gap of`,
+   diagram: DIAGRAMS.slabT('K = 2','2 mm','2 mm'),
+   opts: [`3 mm`,`2 mm`,`6 mm`,`4 mm`],
+   ans: 0,
+   sol: `t/K + (d − t) = 2/2 + 2 = <strong>3 mm</strong>.<br><br>6 mm is the trap: it multiplies by K (2 × 2 + 2). Dividing is correct — the dielectric makes the gap look <em>thinner</em>, never thicker.`
+  },
+  {
+   q: `Two slabs fill the whole gap: 1 mm with K₁ = 2, and 3 mm with K₂ = 3. Plate area = 30 cm². The capacitance is`,
+   diagram: DIAGRAMS.twoSlabs(),
+   opts: [`2ε₀ F`,`0.75ε₀ F`,`0.27ε₀ F`,`6ε₀ F`],
+   ans: 0,
+   sol: `Gap behaves like t₁/K₁ + t₂/K₂ = 1/2 + 3/3 = 1.5 mm = 1.5 × 10⁻³ m.<br>A = 30 cm² = 3 × 10⁻³ m².<br>C = ε₀ × (3 × 10⁻³)/(1.5 × 10⁻³) = <strong>2ε₀ F</strong>.<br><br>Same rule for many layers: C = ε₀A / (t₁/K₁ + t₂/K₂ + t₃/K₃ …).<br>0.75ε₀ forgets K (uses 4 mm). 0.27ε₀ multiplies by K (11 mm).`
+  },
+  {
+   tag: `JEE (Main) 2023`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A parallel plate capacitor has plate area 40 cm² and plate separation 2 mm. The space between the plates is filled with a dielectric medium of a thickness 1 mm and dielectric constant 5. The capacitance of the system is`,
+   diagram: DIAGRAMS.jee2023(),
+   opts: [`(10/3) ε₀ F`,`(3/10) ε₀ F`,`10 ε₀ F`,`24 ε₀ F`],
+   ans: 0,
+   sol: `Gap behaves like t/K + (d − t) = 1/5 + 1 = 1.2 mm = 1.2 × 10⁻³ m (rungs 3, 4).<br>A = 40 cm² = 4 × 10⁻³ m².<br>C = ε₀ × (4 × 10⁻³)/(1.2 × 10⁻³) = <strong>(10/3) ε₀ F</strong>.<br><br>3/10 is the same number turned upside down — always keep A on top.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ name: `Dielectrics side by side (parallel) — the three-slab capacitor`,
+ mode: 'class',
+ questions: [
+  {
+   q: `Two capacitors, 3 μF and 5 μF, are joined in <strong>parallel</strong>. The total capacitance is`,
+   opts: [`8 μF`,`15/8 μF`,`2 μF`,`15 μF`],
+   ans: 0,
+   sol: `Parallel → just add: 3 + 5 = <strong>8 μF</strong>.<br><br>15/8 is the series answer. Don't mix the two rules.`
+  },
+  {
+   q: `Left half of the plate area has a dielectric K (full gap). Right half is air. Each half is like a separate capacitor with area A/2. These two halves are in`,
+   diagram: DIAGRAMS.halfK(),
+   opts: [`parallel, so C = (K + 1)ε₀A/2d`,`series, so C = 2Kε₀A/(K + 1)d`,`parallel, so C = Kε₀A/d`,`series, so C = (K + 1)ε₀A/2d`],
+   ans: 0,
+   sol: `Both halves touch the <strong>same two plates</strong>. Same V across both → <strong>parallel</strong>.<br>C = Kε₀(A/2)/d + ε₀(A/2)/d = <strong>(K + 1)ε₀A/2d</strong>.<br><br>Rule from your notes: boundary <em>across</em> the gap (side by side) → parallel. Boundary <em>along</em> the plates (layers) → series.`
+  },
+  {
+   q: `An air capacitor is 4 μF. Half its plate area is filled with K = 3 (full gap). The other half stays air. New capacitance?`,
+   diagram: DIAGRAMS.halfK(),
+   opts: [`8 μF`,`12 μF`,`16 μF`,`3 μF`],
+   ans: 0,
+   sol: `Each half alone is 2 μF (half area).<br>Dielectric half → 3 × 2 = 6 μF. Air half → 2 μF.<br>Parallel → 6 + 2 = <strong>8 μF</strong>.<br><br>12 μF is the trap: it treats the whole plate as filled.`
+  },
+  {
+   q: `Let C = ε₀A/d (the full air value). A small block has area A/2 and thickness d/2, filled with K₁ = 4. As a capacitor, its value is`,
+   diagram: DIAGRAMS.threeK(),
+   opts: [`4C`,`2C`,`C`,`8C`],
+   ans: 0,
+   sol: `K₁ε₀(A/2)/(d/2) = K₁ × ε₀A/d = 4C.<br><br>Half area and half gap cancel each other. So <strong>each quarter-block = K × C</strong>. This trick saves time in the original question.`
+  },
+  {
+   q: `Two blocks, 4C and 4C, sit one on top of the other (top layer and bottom layer of the same half). They are in series. Together they give`,
+   opts: [`2C`,`8C`,`4C`,`C`],
+   ans: 0,
+   sol: `Layers → series. Two equal capacitors in series → half of one: 4C/2 = <strong>2C</strong>.<br><br>Formula: C₁C₂/(C₁ + C₂) = 16C²/8C = 2C.`
+  },
+  {
+   tag: `JEE (Main) PYQ · from your notes`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> An air filled capacitor of capacitance 2 μF is filled with three dielectric materials of dielectric constants K₁ = 4, K₂ = 4 and K₃ = 6 as shown in the figure. The new capacitance of the capacitor (in μF) is`,
+   diagram: DIAGRAMS.threeK(),
+   opts: [`10 μF`,`8 μF`,`12 μF`,`20 μF`],
+   ans: 0,
+   sol: `Let C = 2 μF (air value).<br>• Right half: K₁ block = 4C, K₂ block = 4C, in series → 2C (rungs 4, 5).<br>• Left half: K₃ fills the full gap over area A/2 → K₃ × C/2 = 6C/2 = 3C.<br>• The two halves are in parallel → 2C + 3C = 5C.<br><br>C<sub>eq</sub> = 5 × 2 μF = <strong>10 μF</strong>.<br><br>20 μF forgets that the K₃ part has only <em>half</em> the area.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ name: `L-shaped dielectric — split, then series + parallel`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `In the figure, look at the <strong>left half</strong> only (area A/2). Its top part is air of thickness d/2. Using C = ε₀A/d, this air block alone has capacitance`,
+   diagram: DIAGRAMS.lShape(),
+   opts: [`C`,`C/4`,`2C`,`C/2`],
+   ans: 0,
+   sol: `ε₀(A/2)/(d/2) = ε₀A/d = <strong>C</strong>.<br><br>Half the area, half the gap → they cancel.`
+  },
+  {
+   q: `The bottom part of the left half (area A/2, thickness d/2) has dielectric K. Its capacitance is`,
+   opts: [`KC`,`C/K`,`KC/2`,`2KC`],
+   ans: 0,
+   sol: `Same size block as rung 1, now with K → <strong>KC</strong>.`
+  },
+  {
+   q: `These two blocks (C on top, KC below) are layers, one above the other. Together they give`,
+   opts: [`KC/(1 + K)`,`(1 + K)C`,`KC/2`,`C/(1 + K)`],
+   ans: 0,
+   sol: `Layers → series: C × KC/(C + KC) = <strong>KC/(1 + K)</strong>.<br><br>(1 + K)C would be parallel — wrong here because one block sits on top of the other.`
+  },
+  {
+   q: `The <strong>right half</strong> (area A/2) is fully filled with K across the full gap d. Its capacitance is`,
+   opts: [`KC/2`,`KC`,`2KC`,`C/2`],
+   ans: 0,
+   sol: `Kε₀(A/2)/d = <strong>KC/2</strong>.<br><br>Only the area is halved here. The gap is full d.`
+  },
+  {
+   q: `The left half and right half are side by side, so they are in parallel. KC/(1 + K) + KC/2 simplifies to`,
+   opts: [`KC(K + 3)/2(K + 1)`,`KC(K + 2)/2(K + 1)`,`KC(K + 1)/2`,`3KC/2(K + 1)`],
+   ans: 0,
+   sol: `Common denominator 2(1 + K):<br>[2KC + KC(1 + K)] / 2(K + 1) = [2KC + KC + K²C] / 2(K + 1) = KC(3 + K)/2(K + 1).<br><br>So C<sub>eq</sub> = <strong>KC(K + 3)/2(K + 1)</strong>.`
+  },
+  {
+   tag: `JEE (Main) PYQ · from your notes`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A parallel plate capacitor, with plate area A and plate separation d, is filled with a dielectric slab as shown. What is the capacitance of the arrangement?`,
+   diagram: DIAGRAMS.lShape(),
+   opts: [`K(K + 3)ε₀A / 2(K + 1)d`,`(3/4) Kε₀A/d`,`(4/3) Kε₀A/d`,`((K + 1)/2) ε₀A/d`],
+   ans: 0,
+   sol: `Steps from the ladder, with C = ε₀A/d:<br>• Left half: C and KC in series → KC/(1 + K)<br>• Right half: KC/2<br>• Parallel: KC/(1 + K) + KC/2 = KC(K + 3)/2(K + 1)<br><br>Answer: <strong>K(K + 3)ε₀A / 2(K + 1)d</strong>.<br><br>Quick check: put K = 1 (no dielectric). You get 1 × 4/(2 × 2) = 1 → ε₀A/d ✓.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ name: `Conducting foil inside — voltage divides in series`,
+ mode: 'class',
+ questions: [
+  {
+   q: `Two capacitors are in series across a battery. Which quantity is the <strong>same</strong> for both?`,
+   diagram: DIAGRAMS.seriesLoop(['2 μF','3 μF'],'10 V'),
+   opts: [`Charge`,`Voltage`,`Energy`,`Capacitance`],
+   ans: 0,
+   sol: `In series the same charge Q sits on every capacitor. The <strong>voltage</strong> gets shared.`
+  },
+  {
+   q: `In the same circuit (2 μF and 3 μF in series, 10 V), the voltage across the <strong>2 μF</strong> capacitor is`,
+   diagram: DIAGRAMS.seriesLoop(['2 μF','3 μF'],'10 V'),
+   opts: [`6 V`,`4 V`,`5 V`,`10 V`],
+   ans: 0,
+   sol: `C<sub>eq</sub> = 2 × 3/5 = 1.2 μF. Q = 1.2 × 10 = 12 μC.<br>V on 2 μF = 12/2 = <strong>6 V</strong>. V on 3 μF = 12/3 = 4 V.<br><br>Remember: in series, the <strong>smaller C takes the bigger V</strong> (V = Q/C, same Q).`
+  },
+  {
+   q: `A thin conducting foil F is placed inside a capacitor, parallel to the plates, between two dielectric layers. The foil makes the capacitor behave like`,
+   diagram: DIAGRAMS.foil(),
+   opts: [`two capacitors in series, the foil being their common middle plate`,`two capacitors in parallel`,`a short circuit`,`a single capacitor with no change`],
+   ans: 0,
+   sol: `The foil is a conductor, so it has one potential. Top layer is a capacitor between top plate and foil. Bottom layer is a capacitor between foil and bottom plate. One after another → <strong>series</strong>.<br><br>So the foil's voltage is just the voltage across one of the layers.`
+  },
+  {
+   q: `Layer 1: K = 3, t = 0.5 mm. Layer 2: K = 4, t = 1 mm. Same area. The ratio C₁ : C₂ is`,
+   opts: [`3 : 2`,`2 : 3`,`3 : 4`,`3 : 8`],
+   ans: 0,
+   sol: `C ∝ K/t.<br>C₁ ∝ 3/0.5 = 6. C₂ ∝ 4/1 = 4.<br>C₁ : C₂ = 6 : 4 = <strong>3 : 2</strong>.<br><br>3 : 4 forgets the thickness. 3 : 8 multiplies by t instead of dividing.`
+  },
+  {
+   q: `These two layers are in series across 100 V. Since V ∝ 1/C, V₁ : V₂ = 2 : 3. The voltage across layer 1 (K = 3) is`,
+   opts: [`40 V`,`60 V`,`50 V`,`100 V`],
+   ans: 0,
+   sol: `V₁ + V₂ = 100 and V₂ = (3/2)V₁.<br>V₁ + 1.5V₁ = 100 → V₁ = <strong>40 V</strong>, V₂ = 60 V.<br><br>Same as your notes: (5/2)V₁ = 100.`
+  },
+  {
+   tag: `JEE (Main) 2022`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A composite parallel plate capacitor is made up of two different dielectric materials with different thickness (t₁ and t₂) as shown in figure. The two different dielectric materials are separated by a conducting foil F. The voltage of the conducting foil is ______ V.`,
+   diagram: DIAGRAMS.foilBat(),
+   opts: [`60 V`,`40 V`,`50 V`,`100 V`],
+   ans: 0,
+   sol: `From the ladder: C₁ : C₂ = 3 : 2 → V₁ = 40 V (top layer), V₂ = 60 V (bottom layer).<br><br>Bottom plate is on the battery's − side = 0 V. The foil sits on top of the bottom layer, so foil = 0 + 60 = <strong>60 V</strong>. (Top plate = 100 V. Check: 100 − 40 = 60 ✓.)<br><br>40 V is the top layer's share, not the foil's potential.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ name: `Dielectric strength — V = Ed and the voltage rating`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `A capacitor with gap d = 2 mm is connected to 200 V. The electric field between the plates is`,
+   diagram: DIAGRAMS.plateV(),
+   opts: [`1 × 10⁵ V/m`,`100 V/m`,`400 V/m`,`1 × 10⁶ V/m`],
+   ans: 0,
+   sol: `Between the plates the field is uniform: V = Ed → E = V/d = 200/(2 × 10⁻³) = <strong>1 × 10⁵ V/m</strong>.<br><br>Always change mm to m first.`
+  },
+  {
+   q: `The <strong>dielectric strength</strong> of a material means`,
+   opts: [`the largest electric field it can bear before it breaks down and sparks`,`its dielectric constant K`,`the largest charge the plates can hold`,`the largest capacitance it can give`],
+   ans: 0,
+   sol: `Above this field, the material stops being an insulator — a spark jumps across. So it fixes the <strong>maximum safe voltage</strong> (voltage rating): V<sub>max</sub> = E<sub>max</sub> × d.`
+  },
+  {
+   q: `A dielectric can bear at most 10⁶ V/m. The capacitor must work safely at 500 V. The <strong>smallest</strong> gap allowed is`,
+   opts: [`0.5 mm`,`5 mm`,`2 mm`,`0.05 mm`],
+   ans: 0,
+   sol: `d = V/E = 500/10⁶ = 5 × 10⁻⁴ m = <strong>0.5 mm</strong>.<br><br>Any thinner and the field would go above 10⁶ V/m.`
+  },
+  {
+   q: `Once you know C, d and A, the dielectric constant comes from`,
+   opts: [`K = Cd/(ε₀A)`,`K = ε₀A/(Cd)`,`K = CA/(ε₀d)`,`K = C/(ε₀Ad)`],
+   ans: 0,
+   sol: `C = Kε₀A/d → <strong>K = Cd/(ε₀A)</strong>.`
+  },
+  {
+   q: `C = 0.45 nF, d = 1 mm, A = 0.01 m². Take ε₀ ≈ 9 × 10⁻¹² for easy maths. K is`,
+   opts: [`5`,`0.2`,`50`,`4.5`],
+   ans: 0,
+   sol: `K = Cd/(ε₀A) = (4.5 × 10⁻¹⁰ × 10⁻³)/(9 × 10⁻¹² × 10⁻²) = 4.5 × 10⁻¹³ / 9 × 10⁻¹⁴ = <strong>5</strong>.`
+  },
+  {
+   tag: `JEE (Main) 2019`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> Voltage rating of a parallel plate capacitor is 500 V. Its dielectric can withstand a maximum electric field of 10⁶ V/m. The plate area is 10⁻⁴ m². What is the dielectric constant if the capacitance is 15 pF? (Given ε₀ = 8.86 × 10⁻¹² C²/Nm²)`,
+   diagram: DIAGRAMS.plateV(),
+   opts: [`8.5`,`3.8`,`4.5`,`6.2`],
+   ans: 0,
+   sol: `Step 1 (rung 3): d = V/E = 500/10⁶ = 5 × 10⁻⁴ m.<br>Step 2 (rung 4): K = Cd/(ε₀A) = (15 × 10⁻¹² × 5 × 10⁻⁴)/(8.86 × 10⁻¹² × 10⁻⁴)<br>= 75/8.86 ≈ <strong>8.5</strong>.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ name: `Putting in a dielectric — battery ON vs battery OFF`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A capacitor stays <strong>connected</strong> to the battery while a dielectric K is pushed in. Which quantity stays the same?`,
+   diagram: DIAGRAMS.slabBat(),
+   opts: [`Voltage V`,`Charge Q`,`Capacitance C`,`Energy U`],
+   ans: 0,
+   sol: `The battery holds the voltage fixed. So <strong>V stays the same</strong>.<br>C becomes KC, so Q = KCV goes up K times, and U = ½(KC)V² goes up K times.`
+  },
+  {
+   q: `Battery still connected, dielectric K fills the gap. The new energy U′ compared with old energy U is`,
+   opts: [`U′ = KU`,`U′ = U/K`,`U′ = U`,`U′ = K²U`],
+   ans: 0,
+   sol: `U′ = ½(KC)V² = K × ½CV² = <strong>KU</strong> (energy increases — the battery supplies more charge).`
+  },
+  {
+   q: `Now the battery is <strong>removed first</strong>, then the dielectric is pushed in. Which stays the same?`,
+   diagram: DIAGRAMS.slabIso(),
+   opts: [`Charge Q`,`Voltage V`,`Energy U`,`Electric field E`],
+   ans: 0,
+   sol: `No path for charge to come or go → <strong>Q is stuck</strong>.<br>C → KC, so V′ = Q/KC = V/K and U′ = Q²/2KC = U/K (energy decreases).<br><br>Your notes: Q = C′V′ = KC × V/K.`
+  },
+  {
+   q: `A capacitor that was <strong>never connected</strong> to any battery (uncharged) gets a dielectric slab. Its stored energy becomes`,
+   opts: [`zero`,`½KCV²`,`½CV²/K`,`K times bigger`],
+   ans: 0,
+   sol: `C′ = KC, but V = 0 and Q = 0. So U = ½(KC)(0)² = <strong>0</strong>. That is the third case in your notes.`
+  },
+  {
+   q: `100 μF at 100 V, battery kept connected. A slab K = 3 fills the gap. The change in stored energy is`,
+   opts: [`+1 J`,`+1.5 J`,`+0.5 J`,`−0.33 J`],
+   ans: 0,
+   sol: `Before: ½ × 100 × 10⁻⁶ × 100² = 0.5 J.<br>After: 3 × 0.5 = 1.5 J.<br>Change = 1.5 − 0.5 = <strong>+1 J</strong>.<br><br>Short formula: ΔU = ½(K − 1)CV².<br>−0.33 J would be the battery-removed case (U/K − U).`
+  },
+  {
+   tag: `JEE (Main) 2021`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A parallel plate capacitor of capacitance 200 μF is connected to a battery of 200 V. A dielectric slab of dielectric constant 2 is now inserted into the space between plates of capacitor while the battery remain connected. The change in the electrostatic energy in the capacitor will be ____ J.`,
+   diagram: DIAGRAMS.slabBat(),
+   opts: [`4 J`,`8 J`,`2 J`,`0 J`],
+   ans: 0,
+   sol: `Battery connected → V fixed (rung 1).<br>ΔU = ½(K − 1)CV² = ½ × (2 − 1) × 200 × 10⁻⁶ × (200)²<br>= ½ × 200 × 10⁻⁶ × 4 × 10⁴ = <strong>4 J</strong>.<br><br>8 J is the final energy, not the change.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ name: `Field between the plates after the slab goes in`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `For a parallel plate capacitor, the field between the plates is`,
+   opts: [`E = V/d`,`E = Vd`,`E = d/V`,`E = V/d²`],
+   ans: 0,
+   sol: `Uniform field: V = Ed → <strong>E = V/d</strong>.`
+  },
+  {
+   q: `Battery removed, then a dielectric K fills the gap completely. The voltage becomes`,
+   opts: [`V/K`,`KV`,`V (no change)`,`zero`],
+   ans: 0,
+   sol: `Q is stuck, C → KC, so V′ = Q/(KC) = <strong>V/K</strong>.`
+  },
+  {
+   q: `Same case (battery removed, slab fills gap). The gap d does not change. So the field becomes`,
+   diagram: DIAGRAMS.slabIso(),
+   opts: [`E/K — it decreases`,`KE — it increases`,`E — no change`,`zero`],
+   ans: 0,
+   sol: `E′ = V′/d = (V/K)/d = <strong>E/K</strong>. The dielectric's own induced charges cancel part of the field.`
+  },
+  {
+   q: `Now the battery stays <strong>connected</strong> and the slab fills the gap completely. The field inside becomes`,
+   diagram: DIAGRAMS.slabBat(),
+   opts: [`E — no change`,`E/K`,`KE`,`zero`],
+   ans: 0,
+   sol: `V is fixed by the battery and d is the same, so E = V/d is the <strong>same</strong>. (The battery pushes extra charge on the plates to keep it so.)`
+  },
+  {
+   q: `Battery removed. Field was 6 × 10⁵ V/m. A slab K = 3 fills the gap. New field?`,
+   opts: [`2 × 10⁵ V/m`,`18 × 10⁵ V/m`,`6 × 10⁵ V/m`,`3 × 10⁵ V/m`],
+   ans: 0,
+   sol: `E′ = E/K = 6 × 10⁵/3 = <strong>2 × 10⁵ V/m</strong>.`
+  },
+  {
+   tag: `PYQ · from your notes`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> Air filled capacitor is charged by a battery and after charging battery is removed. A slab of dielectric material is inserted in it to fill the space completely. The electric field in the capacitor is`,
+   opts: [`Decreased`,`Increased`,`Remains constant`,`First increased then decreased`],
+   ans: 0,
+   sol: `Battery removed → Q constant → V′ = V/K (rung 2).<br>E′ = V′/d = E/K → <strong>decreased</strong> (rung 3).<br><br>"Remains constant" is the battery-connected case — read the question for which one it is.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ name: `Energy in terms of charge — U = Q²/2C`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `Which of these is <strong>NOT</strong> a correct formula for the energy stored in a capacitor?`,
+   opts: [`½Q²C`,`½CV²`,`Q²/2C`,`½QV`],
+   ans: 0,
+   sol: `The three correct forms are ½CV² = Q²/2C = ½QV. Put Q = CV in each to check.<br><strong>½Q²C</strong> is wrong — C must be at the bottom with Q².`
+  },
+  {
+   q: `C is fixed. The charge is doubled. The energy becomes`,
+   opts: [`4 times`,`2 times`,`same`,`half`],
+   ans: 0,
+   sol: `U = Q²/2C → U ∝ Q². Double Q → <strong>4 times</strong> U.`
+  },
+  {
+   q: `C is fixed. The charge is increased by 20%. The energy increases by`,
+   opts: [`44%`,`20%`,`40%`,`4%`],
+   ans: 0,
+   sol: `New Q = 1.2 Q. New U = (1.2)² U = 1.44 U → increase = <strong>44%</strong>.<br><br>40% is the trap: it just doubles 20%. Square the factor, not the percent.`
+  },
+  {
+   q: `C is fixed. The energy goes up by 21%. The charge went up by`,
+   opts: [`10%`,`21%`,`10.5%`,`42%`],
+   ans: 0,
+   sol: `U′/U = 1.21 → Q′/Q = √1.21 = 1.1 → <strong>10%</strong> rise.`
+  },
+  {
+   q: `Charge Q is increased by 2 C, and the energy rises by 44%. Which equation is correct?`,
+   opts: [`(Q + 2)/Q = 1.2`,`(Q + 2)/Q = 1.44`,`(Q + 2)² = 1.44`,`Q + 2 = 1.44 Q²`],
+   ans: 0,
+   sol: `U ∝ Q² → (Q + 2)²/Q² = 1.44 → take square root → <strong>(Q + 2)/Q = 1.2</strong>.`
+  },
+  {
+   tag: `JEE (Main) 2022`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> If the charge on a capacitor is increased by 2 C, the energy stored in it increases by 44%. The original charge on the capacitor is (in C)`,
+   opts: [`10`,`20`,`30`,`40`],
+   ans: 0,
+   sol: `(Q + 2)/Q = 1.2 (rung 5)<br>Q + 2 = 1.2Q → 0.2Q = 2 → <strong>Q = 10 C</strong>.<br><br>Check: 12²/10² = 144/100 → 44% more ✓.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ name: `Sharing of charge — the common potential`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A 5 μF capacitor is charged to 30 V. Its charge is`,
+   opts: [`150 μC`,`6 μC`,`35 μC`,`0.17 μC`],
+   ans: 0,
+   sol: `Q = CV = 5 × 30 = <strong>150 μC</strong>.`
+  },
+  {
+   q: `The battery is removed. This charged capacitor is joined to an <strong>uncharged</strong> 10 μF capacitor (+ plate to + side). After joining, the <strong>total</strong> charge is`,
+   diagram: DIAGRAMS.sharing('5 μF, 30 V','10 μF, 0 V'),
+   opts: [`150 μC (charge is conserved)`,`300 μC`,`450 μC`,`0`],
+   ans: 0,
+   sol: `No battery → no new charge comes in. Charge only flows from one capacitor to the other. Total stays <strong>150 μC</strong>.`
+  },
+  {
+   q: `After the flow stops, both capacitors have the same voltage (they are in parallel). That common voltage is`,
+   opts: [`10 V`,`15 V`,`30 V`,`20 V`],
+   ans: 0,
+   sol: `V = total Q / total C = 150/(5 + 10) = <strong>10 V</strong>.<br><br>15 V is the plain average of 30 and 0 — it ignores the sizes.`
+  },
+  {
+   q: `General rule (like plates joined) — the common potential is`,
+   opts: [`V = (C₁V₁ + C₂V₂)/(C₁ + C₂)`,`V = (V₁ + V₂)/2`,`V = (C₁V₁ − C₂V₂)/(C₁ + C₂)`,`V = (C₁ + C₂)/(C₁V₁ + C₂V₂)`],
+   ans: 0,
+   sol: `Total charge ÷ total capacitance: <strong>V = (C₁V₁ + C₂V₂)/(C₁ + C₂)</strong>.<br><br>The minus version is for <em>unlike</em> plates joined (ladder 13).`
+  },
+  {
+   q: `A 3 μF capacitor at 20 V is joined to a 1 μF capacitor at 4 V, like plates together. Common potential?`,
+   opts: [`16 V`,`12 V`,`24 V`,`14 V`],
+   ans: 0,
+   sol: `V = (3 × 20 + 1 × 4)/(3 + 1) = 64/4 = <strong>16 V</strong>.`
+  },
+  {
+   tag: `JEE (Main) 2022`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A capacitor C₁ of capacitance 5 μF is charged to a potential of 30 V using a battery. The battery is then removed and the charged capacitor is connected to an uncharged capacitor C₂ of capacitance 10 μF as shown in figure. When the switch is closed charge flows between the capacitors. At equilibrium, the charge on the capacitor C₂ is ______ μC.`,
+   diagram: DIAGRAMS.sharing('C₁ = 5 μF','C₂ = 10 μF'),
+   opts: [`100 μC`,`150 μC`,`50 μC`,`300 μC`],
+   ans: 0,
+   sol: `Common V = (5 × 30 + 0)/15 = 10 V (rung 3).<br>Q on C₂ = C₂V = 10 × 10 = <strong>100 μC</strong>.<br><br>Check: C₁ keeps 5 × 10 = 50 μC. 50 + 100 = 150 ✓ (charge conserved).`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ name: `Sharing with switches S₁ and S₂`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `In the circuit, only S₁ is closed. C₁ = 2 μF charges fully from the 10 V battery. Charge on C₁?`,
+   diagram: DIAGRAMS.switches3(),
+   opts: [`20 μC`,`5 μC`,`12 μC`,`100 μC`],
+   ans: 0,
+   sol: `Q = CV = 2 × 10 = <strong>20 μC</strong>. C₂ gets nothing yet — S₂ is open.`
+  },
+  {
+   q: `Now S₁ is opened (battery cut off). The charge on C₁ is`,
+   opts: [`still 20 μC`,`zero`,`10 μC`,`it flows back to the battery`],
+   ans: 0,
+   sol: `Opening the switch leaves C₁ isolated. Its charge has nowhere to go → <strong>still 20 μC</strong>.`
+  },
+  {
+   q: `Then S₂ is closed. C₁ and C₂ are now joined. Charge will`,
+   opts: [`flow from C₁ to C₂ till both have the same voltage`,`flow from C₂ to C₁`,`not flow at all`,`flow till both have the same charge`],
+   ans: 0,
+   sol: `C₂ is at 0 V, C₁ is at 10 V. Charge flows until the voltages become <strong>equal</strong> (not the charges).`
+  },
+  {
+   q: `Total charge 20 μC is shared by 2 μF and 8 μF in parallel. Common voltage?`,
+   opts: [`2 V`,`10 V`,`2.5 V`,`5 V`],
+   ans: 0,
+   sol: `V = 20/(2 + 8) = <strong>2 V</strong>.`
+  },
+  {
+   q: `At this common 2 V, the charge left on C₁ (2 μF) is`,
+   opts: [`4 μC`,`20 μC`,`16 μC`,`10 μC`],
+   ans: 0,
+   sol: `Q₁ = 2 × 2 = <strong>4 μC</strong>. So 20 − 4 = 16 μC moved to C₂.`
+  },
+  {
+   tag: `JEE (Main) 2021`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A 2 μF capacitor C₁ is first charged to a potential difference of 10 V using a battery. Then the battery is removed and the capacitor is connected to an uncharged capacitor C₂ of 8 μF. The charge in C₂ on equilibrium condition is ______ μC. (Round off to the nearest integer)`,
+   diagram: DIAGRAMS.switches3(),
+   opts: [`16 μC`,`20 μC`,`4 μC`,`80 μC`],
+   ans: 0,
+   sol: `V<sub>common</sub> = (2 × 10)/(2 + 8) = 2 V.<br>Q₂ = 8 × 2 = <strong>16 μC</strong>.<br><br>80 μC is the trap: it uses 10 V on C₂. The 10 V is gone once the battery is removed.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ name: `Energy lost when capacitors share charge`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A 4 μF capacitor is charged to 10 V. Its stored energy is`,
+   opts: [`200 μJ`,`400 μJ`,`40 μJ`,`20 μJ`],
+   ans: 0,
+   sol: `U = ½CV² = ½ × 4 × 100 = <strong>200 μJ</strong>.`
+  },
+  {
+   q: `It is joined to an uncharged 4 μF capacitor. Common voltage = 5 V. Total energy now?`,
+   opts: [`100 μJ`,`200 μJ`,`50 μJ`,`400 μJ`],
+   ans: 0,
+   sol: `U = ½ × (4 + 4) × 5² = ½ × 8 × 25 = <strong>100 μJ</strong>.<br><br>Charge was kept (40 μC before, 40 μC after), but energy was not.`
+  },
+  {
+   q: `So 100 μJ is lost. Where did it go?`,
+   opts: [`Heat in the wires (and some radiation) while charge flowed`,`It is stored in the switch`,`It went back into the battery`,`Nowhere — energy is always the same in sharing`],
+   ans: 0,
+   sol: `While charge rushes from one capacitor to the other, current flows in the wires → <strong>heat</strong> (and a little radiation). There is no battery here.<br><br>This loss happens even if the wire resistance is tiny.`
+  },
+  {
+   q: `Shortcut from your notes: ΔU = ½ · [C₁C₂/(C₁ + C₂)] · (V₁ − V₂)². For 2 μF at 30 V joined to an uncharged 1 μF, the loss is`,
+   opts: [`300 μJ`,`900 μJ`,`600 μJ`,`150 μJ`],
+   ans: 0,
+   sol: `C₁C₂/(C₁ + C₂) = 2/3 μF. (V₁ − V₂)² = 900.<br>ΔU = ½ × (2/3) × 900 = <strong>300 μJ</strong>.<br><br>Check: before ½ × 2 × 900 = 900 μJ; V<sub>c</sub> = 60/3 = 20 V; after ½ × 3 × 400 = 600 μJ; lost 300 ✓.`
+  },
+  {
+   q: `C at V₀ is joined to an equal uncharged C. What fraction of the starting energy is lost?`,
+   opts: [`Half`,`One quarter`,`None`,`All of it`],
+   ans: 0,
+   sol: `ΔU = ½ × (C/2) × V₀² = ¼CV₀². Starting energy = ½CV₀². Fraction lost = <strong>half</strong>.`
+  },
+  {
+   tag: `JEE (Main) 2020`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A capacitor C is fully charged with voltage V₀. After disconnecting the voltage source, it is connected in parallel with another uncharged capacitor of capacitance C/2. The energy loss in the process after the charge is distributed between the two capacitors is`,
+   diagram: DIAGRAMS.sharing('C, V₀','C/2, 0 V'),
+   opts: [`(1/6) CV₀²`,`(1/4) CV₀²`,`(1/3) CV₀²`,`(1/2) CV₀²`],
+   ans: 0,
+   sol: `C₁C₂/(C₁ + C₂) = (C × C/2)/(3C/2) = C/3.<br>ΔU = ½ × (C/3) × V₀² = <strong>CV₀²/6</strong>.<br><br>Check the long way: V<sub>c</sub> = CV₀/(3C/2) = 2V₀/3. After = ½ × (3C/2) × 4V₀²/9 = CV₀²/3. Lost = CV₀²/2 − CV₀²/3 = CV₀²/6 ✓.`
+  }
+ ]
+}
+,
+
+/* ---------------------------------- LADDER 12 ---------------------------------- */
+{
+ name: `Switch from A to B — heat lost in terms of Q`,
+ mode: 'class',
+ questions: [
+  {
+   q: `In the figure, the switch S is at position A. Capacitor C gets connected straight across the battery ε. Its charge Q is`,
+   diagram: DIAGRAMS.switchAB(),
+   opts: [`Q = Cε, so ε = Q/C`,`Q = ε/C`,`Q = 3Cε`,`Q = 4Cε`],
+   ans: 0,
+   sol: `Q = Cε → <strong>ε = Q/C</strong>. Keep this — the answer must be written in Q and C at the end.`
+  },
+  {
+   q: `While S is at A, what is the voltage on the 3C capacitor?`,
+   opts: [`0 V — nothing has reached it yet`,`ε`,`ε/3`,`ε/4`],
+   ans: 0,
+   sol: `The 3C capacitor is cut off from C and from the battery. It is uncharged → <strong>0 V</strong>.`
+  },
+  {
+   q: `S is turned to B. Now C is joined only to 3C (the battery is out of this loop). The common voltage is`,
+   opts: [`ε/4`,`ε/3`,`ε/2`,`ε`],
+   ans: 0,
+   sol: `This is sharing of charge: V = (C × ε + 3C × 0)/(C + 3C) = <strong>ε/4</strong>.`
+  },
+  {
+   q: `Using ΔU = ½ · [C₁C₂/(C₁ + C₂)] · (V₁ − V₂)², the heat produced is`,
+   opts: [`3Cε²/8`,`Cε²/8`,`3Cε²/4`,`Cε²/2`],
+   ans: 0,
+   sol: `C₁C₂/(C₁ + C₂) = (C × 3C)/4C = 3C/4.<br>ΔU = ½ × (3C/4) × (ε − 0)² = <strong>3Cε²/8</strong>.`
+  },
+  {
+   q: `Write 3Cε²/8 in terms of Q (use ε = Q/C):`,
+   opts: [`3Q²/8C`,`3Q²C/8`,`3Q/8C`,`Q²/8C`],
+   ans: 0,
+   sol: `3C × (Q/C)²/8 = 3C × Q²/C² /8 = <strong>3Q²/8C</strong>.`
+  },
+  {
+   tag: `JEE (Main) 2019`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> In the figure shown, after the switch 'S' is turned from position 'A' to position 'B', the energy dissipated in the circuit in terms of capacitance 'C' and total charge 'Q' is`,
+   diagram: DIAGRAMS.switchAB(),
+   opts: [`(3/8) Q²/C`,`(1/8) Q²/C`,`(5/8) Q²/C`,`(3/4) Q²/C`],
+   ans: 0,
+   sol: `• At A: Q = Cε (rung 1)<br>• At B: C (at ε) shares with 3C (at 0) (rungs 2, 3)<br>• Heat = ½ × (3C/4) × ε² = 3Cε²/8 (rung 4)<br>• Put ε = Q/C → <strong>3Q²/8C</strong> (rung 5)`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 13 ---------------------------------- */
+{
+ name: `Unlike plates joined (+ to −)`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `Two charged capacitors are joined with the + plate of one touching the − plate of the other. The net charge on the joined side is`,
+   diagram: DIAGRAMS.unlike('C₁, V₁','C₂, V₂ (turned round)'),
+   opts: [`Q₁ − Q₂ (the charges partly cancel)`,`Q₁ + Q₂`,`zero always`,`Q₁ × Q₂`],
+   ans: 0,
+   sol: `+Q₁ and −Q₂ sit on the same connected conductor. They partly cancel → <strong>Q₁ − Q₂</strong>.<br><br>Like plates (+ to +) → charges add. Unlike plates (+ to −) → charges subtract.`
+  },
+  {
+   q: `4 μF at 10 V and 2 μF at 5 V are joined + to −. Net charge to share?`,
+   opts: [`30 μC`,`50 μC`,`40 μC`,`10 μC`],
+   ans: 0,
+   sol: `Q₁ = 4 × 10 = 40 μC. Q₂ = 2 × 5 = 10 μC.<br>Unlike plates → 40 − 10 = <strong>30 μC</strong>.`
+  },
+  {
+   q: `This 30 μC is shared by 4 μF + 2 μF in parallel. Common voltage?`,
+   opts: [`5 V`,`8.3 V`,`7.5 V`,`15 V`],
+   ans: 0,
+   sol: `V = 30/(4 + 2) = <strong>5 V</strong>.<br><br>8.3 V would come from adding the charges (50/6) — that is the like-plates case.`
+  },
+  {
+   q: `General formula for unlike plates joined:`,
+   opts: [`V = (C₁V₁ − C₂V₂)/(C₁ + C₂)`,`V = (C₁V₁ + C₂V₂)/(C₁ + C₂)`,`V = (C₁V₁ − C₂V₂)/(C₁ − C₂)`,`V = (V₁ − V₂)/2`],
+   ans: 0,
+   sol: `Net charge ÷ total C: <strong>V = (C₁V₁ − C₂V₂)/(C₁ + C₂)</strong>. The bottom always <em>adds</em> — they are in parallel after joining.`
+  },
+  {
+   q: `For unlike plates the energy loss is ΔU = ½ · [C₁C₂/(C₁ + C₂)] · (V₁ + V₂)². For 4 μF at 10 V and 2 μF at 5 V, the loss is`,
+   opts: [`150 μJ`,`16.7 μJ`,`75 μJ`,`225 μJ`],
+   ans: 0,
+   sol: `C₁C₂/(C₁ + C₂) = 8/6 = 4/3 μF. (V₁ + V₂)² = 15² = 225.<br>ΔU = ½ × (4/3) × 225 = <strong>150 μJ</strong>.<br><br>Check: before ½·4·100 + ½·2·25 = 225 μJ. After ½·6·25 = 75 μJ. Lost 150 ✓.<br>16.7 μJ uses (V₁ − V₂)² — that is only for like plates.`
+  },
+  {
+   tag: `Notes concept · slides 4 & 26`,
+   lbl: `Exam-level question`,
+   q: `★ Two identical capacitors, each of capacitance C, are charged to V and 3V. They are now joined with the + plate of one connected to the − plate of the other. The common potential and the heat produced are`,
+   diagram: DIAGRAMS.unlike('C, 3V','C, V (turned round)'),
+   opts: [`V and 4CV²`,`2V and CV²`,`V and 2CV²`,`2V and 4CV²`],
+   ans: 0,
+   sol: `Common V = (C × 3V − C × V)/(C + C) = 2CV/2C = <strong>V</strong>.<br>Heat = ½ × (C/2) × (3V + V)² = ½ × (C/2) × 16V² = <strong>4CV²</strong>.<br><br>Check: before ½C(9V²) + ½C(V²) = 5CV². After ½(2C)V² = CV². Lost 4CV² ✓.<br>2V would be the like-plates answer.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 14 ---------------------------------- */
+{
+ name: `Dielectric first, then sharing — the 55 V question`,
+ mode: 'class',
+ questions: [
+  {
+   q: `C₁ = 10 μF stays connected to 100 V while a slab K = 10 is put in. Its new capacitance and charge are`,
+   opts: [`100 μF and 10,000 μC`,`100 μF and 1000 μC`,`10 μF and 1000 μC`,`1 μF and 100 μC`],
+   ans: 0,
+   sol: `C₁′ = KC = 100 μF. Battery connected → V = 100 V → Q₁ = 100 × 100 = <strong>10,000 μC</strong>.`
+  },
+  {
+   q: `C₂ = 10 μF was charged to 100 V and then <strong>disconnected</strong>. Its charge is`,
+   opts: [`1000 μC, and it stays fixed`,`10,000 μC`,`zero`,`100 μC`],
+   ans: 0,
+   sol: `Q₂ = 10 × 100 = <strong>1000 μC</strong>. Isolated → this charge cannot change.`
+  },
+  {
+   q: `Now slab K = 10 goes into the isolated C₂. Its new voltage is`,
+   opts: [`10 V`,`100 V`,`1000 V`,`1 V`],
+   ans: 0,
+   sol: `C₂′ = 100 μF, Q₂ = 1000 μC (fixed) → V₂ = 1000/100 = <strong>10 V</strong> (= V/K).`
+  },
+  {
+   q: `Both are now off the source and joined in parallel (like plates). Total charge?`,
+   opts: [`11,000 μC`,`9000 μC`,`10,000 μC`,`2000 μC`],
+   ans: 0,
+   sol: `10,000 + 1000 = <strong>11,000 μC</strong>.`
+  },
+  {
+   q: `Total capacitance of the pair (each now has the slab)?`,
+   opts: [`200 μF`,`20 μF`,`110 μF`,`50 μF`],
+   ans: 0,
+   sol: `100 + 100 = <strong>200 μF</strong> (parallel). Don't use the old 10 μF values — the slabs are still inside.`
+  },
+  {
+   tag: `JEE (Main) 2023`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> Two parallel plate capacitors C₁ and C₂ each having capacitance of 10 μF are individually charged by a 100 V D.C. source. Capacitor C₁ is kept connected to the source and a dielectric slab is inserted between its plates. Capacitor C₂ is disconnected from the source and then a dielectric slab is inserted in it. Afterwards the capacitor C₁ is also disconnected from the source and the two capacitors are finally connected in parallel combination. The common potential of the combination will be ______ V. (Assuming Dielectric constant = 10)`,
+   opts: [`55 V`,`100 V`,`10 V`,`50 V`],
+   ans: 0,
+   sol: `V = (C₁′V₁ + C₂′V₂)/(C₁′ + C₂′) = (100 × 100 + 100 × 10)/(100 + 100)<br>= 11,000/200 = <strong>55 V</strong>.<br><br>Your notes: same formula, just with the new (slab) values C₁′ and C₂′.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 15 ---------------------------------- */
+{
+ name: `Key opened, then dielectric — the energy ratio`,
+ mode: 'class',
+ questions: [
+  {
+   q: `In the figure, key K is closed. Both capacitors (each C) are across V. Total energy E₁ is`,
+   diagram: DIAGRAMS.keyK(),
+   opts: [`CV²`,`½CV²`,`2CV²`,`¼CV²`],
+   ans: 0,
+   sol: `Each has ½CV². Two of them → <strong>CV²</strong>.`
+  },
+  {
+   q: `Key K is opened. What happens to the two capacitors?`,
+   diagram: DIAGRAMS.keyK(),
+   opts: [`Left C stays on the source; right C is cut off and keeps charge CV`,`Both are cut off from the source`,`Both stay on the source`,`Right C loses all its charge`],
+   ans: 0,
+   sol: `The key is only in the right branch. Left C is still across V. Right C is isolated with <strong>Q = CV</strong> stuck on it.`
+  },
+  {
+   q: `A slab K = 5 goes into the <strong>left</strong> C (still on the source). Its energy becomes`,
+   opts: [`2.5 CV²`,`0.1 CV²`,`0.5 CV²`,`5 CV²`],
+   ans: 0,
+   sol: `V fixed: U = ½(5C)V² = <strong>2.5 CV²</strong>.`
+  },
+  {
+   q: `A slab K = 5 goes into the <strong>right</strong> C (isolated, Q = CV). Its energy becomes`,
+   opts: [`0.1 CV²`,`2.5 CV²`,`0.5 CV²`,`0.2 CV²`],
+   ans: 0,
+   sol: `Q fixed: U = Q²/2(5C) = C²V²/10C = <strong>CV²/10 = 0.1 CV²</strong>.`
+  },
+  {
+   q: `So the new total energy E₂ is`,
+   opts: [`2.6 CV²`,`2.5 CV²`,`5 CV²`,`0.6 CV²`],
+   ans: 0,
+   sol: `E₂ = 2.5 CV² + 0.1 CV² = <strong>2.6 CV²</strong>.`
+  },
+  {
+   tag: `JEE (Main) 2022`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A source of potential difference V is connected to the combination of two identical capacitors as shown in the figure. When key 'K' is closed, the total energy stored across the combination is E₁. Now key 'K' is opened and dielectric of dielectric constant 5 is introduced between the plates of the capacitors. The total energy stored across the combination is now E₂. The ratio E₁/E₂ will be`,
+   diagram: DIAGRAMS.keyK(),
+   opts: [`5/13`,`1/10`,`2/5`,`5/26`],
+   ans: 0,
+   sol: `E₁ = CV² (rung 1). E₂ = 2.6 CV² (rung 5).<br>E₁/E₂ = 1/2.6 = 10/26 = <strong>5/13</strong>.<br><br>2/5 is what you get if you treat both as battery-connected (E₂ = 5CV²).`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 16 ---------------------------------- */
+{
+ name: `Battery work and heat — reconnecting a charged capacitor`,
+ mode: 'class',
+ questions: [
+  {
+   q: `A battery of emf ε pushes a charge ΔQ through itself (from − to +). The work done by the battery is`,
+   opts: [`ε·ΔQ`,`½ε·ΔQ`,`ε/ΔQ`,`½ε²ΔQ`],
+   ans: 0,
+   sol: `The battery's voltage is fixed, so W = <strong>ε·ΔQ</strong> (no ½ here).<br><br>The ½ belongs to the capacitor's energy (½CV²), because its voltage builds up from 0.`
+  },
+  {
+   q: `An uncharged C is charged by a battery V. Battery work = CV². Energy stored = ½CV². The heat produced in the wires is`,
+   opts: [`½CV²`,`CV²`,`zero`,`2CV²`],
+   ans: 0,
+   sol: `Heat = W<sub>battery</sub> − ΔU = CV² − ½CV² = <strong>½CV²</strong>.<br><br>Big rule from your notes: <strong>Heat = W<sub>battery</sub> − ΔU</strong>.`
+  },
+  {
+   q: `C is charged to V. Now it is joined to the <strong>same</strong> battery V but turned round (+ plate to − terminal). Finally the top plate has −CV instead of +CV. The charge that went through the battery is`,
+   diagram: DIAGRAMS.recharge('V',true),
+   opts: [`2CV`,`CV`,`zero`,`½CV`],
+   ans: 0,
+   sol: `The plate goes from +CV to −CV. Change = <strong>2CV</strong> (your notes: ΔQ = −2CV).`
+  },
+  {
+   q: `In that reversed case, W<sub>battery</sub> = V × 2CV = 2CV². The energy stored is ½CV² before and after. Heat produced?`,
+   opts: [`2CV²`,`CV²`,`½CV²`,`zero`],
+   ans: 0,
+   sol: `ΔU = ½CV² − ½CV² = 0.<br>Heat = 2CV² − 0 = <strong>2CV²</strong>. All the battery's work turns into heat.`
+  },
+  {
+   q: `C is charged to V, then joined (+ to +) to a battery of V/2. Final charge = CV/2. The charge through the battery and the battery's work are`,
+   diagram: DIAGRAMS.recharge('V/2',false),
+   opts: [`ΔQ = −CV/2, W = −CV²/4`,`ΔQ = +CV/2, W = +CV²/4`,`ΔQ = −CV, W = −CV²/2`,`ΔQ = 0, W = 0`],
+   ans: 0,
+   sol: `Charge drops from CV to CV/2 → ΔQ = <strong>−CV/2</strong> (charge is pushed back <em>into</em> the battery).<br>W = (V/2) × (−CV/2) = <strong>−CV²/4</strong>. Negative work: the battery gets charged a bit.`
+  },
+  {
+   tag: `Example 47 · from your notes`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> A capacitor of capacitance C is charged by a battery to a potential difference V. Now, it is disconnected from this battery and connected to another battery of potential difference V/2, so that positive plate of capacitor is connected to positive terminal of the battery and negative plate of the capacitor is connected to the negative terminal of the battery. Find the heat produced in the circuit.`,
+   diagram: DIAGRAMS.recharge('V/2',false),
+   opts: [`CV²/8`,`3CV²/8`,`CV²/4`,`CV²/2`],
+   ans: 0,
+   sol: `W<sub>battery</sub> = −CV²/4 (rung 5).<br>ΔU = ½C(V/2)² − ½CV² = CV²/8 − 4CV²/8 = −3CV²/8.<br>Heat = W − ΔU = −CV²/4 + 3CV²/8 = −2CV²/8 + 3CV²/8 = <strong>CV²/8</strong>.<br><br>3CV²/8 is only the energy the capacitor lost — part of it went into the battery.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 17 ---------------------------------- */
+{
+ name: `Series vs parallel on the same supply — energy ratio`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `25 μF, 30 μF and 45 μF in <strong>parallel</strong>. Total capacitance?`,
+   opts: [`100 μF`,`450/43 μF`,`33.3 μF`,`43 μF`],
+   ans: 0,
+   sol: `Parallel → add: 25 + 30 + 45 = <strong>100 μF</strong>.`
+  },
+  {
+   q: `2 μF, 3 μF and 6 μF in <strong>series</strong>. Total capacitance?`,
+   opts: [`1 μF`,`11 μF`,`6 μF`,`0.5 μF`],
+   ans: 0,
+   sol: `1/C = 1/2 + 1/3 + 1/6 = (3 + 2 + 1)/6 = 1 → <strong>C = 1 μF</strong>.<br><br>Series total is always <em>smaller</em> than the smallest one.`
+  },
+  {
+   q: `The 100 μF parallel group is on 100 V. Energy stored E is`,
+   opts: [`0.5 J`,`1 J`,`5 J`,`0.05 J`],
+   ans: 0,
+   sol: `E = ½CV² = ½ × 100 × 10⁻⁶ × 10⁴ = <strong>0.5 J</strong>.`
+  },
+  {
+   q: `25 μF, 30 μF and 45 μF in series. Using LCM 450: 1/C = (18 + 15 + 10)/450. So C is`,
+   opts: [`450/43 μF`,`43/450 μF`,`100 μF`,`450 μF`],
+   ans: 0,
+   sol: `1/C = 43/450 → <strong>C = 450/43 μF</strong> (about 10.5 μF).`
+  },
+  {
+   q: `Same supply V for both. Energy ½CV² ∝ C. So E<sub>series</sub>/E<sub>parallel</sub> is`,
+   opts: [`9/86`,`86/9`,`43/450`,`1/100`],
+   ans: 0,
+   sol: `(450/43)/100 = 450/4300 = 45/430 = <strong>9/86</strong>.`
+  },
+  {
+   tag: `JEE (Main) 2024`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> Three capacitors of capacitances 25 μF, 30 μF and 45 μF are connected in parallel to a supply of 100 V. Energy stored in the above combination is E. When these capacitors are connected in series to the same supply, the stored energy is (9/x) E. The value of x is ______.`,
+   opts: [`86`,`43`,`100`,`9`],
+   ans: 0,
+   sol: `E<sub>series</sub> = (9/86)E (rung 5) → <strong>x = 86</strong>.<br><br>No need for the 0.5 J — the ratio of C is enough because V is the same.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 18 ---------------------------------- */
+{
+ name: `Why series capacitors carry the same charge — isolated plates`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `In a series chain, the inner plates of two neighbouring capacitors and the wire between them form one piece. That piece is`,
+   diagram: DIAGRAMS.seriesLoop(['C₁','C₂','C₃'],'V',true),
+   opts: [`an isolated conductor — its total charge stays zero`,`connected to the battery`,`always positively charged`,`a short circuit`],
+   ans: 0,
+   sol: `No wire joins this piece to the battery. It started with zero charge, so its <strong>net charge stays zero</strong> (your notes: isolated conductor, Q = 0).`
+  },
+  {
+   q: `On that isolated piece, the right plate of C₁ has −Q. So the left plate of C₂ must have`,
+   opts: [`+Q`,`−Q`,`zero`,`+2Q`],
+   ans: 0,
+   sol: `−Q + (charge on C₂'s plate) = 0 → <strong>+Q</strong>. So C₂ also carries Q. This is why every capacitor in series has the <strong>same charge</strong>.`
+  },
+  {
+   q: `2 μF, 3 μF and 6 μF are in series on 12 V. Equivalent capacitance?`,
+   diagram: DIAGRAMS.seriesLoop(['2 μF','3 μF','6 μF'],'12 V'),
+   opts: [`1 μF`,`11 μF`,`2 μF`,`6 μF`],
+   ans: 0,
+   sol: `1/C = 1/2 + 1/3 + 1/6 = 1 → <strong>1 μF</strong>.`
+  },
+  {
+   q: `Charge on each capacitor?`,
+   opts: [`12 μC on each`,`24 μC, 36 μC, 72 μC`,`4 μC on each`,`132 μC on each`],
+   ans: 0,
+   sol: `Q = C<sub>eq</sub>V = 1 × 12 = <strong>12 μC</strong>, same on all three.`
+  },
+  {
+   q: `Voltage across the 2 μF capacitor?`,
+   opts: [`6 V`,`4 V`,`2 V`,`12 V`],
+   ans: 0,
+   sol: `V = Q/C = 12/2 = <strong>6 V</strong>. (3 μF → 4 V, 6 μF → 2 V. Total 12 V ✓.)`
+  },
+  {
+   tag: `Notes concept · slide 30`,
+   lbl: `Exam-level question`,
+   q: `★ 4 μF and 12 μF are in series across 20 V. The charge on each capacitor and the voltage across the 4 μF capacitor are`,
+   diagram: DIAGRAMS.seriesLoop(['4 μF','12 μF'],'20 V'),
+   opts: [`60 μC and 15 V`,`60 μC and 5 V`,`80 μC and 20 V`,`320 μC and 15 V`],
+   ans: 0,
+   sol: `C<sub>eq</sub> = 4 × 12/16 = 3 μF → Q = 3 × 20 = <strong>60 μC</strong> on each.<br>V on 4 μF = 60/4 = <strong>15 V</strong> (12 μF gets 5 V).<br><br>Smaller C → bigger V.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 19 ---------------------------------- */
+{
+ name: `Mixed circuit — charge on the 8 μF capacitor`,
+ mode: 'class',
+ questions: [
+  {
+   q: `4 μF, 6 μF and 12 μF are in series. Their equivalent is`,
+   opts: [`2 μF`,`22 μF`,`4 μF`,`1 μF`],
+   ans: 0,
+   sol: `1/C = 1/4 + 1/6 + 1/12 = (3 + 2 + 1)/12 = 6/12 → <strong>C = 2 μF</strong>.`
+  },
+  {
+   q: `In the circled branch (4 μF, 6 μF, 12 μF in series), the 6 μF has 20 μC. The 4 μF and 12 μF in that same branch have`,
+   diagram: DIAGRAMS.mixed2019(),
+   opts: [`20 μC each`,`13.3 μC and 40 μC`,`zero`,`10 μC each`],
+   ans: 0,
+   sol: `Series → <strong>same charge</strong> on all → 20 μC each.`
+  },
+  {
+   q: `The voltage across the whole circled branch is`,
+   opts: [`10 V`,`20 V`,`40 V`,`3.3 V`],
+   ans: 0,
+   sol: `V = Q/C<sub>branch</sub> = 20/2 = <strong>10 V</strong>.`
+  },
+  {
+   q: `The 8 μF capacitor and the circled branch both connect between the same two junctions. So they are`,
+   diagram: DIAGRAMS.mixed2019(),
+   opts: [`in parallel — same voltage`,`in series — same charge`,`not connected`,`in series — same voltage`],
+   ans: 0,
+   sol: `Same two end points → <strong>parallel</strong> → the 8 μF also has 10 V.`
+  },
+  {
+   q: `Check yourself: inside the branch, V on 4 μF + V on 6 μF + V on 12 μF should add up to`,
+   opts: [`5 + 3.33 + 1.67 = 10 V`,`20 V`,`3 × 10 = 30 V`,`5 + 5 + 5 = 15 V`],
+   ans: 0,
+   sol: `20/4 = 5 V, 20/6 = 3.33 V, 20/12 = 1.67 V. Sum = <strong>10 V</strong> ✓ — matches rung 3.`
+  },
+  {
+   tag: `JEE (Main) 2019`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> In the circuit shown, the charge on the 6 μF capacitor is 20 μC. Charge on the 8 μF capacitor is ______ μC.`,
+   diagram: DIAGRAMS.mixed2019(),
+   opts: [`80 μC`,`20 μC`,`40 μC`,`160 μC`],
+   ans: 0,
+   sol: `Branch C = 2 μF, Q = 20 μC → V = 10 V (rungs 1–3).<br>8 μF is parallel to it → V = 10 V (rung 4).<br>Q = 8 × 10 = <strong>80 μC</strong>.<br><br>20 μC is the trap: same charge works only for series, not for parallel.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 20 ---------------------------------- */
+{
+ name: `Hidden parallel — redraw the circuit by its junctions`,
+ mode: 'hw',
+ questions: [
+  {
+   q: `Two points are joined by a plain wire (no capacitor, no battery). Their potentials are`,
+   opts: [`equal — treat them as one junction`,`different`,`always zero`,`opposite`],
+   ans: 0,
+   sol: `A plain wire has no voltage drop. Both ends are at the <strong>same potential</strong>. Give them the same letter.`
+  },
+  {
+   q: `Two capacitors both connect between the same two junctions A and B. They are in`,
+   opts: [`parallel`,`series`,`neither`,`series if they are equal`],
+   ans: 0,
+   sol: `Same two end points → same V → <strong>parallel</strong>. It does not matter how the drawing looks.`
+  },
+  {
+   q: `Three capacitors each connect between A and B. Their equivalent is`,
+   diagram: DIAGRAMS.hwRedraw(),
+   opts: [`C₁ + C₂ + C₃`,`1/(1/C₁ + 1/C₂ + 1/C₃)`,`(C₁ + C₂ + C₃)/3`,`C₁C₂C₃`],
+   ans: 0,
+   sol: `All across the same A and B → parallel → <strong>add</strong>.`
+  },
+  {
+   q: `In the circuit, the junction between C₁ and C₂ is wired (bottom wire) to the point just before B. The junction between C₂ and C₃ is wired (top wire) to A. So C₁ sits between`,
+   diagram: DIAGRAMS.hwAB(),
+   opts: [`A and B`,`A and A`,`B and B`,`nowhere — it is shorted`],
+   ans: 0,
+   sol: `Left of C₁ is A. Right of C₁ is joined to B by the bottom wire. So C₁ is <strong>between A and B</strong>.<br>Same check: C₂ is between B (left) and A (right). C₃ is between A (left) and B (right). All three are across A and B.`
+  },
+  {
+   tag: `Your H-W · Q21`,
+   q: `Equivalent capacitance across AB in this circuit is`,
+   diagram: DIAGRAMS.hwAB(),
+   opts: [`60 μF`,`60/11 μF`,`15 μF`,`20 μF`],
+   ans: 0,
+   sol: `All three are in parallel (rung 4): 10 + 20 + 30 = <strong>60 μF</strong>.<br><br>60/11 μF is the series answer — what you get if you trust the drawing instead of the junctions.`
+  },
+  {
+   tag: `Your H-W · Q22`,
+   lbl: `Original question`,
+   q: `★ <strong>Original:</strong> In the given circuit, a battery of emf 10 V is connected across point A and B. Energy of capacitor C₂ is`,
+   diagram: DIAGRAMS.hwAB(),
+   opts: [`10⁻³ J`,`2 × 10⁻³ J`,`2.5 × 10⁻⁴ J`,`5 × 10⁻³ J`],
+   ans: 0,
+   sol: `C₂ is across A and B → it has the full 10 V.<br>U = ½CV² = ½ × 20 × 10⁻⁶ × 100 = <strong>10⁻³ J</strong>.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 21 ---------------------------------- */
+{
+ name: `Symmetric circuits — equal potentials, remove the middle`,
+ mode: 'class',
+ questions: [
+  {
+   q: `Two points P and Q are at the same potential. A capacitor joining P and Q has`,
+   opts: [`zero voltage, so zero charge — it can be removed`,`the full battery voltage`,`double charge`,`half the battery voltage`],
+   ans: 0,
+   sol: `V = 0 → Q = CV = 0. A capacitor with no charge does nothing → <strong>remove it</strong>.`
+  },
+  {
+   q: `A circuit between A and B looks exactly the same when flipped about the middle line (the line perpendicular to AB). The points on that middle line are`,
+   opts: [`all at the same potential`,`all at V<sub>A</sub>`,`all at zero only if B is earthed`,`at different potentials`],
+   ans: 0,
+   sol: `By symmetry, each point on the middle line is "halfway" between A and B → all at <strong>(V<sub>A</sub> + V<sub>B</sub>)/2</strong>. So V<sub>a</sub> = V<sub>b</sub> = V<sub>c</sub> as in your notes. Capacitors lying along that line carry no charge.`
+  },
+  {
+   q: `In a capacitor bridge (C₁, C₂ on top, C₃, C₄ below, C₅ in the middle), the middle capacitor has no charge when`,
+   diagram: DIAGRAMS.bridge({c1:'C₁',c2:'C₂',c3:'C₃',c4:'C₄',c5:'C₅'}),
+   opts: [`C₁/C₂ = C₃/C₄`,`C₁/C₃ = C₄/C₂`,`C₁ + C₂ = C₃ + C₄`,`C₅ = C₁`],
+   ans: 0,
+   sol: `Balanced bridge: <strong>C₁/C₂ = C₃/C₄</strong>. Then the two middle points are at the same potential → C₅ is removed.<br><br>Same look as the Wheatstone bridge.`
+  },
+  {
+   q: `All four arms are 2 μF and the middle one is 5 μF. Equivalent capacitance between A and B?`,
+   diagram: DIAGRAMS.bridge({c1:'2 μF',c2:'2 μF',c3:'2 μF',c4:'2 μF',c5:'5 μF'}),
+   opts: [`2 μF`,`7 μF`,`4 μF`,`1 μF`],
+   ans: 0,
+   sol: `Balanced (2/2 = 2/2) → remove 5 μF.<br>Top path: 2 and 2 in series = 1 μF. Bottom path = 1 μF.<br>Parallel → <strong>2 μF</strong>.`
+  },
+  {
+   q: `C₁ = 2 μF, C₂ = 4 μF (top), C₃ = 1 μF, C₄ = 2 μF (bottom), middle C₅ = 3 μF. Equivalent between A and B?`,
+   diagram: DIAGRAMS.bridge({c1:'2 μF',c2:'4 μF',c3:'1 μF',c4:'2 μF',c5:'3 μF'}),
+   opts: [`2 μF`,`5 μF`,`3 μF`,`9 μF`],
+   ans: 0,
+   sol: `2/4 = 1/2 → balanced → remove 3 μF.<br>Top: 2 × 4/6 = 4/3 μF. Bottom: 1 × 2/3 = 2/3 μF.<br>Total = 4/3 + 2/3 = <strong>2 μF</strong>.`
+  },
+  {
+   tag: `Notes concept · slide 27`,
+   lbl: `Exam-level question`,
+   q: `★ Six identical capacitors, each C, are joined as shown: a bridge of five between A and B, plus one more C directly from A to B. The equivalent capacitance between A and B is`,
+   diagram: DIAGRAMS.bridge({c1:'C',c2:'C',c3:'C',c4:'C',c5:'C',direct:'C'}),
+   opts: [`2C`,`3C`,`5C/2`,`C`],
+   ans: 0,
+   sol: `Bridge is balanced (C/C = C/C) → middle C removed.<br>Top path C/2, bottom path C/2 → bridge = C.<br>Add the direct C in parallel → <strong>2C</strong>.<br><br>3C comes from wrongly keeping the middle C.`
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 22 ---------------------------------- */
+{
+ name: `KCL and KVL with capacitors — charge on a junction`,
+ mode: 'class',
+ questions: [
+  {
+   q: `Three capacitors meet at an isolated junction (shaded). The junction-side plates have −q₁, +q₂ and +q₃. Since the junction started uncharged,`,
+   diagram: DIAGRAMS.junction(),
+   opts: [`−q₁ + q₂ + q₃ = 0, so q₁ = q₂ + q₃`,`q₁ + q₂ + q₃ = 0`,`q₁ = q₂ = q₃`,`q₁ = q₂ − q₃`],
+   ans: 0,
+   sol: `Charge on an isolated junction stays zero (like KCL for current).<br>−q₁ + q₂ + q₃ = 0 → <strong>q₁ = q₂ + q₃</strong>. Same as your notes.`
+  },
+  {
+   q: `In that figure q₁ = 30 μC and q₂ = 10 μC. Then q₃ is`,
+   opts: [`20 μC`,`40 μC`,`10 μC`,`zero`],
+   ans: 0,
+   sol: `q₃ = q₁ − q₂ = 30 − 10 = <strong>20 μC</strong>.`
+  },
+  {
+   q: `KVL sign rule from your notes: when you walk through a capacitor (or a cell) from its + side to its − side, you write`,
+   opts: [`minus (a drop): −q/C or −ε`,`plus: +q/C or +ε`,`zero`,`plus for capacitor, minus for cell`],
+   ans: 0,
+   sol: `+ to − → <strong>drop → minus</strong>. − to + → rise → plus. The same rule works for capacitors (q/C) and cells (ε). Then the sum around any closed loop = 0.`
+  },
+  {
+   q: `12 V battery with 2 μF and 4 μF in series. KVL: 12 − q/2 − q/4 = 0. The charge q is`,
+   diagram: DIAGRAMS.seriesLoop(['2 μF','4 μF'],'12 V'),
+   opts: [`16 μC`,`24 μC`,`8 μC`,`48 μC`],
+   ans: 0,
+   sol: `q(1/2 + 1/4) = 12 → q × 3/4 = 12 → <strong>q = 16 μC</strong>.`
+  },
+  {
+   q: `One loop: 10 V battery, 2 μF capacitor and a 4 V battery facing the other way (both + on top). Charge on the capacitor?`,
+   diagram: DIAGRAMS.loop2bat(),
+   opts: [`12 μC`,`28 μC`,`20 μC`,`8 μC`],
+   ans: 0,
+   sol: `Walk clockwise: up the 10 V cell (− to +) → +10. Across the capacitor → −q/2. Down the 4 V cell (+ to −) → −4.<br>10 − q/2 − 4 = 0 → q = <strong>12 μC</strong>.<br><br>28 μC adds the batteries — they oppose each other here.`
+  },
+  {
+   tag: `Notes concept · slides 28 & 29`,
+   lbl: `Exam-level question`,
+   q: `★ In the circuit, all capacitors are 2 μF and were uncharged at first. Take Y = 0 V and let X = x. Use "total charge on the plates touching X = 0". The charges on C₂ and C₃ are`,
+   diagram: DIAGRAMS.threeBranch(),
+   opts: [`12 μC and 0`,`12 μC and 12 μC`,`6 μC and 6 μC`,`24 μC and 0`],
+   ans: 0,
+   sol: `Plate charge on the X side = C × (x − other side):<br>• C₁: 2(x − 12)  • C₂: 2(x − 0)  • C₃: 2(x − 6)<br>Sum = 0 → 2x − 24 + 2x + 2x − 12 = 0 → 6x = 36 → x = 6 V.<br><br>C₂: 2 × 6 = <strong>12 μC</strong>. C₃: 2 × (6 − 6) = <strong>0</strong> — both sides at 6 V!<br>(C₁: 2 × 6 = 12 μC. Check at X: −12 + 12 + 0 = 0 ✓)`
+  }
+ ]
+}
+
+];
+
+
+const STORAGE_KEY = 'padipucast_capacitor_notes_ladder_v1';
+
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||'', lbl:raw.lbl||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; ${q.lbl||'Original question'}</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
