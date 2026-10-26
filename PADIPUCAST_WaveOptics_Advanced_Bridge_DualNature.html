@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Wave Optics Advanced + Bridge to Dual Nature</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+
+.lec-head{grid-column:1/-1;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:22px 0 2px;padding-bottom:8px;border-bottom:1px solid var(--border2);}
+.lec-head h2{font-family:'LemonMilk',sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--text);}
+.lec-head p{font-size:12.5px;color:var(--text2);margin-top:2px;}
+.key-card-btn{grid-column:1/-1;text-align:left;background:#fdf6e7;border:1px solid #f0dcae;border-radius:14px;padding:16px 18px;cursor:pointer;font-family:inherit;color:var(--text);transition:transform .15s,box-shadow .15s;}
+.key-card-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(180,83,9,.12);}
+.key-card-btn .kb-t{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#b45309;}
+.key-card-btn .kb-n{font-size:15px;font-weight:600;margin-top:4px;}
+.key-card-btn .kb-s{font-size:12.5px;color:var(--text2);margin-top:2px;}
+#qs-key{margin-top:12px;font-size:13.5px;color:#7c4a03;background:#fdf6e7;border:1px solid #f0dcae;border-left:3px solid #b45309;border-radius:8px;padding:10px 14px;}
+#qs-key b{color:#b45309;}
+#qs-key a{color:#b45309;cursor:pointer;text-decoration:underline;margin-left:6px;}
+.kcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-top:14px;}
+.kcard .kc-n{font-family:'LemonMilk',sans-serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);}
+.kcard h3{font-size:17px;margin:2px 0 6px;}
+.kcard .kc-idea{font-size:14.5px;margin-bottom:10px;}
+.kcard .kc-lbl{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#0f766e;margin:10px 0 4px;}
+.kcard ul{list-style:none;}
+.kcard li{font-size:14px;padding:3px 0 3px 16px;position:relative;}
+.kcard li::before{content:'';position:absolute;left:2px;top:12px;width:6px;height:6px;border-radius:50%;background:#0f766e;}
+.kcard .kc-f li{font-family:'DM Sans',sans-serif;background:#f0f7f6;border-radius:6px;margin:4px 0;padding:6px 10px 6px 22px;}
+.kcard .kc-f li::before{left:9px;top:15px;}
+.kcard .kc-trap{margin-top:12px;font-size:13.5px;background:var(--wrong-bg);border:1px solid var(--wrong-border);color:#8a2a1f;border-radius:8px;padding:8px 12px;}
+.kcard .kc-go{margin-top:12px;font-size:12px;color:var(--text2);}
+.key-foot{margin-top:20px;}
+#key-go{background:var(--pill-active-bg);color:var(--pill-active-text);border:none;border-radius:8px;padding:10px 18px;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Wave Optics &#183; Advanced + Bridge</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Wave Optics &#183; Advanced practice &#8594; Dual Nature</h1></div>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="key-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="key-topic"></div>
+      <div class="qs-title" id="key-title"></div>
+    </div>
+    <div id="key-list"></div>
+    <div class="key-foot"><button id="key-go" onclick="goHome()">Back to the ladders</button></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+      <div id="qs-key"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// PADIPUCAST · Wave Optics Advanced practice + bridge to Dual Nature
+const KEYS = {
+ "A1": {
+  "lec": 1,
+  "title": "Far-field YDSE at any angle",
+  "idea": "Far from the slits, path difference = d sin θ for ANY angle. Do not use y = nλD/d when θ is large.",
+  "f": [
+   "λ = c/f (find λ first, even for microwaves or radio)",
+   "Δx = d sin θ, φ = (2π/λ) d sin θ",
+   "I(θ) = I<sub>max</sub> cos²(φ/2)",
+   "Maxima: d sin θ = nλ; minima: d sin θ = (n + ½)λ"
+  ],
+  "what": [
+   "θ is measured from the central line (perpendicular bisector)",
+   "sin θ ≤ 1 limits how many maxima you get",
+   "d = λ/2 → only one maximum (θ = 0); d = λ → maxima at 0° and 90°"
+  ],
+  "trap": "At θ = 90° the path difference is d itself, not zero."
+ },
+ "A2": {
+  "lec": 1,
+  "title": "Oblique light and two media",
+  "idea": "Add the extra optical path BEFORE the slits to the path difference AFTER the slits. Central maximum is where the total is zero.",
+  "f": [
+   "Before slits (incidence θ, medium n<sub>1</sub>): n<sub>1</sub>d sin θ",
+   "After slits (angle θ′, medium n<sub>2</sub>): n<sub>2</sub>d sin θ′",
+   "Zero total: n<sub>1</sub> sin θ = n<sub>2</sub> sin θ′ (looks like Snell's law!)",
+   "Position on screen: y = D tan θ′",
+   "Vacuum wavelength λ<sub>0</sub> = nλ (if λ is given in a medium)"
+  ],
+  "what": [
+   "The slit the light reaches first is ‘ahead’ — the other slit's wave carries extra path",
+   "The central max lies on the side of the slit reached LATER",
+   "Phase = (2π/λ<sub>0</sub>) × optical path"
+  ],
+  "trap": "If λ is given inside a medium, change it to λ<sub>0</sub> before using optical path."
+ },
+ "A3": {
+  "lec": 1,
+  "title": "Thin sheet at Advanced level",
+  "idea": "A sheet adds (μ − 1)t to one beam. It can shift the pattern, or cancel the shift made by oblique light.",
+  "f": [
+   "Extra path = (μ − 1)t",
+   "Centre moves to n-th bright: (μ − 1)t = nλ",
+   "Bring centre back to O: (μ − 1)t = d sin θ (sheet on the slit reached first)"
+  ],
+  "what": [
+   "Pattern moves towards the covered slit",
+   "Fringe width does not change"
+  ],
+  "trap": "Put the sheet on the slit that is reached FIRST to cancel the oblique-incidence shift."
+ },
+ "B1": {
+  "lec": 2,
+  "title": "Bridge 1 · light behaves like particles",
+  "idea": "Interference, diffraction and polarisation need waves. But the photoelectric effect needs photons: light energy comes in packets E = hf.",
+  "f": [
+   "E = hf = hc/λ; E (eV) ≈ 1240/λ(nm)",
+   "Einstein: hc/λ = φ + K<sub>max</sub>",
+   "K<sub>max</sub> = eV<sub>s</sub>; φ = hc/λ<sub>0</sub> (λ<sub>0</sub> = threshold)"
+  ],
+  "what": [
+   "Brighter light → more electrons, not faster electrons",
+   "Below threshold frequency → no electrons at any brightness"
+  ],
+  "trap": "Two equations with the same φ? Subtract them to remove φ."
+ },
+ "B2": {
+  "lec": 2,
+  "title": "Bridge 2 · particles behave like waves",
+  "idea": "Electrons also diffract — just like light through a slit. So a moving particle has a wavelength.",
+  "f": [
+   "de Broglie: λ = h/p = h/mv",
+   "λ ∝ 1/v for the same particle",
+   "Electron through V volts: λ = h/√(2meV) ≈ 12.27/√V Å"
+  ],
+  "what": [
+   "Diffraction is clear only when the slit/gap is about λ",
+   "Crystal atom spacing (~1 Å) works for electrons of ~100 V"
+  ],
+  "trap": "Slower particle → longer wavelength (opposite of what students guess)."
+ }
+};
+const TOPICS = [
+ {
+  "name": "Microwave YDSE — intensity at any angle",
+  "mode": "class",
+  "part": "Far-field YDSE at any angle",
+  "lec": 1,
+  "c": "A1",
+  "keyIdea": "Far from the slits, path difference = d sin θ for ANY angle. Do not use y = nλD/d when θ is large.",
+  "questions": [
+   {
+    "q": "Microwaves of frequency 10<sup>6</sup> Hz travel at 3 × 10<sup>8</sup> m/s. Their wavelength is:",
+    "diagram": null,
+    "opts": [
+     "300 m",
+     "3 m",
+     "30 m",
+     "3000 m"
+    ],
+    "ans": 0,
+    "sol": "λ = c/f = (3 × 10<sup>8</sup>)/(10<sup>6</sup>) = <b>300 m</b>. Always find λ first.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Two slits are d apart. For a far-away point at angle θ from the central line, the path difference is:",
+    "diagram": null,
+    "opts": [
+     "d sin θ",
+     "d cos θ",
+     "d tan θ",
+     "yd/D only"
+    ],
+    "ans": 0,
+    "sol": "Far away, the two rays are almost parallel. The extra path is <b>d sin θ</b>. This works for any θ, even 90°.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "With d = 150 m and λ = 300 m, at θ = 30° the path difference is 75 m. As a fraction of λ this is:",
+    "diagram": null,
+    "opts": [
+     "λ/4",
+     "λ/2",
+     "λ",
+     "λ/8"
+    ],
+    "ans": 0,
+    "sol": "75/300 = <b>1/4</b>. So φ = (2π/λ)(λ/4) = π/2.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Two equal sources in phase: I = I<sub>0</sub> cos²(φ/2). At φ = π/2 the intensity is:",
+    "diagram": null,
+    "opts": [
+     "I<sub>0</sub>/2",
+     "I<sub>0</sub>/4",
+     "I<sub>0</sub>",
+     "zero"
+    ],
+    "ans": 0,
+    "sol": "cos²(π/4) = 1/2 → <b>I<sub>0</sub>/2</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "At θ = 90°, the path difference d sin 90° = 150 m = λ/2. The intensity there is:",
+    "diagram": null,
+    "opts": [
+     "zero",
+     "I<sub>0</sub>/2",
+     "I<sub>0</sub>/4",
+     "I<sub>0</sub>"
+    ],
+    "ans": 0,
+    "sol": "Δx = λ/2 → φ = π → cos²(π/2) = 0. <b>Zero</b> — a full minimum along the line of the slits.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In an interference arrangement similar to Young's double-slit experiment, the slits S<sub>1</sub> and S<sub>2</sub> are illuminated with coherent microwave sources, each of frequency 10<sup>6</sup> Hz, with zero phase difference. The slits are separated by d = 150.0 m and the screen is at a very large distance. I<sub>0</sub> is the maximum intensity. For 0 ≤ θ ≤ 90° (θ as shown), which statements are correct?<br>(A) I(θ) = I<sub>0</sub>/2 for θ = 30°<br>(B) I(θ) = I<sub>0</sub>/4 for θ = 90°<br>(C) I(θ) = I<sub>0</sub> for θ = 0°<br>(D) I(θ) is constant for all θ",
+    "diagram": "<svg viewBox=\"0 0 320 200\" width=\"320\" height=\"200\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"120.0\" y1=\"30.0\" x2=\"120.0\" y2=\"190.0\" stroke=\"#475569\" stroke-width=\"2\"/><circle cx=\"120.0\" cy=\"40.0\" r=\"3.5\" fill=\"#dc2626\"/><circle cx=\"120.0\" cy=\"180.0\" r=\"3.5\" fill=\"#dc2626\"/><text x=\"132.0\" y=\"38.0\" font-size=\"12\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">S<tspan font-size=\"9\" dy=\"3\">1</tspan></text><text x=\"132.0\" y=\"190.0\" font-size=\"12\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">S<tspan font-size=\"9\" dy=\"3\">2</tspan></text><line x1=\"120.0\" y1=\"110.0\" x2=\"300.0\" y2=\"110.0\" stroke=\"#64748b\" stroke-width=\"1\" stroke-dasharray=\"4 4\"/><line x1=\"120.0\" y1=\"110.0\" x2=\"267.2\" y2=\"25.0\" stroke=\"#2563eb\" stroke-width=\"1.5\" marker-end=\"url(#aC)\"/><path d=\"M 180 110 A 60 60 0 0 0 172.0 80.0\" stroke=\"#64748b\" stroke-width=\"1\" fill=\"none\"/><text x=\"190.0\" y=\"98.0\" font-size=\"12\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">θ</text><line x1=\"96.0\" y1=\"40.0\" x2=\"96.0\" y2=\"110.0\" stroke=\"#64748b\" stroke-width=\"1\"/><line x1=\"92.0\" y1=\"40.0\" x2=\"100.0\" y2=\"40.0\" stroke=\"#64748b\" stroke-width=\"1\"/><line x1=\"92.0\" y1=\"110.0\" x2=\"100.0\" y2=\"110.0\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"89.0\" y=\"79.0\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">d/2</text><line x1=\"96.0\" y1=\"110.0\" x2=\"96.0\" y2=\"180.0\" stroke=\"#64748b\" stroke-width=\"1\"/><line x1=\"92.0\" y1=\"110.0\" x2=\"100.0\" y2=\"110.0\" stroke=\"#64748b\" stroke-width=\"1\"/><line x1=\"92.0\" y1=\"180.0\" x2=\"100.0\" y2=\"180.0\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"89.0\" y=\"149.0\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">d/2</text><text x=\"220.0\" y=\"180.0\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">far-away screen</text></svg>",
+    "opts": [
+     "(A) and (C) only",
+     "(A), (B) and (C)",
+     "(C) only",
+     "(D) only"
+    ],
+    "ans": 0,
+    "sol": "λ = 300 m, d = λ/2.<br>θ = 0°: Δx = 0 → I = I<sub>0</sub>. (C) ✓<br>θ = 30°: Δx = 75 m = λ/4 → φ = π/2 → I = I<sub>0</sub>/2. (A) ✓<br>θ = 90°: Δx = 150 m = λ/2 → φ = π → I = 0, not I<sub>0</sub>/4. (B) ✗ — and I is clearly not constant. (D) ✗<br><b>Answer: (A) and (C).</b>",
+    "tag": "Elite Major Test-04 (17-10-26) · Q5",
+    "note": "In the paper this is a <b>one or more correct</b> question. Here the options list the combinations.",
+    "starLbl": "JEE Advanced pattern · Major Test-04"
+   }
+  ]
+ },
+ {
+  "name": "Same set-up, slits one wavelength apart",
+  "mode": "hw",
+  "part": "Far-field YDSE at any angle",
+  "lec": 1,
+  "c": "A1",
+  "keyIdea": "Far from the slits, path difference = d sin θ for ANY angle. Do not use y = nλD/d when θ is large.",
+  "questions": [
+   {
+    "q": "For far-field maxima, d sin θ = nλ. With d = λ this becomes:",
+    "diagram": null,
+    "opts": [
+     "sin θ = n",
+     "sin θ = n/2",
+     "sin θ = 2n",
+     "cos θ = n"
+    ],
+    "ans": 0,
+    "sol": "Divide by λ: <b>sin θ = n</b>. Since sin θ ≤ 1, only n = 0 and n = 1 work.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "With d = λ, minima need d sin θ = (n + ½)λ. In 0°–90° the minimum is at:",
+    "diagram": null,
+    "opts": [
+     "30°",
+     "45°",
+     "60°",
+     "90°"
+    ],
+    "ans": 0,
+    "sol": "sin θ = ½ → <b>θ = 30°</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "With d = λ, at the angle where sin θ = 1/4, the intensity is:",
+    "diagram": null,
+    "opts": [
+     "I<sub>0</sub>/2",
+     "I<sub>0</sub>/4",
+     "zero",
+     "I<sub>0</sub>"
+    ],
+    "ans": 0,
+    "sol": "Δx = λ/4 → φ = π/2 → <b>I<sub>0</sub>/2</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "How many maxima appear in 0° ≤ θ ≤ 90° when d = λ?",
+    "diagram": null,
+    "opts": [
+     "2",
+     "1",
+     "3",
+     "infinite"
+    ],
+    "ans": 0,
+    "sol": "n = 0 (θ = 0°) and n = 1 (θ = 90°): <b>2</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "(Practice, made from Q5.) The same microwave set-up (λ = 300 m) now has slits d = 300 m apart. For 0 ≤ θ ≤ 90°, which is correct?",
+    "diagram": null,
+    "opts": [
+     "Maxima at θ = 0° and 90°, a minimum at θ = 30°",
+     "Only one maximum, at θ = 0°",
+     "A minimum at θ = 90°",
+     "Intensity is the same at all angles"
+    ],
+    "ans": 0,
+    "sol": "d = λ. Maxima: sin θ = n → θ = 0° (n = 0) and 90° (n = 1). Minimum: sin θ = ½ → θ = 30°. <b>Maxima at 0° and 90°, minimum at 30°.</b>",
+    "tag": "Advanced practice (from Q5)",
+    "note": "",
+    "starLbl": "Advanced practice"
+   }
+  ]
+ },
+ {
+  "name": "Oblique light in air — where is the central maximum?",
+  "mode": "hw",
+  "part": "Oblique light and two media",
+  "lec": 1,
+  "c": "A2",
+  "keyIdea": "Add the extra optical path BEFORE the slits to the path difference AFTER the slits. Central maximum is where the total is zero.",
+  "questions": [
+   {
+    "q": "Parallel light falls on the slit plane at angle θ to the normal. Before reaching the slits, the wave going to the far slit travels an extra path of:",
+    "diagram": null,
+    "opts": [
+     "d sin θ",
+     "d cos θ",
+     "d tan θ",
+     "zero"
+    ],
+    "ans": 0,
+    "sol": "The wavefront is tilted. The slit reached later gets extra path <b>d sin θ</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In a medium of refractive index n, a geometric length L is worth an optical path of:",
+    "diagram": null,
+    "opts": [
+     "nL",
+     "L/n",
+     "L",
+     "n²L"
+    ],
+    "ans": 0,
+    "sol": "Optical path = <b>nL</b>. Always compare optical paths, not plain lengths.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "So if the light before the slits is in a medium n<sub>1</sub>, the extra optical path is:",
+    "diagram": null,
+    "opts": [
+     "n<sub>1</sub>d sin θ",
+     "d sin θ/n<sub>1</sub>",
+     "n<sub>1</sub>d cos θ",
+     "d sin θ"
+    ],
+    "ans": 0,
+    "sol": "Multiply by n<sub>1</sub>: <b>n<sub>1</sub>d sin θ</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "After the slits (medium n<sub>2</sub>), a point at angle θ′ has path difference:",
+    "diagram": null,
+    "opts": [
+     "n<sub>2</sub>d sin θ′",
+     "d sin θ′",
+     "n<sub>2</sub>d tan θ′",
+     "d sin θ′/n<sub>2</sub>"
+    ],
+    "ans": 0,
+    "sol": "Same rule on the screen side: <b>n<sub>2</sub>d sin θ′</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The central maximum is where:",
+    "diagram": null,
+    "opts": [
+     "the total optical path difference (before + after) is zero",
+     "the point is exactly at O always",
+     "only the after-slit path is zero",
+     "sin θ′ = 1"
+    ],
+    "ans": 0,
+    "sol": "Central maximum = zero <b>total</b> path difference. With oblique light it moves away from O.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "(Practice, made from the Q9 paragraph.) In a YDSE in air, d = 1 mm and D = 1 m. A parallel beam falls on the slits at θ = 30° to the normal, coming from above (so it reaches S<sub>1</sub> first). The y-coordinate of the central maximum is:",
+    "diagram": null,
+    "opts": [
+     "−1/√3 m",
+     "+1/√3 m",
+     "0",
+     "−1/2 m"
+    ],
+    "ans": 0,
+    "sol": "In air, zero total path needs sin θ′ = sin θ → θ′ = 30°, on the S<sub>2</sub> side (below O). y = −D tan 30° = <b>−1/√3 m</b> ≈ −0.58 m. The light just carries on in its own direction.<br>Note: this is option (D) of Q9 — the trap answer when you forget the two media.",
+    "tag": "Advanced practice (from Q9)",
+    "note": "",
+    "starLbl": "Advanced practice"
+   }
+  ]
+ },
+ {
+  "name": "Oblique light + two media — zero phase point",
+  "mode": "class",
+  "part": "Oblique light and two media",
+  "lec": 1,
+  "c": "A2",
+  "keyIdea": "Add the extra optical path BEFORE the slits to the path difference AFTER the slits. Central maximum is where the total is zero.",
+  "questions": [
+   {
+    "q": "Zero total path: n<sub>1</sub>d sin θ = n<sub>2</sub>d sin θ′. So sin θ′ =",
+    "diagram": null,
+    "opts": [
+     "n<sub>1</sub> sin θ/n<sub>2</sub>",
+     "n<sub>2</sub> sin θ/n<sub>1</sub>",
+     "sin θ",
+     "n<sub>1</sub>n<sub>2</sub> sin θ"
+    ],
+    "ans": 0,
+    "sol": "d cancels: <b>sin θ′ = n<sub>1</sub> sin θ/n<sub>2</sub></b>. Same form as Snell's law.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "With n<sub>1</sub> = 4/3, n<sub>2</sub> = 10/9, θ = 30°: sin θ′ =",
+    "diagram": null,
+    "opts": [
+     "0.6",
+     "0.5",
+     "0.75",
+     "0.8"
+    ],
+    "ans": 0,
+    "sol": "(4/3)(1/2) ÷ (10/9) = (2/3)(9/10) = <b>0.6</b> → θ′ = 37°.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Light reaches S<sub>1</sub> first, so S<sub>2</sub>'s wave carries extra path before the slits. To cancel it, the point must be:",
+    "diagram": null,
+    "opts": [
+     "nearer to S<sub>2</sub>, i.e. below O (y < 0)",
+     "nearer to S<sub>1</sub>, i.e. above O",
+     "exactly at O",
+     "at infinity"
+    ],
+    "ans": 0,
+    "sol": "Below O, S<sub>1</sub>'s wave has the longer path after the slits — that cancels S<sub>2</sub>'s lead. So <b>y is negative</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "θ′ = 37° (tan = 3/4) and D = 1 m. The distance from O is:",
+    "diagram": null,
+    "opts": [
+     "0.75 m",
+     "0.6 m",
+     "0.8 m",
+     "1.33 m"
+    ],
+    "ans": 0,
+    "sol": "|y| = D tan θ′ = <b>0.75 m</b>. Use tan, not sin.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "(Paragraph.) In the YDSE shown, a parallel beam of wavelength λ (in medium n<sub>1</sub>) falls at angle θ. S<sub>1</sub>O = S<sub>2</sub>O. The medium left of the slits has index n<sub>1</sub> and right of the slits n<sub>2</sub>. D = 1 m, d = 1 mm, θ = 30°, λ = 0.3 mm, n<sub>1</sub> = 4/3, n<sub>2</sub> = 10/9.<br>The y-coordinate of the point where the total phase difference between the interfering waves is zero is:",
+    "diagram": "<svg viewBox=\"0 0 350 228\" width=\"350\" height=\"228\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"150.0\" y1=\"20.0\" x2=\"150.0\" y2=\"200.0\" stroke=\"#475569\" stroke-width=\"2.5\"/><line x1=\"150.0\" y1=\"75.0\" x2=\"150.0\" y2=\"85.0\" stroke=\"#fff\" stroke-width=\"4\"/><line x1=\"150.0\" y1=\"135.0\" x2=\"150.0\" y2=\"145.0\" stroke=\"#fff\" stroke-width=\"4\"/><rect x=\"10.0\" y=\"20.0\" width=\"140.0\" height=\"180.0\" fill=\"#dbeafe\" fill-opacity=\"0.35\" stroke=\"none\" stroke-width=\"1.2\"/><rect x=\"150.0\" y=\"20.0\" width=\"150.0\" height=\"180.0\" fill=\"#dcfce7\" fill-opacity=\"0.35\" stroke=\"none\" stroke-width=\"1.2\"/><text x=\"60.0\" y=\"36.0\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">n<tspan font-size=\"9\" dy=\"3\">1</tspan> = 4/3</text><text x=\"225.0\" y=\"36.0\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">n<tspan font-size=\"9\" dy=\"3\">2</tspan> = 10/9</text><line x1=\"40.0\" y1=\"48.0\" x2=\"120.0\" y2=\"94.0\" stroke=\"#dc2626\" stroke-width=\"1.4\" marker-end=\"url(#aH)\"/><line x1=\"40.0\" y1=\"78.0\" x2=\"120.0\" y2=\"124.0\" stroke=\"#dc2626\" stroke-width=\"1.4\" marker-end=\"url(#aH)\"/><line x1=\"40.0\" y1=\"108.0\" x2=\"120.0\" y2=\"154.0\" stroke=\"#dc2626\" stroke-width=\"1.4\" marker-end=\"url(#aH)\"/><text x=\"52.0\" y=\"150.0\" font-size=\"11\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">θ = 30°</text><text x=\"158.0\" y=\"76.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">S<tspan font-size=\"9\" dy=\"3\">1</tspan></text><text x=\"158.0\" y=\"154.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">S<tspan font-size=\"9\" dy=\"3\">2</tspan></text><line x1=\"150.0\" y1=\"110.0\" x2=\"300.0\" y2=\"110.0\" stroke=\"#64748b\" stroke-width=\"1\" stroke-dasharray=\"4 4\"/><line x1=\"300.0\" y1=\"20.0\" x2=\"300.0\" y2=\"200.0\" stroke=\"#475569\" stroke-width=\"2\"/><circle cx=\"300.0\" cy=\"110.0\" r=\"3\" fill=\"#334155\"/><text x=\"292.0\" y=\"104.0\" font-size=\"12\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">O</text><line x1=\"305.0\" y1=\"110.0\" x2=\"305.0\" y2=\"40.0\" stroke=\"#334155\" stroke-width=\"1.1\" marker-end=\"url(#aI)\"/><text x=\"312.0\" y=\"46.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">y</text><text x=\"306.0\" y=\"196.0\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">screen</text><line x1=\"150.0\" y1=\"214.0\" x2=\"300.0\" y2=\"214.0\" stroke=\"#64748b\" stroke-width=\"1\"/><line x1=\"150.0\" y1=\"210.0\" x2=\"150.0\" y2=\"218.0\" stroke=\"#64748b\" stroke-width=\"1\"/><line x1=\"300.0\" y1=\"210.0\" x2=\"300.0\" y2=\"218.0\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"225.0\" y=\"228.0\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">D</text></svg>",
+    "opts": [
+     "y = −3/4 m",
+     "y = −3/5 m",
+     "y = +3/4 m",
+     "y = −1/√3 m"
+    ],
+    "ans": 0,
+    "sol": "n<sub>1</sub> sin 30° = n<sub>2</sub> sin θ′ → sin θ′ = 0.6 → θ′ = 37°, tan θ′ = 3/4.<br>Light reaches S<sub>1</sub> first, so the point is on the S<sub>2</sub> side (below O): y = −D tan θ′ = <b>−3/4 m</b>.",
+    "tag": "Elite Major Test-04 (17-10-26) · Q9",
+    "note": "",
+    "starLbl": "JEE Advanced pattern · Major Test-04"
+   }
+  ]
+ },
+ {
+  "name": "Oblique light + two media — nearest maximum above O",
+  "mode": "class",
+  "part": "Oblique light and two media",
+  "lec": 1,
+  "c": "A2",
+  "keyIdea": "Add the extra optical path BEFORE the slits to the path difference AFTER the slits. Central maximum is where the total is zero.",
+  "questions": [
+   {
+    "q": "λ = 0.3 mm inside a medium of n<sub>1</sub> = 4/3. The vacuum wavelength λ<sub>0</sub> is:",
+    "diagram": null,
+    "opts": [
+     "0.4 mm",
+     "0.225 mm",
+     "0.3 mm",
+     "0.533 mm"
+    ],
+    "ans": 0,
+    "sol": "λ<sub>0</sub> = n<sub>1</sub>λ = (4/3)(0.3) = <b>0.4 mm</b>. Phases use λ<sub>0</sub> with optical paths.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "At O the after-slit paths are equal. The total optical path difference at O is n<sub>1</sub>d sin 30° =",
+    "diagram": null,
+    "opts": [
+     "2/3 mm",
+     "1/2 mm",
+     "4/3 mm",
+     "1/3 mm"
+    ],
+    "ans": 0,
+    "sol": "(4/3)(1 mm)(1/2) = <b>2/3 mm</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The phase difference at O is (2π/λ<sub>0</sub>) × (2/3 mm) =",
+    "diagram": null,
+    "opts": [
+     "10π/3",
+     "5π/3",
+     "3π",
+     "4π"
+    ],
+    "ans": 0,
+    "sol": "(2π/0.4)(2/3) = 2π × (5/3) = <b>10π/3</b> = 3π + π/3. Not a maximum and not a minimum.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Going up from O, the phase difference increases. The next maximum needs a phase of 4π, so the extra path needed is:",
+    "diagram": null,
+    "opts": [
+     "λ<sub>0</sub>/3",
+     "λ<sub>0</sub>/2",
+     "2λ<sub>0</sub>/3",
+     "λ<sub>0</sub>"
+    ],
+    "ans": 0,
+    "sol": "4π − 10π/3 = 2π/3 → extra path = (2π/3)(λ<sub>0</sub>/2π) = <b>λ<sub>0</sub>/3</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "This extra path comes from the screen side: n<sub>2</sub>d sin θ<sub>1</sub> = λ<sub>0</sub>/3. So sin θ<sub>1</sub> =",
+    "diagram": null,
+    "opts": [
+     "3/25",
+     "1/8",
+     "3/10",
+     "2/15"
+    ],
+    "ans": 0,
+    "sol": "sin θ<sub>1</sub> = (0.4/3 mm)/[(10/9)(1 mm)] = (0.4/3)(0.9) = <b>0.12 = 3/25</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "(Same paragraph: D = 1 m, d = 1 mm, θ = 30°, λ = 0.3 mm in medium n<sub>1</sub>, n<sub>1</sub> = 4/3, n<sub>2</sub> = 10/9.) The y-coordinate of the nearest maximum above O will be:",
+    "diagram": "<svg viewBox=\"0 0 350 228\" width=\"350\" height=\"228\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"150.0\" y1=\"20.0\" x2=\"150.0\" y2=\"200.0\" stroke=\"#475569\" stroke-width=\"2.5\"/><line x1=\"150.0\" y1=\"75.0\" x2=\"150.0\" y2=\"85.0\" stroke=\"#fff\" stroke-width=\"4\"/><line x1=\"150.0\" y1=\"135.0\" x2=\"150.0\" y2=\"145.0\" stroke=\"#fff\" stroke-width=\"4\"/><rect x=\"10.0\" y=\"20.0\" width=\"140.0\" height=\"180.0\" fill=\"#dbeafe\" fill-opacity=\"0.35\" stroke=\"none\" stroke-width=\"1.2\"/><rect x=\"150.0\" y=\"20.0\" width=\"150.0\" height=\"180.0\" fill=\"#dcfce7\" fill-opacity=\"0.35\" stroke=\"none\" stroke-width=\"1.2\"/><text x=\"60.0\" y=\"36.0\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">n<tspan font-size=\"9\" dy=\"3\">1</tspan> = 4/3</text><text x=\"225.0\" y=\"36.0\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">n<tspan font-size=\"9\" dy=\"3\">2</tspan> = 10/9</text><line x1=\"40.0\" y1=\"48.0\" x2=\"120.0\" y2=\"94.0\" stroke=\"#dc2626\" stroke-width=\"1.4\" marker-end=\"url(#aH)\"/><line x1=\"40.0\" y1=\"78.0\" x2=\"120.0\" y2=\"124.0\" stroke=\"#dc2626\" stroke-width=\"1.4\" marker-end=\"url(#aH)\"/><line x1=\"40.0\" y1=\"108.0\" x2=\"120.0\" y2=\"154.0\" stroke=\"#dc2626\" stroke-width=\"1.4\" marker-end=\"url(#aH)\"/><text x=\"52.0\" y=\"150.0\" font-size=\"11\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">θ = 30°</text><text x=\"158.0\" y=\"76.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">S<tspan font-size=\"9\" dy=\"3\">1</tspan></text><text x=\"158.0\" y=\"154.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">S<tspan font-size=\"9\" dy=\"3\">2</tspan></text><line x1=\"150.0\" y1=\"110.0\" x2=\"300.0\" y2=\"110.0\" stroke=\"#64748b\" stroke-width=\"1\" stroke-dasharray=\"4 4\"/><line x1=\"300.0\" y1=\"20.0\" x2=\"300.0\" y2=\"200.0\" stroke=\"#475569\" stroke-width=\"2\"/><circle cx=\"300.0\" cy=\"110.0\" r=\"3\" fill=\"#334155\"/><text x=\"292.0\" y=\"104.0\" font-size=\"12\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">O</text><line x1=\"305.0\" y1=\"110.0\" x2=\"305.0\" y2=\"40.0\" stroke=\"#334155\" stroke-width=\"1.1\" marker-end=\"url(#aI)\"/><text x=\"312.0\" y=\"46.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">y</text><text x=\"306.0\" y=\"196.0\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">screen</text><line x1=\"150.0\" y1=\"214.0\" x2=\"300.0\" y2=\"214.0\" stroke=\"#64748b\" stroke-width=\"1\"/><line x1=\"150.0\" y1=\"210.0\" x2=\"150.0\" y2=\"218.0\" stroke=\"#64748b\" stroke-width=\"1\"/><line x1=\"300.0\" y1=\"210.0\" x2=\"300.0\" y2=\"218.0\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"225.0\" y=\"228.0\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">D</text></svg>",
+    "opts": [
+     "150/√154 cm",
+     "24 cm",
+     "100/√99 cm",
+     "None of these"
+    ],
+    "ans": 0,
+    "sol": "Phase at O = 10π/3 = 3π + π/3. Going up it increases; the next maximum is at 4π, so we need 2π/3 more, i.e. extra path λ<sub>0</sub>/3.<br>n<sub>2</sub>d sin θ<sub>1</sub> = λ<sub>0</sub>/3 → sin θ<sub>1</sub> = 3/25 → tan θ<sub>1</sub> = 3/√616.<br>y = D tan θ<sub>1</sub> = 300/√616 cm = <b>150/√154 cm</b> (≈ 12.1 cm).",
+    "tag": "Elite Major Test-04 (17-10-26) · Q10",
+    "note": "",
+    "starLbl": "JEE Advanced pattern · Major Test-04"
+   }
+  ]
+ },
+ {
+  "name": "Sheet moves the centre to the 4th bright fringe",
+  "mode": "hw",
+  "part": "Thin sheet at Advanced level",
+  "lec": 1,
+  "c": "A3",
+  "keyIdea": "A sheet adds (μ − 1)t to one beam. It can shift the pattern, or cancel the shift made by oblique light.",
+  "questions": [
+   {
+    "q": "A glass sheet (μ, thickness t) in front of one slit adds an extra optical path of:",
+    "diagram": null,
+    "opts": [
+     "(μ − 1)t",
+     "μt",
+     "t",
+     "(μ + 1)t"
+    ],
+    "ans": 0,
+    "sol": "Glass replaces air of the same thickness: μt − t = <b>(μ − 1)t</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The centre (zero path difference) now moves to where the old path difference was (μ − 1)t. If that equals nλ, the centre sits at:",
+    "diagram": null,
+    "opts": [
+     "the old n-th bright fringe",
+     "the old n-th dark fringe",
+     "O itself",
+     "infinity"
+    ],
+    "ans": 0,
+    "sol": "Old n-th bright had path difference nλ. So the new centre lands on the <b>old n-th bright fringe</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The pattern shifts:",
+    "diagram": null,
+    "opts": [
+     "towards the covered slit",
+     "away from the covered slit",
+     "does not shift",
+     "only gets wider"
+    ],
+    "ans": 0,
+    "sol": "The covered slit's light is slowed; to balance it, the centre moves to points nearer that slit — <b>towards the covered slit</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "μ = 1.5, λ = 600 nm, centre moves to the 1st bright fringe. t =",
+    "diagram": null,
+    "opts": [
+     "1.2 μm",
+     "0.6 μm",
+     "0.3 μm",
+     "2.4 μm"
+    ],
+    "ans": 0,
+    "sol": "(0.5)t = 600 nm → t = 1200 nm = <b>1.2 μm</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Monochromatic light of wavelength 500 nm is used in Young's double slit experiment. When one of the slits is covered with a very thin glass plate (refractive index 1.5), the central maximum shifts to the position previously occupied by the 4th bright fringe. The thickness of the glass plate is ____ μm.",
+    "diagram": null,
+    "opts": [
+     "4",
+     "2",
+     "8",
+     "1"
+    ],
+    "ans": 0,
+    "sol": "(μ − 1)t = 4λ → t = (4 × 500 nm)/0.5 = 4000 nm = <b>4 μm</b>.",
+    "tag": "Elite Major Test-04 (17-10-26) · Numerical Q3",
+    "note": "In the paper this is a numerical-value question.",
+    "starLbl": "JEE Advanced pattern · Major Test-04"
+   }
+  ]
+ },
+ {
+  "name": "Use a sheet to cancel the oblique-light shift",
+  "mode": "hw",
+  "part": "Thin sheet at Advanced level",
+  "lec": 1,
+  "c": "A3",
+  "keyIdea": "A sheet adds (μ − 1)t to one beam. It can shift the pattern, or cancel the shift made by oblique light.",
+  "questions": [
+   {
+    "q": "Light reaches S<sub>1</sub> first. Before the slits, the wave going to S<sub>2</sub> has extra path d sin θ. Without any sheet, the central maximum shifts:",
+    "diagram": null,
+    "opts": [
+     "towards S<sub>2</sub> (below O)",
+     "towards S<sub>1</sub> (above O)",
+     "nowhere",
+     "to infinity"
+    ],
+    "ans": 0,
+    "sol": "S<sub>2</sub>'s wave is behind, so the centre moves to the <b>S<sub>2</sub> side</b>, where S<sub>1</sub>'s after-slit path is longer.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A sheet on S<sub>1</sub> adds (μ − 1)t to S<sub>1</sub>'s wave. On its own, it shifts the pattern:",
+    "diagram": null,
+    "opts": [
+     "towards S<sub>1</sub>",
+     "towards S<sub>2</sub>",
+     "not at all",
+     "both ways"
+    ],
+    "ans": 0,
+    "sol": "A sheet always pulls the pattern <b>towards the covered slit</b> — here S<sub>1</sub>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The two shifts cancel and the centre returns to O when:",
+    "diagram": null,
+    "opts": [
+     "(μ − 1)t = d sin θ",
+     "(μ − 1)t = λ",
+     "μt = d sin θ",
+     "t = d sin θ"
+    ],
+    "ans": 0,
+    "sol": "Total path difference at O must be zero: <b>(μ − 1)t = d sin θ</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "d = 0.1 mm and θ = 0.01 rad (small). d sin θ is about:",
+    "diagram": null,
+    "opts": [
+     "1 μm",
+     "10 μm",
+     "0.1 μm",
+     "0.01 mm"
+    ],
+    "ans": 0,
+    "sol": "d sin θ ≈ dθ = (10<sup>−4</sup> m)(0.01) = 10<sup>−6</sup> m = <b>1 μm</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "(Advanced practice, joining Q9 and Numerical Q3.) In air, light falls on a double slit (d = 0.1 mm) at a small angle θ = 0.01 rad, reaching S<sub>1</sub> first. A glass sheet (μ = 1.5) is placed on S<sub>1</sub> so that the central maximum comes back to O. The thickness of the sheet is:",
+    "diagram": null,
+    "opts": [
+     "2 μm",
+     "1 μm",
+     "0.5 μm",
+     "4 μm"
+    ],
+    "ans": 0,
+    "sol": "Need (μ − 1)t = d sin θ ≈ dθ = 10<sup>−4</sup> × 0.01 = 10<sup>−6</sup> m. t = 10<sup>−6</sup>/0.5 = <b>2 μm</b>.",
+    "tag": "Advanced practice (Q9 + Q3)",
+    "note": "",
+    "starLbl": "Advanced practice"
+   }
+  ]
+ },
+ {
+  "name": "Where the wave picture stops working",
+  "mode": "class",
+  "part": "Bridge 1 · light behaves like particles",
+  "lec": 2,
+  "c": "B1",
+  "keyIdea": "Interference, diffraction and polarisation need waves. But the photoelectric effect needs photons: light energy comes in packets E = hf.",
+  "questions": [
+   {
+    "q": "Which of these can the wave theory of light explain?",
+    "diagram": null,
+    "opts": [
+     "Interference, diffraction and polarisation",
+     "The photoelectric effect",
+     "Why there is a threshold frequency",
+     "Why electrons come out with no time delay"
+    ],
+    "ans": 0,
+    "sol": "Everything we did in Wave Optics — <b>interference, diffraction, polarisation</b> — needs waves. The other three are photoelectric facts that waves cannot explain.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Very bright red light gives no photoelectrons, but weak violet light does. This shows that the energy of light comes in packets of size:",
+    "diagram": null,
+    "opts": [
+     "E = hf (depends on frequency)",
+     "E ∝ intensity",
+     "E ∝ amplitude²",
+     "E = mc² of the light beam"
+    ],
+    "ans": 0,
+    "sol": "Each photon carries <b>E = hf</b>. Brightness only changes the <b>number</b> of photons, not the energy of each one.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Energy of one photon of wavelength 400 nm (use hc = 1240 eV nm):",
+    "diagram": null,
+    "opts": [
+     "3.1 eV",
+     "4.96 eV",
+     "1.24 eV",
+     "2.5 eV"
+    ],
+    "ans": 0,
+    "sol": "E = 1240/400 = <b>3.1 eV</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Einstein's photoelectric equation is:",
+    "diagram": null,
+    "opts": [
+     "hc/λ = φ + ½mv<sub>max</sub>²",
+     "hc/λ = φ − ½mv<sub>max</sub>²",
+     "hcλ = φ + ½mv<sub>max</sub>²",
+     "φ = hc/λ + ½mv<sub>max</sub>²"
+    ],
+    "ans": 0,
+    "sol": "Photon energy = work function (to get out) + maximum KE: <b>hc/λ = φ + ½mv<sub>max</sub>²</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "If the maximum speed doubles (v → 2v), the maximum kinetic energy becomes:",
+    "diagram": null,
+    "opts": [
+     "4 times",
+     "2 times",
+     "√2 times",
+     "the same"
+    ],
+    "ans": 0,
+    "sol": "KE ∝ v². (2v)² = 4v² → <b>4 times</b>. So the second equation has 4 × (½mv²).",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "When a metal surface is illuminated by light of wavelength 400 nm and 250 nm, the maximum speeds of the photoelectrons are v and 2v respectively. The work function of the metal is:",
+    "diagram": null,
+    "opts": [
+     "2hc × 10<sup>6</sup> J",
+     "3hc × 10<sup>6</sup> J",
+     "hc × 10<sup>6</sup> J",
+     "0.5hc × 10<sup>6</sup> J"
+    ],
+    "ans": 0,
+    "sol": "hc/(400 nm) = φ + ½mv² … (i)<br>hc/(250 nm) = φ + 4(½mv²) … (ii)<br>4 × (i) − (ii): hc(4/400 − 1/250) nm<sup>−1</sup> = 3φ → hc(0.006 nm<sup>−1</sup>) = 3φ → φ = hc × 0.002 nm<sup>−1</sup> = hc × 2 × 10<sup>6</sup> m<sup>−1</sup>.<br><b>φ = 2hc × 10<sup>6</sup> J</b> (with h and c in SI units).",
+    "tag": "Elite Major Test-04 (17-10-26) · Q1",
+    "note": "",
+    "starLbl": "JEE Advanced pattern · Major Test-04"
+   }
+  ]
+ },
+ {
+  "name": "Two stopping potentials → threshold wavelength",
+  "mode": "hw",
+  "part": "Bridge 1 · light behaves like particles",
+  "lec": 2,
+  "c": "B1",
+  "keyIdea": "Interference, diffraction and polarisation need waves. But the photoelectric effect needs photons: light energy comes in packets E = hf.",
+  "questions": [
+   {
+    "q": "The stopping potential V<sub>s</sub> is related to the maximum kinetic energy by:",
+    "diagram": null,
+    "opts": [
+     "K<sub>max</sub> = eV<sub>s</sub>",
+     "K<sub>max</sub> = V<sub>s</sub>/e",
+     "K<sub>max</sub> = eV<sub>s</sub>²",
+     "K<sub>max</sub> = hV<sub>s</sub>"
+    ],
+    "ans": 0,
+    "sol": "The reverse voltage just stops the fastest electron: <b>eV<sub>s</sub> = K<sub>max</sub></b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The threshold wavelength λ<sub>0</sub> is the longest λ that can still eject electrons. It is related to the work function by:",
+    "diagram": null,
+    "opts": [
+     "φ = hc/λ<sub>0</sub>",
+     "φ = hcλ<sub>0</sub>",
+     "φ = λ<sub>0</sub>/hc",
+     "φ = hλ<sub>0</sub>/c"
+    ],
+    "ans": 0,
+    "sol": "At threshold K<sub>max</sub> = 0, so hc/λ<sub>0</sub> = φ → <b>φ = hc/λ<sub>0</sub></b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "You have hc/λ<sub>1</sub> = φ + eV<sub>1</sub> and hc/λ<sub>2</sub> = φ + eV<sub>2</sub>. The quickest way to remove φ is to:",
+    "diagram": null,
+    "opts": [
+     "subtract the two equations",
+     "add them",
+     "divide them",
+     "square them"
+    ],
+    "ans": 0,
+    "sol": "<b>Subtract</b>: φ cancels and you get hc(1/λ<sub>1</sub> − 1/λ<sub>2</sub>) = e(V<sub>1</sub> − V<sub>2</sub>). Same trick as the previous ladder.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Light of 2 eV photons gives K<sub>max</sub> = 0.5 eV. The work function is:",
+    "diagram": null,
+    "opts": [
+     "1.5 eV",
+     "2.5 eV",
+     "0.5 eV",
+     "4 eV"
+    ],
+    "ans": 0,
+    "sol": "φ = E − K<sub>max</sub> = 2 − 0.5 = <b>1.5 eV</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "For a certain metal, when monochromatic light of wavelength λ is incident, the stopping potential for photoelectrons is 3V<sub>0</sub>. When the same metal is illuminated by light of wavelength 2λ, the stopping potential becomes V<sub>0</sub>. The threshold wavelength for photoelectric emission for the metal is αλ. The value of α is:",
+    "diagram": null,
+    "opts": [
+     "4",
+     "1",
+     "2",
+     "3"
+    ],
+    "ans": 0,
+    "sol": "hc/λ = φ + 3eV<sub>0</sub> … (i); hc/2λ = φ + eV<sub>0</sub> … (ii).<br>(i) − (ii): hc/2λ = 2eV<sub>0</sub> → eV<sub>0</sub> = hc/4λ.<br>From (ii): φ = hc/2λ − hc/4λ = hc/4λ → λ<sub>0</sub> = hc/φ = <b>4λ</b>. So α = 4.",
+    "tag": "Q9 · JEE Main 2026 2nd April Morning Shift (Dual Nature PYQ)",
+    "note": "",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "From light diffraction to electron waves",
+  "mode": "class",
+  "part": "Bridge 2 · particles behave like waves",
+  "lec": 2,
+  "c": "B2",
+  "keyIdea": "Electrons also diffract — just like light through a slit. So a moving particle has a wavelength.",
+  "questions": [
+   {
+    "q": "(Wave Optics recall.) A slit shows strong diffraction when its width is:",
+    "diagram": null,
+    "opts": [
+     "about the same as the wavelength",
+     "much larger than the wavelength",
+     "zero",
+     "any size — diffraction does not depend on width"
+    ],
+    "ans": 0,
+    "sol": "Spreading ∝ λ/a. It is clear when <b>a is close to λ</b>. Very wide openings give almost straight beams.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A beam of electrons passing through a crystal (atom spacing ~1 Å) makes a diffraction pattern, like light through slits. This shows that electrons:",
+    "diagram": null,
+    "opts": [
+     "also behave like waves",
+     "are photons",
+     "have no mass",
+     "travel faster than light"
+    ],
+    "ans": 0,
+    "sol": "Only waves diffract. So moving electrons <b>behave like waves</b> (Davisson–Germer). Their wavelength must be about 1 Å.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "de Broglie's formula for the wavelength of a particle of mass m and speed v is:",
+    "diagram": null,
+    "opts": [
+     "λ = h/mv",
+     "λ = mv/h",
+     "λ = hc/E",
+     "λ = h/m"
+    ],
+    "ans": 0,
+    "sol": "<b>λ = h/p = h/mv</b>. Bigger momentum → shorter wavelength.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An electron's speed is doubled. Its de Broglie wavelength becomes:",
+    "diagram": null,
+    "opts": [
+     "half",
+     "double",
+     "four times",
+     "the same"
+    ],
+    "ans": 0,
+    "sol": "λ ∝ 1/v → <b>half</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An electron accelerated through 100 V has λ ≈ 12.27/√V Å =",
+    "diagram": null,
+    "opts": [
+     "1.227 Å",
+     "12.27 Å",
+     "0.1227 Å",
+     "122.7 Å"
+    ],
+    "ans": 0,
+    "sol": "12.27/√100 = 12.27/10 = <b>1.227 Å</b> — the same size as the atom spacing in a crystal. That is why crystals diffract electrons.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An electron is travelling with a velocity v in free space and when it enters a medium, its velocity is reduced by 20%. The de Broglie wavelength of the electron in the medium is αλ<sub>0</sub>, where λ<sub>0</sub> is its de Broglie wavelength in free space. The value of α is:",
+    "diagram": null,
+    "opts": [
+     "1.25",
+     "1.20",
+     "1.0",
+     "0.75"
+    ],
+    "ans": 0,
+    "sol": "λ = h/mv ∝ 1/v. New speed = 0.8v → λ = λ<sub>0</sub>/0.8 = <b>1.25λ<sub>0</sub></b>. (Not 1.20 — that is the common mistake.)",
+    "tag": "Q14 · JEE Main 2026 5th April Evening Shift (Dual Nature PYQ)",
+    "note": "",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ }
+];
+
+const STORAGE_KEY = 'padipucast_waveoptics_adv_bridge_dualnature_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||'', starLbl:raw.starLbl||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  let lastLec=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    if(topic.lec!==lastLec){
+      lastLec=topic.lec;
+      const nl=TOPICS.filter(t=>t.lec===topic.lec).length;
+      const cs=Object.keys(KEYS).filter(k=>KEYS[k].lec===topic.lec);
+      const h=document.createElement('div'); h.className='lec-head';
+      h.innerHTML=`<div><h2>${topic.lec===1?'Part A &#183; Wave Optics at Advanced level':'Part B &#183; Bridge to Dual Nature'}</h2><p>${cs.length} concepts &#183; ${nl} ladders</p></div>`;
+      topicGrid.appendChild(h);
+      const kb=document.createElement('button'); kb.className='key-card-btn';
+      kb.innerHTML=`<div class="kb-t">&#9733; Start here &#183; Key ideas</div><div class="kb-n">${topic.lec===1?'Part A':'Part B'} key ideas &#8212; ${cs.length} concept cards</div><div class="kb-s">${cs.map(k=>KEYS[k].title).join(' &#183; ')}</div>`;
+      kb.onclick=()=>openKeys(topic.lec);
+      topicGrid.appendChild(kb);
+    }
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}${topic.part?' &#183; '+topic.part:''} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+
+const keyScreen=document.getElementById('key-screen');
+function openKeys(lec,focus){
+  homeScreen.classList.remove('active'); qScreen.classList.remove('active'); keyScreen.classList.add('active');
+  backBtn.style.display='flex'; hideYT();
+  const cs=Object.keys(KEYS).filter(k=>KEYS[k].lec===lec);
+  document.getElementById('key-topic').innerHTML=`${lec===1?'Part A':'Part B'} &#183; key ideas`;
+  document.getElementById('key-title').innerHTML=`${lec===1?'Wave Optics at Advanced level':'From waves to photons and matter waves'} &#8212; read these before the ladders`;
+  document.getElementById('key-list').innerHTML=cs.map((k,i)=>{const c=KEYS[k];
+    const lad=TOPICS.map((t,ti)=>({t,ti})).filter(x=>x.t.c===k).map(x=>'L'+String(x.ti+1).padStart(2,'0')).join(', ');
+    return `<div class="kcard" id="kc-${k}"><div class="kc-n">Concept ${i+1} of ${cs.length}</div><h3>${c.title}</h3>
+    <div class="kc-idea">${c.idea}</div>
+    <div class="kc-lbl">Formulas</div><ul class="kc-f">${c.f.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <div class="kc-lbl">What is what</div><ul>${c.what.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <div class="kc-trap"><b>Watch out:</b> ${c.trap}</div>
+    <div class="kc-go">Ladders for this concept: ${lad}</div></div>`;}).join('');
+  if(focus){const el=document.getElementById('kc-'+focus); if(el) setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);} else window.scrollTo(0,0);
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active'); keyScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active'); keyScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')}${curTopic.part?' &#183; '+curTopic.part:''} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  document.getElementById('qs-key').innerHTML=`<b>Key idea.</b> ${curTopic.keyIdea} <a onclick="openKeys(${curTopic.lec},'${curTopic.c}')">Open key ideas</a>`;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; ${q.starLbl||'Original question'}</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
