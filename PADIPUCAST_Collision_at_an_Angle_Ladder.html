@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Collision at an Angle &#183; Ladders</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Centre of Mass &#183; Collision at an Angle</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Collision at an Angle<br>Oblique collisions, one small step at a time</h1></div>
+    <p id="home-sub">Every &#8220;collision at an angle&#8221; question in the <strong>ALLEN JEE module</strong> (Centre of Mass, sections 4.3&#8211;4.4) and its PYQ exercises: Illustrations 37&#8211;39, Beginner&#8217;s Box 5, Worked Illustrations 6 &amp; 7, Exercise 1&#8211;3, and the JEE Main / Advanced PYQs of Exercise 4(A), 4(B) and 5. Every rung shows its source tag.<br><br><strong>The one rule behind all of it:</strong> break every velocity into an <strong>n-part</strong> (along the line of impact) and a <strong>t-part</strong> (along the common tangent). Smooth surfaces never change the t-part. Momentum and e work along n. For free bodies, also keep momentum along x and y separately.<br><br>The flow: momentum as a vector &#8594; sticking at an angle &#8594; pieces flying apart &#8594; n and t axes &#8594; walls &#8594; corners and two walls &#8594; inclines &#8594; the ground &#8594; two discs &#8594; the 90&#176; rule &#8594; one ball on two &#8594; a ball on a string &#8594; a free wedge.<br><br>Each ladder has <strong>5 or 6 rungs</strong>: small build-up steps, each teaching one idea, then the &#9733; module question. Every ladder is marked <strong>DISCUSS IN CLASS</strong> or <strong>HOMEWORK</strong>. 13 ladders, 72 questions. Take g = 10 m/s<sup>2</sup> unless the question says otherwise.</p>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===============================================================================
+//  SVG DIAGRAM LIBRARY - Collision  (PADIPUCAST)
+// ===============================================================================
+const AR = (id,c)=>`<marker id="${id}" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="${c}"/></marker>`;
+const FS = 'font-family="sans-serif"';
+const INK='#1a1916', GREY='#6b7280', RED='#c0392b', GRN='#1a7a4a', AMB='#b45309', BLU='#1d4ed8';
+const FILL_T='#e6f1f4', FILL_B='#c9e2e9', FILL_C='#fbe7cc';
+
+let _uid = 0;
+function _nid(){ return 'm'+(++_uid); }
+const _f = n => Math.round(n*10)/10;
+
+// hatched ground line
+function _hatch(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+9;x<x1;x+=11){ s+=`<line x1="${x}" y1="${y}" x2="${x-8}" y2="${y+9}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+function _ln(x0,y0,x1,y1,c,w,dash){
+  return `<line x1="${_f(x0)}" y1="${_f(y0)}" x2="${_f(x1)}" y2="${_f(y1)}" stroke="${c}" stroke-width="${w||1.6}"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+}
+function _tx(x,y,t,o){
+  o=o||{};
+  return `<text x="${_f(x)}" y="${_f(y)}" font-size="${o.s||11}" text-anchor="${o.a||'middle'}" fill="${o.c||INK}" ${FS}${o.b?' font-weight="700"':''}${o.i?' font-style="italic"':''}>${t}</text>`;
+}
+function _ar(x0,y0,x1,y1,c,w){
+  const id=_nid();
+  return `<defs>${AR(id,c)}</defs><line x1="${_f(x0)}" y1="${_f(y0)}" x2="${_f(x1)}" y2="${_f(y1)}" stroke="${c}" stroke-width="${w||2.2}" marker-end="url(#${id})"/>`;
+}
+function _ball(cx,cy,r,lbl,sub,fill){
+  let s=`<circle cx="${_f(cx)}" cy="${_f(cy)}" r="${r}" fill="${fill||FILL_T}" stroke="${INK}" stroke-width="1.7"/>`;
+  if(lbl) s+=_tx(cx,cy+(sub?-1:4),lbl,{s:11.5,b:1});
+  if(sub) s+=_tx(cx,cy+12,sub,{s:9.5,c:GREY});
+  return s;
+}
+// velocity arrow drawn ABOVE a ball, so two approaching balls never clash
+function _vel(cx,cy,r,dir,lbl,c,len){
+  if(!dir) return _tx(cx,cy+r+14,lbl||'at rest',{s:10,c:GREY});
+  len=len||38; c=c||RED;
+  const y=cy-r-9, x0=cx-dir*len*0.45, x1=cx+dir*len*0.55;
+  return _ar(x0,y,x1,y,c)+_tx(cx+dir*3,y-7,lbl,{s:11,c:c,b:1});
+}
+// a ball flattened against its partner at x = xf (side: 'L' = ball on the left)
+function _flat(xf,cy,r,d,side,fill){
+  const h=Math.sqrt(r*r-d*d);
+  return `<path d="M ${xf} ${_f(cy-h)} A ${r} ${r} 0 1 ${side==='L'?0:1} ${xf} ${_f(cy+h)} Z" fill="${fill}" stroke="${INK}" stroke-width="1.7"/>`;
+}
+const _svg=(W,H,s)=>`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+
+// ---- spring zig-zag helper --------------------------------------------------
+function _zig(x0,x1,y){
+  const n=8, dx=(x1-x0-12)/n;
+  let d=`M ${_f(x0)} ${y} L ${_f(x0+6)} ${y}`;
+  for(let i=0;i<n;i++){ d+=` L ${_f(x0+6+dx*(i+0.5))} ${y+(i%2?6:-6)}`; }
+  d+=` L ${_f(x1-6)} ${y} L ${_f(x1)} ${y}`;
+  return `<path d="${d}" fill="none" stroke="${INK}" stroke-width="1.4"/>`;
+}
+// ceiling hatch (lines above the beam)
+function _ceil(x0,x1,y){
+  let s=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="${INK}" stroke-width="2"/>`;
+  for(let x=x0+4;x<x1;x+=10){ s+=`<line x1="${x}" y1="${y}" x2="${x+7}" y2="${y-8}" stroke="${INK}" stroke-width="1.1"/>`; }
+  return s;
+}
+
+const DIAGRAMS = {
+
+// ---- force-time spike of a collision ----------------------------------------
+ftSpike:()=>{
+  const ox=48, oy=136; let s='';
+  s+=_ar(ox,oy,310,oy,GREY,1.3)+_ar(ox,oy,ox,14,GREY,1.3);
+  s+=_tx(314,oy+16,'t',{s:11,c:GREY})+_tx(ox-12,22,'F',{s:11,c:GREY,b:1});
+  const spike=`C 160 ${oy} 161 30 170 30 C 179 30 180 ${oy} 190 ${oy}`;
+  s+=`<path d="M 150 ${oy} ${spike} Z" fill="${RED}" fill-opacity="0.12"/>`;
+  s+=`<path d="M ${ox} ${oy} L 150 ${oy} ${spike} L 300 ${oy}" fill="none" stroke="${RED}" stroke-width="2.4"/>`;
+  s+=_tx(188,34,'very large force',{s:10.5,a:'start',c:RED,b:1});
+  s+=_ln(150,oy+7,150,oy+17,GREY,1)+_ln(190,oy+7,190,oy+17,GREY,1)+_ln(150,oy+12,190,oy+12,GREY,1);
+  s+=_tx(170,oy+30,'&#916;t &#8776; 10&#8315;&#179; s',{s:10.5,b:1});
+  s+=_ln(178,100,232,92,GREY,1)+_tx(236,95,'area = impulse = &#916;p',{s:10.5,a:'start',c:GREY});
+  return _svg(340,178,s);
+},
+
+// ---- alpha particle turned back by a nucleus (indirect collision) -----------
+alpha:()=>{
+  const id=_nid(); let s=`<defs>${AR(id,RED)}</defs>`;
+  s+=`<path d="M 18 84 L 150 84 C 222 84 228 50 176 30 L 102 12" fill="none" stroke="${RED}" stroke-width="2" marker-end="url(#${id})"/>`;
+  s+=`<circle cx="226" cy="92" r="9" fill="${AMB}" stroke="${INK}" stroke-width="1.2"/>`+_tx(226,96.5,'+',{s:13,c:'#fff',b:1});
+  s+=_tx(226,118,'gold nucleus (+)',{s:10.5,c:GREY});
+  s+=_tx(66,76,'&#945;-particle (+)',{s:11,c:RED,b:1});
+  s+=_ln(222,84,212,66,GREY,1,'3 3')+_tx(244,62,'never touches',{s:10,a:'start',c:GREY});
+  s+=_tx(170,140,'huge repulsive push for a very short time &#8212; still a collision',{s:10.5,c:INK});
+  return _svg(340,150,s);
+},
+
+// ---- head-on vs oblique -----------------------------------------------------
+kinds:()=>{
+  let s='';
+  s+=_tx(95,16,'head-on (1D)',{s:11,b:1});
+  s+=_ln(16,70,176,70,AMB,1.2,'5 4');
+  s+=_ball(58,70,18,'1','',FILL_T)+_ball(132,70,18,'2','',FILL_B);
+  s+=_vel(58,70,18,1,'u&#8321;',RED,32)+_vel(132,70,18,-1,'u&#8322;',RED,32);
+  s+=_tx(95,112,'both centres on one line',{s:10,c:GREY});
+  s+=_ln(192,8,192,118,'#e8e6e0',1);
+  s+=_tx(285,16,'oblique (2D)',{s:11,b:1});
+  const c1x=244,c1y=84, a=-32*Math.PI/180, ex=Math.cos(a), ey=Math.sin(a), c2x=c1x+36*ex, c2y=c1y+36*ey;
+  s+=_ln(206,c1y,370,c1y,'#d4d1c8',1,'4 4');
+  s+=_ln(c1x-26*ex,c1y-26*ey,c2x+46*ex,c2y+46*ey,AMB,1.2,'5 4');
+  s+=_tx(c2x+30,c2y-34,'line of centres',{s:10,a:'start',c:AMB});
+  s+=_ball(c1x,c1y,18,'1','',FILL_T)+_ball(c2x,c2y,18,'2','',FILL_B);
+  s+=_ar(c1x-52,c1y,c1x-22,c1y,RED)+_tx(c1x-38,c1y-8,'u&#8321;',{s:11,c:RED,b:1});
+  s+=_tx(285,118,'line of centres at an angle to the motion',{s:10,c:GREY});
+  return _svg(380,126,s);
+},
+
+// ---- e from 0 to 1 ----------------------------------------------------------
+eScale:()=>{
+  const y=52, x0=40, x1=340; let s='';
+  s+=`<rect x="${x0}" y="${y-5}" width="${x1-x0}" height="10" rx="5" fill="#f0ede8" stroke="${INK}" stroke-width="1.2"/>`;
+  s+=`<circle cx="${x0}" cy="${y}" r="7" fill="${RED}"/><circle cx="${x1}" cy="${y}" r="7" fill="${GRN}"/>`;
+  s+=_tx(x0,y-16,'e = 0',{s:11,b:1,c:RED})+_tx(190,y-16,'0 &lt; e &lt; 1',{s:11,b:1,c:AMB})+_tx(x1,y-16,'e = 1',{s:11,b:1,c:GRN});
+  s+=_tx(18,y+26,'perfectly inelastic',{s:10.5,a:'start'})+_tx(18,y+40,'stick &#183; max KE lost',{s:10,a:'start',c:GREY});
+  s+=_tx(190,y+26,'inelastic',{s:10.5})+_tx(190,y+40,'some KE lost',{s:10,c:GREY});
+  s+=_tx(362,y+26,'elastic',{s:10.5,a:'end'})+_tx(362,y+40,'no KE lost',{s:10,a:'end',c:GREY});
+  s+=_tx(190,y+66,'momentum is conserved in all three',{s:10.5,b:1});
+  return _svg(380,128,s);
+},
+
+// ---- the three stages of a collision ----------------------------------------
+phases:()=>{
+  const cy=58, r=22; let s='';
+  s+=_ball(48,cy,r,'m&#8321;','',FILL_T)+_ball(92,cy,r,'m&#8322;','',FILL_B);
+  s+=_vel(48,cy,r,1,'u&#8321;',RED,40)+_vel(92,cy,r,1,'u&#8322;',RED,26);
+  const xf=195, d=16;
+  s+=_flat(xf,cy,r,d,'L',FILL_T)+_flat(xf,cy,r,d,'R',FILL_B);
+  s+=_tx(xf-d-3,cy+4,'m&#8321;',{s:11.5,b:1})+_tx(xf+d+3,cy+4,'m&#8322;',{s:11.5,b:1});
+  s+=_vel(xf,cy,r,1,'u (same)',AMB,40);
+  s+=_ball(290,cy,r,'m&#8321;','',FILL_T)+_ball(348,cy,r,'m&#8322;','',FILL_B);
+  s+=_vel(290,cy,r,1,'v&#8321;',GRN,26)+_vel(348,cy,r,1,'v&#8322;',GRN,44);
+  s+=_tx(70,cy+r+22,'impact begins',{s:10.5,b:1})+_tx(195,cy+r+22,'maximum deformation',{s:10.5,b:1})+_tx(319,cy+r+22,'separation',{s:10.5,b:1});
+  s+=_tx(70,cy+r+36,'u&#8321; &gt; u&#8322;',{s:10,c:GREY})+_tx(195,cy+r+36,'same velocity u',{s:10,c:GREY})+_tx(319,cy+r+36,'v&#8322; &#8805; v&#8321;',{s:10,c:GREY});
+  s+=_ar(76,136,186,136,GRN,1.6)+_ar(204,136,314,136,GRN,1.6);
+  s+=_tx(131,152,'deformation (force D)',{s:10.5,c:GRN,b:1})+_tx(259,152,'restitution (force R)',{s:10.5,c:GRN,b:1});
+  return _svg(390,162,s);
+},
+
+// ---- equal and opposite deformation impulses ---------------------------------
+impulsePair:()=>{
+  const cy=62, r=36, xf=170, d=22; let s='';
+  s+=_flat(xf,cy,r,d,'L',FILL_T)+_flat(xf,cy,r,d,'R',FILL_B);
+  s+=_tx(xf-d-6,cy+4,'m&#8321;',{s:12,b:1})+_tx(xf+d+6,cy+4,'m&#8322;',{s:12,b:1});
+  s+=_ar(108,cy,58,cy,GRN)+_tx(83,cy-9,'&#8747;D dt',{s:11,c:GRN,b:1})+_tx(83,cy+18,'on m&#8321;',{s:10,c:GREY});
+  s+=_ar(232,cy,282,cy,GRN)+_tx(257,cy-9,'&#8747;D dt',{s:11,c:GRN,b:1})+_tx(257,cy+18,'on m&#8322;',{s:10,c:GREY});
+  s+=_tx(170,cy+r+28,'same size, opposite direction &#8594; they cancel for the pair',{s:10.5,c:INK});
+  return _svg(340,136,s);
+},
+
+// ---- generic two-ball picture: before (and optionally after) ----------------
+twoBalls:(o)=>{
+  const W=380, two=!!o.after, X=o.x||[130,250], cyB=66, cyA=160;
+  const H = two ? (o.cap?226:210) : (o.cap?130:114);
+  let s='';
+  const row=(cy,arr,col)=>{
+    let t=_ln(two?56:36,cy,W-24,cy,'#d4d1c8',1,'4 4');
+    if(arr.stuck){
+      const r1=arr.r1||22, r2=arr.r2||22, mid=(X[0]+X[1])/2, xt=mid-r2+r1;
+      t+=_ball(xt-r1,cy,r1,arr.l1,arr.s1,FILL_T)+_ball(xt+r2,cy,r2,arr.l2,arr.s2,FILL_B);
+      t+=_vel(mid,cy,Math.max(r1,r2),arr.d,arr.v,col,44);
+      return t;
+    }
+    arr.forEach((b,i)=>{
+      const r=b.r||22;
+      t+=_ball(X[i],cy,r,b.l,b.s,b.f||(i?FILL_B:FILL_T));
+      t+=_vel(X[i],cy,r,b.d,b.v,b.c||col,b.len);
+    });
+    return t;
+  };
+  if(two){
+    s+=_tx(12,cyB+4,'before',{s:10,a:'start',c:GREY})+_tx(12,cyA+4,'after',{s:10,a:'start',c:GREY});
+    s+=_ln(30,113,W-20,113,'#e8e6e0',1);
+  }
+  s+=row(cyB,o.before,RED);
+  if(two) s+=row(cyA,o.after,GRN);
+  if(o.cap) s+=_tx(W/2,H-9,o.cap,{s:10.5,c:GREY});
+  return _svg(W,H,s);
+},
+
+// ---- one ball into a row of identical balls ----------------------------------
+cradle:(o)=>{
+  o=o||{}; const r=15, after=o.after!==false, cyB=48, cyA=128; let s='';
+  if(after) s+=_tx(8,cyB+4,'before',{s:10,a:'start',c:GREY})+_tx(8,cyA+4,'after',{s:10,a:'start',c:GREY});
+  s+=_ln(56,cyB,364,cyB,'#d4d1c8',1,'4 4');
+  s+=_ball(76,cyB,r,'m','',FILL_C)+_vel(76,cyB,r,1,'v',RED,34);
+  for(let i=0;i<5;i++) s+=_ball(140+30*i,cyB,r,'m','',FILL_T);
+  s+=_tx(200,cyB+r+16,'five identical balls at rest, just touching',{s:10,c:GREY});
+  if(after){
+    s+=_ln(30,90,364,90,'#e8e6e0',1);
+    s+=_ln(56,cyA,364,cyA,'#d4d1c8',1,'4 4');
+    s+=_ball(110,cyA,r,'m','',FILL_C);
+    for(let i=0;i<4;i++) s+=_ball(140+30*i,cyA,r,'m','',FILL_T);
+    s+=_ball(300,cyA,r,'m','',FILL_C)+_vel(300,cyA,r,1,'v',GRN,34);
+    s+=_tx(170,cyA+r+16,'all at rest',{s:10,c:GREY});
+  }
+  return _svg(380,after?170:88,s);
+},
+
+// ---- bullet into a pendulum bob --------------------------------------------
+pendulum:(o)=>{
+  o=o||{}; const px=200, py=16, L=107, by=py+L; let s='';
+  s+=_ln(150,py,250,py,INK,2);
+  for(let x=156;x<250;x+=10) s+=_ln(x,py,x+7,py-8,INK,1.1);
+  s+=_ln(px,py,px,by-11,INK,1.4);
+  s+=`<rect x="${px-15}" y="${by-11}" width="30" height="22" fill="${FILL_C}" stroke="${INK}" stroke-width="1.6" rx="2"/>`;
+  s+=_tx(px,by+4,o.bob||'M',{s:9.5,b:1});
+  const a=37*Math.PI/180, sx=px+L*Math.sin(a), sy=py+L*Math.cos(a);
+  s+=_ln(px,py,px+(L-11)*Math.sin(a),py+(L-11)*Math.cos(a),GREY,1.2,'4 3');
+  s+=`<rect x="${_f(sx-15)}" y="${_f(sy-11)}" width="30" height="22" fill="none" stroke="${GREY}" stroke-width="1.3" stroke-dasharray="4 3" rx="2"/>`;
+  s+=_ln(px+18,by,322,by,GREY,1,'3 3')+_ln(sx+18,sy,322,sy,GREY,1,'3 3');
+  s+=_ln(316,sy,316,by,INK,1.3)+_ln(311,sy,321,sy,INK,1.3)+_ln(311,by,321,by,INK,1.3);
+  s+=_tx(326,(sy+by)/2+4,'h',{s:12,a:'start',b:1,i:1});
+  s+=`<rect x="90" y="${by-3}" width="16" height="6" rx="2" fill="${INK}"/>`;
+  s+=_ar(112,by,168,by,RED)+_tx(140,by-9,o.u||'u',{s:11,c:RED,b:1});
+  s+=_tx(98,by+20,o.bullet||'bullet',{s:10,c:GREY});
+  s+=_ar(186,by+24,228,by+24,GRN,2)+_tx(207,by+40,'v just after',{s:10,c:GRN,b:1});
+  s+=_tx(170,184,'&#9312; bullet sticks: momentum      &#9313; bob rises: energy',{s:10.5,c:INK});
+  return _svg(340,192,s);
+},
+
+// ---- particle sliding up a free wedge ---------------------------------------
+wedge:()=>{
+  const gy=160; let s='';
+  s+=_hatch(20,360,gy);
+  s+=`<polygon points="130,${gy} 320,${gy} 320,46" fill="${FILL_B}" stroke="${INK}" stroke-width="1.7"/>`;
+  s+=_tx(282,146,'M = 4m',{s:11.5,b:1});
+  s+=_ball(96,gy-8,8,'','',FILL_C)+_vel(96,gy-8,8,1,'v',RED,34)+_tx(82,gy-4,'m',{s:11,b:1,a:'end'});
+  s+=`<circle cx="245.9" cy="81.1" r="8" fill="none" stroke="${GREY}" stroke-width="1.3" stroke-dasharray="3 2"/>`;
+  s+=_ln(206,81.1,238,81.1,GREY,1,'3 3')+_ln(104,152,218,152,GREY,1,'3 3');
+  s+=_ln(212,81.1,212,152,INK,1.3)+_ln(207,81.1,217,81.1,INK,1.3)+_ln(207,152,217,152,INK,1.3);
+  s+=_tx(204,122,'h',{s:12,a:'end',b:1,i:1});
+  s+=_tx(196,26,'at the top: particle and wedge move together',{s:10.5,c:AMB,b:1});
+  s+=_tx(190,188,'smooth floor, smooth wedge',{s:10.5,c:GREY});
+  return _svg(380,196,s);
+},
+
+// ---- ball bouncing on the floor ---------------------------------------------
+bounce:()=>{
+  const gy=166, top=40, e=0.6, w=60; let s='';
+  s+=_hatch(36,340,gy);
+  const h0=gy-top; let x=60;
+  let d=`M ${x} ${top} Q ${x+w/2} ${top} ${x+w} ${gy}`;
+  x+=w; const xs=[x], hs=[h0];
+  for(let n=1;n<=6;n++){
+    const H=h0*Math.pow(e,2*n), ww=2*w*Math.pow(e,n);
+    d+=` Q ${_f(x+ww/2)} ${_f(gy-2*H)} ${_f(x+ww)} ${gy}`;
+    hs.push(H); x+=ww; xs.push(x);
+  }
+  s+=`<path d="${d}" fill="none" stroke="${RED}" stroke-width="2"/>`;
+  s+=`<circle cx="60" cy="${top}" r="6" fill="${FILL_C}" stroke="${INK}" stroke-width="1.3"/>`;
+  s+=_ln(40,top,40,gy,INK,1.2)+_ln(35,top,45,top,INK,1.2);
+  s+=_tx(32,(top+gy)/2+4,'h&#8320;',{s:11.5,a:'end',b:1,i:1});
+  const p1x=xs[0]+w*e, p1y=gy-hs[1], p2x=xs[1]+w*e*e, p2y=gy-hs[2];
+  s+=_ln(p1x,p1y,300,p1y,GREY,1,'3 3')+_tx(304,p1y+4,'h&#8321; = e&#178;h&#8320;',{s:10.5,a:'start',c:INK});
+  s+=_ln(p2x,p2y,300,p2y,GREY,1,'3 3')+_tx(304,p2y+4,'h&#8322; = e&#8308;h&#8320;',{s:10.5,a:'start',c:INK});
+  s+=_tx(xs[0],gy+24,'v&#8320;',{s:10.5,b:1,c:RED})+_tx(xs[1],gy+24,'v&#8321;',{s:10.5,b:1,c:RED})+_tx(xs[2],gy+24,'v&#8322;',{s:10.5,b:1,c:RED});
+  s+=_tx(366,52,'v&#8345; = e&#8319; v&#8320;',{s:11,a:'end',b:1})+_tx(366,70,'h&#8345; = e&#178;&#8319; h&#8320;',{s:11,a:'end',b:1});
+  s+=_tx(366,88,'floor: fixed',{s:10,a:'end',c:GREY});
+  return _svg(380,198,s);
+},
+
+// ---- oblique collision, after the hit ---------------------------------------
+obliqueAfter:(o)=>{
+  o=o||{}; const ox=150, oy=106, D=70; let s='';
+  s+=_ln(24,oy,340,oy,'#d4d1c8',1,'4 4');
+  s+=_ball(62,oy,13,'1','',FILL_T)+_ar(80,oy,118,oy,RED)+_tx(99,oy-8,o.u||'u',{s:11,c:RED,b:1});
+  s+=`<circle cx="${ox}" cy="${oy}" r="13" fill="none" stroke="${GREY}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+  s+=_tx(ox-34,oy+30,'2 was at rest here',{s:9.5,c:GREY});
+  const t1=(o.th||48)*Math.PI/180, t2=(o.ph||42)*Math.PI/180;
+  const c1=Math.cos(t1), s1=Math.sin(t1), c2=Math.cos(t2), s2=Math.sin(t2);
+  const b1x=ox+D*c1, b1y=oy-D*s1, b2x=ox+D*c2, b2y=oy+D*s2;
+  s+=_ln(ox,oy,b1x,b1y,GREY,1,'3 3')+_ln(ox,oy,b2x,b2y,GREY,1,'3 3');
+  s+=_ball(b1x,b1y,13,'1','',FILL_T)+_ball(b2x,b2y,13,'2','',FILL_B);
+  s+=_ar(b1x+14*c1,b1y-14*s1,b1x+40*c1,b1y-40*s1,GRN)+_tx(b1x+43*c1+8,b1y-43*s1+4,o.v1||'v&#8321;',{s:11,c:GRN,b:1,a:'start'});
+  s+=_ar(b2x+14*c2,b2y+14*s2,b2x+40*c2,b2y+40*s2,GRN)+_tx(b2x+43*c2+8,b2y+43*s2+6,o.v2||'v&#8322;',{s:11,c:GRN,b:1,a:'start'});
+  s+=`<path d="M ${ox+34} ${oy} A 34 34 0 0 0 ${_f(ox+34*c1)} ${_f(oy-34*s1)}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`;
+  s+=`<path d="M ${ox+34} ${oy} A 34 34 0 0 1 ${_f(ox+34*c2)} ${_f(oy+34*s2)}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`;
+  s+=_tx(ox+47*Math.cos(t1/2),oy-47*Math.sin(t1/2)+4,'&#952;',{s:12,c:AMB,b:1});
+  s+=_tx(ox+47*Math.cos(t2/2),oy+47*Math.sin(t2/2)+5,'&#966;',{s:12,c:AMB,b:1});
+  s+=_tx(330,oy-6,'x',{s:10.5,c:GREY,i:1});
+  s+=_tx(18,204,o.cap||'conserve momentum along x and along y separately',{s:10,a:'start',c:GREY});
+  return _svg(360,212,s);
+},
+
+// ---- momentum triangle for identical balls ----------------------------------
+momTriangle:()=>{
+  let s='';
+  const A=[50,160], B=[310,160], C=[119,45.2];
+  s+=_ar(A[0],A[1],B[0],B[1],INK,2.2);
+  s+=_ar(A[0],A[1],C[0],C[1],BLU,2.2);
+  s+=_ar(C[0],C[1],B[0],B[1],GRN,2.2);
+  s+=`<path d="M 112.8 55.5 L 123.1 61.7 L 129.3 51.4" fill="none" stroke="${INK}" stroke-width="1.2"/>`;
+  s+=_tx(76,98,'p&#8321; = m v&#8321;',{s:11,a:'end',c:BLU,b:1});
+  s+=_tx(226,96,'p&#8322; = m v&#8322;',{s:11,a:'start',c:GRN,b:1});
+  s+=_tx(180,178,'p = m u   (before the hit)',{s:11,b:1});
+  s+=_tx(180,198,'p&#178; = p&#8321;&#178; + p&#8322;&#178;  &#8594;  the angle at the top is 90&#176;',{s:10.5,c:GREY});
+  return _svg(360,206,s);
+},
+
+// ===================== NEW DIAGRAMS · module ladder ==========================
+
+// ---- ball hits the floor: before / after ------------------------------------
+dropHit:(o)=>{
+  o=o||{}; const gy=124; let s=_hatch(30,330,gy);
+  s+=_ball(100,gy-14,14,'','',FILL_C)+_ar(100,24,100,gy-34,RED)+_tx(112,62,o.u||'25 m/s',{s:11,a:'start',c:RED,b:1});
+  s+=_tx(100,gy+26,'just before',{s:10,c:GREY});
+  s+=_ball(240,gy-14,14,'','',FILL_C)+_ar(240,gy-34,240,24,GRN)+_tx(252,62,o.v||'10 m/s',{s:11,a:'start',c:GRN,b:1});
+  s+=_tx(240,gy+26,'just after',{s:10,c:GREY});
+  return _svg(360,gy+34,s);
+},
+
+// ---- blocks on a floor, optional springs between them -----------------------
+springBlocks:(o)=>{
+  const W=o.W||380, gy=100, h=36; let s=_hatch(14,W-14,gy);
+  const B=o.blocks;
+  (o.springs||[]).forEach(([i,j])=>{
+    const a=B[i], c=B[j];
+    s+=_zig(a.x+(a.w||46)/2, c.x-(c.w||46)/2, gy-h/2);
+  });
+  B.forEach(b=>{
+    const w=b.w||46;
+    s+=`<rect x="${_f(b.x-w/2)}" y="${gy-h}" width="${w}" height="${h}" fill="${b.f||FILL_B}" stroke="${INK}" stroke-width="1.6" rx="2"${b.f==='none'?' stroke-dasharray="3 3"':''}/>`;
+    if(b.s){ s+=_tx(b.x,gy-h/2-2,b.l,{s:11.5,b:1})+_tx(b.x,gy-h/2+12,b.s,{s:9.5,c:GREY}); }
+    else s+=_tx(b.x,gy-h/2+4,b.l,{s:11.5,b:1});
+    if(b.d){
+      const y=gy-h-13, x0=b.x-b.d*16, x1=b.x+b.d*24;
+      s+=_ar(x0,y,x1,y,b.c||RED)+_tx(b.x+b.d*4,y-8,b.v,{s:11,c:b.c||RED,b:1});
+    } else if(b.v){ s+=_tx(b.x,gy-h-9,b.v,{s:10,c:GREY}); }
+  });
+  if(o.cap) s+=_tx(W/2,gy+26,o.cap,{s:10.5,c:GREY});
+  return _svg(W,gy+(o.cap?36:16),s);
+},
+
+// ---- ball meets a heavy wall that moves towards it --------------------------
+movingWall:(o)=>{
+  o=o||{}; const cy=62; let s='';
+  s+=_ln(20,cy+22,320,cy+22,'#d4d1c8',1);
+  s+=_ball(90,cy,18,'m','',FILL_C)+_vel(90,cy,18,1,o.v||'v',RED,38);
+  s+=`<rect x="250" y="10" width="26" height="${cy+12}" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_ar(244,26,212,26,BLU)+_tx(228,18,o.u||'u',{s:11,c:BLU,b:1});
+  s+=_tx(263,cy+40,'wall · infinite mass',{s:10,c:GREY});
+  return _svg(340,cy+50,s);
+},
+
+// ---- ball falls on a heavy platform that also moves down --------------------
+platform:(o)=>{
+  o=o||{}; let s='';
+  s+=_ball(110,30,12,'','',FILL_C)+_ar(110,46,110,88,RED)+_tx(122,72,o.u||'10 m/s',{s:11,a:'start',c:RED,b:1});
+  s+=`<rect x="40" y="96" width="140" height="16" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=_ar(110,118,110,152,BLU)+_tx(122,140,o.p||'5 m/s',{s:11,a:'start',c:BLU,b:1});
+  s+=_tx(110,172,'heavy platform (its speed does not change)',{s:10,c:GREY});
+  return _svg(260,180,s);
+},
+
+// ---- ball hits a smooth wall obliquely -------------------------------------
+wallOblique:(o)=>{
+  o=o||{}; const px=250, py=96, t=(o.th||40)*Math.PI/180, t2=(o.th2||56)*Math.PI/180, L=112; let s='';
+  s+=`<rect x="${px}" y="14" width="18" height="160" fill="${FILL_B}" stroke="${INK}" stroke-width="1.4"/>`;
+  s+=_ln(px,py,px-150,py,GREY,1,'4 3')+_tx(px-154,py+4,'normal (n)',{s:10,a:'end',c:GREY});
+  const ax=px-L*Math.cos(t), ay=py+L*Math.sin(t);
+  s+=_ar(ax,ay,px-12*Math.cos(t),py+12*Math.sin(t),RED)+_tx(ax-6,ay+4,o.u||'u',{s:11.5,a:'end',c:RED,b:1});
+  const bx=px-L*Math.cos(t2), by=py-L*Math.sin(t2);
+  s+=_ar(px-12*Math.cos(t2),py-12*Math.sin(t2),bx,by,GRN)+_tx(bx-6,by+4,o.v||'v',{s:11.5,a:'end',c:GRN,b:1});
+  const r=36;
+  s+=`<path d="M ${px-r} ${py} A ${r} ${r} 0 0 0 ${_f(px-r*Math.cos(t))} ${_f(py+r*Math.sin(t))}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`;
+  s+=`<path d="M ${px-r} ${py} A ${r} ${r} 0 0 1 ${_f(px-r*Math.cos(t2))} ${_f(py-r*Math.sin(t2))}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`;
+  s+=_tx(px-50*Math.cos(t/2),py+50*Math.sin(t/2)+5,o.a1||'&#952;',{s:12,c:AMB,b:1});
+  s+=_tx(px-50*Math.cos(t2/2),py-50*Math.sin(t2/2)+4,o.a2||'&#952;&#8242;',{s:12,c:AMB,b:1});
+  s+=_tx(px+9,190,'smooth wall',{s:10,c:GREY});
+  if(o.cap) s+=_tx(150,212,o.cap,{s:10,c:GREY});
+  return _svg(300,o.cap?220:198,s);
+},
+
+// ---- ball hits a fixed (or free) incline -----------------------------------
+inclineHit:(o)=>{
+  o=o||{}; const th=(o.th||30)*Math.PI/180, L=o.L||210, x0=50, sn=Math.sin(th), cs=Math.cos(th);
+  const gy=Math.max(104+0.55*L*sn, 16+L*sn);
+  const bx=x0+L*cs, cy=gy-L*sn;
+  let s=_hatch(20,Math.max(bx+40,300),gy);
+  s+=`<polygon points="${x0},${_f(gy)} ${_f(bx)},${_f(gy)} ${_f(bx)},${_f(cy)}" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6"/>`;
+  if(o.wl) s+=_tx(bx-34,gy-10,o.wl,{s:11,b:1});
+  const px=x0+0.55*L*cs, py=gy-0.55*L*sn, r=8, cx=px-r*sn, cyy=py-r*cs;
+  s+=`<circle cx="${_f(cx)}" cy="${_f(cyy)}" r="${r}" fill="${FILL_C}" stroke="${INK}" stroke-width="1.3"/>`;
+  if(o.mode==='horiz'){
+    s+=_ar(cx-84,cyy,cx-13,cyy,RED)+_tx(cx-52,cyy-8,o.u||'u',{s:11,c:RED,b:1});
+    if(!o.noOut) s+=_ar(cx,cyy-13,cx,cyy-64,GRN)+_tx(cx+8,cyy-46,o.v||'v',{s:11,a:'start',c:GRN,b:1});
+  } else {
+    s+=_ar(cx,cyy-84,cx,cyy-13,RED)+_tx(cx+8,cyy-56,o.u||'u',{s:11,a:'start',c:RED,b:1});
+    if(!o.noOut) s+=_ar(cx-13,cyy,cx-74,cyy,GRN)+_tx(cx-48,cyy-8,o.v||'v',{s:11,c:GRN,b:1});
+  }
+  s+=`<path d="M ${x0+30} ${_f(gy)} A 30 30 0 0 0 ${_f(x0+30*cs)} ${_f(gy-30*sn)}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`;
+  s+=_tx(x0+38,gy-7,o.thl||'&#952;',{s:11,c:AMB,b:1,a:'start'});
+  if(o.cap) s+=_tx(160,gy+24,o.cap,{s:10,c:GREY});
+  return _svg(Math.max(bx+50,320),gy+(o.cap?32:14),s);
+},
+
+// ---- two discs, offset centres (impact parameter) ---------------------------
+impactParam:(o)=>{
+  o=o||{}; const r=22, ax=70, ay=50, bx=o.bx||220, by=ay+(o.b||0.5)*r; let s='';
+  s+=_ln(ax,ay,bx+56,ay,GREY,1,'4 3');
+  s+=_ln(bx-40,by,bx+56,by,'#d4d1c8',1,'4 3');
+  s+=_ball(ax,ay,r,o.la||'A','',FILL_T)+_vel(ax,ay,r,1,o.u||'v',RED,40);
+  s+=_ball(bx,by,r,o.lb||'B','',FILL_B)+_tx(bx,by+r+14,'at rest',{s:10,c:GREY});
+  const dx=bx+r+16;
+  s+=_ln(dx,ay,dx,by,INK,1.2)+_ln(dx-5,ay,dx+5,ay,INK,1.2)+_ln(dx-5,by,dx+5,by,INK,1.2);
+  s+=_tx(dx+8,(ay+by)/2+4,o.bl||'r/2',{s:11,a:'start',b:1});
+  if(o.cap) s+=_tx(160,by+r+34,o.cap,{s:10,c:GREY});
+  return _svg(330,by+r+(o.cap?42:22),s);
+},
+
+// ---- one body at rest at O, pieces fly off ----------------------------------
+split2D:(o)=>{
+  const ox=170, oy=112; let s='';
+  s+=_ln(20,oy,340,oy,'#d4d1c8',1,'4 3');
+  s+=_ball(44,oy,18,o.l0||'m','',FILL_T)+_ar(68,oy,118,oy,RED)+_tx(93,oy-8,o.u||'v',{s:11,c:RED,b:1});
+  s+=`<circle cx="${ox}" cy="${oy}" r="19" fill="${FILL_B}" stroke="${INK}" stroke-width="1.4"/>`+_tx(ox,oy+4,o.lt||'2m',{s:10,b:1});
+  (o.out||[]).forEach(p=>{
+    const a=p.a*Math.PI/180, c=Math.cos(a), sn=-Math.sin(a), L=p.L||80;
+    s+=_ar(ox+21*c,oy+21*sn,ox+L*c,oy+L*sn,p.c||GRN);
+    s+=_tx(ox+(L+12)*c,oy+(L+12)*sn+4,p.lb,{s:10.5,c:p.c||GRN,b:1,a:c>0.25?'start':(c<-0.25?'end':'middle')});
+  });
+  s+=_tx(334,oy-6,'x',{s:10.5,c:GREY,i:1});
+  if(o.cap) s+=_tx(180,212,o.cap,{s:10,c:GREY});
+  return _svg(360,o.cap?220:204,s);
+},
+
+// ---- two bodies moving at right angles meet and stick -----------------------
+stick2D:()=>{
+  const ox=210, oy=90; let s='';
+  s+=_ln(40,oy,336,oy,'#d4d1c8',1,'4 3')+_ln(ox,22,ox,196,'#d4d1c8',1,'4 3');
+  s+=_ball(96,oy,13,'m','',FILL_T)+_ar(114,oy,160,oy,RED)+_tx(137,oy-8,'2v',{s:11,c:RED,b:1});
+  s+=_ball(ox,172,17,'2m','',FILL_B)+_ar(ox,151,ox,110,BLU)+_tx(ox+10,134,'v',{s:11,c:BLU,b:1,a:'start'});
+  s+=`<circle cx="${ox}" cy="${oy}" r="4" fill="${INK}"/>`+_tx(ox+10,oy-8,'meet here and stick',{s:10,a:'start',c:GREY});
+  s+=_tx(338,oy+4,'x',{s:10.5,a:'start',c:GREY,i:1})+_tx(ox+8,28,'y',{s:10.5,a:'start',c:GREY,i:1});
+  return _svg(360,204,s);
+},
+
+// ---- straight-line graph of h against H -------------------------------------
+hHgraph:()=>{
+  const ox=50, oy=150; let s='';
+  s+=_ar(ox,oy,ox+250,oy,GREY,1.3)+_ar(ox,oy,ox,18,GREY,1.3);
+  s+=_tx(ox+252,oy+18,'H (m)',{s:10.5,c:GREY,a:'end'})+_tx(ox+8,24,'h (m)',{s:10.5,c:GREY,a:'start'});
+  const px=ox+180, py=oy-80;
+  s+=_ln(ox,oy,ox+225,oy-100,RED,2.2);
+  s+=_ln(px,oy,px,py,GREY,1,'3 3')+_ln(ox,py,px,py,GREY,1,'3 3');
+  s+=`<circle cx="${px}" cy="${py}" r="3.5" fill="${RED}"/>`;
+  s+=_tx(px,oy+16,'90',{s:10.5})+_tx(ox-8,py+4,'40',{s:10.5,a:'end'})+_tx(ox-8,oy+14,'O',{s:10.5,a:'end'});
+  return _svg(320,176,s);
+},
+
+// ---- pendulum on a peg, released from horizontal, hits the wall -------------
+pendWall:()=>{
+  const wx=40, px=50, py=34, L=150; let s='';
+  s+=`<rect x="${wx-14}" y="14" width="14" height="${L+40}" fill="${FILL_B}" stroke="${INK}" stroke-width="1.4"/>`;
+  s+=`<circle cx="${px}" cy="${py}" r="3.5" fill="${INK}"/>`+_ln(wx,py,px,py,INK,2);
+  s+=_ln(px,py,px+L-10,py,INK,1.4)+`<circle cx="${px+L}" cy="${py}" r="10" fill="${FILL_C}" stroke="${INK}" stroke-width="1.5"/>`;
+  s+=`<path d="M ${px+L} ${py+12} A ${L} ${L} 0 0 1 ${px+12} ${py+L}" fill="none" stroke="${GREY}" stroke-width="1.2" stroke-dasharray="4 3"/>`;
+  s+=_ln(px,py,px,py+L-10,GREY,1,'3 3');
+  s+=`<circle cx="${px}" cy="${py+L}" r="10" fill="none" stroke="${GREY}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+  s+=_tx(px+L/2,py-8,'L',{s:12,b:1,i:1})+_tx(px+16,py+L+24,'bob hits the wall here',{s:10,a:'start',c:GREY});
+  s+=_tx(px+L+16,py+4,'released',{s:10,a:'start',c:GREY});
+  s+=_tx(150,L+76,'e = 2/&#8730;5 at every hit',{s:10.5,c:AMB,b:1});
+  return _svg(300,L+84,s);
+},
+
+// ---- block B on wedge A, then wedge C ---------------------------------------
+twoWedges:()=>{
+  const gy=150; let s=_hatch(14,366,gy);
+  s+=`<path d="M 46 ${gy-100} L 66 ${gy-100} A 100 100 0 0 0 166 ${gy} L 46 ${gy} Z" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<path d="M 334 ${gy-100} L 314 ${gy-100} A 100 100 0 0 1 214 ${gy} L 334 ${gy} Z" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6"/>`;
+  s+=`<rect x="49" y="${gy-117}" width="17" height="17" fill="${FILL_C}" stroke="${INK}" stroke-width="1.4"/>`+_tx(57.5,gy-121,'B',{s:10.5,b:1});
+  s+=_ln(34,gy-100,34,gy,INK,1.2)+_ln(29,gy-100,39,gy-100,INK,1.2)+_ln(29,gy,39,gy,INK,1.2);
+  s+=_tx(28,gy-46,'h',{s:12,a:'end',b:1,i:1});
+  s+=_tx(70,gy-12,'A · m',{s:11,b:1})+_tx(312,gy-12,'C · m',{s:11,b:1});
+  s+=_tx(190,gy+24,'all surfaces smooth · both wedges free to slide',{s:10,c:GREY});
+  return _svg(380,gy+32,s);
+},
+
+// ---- projectile bullet meets a hanging bob at the top -----------------------
+bulletTop:()=>{
+  const gy=184, ox=30, bx=206, by=84, L=60; let s=_hatch(14,366,gy);
+  s+=`<path d="M ${ox} ${gy} Q 110 ${by} ${bx-14} ${by}" fill="none" stroke="${RED}" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+  s+=_ar(ox,gy,ox+26,gy-32,RED)+_tx(ox+48,gy-20,'10 m/s',{s:10.5,a:'start',c:RED,b:1});
+  s+=`<path d="M ${ox+26} ${gy} A 26 26 0 0 0 ${_f(ox+26*Math.cos(0.896))} ${_f(gy-26*Math.sin(0.896))}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`+_tx(ox+31,gy-5,'&#952;',{s:11,a:'start',c:AMB,b:1});
+  s+=_tx(ox-2,gy+24,'bullet m fired here',{s:10,a:'start',c:GREY});
+  s+=_ceil(176,236,by-L);
+  s+=_ln(bx,by-L,bx,by-12,INK,1.4)+_ball(bx,by,12,'3m','',FILL_C);
+  const a=Math.PI/3, ex=bx+L*Math.sin(a), ey=by-L+L*Math.cos(a);
+  s+=_ln(bx,by-L,ex,ey,GREY,1.2,'4 3')+`<circle cx="${_f(ex)}" cy="${_f(ey)}" r="12" fill="none" stroke="${GREY}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+  s+=_tx(ex+16,ey+4,'string turns 60&#176;',{s:10,a:'start',c:GREY});
+  s+=_tx(bx-8,by-34,'&#8467; = 2/5 m',{s:10,a:'end',c:INK});
+  s+=_tx(178,by+34,'hit at the highest point',{s:10,c:GREY});
+  return _svg(380,gy+32,s);
+},
+
+// ---- one dropped, one thrown up, same vertical line -------------------------
+vertMeet:()=>{
+  const gy=196, x=130; let s=_hatch(50,270,gy);
+  s+=_ball(x,30,10,'','',FILL_C)+_ar(x,44,x,84,RED)+_tx(x+12,66,'dropped from rest',{s:10,a:'start',c:RED});
+  s+=_ball(x,gy-10,10,'','',FILL_T)+_ar(x,gy-24,x,gy-66,GRN)+_tx(x+12,gy-44,'thrown up at &#8730;(2gh)',{s:10,a:'start',c:GRN});
+  s+=_ln(80,30,80,gy,INK,1.2)+_ln(75,30,85,30,INK,1.2)+_ln(75,gy,85,gy,INK,1.2)+_tx(70,(30+gy)/2+4,'h',{s:12,a:'end',b:1,i:1});
+  s+=_tx(160,gy+24,'same mass m · they stick when they meet',{s:10,c:GREY});
+  return _svg(320,gy+32,s);
+},
+
+// ---- projectile that keeps bouncing ----------------------------------------
+bounceProj:()=>{
+  const gy=128; let s=_hatch(14,372,gy); let x=24;
+  const R=[150,82,44,24,13], L=['u&#8320;','u&#8320;/&#945;','u&#8320;/&#945;&#178;','',''];
+  R.forEach((r,i)=>{
+    const H=r*0.5;
+    s+=`<path d="M ${_f(x)} ${gy} Q ${_f(x+r/2)} ${_f(gy-2*H)} ${_f(x+r)} ${gy}" fill="none" stroke="${RED}" stroke-width="1.8"/>`;
+    if(L[i]){
+      const al=Math.atan2(2*H,r/2), len=Math.max(20,36-8*i);
+      s+=_ar(x,gy,x+len*Math.cos(al),gy-len*Math.sin(al),INK,1.6);
+      s+=_tx(x+len*Math.cos(al)+5,gy-len*Math.sin(al)-3,L[i],{s:10.5,a:'start',b:1});
+    }
+    x+=r;
+  });
+  s+=_tx(42,gy-5,'&#952;',{s:10,c:AMB,a:'start',b:1});
+  s+=_tx(190,gy+26,'same angle &#952; every time · speed &#247; &#945; at each bounce',{s:10,c:GREY});
+  return _svg(380,gy+34,s);
+},
+
+// ---- smooth circular tube, top view ----------------------------------------
+tube:()=>{
+  const cx=120, cy=100, R=70; let s='';
+  s+=`<circle cx="${cx}" cy="${cy}" r="${R+8}" fill="none" stroke="${INK}" stroke-width="1.5"/>`;
+  s+=`<circle cx="${cx}" cy="${cy}" r="${R-8}" fill="none" stroke="${INK}" stroke-width="1.5"/>`;
+  s+=_ln(cx,cy,cx-R,cy,GREY,1,'3 3')+_tx(cx-R/2,cy-6,'r',{s:11.5,b:1,i:1});
+  s+=`<circle cx="${cx+R}" cy="${cy}" r="7" fill="${FILL_B}" stroke="${INK}" stroke-width="1.3"/>`+_tx(cx+R+16,cy+4,'2m (at rest)',{s:10.5,a:'start',b:1});
+  s+=`<circle cx="${cx}" cy="${cy+R}" r="6" fill="${FILL_C}" stroke="${INK}" stroke-width="1.3"/>`;
+  s+=_ar(cx+12,cy+R+18,cx+46,cy+R+18,RED)+_tx(cx+52,cy+R+22,'u',{s:11,a:'start',c:RED,b:1})+_tx(cx-12,cy+R+22,'m',{s:11,a:'end',b:1});
+  s+=_tx(cx+R+16,cy+24,'smooth tube, top view',{s:10,a:'start',c:GREY})+_tx(cx+R+16,cy+40,'e = 1/2',{s:10,a:'start',c:AMB,b:1});
+  return _svg(330,cy+R+32,s);
+},
+
+// ---- A slides 2 m and hits B (friction on the floor) -----------------------
+frictionAB:()=>{
+  const gy=90; let s=_hatch(16,360,gy);
+  const blk=(x,l)=>`<rect x="${x-20}" y="${gy-30}" width="40" height="30" fill="${FILL_B}" stroke="${INK}" stroke-width="1.6" rx="2"/>`+_tx(x,gy-11,'m',{s:11,b:1})+_tx(x,gy-40,l,{s:11.5,b:1});
+  s+=blk(80,'A')+blk(260,'B');
+  s+=_ar(102,gy-18,140,gy-18,RED)+_tx(146,gy-14,'4 m/s',{s:10.5,a:'start',c:RED,b:1});
+  s+=_ln(80,gy+22,260,gy+22,INK,1.2)+_ln(80,gy+17,80,gy+27,INK,1.2)+_ln(260,gy+17,260,gy+27,INK,1.2);
+  s+=_tx(170,gy+18,'2 m',{s:11,b:1});
+  s+=_tx(80,gy+44,'&#956; = 1/15 for A',{s:10,c:GREY})+_tx(260,gy+44,'&#956; = 2/15 for B',{s:10,c:GREY});
+  return _svg(380,gy+54,s);
+},
+
+// ===================== OBLIQUE COLLISION DIAGRAMS ============================
+
+// ---- resolve one velocity into x and y parts -------------------------------
+vecResolve:(o)=>{
+  o=o||{}; const ox=60, oy=170, L=180, a=(o.a||37)*Math.PI/180; let s='';
+  const ex=ox+L*Math.cos(a), ey=oy-L*Math.sin(a);
+  s+=_ar(ox,oy,ox+250,oy,GREY,1.2)+_ar(ox,oy,ox,24,GREY,1.2)+_tx(ox+254,oy+4,'x',{s:11,c:GREY,i:1,a:'start'})+_tx(ox-8,30,'y',{s:11,c:GREY,i:1,a:'end'});
+  s+=_ln(ex,ey,ex,oy,BLU,1.3,'4 3')+_ln(ox,ey,ex,ey,BLU,1.3,'4 3');
+  s+=_ar(ox,oy,ex,ey,RED,2.4)+_tx(ox+L*0.5*Math.cos(a)-8,oy-L*0.5*Math.sin(a)-10,o.v||'10 m/s',{s:11.5,c:RED,b:1,a:'end'});
+  s+=_tx(ox+L*Math.cos(a)/2,oy+18,o.vx||'v cos &#952;',{s:11,c:BLU,b:1})+_tx(ex+8,(ey+oy)/2+4,o.vy||'v sin &#952;',{s:11,c:BLU,b:1,a:'start'});
+  s+=`<path d="M ${ox+40} ${oy} A 40 40 0 0 0 ${_f(ox+40*Math.cos(a))} ${_f(oy-40*Math.sin(a))}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`+_tx(ox+50,oy-10,o.al||'37&#176;',{s:11,c:AMB,b:1,a:'start'});
+  return _svg(340,196,s);
+},
+
+// ---- two bodies come in along given lines and stick ------------------------
+stickAngles:()=>{
+  const ox=180, oy=110, L=95; let s='';
+  s+=_ln(40,oy,330,oy,'#d4d1c8',1,'4 3')+_ln(ox,20,ox,210,'#d4d1c8',1,'4 3');
+  s+=_tx(332,oy+4,'X',{s:10.5,c:GREY,a:'start'})+_tx(ox+6,26,'Y',{s:10.5,c:GREY,a:'start'});
+  const a1=30*Math.PI/180, a2=45*Math.PI/180;
+  const Ax=ox-L*Math.sin(a1), Ay=oy+L*Math.cos(a1), Bx=ox+L*Math.sin(a2), By=oy+L*Math.cos(a2);
+  s+=_ln(Ax,Ay,ox,oy,GREY,1,'3 3')+_ln(Bx,By,ox,oy,GREY,1,'3 3');
+  s+=_ball(Ax,Ay,12,'A','',FILL_T)+_ball(Bx,By,12,'B','',FILL_B);
+  s+=_ar(Ax+14*Math.sin(a1),Ay-14*Math.cos(a1),Ax+46*Math.sin(a1),Ay-46*Math.cos(a1),RED)+_tx(Ax-16,Ay-14,'v',{s:11,c:RED,b:1,a:'end'});
+  s+=_ar(Bx-14*Math.sin(a2),By-14*Math.cos(a2),Bx-46*Math.sin(a2),By-46*Math.cos(a2),RED)+_tx(Bx+16,By-14,'v',{s:11,c:RED,b:1,a:'start'});
+  s+=`<path d="M ${ox} ${oy+38} A 38 38 0 0 1 ${_f(ox-38*Math.sin(a1))} ${_f(oy+38*Math.cos(a1))}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`+_tx(ox-15,oy+64,'30&#176;',{s:10.5,c:AMB,b:1});
+  s+=`<path d="M ${ox} ${oy+50} A 50 50 0 0 0 ${_f(ox+50*Math.sin(a2))} ${_f(oy+50*Math.cos(a2))}" fill="none" stroke="${AMB}" stroke-width="1.3"/>`+_tx(ox+29,oy+72,'45&#176;',{s:10.5,c:AMB,b:1});
+  const cdx=Math.sin(a1)-Math.sin(a2), cdy=Math.cos(a1)+Math.cos(a2), cn=Math.hypot(cdx,cdy);
+  s+=_ar(ox,oy,ox+80*cdx/cn,oy-80*cdy/cn,GRN,2.2)+_tx(ox+86*cdx/cn-6,oy-86*cdy/cn,'C (stuck)',{s:10.5,c:GRN,b:1,a:'end'});
+  s+=`<path d="M ${ox+28} ${oy} A 28 28 0 0 0 ${_f(ox+28*cdx/cn)} ${_f(oy-28*cdy/cn)}" fill="none" stroke="${BLU}" stroke-width="1.3"/>`+_tx(ox+30,oy-22,'&#952;',{s:12,c:BLU,b:1,a:'start'});
+  s+=_tx(180,222,'angles measured from the vertical (Y) line · equal mass M, equal speed v',{s:9.5,c:GREY});
+  return _svg(360,230,s);
+},
+
+// ---- body at rest bursts into pieces ---------------------------------------
+burst:(o)=>{
+  const ox=170, oy=110; let s='';
+  s+=`<circle cx="${ox}" cy="${oy}" r="16" fill="${FILL_C}" stroke="${INK}" stroke-width="1.5"/>`+_tx(ox,oy+4,o.lt||'3m',{s:10,b:1});
+  s+=_tx(ox,oy+34,'at rest before',{s:9.5,c:GREY});
+  (o.out||[]).forEach(p=>{
+    const a=p.a*Math.PI/180, c=Math.cos(a), sn=-Math.sin(a), L=p.L||80;
+    s+=_ar(ox+19*c,oy+19*sn,ox+L*c,oy+L*sn,p.c||GRN);
+    s+=_tx(ox+(L+12)*c,oy+(L+12)*sn+4,p.lb,{s:10.5,c:p.c||GRN,b:1,a:c>0.25?'start':(c<-0.25?'end':'middle')});
+  });
+  if(o.cap) s+=_tx(170,214,o.cap,{s:10,c:GREY});
+  return _svg(340,o.cap?222:204,s);
+},
+
+// ---- two touching smooth balls with n and t axes ---------------------------
+ntAxes:()=>{
+  const r=34, ax=140, ay=110, a=-25*Math.PI/180, bx=ax+2*r*Math.cos(a), by=ay+2*r*Math.sin(a);
+  const cx=(ax+bx)/2, cy=(ay+by)/2, nx=Math.cos(a), ny=Math.sin(a);
+  let s='';
+  s+=_ln(cx-120*nx,cy-120*ny,cx+130*nx,cy+130*ny,BLU,1.4,'6 4')+_tx(cx+134*nx,cy+134*ny+4,'n (line of impact)',{s:10.5,c:BLU,b:1,a:'start'});
+  s+=_ln(cx+90*ny,cy-90*nx,cx-90*ny,cy+90*nx,GRN,1.4,'6 4')+_tx(cx+94*ny+4,cy-94*nx,'t (common tangent)',{s:10.5,c:GRN,b:1,a:'start'});
+  s+=_ball(ax,ay,r,'A','',FILL_T)+_ball(bx,by,r,'B','',FILL_B);
+  s+=`<circle cx="${_f(cx)}" cy="${_f(cy)}" r="3.5" fill="${RED}"/>`;
+  s+=_ln(cx,cy,cx+10,cy+46,RED,1)+_tx(cx+12,cy+58,'contact point',{s:10,c:RED,b:1,a:'start'});
+  return _svg(420,220,s);
+},
+
+// ---- ball meets an L-shaped corner -----------------------------------------
+lCorner:()=>{
+  const cx=80, cy=40; let s='';
+  s+=`<rect x="${cx-14}" y="${cy}" width="14" height="170" fill="${FILL_B}" stroke="${INK}" stroke-width="1.3"/>`;
+  s+=`<rect x="${cx-14}" y="${cy+170}" width="250" height="14" fill="${FILL_B}" stroke="${INK}" stroke-width="1.3"/>`;
+  const A=[cx,cy+60], B=[cx+120,cy+170];
+  s+=_ar(cx+190,cy+10,A[0]+6,A[1]-3,RED)+_tx(cx+170,cy+6,'v (in)',{s:11,c:RED,b:1,a:'start'});
+  s+=_ln(A[0],A[1],B[0],B[1],GREY,1.6,'5 4');
+  s+=_ar(B[0],B[1],B[0]+100,B[1]-130,GRN)+_tx(B[0]+104,B[1]-132,'after 2 hits',{s:11,c:GRN,b:1,a:'start'});
+  s+=`<circle cx="${A[0]+6}" cy="${A[1]}" r="5" fill="${FILL_C}" stroke="${INK}"/>`+_tx(A[0]+14,A[1]+16,'A',{s:12,b:1,a:'start'});
+  s+=`<circle cx="${B[0]}" cy="${B[1]-6}" r="5" fill="${FILL_C}" stroke="${INK}"/>`+_tx(B[0]-6,B[1]-12,'B',{s:12,b:1,a:'end'});
+  s+=_tx(cx+120,cy+206,'L-shaped corner · smooth table (top view) · e at each hit',{s:10,c:GREY});
+  return _svg(380,cy+214,s);
+},
+
+// ---- particle going round a hexagon ----------------------------------------
+hexagon:()=>{
+  const cx=150, cy=110, R=80; let s='', pts=[];
+  for(let k=0;k<6;k++){ const a=Math.PI/180*(60*k); pts.push([cx+R*Math.cos(a),cy-R*Math.sin(a)]); }
+  s+=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#d4d1c8" stroke-width="1" stroke-dasharray="4 3"/>`;
+  s+=`<polygon points="${pts.map(p=>_f(p[0])+','+_f(p[1])).join(' ')}" fill="${FILL_T}" stroke="${INK}" stroke-width="1.6"/>`;
+  const P=pts[0], Q=pts[1];
+  s+=_ar(pts[5][0]+0.2*(P[0]-pts[5][0]),pts[5][1]+0.2*(P[1]-pts[5][1]),pts[5][0]+0.75*(P[0]-pts[5][0]),pts[5][1]+0.75*(P[1]-pts[5][1]),RED)+_tx(P[0]+8,cy+44,'v&#8320;',{s:11,c:RED,b:1,a:'start'});
+  s+=_ar(P[0]+0.2*(Q[0]-P[0]),P[1]+0.2*(Q[1]-P[1]),P[0]+0.7*(Q[0]-P[0]),P[1]+0.7*(Q[1]-P[1]),GRN)+_tx(P[0]+8,cy-40,'v&#8320;',{s:11,c:GRN,b:1,a:'start'});
+  s+=`<circle cx="${_f(P[0])}" cy="${_f(P[1])}" r="4" fill="${AMB}"/>`+_tx(P[0]+10,P[1]+4,'corner: turns 60&#176;',{s:10.5,c:AMB,b:1,a:'start'});
+  s+=_ln(cx,cy,P[0],P[1],GREY,1,'3 3')+_tx(cx+R/2,cy+14,'R',{s:11,b:1,i:1});
+  return _svg(330,210,s);
+},
+
+// ---- ball thrown between two smooth vertical walls --------------------------
+twoWalls:()=>{
+  const gy=200, w1=40, w2=260, a=w2-w1; let s=_hatch(16,300,gy);
+  s+=`<rect x="${w1-12}" y="30" width="12" height="${gy-30}" fill="${FILL_B}" stroke="${INK}" stroke-width="1.3"/>`;
+  s+=`<rect x="${w2}" y="30" width="12" height="${gy-30}" fill="${FILL_B}" stroke="${INK}" stroke-width="1.3"/>`;
+  const yA=gy-96, yB=gy-118;
+  s+=`<path d="M ${w1} ${gy} Q ${w1+a*0.45} ${gy-170} ${w2} ${yA}" fill="none" stroke="${RED}" stroke-width="1.8"/>`;
+  s+=`<path d="M ${w2} ${yA} Q ${w1+a*0.35} ${yA-60} ${w1} ${yB}" fill="none" stroke="${GRN}" stroke-width="1.8"/>`;
+  s+=`<path d="M ${w1} ${yB} Q ${w1+a*0.5} ${yB+10} ${w2} ${gy}" fill="none" stroke="${BLU}" stroke-width="1.8"/>`;
+  s+=_tx(w1+2,gy+20,'O',{s:12,b:1})+_tx(w2+18,yA+4,'A',{s:12,b:1,a:'start'})+_tx(w1-18,yB+4,'B',{s:12,b:1,a:'end'})+_tx(w2-6,gy+20,'C',{s:12,b:1});
+  s+=_ln(w1,gy+30,w2,gy+30,INK,1.1)+_ln(w1,gy+25,w1,gy+35,INK,1.1)+_ln(w2,gy+25,w2,gy+35,INK,1.1)+_tx((w1+w2)/2,gy+44,'a',{s:12,b:1,i:1});
+  s+=_tx(w1+8,gy-36,'u (across), v (up)',{s:10,c:RED,a:'start'});
+  return _svg(320,gy+52,s);
+},
+
+// ---- falls from H, hits a 45 degree incline at h, goes off horizontally -----
+inclineFall:()=>{
+  const gy=230, x=110, H=200, h=95; let s=_hatch(14,360,gy);
+  s+=`<rect x="${x-26}" y="${gy-h+10}" width="14" height="${h-10}" fill="#d4d1c8" stroke="${INK}" stroke-width="1"/>`;
+  s+=`<polygon points="${x-30},${gy-h+10} ${x+10},${gy-h+10} ${x-30},${gy-h-30}" fill="${FILL_B}" stroke="${INK}" stroke-width="1.5"/>`;
+  s+=_tx(x-26,gy-h+2,'45&#176;',{s:9.5,c:AMB,b:1,a:'start'});
+  s+=_ball(x-14,gy-H+4,8,'','',FILL_C)+_ln(x-14,gy-H+14,x-14,gy-h-14,RED,1.6,'5 4');
+  s+=`<path d="M ${x-6} ${gy-h-12} Q ${x+110} ${gy-h-12} ${x+190} ${gy}" fill="none" stroke="${GRN}" stroke-width="1.8" stroke-dasharray="6 4"/>`;
+  s+=_ar(x,gy-h-12,x+46,gy-h-12,GRN)+_tx(x+24,gy-h-20,'horizontal',{s:10,c:GRN,b:1});
+  s+=_ln(30,gy-H,30,gy,INK,1.1)+_ln(25,gy-H,35,gy-H,INK,1.1)+_tx(24,gy-H/2,'H',{s:12,b:1,i:1,a:'end'});
+  s+=_ln(50,gy-h-12,50,gy,INK,1.1)+_ln(45,gy-h-12,55,gy-h-12,INK,1.1)+_tx(58,gy-h/2,'h',{s:12,b:1,i:1,a:'start'});
+  s+=_tx(x-6,gy-H,'dropped from rest',{s:10,c:GREY,a:'start'});
+  s+=_tx(200,gy+20,'smooth incline · elastic hit',{s:10,c:GREY});
+  return _svg(370,gy+28,s);
+},
+
+// ---- ball strikes the ground at an angle, bounces ---------------------------
+groundBounce:(o)=>{
+  o=o||{}; const gy=150, px=180; let s=_hatch(20,340,gy);
+  s+=_ar(px-110,gy-120,px-6,gy-8,RED)+_tx(px-114,gy-124,'before: ('+(o.bx||'4')+', &#8722;'+(o.by||'6')+')',{s:10.5,c:RED,b:1,a:'start'});
+  s+=_ar(px+6,gy-8,px+90,gy-70,GRN)+_tx(px+94,gy-74,'after: ('+(o.ax||'4')+', '+(o.ay||'3')+')',{s:10.5,c:GRN,b:1,a:'start'});
+  s+=`<circle cx="${px}" cy="${gy-6}" r="6" fill="${FILL_C}" stroke="${INK}" stroke-width="1.3"/>`;
+  s+=_ln(px,gy,px,gy-120,GREY,1,'3 3')+_tx(px+4,gy-124,'normal',{s:9.5,c:GREY,a:'start'});
+  s+=_tx(180,gy+22,o.cap||'smooth ground · e = 1/2 · only the up–down part changes',{s:10,c:GREY});
+  return _svg(360,gy+30,s);
+},
+
+// ---- slide on a terrace, ball flies off and bounces ------------------------
+terraceSlide:()=>{
+  const gy=230, tx=140, th=120; let s=_hatch(14,400,gy);
+  s+=`<rect x="20" y="${gy-th}" width="${tx-20}" height="${th}" fill="#d4d1c8" stroke="${INK}" stroke-width="1.4"/>`;
+  s+=`<path d="M 40 ${gy-th-70} Q 50 ${gy-th-4} ${tx} ${gy-th-4} L ${tx} ${gy-th} L 40 ${gy-th} Z" fill="${FILL_B}" stroke="${INK}" stroke-width="1.3"/>`;
+  s+=`<circle cx="44" cy="${gy-th-76}" r="6" fill="${FILL_C}" stroke="${INK}" stroke-width="1.3"/>`;
+  s+=_ln(24,gy-th-76,24,gy-th,INK,1.1)+_tx(18,gy-th-36,'h',{s:12,b:1,i:1,a:'end'});
+  s+=_ln(10,gy-th,10,gy,INK,1.1)+_tx(6,gy-th/2,'3h',{s:11,b:1,a:'end'});
+  s+=`<path d="M ${tx} ${gy-th-10} Q ${tx+130} ${gy-th-10} ${tx+150} ${gy}" fill="none" stroke="${RED}" stroke-width="1.8" stroke-dasharray="6 4"/>`;
+  s+=_ar(tx+2,gy-th-10,tx+44,gy-th-10,RED)+_tx(tx+24,gy-th-18,'u&#8320;',{s:11,c:RED,b:1});
+  s+=`<path d="M ${tx+150} ${gy} Q ${tx+190} ${gy-90} ${tx+230} ${gy}" fill="none" stroke="${GRN}" stroke-width="1.8" stroke-dasharray="6 4"/>`;
+  s+=_tx(tx+196,gy-52,'h&#8321;',{s:11,c:GRN,b:1,a:'start'})+_tx(tx+138,gy-10,'&#952;',{s:11,c:AMB,b:1,a:'end'});
+  s+=_ln(tx,gy+16,tx+150,gy+16,INK,1.1)+_ln(tx,gy+11,tx,gy+21,INK,1.1)+_ln(tx+150,gy+11,tx+150,gy+21,INK,1.1)+_tx(tx+75,gy+30,'d',{s:12,b:1,i:1});
+  s+=_tx(330,40,'z &#8593; (up)',{s:10,c:GREY,a:'start'})+_tx(330,56,'x &#8594;',{s:10,c:GREY,a:'start'});
+  s+=_tx(230,gy+46,'frictionless slide · ground e = 1/&#8730;3',{s:10,c:GREY});
+  return _svg(410,gy+54,s);
+},
+
+// ---- Worked Illustration 7: two balls with given centres -------------------
+discsXY:()=>{
+  const k=34, ox=60, oy=70, r=k; let s='';
+  s+=_ar(20,oy,380,oy,GREY,1.2)+_tx(384,oy+4,'x',{s:11,c:GREY,i:1,a:'start'});
+  s+=_ar(ox,oy+90,ox,10,GREY,1.2)+_tx(ox+6,16,'y',{s:11,c:GREY,i:1,a:'start'});
+  s+=_ball(ox,oy,r,'A','',FILL_T)+_ar(ox+r+4,oy-r-10,ox+r+50,oy-r-10,RED)+_tx(ox+r+26,oy-r-18,'4 m/s',{s:11,c:RED,b:1});
+  s+=_ball(ox+5*k,oy+k,r,'B','',FILL_B)+_tx(ox+5*k,oy+2*k+16,'at rest',{s:10,c:GREY});
+  s+=_ln(ox,oy+k,ox+5*k+50,oy+k,'#d4d1c8',1,'3 3');
+  s+=_tx(ox-6,oy+16,'(0, 0)',{s:9.5,c:GREY,a:'end'})+_tx(ox+5*k+r+6,oy+k+4,'(5R, &#8722;R)',{s:9.5,c:GREY,a:'start'});
+  s+=_tx(200,oy+2*k+36,'smooth balls of radius R · elastic',{s:10,c:GREY});
+  return _svg(400,oy+2*k+44,s);
+},
+
+// ---- one ball hits two touching balls --------------------------------------
+threeBalls:(o)=>{
+  o=o||{}; const r=26, bx=230, cy=110; let s='';
+  s+=_ln(20,cy,380,cy,'#d4d1c8',1,'4 3');
+  s+=_ball(bx,cy-r,r,'B','',FILL_B)+_ball(bx,cy+r,r,'C','',FILL_B);
+  s+=_ball(50,cy,r,'A','',FILL_T)+_vel(50,cy,r,1,o.u||'u',RED,44)+_tx(50,cy+r+14,'A, coming in',{s:9.5,c:GREY});
+  const sx=bx-r*Math.sqrt(3);
+  s+=`<circle cx="${_f(sx)}" cy="${cy}" r="${r}" fill="none" stroke="${GREY}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+  s+=_ln(sx,cy,bx,cy-r,BLU,1.2,'4 3')+_ln(sx,cy,bx,cy+r,BLU,1.2,'4 3');
+  s+=_tx(sx,cy-r-34,'each line of centres at 30&#176;',{s:10,c:AMB,b:1});
+  const a=Math.PI/6;
+  s+=_ar(bx+r*Math.cos(a)+2,cy-r-r*Math.sin(a)+12,bx+70*Math.cos(a)+r,cy-r-70*Math.sin(a),GRN)+_tx(bx+r+66,cy-r-38,o.v||'v',{s:11,c:GRN,b:1,a:'start'});
+  s+=_ar(bx+r*Math.cos(a)+2,cy+r+r*Math.sin(a)-12,bx+70*Math.cos(a)+r,cy+r+70*Math.sin(a),GRN)+_tx(bx+r+66,cy+r+46,o.v||'v',{s:11,c:GRN,b:1,a:'start'});
+  s+=_tx(sx,cy+r+44,'dashed: A at the moment of contact',{s:9.5,c:GREY});
+  if(o.cap) s+=_tx(200,226,o.cap,{s:10,c:GREY});
+  return _svg(400,o.cap?234:220,s);
+},
+
+// ---- ball B dropped on ball A that hangs on a string ------------------------
+stringBalls:()=>{
+  const sx=150, R=26, ay=190; let s=_ceil(120,180,20)+_ln(sx,20,sx,ay-R,INK,1.4);
+  s+=_ball(sx,ay,R,'A','',FILL_T);
+  const bx=sx+R, byc=ay-R*Math.sqrt(3);
+  s+=`<circle cx="${bx}" cy="${_f(byc)}" r="${R}" fill="none" stroke="${GREY}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+  s+=_ball(bx,50,R,'B','',FILL_C)+_ln(bx,50+R,bx,byc-R,GREY,1,'4 3');
+  s+=_ar(bx+R+14,60,bx+R+14,110,RED)+_tx(bx+R+20,90,'falls h',{s:10.5,c:RED,b:1,a:'start'});
+  s+=_ln(sx,ay,bx,byc,BLU,1.5,'4 3')+_tx(sx-R-6,(ay+byc)/2,'centres 2R apart',{s:10,c:BLU,b:1,a:'end'});
+  s+=_tx(bx+R+6,byc+R+4,'line of centres at 30&#176; to vertical',{s:10,c:AMB,b:1,a:'start'});
+  s+=_tx(sx+R+60,byc+4,'B at the hit',{s:9.5,c:GREY,a:'start'});
+  s+=_tx(200,ay+R+18,'A, B identical (mass m, radius R) · smooth',{s:9.5,c:GREY});
+  return _svg(400,ay+R+26,s);
+}
+
+
+};
+
+const TOPICS = [
+
+/* ---------------------------------- LADDER 01 ---------------------------------- */
+{
+ "name": "Momentum is a vector — break it into x and y",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A ball moves at 10 m/s at 37° above the x-axis. Its x and y parts of velocity are",
+   "diagram": DIAGRAMS.vecResolve(),
+   "opts": ["8 m/s along x, 6 m/s along y","6 m/s along x, 8 m/s along y","10 m/s along x, 0 along y","7 m/s along x, 7 m/s along y"],
+   "ans": 0,
+   "sol": "v<sub>x</sub> = 10 cos 37° = 10 × 4/5 = <strong>8 m/s</strong><br>v<sub>y</sub> = 10 sin 37° = 10 × 3/5 = <strong>6 m/s</strong><br><br>cos goes with the side <em>next to</em> the angle. The angle here is measured from x, so cos gives the x-part."
+  },
+  {
+   "q": "A 2 kg ball has velocity (3î + 4ĵ) m/s. The size of its momentum is",
+   "opts": ["10 kg m/s","14 kg m/s","5 kg m/s","7 kg m/s"],
+   "ans": 0,
+   "sol": "p = 2(3î + 4ĵ) = 6î + 8ĵ.<br>|p| = √(36 + 64) = <strong>10 kg m/s</strong>.<br><br>14 adds 6 and 8 like plain numbers. Parts at right angles add by Pythagoras."
+  },
+  {
+   "q": "A 2 kg ball moves at 3 m/s along x. A 1 kg ball moves at 4 m/s along y. The size of their total momentum is",
+   "opts": ["2√13 kg m/s ≈ 7.2","10 kg m/s","7 kg m/s","2 kg m/s"],
+   "ans": 0,
+   "sol": "Total = (2 × 3) î + (1 × 4) ĵ = 6î + 4ĵ.<br>|p| = √(36 + 16) = √52 = <strong>2√13 ≈ 7.2 kg m/s</strong>.<br><br>10 = 6 + 4 is the 'add like numbers' trap."
+  },
+  {
+   "q": "In a collision, momentum is kept along x and along y <strong>separately</strong>. A 2 kg ball at 5 m/s along +x hits a 3 kg ball at rest. After the hit the 2 kg ball moves at 3 m/s along +y. The velocity of the 3 kg ball is",
+   "opts": ["(10/3) î − 2 ĵ m/s","(10/3) î + 2 ĵ m/s","5 î − 3 ĵ m/s","(10/3) î m/s"],
+   "ans": 0,
+   "sol": "x: 2 × 5 = 2 × 0 + 3v<sub>x</sub> ⇒ v<sub>x</sub> = 10/3.<br>y: 0 = 2 × 3 + 3v<sub>y</sub> ⇒ v<sub>y</sub> = −2.<br>So v = <strong>(10/3) î − 2 ĵ</strong> m/s.<br><br>y-momentum was zero before, so it must be zero after. If one ball goes up, the other must go down."
+  },
+  {
+   "tag": "Beginner's Box-5 Q6",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A mass m moves with a velocity v and collides inelastically with another identical mass. After collision the 1st mass moves with velocity v/√3 in a direction perpendicular to the initial direction of motion. Find the speed of the second mass after collision.",
+   "opts": ["2v/√3","v","√3 v","v/√3"],
+   "ans": 0,
+   "sol": "Same method as rung 4.<br>x: mv = m(0) + mv<sub>2x</sub> ⇒ v<sub>2x</sub> = v.<br>y: 0 = m(v/√3) + mv<sub>2y</sub> ⇒ v<sub>2y</sub> = −v/√3.<br>v₂ = v√(1 + 1/3) = <strong>2v/√3</strong>.<br><br>Module key: (C) ✓."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 02 ---------------------------------- */
+{
+ "name": "Sticking at an angle — 2D perfectly inelastic",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A 1 kg ball moving at 3 m/s along x sticks to a 1 kg ball moving at 4 m/s along y. The combined body moves with",
+   "opts": ["2.5 m/s at 53° above x","3.5 m/s at 45° above x","5 m/s at 53° above x","2.5 m/s at 37° above x"],
+   "ans": 0,
+   "sol": "Total momentum = (3, 4) kg m/s, size 5. Total mass 2 kg ⇒ speed 2.5 m/s.<br>Direction: tan φ = 4/3 ⇒ φ = <strong>53°</strong> above x.<br><br>37° is tan<sup>−1</sup>(3/4) — the angle from y, not from x."
+  },
+  {
+   "tag": "Beginner's Box-5 Q1",
+   "q": "A particle of mass 1 g moving with a velocity u₁ = (3î − 2ĵ) m/s experiences a perfectly inelastic collision with another particle of mass 2 g and velocity u₂ = (4ĵ − 6k̂) m/s. The velocity of the combined particle is",
+   "opts": ["î + 2ĵ − 4k̂","î − 2ĵ + 4k̂","î − 2ĵ − 4k̂","î + 3.33ĵ + 4k̂"],
+   "ans": 0,
+   "sol": "V = (m₁u₁ + m₂u₂)/(m₁ + m₂) = [1(3î − 2ĵ) + 2(4ĵ − 6k̂)]/3 = (3î + 6ĵ − 12k̂)/3 = <strong>î + 2ĵ − 4k̂</strong>.<br><br>Do each of î, ĵ, k̂ separately. Grams cancel."
+  },
+  {
+   "q": "KE lost in rung 1: before = ½(1)(3²) + ½(1)(4²); after = ½(2)(2.5²). The fraction of KE lost is",
+   "opts": ["50%","25%","20%","0"],
+   "ans": 0,
+   "sol": "Before: 4.5 + 8 = 12.5 J. After: ½ × 2 × 6.25 = 6.25 J.<br>Lost = 6.25 J = <strong>50%</strong>.<br><br>Shortcut for sticking: KE after = p²/2M, with p found as a vector."
+  },
+  {
+   "tag": "JEE Main 2015 · Ex-4(B) Q1",
+   "q": "A particle of mass m moving in the x direction with speed 2v is hit by another particle of mass 2m moving in the y direction with speed v. If the collision is perfectly inelastic, the percentage loss in the energy during the collision is close to",
+   "opts": ["56%","44%","50%","62%"],
+   "ans": 0,
+   "sol": "KE before = ½m(2v)² + ½(2m)v² = 3mv².<br>p = (2mv, 2mv) ⇒ p² = 8m²v². KE after = 8m²v²/(2 × 3m) = (4/3)mv².<br>Loss = (3 − 4/3)/3 = 5/9 ≈ <strong>56%</strong>.<br><br>44% is the part kept."
+  },
+  {
+   "q": "Two equal masses m, each with speed v, move at right angles to each other (one along x, one along y) and stick. The combined body moves with",
+   "opts": ["v/√2 at 45° to each","v at 45° to each","√2 v at 45° to each","v/2 at 45° to each"],
+   "ans": 0,
+   "sol": "p = (mv, mv) ⇒ |p| = √2 mv. Mass 2m ⇒ speed = √2 mv/2m = <strong>v/√2</strong>.<br>Equal parts ⇒ direction is exactly between them, 45°."
+  },
+  {
+   "tag": "JEE Main 2017 · Ex-4(B) Q2",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> Two particles A and B of equal mass M are moving with the same speed v as shown in the figure. They collide completely inelastically and move as a single particle C. The angle θ that the path of C makes with the X-axis is given by :",
+   "diagram": DIAGRAMS.stickAngles(),
+   "opts": ["tan θ = (√3 + √2)/(1 − √2)","tan θ = (1 − √3)/(1 + √2)","tan θ = (1 − √2)/(√2(1 + √3))","tan θ = (√3 − √2)/(1 − √2)"],
+   "ans": 0,
+   "sol": "The 30° and 45° are measured from the vertical line, as in the figure.<br>A: (v sin 30°, v cos 30°) = v(1/2, √3/2). B: (−v sin 45°, v cos 45°) = v(−1/√2, 1/√2).<br>Total: v(1/2 − 1/√2, √3/2 + 1/√2).<br>tan θ = (√3/2 + 1/√2)/(1/2 − 1/√2). Multiply top and bottom by √2: <strong>(√3 + √2)/(1 − √2)</strong>.<br><br>The bottom is negative, so θ is a little more than 90°: C goes up and slightly to the left (B's 45° pushes harder sideways than A's 30°). Module key: (3) ✓."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 03 ---------------------------------- */
+{
+ "name": "Pieces flying off at angles",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A body at rest breaks into two equal pieces. The pieces move",
+   "diagram": DIAGRAMS.burst({lt:'2m',out:[{a:20,lb:'m, v'},{a:200,lb:'m, v'}]}),
+   "opts": ["in opposite directions with equal speeds","at right angles to each other","in the same direction","at 120° to each other"],
+   "ans": 0,
+   "sol": "Total momentum stays zero ⇒ m v₁ + m v₂ = 0 ⇒ v₂ = −v₁: <strong>opposite directions, equal speeds</strong>.<br><br>Two pieces from rest always fly apart along one straight line."
+  },
+  {
+   "tag": "Beginner's Box-5 Q5",
+   "q": "A particle of mass m moving along the x-axis with speed v collides with a particle of mass 2m initially at rest. After the collision, the first particle has come to rest and the second particle has split into two equal-mass pieces that are shown in the figure (each at angle θ &gt; 0 on either side of the x-axis). Which statement correctly describes the speeds of the pieces?",
+   "diagram": DIAGRAMS.split2D({u:'v',lt:'2m',out:[{a:35,lb:'m'},{a:-35,lb:'m'}],cap:'first particle stops · pieces at θ on both sides'}),
+   "opts": ["Each piece moves with speed greater than v/2","Each piece moves with speed v","Each piece moves with speed v/2","One piece moves with v/2, the other faster"],
+   "ans": 0,
+   "sol": "y: the pieces must have equal speeds v′ (their y-parts cancel).<br>x: mv = 2 m v′ cos θ ⇒ v′ = v/(2 cos θ) &gt; v/2, since cos θ &lt; 1.<br><br>Module key: (D) ✓. (The book's text says '2M'; read it as 2m.)"
+  },
+  {
+   "tag": "JEE Main 2021 · Ex-4(B) Q15",
+   "q": "A ball of mass 10 kg moving with a velocity 10√3 m/s along the x-axis, hits another ball of mass 20 kg which is at rest. After the collision, first ball comes to rest while the second ball disintegrates into two equal pieces. One piece starts moving along y-axis with a speed of 10 m/s. The second piece starts moving at an angle of 30° with respect to the x-axis. The velocity of the ball moving at 30° with x-axis is x m/s. The value of x to the nearest integer is ______.",
+   "diagram": DIAGRAMS.split2D({l0:'10 kg',u:'10√3 m/s',lt:'20 kg',out:[{a:90,lb:'10 m/s',L:70},{a:-30,lb:'x m/s at 30°'}]}),
+   "opts": ["20","10","17","30"],
+   "ans": 0,
+   "sol": "Pieces: 10 kg each.<br>x: 10 × 10√3 = 10 x cos 30° ⇒ x = 10√3/(√3/2) = <strong>20</strong>.<br>Check y: 10 × 10 = 10 × 20 × sin 30° = 100 ✓."
+  },
+  {
+   "q": "A body at rest explodes into three equal pieces. Two of them fly off at right angles to each other, each with speed v. The third piece moves with",
+   "diagram": DIAGRAMS.burst({lt:'3m',out:[{a:0,lb:'v'},{a:90,lb:'v',L:70},{a:225,lb:'?',c:RED}]}),
+   "opts": ["√2 v, at 135° to each of the other two","v, at 135° to each","2v, opposite to one of them","√2 v, at 90° to one of them"],
+   "ans": 0,
+   "sol": "The first two give momentum (mv, mv), size √2 mv. The third must cancel it: equal size, opposite direction.<br>m v₃ = √2 mv ⇒ v₃ = <strong>√2 v</strong>, pointing exactly opposite to their resultant — that is 135° from each."
+  },
+  {
+   "tag": "JEE Main 2019 · Ex-4(B) Q6",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A particle of mass 'm' is moving with speed '2v' and collides with a mass '2m' moving with speed 'v' in the same direction. After collision, the first mass is stopped completely while the second one splits into two particles each of mass 'm', which move at angle 45° with respect to the original direction. The speed of each of the moving particle will be :",
+   "diagram": DIAGRAMS.split2D({u:'2v',lt:'2m',out:[{a:45,lb:'m'},{a:-45,lb:'m'}],cap:'the 2m body was also moving forward with v'}),
+   "opts": ["2√2 v","√2 v","v/(2√2)","v/√2"],
+   "ans": 0,
+   "sol": "Momentum before (all along x): m(2v) + 2m(v) = 4mv.<br>After: first mass stops. Pieces: equal speeds v′ at ±45° (y-parts cancel).<br>x: 4mv = 2 × m v′ cos 45° = √2 m v′ ⇒ v′ = 4v/√2 = <strong>2√2 v</strong>.<br><br>Do not forget the 2m body's own momentum 2mv. Module key: (2) ✓."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 04 ---------------------------------- */
+{
+ "name": "The line of impact — n and t axes",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "When two smooth balls touch, the push between them acts along the common normal at the contact point. This line is called",
+   "diagram": DIAGRAMS.ntAxes(),
+   "opts": ["the line of impact (n-axis)","the common tangent (t-axis)","the line of the first ball's velocity","the line joining their tops"],
+   "ans": 0,
+   "sol": "The push acts along the <strong>common normal</strong>. We call it the line of impact, the n-axis.<br>The line at 90° to it, through the contact point, is the common tangent, the t-axis."
+  },
+  {
+   "q": "For two smooth spheres or discs, the line of impact always passes through",
+   "opts": ["both centres","the contact point only, in any direction","the point where the first ball started","the top of the heavier ball"],
+   "ans": 0,
+   "sol": "The normal to a circle at any point goes through its centre. At contact the two normals are the same line, so it passes through <strong>both centres</strong>.<br><br>That is why we draw the line joining the centres first, in every disc question."
+  },
+  {
+   "q": "Surfaces are smooth, so there is no force along the t-axis. During the hit, the t-part of the velocity of <strong>each</strong> body",
+   "opts": ["stays the same","becomes zero","is multiplied by e","is swapped with the other body's t-part"],
+   "ans": 0,
+   "sol": "No force along t ⇒ no change along t ⇒ each body keeps its own t-part. (Module eq. A: v<sub>At</sub> = u<sub>At</sub>, v<sub>Bt</sub> = u<sub>Bt</sub>.)<br><br>'Swapped' is wrong: even for equal masses, only the n-parts swap."
+  },
+  {
+   "q": "The coefficient of restitution e is used with",
+   "opts": ["only the n-parts: v<sub>Bn</sub> − v<sub>An</sub> = e(u<sub>An</sub> − u<sub>Bn</sub>)","the full speeds of both bodies","only the t-parts","the x-parts, whatever the line of impact"],
+   "ans": 0,
+   "sol": "e compares speeds of approach and separation <strong>along the line of impact</strong> only.<br><br>A common mistake is to use the full speed u in the e-equation. Always take the n-part first."
+  },
+  {
+   "q": "The module solves an oblique impact of two free bodies with four equations. They are",
+   "opts": ["t-part of A unchanged, t-part of B unchanged, n-momentum conserved, e-equation along n","x-momentum, y-momentum, KE conserved, e-equation","n-momentum, t-momentum, KE before = KE after, e = 1","e along n, e along t, and two momentum equations"],
+   "ans": 0,
+   "sol": "Module 4.3: (A) v<sub>At</sub> = u<sub>At</sub>, v<sub>Bt</sub> = u<sub>Bt</sub>; (B) n-momentum; (C) e-equation along n.<br>Four unknowns (v<sub>At</sub>, v<sub>An</sub>, v<sub>Bt</sub>, v<sub>Bn</sub>), four equations.<br><br>KE is conserved only when e = 1, so it is not a general equation."
+  },
+  {
+   "tag": "Illustration 38 (b)",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A ball collides with a frictionless wall with velocity u as shown in the figure (at angle θ to the normal). If the impact is perfectly elastic, what do you observe?",
+   "diagram": DIAGRAMS.wallOblique({th:40,th2:40,a2:'&#952;'}),
+   "opts": ["It rebounds with the same speed, at the same angle θ on the other side of the normal","It rebounds along the same line it came in","It slides along the wall with u sin θ","It rebounds with the same speed but at a smaller angle"],
+   "ans": 0,
+   "sol": "t-part: u sin θ (unchanged). n-part: e u cos θ = u cos θ (e = 1), reversed.<br>Speed = u, and tan θ′ = tan θ ⇒ θ′ = θ.<br><br>The module says it: an elastic hit on a smooth wall follows the same law as <strong>light reflecting from a plane mirror</strong>."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 05 ---------------------------------- */
+{
+ "name": "Ball hits a smooth wall at an angle",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A ball hits a smooth fixed wall at 4 m/s, at 60° to the normal. e = 1/2. Just after the hit, its speed is",
+   "diagram": DIAGRAMS.wallOblique({th:60,th2:74,u:'4 m/s',a1:'60°'}),
+   "opts": ["√13 m/s ≈ 3.6 m/s","2 m/s","4 m/s","√7 m/s"],
+   "ans": 0,
+   "sol": "t-part: 4 sin 60° = 2√3 (unchanged).<br>n-part: e × 4 cos 60° = ½ × 2 = 1 (reversed).<br>Speed = √(12 + 1) = <strong>√13 ≈ 3.6 m/s</strong>.<br><br>2 m/s multiplies the whole speed by e — wrong; e acts only on the n-part."
+  },
+  {
+   "tag": "Illustration 38 (a)",
+   "q": "A ball collides with a frictionless wall with velocity u at angle θ to the normal. Coefficient of restitution is e. Just after the impact, the ball's speed v and its angle θ′ with the normal are",
+   "opts": ["v = u√(sin²θ + e²cos²θ), tan θ′ = tan θ / e","v = eu, θ′ = θ","v = u√(e²sin²θ + cos²θ), tan θ′ = e tan θ","v = u, tan θ′ = tan θ / e"],
+   "ans": 0,
+   "sol": "v<sub>t</sub> = u sin θ, v<sub>n</sub> = e u cos θ.<br>v = √(v<sub>t</sub>² + v<sub>n</sub>²) = <strong>u√(sin²θ + e²cos²θ)</strong>; tan θ′ = v<sub>t</sub>/v<sub>n</sub> = <strong>tan θ / e</strong>.<br><br>e &lt; 1 ⇒ θ′ &gt; θ: the ball comes off flatter, closer to the wall."
+  },
+  {
+   "tag": "Worked Illustration 6",
+   "q": "A small sphere of mass 1 kg is moving with a velocity (6î + ĵ) m/s. It hits a fixed smooth wall and rebounds with velocity (−4î + ĵ) m/s. The coefficient of restitution between the sphere and the wall is",
+   "opts": ["2/3","3/2","9/16","4/9"],
+   "ans": 0,
+   "sol": "The ĵ part did not change ⇒ the wall lies along ĵ; its normal is along î.<br>Approach along the normal = 6, separation = 4 ⇒ e = 4/6 = <strong>2/3</strong>.<br><br><strong>Print note:</strong> the module prints the rebound as (4î + ĵ) with impulse −2î. With +4î the ball would still be moving into the wall. It must be (−4î + ĵ), and then the impulse is −10î. e = 2/3 does not change."
+  },
+  {
+   "q": "Impulse from a smooth wall acts only along the normal: J = m u cos θ (1 + e). A 0.5 kg ball hits a wall at 10 m/s, at 60° to the normal, elastically. J =",
+   "opts": ["5 N s, along the normal","10 N s, along the normal","8.7 N s, along the normal","2.5 N s, along the wall"],
+   "ans": 0,
+   "sol": "J = 0.5 × 10 × cos 60° × (1 + 1) = 0.5 × 10 × 0.5 × 2 = <strong>5 N s</strong>, outward along the normal.<br><br>8.7 N s uses sin 60° — that is the t-part, which does not change at all."
+  },
+  {
+   "q": "KE lost when a ball hits a smooth wall = (1 − e²) × (KE of the n-part) = (1 − e²) cos²θ × (original KE). For e = 1/2, θ = 60°, the fraction lost is",
+   "opts": ["3/16","3/4","1/4","1/16"],
+   "ans": 0,
+   "sol": "(1 − 1/4) × cos²60° = (3/4)(1/4) = <strong>3/16</strong>.<br><br>The t-part carries its KE through untouched, so only the n-part's share can be lost. 3/4 is the head-on answer (θ = 0)."
+  },
+  {
+   "tag": "JEE Main 2018 · Ex-4(A) Q4",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> The mass of a hydrogen molecule is 3.32 × 10<sup>−27</sup> kg. If 10<sup>23</sup> hydrogen molecules strike, per second, a fixed wall of area 2 cm<sup>2</sup> at an angle of 45° to the normal, and rebound elastically with a speed of 10<sup>3</sup> m/s, then the pressure on the wall is nearly :",
+   "diagram": DIAGRAMS.wallOblique({th:45,th2:45,u:'10³ m/s',v:'10³ m/s',a1:'45°',a2:'45°'}),
+   "opts": ["2.35 × 10<sup>3</sup> N/m<sup>2</sup>","4.70 × 10<sup>3</sup> N/m<sup>2</sup>","2.35 × 10<sup>2</sup> N/m<sup>2</sup>","4.70 × 10<sup>2</sup> N/m<sup>2</sup>"],
+   "ans": 0,
+   "sol": "Impulse per molecule (rung 4, e = 1) = 2mu cos 45° = 2 × 3.32 × 10<sup>−27</sup> × 10<sup>3</sup> × 0.707 ≈ 4.69 × 10<sup>−24</sup> N s.<br>Force = 10<sup>23</sup> × 4.69 × 10<sup>−24</sup> ≈ 0.469 N.<br>Pressure = 0.469/(2 × 10<sup>−4</sup>) ≈ <strong>2.35 × 10<sup>3</sup> N/m<sup>2</sup></strong>.<br><br>Module key: (1) ✓."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 06 ---------------------------------- */
+{
+ "name": "Corners and two walls — one part at a time",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A smooth wall stands along y, so its normal is along x. A ball with velocity (3î + 4ĵ) m/s hits it, e = 1/2. Its velocity after the hit is",
+   "opts": ["(−1.5î + 4ĵ) m/s","(−3î + 4ĵ) m/s","(−1.5î + 2ĵ) m/s","(1.5î + 4ĵ) m/s"],
+   "ans": 0,
+   "sol": "Only the part along the normal (x) changes: 3 → −e × 3 = −1.5. The y-part (along the wall) stays 4.<br>v = <strong>−1.5î + 4ĵ</strong>.<br><br>(−1.5î + 2ĵ) wrongly applies e to the wall-part too."
+  },
+  {
+   "tag": "Beginner's Box-5 Q3",
+   "q": "AB is an L shaped obstacle fixed on a horizontal smooth table. A ball strikes it at A, gets deflected and restrikes it at B. If the velocity vector before collision is v⃗ and coefficient of restitution of each collision is 'e', then the velocity of ball after its second collision at B is :",
+   "diagram": DIAGRAMS.lCorner(),
+   "opts": ["−e v⃗","e² v⃗","−e² v⃗","data insufficient"],
+   "ans": 0,
+   "sol": "Wall 1 reverses one part and multiplies it by e. Wall 2 (at 90°) does the same to the other part.<br>Each part is hit <strong>once</strong> ⇒ both parts become −e times ⇒ <strong>−e v⃗</strong>: the ball comes back parallel to its path, slower.<br><br>e² would need each part to be hit twice. Module key: (C) ✓."
+  },
+  {
+   "q": "A particle moving at constant speed v turns through 90° (e.g. at a corner). The size of the change in its momentum is",
+   "opts": ["√2 mv","2mv","mv","zero, since the speed is the same"],
+   "ans": 0,
+   "sol": "Δp = m(v<sub>after</sub> − v<sub>before</sub>). Two vectors of size v at 90° ⇒ their difference has size √(v² + v²) = √2 v.<br>|Δp| = <strong>√2 mv</strong>.<br><br>General rule: turning by angle φ at the same speed ⇒ |Δp| = 2mv sin(φ/2). φ = 90° gives 2mv × 0.707 = √2 mv ✓."
+  },
+  {
+   "tag": "Ex-1 Q9",
+   "q": "A particle of mass m is made to move with uniform speed v₀ along the perimeter of a regular hexagon, inscribed in a circle of radius R. The magnitude of impulse applied at each corner of the hexagon is",
+   "diagram": DIAGRAMS.hexagon(),
+   "opts": ["2mv₀ sin(π/6)","mv₀ sin(π/6)","mv₀ sin(π/3)","2mv₀ sin(π/3)"],
+   "ans": 0,
+   "sol": "At each corner of a regular hexagon the direction turns through the outside angle 360°/6 = 60°.<br>|J| = 2mv₀ sin(60°/2) = <strong>2mv₀ sin(π/6)</strong> (= mv₀).<br><br>R is not needed. Module key: (A) ✓."
+  },
+  {
+   "q": "Back to walls. A ball moves between two smooth parallel vertical walls, a apart, with horizontal speed u. Each wall hit multiplies the horizontal speed by e. The times to cross the gap the 1st, 2nd and 3rd time are",
+   "diagram": DIAGRAMS.twoWalls(),
+   "opts": ["a/u, a/(eu), a/(e²u)","a/u, ea/u, e²a/u","a/u each time","a/u, a/(2eu), a/(3eu)"],
+   "ans": 0,
+   "sol": "Speeds across: u, then eu, then e²u. Time = distance ÷ speed ⇒ <strong>a/u, a/(eu), a/(e²u)</strong>.<br>Total = a(e² + e + 1)/(e²u).<br><br>Slower speed ⇒ <em>more</em> time — so e goes in the bottom."
+  },
+  {
+   "tag": "Ex-2 Q6",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A ball is projected from a point in one of the two smooth parallel vertical walls against the other in a plane perpendicular to both after being reflected at each wall impinge again on the second at a point in the same horizontal plane as is started. The distance between two walls is a, b is the free range on a horizontal plane and e be the coefficient of restitution. (u = horizontal, v = vertical part of the launch velocity.) Check:<br>(i) The total time taken in moving from O to C is (a/(e²u))(e² + e + 1)<br>(ii) The free range on the horizontal plane b = 2uv/g<br>(iii) be² = a(e² + e + 1)",
+   "diagram": DIAGRAMS.twoWalls(),
+   "opts": ["All three are correct","Only (i) and (ii)","Only (ii) and (iii)","Only (i)"],
+   "ans": 0,
+   "sol": "(i) From rung 5 ✓.<br>(ii) Smooth vertical walls never touch the vertical motion. Time of flight is 2v/g as usual, so the free range b = u × 2v/g = 2uv/g ✓.<br>(iii) C is at the starting level, so the total time is also 2v/g = b/u. Equate with (i): a(e² + e + 1)/(e²u) = b/u ⇒ <strong>be² = a(e² + e + 1)</strong> ✓.<br><br>Module key: (ABCD) — all correct."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 07 ---------------------------------- */
+{
+ "name": "Ball hits a fixed incline",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A ball falls straight down onto a smooth incline of angle θ. The angle between the ball's velocity and the <strong>normal</strong> to the incline is",
+   "diagram": DIAGRAMS.inclineHit({th:30,mode:'drop',noOut:true}),
+   "opts": ["θ","90° − θ","2θ","0"],
+   "ans": 0,
+   "sol": "The normal to the incline is tilted from the vertical by the same angle θ as the incline is tilted from the horizontal. The velocity is vertical ⇒ angle with the normal = <strong>θ</strong>.<br><br>So along the incline (t): u sin θ. Into the incline (n): u cos θ."
+  },
+  {
+   "q": "A ball falls vertically onto a smooth 45° incline and the hit is elastic. Just after the hit it moves",
+   "opts": ["horizontally","vertically up","down the incline","at 45° above the horizontal"],
+   "ans": 0,
+   "sol": "Elastic on a smooth surface ⇒ like a mirror: angle out = angle in = 45° on the other side of the normal.<br>The normal is 45° from vertical, so the ball turns through 90° in total ⇒ it goes off <strong>horizontally</strong>.<br><br>Keep this — the ★ question uses it."
+  },
+  {
+   "tag": "Beginner's Box-5 Q2",
+   "q": "A ball collides with an inclined plane of inclination θ after falling through a distance h. If it moves horizontally just after the impact, the coefficient of restitution is",
+   "diagram": DIAGRAMS.inclineHit({th:30,mode:'drop'}),
+   "opts": ["tan²θ","cot²θ","tan θ","cot θ"],
+   "ans": 0,
+   "sol": "Before: t = u sin θ, n = u cos θ. After: t = u sin θ, n = e u cos θ.<br>Horizontal ⇒ the new velocity makes (90° − θ) with the normal:<br>tan(90° − θ) = u sin θ/(e u cos θ) ⇒ cot θ = tan θ/e ⇒ <strong>e = tan²θ</strong>.<br><br>Check: θ = 45° gives e = 1 — rung 2 ✓. Module key: (A) ✓."
+  },
+  {
+   "tag": "Beginner's Box-5 Q4 · Ex-1 Q13",
+   "q": "In the figure shown a particle P strikes the inclined smooth plane horizontally and rebounds vertically. If the angle θ is 60°, then the co-efficient of restitution is:",
+   "diagram": DIAGRAMS.inclineHit({th:60,mode:'horiz',L:180}),
+   "opts": ["1/3","1/√3","1/2","1"],
+   "ans": 0,
+   "sol": "Now the horizontal velocity makes (90° − θ) with the normal.<br>Before: t = u cos θ, n = u sin θ. After: t = u cos θ, n = e u sin θ.<br>Vertical ⇒ angle θ with the normal: tan θ = cos θ/(e sin θ) ⇒ e = cot²θ = cot²60° = <strong>1/3</strong>.<br><br>Ex-1 Q13 is the same question. Keys: Box-5 (A), Ex-1 (C) — both 1/3 ✓."
+  },
+  {
+   "q": "A body is dropped from 20 m. At 10 m height it hits a smooth 45° incline elastically (rung 2) and flies off horizontally. Total time to reach the ground (g = 10 m/s²) is",
+   "diagram": DIAGRAMS.inclineFall(),
+   "opts": ["2√2 s ≈ 2.83 s","2 s","√2 s","4 s"],
+   "ans": 0,
+   "sol": "Fall 10 m from rest: t₁ = √(2 × 10/10) = √2 s.<br>After the bounce the vertical speed is zero, so it falls the last 10 m from rest again: t₂ = √2 s.<br>Total = <strong>2√2 s</strong>.<br><br>2 s is the time with no incline. The incline 'throws away' the downward speed, so the body takes longer."
+  },
+  {
+   "tag": "JEE Main 2024 · Ex-4(A) Q17",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A body starts falling freely from height H hits an inclined plane in its path at height h. As a result of this perfectly elastic impact, the direction of the velocity of the body becomes horizontal. The value of H/h for which the body will take the maximum time to reach the ground is ______.",
+   "diagram": DIAGRAMS.inclineFall(),
+   "opts": ["2","3","4","√2"],
+   "ans": 0,
+   "sol": "As in rung 5: t = √(2(H − h)/g) + √(2h/g) = √(2/g) [√(H − h) + √h].<br>√(H − h) + √h is largest when the two parts are equal: H − h = h ⇒ <strong>H/h = 2</strong>.<br>(Check by calculus: d/dh gives −1/(2√(H−h)) + 1/(2√h) = 0 ⇒ h = H/2.)<br><br>Module key: 2 ✓."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 08 ---------------------------------- */
+{
+ "name": "Ball bouncing off the ground at an angle",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "A ball hits smooth level ground at an angle. The ground is the 'wall' and its normal is vertical. After the bounce",
+   "opts": ["the horizontal part stays the same; the vertical part reverses and is multiplied by e","both parts are multiplied by e","the horizontal part becomes zero","the vertical part stays the same"],
+   "ans": 0,
+   "sol": "Smooth ground ⇒ no sideways force ⇒ horizontal part unchanged. The vertical part (the n-part) reverses and becomes e times."
+  },
+  {
+   "q": "A ball hits the ground with velocity (4î − 6ĵ) m/s (ĵ up). e = 1/2. After the bounce its velocity makes what angle with the ground?",
+   "diagram": DIAGRAMS.groundBounce(),
+   "opts": ["37°","56°","45°","26.5°"],
+   "ans": 0,
+   "sol": "After: (4î + 3ĵ). tan α = 3/4 ⇒ α = <strong>37°</strong>.<br>Before it came in at tan<sup>−1</sup>(6/4) ≈ 56°. A bounce with e &lt; 1 makes the path flatter."
+  },
+  {
+   "q": "A ball is thrown horizontally at 10 m/s from a height of 15 m (g = 10 m/s²). It hits the ground at angle θ with the horizontal, where",
+   "opts": ["θ = 60°","θ = 30°","θ = 45°","θ = 37°"],
+   "ans": 0,
+   "sol": "v<sub>y</sub> = √(2gH) = √300 = 10√3 m/s. v<sub>x</sub> = 10 m/s.<br>tan θ = 10√3/10 = √3 ⇒ <strong>θ = 60°</strong>."
+  },
+  {
+   "tag": "JEE Adv 2018 · Ex-5 Q3",
+   "q": "A ball is projected from the ground at an angle of 45° with the horizontal surface. It reaches a maximum height of 120 m and returns to the ground. Upon hitting the ground for the first time, it loses half of its kinetic energy. Immediately after the bounce, the velocity of the ball makes an angle of 30° with the horizontal surface. The maximum height it reaches after the bounce, in metres, is",
+   "opts": ["30","60","40","15"],
+   "ans": 0,
+   "sol": "Before: u²/4g = 120 (sin²45° = ½) ⇒ u²/g = 480.<br>Half KE lost ⇒ v² = u²/2.<br>After: H′ = v² sin²30°/2g = (u²/2)(1/4)/2g = (u²/g)/16 = <strong>30 m</strong>.<br><br>Note: this is not a smooth-ground bounce (the angle changes for a reason the question gives). Use what the question gives. Module key: 30 ✓."
+  },
+  {
+   "tag": "JEE Adv 2023 · Ex-5 Q9",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A slide with a frictionless curved surface, which becomes horizontal at its lower end, is fixed on the terrace of a building of height 3h from the ground, as shown in the figure. A spherical ball of mass m is released on the slide from rest at a height h from the top of the terrace. The ball leaves the slide with a velocity u⃗₀ = u₀x̂ and falls on the ground at a distance d from the building making an angle θ with the horizontal. It bounces off with a velocity v⃗ and reaches a maximum height h₁. The acceleration due to gravity is g and the coefficient of restitution of the ground is 1/√3. Which of the following statement(s) is(are) correct?<br>(A) u⃗₀ = √(2gh) x̂<br>(B) v⃗ = √(2gh)(x̂ − ẑ)<br>(C) θ = 60°<br>(D) d/h₁ = 2√3",
+   "diagram": DIAGRAMS.terraceSlide(),
+   "opts": ["(A), (C) and (D)","(A) and (B) only","(B), (C) and (D)","All four"],
+   "ans": 0,
+   "sol": "(A) Smooth slide: ½u₀² = gh ⇒ u₀ = √(2gh) ✓.<br>(C) Falls 3h: v<sub>z</sub> = √(6gh). tan θ = √(6gh)/√(2gh) = √3 ⇒ θ = 60° ✓ (rung 3).<br>(B) Bounce (rung 1): x-part stays √(2gh); z-part becomes √(6gh)/√3 = √(2gh), now <em>upward</em>. So v⃗ = √(2gh)(x̂ <strong>+</strong> ẑ). (B) has −ẑ ✗.<br>(D) h₁ = (√(2gh))²/2g = h. d = u₀ × √(2 × 3h/g) = √(2gh) × √(6h/g) = 2√3 h ⇒ d/h₁ = 2√3 ✓.<br><br>Module key: (ACD) ✓."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 09 ---------------------------------- */
+{
+ "name": "Two smooth discs — the line of centres decides",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Disc A (radius r) moves towards an identical disc B at rest. The sideways gap between A's path and B's centre (the impact parameter) is b. At contact the centres are 2r apart. The line of centres makes angle α with A's velocity, where",
+   "diagram": DIAGRAMS.impactParam({u:'u',b:1,bl:'b'}),
+   "opts": ["sin α = b/2r","sin α = b/r","cos α = b/2r","tan α = b/r"],
+   "ans": 0,
+   "sol": "Right triangle: hypotenuse = 2r (centre to centre), side opposite α = b.<br><strong>sin α = b/2r</strong>. For b = r ⇒ α = 30°; for b = r/2 ⇒ sin α = 1/4.<br><br>b/r is the most common slip — forgetting there are two radii."
+  },
+  {
+   "q": "B was at rest. After the hit, B moves",
+   "opts": ["along the line of centres","along A's original velocity","along the common tangent","it depends on e"],
+   "ans": 0,
+   "sol": "B gets only one push, along the line of centres (ladder 4). It had no t-part to keep. So B moves <strong>along the line of centres</strong>, for any e."
+  },
+  {
+   "q": "Identical discs, elastic, B at rest. Along n they behave like a head-on hit of equal masses, so they <strong>swap n-parts</strong>; t-parts stay. A comes in at u, at angle α to the line of centres. After the hit",
+   "opts": ["B: u cos α along n; A: u sin α along t","B: u sin α along n; A: u cos α along t","B: u along u; A stops","both move at u/2"],
+   "ans": 0,
+   "sol": "A's n-part u cos α → goes to B. B's n-part 0 → goes to A.<br>A keeps its t-part u sin α.<br><strong>B: u cos α along n, A: u sin α along t</strong> — at 90° to each other."
+  },
+  {
+   "tag": "Illustration 37",
+   "q": "A disk sliding with velocity u on a smooth horizontal plane strikes another identical disk kept at rest as shown in the figure. If the impact between the disks is perfectly elastic, find velocities of the disks after the impact. (The line of impact makes 30° with u.)",
+   "diagram": DIAGRAMS.impactParam({u:'u',b:1,bl:'r',cap:'line of impact at 30° to u'}),
+   "opts": ["A: u/2 along the tangent; B: (√3/2)u along the line of impact","A: (√3/2)u along the tangent; B: u/2 along the line of impact","A stops; B moves with u","Both move with u/√2"],
+   "ans": 0,
+   "sol": "α = 30° in rung 3: B gets u cos 30° = <strong>(√3/2)u</strong> along n; A keeps u sin 30° = <strong>u/2</strong> along t.<br>Module: v<sub>At</sub> = u/2, v<sub>An</sub> = 0, v<sub>Bn</sub> = u√3/2 ✓."
+  },
+  {
+   "tag": "Beginner's Box-5 Q7",
+   "q": "A disk A of radius r moving on perfectly smooth surface at a speed v undergoes an elastic collision with an identical stationary disk B. Find the velocity of the disk B after collision if the impact parameter is r/2 as shown in the figure.",
+   "diagram": DIAGRAMS.impactParam({u:'v',b:0.5,bl:'r/2'}),
+   "opts": ["√15 v/4","v/4","v/2","√3 v/2"],
+   "ans": 0,
+   "sol": "sin α = (r/2)/(2r) = 1/4 (rung 1) ⇒ cos α = √15/4.<br>B: v cos α = <strong>√15 v/4</strong>.<br><br>v/4 is A's speed. √3v/2 uses sin α = (r/2)/r. Module key: (A) ✓."
+  },
+  {
+   "tag": "Worked Illustration 7",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> Two smooth balls A and B, each of mass m and radius R, have their centre at (0, 0, R) and (5R, −R, R) respectively, in a coordinate system as shown. Ball A, moving along positive x-axis, collides with ball B. Just before the collision, speed of ball A is 4 m/s and ball B is stationary. The collision between the balls is elastic. Velocity of the ball A just after the collision is",
+   "diagram": DIAGRAMS.discsXY(),
+   "opts": ["(î + √3ĵ) m/s","(î − √3ĵ) m/s","(2î + √3ĵ) m/s","(2î + 2ĵ) m/s"],
+   "ans": 0,
+   "sol": "Sideways gap = R ⇒ sin α = R/2R ⇒ α = 30°. B is below A's path, so the line of centres points 30° <em>below</em> x.<br>A keeps only its t-part: 4 sin 30° = 2 m/s, along the tangent, which is 60° <em>above</em> x.<br>v<sub>A</sub> = 2(cos 60° î + sin 60° ĵ) = <strong>î + √3ĵ</strong>.<br>(B gets 4 cos 30° = 2√3 m/s along the line of centres.)<br><br>(î − √3ĵ) sends A towards B — impossible after a push away from B. Module key: (A) ✓."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 10 ---------------------------------- */
+{
+ "name": "Equal masses fly off at 90° — and when they don't",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "Two identical balls, one at rest, collide elastically but not head-on. After the hit, the angle between their paths is",
+   "diagram": DIAGRAMS.momTriangle(),
+   "opts": ["90°","180°","60°","any angle"],
+   "ans": 0,
+   "sol": "Momentum: p = p₁ + p₂ (a triangle). Elastic with equal m: p² = p₁² + p₂² (Pythagoras). So the triangle is right-angled ⇒ <strong>90°</strong> between the paths.<br><br>Head-on is the one exception: then the striker stops and there is no second path."
+  },
+  {
+   "q": "A ball at 10 m/s hits an identical ball at rest elastically. The first ball goes off at 30° to its old line. Its speed and the second ball's speed are",
+   "opts": ["5√3 m/s and 5 m/s","5 m/s and 5√3 m/s","5 m/s and 5 m/s","10 m/s and 0"],
+   "ans": 0,
+   "sol": "They separate at 90°, so ball 2 goes at 60° on the other side.<br>v₁ = 10 cos 30° = <strong>5√3 m/s</strong>, v₂ = 10 cos 60° = <strong>5 m/s</strong>.<br>Check KE: 75 + 25 = 100 ✓."
+  },
+  {
+   "q": "Same two identical balls, but the hit is inelastic (e &lt; 1). The angle between their paths afterwards is",
+   "opts": ["less than 90°","exactly 90°","more than 90°","180°"],
+   "ans": 0,
+   "sol": "KE is lost ⇒ p₁² + p₂² &lt; p². In the triangle p = p₁ + p₂ this means p₁ · p₂ &gt; 0 ⇒ the angle between them is <strong>less than 90°</strong>.<br><br>So 90° is a quick test: if a question says 'identical, at 90°', the hit was elastic."
+  },
+  {
+   "q": "Unequal masses now. M (speed V₀) hits m at rest elastically; both go off at the <strong>same angle θ</strong>, on opposite sides. y-momentum gives Mv₁ = mv₂. Then x-momentum gives v₁ =",
+   "diagram": DIAGRAMS.obliqueAfter({th:40,ph:40,u:'V₀',v1:'v₁',v2:'v₂',cap:'equal angles on both sides · elastic'}),
+   "opts": ["V₀/(2 cos θ)","V₀ cos θ","V₀/2","2V₀ cos θ"],
+   "ans": 0,
+   "sol": "MV₀ = Mv₁ cos θ + mv₂ cos θ = 2Mv₁ cos θ ⇒ <strong>v₁ = V₀/(2 cos θ)</strong>."
+  },
+  {
+   "tag": "JEE Main 2021 · Ex-4(B) Q11",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A body of mass M moving at speed V₀ collides elastically with a mass 'm' at rest. After the collision, the two masses move at angles θ₁ and θ₂ with respect to the initial direction of motion of the body of mass M. The largest possible value of the ratio M/m, for which the angles θ₁ and θ₂ will be equal, is :",
+   "diagram": DIAGRAMS.obliqueAfter({th:40,ph:40,u:'V₀',v1:'v₁',v2:'v₂',cap:'equal angles on both sides · elastic'}),
+   "opts": ["3","4","1","2"],
+   "ans": 0,
+   "sol": "From rung 4: v₁ = V₀/(2 cos θ), v₂ = (M/m)v₁.<br>KE: MV₀² = Mv₁² + mv₂² = Mv₁²(1 + M/m) ⇒ V₀² = V₀²(1 + M/m)/(4 cos²θ)<br>⇒ cos²θ = (1 + M/m)/4 ≤ 1 ⇒ <strong>M/m ≤ 3</strong>.<br><br>Check: M = m gives cos²θ = ½, θ = 45° each — total 90°, matching rung 1 ✓. Module key: (3) ✓."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 11 ---------------------------------- */
+{
+ "name": "One ball hits two touching balls",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Ball A moves straight at the gap between two identical touching balls B and C (a symmetric hit). After the hit, B and C",
+   "diagram": DIAGRAMS.threeBalls(),
+   "opts": ["move with equal speeds at equal angles on either side of A's line","move along A's line","stay at rest","move at right angles to A's line"],
+   "ans": 0,
+   "sol": "The set-up is a mirror image about A's line, so the result must be too: <strong>equal speeds, equal angles</strong> on both sides. Their sideways momenta cancel."
+  },
+  {
+   "q": "All three balls are identical (radius r). At contact, A touches both B and C, so the three centres make an equilateral triangle (each side 2r). Each line of centres A–B and A–C makes what angle with A's line?",
+   "diagram": DIAGRAMS.threeBalls(),
+   "opts": ["30°","60°","45°","90°"],
+   "ans": 0,
+   "sol": "In an equilateral triangle each angle is 60°. A's line cuts the angle at A in half ⇒ <strong>30°</strong> to each line of centres.<br><br>So B and C fly off at 30° to A's line (ladder 9, rung 2)."
+  },
+  {
+   "q": "Momentum along A's line: m u = m v′ + 2 m v cos 30°, where v′ is A's velocity after and v is the speed of B (and C). This gives",
+   "opts": ["v′ = u − √3 v","v′ = u − 2v","v′ = u − v/√3","v′ = u + √3 v"],
+   "ans": 0,
+   "sol": "2v cos 30° = 2v × √3/2 = √3 v ⇒ <strong>v′ = u − √3 v</strong>."
+  },
+  {
+   "q": "Now use e = 1 along each line of centres: (v − v′ cos 30°) = u cos 30°. Together with rung 3, the results are",
+   "opts": ["v = 2√3 u/5; A bounces back at u/5","v = u/√3; A stops","v = u/2; A goes on at u/2","v = 2u/5; A bounces back at u/5"],
+   "ans": 0,
+   "sol": "Put v′ = u − √3v: v − (√3/2)(u − √3v) = (√3/2)u ⇒ v + (3/2)v = √3 u ⇒ <strong>v = 2√3u/5</strong>.<br>v′ = u − √3(2√3u/5) = u − 6u/5 = <strong>−u/5</strong>: A comes back.<br>Check KE: (1/25 + 2 × 12/25)u² = u² ✓."
+  },
+  {
+   "tag": "Ex-1 Q22",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A spherical ball of mass 1 kg moving with a uniform speed of 1 m/s collides symmetrically with two identical spherical balls of mass 1 kg each at rest touching each other. If the two balls move with 0.5 m/s in two directions at the same angle of 60° with the direction of the first ball, the loss of kinetic energy on account of the collision is :",
+   "diagram": DIAGRAMS.threeBalls({u:'1 m/s',v:'0.5 m/s'}),
+   "opts": ["0.125 J","0.5 J","1.0 J","0.75 J"],
+   "ans": 0,
+   "sol": "Momentum along the line: 1 × 1 = 1 × v′ + 2 × 1 × 0.5 cos 60° = v′ + 0.5 ⇒ v′ = 0.5 m/s forward.<br>KE before = ½(1)(1)² = 0.5 J.<br>KE after = ½(0.5)² + 2 × ½(0.5)² = 0.125 + 0.25 = 0.375 J.<br>Loss = <strong>0.125 J</strong>.<br><br><strong>Print note:</strong> rung 2 shows that for touching identical balls the line of centres is at 30°, not 60°. The question gives 60°, so we use its numbers; the answer 0.125 J follows from them. Module key: (A) ✓."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 12 ---------------------------------- */
+{
+ "name": "Ball hits a ball hanging on a string",
+ "mode": "hw",
+ "questions": [
+  {
+   "q": "Ball A hangs on a light inextensible string. Another ball hits it from above at an angle. During the very short hit, the string can give a big upward pull (impulsive tension). So just after the hit, A can move",
+   "diagram": DIAGRAMS.stringBalls(),
+   "opts": ["only horizontally","only vertically","in any direction","not at all"],
+   "ans": 0,
+   "sol": "The string cannot stretch, so A's vertical velocity just after must be zero. The string supplies whatever vertical impulse it takes. A can move <strong>only horizontally</strong> (sideways).<br><br>Because the string acts from outside, the total momentum of A + B is <em>not</em> kept vertically — only horizontally."
+  },
+  {
+   "tag": "Ex-3 Q16 (set-up)",
+   "q": "Identical smooth ball B (radius R) falls from height h so that its surface just touches the string. At the hit, B's centre is R to the side of A's centre line and the centres are 2R apart. The line of centres makes what angle with the vertical, and how fast is B moving?",
+   "diagram": DIAGRAMS.stringBalls(),
+   "opts": ["30°, √(2gh)","60°, √(2gh)","30°, √(gh)","45°, √(2gh)"],
+   "ans": 0,
+   "sol": "sin α = R/2R = ½ ⇒ <strong>α = 30°</strong> with the vertical.<br>Free fall through h ⇒ u = <strong>√(2gh)</strong>."
+  },
+  {
+   "q": "Let J be the push between the balls (along the line of centres, 30° from vertical). For ball A: m v<sub>A</sub> = J sin 30° (sideways) and the string's impulse T = J cos 30° (vertical). For B: its t-part stays, its n-part drops by J/m. If e = 1 along n: v<sub>A</sub> sin 30° − (u cos 30° − J/m) = u cos 30°. Using J = 2m v<sub>A</sub>, this gives",
+   "opts": ["v<sub>A</sub> = 2√3 u/5","v<sub>A</sub> = √3 u/5","v<sub>A</sub> = u/2","v<sub>A</sub> = 2u/5"],
+   "ans": 0,
+   "sol": "v<sub>A</sub>/2 − (√3/2)u + 2v<sub>A</sub> = (√3/2)u ⇒ (5/2)v<sub>A</sub> = √3 u ⇒ <strong>v<sub>A</sub> = 2√3u/5</strong>.<br><br>The left side 'v<sub>A</sub> sin 30°' is A's speed along n — A moves sideways, so only part of its speed is along the line of centres."
+  },
+  {
+   "tag": "Ex-3 Q16 (A)",
+   "q": "A smooth ball A of mass m is attached to one end of a light inextensible string, and is suspended from fixed point O. Another identical ball B, is dropped from a height h, so that the string just touches the surface of the sphere. If collision between balls is completely elastic then speed of ball A just after collision is",
+   "diagram": DIAGRAMS.stringBalls(),
+   "opts": ["2√(6gh)/5","√(6gh)/5","(3m/5)√(2gh)","(6m/5)√(2gh)"],
+   "ans": 0,
+   "sol": "From rung 3 with u = √(2gh): v<sub>A</sub> = (2√3/5)√(2gh) = <strong>2√(6gh)/5</strong>.<br><br>The last two options have m in them — those are impulses, not speeds. Matrix key: (A)–s ✓."
+  },
+  {
+   "tag": "Ex-3 Q16 (B)",
+   "q": "Same set-up, elastic collision. The impulsive tension provided by the string is",
+   "opts": ["(6m/5)√(2gh)","(3m/5)√(2gh)","2√(6gh)/5","m√(2gh)"],
+   "ans": 0,
+   "sol": "T = J cos 30° = 2m v<sub>A</sub> × (√3/2) = √3 m v<sub>A</sub> = √3 m × (2√3/5)√(2gh) = <strong>(6m/5)√(2gh)</strong>.<br><br>Matrix key: (B)–r ✓."
+  },
+  {
+   "tag": "Ex-3 Q16 (C) & (D)",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> Same set-up. If collision between balls is completely inelastic, then the speed of ball A just after collision and the impulsive tension provided by the string are",
+   "diagram": DIAGRAMS.stringBalls(),
+   "opts": ["√(6gh)/5 and (3m/5)√(2gh)","2√(6gh)/5 and (6m/5)√(2gh)","√(6gh)/5 and (6m/5)√(2gh)","√(2gh)/2 and m√(2gh)"],
+   "ans": 0,
+   "sol": "e = 0 along n: v<sub>A</sub> sin 30° − (u cos 30° − J/m) = 0 ⇒ v<sub>A</sub>/2 − (√3/2)u + 2v<sub>A</sub> = 0 ⇒ v<sub>A</sub> = √3u/5 = <strong>√(6gh)/5</strong>.<br>T = √3 m v<sub>A</sub> = 3mu/5 = <strong>(3m/5)√(2gh)</strong>.<br><br>Exactly half of the elastic values. Matrix key: (C)–q, (D)–p ✓."
+  }
+ ]
+},
+
+/* ---------------------------------- LADDER 13 ---------------------------------- */
+{
+ "name": "Ball hits a free wedge — Illustration 39 step by step",
+ "mode": "class",
+ "questions": [
+  {
+   "q": "A ball hits the smooth sloping face of a wedge. The wedge is free to slide on a smooth floor. During the hit, the floor pushes up on the wedge. So which momentum of (ball + wedge) is conserved?",
+   "diagram": DIAGRAMS.inclineHit({th:37,mode:'horiz',noOut:true,u:'10 m/s',wl:'wedge',L:220,thl:'37°'}),
+   "opts": ["Horizontal momentum only","Vertical momentum only","Both","Neither"],
+   "ans": 0,
+   "sol": "The floor gives a big upward impulse during the hit (the wedge cannot sink). That is vertical. Nothing outside pushes sideways ⇒ <strong>horizontal momentum only</strong>.<br><br>This is section 4.4 — 'one body constrained'. Find a direction with no outside force and conserve momentum there."
+  },
+  {
+   "q": "The face is smooth, so the ball's velocity <strong>along the face</strong> (t-axis) does not change. The ball moves horizontally at 10 m/s and the face is at 37° to the horizontal. Its t-part and n-part are",
+   "opts": ["t = 8 m/s, n = 6 m/s","t = 6 m/s, n = 8 m/s","t = 10 m/s, n = 0","t = 5 m/s, n = 5 m/s"],
+   "ans": 0,
+   "sol": "The velocity makes 37° with the face.<br>t = 10 cos 37° = <strong>8 m/s</strong> (stays 8 after the hit)<br>n = 10 sin 37° = <strong>6 m/s</strong> (this is the speed of approach)."
+  },
+  {
+   "q": "The wedge can move only horizontally, with speed v<sub>B</sub>. The normal to the face makes 53° with the horizontal. The wedge's velocity component along that normal is",
+   "opts": ["v<sub>B</sub> cos 53° = 3v<sub>B</sub>/5","v<sub>B</sub> cos 37° = 4v<sub>B</sub>/5","v<sub>B</sub>","zero"],
+   "ans": 0,
+   "sol": "Component = v<sub>B</sub> × cos(angle between them) = v<sub>B</sub> cos 53° = <strong>3v<sub>B</sub>/5</strong>.<br><br>e works only with these n-parts."
+  },
+  {
+   "q": "Restitution along n. Let v<sub>An</sub> = the ball's speed <strong>outwards</strong> along the normal after the hit. The wedge moves into the normal at 3v<sub>B</sub>/5. The correct e-equation (e = 0.8) is",
+   "opts": ["3v<sub>B</sub>/5 + v<sub>An</sub> = 0.8 × 6 = 4.8","3v<sub>B</sub>/5 = 0.8 × 10 = 8","v<sub>An</sub> − 3v<sub>B</sub>/5 = 4.8","3v<sub>B</sub>/5 + v<sub>An</sub> = 6"],
+   "ans": 0,
+   "sol": "They move apart along n: the wedge goes in at 3v<sub>B</sub>/5, the ball comes out at v<sub>An</sub>. Speeds of separation add:<br><strong>3v<sub>B</sub>/5 + v<sub>An</sub> = e × 6 = 4.8</strong>.<br><br>Use the n-part (6), not the full 10. And '= 6' forgets e."
+  },
+  {
+   "tag": "Illustration 39",
+   "lbl": "Original question",
+   "q": "★ <strong>Original:</strong> A 250 g ball moving horizontally with velocity 10.0 m/s strikes inclined surface of a 720 g smooth wedge as shown in the figure. The wedge is placed at rest on a frictionless horizontal ground. If the coefficient of restitution is 0.8, calculate the velocity of the wedge after the impact.",
+   "diagram": DIAGRAMS.inclineHit({th:37,mode:'horiz',noOut:true,u:'10 m/s',wl:'720 g',L:220,thl:'37°',cap:'250 g ball · smooth wedge · frictionless ground · e = 0.8'}),
+   "opts": ["2.0 m/s","0.29 m/s","3.5 m/s","1.6 m/s"],
+   "ans": 0,
+   "sol": "From rungs 2–4: ball keeps t = 8 m/s; v<sub>An</sub> = 4.8 − 0.6v<sub>B</sub>.<br>Ball's horizontal velocity after = 8 cos 37° − v<sub>An</sub> cos 53° = 6.4 − 0.6v<sub>An</sub>.<br>Horizontal momentum: 0.25 × 10 = 0.25(6.4 − 0.6v<sub>An</sub>) + 0.72v<sub>B</sub><br>2.5 = 0.25(6.4 − 2.88 + 0.36v<sub>B</sub>) + 0.72v<sub>B</sub> = 0.88 + 0.81v<sub>B</sub><br>⇒ <strong>v<sub>B</sub> = 2.0 m/s</strong> (and v<sub>An</sub> = 3.6 m/s).<br><br><strong>Print note:</strong> the module's equation (iii) is printed as 3v<sub>B</sub>/5 − v<sub>An</sub> = 0.8(6 − 0). With v<sub>An</sub> drawn outwards (as its own equation (ii) uses), the sign must be +. Solving the printed pair literally gives v<sub>B</sub> ≈ 0.29 m/s. The printed answer, 2.0 m/s, is the correct one.<br><br>3.5 m/s puts all the ball's momentum into the wedge (2.5/0.72)."
+  }
+ ]
+}
+
+];
+
+
+const STORAGE_KEY = 'padipucast_oblique_collision_ladder_v1';
+
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||'', lbl:raw.lbl||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; ${q.lbl||'Original question'}</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
