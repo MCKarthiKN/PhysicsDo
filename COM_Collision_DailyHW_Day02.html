@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; COM &amp; Collisions &#183; Daily HW Day 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ec;--card:#fffdf8;--ink:#1a1916;--soft:#6b6558;--line:#e5dfd1;--teal:#0f766e;--teal-s:#e3f1ee;--amb:#b45309;--amb-s:#fbefdc;--red:#b42318;--red-s:#fdecea;--grn:#15803d;--grn-s:#e6f4ea}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;min-height:100vh}
+.wrap{max-width:780px;margin:0 auto;padding:28px 16px 80px}
+.brand{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand a{color:var(--teal);text-decoration:none}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,5vw,36px);line-height:1.15;margin:18px 0 8px}
+.lede{color:var(--soft);max-width:620px}
+.tracks{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0}
+@media(max-width:600px){.tracks{grid-template-columns:1fr}}
+.track{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:20px;cursor:pointer;text-align:left;font:inherit;color:inherit;transition:border-color .15s,transform .15s}
+.track:hover{border-color:var(--teal);transform:translateY(-2px)}
+.track .tag{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+.track.b .tag{color:var(--amb)}
+.track h2{font-family:'Space Grotesk',sans-serif;font-size:22px;margin:6px 0 4px}
+.track p{color:var(--soft);font-size:14px}
+.track .best{margin-top:12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink)}
+.note{background:var(--amb-s);border-left:3px solid var(--amb);padding:12px 14px;border-radius:6px;font-size:14px}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:22px 0 14px}
+.chip{font-family:'DM Mono',monospace;font-size:12px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 12px}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.pill{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);font:500 13px 'DM Mono',monospace;cursor:pointer;color:var(--ink)}
+.pill.cur{border-color:var(--ink)}
+.pill.ok{background:var(--grn-s);border-color:var(--grn);color:var(--grn)}
+.pill.no{background:var(--red-s);border-color:var(--red);color:var(--red)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
+@media(max-width:600px){.card{padding:18px 14px}}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.m{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:5px;background:#f0ece2;color:var(--soft)}
+.m.E{background:var(--grn-s);color:var(--grn)} .m.M{background:var(--amb-s);color:var(--amb)} .m.H{background:var(--red-s);color:var(--red)}
+.qtext{font-size:17px;margin-bottom:14px}
+.fig{display:flex;justify-content:center;background:#faf8f2;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:16px;overflow-x:auto}
+.fig svg{max-width:100%;height:auto}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;margin-bottom:9px;cursor:pointer;font:inherit;color:inherit}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt .k{flex:0 0 26px;height:26px;border-radius:6px;border:1px solid var(--line);display:grid;place-items:center;font:500 12px 'DM Mono',monospace}
+.opt.right{background:var(--grn-s);border-color:var(--grn)}
+.opt.wrong{background:var(--red-s);border-color:var(--red)}
+.opt:disabled{cursor:default}
+.opt.dim{opacity:.55}
+.sol{margin-top:14px;border-left:3px solid var(--teal);background:var(--teal-s);padding:14px 16px;border-radius:6px;font-size:15px}
+.sol .v{font-weight:700;margin-bottom:4px}
+.sol .v.no{color:var(--red)} .sol .v.ok{color:var(--grn)}
+.flag{display:block;margin-top:8px;background:var(--amb-s);border-left:3px solid var(--amb);padding:8px 10px;border-radius:4px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.btn{font:700 14px 'DM Sans',sans-serif;padding:10px 18px;border-radius:10px;border:1.5px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:disabled{opacity:.35;cursor:default}
+.result{text-align:center}
+.score{font-family:'Space Grotesk',sans-serif;font-size:56px;font-weight:700;line-height:1}
+.rlist{text-align:left;margin-top:20px}
+.rrow{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><span>PADIPUCAST &#183; NEET &#183; Centre of Mass &amp; Collisions</span><a href="index.html">&#8592; All days</a></div>
+
+  <section id="home">
+    <h1>Daily HW &#183; Day 2<br>Motion of the centre of mass</h1>
+    <p class="lede">Zero external force, explosions, man on plank or trolley, spring–block systems. Built on the Nurture test of 04-11-2026 &#8212; same ideas, new numbers. <b>Pick one track for today</b> &#8212; not both.</p>
+    <div class="tracks">
+      <button class="track a" data-t="A"><div class="tag">Track A</div><h2>10 questions</h2><p>Mixed &#8212; starts easy, ends with a tough one. Good if you want speed and confidence.</p><div class="best" id="bestA"></div></button>
+      <button class="track b" data-t="B"><div class="tag">Track B</div><h2>7 questions</h2><p>All medium. Fewer questions, every one needs real thinking.</p><div class="best" id="bestB"></div></button>
+    </div>
+    <p class="note">How to do it: solve in your notebook first, then tap your answer. The solution opens right away. Your answers stay saved on this device, so you can come back later.</p>
+  </section>
+
+  <section id="quiz" class="hidden">
+    <div class="bar"><span class="chip" id="trackChip"></span><span class="chip" id="scoreChip"></span></div>
+    <div class="pills" id="pills"></div>
+    <div class="card" id="qcard"></div>
+    <div class="nav">
+      <button class="btn ghost" id="prev">&#8592; Prev</button>
+      <button class="btn ghost" id="home-btn">Change track</button>
+      <button class="btn" id="next">Next &#8594;</button>
+    </div>
+  </section>
+
+  <section id="done" class="hidden">
+    <div class="card result">
+      <div class="m" style="display:inline-block;margin-bottom:12px" id="doneTrack"></div>
+      <div class="score" id="doneScore"></div>
+      <p id="doneMsg" style="margin-top:10px;color:var(--soft)"></p>
+      <div class="rlist" id="doneList"></div>
+      <div class="nav" style="justify-content:center">
+        <button class="btn ghost" id="review">Review answers</button>
+        <button class="btn" id="redo">Try again</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const DAY = 2;
+const QS = {"8": {"q": "A man of mass 50 kg stands at one end of a 6 m long plank of mass 100 kg lying on smooth ice. He walks to the other end. How far does the plank move?", "o": ["2 m, same way as the man", "4 m, opposite to the man", "3 m, opposite to the man", "2 m, opposite to the man"], "a": 3, "s": "COM stays fixed. Man moves 6 m relative to plank.<br>Plank shift = m<sub>man</sub>L/(m<sub>man</sub> + M) = 50 × 6/150 = <b>2 m, opposite</b>.<br>(The man moves 4 m relative to the ice.)", "d": "M", "yr": "Built on paper Q8", "fig": "<svg viewBox=\"0 0 320 120\" width=\"320\" height=\"120\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\" font-size=\"12\">\n<line x1=\"10\" y1=\"96\" x2=\"310\" y2=\"96\" stroke=\"#1a1916\" stroke-width=\"1.5\"/>\n<rect x=\"40\" y=\"80\" width=\"240\" height=\"14\" fill=\"#e6f1f4\" stroke=\"#1a1916\" stroke-width=\"1.5\"/>\n<circle cx=\"52\" cy=\"52\" r=\"8\" fill=\"#fbe7cc\" stroke=\"#1a1916\" stroke-width=\"1.4\"/><line x1=\"52\" y1=\"60\" x2=\"52\" y2=\"80\" stroke=\"#1a1916\" stroke-width=\"2\"/>\n<line x1=\"70\" y1=\"50\" x2=\"140\" y2=\"50\" stroke=\"#c0392b\" stroke-width=\"2\"/><polygon points=\"140,45 150,50 140,55\" fill=\"#c0392b\"/><text x=\"105\" y=\"42\" text-anchor=\"middle\" fill=\"#c0392b\">walks</text>\n<text x=\"160\" y=\"115\" text-anchor=\"middle\" fill=\"#6b7280\">plank 6 m, 100 kg · man 50 kg · smooth ice</text>\n</svg>"}, "9": {"q": "A system has zero net external force. At t = 0 its centre of mass moves at 3 m/s towards east. At t = 10 s the centre of mass", "o": ["moves at 30 m/s towards east", "can have any velocity", "moves at 3 m/s towards east", "is at rest"], "a": 2, "s": "F<sub>ext</sub> = M a<sub>cm</sub> = 0 ⇒ a<sub>cm</sub> = 0 ⇒ v<sub>cm</sub> stays the same.<br>⇒ <b>still 3 m/s towards east</b>. The parts inside may move in any way, but the COM doesn't care.", "d": "E", "yr": "Built on paper Q9", "fig": ""}, "10": {"q": "Two particles of 1 kg and 4 kg are at rest on a smooth table, a little apart. A constant force of 10 N starts acting on the 1 kg particle only. The speed of the centre of mass after 4 s is", "o": ["40 m/s", "2 m/s", "8 m/s", "10 m/s"], "a": 2, "s": "a<sub>cm</sub> = F<sub>ext</sub>/M<sub>total</sub> = 10/5 = 2 m/s²<br>v<sub>cm</sub> = 2 × 4 = <b>8 m/s</b><br><br>40 m/s is the speed of the 1 kg particle itself — not the COM.", "d": "M", "yr": "Built on paper Q10", "fig": ""}, "11": {"q": "Blocks of 2 kg and 3 kg are joined by a spring (k = 480 N/m) at natural length on a smooth floor. The 3 kg block suddenly gets a velocity of 5 m/s away from the 2 kg block. The maximum extension of the spring is", "o": ["0.51 m", "0.25 m", "0.18 m", "0.40 m"], "a": 1, "s": "Momentum: 3 × 5 = 5V ⇒ common V = 3 m/s at max extension.<br>Energy: ½(3)(25) = ½(5)(9) + ½(480)x² ⇒ 37.5 = 22.5 + 240x² ⇒ x² = 1/16 ⇒ <b>x = 0.25 m</b><br><br>Shortcut: ½μV² = ½kx² with μ = m<sub>1</sub>m<sub>2</sub>/(m<sub>1</sub> + m<sub>2</sub>) = 1.2 kg.<br>0.40 m is the trap from using 3 kg alone (forgetting the other block moves).", "d": "H", "yr": "Built on paper Q11", "fig": ""}, "12": {"q": "Blocks of 6 kg and 2 kg, joined by a light spring, rest on a smooth floor. A sudden hit gives the 2 kg block a velocity of 8 m/s towards the 6 kg block. The velocity of the centre of mass is", "o": ["8 m/s", "2 m/s", "4 m/s", "6 m/s"], "a": 1, "s": "Just after the hit: v<sub>cm</sub> = (2 × 8 + 6 × 0)/8 = <b>2 m/s</b>.<br>After that, the spring force is internal, so v<sub>cm</sub> stays 2 m/s forever.", "d": "E", "yr": "Built on paper Q12", "fig": ""}, "15": {"q": "Particle A (2 kg) is at x = 1 m moving at +4 m/s. Particle B (3 kg) is at x = 6 m moving at −1 m/s. They move only under their mutual attraction. The position of the centre of mass at t = 2 s is", "o": ["x = 4 m", "x = 8 m", "x = 5 m", "x = 6 m"], "a": 3, "s": "x<sub>cm</sub>(0) = (2×1 + 3×6)/5 = 4 m<br>v<sub>cm</sub> = (2×4 + 3×(−1))/5 = 1 m/s — stays constant (only internal force).<br>At t = 2 s: x = 4 + 2 = <b>6 m</b>", "d": "M", "yr": "Built on paper Q15", "fig": ""}, "16": {"q": "A boy walks from one end of a boat to the other, then runs back, stopping a few times on the way. Water resistance is negligible. The centre of mass of 'boy + boat' (starting from rest)", "o": ["moves only if boy and boat have equal masses", "moves only while the boy accelerates", "stays at rest the whole time", "moves along with the boy"], "a": 2, "s": "No horizontal external force on boy + boat ⇒ v<sub>cm</sub> stays at its starting value, 0.<br>Walking, running, stopping — all are internal. ⇒ <b>COM stays at rest</b>. The boat just moves the other way.", "d": "E", "yr": "Built on paper Q16", "fig": ""}, "19": {"q": "A firework moving along a parabolic path bursts in mid-air into many pieces. Ignore air resistance. While all the pieces are still in the air, their centre of mass", "o": ["falls vertically down", "moves horizontally", "continues on the same parabola", "stops and then falls"], "a": 2, "s": "The burst forces are internal. The only external force is still gravity (Mg), same as before.<br>So the COM moves exactly as if nothing happened ⇒ <b>same parabola</b>.", "d": "E", "yr": "Built on paper Q19", "fig": ""}, "20": {"q": "A body of mass M moving with velocity v suddenly breaks into two parts. The part of mass M/3 comes to rest. The velocity of the other part is", "o": ["v", "2v", "3v", "3v/2"], "a": 3, "s": "Momentum: Mv = (M/3)(0) + (2M/3)v' ⇒ <b>v' = 3v/2</b>", "d": "E", "yr": "Built on paper Q20", "fig": ""}, "27": {"q": "Block A moving with speed v hits a light spring fixed to block B, which is at rest on a smooth floor. At the instant when A and B have the same velocity", "o": ["spring compression is maximum and the system's KE is minimum", "system's KE is maximum", "system's momentum is minimum", "spring is at natural length"], "a": 0, "s": "While A is faster, the gap is closing ⇒ spring compresses, KE turns into spring energy.<br>At equal velocities the gap stops closing ⇒ <b>max compression, min KE</b>.<br>Momentum stays the same all the time (no external horizontal force).", "d": "M", "yr": "Built on paper Q27", "fig": ""}, "29": {"q": "A bomb at rest explodes into many pieces. Because of the explosion (internal forces), which of these changes?", "o": ["Total kinetic energy only", "Total linear momentum only", "Both kinetic energy and momentum", "Neither"], "a": 0, "s": "Internal forces come in action–reaction pairs ⇒ total momentum stays 0.<br>But they do work (chemical energy → motion) ⇒ KE goes from 0 to a large value.<br>⇒ <b>only KE changes</b>.", "d": "E", "yr": "Built on paper Q29", "fig": ""}, "38": {"q": "A man of 60 kg stands on a trolley of 240 kg resting on a smooth floor. He starts walking on the trolley at 2 m/s <b>relative to the trolley</b>. After 5 s, his displacement relative to the ground is", "o": ["2 m", "10 m", "6 m", "8 m"], "a": 3, "s": "Momentum 0: 60 v<sub>man</sub> = 240 v<sub>trolley</sub> and v<sub>man</sub> + v<sub>trolley</sub> = 2 (relative speed).<br>⇒ v<sub>man</sub> = 2 × 240/300 = 1.6 m/s ⇒ in 5 s: <b>8 m</b><br><br>10 m is relative to the trolley; 2 m is how far the trolley moves.", "d": "M", "yr": "Built on paper Q38", "fig": ""}, "42": {"q": "On a smooth horizontal table, a 2 kg block is pushed by 10 N along +x, and a 3 kg block is pushed by 5 N along −y. The acceleration of their centre of mass is", "o": ["(2î + ĵ) m/s²", "(5î − 1.67ĵ) m/s²", "(2î − ĵ) m/s²", "(î − 2ĵ) m/s²"], "a": 2, "s": "a<sub>cm</sub> = (sum of external forces)/(total mass) = (10î − 5ĵ)/5 = <b>(2î − ĵ) m/s²</b><br><br>(5î − 1.67ĵ) is the two blocks' own accelerations put together — not the COM.", "d": "M", "yr": "Built on paper Q42", "fig": ""}, "43": {"q": "<b>Assertion:</b> A shell at rest explodes into two pieces that fly apart. The centre of mass of the pieces stays at rest.<br><b>Reason:</b> Internal forces cannot change the total momentum of a system.", "o": ["Both true, but Reason does not explain Assertion", "Assertion false, Reason true", "Assertion true, Reason false", "Both true, and Reason explains Assertion"], "a": 3, "s": "Explosion forces are internal ⇒ total momentum stays 0 ⇒ v<sub>cm</sub> = 0 ⇒ COM stays at rest.<br>The Reason is exactly why ⇒ <b>both true, R explains A</b>.", "d": "E", "yr": "Built on paper Q43", "fig": ""}};
+const TRACKS = {"A": [9, 29, 16, 43, 19, 20, 12, 10, 15, 11], "B": [15, 8, 10, 38, 42, 27, 11]};
+const KEY = 'padipucast_com_collision_dhw_day' + DAY + '_v1';
+const LET = ['a','b','c','d'];
+const DLBL = {E:'Easy',M:'Medium',H:'Hard'};
+
+let store = {A:{}, B:{}, bestA:null, bestB:null};
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) store = Object.assign(store, s); } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch(e) {} }
+
+let track = 'A', cur = 0;
+const $ = id => document.getElementById(id);
+const list = () => TRACKS[track];
+const answered = () => list().filter(n => store[track][n] !== undefined);
+const right = () => list().filter(n => store[track][n] === QS[n].a).length;
+
+function show(id){ ['home','quiz','done'].forEach(s => $(s).classList.toggle('hidden', s !== id)); window.scrollTo(0,0); }
+
+function home(){
+  ['A','B'].forEach(t => {
+    const b = store['best'+t], tot = TRACKS[t].length;
+    $('best'+t).textContent = b === null ? 'Not tried yet' : 'Best: ' + b + ' / ' + tot;
+  });
+  show('home');
+}
+
+function start(t){
+  track = t;
+  const L = list();
+  const firstOpen = L.findIndex(n => store[t][n] === undefined);
+  cur = firstOpen < 0 ? 0 : firstOpen;
+  $('trackChip').textContent = 'Day ' + DAY + ' · Track ' + t + ' · ' + L.length + ' Qs';
+  show('quiz'); render();
+}
+
+function render(){
+  const L = list(), n = L[cur], q = QS[n], mine = store[track][n];
+  $('pills').innerHTML = L.map((m,i) => {
+    const a = store[track][m], cls = a === undefined ? '' : (a === QS[m].a ? 'ok' : 'no');
+    return `<button class="pill ${cls} ${i===cur?'cur':''}" data-i="${i}">${i+1}</button>`;
+  }).join('');
+  $('scoreChip').textContent = 'Score ' + right() + ' / ' + L.length;
+  let h = `<div class="meta"><span class="m">Q ${cur+1} of ${L.length}</span><span class="m ${q.d}">${DLBL[q.d]}</span><span class="m">${q.yr}</span></div>`;
+  h += `<div class="qtext">${q.q}</div>`;
+  if (q.fig) h += `<div class="fig">${q.fig}</div>`;
+  q.o.forEach((o,i) => {
+    let c = '';
+    if (mine !== undefined) c = i === q.a ? 'right' : (i === mine ? 'wrong' : 'dim');
+    h += `<button class="opt ${c}" data-o="${i}" ${mine!==undefined?'disabled':''}><span class="k">${LET[i]}</span><span>${o}</span></button>`;
+  });
+  if (mine !== undefined){
+    const ok = mine === q.a;
+    h += `<div class="sol"><div class="v ${ok?'ok':'no'}">${ok ? 'Correct ✓' : 'Not this time — answer is (' + LET[q.a] + ')'}</div>${q.s}</div>`;
+  }
+  $('qcard').innerHTML = h;
+  $('prev').disabled = cur === 0;
+  $('next').textContent = cur === L.length - 1 ? 'Finish' : 'Next →';
+}
+
+function pick(i){
+  const n = list()[cur];
+  if (store[track][n] !== undefined) return;
+  store[track][n] = i; save(); render();
+}
+
+function finish(){
+  const L = list(), sc = right(), tot = L.length, done = answered().length;
+  if (done === tot){
+    const k = 'best'+track;
+    if (store[k] === null || sc > store[k]) store[k] = sc;
+    save();
+  }
+  $('doneTrack').textContent = 'Day ' + DAY + ' · Track ' + track;
+  $('doneScore').textContent = sc + ' / ' + tot;
+  const pct = sc / tot;
+  let msg = pct >= 0.8 ? 'Very good! Today’s topic is in your hands.' : pct >= 0.5 ? 'Good try. Read the solutions of the wrong ones once more and write them in your notebook.' : 'No problem — redo the wrong ones tomorrow morning after reading the solutions.';
+  if (done < tot) msg = (tot - done) + ' question(s) not answered yet. ' + msg;
+  $('doneMsg').textContent = msg;
+  $('doneList').innerHTML = L.map((n,i) => {
+    const a = store[track][n], col = a === undefined ? '#cfc8b8' : (a === QS[n].a ? 'var(--grn)' : 'var(--red)');
+    const txt = a === undefined ? 'skipped' : (a === QS[n].a ? 'correct' : 'you: (' + LET[a] + ') · answer: (' + LET[QS[n].a] + ')');
+    return `<div class="rrow"><span class="dot" style="background:${col}"></span><b>Q${i+1}</b><span style="color:var(--soft)">${QS[n].yr}</span><span style="margin-left:auto">${txt}</span></div>`;
+  }).join('');
+  show('done');
+}
+
+document.querySelectorAll('.track').forEach(b => b.addEventListener('click', () => start(b.dataset.t)));
+$('qcard').addEventListener('click', e => { const b = e.target.closest('.opt'); if (b && !b.disabled) pick(+b.dataset.o); });
+$('pills').addEventListener('click', e => { const b = e.target.closest('.pill'); if (b){ cur = +b.dataset.i; render(); } });
+$('prev').addEventListener('click', () => { if (cur > 0){ cur--; render(); } });
+$('next').addEventListener('click', () => { if (cur < list().length - 1){ cur++; render(); window.scrollTo(0,0); } else finish(); });
+$('home-btn').addEventListener('click', home);
+$('review').addEventListener('click', () => { cur = 0; show('quiz'); render(); });
+$('redo').addEventListener('click', () => { store[track] = {}; save(); start(track); });
+home();
+</script>
+</body>
+</html>
