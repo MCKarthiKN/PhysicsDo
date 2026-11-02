@@ -1,0 +1,3482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADIPUCAST &#183; Atoms &#183; Lecture DPP + Key Ideas</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk.woff2') format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'LemonMilk';src:url('https://cdn.jsdelivr.net/gh/nicholasgasior/lemon-milk@main/lemon_milk_bold.woff2') format('woff2');font-weight:700;font-display:swap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f3;--surface:#ffffff;--border:#e8e6e0;--border2:#d4d1c8;
+  --text:#1a1916;--text2:#6b6760;--text3:#a09d97;--accent:#1a1916;
+  --tag-bg:#f0ede8;--correct-bg:#f0faf5;--correct:#1a7a4a;--correct-border:#b3e0c6;
+  --wrong-bg:#fff5f5;--wrong:#c0392b;--wrong-border:#f5c6c2;
+  --yt:#ff2d2d;--pill-active-bg:#1a1916;--pill-active-text:#f7f6f3;
+}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;}
+#shell{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+#topnav{display:flex;align-items:center;justify-content:space-between;padding:28px 0 32px;}
+.brand{font-family:'LemonMilk',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--text);text-transform:uppercase;}
+.brand span{color:var(--text3);}
+#back-btn{display:none;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.12em;color:var(--text2);text-transform:uppercase;padding:6px 0;transition:color 0.15s;}
+#back-btn:hover{color:var(--text);}
+#back-btn svg{transition:transform 0.15s;}
+#back-btn:hover svg{transform:translateX(-2px);}
+.screen{display:none;}
+.screen.active{display:block;}
+#home-heading{margin-bottom:8px;}
+#home-heading h1{font-family:'LemonMilk',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.04em;line-height:1.3;}
+#home-sub{font-size:14px;color:var(--text2);margin-bottom:20px;}
+.home-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px;flex-wrap:wrap;}
+.progress-summary{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.progress-summary span{color:var(--correct);font-weight:700;}
+#clear-all-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--wrong-border);border-radius:8px;padding:8px 16px;cursor:pointer;color:var(--wrong);transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+#clear-all-btn:hover{background:var(--wrong-bg);border-color:var(--wrong);}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){.topic-grid{grid-template-columns:1fr;}}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.18s,box-shadow 0.18s,transform 0.18s;text-align:left;position:relative;overflow:hidden;}
+.topic-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.07);transform:translateY(-2px);}
+.topic-card:active{transform:translateY(0);}
+.tc-num{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.15em;color:var(--text3);margin-bottom:8px;text-transform:uppercase;}
+.tc-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:10px;padding-right:20px;}
+.tc-bar{display:flex;align-items:center;gap:8px;}
+.tc-dots{display:flex;gap:3px;}
+.tc-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.tc-dot.done{background:var(--correct);}
+.tc-dot.wrong{background:var(--wrong);}
+.tc-count{font-size:12px;color:var(--text3);}
+.tc-arrow{position:absolute;right:18px;top:22px;color:var(--text3);transition:transform 0.18s,color 0.18s;}
+.topic-card:hover .tc-arrow{transform:translateX(3px);color:var(--text);}
+.topic-card.all-done{border-color:var(--correct-border);}
+.topic-card.all-done .tc-arrow{color:var(--correct);}
+#qscreen-header{margin-bottom:28px;}
+.qs-topic{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.qs-title{font-size:20px;font-weight:600;letter-spacing:-0.01em;}
+.q-selector{display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap;}
+.q-pill{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.05em;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.q-pill:hover{border-color:var(--border2);color:var(--text);}
+.q-pill.active{background:var(--pill-active-bg);color:var(--pill-active-text);border-color:var(--pill-active-bg);}
+.q-pill.answered-c{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.q-pill.answered-w{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+#q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;position:relative;}
+.q-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;}
+.q-label .orig{color:#b45309;}
+.q-text{font-size:15.5px;line-height:1.75;color:var(--text);margin-bottom:16px;font-weight:400;}
+.q-text sup{font-size:0.75em;}
+.q-text sub{font-size:0.75em;}
+.q-diagram{margin-bottom:20px;display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.q-diagram svg{max-width:100%;height:auto;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s;text-align:left;}
+.opt sup{font-size:0.75em;}.opt sub{font-size:0.75em;}
+.opt:hover:not(.locked){border-color:var(--border2);color:var(--text);background:var(--surface);}
+.opt-letter{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.05em;color:var(--text3);flex-shrink:0;transition:all 0.15s;background:var(--surface);}
+.opt:hover:not(.locked) .opt-letter{border-color:var(--text);color:var(--text);}
+.opt.is-correct{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-correct .opt-letter{background:var(--correct-bg);border-color:var(--correct-border);color:var(--correct);}
+.opt.is-wrong{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.is-wrong .opt-letter{background:var(--wrong-bg);border-color:var(--wrong-border);color:var(--wrong);}
+.opt.reveal-correct{opacity:0.5;}
+.opt.locked{cursor:default;pointer-events:none;}
+#sol-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease,opacity 0.35s ease;}
+#sol-wrap.open{max-height:700px;opacity:1;}
+#sol-box{border-left:2px solid var(--text3);padding:12px 16px;margin-bottom:18px;font-size:13.5px;line-height:1.75;color:var(--text2);}
+#sol-box strong{color:var(--text);font-weight:600;}
+#sol-box sup{font-size:0.75em;}#sol-box sub{font-size:0.75em;}
+.act-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#show-ans-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 16px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+#show-ans-btn:hover{border-color:var(--border2);color:var(--text);}
+.nav-btns{display:flex;gap:8px;}
+#prev-btn,#next-btn{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;padding:9px 18px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;border:1px solid var(--border);}
+#prev-btn{background:none;color:var(--text2);}
+#prev-btn:hover{border-color:var(--border2);color:var(--text);}
+#next-btn{background:var(--text);color:var(--bg);border-color:var(--text);}
+#next-btn:hover{opacity:0.85;}
+#next-btn:disabled,#prev-btn:disabled{opacity:0.3;cursor:default;pointer-events:none;}
+#feedback{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border-radius:20px;opacity:0;transform:scale(0.85);transition:all 0.25s cubic-bezier(.34,1.56,.64,1);}
+#feedback.show{opacity:1;transform:scale(1);}
+#feedback.fb-c{background:var(--correct-bg);color:var(--correct);border:1px solid var(--correct-border);}
+#feedback.fb-w{background:var(--wrong-bg);color:var(--wrong);border:1px solid var(--wrong-border);}
+#yt-corner{position:fixed;bottom:28px;right:28px;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow:hidden;z-index:200;display:none;animation:popUp 0.28s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popUp{from{opacity:0;transform:translateY(12px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#yt-corner.visible{display:block;}
+.yt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
+.yt-label{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.yt-label svg{color:var(--yt);}
+#yt-close{background:none;border:none;cursor:pointer;color:var(--text3);line-height:1;padding:2px;transition:color 0.15s;}
+#yt-close:hover{color:var(--text);}
+.yt-body{padding:14px;}
+.yt-hint{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5;}
+.yt-input-row{display:flex;gap:6px;}
+#yt-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
+#yt-input:focus{border-color:var(--border2);}
+#yt-go{background:var(--yt);color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;transition:opacity 0.15s;white-space:nowrap;}
+#yt-go:hover{opacity:0.85;}
+#yt-embed{margin-top:12px;border-radius:8px;overflow:hidden;display:none;}
+#yt-embed iframe{width:100%;height:158px;border:none;display:block;}
+#yt-trigger{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--yt);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,45,45,0.35);transition:transform 0.2s,box-shadow 0.2s;z-index:199;}
+#yt-trigger.visible{display:flex;}
+#yt-trigger:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(255,45,45,0.45);}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeSlideIn 0.3s ease forwards;}
+#q-card{animation:fadeSlideIn 0.25s ease forwards;}
+.score-strip{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);}
+.score-chip span{color:var(--text);font-weight:700;}
+#clear-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;}
+#clear-modal.show{display:flex;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:360px;width:90%;animation:popUp 0.25s cubic-bezier(.34,1.56,.64,1);}
+.modal-title{font-family:'LemonMilk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;margin-bottom:10px;}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-cancel{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:none;border:1px solid var(--border);border-radius:8px;padding:9px 18px;cursor:pointer;color:var(--text2);transition:all 0.15s;}
+.modal-cancel:hover{border-color:var(--border2);color:var(--text);}
+.modal-confirm{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:var(--wrong);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;transition:opacity 0.15s;}
+.modal-confirm:hover{opacity:0.85;}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;border-radius:999px;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:600;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.srctag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;background:var(--tag-bg);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+.modepill{display:inline-block;font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;border-radius:5px;padding:3px 8px;margin-bottom:6px;}
+.mp-class{background:#1a1916;color:#f7f6f3;}
+.mp-hw{background:#f0ede8;color:#6b6760;border:1px solid #d4d1c8;}
+.notebox{margin-top:10px;font-size:12.5px;color:var(--text2);border-left:2px solid var(--border2);padding-left:10px;}
+
+.lec-head{grid-column:1/-1;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:22px 0 2px;padding-bottom:8px;border-bottom:1px solid var(--border2);}
+.lec-head h2{font-family:'LemonMilk',sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--text);}
+.lec-head p{font-size:12.5px;color:var(--text2);margin-top:2px;}
+.key-card-btn{grid-column:1/-1;text-align:left;background:#fdf6e7;border:1px solid #f0dcae;border-radius:14px;padding:16px 18px;cursor:pointer;font-family:inherit;color:var(--text);transition:transform .15s,box-shadow .15s;}
+.key-card-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(180,83,9,.12);}
+.key-card-btn .kb-t{font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#b45309;}
+.key-card-btn .kb-n{font-size:15px;font-weight:600;margin-top:4px;}
+.key-card-btn .kb-s{font-size:12.5px;color:var(--text2);margin-top:2px;}
+#qs-key{margin-top:12px;font-size:13.5px;color:#7c4a03;background:#fdf6e7;border:1px solid #f0dcae;border-left:3px solid #b45309;border-radius:8px;padding:10px 14px;}
+#qs-key b{color:#b45309;}
+#qs-key a{color:#b45309;cursor:pointer;text-decoration:underline;margin-left:6px;}
+.kcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-top:14px;}
+.kcard .kc-n{font-family:'LemonMilk',sans-serif;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);}
+.kcard h3{font-size:17px;margin:2px 0 6px;}
+.kcard .kc-idea{font-size:14.5px;margin-bottom:10px;}
+.kcard .kc-lbl{font-family:'LemonMilk',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#0f766e;margin:10px 0 4px;}
+.kcard ul{list-style:none;}
+.kcard li{font-size:14px;padding:3px 0 3px 16px;position:relative;}
+.kcard li::before{content:'';position:absolute;left:2px;top:12px;width:6px;height:6px;border-radius:50%;background:#0f766e;}
+.kcard .kc-f li{font-family:'DM Sans',sans-serif;background:#f0f7f6;border-radius:6px;margin:4px 0;padding:6px 10px 6px 22px;}
+.kcard .kc-f li::before{left:9px;top:15px;}
+.kcard .kc-trap{margin-top:12px;font-size:13.5px;background:var(--wrong-bg);border:1px solid var(--wrong-border);color:#8a2a1f;border-radius:8px;padding:8px 12px;}
+.kcard .kc-go{margin-top:12px;font-size:12px;color:var(--text2);}
+.key-foot{margin-top:20px;}
+#key-go{background:var(--pill-active-bg);color:var(--pill-active-text);border:none;border-radius:8px;padding:10px 18px;font-family:'LemonMilk',sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topnav">
+    <div class="brand">PADIPUCAST <span>&#183;</span> Atoms &#183; Lecture DPP</div>
+    <button id="back-btn" onclick="goHome()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      All Sets
+    </button>
+  </div>
+
+  <div id="home-screen" class="screen active">
+    <div id="home-heading"><h1>Atoms &#183; Lecture DPP</h1></div>
+    <div class="home-actions">
+      <div class="progress-summary" id="home-progress">Loading...</div>
+      <button id="clear-all-btn" onclick="confirmClear()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear All Progress
+      </button>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <div id="key-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="key-topic"></div>
+      <div class="qs-title" id="key-title"></div>
+    </div>
+    <div id="key-list"></div>
+    <div class="key-foot"><button id="key-go" onclick="goHome()">Back to the ladders</button></div>
+  </div>
+
+  <div id="q-screen" class="screen">
+    <div id="qscreen-header">
+      <div class="qs-topic" id="qs-topic-label"></div>
+      <div class="qs-title" id="qs-title"></div>
+      <div id="qs-key"></div>
+    </div>
+    <div class="score-strip">
+      <div class="score-chip">Score <span id="sc-score">0</span> / <span id="sc-total">5</span></div>
+      <div class="score-chip">Attempted <span id="sc-att">0</span></div>
+    </div>
+    <div class="q-selector" id="q-selector"></div>
+    <div id="q-card">
+      <div class="q-label" id="q-label">Rung 1 of 4</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-diagram" id="q-diagram" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div id="sol-wrap"><div id="sol-box"></div></div>
+      <div class="act-row">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="feedback"></div>
+          <button id="show-ans-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="nav-btns">
+          <button id="prev-btn" onclick="moveQ(-1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Prev
+          </button>
+          <button id="next-btn" onclick="moveQ(1)">
+            Next
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="yt-trigger" title="Watch solution video">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+</button>
+
+<div id="yt-corner">
+  <div class="yt-header">
+    <div class="yt-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 12.64 12.64 0 0 0-8.07 0A4.83 4.83 0 0 1 4.41 6.69C3.14 9.14 3 12 3 12s.14 2.86 1.41 5.31a4.83 4.83 0 0 1 3.77 2.75 12.64 12.64 0 0 0 8.07 0 4.83 4.83 0 0 1 3.77-2.75C20.86 14.86 21 12 21 12s-.14-2.86-1.41-5.31zM10 15V9l5 3-5 3z"/></svg>
+      Solution Video
+    </div>
+    <button id="yt-close" onclick="closeYT()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="yt-body">
+    <p class="yt-hint">Paste a YouTube link &#8212; timestamps supported:</p>
+    <div class="yt-input-row">
+      <input type="text" id="yt-input" placeholder="https://youtube.com/watch?v=..."/>
+      <button id="yt-go" onclick="loadYT()">Load</button>
+    </div>
+    <div id="yt-embed"></div>
+  </div>
+</div>
+
+<div id="clear-modal">
+  <div class="modal-box">
+    <div class="modal-title">Clear All Progress?</div>
+    <div class="modal-body">This will reset all your answers across every ladder. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="cancelClear()">Cancel</button>
+      <button class="modal-confirm" onclick="executeClear()">Yes, Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// PADIPUCAST · Atoms · Lecture DPP (Lecture 4) with key ideas
+const KEYS = {
+ "A1": {
+  "lec": 4,
+  "title": "Rutherford model · closest approach",
+  "idea": "Almost all the mass and all the positive charge sit in a tiny nucleus. An α-particle aimed head-on stops when all its KE has turned into electric PE.",
+  "f": [
+   "Head-on: K = k(2e)(Ze)/r<sub>0</sub> → r<sub>0</sub> = 2kZe²/K",
+   "ke² = 1.44 MeV fm → r<sub>0</sub>(fm) = 2.88 Z/K(MeV)",
+   "Impact parameter b ∝ cot(θ/2)",
+   "r<sub>0</sub> ∝ Z, ∝ 1/K, ∝ 1/m, ∝ 1/v²"
+  ],
+  "what": [
+   "Most α go straight → atom is mostly empty",
+   "Few bounce back → tiny, heavy, positive nucleus; only near head-on hits (b ≈ 0)",
+   "b = 0 → θ = 180°",
+   "Nucleus size ≤ r<sub>0</sub>; diameter ≈ 2r<sub>0</sub>",
+   "Rutherford's atom should collapse (accelerating electron radiates)"
+  ],
+  "trap": "Charge of α is 2e, not e. And check whether the question wants radius (r<sub>0</sub>) or diameter (2r<sub>0</sub>)."
+ },
+ "A2": {
+  "lec": 4,
+  "title": "Bohr's postulates · angular momentum",
+  "idea": "The electron moves only in orbits where L = nh/2π, and it does not radiate while in such an orbit. It emits or absorbs a photon only when it jumps.",
+  "f": [
+   "L = mvr = nh/2π = nħ",
+   "2πL/h = n",
+   "2πr = nλ (de Broglie picture)",
+   "E<sub>n</sub> = E<sub>1</sub>/n² → n from energy"
+  ],
+  "what": [
+   "h and L have the same dimensions [ML²T<sup>−1</sup>]",
+   "Works only for one-electron systems (H, He<sup>+</sup>, Li<sup>2+</sup>…)",
+   "Fails for many-electron atoms: no e–e repulsion in the model",
+   "ΔL for a jump of one level = h/2π"
+  ],
+  "trap": "L is a multiple of h/2π, not of h. A statement saying 'integral multiple of h' is false."
+ },
+ "A3": {
+  "lec": 4,
+  "title": "Radius, speed and period of orbits",
+  "idea": "Bigger n → bigger, slower orbit. Bigger Z → smaller, faster orbit.",
+  "f": [
+   "r<sub>n</sub> = 0.53 n²/Z Å",
+   "v<sub>n</sub> = 2.19 × 10<sup>6</sup> Z/n m/s",
+   "T ∝ n³/Z², f ∝ Z²/n³",
+   "a = v²/r; p = nh/(2πr)"
+  ],
+  "what": [
+   "k<sup>th</sup> excited state → n = k + 1",
+   "Same radius in two ions → Z ∝ n² → v ∝ n",
+   "Same n → r ∝ 1/Z, v ∝ Z"
+  ],
+  "trap": "'Second excited state' is n = 3, not n = 2."
+ },
+ "A4": {
+  "lec": 4,
+  "title": "Energy of the electron: K, U, E",
+  "idea": "Total energy is negative (bound). K = −E and U = 2E in every orbit, so |K/U| = 1/2 always.",
+  "f": [
+   "E<sub>n</sub> = −13.6 Z²/n² eV",
+   "K = −E = 13.6Z²/n², U = 2E",
+   "Excitation 1 → n: 13.6Z²(1 − 1/n²)",
+   "Ionisation from n: 13.6Z²/n²"
+  ],
+  "what": [
+   "H levels: −13.6, −3.4, −1.51, −0.85, −0.54, −0.38 eV",
+   "Going up: K ↓, U ↑, E ↑. Going down: K ↑, U ↓, E ↓",
+   "Same energy when Z/n is the same (H n=1 = He<sup>+</sup> n=2 = Li<sup>2+</sup> n=3)"
+  ],
+  "trap": "He<sup>+</sup> ground state is −54.4 eV and Li<sup>2+</sup> is −122.4 eV — multiply by Z²."
+ },
+ "A5": {
+  "lec": 4,
+  "title": "Orbiting electron as a current loop",
+  "idea": "An electron going round is a tiny current loop. It has a magnetic moment and makes a magnetic field at the nucleus.",
+  "f": [
+   "I = ef = ev/(2πr)",
+   "μ = IA = evr/2 = (e/2m)L",
+   "μ ∝ n (Bohr magneton μ<sub>B</sub> = eh/4πm)",
+   "B at nucleus = μ<sub>0</sub>I/2r ∝ n<sup>−5</sup>"
+  ],
+  "what": [
+   "For an electron, μ is opposite to L: μ = −(e/2m)L",
+   "I ∝ 1/n³ and r ∝ n² → B ∝ n<sup>−5</sup>"
+  ],
+  "trap": "Do not use B ∝ 1/r alone (n<sup>−2</sup>): the current also changes with n."
+ },
+ "A6": {
+  "lec": 4,
+  "title": "Spectral series of hydrogen",
+  "idea": "Each series is named by the level where the jump ends. The smallest jump gives the longest line; the jump from ∞ gives the series limit.",
+  "f": [
+   "1/λ = RZ²(1/n<sub>f</sub>² − 1/n<sub>i</sub>²)",
+   "Longest: n<sub>f</sub>+1 → n<sub>f</sub>. Shortest: ∞ → n<sub>f</sub>, λ = n<sub>f</sub>²/R",
+   "Lyman limit = 1/R ≈ 91 nm; λ(2→1) = 4/3R; Hα = 36/5R; Hβ = 16/3R",
+   "Same ion: ratio of lines = ratio of brackets; λZ² = const"
+  ],
+  "what": [
+   "Lyman →1 (UV), Balmer →2 (visible), Paschen →3, Brackett →4, Pfund →5 (IR)",
+   "Brackets: 2→1: 3/4, 3→1: 8/9, 3→2: 5/36, 4→2: 3/16, 4→3: 7/144",
+   "Photon momentum p = h/λ ∝ 1/λ"
+  ],
+  "trap": "Energy (and momentum) ratios are the inverse of wavelength ratios."
+ },
+ "A7": {
+  "lec": 4,
+  "title": "Transitions · number of lines · excitation",
+  "idea": "Photon energy = difference of two levels. A sample excited to level n gives n(n − 1)/2 lines.",
+  "f": [
+   "hc/λ = E<sub>i</sub> − E<sub>f</sub>; E(eV) = 1240/λ(nm)",
+   "1/λ<sub>AC</sub> = 1/λ<sub>AB</sub> + 1/λ<sub>BC</sub>",
+   "Lines from n (sample) = n(n − 1)/2; one atom: at most n − 1",
+   "Any Balmer line needs n ≥ 3 → 12.09 eV from ground"
+  ],
+  "what": [
+   "Photon is absorbed only if it matches a jump exactly",
+   "An electron can excite with any KE ≥ jump energy (keeps the rest)",
+   "12.5 eV electrons → reach n = 3 → 3 lines (2 Lyman + 1 Balmer)"
+  ],
+  "trap": "Wavelengths do not add — energies (1/λ) add."
+ },
+ "A8": {
+  "lec": 4,
+  "title": "Photon momentum · recoil of the atom",
+  "idea": "A photon carries momentum E/c, so the atom that emits it is pushed back a little.",
+  "f": [
+   "p = E/c = h/λ",
+   "Recoil: Mv = E/c → v = E/(Mc)",
+   "Recoil KE = E²/(2Mc²)",
+   "Energy lost by atom = E + E²/(2Mc²)"
+  ],
+  "what": [
+   "10.2 eV photon → p = 5.44 × 10<sup>−27</sup> kg m/s → v ≈ 3.3–3.4 m/s for H",
+   "Recoil is so small that we usually ignore it"
+  ],
+  "trap": "Change eV to joules before dividing by c."
+ }
+};
+const TOPICS = [
+ {
+  "name": "Why only a few α-particles bounce back",
+  "mode": "class",
+  "part": "Rutherford model · closest approach",
+  "lec": 4,
+  "c": "A1",
+  "keyIdea": "Almost all the mass and all the positive charge sit in a tiny nucleus. An α-particle aimed head-on stops when all its KE has turned into electric PE.",
+  "questions": [
+   {
+    "q": "In Rutherford's gold-foil experiment, most α-particles passed straight through the foil. This tells us that:",
+    "diagram": null,
+    "opts": [
+     "most of the atom is empty space",
+     "the atom is a uniform sphere of positive charge",
+     "electrons are much heavier than α-particles",
+     "the nucleus is negatively charged"
+    ],
+    "ans": 0,
+    "sol": "If most α-particles go straight through, they met nothing in their path. So <b>most of the atom is empty space</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The <b>impact parameter b</b> is the perpendicular distance of the α-particle's starting line from the nucleus (see figure). Which is true?",
+    "diagram": "<svg viewBox=\"0 0 330 165\" width=\"330\" height=\"165\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><circle cx=\"230\" cy=\"120\" r=\"9\" fill=\"#fee2e2\" stroke=\"#dc2626\" stroke-width=\"1.5\"/><text x=\"230.0\" y=\"124.0\" font-size=\"13\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">+</text><text x=\"246.0\" y=\"142.0\" font-size=\"10\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">nucleus</text><line x1=\"30.0\" y1=\"74.0\" x2=\"230.0\" y2=\"74.0\" stroke=\"#9ca3af\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/><line x1=\"230.0\" y1=\"120.0\" x2=\"230.0\" y2=\"74.0\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"236.0\" y=\"101.0\" font-size=\"13\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\" font-style=\"italic\">b</text><path d=\"M30 74 L150 74 Q215 68 240 34 L285 12\" stroke=\"#2563eb\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#aC)\"/><text x=\"40.0\" y=\"66.0\" font-size=\"13\" fill=\"#2563eb\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\" font-style=\"italic\">α</text><line x1=\"240.0\" y1=\"34.0\" x2=\"300.0\" y2=\"34.0\" stroke=\"#9ca3af\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/><path d=\"M272 34 A 32 32 0 0 0 268 19\" stroke=\"#ea580c\" stroke-width=\"1.4\" fill=\"none\"/><text x=\"282.0\" y=\"26.0\" font-size=\"12\" fill=\"#ea580c\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\" font-style=\"italic\">θ</text><path d=\"M30 120 L196 120\" stroke=\"#7c3aed\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#aV)\"/><path d=\"M190 128 L60 128\" stroke=\"#7c3aed\" stroke-width=\"1.4\" fill=\"5 3\" marker-end=\"url(#aV)\"/><text x=\"40.0\" y=\"146.0\" font-size=\"10.5\" fill=\"#7c3aed\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">b = 0 → turns straight back (θ = 180°)</text></svg>",
+    "opts": [
+     "Smaller b → larger scattering angle; b = 0 means a head-on hit and θ = 180°",
+     "Larger b → larger scattering angle",
+     "b does not affect the scattering angle",
+     "b = 0 means the α-particle goes straight through"
+    ],
+    "ans": 0,
+    "sol": "The closer the α-particle's line passes the nucleus, the stronger the push it gets. <b>Small b → large θ</b>. For b = 0 (head-on) it stops and comes straight back: θ = 180°. Formula: b ∝ cot(θ/2).",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "√d<sub>1</sub> and √d<sub>2</sub> are the impact parameters for scattering angles 60° and 90° respectively, when an α-particle approaches a gold nucleus. If d<sub>1</sub> = x d<sub>2</sub>, the value of x is:",
+    "diagram": null,
+    "opts": [
+     "3",
+     "√3",
+     "9",
+     "1/3"
+    ],
+    "ans": 0,
+    "sol": "b ∝ cot(θ/2).<br>√d<sub>1</sub>/√d<sub>2</sub> = cot 30°/cot 45° = √3/1 → d<sub>1</sub>/d<sub>2</sub> = 3. So <b>x = 3</b>.",
+    "tag": "PYQ Q113 · 29-Jun-2022-Shift-1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Choose the correct statement about atomic models:",
+    "diagram": null,
+    "opts": [
+     "A classical atom based on Rutherford's model is doomed to collapse",
+     "In the ground state of Rutherford's model electrons are in stable equilibrium, while in Thomson's model they always feel a net force",
+     "An atom has a nearly continuous mass distribution in Rutherford's model but a highly non-uniform one in Thomson's model",
+     "The positive part of the atom has most of the mass in Rutherford's model but not in Thomson's model"
+    ],
+    "ans": 0,
+    "sol": "In Rutherford's model the electron goes round in a circle, so it is accelerating. Classically an accelerating charge radiates energy, so the electron should spiral into the nucleus. So <b>a classical Rutherford atom must collapse</b>. (Bohr's postulates were made to fix exactly this problem.)",
+    "tag": "PYQ Q107 · 24-Jun-2022-Shift-1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In Rutherford's alpha-particle scattering experiment, only a few alpha particles rebound back because<br>A. The size of gold nucleus is very small as compared to the size of gold atom.<br>B. Alpha particle and gold nucleus have equal charge.<br>C. The impact parameter is minimum for a few alpha particles.<br>D. A few alpha particles have very high kinetic energy.<br>E. Only a few alpha particles undergo head-on collision with the nuclei.<br>Choose the correct answer:",
+    "diagram": null,
+    "opts": [
+     "A, C, E only",
+     "A, B only",
+     "B, E only",
+     "C, D only"
+    ],
+    "ans": 0,
+    "sol": "A ✔ The nucleus is tiny, so very few α-particles come near it.<br>B ✘ Gold nucleus has +79e; α has +2e.<br>C ✔ Only a few have a very small impact parameter → large angle.<br>D ✘ All α-particles from the source have about the same KE; high KE would make them go <i>through</i> more easily, not bounce back.<br>E ✔ Only a near head-on hit turns an α-particle back.<br>Answer: <b>A, C, E only</b>.",
+    "tag": "Q19 · JEE Main 2026 4th April Evening Shift",
+    "note": "",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Distance of closest approach",
+  "mode": "class",
+  "part": "Rutherford model · closest approach",
+  "lec": 4,
+  "c": "A1",
+  "keyIdea": "Almost all the mass and all the positive charge sit in a tiny nucleus. An α-particle aimed head-on stops when all its KE has turned into electric PE.",
+  "questions": [
+   {
+    "q": "An α-particle is fired head-on at a heavy nucleus (see figure). At the distance of closest approach r<sub>0</sub>, the α-particle:",
+    "diagram": "<svg viewBox=\"0 0 320 125\" width=\"320\" height=\"125\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><circle cx=\"280\" cy=\"70\" r=\"11\" fill=\"#fee2e2\" stroke=\"#dc2626\" stroke-width=\"1.5\"/><text x=\"280.0\" y=\"74.0\" font-size=\"13\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">+</text><text x=\"280.0\" y=\"52.0\" font-size=\"11\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">+Ze</text><path d=\"M30 70 L170 70\" stroke=\"#2563eb\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#aC)\"/><circle cx=\"190.0\" cy=\"70.0\" r=\"5\" fill=\"#2563eb\"/><text x=\"190.0\" y=\"58.0\" font-size=\"11\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">α (+2e)</text><line x1=\"190.0\" y1=\"100.0\" x2=\"280.0\" y2=\"100.0\" stroke=\"#64748b\" stroke-width=\"1\"/><line x1=\"190.0\" y1=\"96.0\" x2=\"190.0\" y2=\"104.0\" stroke=\"#64748b\" stroke-width=\"1\"/><line x1=\"280.0\" y1=\"96.0\" x2=\"280.0\" y2=\"104.0\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"235.0\" y=\"114.0\" font-size=\"11\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">r<tspan font-size=\"9\" dy=\"3\">0</tspan></text><text x=\"30.0\" y=\"54.0\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">far away: K = ½mv², U = 0</text><text x=\"30.0\" y=\"122.0\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">at r₀: v = 0, all K → U</text></svg>",
+    "opts": [
+     "stops for an instant (KE = 0)",
+     "moves with its maximum speed",
+     "feels zero force",
+     "has zero potential energy"
+    ],
+    "ans": 0,
+    "sol": "It slows down as it climbs the electric 'hill'. At r<sub>0</sub> all its KE has become PE, so it <b>stops for an instant</b> and then turns back.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Using energy conservation, K = k(Ze)(2e)/r<sub>0</sub> where k = 1/4πε<sub>0</sub>. So r<sub>0</sub> =",
+    "diagram": null,
+    "opts": [
+     "2kZe²/K",
+     "kZe²/K",
+     "2kZe/K",
+     "kZe²/(2K)"
+    ],
+    "ans": 0,
+    "sol": "Charge of α = 2e, nucleus = Ze. ½mv² = k(2e)(Ze)/r<sub>0</sub> → <b>r<sub>0</sub> = 2kZe²/K</b>. More KE → closer approach (r<sub>0</sub> ∝ 1/K).",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Shortcut: ke² = 1.44 MeV fm (1 fm = 10<sup>−15</sup> m). For a 5 MeV α-particle on gold (Z = 79), r<sub>0</sub> ≈",
+    "diagram": null,
+    "opts": [
+     "4.5 × 10<sup>−14</sup> m",
+     "4.5 × 10<sup>−16</sup> m",
+     "2.3 × 10<sup>−14</sup> m",
+     "9.1 × 10<sup>−14</sup> m"
+    ],
+    "ans": 0,
+    "sol": "r<sub>0</sub> = 2 × 1.44 × 79/5 fm = 45.5 fm = <b>4.5 × 10<sup>−14</sup> m</b>. Remember: the answer is always around 10<sup>−14</sup> m for MeV α-particles on heavy nuclei.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An α-particle of energy 5 MeV is scattered through 180° by a fixed uranium nucleus. The distance of closest approach is of the order of:",
+    "diagram": null,
+    "opts": [
+     "10<sup>−12</sup> cm",
+     "10<sup>−10</sup> cm",
+     "10<sup>−14</sup> cm",
+     "10<sup>−15</sup> cm"
+    ],
+    "ans": 0,
+    "sol": "180° means head-on. r<sub>0</sub> = 2 × 1.44 × 92/5 fm ≈ 53 fm = 5.3 × 10<sup>−14</sup> m = 5.3 × 10<sup>−12</sup> cm. Order: <b>10<sup>−12</sup> cm</b>. (Careful: the options are in cm, not m.)",
+    "tag": "PYQ Q281 · 2004",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "If an alpha particle with energy 7.7 MeV is bombarded on a thin gold foil, the closest distance from nucleus it can reach is ____ m. (Atomic number of gold = 79 and 1/4πε<sub>0</sub> = 9 × 10<sup>9</sup> in SI units)",
+    "diagram": null,
+    "opts": [
+     "2.95 × 10<sup>−14</sup>",
+     "3.85 × 10<sup>−14</sup>",
+     "2.95 × 10<sup>−16</sup>",
+     "3.85 × 10<sup>−16</sup>"
+    ],
+    "ans": 0,
+    "sol": "r<sub>0</sub> = k(2e)(Ze)/K. Write K = 7.7 × 10<sup>6</sup> × e joules, so one e cancels:<br>r<sub>0</sub> = (9 × 10<sup>9</sup> × 2 × 79 × 1.6 × 10<sup>−19</sup>)/(7.7 × 10<sup>6</sup>) = <b>2.95 × 10<sup>−14</sup> m</b>.",
+    "tag": "Q4 · JEE Main 2026 21st January Morning Shift",
+    "note": "",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Size of the nucleus from scattering",
+  "mode": "hw",
+  "part": "Rutherford model · closest approach",
+  "lec": 4,
+  "c": "A1",
+  "keyIdea": "Almost all the mass and all the positive charge sit in a tiny nucleus. An α-particle aimed head-on stops when all its KE has turned into electric PE.",
+  "questions": [
+   {
+    "q": "For the same target, if the KE of the α-particle is doubled, the distance of closest approach becomes:",
+    "diagram": null,
+    "opts": [
+     "half",
+     "double",
+     "four times",
+     "one-fourth"
+    ],
+    "ans": 0,
+    "sol": "r<sub>0</sub> = 2kZe²/K, so r<sub>0</sub> ∝ 1/K. Double K → <b>half</b> r<sub>0</sub>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An alpha nucleus of energy ½mv² bombards a heavy nuclear target of charge Ze. Then the distance of closest approach for the alpha nucleus will be proportional to:",
+    "diagram": null,
+    "opts": [
+     "1/m",
+     "v²",
+     "1/v⁴",
+     "1/Ze"
+    ],
+    "ans": 0,
+    "sol": "r<sub>0</sub> = 2kZe²/(½mv²) = 4kZe²/(mv²). So r<sub>0</sub> ∝ Ze, ∝ 1/v², ∝ <b>1/m</b>.",
+    "tag": "PYQ Q272 · 2006",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A 7.9 MeV α-particle. Its kinetic energy in joules is:",
+    "diagram": null,
+    "opts": [
+     "1.26 × 10<sup>−12</sup> J",
+     "1.26 × 10<sup>−18</sup> J",
+     "4.9 × 10<sup>25</sup> J",
+     "7.9 × 10<sup>−13</sup> J"
+    ],
+    "ans": 0,
+    "sol": "1 MeV = 10<sup>6</sup> × 1.6 × 10<sup>−19</sup> J. So 7.9 MeV = 7.9 × 1.6 × 10<sup>−13</sup> = <b>1.26 × 10<sup>−12</sup> J</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The α-particle cannot get closer than r<sub>0</sub>. If we assume it just reaches the surface of the nucleus, then the nucleus radius ≈ r<sub>0</sub>. If r<sub>0</sub> = 3 × 10<sup>−14</sup> m, the estimated diameter of the nucleus is:",
+    "diagram": null,
+    "opts": [
+     "6 × 10<sup>−14</sup> m",
+     "3 × 10<sup>−14</sup> m",
+     "1.5 × 10<sup>−14</sup> m",
+     "9 × 10<sup>−14</sup> m"
+    ],
+    "ans": 0,
+    "sol": "Radius ≈ r<sub>0</sub> → <b>diameter ≈ 2r<sub>0</sub> = 6 × 10<sup>−14</sup> m</b>. (Really this is an upper limit on the size.)",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A 7.9 MeV α-particle scatters from a target material of atomic number 79. From the given data the estimated diameter of nuclei of the target material is (approximately) ____ m. [1/4πε<sub>0</sub> = 9 × 10<sup>9</sup> N m²/C², e = 1.6 × 10<sup>−19</sup> C]",
+    "diagram": null,
+    "opts": [
+     "5.76 × 10<sup>−14</sup>",
+     "2.88 × 10<sup>−14</sup>",
+     "1.44 × 10<sup>−13</sup>",
+     "1.69 × 10<sup>−12</sup>"
+    ],
+    "ans": 0,
+    "sol": "r<sub>0</sub> = (9 × 10<sup>9</sup> × 2 × 79 × 1.6 × 10<sup>−19</sup>)/(7.9 × 10<sup>6</sup>) = 2.88 × 10<sup>−14</sup> m.<br>Diameter ≈ 2r<sub>0</sub> = <b>5.76 × 10<sup>−14</sup> m</b>.",
+    "tag": "Q6 · JEE Main 2026 22nd January Morning Shift",
+    "note": "The key takes nucleus radius ≈ closest approach, so diameter = 2r<sub>0</sub>. Option 2.88 × 10<sup>−14</sup> is r<sub>0</sub> itself — the common trap.",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Bohr's quantum condition",
+  "mode": "class",
+  "part": "Bohr's postulates · angular momentum",
+  "lec": 4,
+  "c": "A2",
+  "keyIdea": "The electron moves only in orbits where L = nh/2π, and it does not radiate while in such an orbit. It emits or absorbs a photon only when it jumps.",
+  "questions": [
+   {
+    "q": "Bohr's second postulate: the electron can move only in orbits where its angular momentum L = mvr equals:",
+    "diagram": null,
+    "opts": [
+     "nh/2π",
+     "nh",
+     "nh/π",
+     "h/(2πn)"
+    ],
+    "ans": 0,
+    "sol": "<b>L = nh/2π = nħ</b>, n = 1, 2, 3 … So L is a whole-number multiple of <b>h/2π</b>, not of h.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Dimensions of Planck's constant h (from E = hf) are:",
+    "diagram": null,
+    "opts": [
+     "[ML²T<sup>−1</sup>] — same as angular momentum",
+     "[MLT<sup>−1</sup>] — same as momentum",
+     "[ML²T<sup>−2</sup>] — same as energy",
+     "[MLT<sup>−2</sup>] — same as force"
+    ],
+    "ans": 0,
+    "sol": "h = E/f → J s = kg m² s<sup>−1</sup> = <b>[ML²T<sup>−1</sup>]</b>. Angular momentum mvr also has kg m² s<sup>−1</sup>. Same dimensions.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In terms of ħ = h/2π, the allowed values of L in Bohr's model are:",
+    "diagram": null,
+    "opts": [
+     "ħ, 2ħ, 3ħ, …",
+     "0, ħ, 2ħ, …",
+     "h, 2h, 3h, …",
+     "ħ/2, 3ħ/2, 5ħ/2, …"
+    ],
+    "ans": 0,
+    "sol": "n starts at 1, so <b>L = ħ, 2ħ, 3ħ …</b> L = 0 is not allowed in Bohr's model.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The momentum of an electron revolving in the n<sup>th</sup> orbit is given by: (symbols have usual meanings)",
+    "diagram": null,
+    "opts": [
+     "nh/(2πr)",
+     "nh/(2r)",
+     "nh/(2π)",
+     "2πr/(nh)"
+    ],
+    "ans": 0,
+    "sol": "mvr = nh/2π → p = mv = <b>nh/(2πr)</b>.",
+    "tag": "PYQ Q123 · 25-Jul-2022-Shift-1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Statement (I): The dimensions of Planck's constant and angular momentum are same.<br>Statement (II): In Bohr's model electron revolve around the nucleus only in those orbits for which angular momentum is integral multiple of Planck's constant.<br>Choose the most appropriate answer:",
+    "diagram": null,
+    "opts": [
+     "Statement I is correct but Statement II is incorrect",
+     "Both Statement I and Statement II are correct",
+     "Both Statement I and Statement II are incorrect",
+     "Statement I is incorrect but Statement II is correct"
+    ],
+    "ans": 0,
+    "sol": "I ✔ Both are kg m² s<sup>−1</sup>.<br>II ✘ L is an integral multiple of <b>h/2π</b>, not of h.<br>Answer: <b>I correct, II incorrect</b>.",
+    "tag": "Q39 · JEE Main 2025 4th April Evening Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Where the Bohr model works",
+  "mode": "hw",
+  "part": "Bohr's postulates · angular momentum",
+  "lec": 4,
+  "c": "A2",
+  "keyIdea": "The electron moves only in orbits where L = nh/2π, and it does not radiate while in such an orbit. It emits or absorbs a photon only when it jumps.",
+  "questions": [
+   {
+    "q": "Bohr's model gives correct answers only for:",
+    "diagram": null,
+    "opts": [
+     "one-electron systems like H, He<sup>+</sup>, Li<sup>2+</sup>",
+     "all atoms",
+     "only the hydrogen atom",
+     "the neutral helium atom"
+    ],
+    "ans": 0,
+    "sol": "Any atom or ion with <b>just one electron</b> (hydrogen-like) can be handled by Bohr's model.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Why does Bohr's model fail for the neutral helium atom (2 electrons)?",
+    "diagram": null,
+    "opts": [
+     "It ignores the repulsion between the two electrons",
+     "Helium nucleus is too heavy",
+     "Helium electrons do not move in circles",
+     "Helium has no stationary orbits"
+    ],
+    "ans": 0,
+    "sol": "Bohr's model only uses the nucleus–electron attraction. It has <b>no term for electron–electron repulsion</b>, so it cannot handle many-electron atoms.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "de Broglie's picture of Bohr's rule: an orbit is allowed when its circumference holds a whole number of electron waves. So:",
+    "diagram": null,
+    "opts": [
+     "2πr = nλ",
+     "πr = nλ",
+     "2πr = λ/n",
+     "r = nλ"
+    ],
+    "ans": 0,
+    "sol": "<b>2πr = nλ</b>. With λ = h/mv this gives mvr = nh/2π — Bohr's condition.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Consider an electron in a hydrogen atom revolving in its second excited state (radius 4.65 Å). The de Broglie wavelength of this electron is:",
+    "diagram": null,
+    "opts": [
+     "9.7 Å",
+     "3.5 Å",
+     "6.6 Å",
+     "12.9 Å"
+    ],
+    "ans": 0,
+    "sol": "Second excited state → n = 3. 2πr = 3λ → λ = 2π × 4.65/3 = <b>9.7 Å</b>.",
+    "tag": "PYQ Q202 · 12 April 2019 II",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Assertion A: The Bohr model is applicable to hydrogen and hydrogen-like atoms only.<br>Reason R: The formulation of Bohr model does not include repulsive force between electrons.<br>Choose the correct answer:",
+    "diagram": null,
+    "opts": [
+     "Both A and R are true and R is the correct explanation of A",
+     "A is true but R is false",
+     "A is false but R is true",
+     "Both A and R are true but R is NOT the correct explanation of A"
+    ],
+    "ans": 0,
+    "sol": "A ✔ Bohr's model works only for one-electron systems.<br>R ✔ It has no electron–electron repulsion term — and that is exactly why it fails for many-electron atoms.<br>Answer: <b>both true, R explains A</b>.",
+    "tag": "Q37 · JEE Main 2025 3rd April Evening Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Energy → n → angular momentum",
+  "mode": "class",
+  "part": "Bohr's postulates · angular momentum",
+  "lec": 4,
+  "c": "A2",
+  "keyIdea": "The electron moves only in orbits where L = nh/2π, and it does not radiate while in such an orbit. It emits or absorbs a photon only when it jumps.",
+  "questions": [
+   {
+    "q": "For a Bohr atom, E<sub>n</sub> = E<sub>0</sub>/n² (E<sub>0</sub> = ground-state energy). If an orbit has energy E<sub>0</sub>/9, then n =",
+    "diagram": null,
+    "opts": [
+     "3",
+     "9",
+     "81",
+     "1/3"
+    ],
+    "ans": 0,
+    "sol": "E<sub>0</sub>/n² = E<sub>0</sub>/9 → n² = 9 → <b>n = 3</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "If L = 2h/π for an electron in a Bohr orbit, then 2πL/h = n =",
+    "diagram": null,
+    "opts": [
+     "4",
+     "2",
+     "π",
+     "8"
+    ],
+    "ans": 0,
+    "sol": "2πL/h = 2π(2h/π)/h = <b>4</b>. So the electron is in n = 4.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Light of energy 12.75 eV is incident on a hydrogen atom in its ground state. The atom absorbs it and reaches an excited state. The angular momentum of the atom in the excited state is (x/π) × 10<sup>−17</sup> eV s. The value of x is: (h = 4.14 × 10<sup>−15</sup> eV s)",
+    "diagram": null,
+    "opts": [
+     "828",
+     "414",
+     "1656",
+     "207"
+    ],
+    "ans": 0,
+    "sol": "E = −13.6 + 12.75 = −0.85 eV = −13.6/16 → n = 4.<br>L = 4h/2π = 2h/π = 2 × 4.14 × 10<sup>−15</sup>/π = (828/π) × 10<sup>−17</sup>. <b>x = 828</b>.",
+    "tag": "PYQ Q83 · 1-Feb-2023 Shift 1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A hydrogen atom in its ground state absorbs 10.2 eV of energy. The angular momentum of the electron increases by: (h = 6.6 × 10<sup>−34</sup> J s)",
+    "diagram": null,
+    "opts": [
+     "1.05 × 10<sup>−34</sup> J s",
+     "2.10 × 10<sup>−34</sup> J s",
+     "3.15 × 10<sup>−34</sup> J s",
+     "4.2 × 10<sup>−34</sup> J s"
+    ],
+    "ans": 0,
+    "sol": "−13.6 + 10.2 = −3.4 eV → n = 2. ΔL = (2 − 1)h/2π = 6.6 × 10<sup>−34</sup>/6.28 = <b>1.05 × 10<sup>−34</sup> J s</b>.",
+    "tag": "PYQ Q111 · 27-Jun-2022-Shift-1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The energy of an electron in an orbit of the Bohr's atom is −0.04E<sub>0</sub> eV where E<sub>0</sub> is the ground state energy. If L is the angular momentum of the electron in this orbit and h is Planck's constant, then 2πL/h is:",
+    "diagram": null,
+    "opts": [
+     "5",
+     "6",
+     "2",
+     "4"
+    ],
+    "ans": 0,
+    "sol": "E<sub>0</sub>/n² = 0.04E<sub>0</sub> → n² = 25 → n = 5.<br>2πL/h = n = <b>5</b>.",
+    "tag": "Q5 · JEE Main 2026 21st January Evening Shift",
+    "note": "The sign is loose in the question (E<sub>0</sub> is itself negative), but the size 0.04 = 1/25 is all you need.",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Angular momentum → energy",
+  "mode": "hw",
+  "part": "Bohr's postulates · angular momentum",
+  "lec": 4,
+  "c": "A2",
+  "keyIdea": "The electron moves only in orbits where L = nh/2π, and it does not radiate while in such an orbit. It emits or absorbs a photon only when it jumps.",
+  "questions": [
+   {
+    "q": "An electron in hydrogen has L = h/π. It is in the orbit n =",
+    "diagram": null,
+    "opts": [
+     "2",
+     "1",
+     "π",
+     "4"
+    ],
+    "ans": 0,
+    "sol": "L = nh/2π = h/π → n = <b>2</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Energy of the electron in the n = 3 orbit of hydrogen is:",
+    "diagram": null,
+    "opts": [
+     "−1.51 eV",
+     "−3.4 eV",
+     "−4.53 eV",
+     "−0.85 eV"
+    ],
+    "ans": 0,
+    "sol": "E<sub>n</sub> = −13.6/n² = −13.6/9 = <b>−1.51 eV</b>. Learn: −13.6, −3.4, −1.51, −0.85, −0.54, −0.38 for n = 1 to 6.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "If 13.6 eV energy is required to ionize the hydrogen atom, then the energy required to remove an electron from n = 2 is:",
+    "diagram": null,
+    "opts": [
+     "3.4 eV",
+     "10.2 eV",
+     "0 eV",
+     "6.8 eV"
+    ],
+    "ans": 0,
+    "sol": "Ionisation energy from level n = 13.6/n². For n = 2: <b>3.4 eV</b>.",
+    "tag": "PYQ Q290 · 2002",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An electron in hydrogen has L = 2h/π. Its energy is:",
+    "diagram": null,
+    "opts": [
+     "−0.85 eV",
+     "−3.4 eV",
+     "−1.51 eV",
+     "−0.54 eV"
+    ],
+    "ans": 0,
+    "sol": "2πL/h = 4 → n = 4 → E = −13.6/16 = <b>−0.85 eV</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Angular momentum of an electron in a hydrogen atom is 3h/π. Then the energy of the electron is _____ eV.",
+    "diagram": null,
+    "opts": [
+     "−0.38",
+     "−1.51",
+     "−0.85",
+     "−0.28"
+    ],
+    "ans": 0,
+    "sol": "L = nh/2π = 3h/π → n = 6.<br>E = −13.6/36 = <b>−0.38 eV</b>.",
+    "tag": "Q16 · JEE Main 2026 2nd April Morning Shift",
+    "note": "",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Radius of Bohr orbits: r ∝ n²",
+  "mode": "class",
+  "part": "Radius, speed and period of orbits",
+  "lec": 4,
+  "c": "A3",
+  "keyIdea": "Bigger n → bigger, slower orbit. Bigger Z → smaller, faster orbit.",
+  "questions": [
+   {
+    "q": "Radius of the n<sup>th</sup> Bohr orbit of a hydrogen-like atom is r<sub>n</sub> = a<sub>0</sub>n²/Z, where a<sub>0</sub> = 0.53 Å. For hydrogen, r<sub>n</sub> ∝",
+    "diagram": null,
+    "opts": [
+     "n²",
+     "n",
+     "1/n",
+     "1/n²"
+    ],
+    "ans": 0,
+    "sol": "Z = 1 → r<sub>n</sub> = a<sub>0</sub>n², so <b>r ∝ n²</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Radius of the n = 2 orbit of hydrogen is:",
+    "diagram": null,
+    "opts": [
+     "2.12 Å",
+     "1.06 Å",
+     "0.265 Å",
+     "4.77 Å"
+    ],
+    "ans": 0,
+    "sol": "r = 0.53 × 4 = <b>2.12 Å</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The radius of the electron's second stationary orbit in Bohr's atom is R. The radius of the 3<sup>rd</sup> orbit will be:",
+    "diagram": null,
+    "opts": [
+     "2.25R",
+     "3R",
+     "R/3",
+     "9R"
+    ],
+    "ans": 0,
+    "sol": "r ∝ n²: r<sub>3</sub>/r<sub>2</sub> = 9/4 → r<sub>3</sub> = <b>2.25R</b>.",
+    "tag": "PYQ Q78 · 31-Jan-2023 Shift 2",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A hydrogen atom, initially in the ground state, is excited by absorbing a photon of wavelength 980 Å. The radius of the atom in the excited state, in terms of Bohr radius a<sub>0</sub>, will be:",
+    "diagram": null,
+    "opts": [
+     "16a<sub>0</sub>",
+     "25a<sub>0</sub>",
+     "9a<sub>0</sub>",
+     "4a<sub>0</sub>"
+    ],
+    "ans": 0,
+    "sol": "Photon energy = 12400/980 ≈ 12.7 eV ≈ 13.6(1 − 1/n²) → n = 4.<br>r = n²a<sub>0</sub> = <b>16a<sub>0</sub></b>.",
+    "tag": "PYQ Q207 · 11 April 2019 I",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The radius of third stationary orbit of electron for Bohr's atom is R. The radius of fourth stationary orbit will be:",
+    "diagram": null,
+    "opts": [
+     "16R/9",
+     "4R/3",
+     "3R/4",
+     "9R/16"
+    ],
+    "ans": 0,
+    "sol": "r ∝ n²: r<sub>4</sub>/r<sub>3</sub> = 16/9 → r<sub>4</sub> = <b>16R/9</b>.",
+    "tag": "Q45 · 27-Jan-2024 Shift 1",
+    "note": "",
+    "starLbl": "JEE Main 2024 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Radius with Z: r ∝ n²/Z",
+  "mode": "hw",
+  "part": "Radius, speed and period of orbits",
+  "lec": 4,
+  "c": "A3",
+  "keyIdea": "Bigger n → bigger, slower orbit. Bigger Z → smaller, faster orbit.",
+  "questions": [
+   {
+    "q": "For the same n, a nucleus with larger Z pulls the electron:",
+    "diagram": null,
+    "opts": [
+     "closer — r ∝ 1/Z",
+     "farther — r ∝ Z",
+     "same distance",
+     "farther — r ∝ Z²"
+    ],
+    "ans": 0,
+    "sol": "More nuclear charge → stronger pull → smaller orbit. <b>r = a<sub>0</sub>n²/Z</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Radius of the ground state of He<sup>+</sup> (Z = 2) is:",
+    "diagram": null,
+    "opts": [
+     "a<sub>0</sub>/2",
+     "2a<sub>0</sub>",
+     "a<sub>0</sub>/4",
+     "4a<sub>0</sub>"
+    ],
+    "ans": 0,
+    "sol": "r = a<sub>0</sub>(1)²/2 = <b>a<sub>0</sub>/2</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Radius of the n = 3 orbit of Li<sup>2+</sup> (Z = 3) is:",
+    "diagram": null,
+    "opts": [
+     "3a<sub>0</sub>",
+     "a<sub>0</sub>",
+     "9a<sub>0</sub>",
+     "a<sub>0</sub>/3"
+    ],
+    "ans": 0,
+    "sol": "r = a<sub>0</sub> × 9/3 = <b>3a<sub>0</sub></b>. Put n² on top and Z below every time.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The radius of the fifth orbit of Li<sup>++</sup> is ____ × 10<sup>−12</sup> m. (Take radius of hydrogen atom = 0.51 Å)",
+    "diagram": null,
+    "opts": [
+     "425",
+     "1275",
+     "213",
+     "850"
+    ],
+    "ans": 0,
+    "sol": "r = 0.51 × 25/3 Å = 4.25 Å = 425 × 10<sup>−12</sup> m. Answer <b>425</b>.",
+    "tag": "PYQ Q87 · 6-Apr-2023 shift 1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Assuming the validity of Bohr's atomic model for hydrogen-like ions, the radius of Li<sup>++</sup> ion in its ground state is given by (1/X)a<sub>0</sub>, where X = ____ (a<sub>0</sub> is the first Bohr radius).",
+    "diagram": null,
+    "opts": [
+     "3",
+     "2",
+     "9",
+     "1"
+    ],
+    "ans": 0,
+    "sol": "r = a<sub>0</sub>n²/Z = a<sub>0</sub>(1)/3 → <b>X = 3</b>.",
+    "tag": "Q34 · JEE Main 2025 2nd April Evening Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Comparing radii of different ions",
+  "mode": "hw",
+  "part": "Radius, speed and period of orbits",
+  "lec": 4,
+  "c": "A3",
+  "keyIdea": "Bigger n → bigger, slower orbit. Bigger Z → smaller, faster orbit.",
+  "questions": [
+   {
+    "q": "Same n, different ions. r(He<sup>+</sup>, n = 3) : r(H, n = 3) =",
+    "diagram": null,
+    "opts": [
+     "1 : 2",
+     "2 : 1",
+     "1 : 4",
+     "1 : 1"
+    ],
+    "ans": 0,
+    "sol": "Same n → r ∝ 1/Z. He<sup>+</sup> : H = 1/2 : 1 = <b>1 : 2</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Which state has the same radius as the ground state of hydrogen?",
+    "diagram": null,
+    "opts": [
+     "Be<sup>3+</sup> in n = 2",
+     "He<sup>+</sup> in n = 2",
+     "Li<sup>2+</sup> in n = 3",
+     "He<sup>+</sup> in n = 1"
+    ],
+    "ans": 0,
+    "sol": "Need n²/Z = 1. Be<sup>3+</sup> (Z = 4), n = 2: 4/4 = 1 ✔. He<sup>+</sup> n = 2: 4/2 = 2. Li<sup>2+</sup> n = 3: 9/3 = 3. He<sup>+</sup> n = 1: 1/2. Answer <b>Be<sup>3+</sup>, n = 2</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The radius of the 2<sup>nd</sup> orbit of He<sup>+</sup> in Bohr's model is r<sub>1</sub> and that of the 4<sup>th</sup> orbit of Be<sup>3+</sup> is r<sub>2</sub>. The ratio r<sub>2</sub>/r<sub>1</sub> is x : 1. The value of x is:",
+    "diagram": null,
+    "opts": [
+     "2",
+     "4",
+     "1/2",
+     "8"
+    ],
+    "ans": 0,
+    "sol": "r<sub>1</sub> = a<sub>0</sub>(4)/2 = 2a<sub>0</sub>; r<sub>2</sub> = a<sub>0</sub>(16)/4 = 4a<sub>0</sub>. r<sub>2</sub>/r<sub>1</sub> = <b>2</b>.",
+    "tag": "PYQ Q94 · 13-Apr-2023 shift 1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "r(He<sup>+</sup>, n = 3) : r(Li<sup>2+</sup>, n = 2) =",
+    "diagram": null,
+    "opts": [
+     "27 : 8",
+     "9 : 4",
+     "3 : 2",
+     "8 : 27"
+    ],
+    "ans": 0,
+    "sol": "r ∝ n²/Z: (9/2) : (4/3) = 27/6 : 8/6 = <b>27 : 8</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Considering the Bohr model of hydrogen-like atoms, the ratio of the radius of 5<sup>th</sup> orbit of the electron in Li<sup>2+</sup> and He<sup>+</sup> is:",
+    "diagram": null,
+    "opts": [
+     "2/3",
+     "3/2",
+     "4/9",
+     "9/4"
+    ],
+    "ans": 0,
+    "sol": "Same n → r ∝ 1/Z. r(Li<sup>2+</sup>)/r(He<sup>+</sup>) = Z<sub>He</sub>/Z<sub>Li</sub> = <b>2/3</b>.",
+    "tag": "Q38 · JEE Main 2025 4th April Morning Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Speed in Bohr orbits: v ∝ Z/n",
+  "mode": "class",
+  "part": "Radius, speed and period of orbits",
+  "lec": 4,
+  "c": "A3",
+  "keyIdea": "Bigger n → bigger, slower orbit. Bigger Z → smaller, faster orbit.",
+  "questions": [
+   {
+    "q": "Speed of the electron in the n<sup>th</sup> orbit: v<sub>n</sub> = 2.19 × 10<sup>6</sup> (Z/n) m/s. In hydrogen, going to higher n the speed:",
+    "diagram": null,
+    "opts": [
+     "decreases as 1/n",
+     "increases as n",
+     "stays the same",
+     "decreases as 1/n²"
+    ],
+    "ans": 0,
+    "sol": "<b>v ∝ Z/n</b>. Outer orbits are slower.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Speed of an electron in Bohr's 7<sup>th</sup> orbit of hydrogen is 3.6 × 10<sup>6</sup> m/s. The corresponding speed in the 3<sup>rd</sup> orbit, in m/s, is:",
+    "diagram": null,
+    "opts": [
+     "8.4 × 10<sup>6</sup>",
+     "1.8 × 10<sup>6</sup>",
+     "7.5 × 10<sup>6</sup>",
+     "3.6 × 10<sup>6</sup>"
+    ],
+    "ans": 0,
+    "sol": "v ∝ 1/n: v<sub>3</sub> = 3.6 × 10<sup>6</sup> × 7/3 = <b>8.4 × 10<sup>6</sup> m/s</b>.",
+    "tag": "PYQ Q76 · 30-Jan-2023 Shift 1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The ratio of the speed of the electron in the 3<sup>rd</sup> orbit of He<sup>+</sup> to that in the 3<sup>rd</sup> orbit of hydrogen is:",
+    "diagram": null,
+    "opts": [
+     "2 : 1",
+     "1 : 1",
+     "1 : 2",
+     "4 : 1"
+    ],
+    "ans": 0,
+    "sol": "Same n → v ∝ Z: 2 : 1. Answer <b>2 : 1</b>.",
+    "tag": "PYQ Q109 · 25-Jun-2022-Shift-1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Two hydrogen-like atoms have orbits of the <b>same radius</b>. Since r ∝ n²/Z, Z ∝ n². Then the speed v ∝ Z/n is proportional to:",
+    "diagram": null,
+    "opts": [
+     "n",
+     "1/n",
+     "n²",
+     "nothing — v is the same"
+    ],
+    "ans": 0,
+    "sol": "Z ∝ n² → v ∝ n²/n = <b>n</b>. So with equal radii, the faster electron is in the higher n.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Two electrons are moving in orbits of two hydrogen-like atoms with speeds 3 × 10<sup>5</sup> m/s and 2.5 × 10<sup>5</sup> m/s respectively. If the radii of these orbits are nearly same, then the possible order of energy states are ____ respectively.",
+    "diagram": null,
+    "opts": [
+     "6 and 5",
+     "8 and 10",
+     "10 and 12",
+     "9 and 8"
+    ],
+    "ans": 0,
+    "sol": "Equal radii → v ∝ n.<br>n<sub>1</sub>/n<sub>2</sub> = 3/2.5 = 6/5. Only option with ratio 6 : 5 → <b>6 and 5</b>.",
+    "tag": "Q12 · JEE Main 2026 24th January Morning Shift",
+    "note": "The actual speeds given are too small for any real Z (v = 2.19 × 10<sup>6</sup>Z/n). The question only wants the ratio 6 : 5.",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Time period and frequency of revolution",
+  "mode": "hw",
+  "part": "Radius, speed and period of orbits",
+  "lec": 4,
+  "c": "A3",
+  "keyIdea": "Bigger n → bigger, slower orbit. Bigger Z → smaller, faster orbit.",
+  "questions": [
+   {
+    "q": "Time for one revolution T = 2πr/v. With r ∝ n² and v ∝ 1/n (hydrogen), T ∝",
+    "diagram": null,
+    "opts": [
+     "n³",
+     "n²",
+     "n",
+     "1/n"
+    ],
+    "ans": 0,
+    "sol": "T ∝ n²/(1/n) = <b>n³</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "For a hydrogen-like ion, frequency of revolution f = 1/T is proportional to:",
+    "diagram": null,
+    "opts": [
+     "Z²/n³",
+     "n³/Z²",
+     "Z/n²",
+     "Z²/n²"
+    ],
+    "ans": 0,
+    "sol": "r ∝ n²/Z, v ∝ Z/n → T ∝ n³/Z² → <b>f ∝ Z²/n³</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The time period of revolution of the electron in its ground-state orbit in hydrogen is 1.6 × 10<sup>−16</sup> s. The frequency of revolution in its first excited state (in s<sup>−1</sup>) is:",
+    "diagram": null,
+    "opts": [
+     "7.8 × 10<sup>14</sup>",
+     "1.6 × 10<sup>14</sup>",
+     "6.2 × 10<sup>15</sup>",
+     "5.6 × 10<sup>12</sup>"
+    ],
+    "ans": 0,
+    "sol": "First excited state → n = 2. T ∝ n³ → T<sub>2</sub> = 8 × 1.6 × 10<sup>−16</sup> = 1.28 × 10<sup>−15</sup> s. f = 1/T = <b>7.8 × 10<sup>14</sup> s<sup>−1</sup></b>.",
+    "tag": "PYQ Q181 · 7 Jan. 2020 I",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The acceleration of an electron in the first orbit of the hydrogen atom (Z = 1) is:",
+    "diagram": null,
+    "opts": [
+     "h²/(4π²m²r³)",
+     "h²/(π²m²r³)",
+     "h²/(8π²m²r³)",
+     "h²/(4πm²r³)"
+    ],
+    "ans": 0,
+    "sol": "n = 1: mvr = h/2π → v = h/(2πmr). a = v²/r = <b>h²/(4π²m²r³)</b>.",
+    "tag": "PYQ Q220 · Online April 9, 2017",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The frequency of revolution of the electron in Bohr's orbit varies with n, the principal quantum number, as:",
+    "diagram": null,
+    "opts": [
+     "1/n³",
+     "1/n⁴",
+     "1/n²",
+     "1/n"
+    ],
+    "ans": 0,
+    "sol": "f = v/(2πr) ∝ (1/n)/(n²) = <b>1/n³</b>.",
+    "tag": "Q31 · JEE Main 2025 28th January Evening Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Kinetic, potential and total energy",
+  "mode": "class",
+  "part": "Energy of the electron: K, U, E",
+  "lec": 4,
+  "c": "A4",
+  "keyIdea": "Total energy is negative (bound). K = −E and U = 2E in every orbit, so |K/U| = 1/2 always.",
+  "questions": [
+   {
+    "q": "In a Bohr orbit, K = −E and U = 2E. If the total energy E = −3.4 eV, then K and U are:",
+    "diagram": null,
+    "opts": [
+     "K = 3.4 eV, U = −6.8 eV",
+     "K = −3.4 eV, U = 6.8 eV",
+     "K = 6.8 eV, U = −3.4 eV",
+     "K = 1.7 eV, U = −5.1 eV"
+    ],
+    "ans": 0,
+    "sol": "K = −E = <b>+3.4 eV</b>, U = 2E = <b>−6.8 eV</b>. Check: K + U = −3.4 ✔.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The ratio |K/U| for an electron in any Bohr orbit is:",
+    "diagram": null,
+    "opts": [
+     "1/2",
+     "2",
+     "1",
+     "depends on n"
+    ],
+    "ans": 0,
+    "sol": "K = −E, U = 2E → |K/U| = <b>1/2</b>, for every n and every Z.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In Bohr's model of hydrogen, let K, P and E be the kinetic, potential and total energy of the electron. When the electron moves to a <b>higher</b> level:",
+    "diagram": null,
+    "opts": [
+     "K decreases, P and E increase",
+     "All K, P and E increase",
+     "P decreases, K and E increase",
+     "K increases, P and E decrease"
+    ],
+    "ans": 0,
+    "sol": "Higher n: K = 13.6/n² falls. E = −13.6/n² rises towards 0, U = 2E also rises (less negative). <b>K ↓, P ↑, E ↑</b>.",
+    "tag": "PYQ Q108 · 24-Jun-2022-Shift-2",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "As an electron makes a transition from an excited state to the ground state of a hydrogen-like atom/ion:",
+    "diagram": null,
+    "opts": [
+     "its kinetic energy increases but potential energy and total energy decrease",
+     "kinetic energy decreases, potential energy increases but total energy remains same",
+     "kinetic energy and total energy decrease but potential energy increases",
+     "kinetic energy, potential energy and total energy decrease"
+    ],
+    "ans": 0,
+    "sol": "Going down (n ↓): K ↑, U becomes more negative (↓), E becomes more negative (↓). <b>K ↑, U ↓, E ↓</b>.",
+    "tag": "PYQ Q227 · 2015",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The ratio of the magnitude of the kinetic energy to the potential energy of an electron in the 5<sup>th</sup> excited state of a hydrogen atom is:",
+    "diagram": null,
+    "opts": [
+     "1/2",
+     "4",
+     "1/4",
+     "1"
+    ],
+    "ans": 0,
+    "sol": "|K/U| = 1/2 in <b>every</b> Bohr orbit, so the state does not matter. Answer <b>1/2</b>.",
+    "tag": "Q50 · 30-Jan-2024 Shift 1",
+    "note": "",
+    "starLbl": "JEE Main 2024 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Energy with Z: E = −13.6 Z²/n²",
+  "mode": "class",
+  "part": "Energy of the electron: K, U, E",
+  "lec": 4,
+  "c": "A4",
+  "keyIdea": "Total energy is negative (bound). K = −E and U = 2E in every orbit, so |K/U| = 1/2 always.",
+  "questions": [
+   {
+    "q": "Energy of a hydrogen-like ion: E<sub>n</sub> = −13.6 Z²/n² eV. Ground-state energy of He<sup>+</sup> is:",
+    "diagram": null,
+    "opts": [
+     "−54.4 eV",
+     "−27.2 eV",
+     "−13.6 eV",
+     "−6.8 eV"
+    ],
+    "ans": 0,
+    "sol": "Z = 2, n = 1: −13.6 × 4 = <b>−54.4 eV</b>. For Li<sup>2+</sup> (Z = 3): −122.4 eV.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "'First excited state' means n = 2. 'Second excited state' means:",
+    "diagram": null,
+    "opts": [
+     "n = 3",
+     "n = 2",
+     "n = 4",
+     "n = 1"
+    ],
+    "ans": 0,
+    "sol": "Ground = n = 1, first excited = n = 2, <b>second excited = n = 3</b>. k<sup>th</sup> excited state → n = k + 1.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The energy of He<sup>+</sup> ion in its first excited state is: (ground-state energy of hydrogen = −13.6 eV)",
+    "diagram": null,
+    "opts": [
+     "−13.6 eV",
+     "−54.4 eV",
+     "−27.2 eV",
+     "−3.4 eV"
+    ],
+    "ans": 0,
+    "sol": "E = −13.6 × 2²/2² = <b>−13.6 eV</b>. Same as hydrogen ground state!",
+    "tag": "PYQ Q92 · 11-Apr-2023 shift 2",
+    "note": "The source PDF marks −3.4 eV as the key; that is wrong. Its own working gives −13.6 eV.",
+    "starLbl": ""
+   },
+   {
+    "q": "Which level of singly ionised carbon has the same energy as the ground-state energy of hydrogen?",
+    "diagram": null,
+    "opts": [
+     "6",
+     "1",
+     "4",
+     "8"
+    ],
+    "ans": 0,
+    "sol": "Singly ionised carbon with one electron (treated as hydrogen-like): Z = 6. 13.6 × 36/n² = 13.6 → n = <b>6</b>.",
+    "tag": "PYQ Q151 · 17 Mar 2021 Shift 1",
+    "note": "Strictly, singly ionised carbon (C<sup>+</sup>) has 5 electrons; the question treats it as hydrogen-like with Z = 6.",
+    "starLbl": ""
+   },
+   {
+    "q": "Considering Bohr's atomic model for hydrogen atom:<br>(A) the energy of H atom in ground state is same as energy of He<sup>+</sup> ion in its first excited state.<br>(B) the energy of H atom in ground state is same as that for Li<sup>++</sup> ion in its second excited state.<br>(C) the energy of H atom in its ground state is same as that of He<sup>+</sup> ion for its ground state.<br>(D) the energy of He<sup>+</sup> ion in its first excited state is same as that for Li<sup>++</sup> ion in its ground state.<br>Choose the correct answer:",
+    "diagram": null,
+    "opts": [
+     "(A), (B) only",
+     "(A), (D) only",
+     "(A), (C) only",
+     "(B), (D) only"
+    ],
+    "ans": 0,
+    "sol": "H ground: −13.6 eV.<br>(A) He<sup>+</sup>, n = 2: −13.6 × 4/4 = −13.6 ✔<br>(B) Li<sup>++</sup>, n = 3: −13.6 × 9/9 = −13.6 ✔<br>(C) He<sup>+</sup>, n = 1: −54.4 ✘<br>(D) Li<sup>++</sup>, n = 1: −122.4 ≠ −13.6 ✘<br>Answer <b>(A), (B) only</b>. Shortcut: same energy when Z/n is the same.",
+    "tag": "Q33 · JEE Main 2025 2nd April Morning Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Excitation energy and finding Z",
+  "mode": "hw",
+  "part": "Energy of the electron: K, U, E",
+  "lec": 4,
+  "c": "A4",
+  "keyIdea": "Total energy is negative (bound). K = −E and U = 2E in every orbit, so |K/U| = 1/2 always.",
+  "questions": [
+   {
+    "q": "Energy needed to lift the electron from n = 1 to n in a hydrogen-like ion: ΔE = 13.6 Z²(1 − 1/n²). For hydrogen, 1 → 2 needs:",
+    "diagram": null,
+    "opts": [
+     "10.2 eV",
+     "3.4 eV",
+     "13.6 eV",
+     "12.1 eV"
+    ],
+    "ans": 0,
+    "sol": "13.6 × (1 − 1/4) = <b>10.2 eV</b>. And 1 → 3 needs 12.09 eV.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Energy required for the electron excitation in Li<sup>++</sup> from the first to the third Bohr orbit is:",
+    "diagram": null,
+    "opts": [
+     "108.8 eV",
+     "36.3 eV",
+     "122.4 eV",
+     "12.1 eV"
+    ],
+    "ans": 0,
+    "sol": "13.6 × 9 × (1 − 1/9) = 13.6 × 8 = <b>108.8 eV</b>.",
+    "tag": "PYQ Q258 · 2011",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A beam of monochromatic light is used to excite the electron in Li<sup>++</sup> from the first orbit to the third orbit. The wavelength of the light is x × 10<sup>−10</sup> m. The value of x is: (hc = 1242 eV nm)",
+    "diagram": null,
+    "opts": [
+     "114",
+     "11.4",
+     "1140",
+     "342"
+    ],
+    "ans": 0,
+    "sol": "ΔE = 108.8 eV. λ = 1242/108.8 = 11.4 nm = 114 × 10<sup>−10</sup> m. <b>x = 114</b>.",
+    "tag": "PYQ Q112 · Given hc = 1242 eV nm",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A He<sup>+</sup> ion is in its first excited state. Its ionization energy is:",
+    "diagram": null,
+    "opts": [
+     "13.60 eV",
+     "48.36 eV",
+     "54.40 eV",
+     "6.04 eV"
+    ],
+    "ans": 0,
+    "sol": "E<sub>2</sub> = −13.6 × 4/4 = −13.6 eV. Ionisation energy = 0 − E<sub>2</sub> = <b>13.6 eV</b>.",
+    "tag": "PYQ Q205 · 9 April 2019 II",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In a hydrogen-like ion, the energy difference between the 2<sup>nd</sup> excitation energy state and ground is 108.8 eV. The atomic number of the ion is:",
+    "diagram": null,
+    "opts": [
+     "3",
+     "1",
+     "4",
+     "2"
+    ],
+    "ans": 0,
+    "sol": "2<sup>nd</sup> excited state → n = 3. 13.6Z²(1 − 1/9) = 108.8 → Z² × 12.09 = 108.8 → Z² = 9 → <b>Z = 3</b>.",
+    "tag": "Q42 · JEE Main 2025 7th April Morning Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Magnetic moment of the orbiting electron",
+  "mode": "class",
+  "part": "Orbiting electron as a current loop",
+  "lec": 4,
+  "c": "A5",
+  "keyIdea": "An electron going round is a tiny current loop. It has a magnetic moment and makes a magnetic field at the nucleus.",
+  "questions": [
+   {
+    "q": "An electron going round a circle of radius r with frequency f is like a current loop (see figure). The current is:",
+    "diagram": "<svg viewBox=\"0 0 300 185\" width=\"300\" height=\"185\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><circle cx=\"150\" cy=\"90\" r=\"58\" fill=\"none\" stroke=\"#334155\" stroke-width=\"1.4\" stroke-dasharray=\"5 3\"/><circle cx=\"150\" cy=\"90\" r=\"8\" fill=\"#fee2e2\" stroke=\"#dc2626\" stroke-width=\"1.5\"/><text x=\"150.0\" y=\"94.0\" font-size=\"13\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">+</text><circle cx=\"208.0\" cy=\"90.0\" r=\"5\" fill=\"#2563eb\"/><text x=\"218.0\" y=\"94.0\" font-size=\"12\" fill=\"#2563eb\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">e⁻</text><path d=\"M191 48 A 58 58 0 0 0 138 33\" stroke=\"#2563eb\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#aC)\"/><text x=\"184.8\" y=\"26.0\" font-size=\"12\" fill=\"#2563eb\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\" font-style=\"italic\">v</text><path d=\"M138 147 A 58 58 0 0 0 191 132\" stroke=\"#ea580c\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#aA)\"/><text x=\"168.0\" y=\"166.0\" font-size=\"10.5\" fill=\"#ea580c\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">current I (opposite to e⁻ motion)</text><line x1=\"150.0\" y1=\"90.0\" x2=\"92.0\" y2=\"90.0\" stroke=\"#64748b\" stroke-width=\"1\"/><text x=\"121.0\" y=\"84.0\" font-size=\"12\" fill=\"#64748b\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\" font-style=\"italic\">r</text></svg>",
+    "opts": [
+     "I = ef",
+     "I = e/f",
+     "I = e/(2πr)",
+     "I = ev"
+    ],
+    "ans": 0,
+    "sol": "Charge e passes any point f times every second → <b>I = ef = e/T = ev/(2πr)</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Magnetic moment μ = IA = (ev/2πr)(πr²) = evr/2. Writing L = mvr, this becomes:",
+    "diagram": null,
+    "opts": [
+     "μ = (e/2m)L",
+     "μ = (e/m)L",
+     "μ = (2e/m)L",
+     "μ = (m/2e)L"
+    ],
+    "ans": 0,
+    "sol": "evr/2 = (e/2m)(mvr) = <b>(e/2m)L</b>. This ratio e/2m is called the gyromagnetic ratio.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The magnetic moment of an electron (charge e) revolving in an orbit around the nucleus, with orbital angular momentum L, is given by:",
+    "diagram": null,
+    "opts": [
+     "μ = −eL/2m",
+     "μ = eL/2m",
+     "μ = −eL/m",
+     "μ = 2eL/m"
+    ],
+    "ans": 0,
+    "sol": "μ = (q/2m)L with q = −e → <b>μ = −eL/2m</b>. The minus sign: for an electron, μ points opposite to L.",
+    "tag": "PYQ Q124 · 25-Jul-2022-Shift-1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In a Bohr orbit, L = nh/2π. So |μ| = (e/2m)(nh/2π). One Bohr magneton is the value for n = 1:",
+    "diagram": null,
+    "opts": [
+     "eh/(4πm) ≈ 9.27 × 10<sup>−24</sup> A m²",
+     "eh/(2πm)",
+     "eh/(8πm)",
+     "h/(4πem)"
+    ],
+    "ans": 0,
+    "sol": "μ<sub>B</sub> = (e/2m)(h/2π) = <b>eh/4πm ≈ 9.27 × 10<sup>−24</sup> A m²</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An electron revolving in n<sup>th</sup> Bohr orbit has magnetic moment μ<sub>n</sub>. If μ<sub>n</sub> ∝ n<sup>x</sup>, the value of x is:",
+    "diagram": null,
+    "opts": [
+     "1",
+     "2",
+     "3",
+     "0"
+    ],
+    "ans": 0,
+    "sol": "μ = (e/2m)L and L = nh/2π → μ ∝ n. So <b>x = 1</b>.",
+    "tag": "Q53 · 30-Jan-2024 Shift 2",
+    "note": "",
+    "starLbl": "JEE Main 2024 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Magnetic field at the nucleus: B ∝ n⁻⁵",
+  "mode": "hw",
+  "part": "Orbiting electron as a current loop",
+  "lec": 4,
+  "c": "A5",
+  "keyIdea": "An electron going round is a tiny current loop. It has a magnetic moment and makes a magnetic field at the nucleus.",
+  "questions": [
+   {
+    "q": "Field at the centre of a circular current loop of radius r:",
+    "diagram": null,
+    "opts": [
+     "B = μ<sub>0</sub>I/(2r)",
+     "B = μ<sub>0</sub>I/(2πr)",
+     "B = μ<sub>0</sub>Ir/2",
+     "B = μ<sub>0</sub>I/(4r)"
+    ],
+    "ans": 0,
+    "sol": "<b>B = μ<sub>0</sub>I/(2r)</b> at the centre of a loop. (μ<sub>0</sub>I/2πr is for a long straight wire.)",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In a Bohr orbit of hydrogen, I ∝ f ∝ 1/n³ and r ∝ n². So the field at the nucleus B ∝ I/r ∝",
+    "diagram": null,
+    "opts": [
+     "n<sup>−5</sup>",
+     "n<sup>−1</sup>",
+     "n<sup>−3</sup>",
+     "n<sup>−2</sup>"
+    ],
+    "ans": 0,
+    "sol": "B ∝ (1/n³)/(n²) = <b>n<sup>−5</sup></b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "According to Bohr's theory, the time-averaged magnetic field at the centre (nucleus) of a hydrogen atom due to the motion of electrons in the n<sup>th</sup> orbit is proportional to:",
+    "diagram": null,
+    "opts": [
+     "n<sup>−5</sup>",
+     "n<sup>−4</sup>",
+     "n<sup>−3</sup>",
+     "n<sup>−2</sup>"
+    ],
+    "ans": 0,
+    "sol": "B = μ<sub>0</sub>I/2r with I ∝ 1/n³ and r ∝ n² → <b>B ∝ n<sup>−5</sup></b>.",
+    "tag": "PYQ Q221 · Online April 8, 2017",
+    "note": "The source PDF gives n<sup>−2</sup> as the key — it forgot that the current also changes with n. The correct answer is n<sup>−5</sup>.",
+    "starLbl": ""
+   },
+   {
+    "q": "Field at the nucleus for the electron in n = 1 compared with n = 3: B<sub>1</sub>/B<sub>3</sub> =",
+    "diagram": null,
+    "opts": [
+     "243",
+     "27",
+     "9",
+     "81"
+    ],
+    "ans": 0,
+    "sol": "B ∝ n<sup>−5</sup> → B<sub>1</sub>/B<sub>3</sub> = 3<sup>5</sup> = <b>243</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Using Bohr's model, calculate the ratio of the magnetic fields generated due to the motion of the electrons in the 2<sup>nd</sup> and 4<sup>th</sup> orbits of hydrogen atom.",
+    "diagram": null,
+    "opts": [
+     "32",
+     "16",
+     "64",
+     "8"
+    ],
+    "ans": 0,
+    "sol": "B ∝ n<sup>−5</sup> → B<sub>2</sub>/B<sub>4</sub> = (4/2)<sup>5</sup> = 2<sup>5</sup> = <b>32</b>.",
+    "tag": "Q2 · JEE Main 2026 2nd April Evening Shift",
+    "note": "",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "The hydrogen series",
+  "mode": "class",
+  "part": "Spectral series of hydrogen",
+  "lec": 4,
+  "c": "A6",
+  "keyIdea": "Each series is named by the level where the jump ends. The smallest jump gives the longest line; the jump from ∞ gives the series limit.",
+  "questions": [
+   {
+    "q": "Look at the figure. Lines that end on n = 1 form the Lyman series, on n = 2 the Balmer series, on n = 3 the Paschen series. Which series is in the visible region?",
+    "diagram": "<svg viewBox=\"0 0 360 275\" width=\"360\" height=\"275\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"70.0\" y1=\"232.0\" x2=\"300.0\" y2=\"232.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"236.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">n = 1</text><text x=\"306.0\" y=\"236.0\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">−13.6 eV</text><line x1=\"70.0\" y1=\"132.0\" x2=\"300.0\" y2=\"132.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"136.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">n = 2</text><text x=\"306.0\" y=\"136.0\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">−3.4</text><line x1=\"70.0\" y1=\"94.0\" x2=\"300.0\" y2=\"94.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"98.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">n = 3</text><text x=\"306.0\" y=\"98.0\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">−1.51</text><line x1=\"70.0\" y1=\"72.0\" x2=\"300.0\" y2=\"72.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"76.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">n = 4</text><text x=\"306.0\" y=\"76.0\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">−0.85</text><line x1=\"70.0\" y1=\"56.0\" x2=\"300.0\" y2=\"56.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"60.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">n = 5</text><line x1=\"70.0\" y1=\"30.0\" x2=\"300.0\" y2=\"30.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"34.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">n = ∞</text><text x=\"306.0\" y=\"34.0\" font-size=\"10.5\" fill=\"#64748b\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">0</text><line x1=\"95.0\" y1=\"132.0\" x2=\"95.0\" y2=\"228.0\" stroke=\"#7c3aed\" stroke-width=\"2\" marker-end=\"url(#aV)\"/><line x1=\"108.0\" y1=\"94.0\" x2=\"108.0\" y2=\"228.0\" stroke=\"#7c3aed\" stroke-width=\"2\" marker-end=\"url(#aV)\"/><line x1=\"121.0\" y1=\"72.0\" x2=\"121.0\" y2=\"228.0\" stroke=\"#7c3aed\" stroke-width=\"2\" marker-end=\"url(#aV)\"/><line x1=\"134.0\" y1=\"30.0\" x2=\"134.0\" y2=\"228.0\" stroke=\"#7c3aed\" stroke-width=\"2\" marker-end=\"url(#aV)\"/><line x1=\"175.0\" y1=\"94.0\" x2=\"175.0\" y2=\"128.0\" stroke=\"#16a34a\" stroke-width=\"2\" marker-end=\"url(#aG)\"/><line x1=\"188.0\" y1=\"72.0\" x2=\"188.0\" y2=\"128.0\" stroke=\"#16a34a\" stroke-width=\"2\" marker-end=\"url(#aG)\"/><line x1=\"201.0\" y1=\"56.0\" x2=\"201.0\" y2=\"128.0\" stroke=\"#16a34a\" stroke-width=\"2\" marker-end=\"url(#aG)\"/><line x1=\"214.0\" y1=\"30.0\" x2=\"214.0\" y2=\"128.0\" stroke=\"#16a34a\" stroke-width=\"2\" marker-end=\"url(#aG)\"/><line x1=\"250.0\" y1=\"72.0\" x2=\"250.0\" y2=\"90.0\" stroke=\"#dc2626\" stroke-width=\"2\" marker-end=\"url(#aH)\"/><line x1=\"263.0\" y1=\"56.0\" x2=\"263.0\" y2=\"90.0\" stroke=\"#dc2626\" stroke-width=\"2\" marker-end=\"url(#aH)\"/><line x1=\"276.0\" y1=\"30.0\" x2=\"276.0\" y2=\"90.0\" stroke=\"#dc2626\" stroke-width=\"2\" marker-end=\"url(#aH)\"/><text x=\"114.0\" y=\"256.0\" font-size=\"11\" fill=\"#7c3aed\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">Lyman (UV)</text><text x=\"194.0\" y=\"150.0\" font-size=\"11\" fill=\"#16a34a\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">Balmer (visible)</text><text x=\"263.0\" y=\"112.0\" font-size=\"11\" fill=\"#dc2626\" text-anchor=\"middle\" font-family=\"DM Sans,sans-serif\">Paschen (IR)</text></svg>",
+    "opts": [
+     "Balmer",
+     "Lyman",
+     "Paschen",
+     "Brackett"
+    ],
+    "ans": 0,
+    "sol": "Lyman (→1): ultraviolet. <b>Balmer (→2): visible</b> (some lines). Paschen (→3), Brackett (→4), Pfund (→5): infrared.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Rydberg formula: 1/λ = RZ²(1/n<sub>f</sub>² − 1/n<sub>i</sub>²). In a series, the <b>longest</b> wavelength line comes from n<sub>i</sub> = n<sub>f</sub> + 1 and the <b>shortest</b> (series limit) from n<sub>i</sub> =",
+    "diagram": null,
+    "opts": [
+     "∞",
+     "n<sub>f</sub> + 2",
+     "2n<sub>f</sub>",
+     "n<sub>f</sub> − 1"
+    ],
+    "ans": 0,
+    "sol": "Smallest energy jump → longest λ (n<sub>f</sub> + 1 → n<sub>f</sub>). Biggest jump → shortest λ (<b>∞ → n<sub>f</sub></b>), λ<sub>min</sub> = n<sub>f</sub>²/R for hydrogen.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The atomic hydrogen emits a line spectrum consisting of various series. Which series of the hydrogen spectrum lies in the visible region?",
+    "diagram": null,
+    "opts": [
+     "Balmer series",
+     "Brackett series",
+     "Paschen series",
+     "Lyman series"
+    ],
+    "ans": 0,
+    "sol": "<b>Balmer</b> — Hα 656 nm (red), Hβ 486 nm, Hγ 434 nm, Hδ 410 nm.",
+    "tag": "PYQ Q149 · 17 Mar 2021 Shift 2",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "According to the Bohr atom model, in which of the following transitions will the frequency be maximum?",
+    "diagram": null,
+    "opts": [
+     "n = 2 to n = 1",
+     "n = 4 to n = 3",
+     "n = 5 to n = 4",
+     "n = 3 to n = 2"
+    ],
+    "ans": 0,
+    "sol": "Compare (1/n<sub>f</sub>² − 1/n<sub>i</sub>²): 2→1: 0.75; 3→2: 0.139; 4→3: 0.049; 5→4: 0.023. Largest → <b>2 → 1</b>.",
+    "tag": "PYQ Q144 · 24 Feb 2021 Shift 2",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In hydrogen atom spectrum (R → Rydberg's constant)<br>A. the maximum wavelength of the radiation of Lyman series is 4/(3R)<br>B. the Balmer series lies in the visible region of the spectrum<br>C. the minimum wavelength of the radiation of Paschen series is 9/R<br>D. the minimum wavelength of Lyman series is 5/(4R)<br>Choose the correct answer:",
+    "diagram": null,
+    "opts": [
+     "A, B and C only",
+     "A, B only",
+     "B, D only",
+     "A, B and D only"
+    ],
+    "ans": 0,
+    "sol": "A ✔ 2→1: 1/λ = R(1 − 1/4) = 3R/4 → λ<sub>max</sub> = 4/(3R).<br>B ✔<br>C ✔ ∞→3: λ<sub>min</sub> = 9/R.<br>D ✘ ∞→1: λ<sub>min</sub> = 1/R, not 5/(4R).<br>Answer <b>A, B and C only</b>.",
+    "tag": "Q9 · JEE Main 2026 23rd January Morning Shift",
+    "note": "",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Longest lines of Lyman and Balmer",
+  "mode": "hw",
+  "part": "Spectral series of hydrogen",
+  "lec": 4,
+  "c": "A6",
+  "keyIdea": "Each series is named by the level where the jump ends. The smallest jump gives the longest line; the jump from ∞ gives the series limit.",
+  "questions": [
+   {
+    "q": "The longest wavelength of the Lyman series (2 → 1) is:",
+    "diagram": null,
+    "opts": [
+     "4/(3R)",
+     "3/(4R)",
+     "1/R",
+     "36/(5R)"
+    ],
+    "ans": 0,
+    "sol": "1/λ = R(1 − 1/4) = 3R/4 → <b>λ = 4/(3R)</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The longest wavelength of the Balmer series (3 → 2) is:",
+    "diagram": null,
+    "opts": [
+     "36/(5R)",
+     "5/(36R)",
+     "4/R",
+     "9/(5R)"
+    ],
+    "ans": 0,
+    "sol": "1/λ = R(1/4 − 1/9) = 5R/36 → <b>λ = 36/(5R)</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The wavelength of the photon emitted by a hydrogen atom when an electron makes a transition from n = 2 to n = 1 is:",
+    "diagram": null,
+    "opts": [
+     "121.8 nm",
+     "194.8 nm",
+     "490.7 nm",
+     "913.3 nm"
+    ],
+    "ans": 0,
+    "sol": "λ = 4/(3R) = 4/(3 × 1.097 × 10<sup>7</sup>) m ≈ <b>121.8 nm</b> (often written 1216 Å).",
+    "tag": "PYQ Q143 · 25 Feb 2021 Shift 2",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The transition from the state n = 4 to n = 3 in a hydrogen-like atom results in ultraviolet radiation. Infrared radiation will be obtained in the transition:",
+    "diagram": null,
+    "opts": [
+     "5 → 4",
+     "3 → 2",
+     "4 → 2",
+     "2 → 1"
+    ],
+    "ans": 0,
+    "sol": "Infrared has less energy than the 4 → 3 line. Of the options, only <b>5 → 4</b> has a smaller (1/n<sub>f</sub>² − 1/n<sub>i</sub>²) than 4 → 3.",
+    "tag": "PYQ Q265 · 2009",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "For a hydrogen atom, the ratio of the largest wavelength of Lyman series to that of the Balmer series is:",
+    "diagram": null,
+    "opts": [
+     "5 : 27",
+     "27 : 5",
+     "3 : 4",
+     "5 : 36"
+    ],
+    "ans": 0,
+    "sol": "λ<sub>L</sub> = 4/(3R), λ<sub>B</sub> = 36/(5R).<br>Ratio = (4/3)/(36/5) = 20/108 = <b>5 : 27</b>.",
+    "tag": "Q41 · JEE Main 2025 7th April Morning Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Paschen and other series",
+  "mode": "hw",
+  "part": "Spectral series of hydrogen",
+  "lec": 4,
+  "c": "A6",
+  "keyIdea": "Each series is named by the level where the jump ends. The smallest jump gives the longest line; the jump from ∞ gives the series limit.",
+  "questions": [
+   {
+    "q": "The Paschen series has n<sub>f</sub> =",
+    "diagram": null,
+    "opts": [
+     "3",
+     "1",
+     "2",
+     "4"
+    ],
+    "ans": 0,
+    "sol": "Lyman 1, Balmer 2, <b>Paschen 3</b>, Brackett 4, Pfund 5.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Series limit of the Lyman series has frequency ν<sub>L</sub> ∝ 1/1². The series limit of the series with n<sub>f</sub> = n has frequency:",
+    "diagram": null,
+    "opts": [
+     "ν<sub>L</sub>/n²",
+     "ν<sub>L</sub>/n",
+     "n²ν<sub>L</sub>",
+     "ν<sub>L</sub>"
+    ],
+    "ans": 0,
+    "sol": "Limit: ∞ → n<sub>f</sub>, energy ∝ 1/n<sub>f</sub>². So <b>ν = ν<sub>L</sub>/n²</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "If the series limit frequency of the Lyman series is ν<sub>L</sub>, then the series limit frequency of the Pfund series is:",
+    "diagram": null,
+    "opts": [
+     "ν<sub>L</sub>/25",
+     "25ν<sub>L</sub>",
+     "16ν<sub>L</sub>",
+     "ν<sub>L</sub>/16"
+    ],
+    "ans": 0,
+    "sol": "Pfund: n<sub>f</sub> = 5 → ν = ν<sub>L</sub>/25. Answer <b>ν<sub>L</sub>/25</b>.",
+    "tag": "PYQ Q212 · 2018",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "If λ<sub>1</sub> and λ<sub>2</sub> are the wavelengths of the third member of Lyman and first member of the Paschen series respectively, then λ<sub>1</sub> : λ<sub>2</sub> is:",
+    "diagram": null,
+    "opts": [
+     "7 : 135",
+     "1 : 9",
+     "7 : 108",
+     "1 : 3"
+    ],
+    "ans": 0,
+    "sol": "Third Lyman: 4 → 1, 1/λ<sub>1</sub> = 15R/16. First Paschen: 4 → 3, 1/λ<sub>2</sub> = 7R/144.<br>λ<sub>1</sub>/λ<sub>2</sub> = (7/144)/(15/16) = 112/2160 = <b>7 : 135</b>.",
+    "tag": "PYQ Q142 · 26 Feb 2021 Shift 1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "If Rydberg's constant is R, the longest wavelength of radiation in Paschen series will be α/(7R), where α = ____",
+    "diagram": null,
+    "opts": [
+     "144",
+     "7",
+     "36",
+     "16"
+    ],
+    "ans": 0,
+    "sol": "Longest Paschen line: 4 → 3. 1/λ = R(1/9 − 1/16) = 7R/144 → λ = 144/(7R). <b>α = 144</b>.",
+    "tag": "Q46 · 27-Jan-2024 Shift 2",
+    "note": "",
+    "starLbl": "JEE Main 2024 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Using the Lyman limit as a unit",
+  "mode": "class",
+  "part": "Spectral series of hydrogen",
+  "lec": 4,
+  "c": "A6",
+  "keyIdea": "Each series is named by the level where the jump ends. The smallest jump gives the longest line; the jump from ∞ gives the series limit.",
+  "questions": [
+   {
+    "q": "The shortest wavelength of the Lyman series is 91 nm. Since this is ∞ → 1, 1/R =",
+    "diagram": null,
+    "opts": [
+     "91 nm",
+     "182 nm",
+     "45.5 nm",
+     "364 nm"
+    ],
+    "ans": 0,
+    "sol": "λ<sub>min</sub>(Lyman) = 1²/R = 1/R → <b>1/R = 91 nm</b>. Now every hydrogen line can be written in units of 91 nm.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "With 1/R = 91 nm, the longest Balmer line (3 → 2) is:",
+    "diagram": null,
+    "opts": [
+     "655 nm",
+     "364 nm",
+     "486 nm",
+     "122 nm"
+    ],
+    "ans": 0,
+    "sol": "λ = (36/5)(1/R) = 7.2 × 91 = <b>655 nm</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "If 917 Å is the lowest wavelength of the Lyman series, then the lowest wavelength of the Balmer series will be ____ Å.",
+    "diagram": null,
+    "opts": [
+     "3668",
+     "2751",
+     "1222",
+     "6600"
+    ],
+    "ans": 0,
+    "sol": "Lowest λ = n<sub>f</sub>²/R. Balmer: 4/R = 4 × 917 = <b>3668 Å</b>.",
+    "tag": "PYQ Q90 · 10-Apr-2023 shift 2",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In the line spectrum of hydrogen, the difference between the largest and the shortest wavelengths of the Lyman series is 304 Å. The corresponding difference for the Paschen series in Å is:",
+    "diagram": null,
+    "opts": [
+     "10553",
+     "3648",
+     "912",
+     "2736"
+    ],
+    "ans": 0,
+    "sol": "Lyman: 4/(3R) − 1/R = 1/(3R) = 304 Å → 1/R = 912 Å.<br>Paschen: 144/(7R) − 9/R = (81/7)(1/R) = 11.57 × 912 ≈ <b>10553 Å</b>.",
+    "tag": "PYQ Q184 · NA Sep. 04, 2020 (I)",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The smallest wavelength of Lyman series is 91 nm. The difference between the largest wavelengths of Paschen and Balmer series is nearly ____ nm.",
+    "diagram": null,
+    "opts": [
+     "1217",
+     "1784",
+     "1875",
+     "1550"
+    ],
+    "ans": 0,
+    "sol": "1/R = 91 nm.<br>Largest Paschen (4 → 3): 144/7 × 91 = 1872 nm.<br>Largest Balmer (3 → 2): 36/5 × 91 = 655 nm.<br>Difference ≈ <b>1217 nm</b>.",
+    "tag": "Q8 · JEE Main 2026 22nd January Evening Shift",
+    "note": "",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "From radii to wavelength",
+  "mode": "hw",
+  "part": "Spectral series of hydrogen",
+  "lec": 4,
+  "c": "A6",
+  "keyIdea": "Each series is named by the level where the jump ends. The smallest jump gives the longest line; the jump from ∞ gives the series limit.",
+  "questions": [
+   {
+    "q": "In hydrogen, r = n²a<sub>0</sub>. An orbit of radius 16a<sub>0</sub> has n =",
+    "diagram": null,
+    "opts": [
+     "4",
+     "16",
+     "8",
+     "2"
+    ],
+    "ans": 0,
+    "sol": "n² = 16 → <b>n = 4</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Wavelength for the 4 → 2 jump in hydrogen: 1/λ = R(1/4 − 1/16) = 3R/16, so λ = 16/(3R). With R = 1.097 × 10<sup>7</sup> m<sup>−1</sup>:",
+    "diagram": null,
+    "opts": [
+     "486 nm",
+     "656 nm",
+     "122 nm",
+     "1875 nm"
+    ],
+    "ans": 0,
+    "sol": "λ = 16/(3 × 1.097 × 10<sup>7</sup>) = 4.86 × 10<sup>−7</sup> m = <b>486 nm</b> (the blue-green Hβ line).",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The first member of the Balmer series of hydrogen has a wavelength of 6561 Å. The wavelength of the second member of the Balmer series (in nm) is:",
+    "diagram": null,
+    "opts": [
+     "486",
+     "434",
+     "410",
+     "365"
+    ],
+    "ans": 0,
+    "sol": "1/λ<sub>1</sub> = 5R/36, 1/λ<sub>2</sub> = 3R/16. λ<sub>2</sub> = λ<sub>1</sub> × (5/36)/(3/16) = 6561 × 20/27 = 4860 Å = <b>486 nm</b>.",
+    "tag": "PYQ Q180 · NA 8 Jan. 2020 II",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Taking the wavelength of the first Balmer line (n = 3 to n = 2) as 660 nm, the wavelength of the 2<sup>nd</sup> Balmer line (n = 4 to n = 2) will be:",
+    "diagram": null,
+    "opts": [
+     "488.9 nm",
+     "889.2 nm",
+     "642.7 nm",
+     "388.9 nm"
+    ],
+    "ans": 0,
+    "sol": "λ<sub>2</sub> = 660 × 20/27 = <b>488.9 nm</b>.",
+    "tag": "PYQ Q204 · 9 April 2019 I",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In the hydrogen atom, the electron makes a transition from the higher orbit (i) to a lower orbit (f). The ratio of the radii of the orbits is r<sub>i</sub> : r<sub>f</sub> = 16 : 4. The wavelength of the photon emitted is ____ nm. (Rydberg constant = 1.0973 × 10<sup>7</sup> m<sup>−1</sup>)",
+    "diagram": null,
+    "opts": [
+     "486",
+     "121",
+     "242",
+     "974"
+    ],
+    "ans": 0,
+    "sol": "Reading the radii as 16a<sub>0</sub> and 4a<sub>0</sub>: n<sub>i</sub> = 4, n<sub>f</sub> = 2.<br>1/λ = R(1/4 − 1/16) = 3R/16 → λ = 16/(3 × 1.0973 × 10<sup>7</sup>) = <b>486 nm</b>.",
+    "tag": "Q20 · JEE Main 2026 5th April Morning Shift",
+    "note": "Strictly, 16 : 4 is just 4 : 1, and the 2 → 1 jump (121 nm, also an option) fits that too. The key reads the numbers as r = 16a<sub>0</sub> and 4a<sub>0</sub>, i.e. 4 → 2.",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Photon momentum of Balmer lines",
+  "mode": "hw",
+  "part": "Spectral series of hydrogen",
+  "lec": 4,
+  "c": "A6",
+  "keyIdea": "Each series is named by the level where the jump ends. The smallest jump gives the longest line; the jump from ∞ gives the series limit.",
+  "questions": [
+   {
+    "q": "Momentum of a photon p = h/λ = E/c. For two photons, p<sub>1</sub>/p<sub>2</sub> =",
+    "diagram": null,
+    "opts": [
+     "λ<sub>2</sub>/λ<sub>1</sub>",
+     "λ<sub>1</sub>/λ<sub>2</sub>",
+     "(λ<sub>2</sub>/λ<sub>1</sub>)²",
+     "1"
+    ],
+    "ans": 0,
+    "sol": "p ∝ 1/λ → <b>p<sub>1</sub>/p<sub>2</sub> = λ<sub>2</sub>/λ<sub>1</sub></b> = E<sub>1</sub>/E<sub>2</sub>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "1st Balmer line Hα (3 → 2) and 2nd Balmer line Hβ (4 → 2) have 1/λ values:",
+    "diagram": null,
+    "opts": [
+     "5R/36 and 3R/16",
+     "3R/4 and 8R/9",
+     "5R/36 and 8R/9",
+     "7R/144 and 3R/16"
+    ],
+    "ans": 0,
+    "sol": "Hα: R(1/4 − 1/9) = <b>5R/36</b>. Hβ: R(1/4 − 1/16) = <b>3R/16</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The ratio of wavelengths of spectral lines Hα and Hβ in the Balmer series is x/20. The value of x is:",
+    "diagram": null,
+    "opts": [
+     "27",
+     "20",
+     "36",
+     "16"
+    ],
+    "ans": 0,
+    "sol": "λ<sub>α</sub>/λ<sub>β</sub> = (3/16)/(5/36) = 108/80 = 27/20. <b>x = 27</b>.",
+    "tag": "PYQ Q88 · 8-Apr-2023 shift 2",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Photon energies: Hα (3 → 2) = 1.89 eV and Hβ (4 → 2) = 2.55 eV. The momentum ratio p<sub>α</sub>/p<sub>β</sub> is about:",
+    "diagram": null,
+    "opts": [
+     "0.74",
+     "1.35",
+     "1",
+     "0.55"
+    ],
+    "ans": 0,
+    "sol": "p = E/c → p<sub>α</sub>/p<sub>β</sub> = 1.89/2.55 ≈ <b>0.74</b> (which is 20/27). The redder line has less momentum.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The ratio of momentum of the photons of the 1<sup>st</sup> and 2<sup>nd</sup> line of Balmer series of hydrogen atoms is α/β. The possible values of α and β are:",
+    "diagram": null,
+    "opts": [
+     "20 and 27",
+     "27 and 20",
+     "3 and 16",
+     "5 and 36"
+    ],
+    "ans": 0,
+    "sol": "p ∝ 1/λ. p<sub>1</sub>/p<sub>2</sub> = (5R/36)/(3R/16) = 80/108 = 20/27.<br><b>α = 20, β = 27</b>. (The wavelength ratio is 27/20 — the other way round.)",
+    "tag": "Q22 · JEE Main 2026 6th April Morning Shift",
+    "note": "",
+    "starLbl": "JEE Main 2026 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Second line of a series",
+  "mode": "hw",
+  "part": "Spectral series of hydrogen",
+  "lec": 4,
+  "c": "A6",
+  "keyIdea": "Each series is named by the level where the jump ends. The smallest jump gives the longest line; the jump from ∞ gives the series limit.",
+  "questions": [
+   {
+    "q": "The second member of the Lyman series is the jump:",
+    "diagram": null,
+    "opts": [
+     "3 → 1",
+     "2 → 1",
+     "3 → 2",
+     "∞ → 1"
+    ],
+    "ans": 0,
+    "sol": "First member 2 → 1, <b>second member 3 → 1</b>, third member 4 → 1.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "For hydrogen, 1/λ for 3 → 1 is:",
+    "diagram": null,
+    "opts": [
+     "8R/9",
+     "3R/4",
+     "5R/36",
+     "R"
+    ],
+    "ans": 0,
+    "sol": "R(1 − 1/9) = <b>8R/9</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In a hydrogen-like atom, when an electron jumps from the M-shell to the L-shell, the wavelength emitted is λ. If an electron jumps from the N-shell to the L-shell, the wavelength emitted will be:",
+    "diagram": null,
+    "opts": [
+     "20λ/27",
+     "27λ/20",
+     "16λ/25",
+     "25λ/16"
+    ],
+    "ans": 0,
+    "sol": "K, L, M, N = n 1, 2, 3, 4. M → L: 5/36; N → L: 3/16.<br>λ′/λ = (5/36)/(3/16) = <b>20/27</b>.",
+    "tag": "PYQ Q194 · 11 Jan 2019 II",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The wavelength emitted is λ<sub>0</sub> when an electron jumps from the second excited state to the first excited state of hydrogen. If the electron jumps from the third excited state to the second orbit, the wavelength will be (20/x)λ<sub>0</sub>. The value of x is:",
+    "diagram": null,
+    "opts": [
+     "27",
+     "20",
+     "36",
+     "5"
+    ],
+    "ans": 0,
+    "sol": "Second excited → first excited: 3 → 2 (5/36). Third excited → second orbit: 4 → 2 (3/16).<br>λ/λ<sub>0</sub> = (5/36)/(3/16) = 20/27 → <b>x = 27</b>.",
+    "tag": "PYQ Q81 · 25-Jan-2023 Shift 1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "If the wavelength of the first member of Lyman series of hydrogen is λ, the wavelength of the second member will be:",
+    "diagram": null,
+    "opts": [
+     "27λ/32",
+     "32λ/27",
+     "27λ/5",
+     "5λ/27"
+    ],
+    "ans": 0,
+    "sol": "First member 2 → 1: 1/λ = 3R/4. Second member 3 → 1: 1/λ′ = 8R/9.<br>λ′/λ = (3/4)/(8/9) = 27/32 → <b>λ′ = 27λ/32</b>.",
+    "tag": "Q43 (Dual Nature PYQ list) · 31-Jan-2024 Shift 1",
+    "note": "",
+    "starLbl": "JEE Main 2024 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Hydrogen-like ions: ν ∝ Z²",
+  "mode": "class",
+  "part": "Spectral series of hydrogen",
+  "lec": 4,
+  "c": "A6",
+  "keyIdea": "Each series is named by the level where the jump ends. The smallest jump gives the longest line; the jump from ∞ gives the series limit.",
+  "questions": [
+   {
+    "q": "For any hydrogen-like ion, ν = RcZ²(1/n<sub>f</sub>² − 1/n<sub>i</sub>²). For the <b>same ion</b>, the ratio of two line frequencies depends only on:",
+    "diagram": null,
+    "opts": [
+     "the bracket (1/n<sub>f</sub>² − 1/n<sub>i</sub>²)",
+     "Z",
+     "R",
+     "c"
+    ],
+    "ans": 0,
+    "sol": "R, c and Z are the same for both lines, so they cancel. <b>Only the brackets matter</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Brackets: 2 → 1 gives 3/4 and 3 → 1 gives 8/9. So ν<sub>31</sub>/ν<sub>21</sub> =",
+    "diagram": null,
+    "opts": [
+     "32/27",
+     "27/32",
+     "9/8",
+     "4/3"
+    ],
+    "ans": 0,
+    "sol": "(8/9)/(3/4) = <b>32/27</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A hydrogen-like ion emits radiation of frequency 2.92 × 10<sup>15</sup> Hz when it makes a transition from n = 3 to n = 1. The frequency of the radiation emitted in the transition from n = 2 to n = 1 will be:",
+    "diagram": null,
+    "opts": [
+     "2.46 × 10<sup>15</sup> Hz",
+     "0.44 × 10<sup>15</sup> Hz",
+     "6.57 × 10<sup>15</sup> Hz",
+     "4.38 × 10<sup>15</sup> Hz"
+    ],
+    "ans": 0,
+    "sol": "ν<sub>21</sub> = 2.92 × 10<sup>15</sup> × 27/32 = <b>2.46 × 10<sup>15</sup> Hz</b>.",
+    "tag": "PYQ Q174 · 26 Aug 2021 Shift 1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "H, D, He<sup>+</sup> and Li<sup>++</sup> all have one electron. For a transition from n = 2 to n = 1 the wavelengths are λ<sub>1</sub>, λ<sub>2</sub>, λ<sub>3</sub>, λ<sub>4</sub> respectively. Then approximately:",
+    "diagram": null,
+    "opts": [
+     "λ<sub>1</sub> = λ<sub>2</sub> = 4λ<sub>3</sub> = 9λ<sub>4</sub>",
+     "4λ<sub>1</sub> = 2λ<sub>2</sub> = 2λ<sub>3</sub> = λ<sub>4</sub>",
+     "λ<sub>1</sub> = 2λ<sub>2</sub> = 2λ<sub>3</sub> = λ<sub>4</sub>",
+     "λ<sub>1</sub> = 2λ<sub>2</sub> = 3λ<sub>3</sub> = 4λ<sub>4</sub>"
+    ],
+    "ans": 0,
+    "sol": "1/λ ∝ Z² → λZ² = constant. Z = 1, 1, 2, 3 → <b>λ<sub>1</sub> = λ<sub>2</sub> = 4λ<sub>3</sub> = 9λ<sub>4</sub></b>. (Deuterium has the same Z as hydrogen.)",
+    "tag": "PYQ Q232 · 2014",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A particular hydrogen-like ion emits radiation of frequency 3 × 10<sup>15</sup> Hz when it makes a transition from n = 2 to n = 1. The frequency of radiation emitted in transition from n = 3 to n = 1 is (x/9) × 10<sup>15</sup> Hz, where x = ____",
+    "diagram": null,
+    "opts": [
+     "32",
+     "27",
+     "24",
+     "8"
+    ],
+    "ans": 0,
+    "sol": "ν<sub>31</sub> = ν<sub>21</sub> × 32/27 = 3 × 10<sup>15</sup> × 32/27 = (32/9) × 10<sup>15</sup> Hz. <b>x = 32</b>.",
+    "tag": "Q62 · 1-Feb-2024 Shift 2",
+    "note": "",
+    "starLbl": "JEE Main 2024 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Adding energy jumps",
+  "mode": "class",
+  "part": "Transitions · number of lines · excitation",
+  "lec": 4,
+  "c": "A7",
+  "keyIdea": "Photon energy = difference of two levels. A sample excited to level n gives n(n − 1)/2 lines.",
+  "questions": [
+   {
+    "q": "Look at the figure: three levels A, B, C. The photon energies add: E<sub>AC</sub> = E<sub>AB</sub> + E<sub>BC</sub>. In terms of wavelengths:",
+    "diagram": "<svg viewBox=\"0 0 330 200\" width=\"330\" height=\"200\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"70.0\" y1=\"40.0\" x2=\"300.0\" y2=\"40.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"44.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">A</text><line x1=\"70.0\" y1=\"110.0\" x2=\"300.0\" y2=\"110.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"114.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">B</text><line x1=\"70.0\" y1=\"180.0\" x2=\"300.0\" y2=\"180.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"184.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">C</text><line x1=\"120.0\" y1=\"40.0\" x2=\"120.0\" y2=\"176.0\" stroke=\"#2563eb\" stroke-width=\"2\" marker-end=\"url(#aC)\"/><text x=\"126.0\" y=\"150.0\" font-size=\"11.5\" fill=\"#2563eb\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">λ<tspan font-size=\"9\" dy=\"3\">AC</tspan></text><line x1=\"200.0\" y1=\"40.0\" x2=\"200.0\" y2=\"106.0\" stroke=\"#16a34a\" stroke-width=\"2\" marker-end=\"url(#aG)\"/><text x=\"206.0\" y=\"79.0\" font-size=\"11.5\" fill=\"#16a34a\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">λ<tspan font-size=\"9\" dy=\"3\">AB</tspan></text><line x1=\"250.0\" y1=\"110.0\" x2=\"250.0\" y2=\"176.0\" stroke=\"#dc2626\" stroke-width=\"2\" marker-end=\"url(#aH)\"/><text x=\"256.0\" y=\"149.0\" font-size=\"11.5\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">λ<tspan font-size=\"9\" dy=\"3\">BC</tspan></text></svg>",
+    "opts": [
+     "1/λ<sub>AC</sub> = 1/λ<sub>AB</sub> + 1/λ<sub>BC</sub>",
+     "λ<sub>AC</sub> = λ<sub>AB</sub> + λ<sub>BC</sub>",
+     "λ<sub>AC</sub> = λ<sub>AB</sub>λ<sub>BC</sub>",
+     "1/λ<sub>AC</sub> = 1/λ<sub>AB</sub> − 1/λ<sub>BC</sub>"
+    ],
+    "ans": 0,
+    "sol": "E = hc/λ, so energies add as <b>1/λ</b>. Wavelengths never simply add.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A → B gives 300 nm and B → C gives 600 nm. A → C gives:",
+    "diagram": null,
+    "opts": [
+     "200 nm",
+     "900 nm",
+     "450 nm",
+     "300 nm"
+    ],
+    "ans": 0,
+    "sol": "1/λ = 1/300 + 1/600 = 3/600 → <b>λ = 200 nm</b>. The big jump gives the shortest wavelength.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Some energy levels of a molecule are shown in the figure. The ratio of the wavelengths r = λ<sub>1</sub>/λ<sub>2</sub> is:",
+    "diagram": "<svg viewBox=\"0 0 330 200\" width=\"330\" height=\"200\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"80.0\" y1=\"40.0\" x2=\"300.0\" y2=\"40.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"72.0\" y=\"44.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">−E</text><line x1=\"80.0\" y1=\"85.0\" x2=\"300.0\" y2=\"85.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"72.0\" y=\"89.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">−4E/3</text><line x1=\"80.0\" y1=\"175.0\" x2=\"300.0\" y2=\"175.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"72.0\" y=\"179.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">−2E</text><line x1=\"140.0\" y1=\"40.0\" x2=\"140.0\" y2=\"171.0\" stroke=\"#2563eb\" stroke-width=\"2\" marker-end=\"url(#aC)\"/><text x=\"146.0\" y=\"111.5\" font-size=\"11.5\" fill=\"#2563eb\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">λ<tspan font-size=\"9\" dy=\"3\">1</tspan></text><line x1=\"220.0\" y1=\"40.0\" x2=\"220.0\" y2=\"81.0\" stroke=\"#dc2626\" stroke-width=\"2\" marker-end=\"url(#aH)\"/><text x=\"226.0\" y=\"66.5\" font-size=\"11.5\" fill=\"#dc2626\" text-anchor=\"start\" font-family=\"DM Sans,sans-serif\">λ<tspan font-size=\"9\" dy=\"3\">2</tspan></text></svg>",
+    "opts": [
+     "1/3",
+     "3/4",
+     "4/3",
+     "2/3"
+    ],
+    "ans": 0,
+    "sol": "λ<sub>1</sub>: −E → −2E, ΔE = E. λ<sub>2</sub>: −E → −4E/3, ΔE = E/3.<br>λ ∝ 1/ΔE → λ<sub>1</sub>/λ<sub>2</sub> = (E/3)/E = <b>1/3</b>.",
+    "tag": "PYQ Q219 · 2017",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An atom absorbs a photon of wavelength 500 nm and emits another photon of wavelength 600 nm. The net energy absorbed by the atom is n × 10<sup>−4</sup> eV. The value of n is: (h = 6.6 × 10<sup>−34</sup> J s, c = 3 × 10<sup>8</sup> m/s)",
+    "diagram": null,
+    "opts": [
+     "4125",
+     "2062",
+     "8250",
+     "1031"
+    ],
+    "ans": 0,
+    "sol": "E = hc(1/500 − 1/600) nm<sup>−1</sup> = 1.98 × 10<sup>−25</sup> × 3.33 × 10<sup>5</sup> = 6.6 × 10<sup>−20</sup> J = 0.4125 eV = <b>4125 × 10<sup>−4</sup> eV</b>.",
+    "tag": "PYQ Q95 · 13-Apr-2023 shift 2",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "During the transition of electron from state A to state C of a Bohr atom, the wavelength of emitted radiation is 2000 Å and it becomes 6000 Å when the electron jumps from state B to state C. Then the wavelength of the radiation emitted during the transition of electrons from state A to state B is:",
+    "diagram": null,
+    "opts": [
+     "3000 Å",
+     "4000 Å",
+     "6000 Å",
+     "2000 Å"
+    ],
+    "ans": 0,
+    "sol": "E<sub>AC</sub> = E<sub>AB</sub> + E<sub>BC</sub> → 1/λ<sub>AB</sub> = 1/2000 − 1/6000 = 2/6000.<br><b>λ<sub>AB</sub> = 3000 Å</b>.",
+    "tag": "Q28 · JEE Main 2025 24th January Morning Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Which level did it jump to?",
+  "mode": "hw",
+  "part": "Transitions · number of lines · excitation",
+  "lec": 4,
+  "c": "A7",
+  "keyIdea": "Photon energy = difference of two levels. A sample excited to level n gives n(n − 1)/2 lines.",
+  "questions": [
+   {
+    "q": "'Fourth excited state' of hydrogen means n =",
+    "diagram": null,
+    "opts": [
+     "5",
+     "4",
+     "3",
+     "6"
+    ],
+    "ans": 0,
+    "sol": "k<sup>th</sup> excited → n = k + 1. Fourth excited → <b>n = 5</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Energy of hydrogen in n = 5 is:",
+    "diagram": null,
+    "opts": [
+     "−0.544 eV",
+     "−0.85 eV",
+     "−2.72 eV",
+     "−0.38 eV"
+    ],
+    "ans": 0,
+    "sol": "−13.6/25 = <b>−0.544 eV</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An excited He<sup>+</sup> ion emits two photons in succession, of wavelengths 108.5 nm and 30.4 nm, in making a transition to the ground state. The quantum number n of its initial excited state is: (E in eV = 1240/λ in nm)",
+    "diagram": null,
+    "opts": [
+     "n = 5",
+     "n = 4",
+     "n = 7",
+     "n = 6"
+    ],
+    "ans": 0,
+    "sol": "Total energy = 1240/108.5 + 1240/30.4 = 11.43 + 40.79 = 52.2 eV.<br>54.4(1 − 1/n²) = 52.2 → 1/n² = 0.04 → <b>n = 5</b>.",
+    "tag": "PYQ Q200 · 12 April 2019 II",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An electron and a proton are far apart. The electron approaches the proton with energy 3 eV. The proton captures it and forms a hydrogen atom in the second excited state. The photon emitted falls on a metal of threshold wavelength 4000 Å. The maximum KE of the photoelectron is:",
+    "diagram": null,
+    "opts": [
+     "1.41 eV",
+     "7.61 eV",
+     "3.3 eV",
+     "No photoelectron would be emitted"
+    ],
+    "ans": 0,
+    "sol": "Second excited → n = 3, E = −1.51 eV. Photon = 3 − (−1.51) = 4.51 eV.<br>φ = 12400/4000 = 3.1 eV. K<sub>max</sub> = 4.51 − 3.1 = <b>1.41 eV</b>.",
+    "tag": "PYQ Q161 · 27 Jul 2021 Shift 2",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An electron in the hydrogen atom initially in the fourth excited state makes a transition to n<sup>th</sup> energy state by emitting a photon of energy 2.86 eV. The integer value of n will be ____",
+    "diagram": null,
+    "opts": [
+     "2",
+     "3",
+     "1",
+     "4"
+    ],
+    "ans": 0,
+    "sol": "Fourth excited state → n = 5, E = −0.544 eV.<br>E<sub>n</sub> = −0.544 − 2.86 = −3.40 eV = −13.6/4 → <b>n = 2</b>.",
+    "tag": "Q25 · JEE Main 2025 3rd April Evening Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Counting spectral lines",
+  "mode": "class",
+  "part": "Transitions · number of lines · excitation",
+  "lec": 4,
+  "c": "A7",
+  "keyIdea": "Photon energy = difference of two levels. A sample excited to level n gives n(n − 1)/2 lines.",
+  "questions": [
+   {
+    "q": "Atoms in a <b>sample</b> are excited to level n. Taking every possible pair of levels, the number of different lines emitted is:",
+    "diagram": "<svg viewBox=\"0 0 330 210\" width=\"330\" height=\"210\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"aH\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#dc2626\"/></marker><marker id=\"aC\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#2563eb\"/></marker><marker id=\"aA\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#ea580c\"/></marker><marker id=\"aI\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#334155\"/></marker><marker id=\"aV\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#7c3aed\"/></marker><marker id=\"aG\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#16a34a\"/></marker><marker id=\"aT\" markerWidth=\"9\" markerHeight=\"7\" refX=\"7.5\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0,9 3.5,0 7\" fill=\"#0f766e\"/></marker></defs><line x1=\"70.0\" y1=\"190.0\" x2=\"300.0\" y2=\"190.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"194.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">n = 1</text><line x1=\"70.0\" y1=\"110.0\" x2=\"300.0\" y2=\"110.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"114.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">n = 2</text><line x1=\"70.0\" y1=\"75.0\" x2=\"300.0\" y2=\"75.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"79.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">n = 3</text><line x1=\"70.0\" y1=\"52.0\" x2=\"300.0\" y2=\"52.0\" stroke=\"#334155\" stroke-width=\"1.6\"/><text x=\"62.0\" y=\"56.0\" font-size=\"11\" fill=\"#334155\" text-anchor=\"end\" font-family=\"DM Sans,sans-serif\">n = 4</text><line x1=\"100.0\" y1=\"52.0\" x2=\"100.0\" y2=\"71.0\" stroke=\"#2563eb\" stroke-width=\"2\" marker-end=\"url(#aC)\"/><line x1=\"132.0\" y1=\"52.0\" x2=\"132.0\" y2=\"106.0\" stroke=\"#2563eb\" stroke-width=\"2\" marker-end=\"url(#aC)\"/><line x1=\"164.0\" y1=\"52.0\" x2=\"164.0\" y2=\"186.0\" stroke=\"#2563eb\" stroke-width=\"2\" marker-end=\"url(#aC)\"/><line x1=\"196.0\" y1=\"75.0\" x2=\"196.0\" y2=\"106.0\" stroke=\"#2563eb\" stroke-width=\"2\" marker-end=\"url(#aC)\"/><line x1=\"228.0\" y1=\"75.0\" x2=\"228.0\" y2=\"186.0\" stroke=\"#2563eb\" stroke-width=\"2\" marker-end=\"url(#aC)\"/><line x1=\"260.0\" y1=\"110.0\" x2=\"260.0\" y2=\"186.0\" stroke=\"#2563eb\" stroke-width=\"2\" marker-end=\"url(#aC)\"/></svg>",
+    "opts": [
+     "n(n − 1)/2",
+     "n − 1",
+     "n²",
+     "2n"
+    ],
+    "ans": 0,
+    "sol": "Choose any 2 levels from n: <b>ⁿC₂ = n(n − 1)/2</b>. The figure shows all 6 lines from n = 4.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A <b>single</b> hydrogen atom in n = 4 can give at most how many photons on its way down?",
+    "diagram": null,
+    "opts": [
+     "3",
+     "6",
+     "4",
+     "1"
+    ],
+    "ans": 0,
+    "sol": "One atom takes one path: 4 → 3 → 2 → 1 gives <b>3</b> photons at most. A sample of many atoms gives all 6 lines.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Hydrogen atom is excited from ground state to another state with principal quantum number 4. Then the number of spectral lines in the emission spectra will be:",
+    "diagram": null,
+    "opts": [
+     "6",
+     "2",
+     "3",
+     "5"
+    ],
+    "ans": 0,
+    "sol": "4 × 3/2 = <b>6</b>.",
+    "tag": "PYQ Q246 · 2012",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "x different wavelengths may be observed in the spectrum from a hydrogen sample if the atoms are excited to states with principal quantum number n = 6. The value of x is:",
+    "diagram": null,
+    "opts": [
+     "15",
+     "6",
+     "21",
+     "30"
+    ],
+    "ans": 0,
+    "sol": "6 × 5/2 = <b>15</b>.",
+    "tag": "PYQ Q172 · 27 Aug 2021 Shift 2",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The number of spectral lines emitted by atomic hydrogen that is in the 4<sup>th</sup> energy level, is",
+    "diagram": null,
+    "opts": [
+     "6",
+     "3",
+     "1",
+     "0"
+    ],
+    "ans": 0,
+    "sol": "'Atomic hydrogen' = a sample of many atoms. From n = 4: 4 × 3/2 = <b>6</b>.",
+    "tag": "Q32 · JEE Main 2025 29th January Evening Shift",
+    "note": "",
+    "starLbl": "JEE Main 2025 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "From energy to number of lines",
+  "mode": "hw",
+  "part": "Transitions · number of lines · excitation",
+  "lec": 4,
+  "c": "A7",
+  "keyIdea": "Photon energy = difference of two levels. A sample excited to level n gives n(n − 1)/2 lines.",
+  "questions": [
+   {
+    "q": "An electron in hydrogen has energy −0.85 eV. It is in n =",
+    "diagram": null,
+    "opts": [
+     "4",
+     "3",
+     "2",
+     "5"
+    ],
+    "ans": 0,
+    "sol": "−13.6/n² = −0.85 → n² = 16 → <b>n = 4</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An electron in hydrogen has energy −1.51 eV. The number of lines this sample can emit is:",
+    "diagram": null,
+    "opts": [
+     "3",
+     "6",
+     "2",
+     "1"
+    ],
+    "ans": 0,
+    "sol": "−1.51 eV → n = 3 → 3 × 2/2 = <b>3</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Monochromatic light falls on hydrogen in its ground state. The atoms absorb some light and then emit radiation of six different wavelengths. The frequency of the incident light is x × 10<sup>15</sup> Hz. The value of x is: (h = 4.25 × 10<sup>−15</sup> eV s)",
+    "diagram": null,
+    "opts": [
+     "3",
+     "6",
+     "2",
+     "4"
+    ],
+    "ans": 0,
+    "sol": "6 lines → n = 4. Energy absorbed = 13.6(1 − 1/16) = 12.75 eV.<br>f = 12.75/4.25 × 10<sup>−15</sup> = 3 × 10<sup>15</sup> Hz. <b>x = 3</b>.",
+    "tag": "PYQ Q91 · 11-Apr-2023 shift 1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "In Li<sup>++</sup>, the electron in the first Bohr orbit is excited by radiation of wavelength λ. When the ion de-excites to the ground state in all possible ways, a total of six spectral lines are observed. The value of λ is: (h = 6.63 × 10<sup>−34</sup> J s, c = 3 × 10<sup>8</sup> m/s)",
+    "diagram": null,
+    "opts": [
+     "10.8 nm",
+     "11.4 nm",
+     "9.4 nm",
+     "12.3 nm"
+    ],
+    "ans": 0,
+    "sol": "6 lines → n = 4. ΔE = 13.6 × 9 × (1 − 1/16) = 114.75 eV.<br>λ = 1240/114.75 = <b>10.8 nm</b>.",
+    "tag": "PYQ Q203 · 10 April 2019 II",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An electron of hydrogen atom in an excited state has energy E<sub>n</sub> = −0.85 eV. The maximum number of allowed transitions to lower energy levels is ____",
+    "diagram": null,
+    "opts": [
+     "6",
+     "3",
+     "4",
+     "10"
+    ],
+    "ans": 0,
+    "sol": "−0.85 eV → n = 4. Maximum transitions = 4 × 3/2 = <b>6</b>.",
+    "tag": "Q52 · 30-Jan-2024 Shift 1",
+    "note": "",
+    "starLbl": "JEE Main 2024 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Lowest energy to see a Balmer line",
+  "mode": "class",
+  "part": "Transitions · number of lines · excitation",
+  "lec": 4,
+  "c": "A7",
+  "keyIdea": "Photon energy = difference of two levels. A sample excited to level n gives n(n − 1)/2 lines.",
+  "questions": [
+   {
+    "q": "Every Balmer line ends at n = 2. So, starting from the ground state, to emit <b>any</b> Balmer line the atom must first reach at least:",
+    "diagram": null,
+    "opts": [
+     "n = 3",
+     "n = 2",
+     "n = 4",
+     "n = ∞"
+    ],
+    "ans": 0,
+    "sol": "If the atom only reaches n = 2, it can only fall 2 → 1 (Lyman). It needs <b>n = 3</b> to fall 3 → 2.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Energy to lift hydrogen from n = 1 to n = 3 is:",
+    "diagram": null,
+    "opts": [
+     "12.09 eV",
+     "10.2 eV",
+     "1.89 eV",
+     "13.6 eV"
+    ],
+    "ans": 0,
+    "sol": "13.6(1 − 1/9) = <b>12.09 eV</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A 12.5 eV electron beam is used to bombard gaseous hydrogen at room temperature. The number of spectral lines emitted will be:",
+    "diagram": null,
+    "opts": [
+     "3",
+     "2",
+     "4",
+     "1"
+    ],
+    "ans": 0,
+    "sol": "12.5 eV can lift to n = 3 (needs 12.09) but not n = 4 (needs 12.75). From n = 3: <b>3</b> lines.",
+    "tag": "PYQ Q93 · 12-Apr-2023 shift 1",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A 12.5 eV electron beam is used to bombard gaseous hydrogen at room temperature. It will emit:",
+    "diagram": null,
+    "opts": [
+     "2 lines in the Lyman series and 1 line in the Balmer series",
+     "3 lines in the Lyman series",
+     "1 line in the Lyman series and 2 lines in the Balmer series",
+     "3 lines in the Balmer series"
+    ],
+    "ans": 0,
+    "sol": "Up to n = 3. Lines: 3 → 1 and 2 → 1 (Lyman), 3 → 2 (Balmer). <b>2 Lyman + 1 Balmer</b>.",
+    "tag": "PYQ Q239 · Online April 25, 2013",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The minimum energy required by a hydrogen atom in ground state to emit radiation in Balmer series is nearly:",
+    "diagram": null,
+    "opts": [
+     "12.1 eV",
+     "1.5 eV",
+     "13.6 eV",
+     "1.9 eV"
+    ],
+    "ans": 0,
+    "sol": "Must reach n = 3: 13.6(1 − 1/9) = <b>12.1 eV</b>. (1.9 eV is the Balmer photon itself, not the energy needed from the ground state.)",
+    "tag": "Q61 · 1-Feb-2024 Shift 1",
+    "note": "",
+    "starLbl": "JEE Main 2024 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Exciting atoms with electrons and photons",
+  "mode": "hw",
+  "part": "Transitions · number of lines · excitation",
+  "lec": 4,
+  "c": "A7",
+  "keyIdea": "Photon energy = difference of two levels. A sample excited to level n gives n(n − 1)/2 lines.",
+  "questions": [
+   {
+    "q": "A photon is absorbed only if its energy exactly matches a jump. An electron striking an atom:",
+    "diagram": null,
+    "opts": [
+     "can give away just part of its KE, so any KE above the jump energy works",
+     "must have exactly the jump energy",
+     "can never excite an atom",
+     "must have more than 13.6 eV"
+    ],
+    "ans": 0,
+    "sol": "An electron can share its energy and keep the rest. So <b>any KE ≥ jump energy</b> can excite the atom.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "'Experiment done at T = 0 K' tells us that before the collision all atoms are in:",
+    "diagram": null,
+    "opts": [
+     "the ground state (n = 1)",
+     "n = 2",
+     "random levels",
+     "the ionised state"
+    ],
+    "ans": 0,
+    "sol": "No thermal excitation at 0 K → all atoms in <b>n = 1</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Radiation from the n = 2 to n = 1 transition of hydrogen falls on He<sup>+</sup> ions in n = 1 and n = 2 states. The possible transition of helium ions as they absorb energy from the radiation is:",
+    "diagram": null,
+    "opts": [
+     "n = 2 → n = 4",
+     "n = 2 → n = 3",
+     "n = 1 → n = 4",
+     "n = 2 → n = 5"
+    ],
+    "ans": 0,
+    "sol": "Photon = 10.2 eV. For He<sup>+</sup>: 54.4(1/4 − 1/16) = 54.4 × 3/16 = 10.2 eV ✔ → <b>2 → 4</b>.",
+    "tag": "PYQ Q206 · 8 April 2019 I",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "A hydrogen atom makes a transition from n = 2 to n = 1 and emits a photon. This photon strikes a Li<sup>2+</sup> ion (Z = 3) in an excited state and completely removes the electron. The least quantum number of the excited state of the ion for this is:",
+    "diagram": null,
+    "opts": [
+     "4",
+     "2",
+     "5",
+     "3"
+    ],
+    "ans": 0,
+    "sol": "Photon = 10.2 eV. Need 122.4/n² ≤ 10.2 → n² ≥ 12 → <b>n = 4</b> (n = 3 needs 13.6 eV).",
+    "tag": "PYQ Q225 · Online April 9, 2016",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Hydrogen atom is bombarded with electrons accelerated through a potential difference of V, which causes excitation of hydrogen atoms. If the experiment is performed at T = 0 K, the minimum potential difference needed to observe any Balmer series lines in the emission spectra will be α/10 V, where α = ____",
+    "diagram": null,
+    "opts": [
+     "121",
+     "102",
+     "136",
+     "151"
+    ],
+    "ans": 0,
+    "sol": "Atoms start in n = 1 and must reach n = 3: 13.6(1 − 1/9) = 12.1 eV → V = 12.1 V = 121/10 V. <b>α = 121</b>.",
+    "tag": "Q49 · 29-Jan-2024 Shift 2",
+    "note": "",
+    "starLbl": "JEE Main 2024 PYQ"
+   }
+  ]
+ },
+ {
+  "name": "Recoil of the atom",
+  "mode": "class",
+  "part": "Photon momentum · recoil of the atom",
+  "lec": 4,
+  "c": "A8",
+  "keyIdea": "A photon carries momentum E/c, so the atom that emits it is pushed back a little.",
+  "questions": [
+   {
+    "q": "A photon of energy E carries momentum:",
+    "diagram": null,
+    "opts": [
+     "E/c",
+     "Ec",
+     "E/c²",
+     "zero, since it has no mass"
+    ],
+    "ans": 0,
+    "sol": "<b>p = E/c = h/λ</b>. Massless, but not momentum-less.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "An atom at rest (mass M) emits a photon of energy E. By momentum conservation, its recoil speed is:",
+    "diagram": null,
+    "opts": [
+     "v = E/(Mc)",
+     "v = Mc/E",
+     "v = E/(Mc²)",
+     "v = √(2E/M)"
+    ],
+    "ans": 0,
+    "sol": "Mv = E/c → <b>v = E/(Mc)</b>. It is tiny because M is big and c is huge.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "Photon of 10.2 eV. Its momentum is:",
+    "diagram": null,
+    "opts": [
+     "5.44 × 10<sup>−27</sup> kg m/s",
+     "1.63 × 10<sup>−18</sup> kg m/s",
+     "3.4 × 10<sup>−8</sup> kg m/s",
+     "5.44 × 10<sup>−19</sup> kg m/s"
+    ],
+    "ans": 0,
+    "sol": "E = 10.2 × 1.6 × 10<sup>−19</sup> = 1.632 × 10<sup>−18</sup> J. p = E/c = <b>5.44 × 10<sup>−27</sup> kg m/s</b>.",
+    "tag": "",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "The recoil speed of a hydrogen atom after it emits a photon in going from n = 5 to n = 1 will be: (take mass of H atom = 1.67 × 10<sup>−27</sup> kg)",
+    "diagram": null,
+    "opts": [
+     "4.17 m/s",
+     "2.19 m/s",
+     "3.25 m/s",
+     "4.34 m/s"
+    ],
+    "ans": 0,
+    "sol": "E = 13.6(1 − 1/25) = 13.06 eV = 2.09 × 10<sup>−18</sup> J. p = E/c = 6.96 × 10<sup>−27</sup>.<br>v = p/M = 6.96 × 10<sup>−27</sup>/1.67 × 10<sup>−27</sup> ≈ <b>4.17 m/s</b>.",
+    "tag": "PYQ Q141 · 26 Feb 2021 Shift 2",
+    "note": "The key 4.17 m/s needs M = 1.67 × 10<sup>−27</sup> kg. With 1.6 × 10<sup>−27</sup> kg you get 4.34 m/s (another option), so the mass value decides the answer here.",
+    "starLbl": ""
+   },
+   {
+    "q": "A nucleus of mass M emits a γ-ray photon of frequency ν. The loss of internal energy by the nucleus is: (c = speed of light)",
+    "diagram": null,
+    "opts": [
+     "hν[1 + hν/(2Mc²)]",
+     "hν",
+     "0",
+     "hν[1 − hν/(2Mc²)]"
+    ],
+    "ans": 0,
+    "sol": "The nucleus recoils with p = hν/c, KE = p²/2M = (hν)²/(2Mc²). Energy lost = photon + recoil KE = <b>hν[1 + hν/(2Mc²)]</b>.",
+    "tag": "PYQ Q171 · Take 'c' as the speed of electromagnetic wave",
+    "note": "",
+    "starLbl": ""
+   },
+   {
+    "q": "When a hydrogen atom going from n = 2 to n = 1 emits a photon, its recoil speed is x/5 m/s, where x = ____ (Use: mass of hydrogen atom = 1.6 × 10<sup>−27</sup> kg)",
+    "diagram": null,
+    "opts": [
+     "17",
+     "34",
+     "8",
+     "51"
+    ],
+    "ans": 0,
+    "sol": "E = 10.2 eV → p = 5.44 × 10<sup>−27</sup> kg m/s.<br>v = p/M = 5.44 × 10<sup>−27</sup>/1.6 × 10<sup>−27</sup> = 3.4 m/s = 17/5 m/s. <b>x = 17</b>.",
+    "tag": "Q47 · 29-Jan-2024 Shift 1",
+    "note": "",
+    "starLbl": "JEE Main 2024 PYQ"
+   }
+  ]
+ }
+];
+
+const STORAGE_KEY = 'padipucast_atoms_lecture_dpp_l4_v1';
+
+function loadAnswers(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === TOPICS.length) return parsed;
+    }
+  }catch(e){}
+  return TOPICS.map(t=>Array(t.questions.length).fill(null));
+}
+function saveAnswers(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){} }
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+const TOPICS_SHUFFLED = TOPICS.map((t,ti)=>({
+  ...t, topicIdx:ti,
+  questions:t.questions.map((raw)=>{
+    const indexed = raw.opts.map((o,i)=>({text:o, isCorrect:i===raw.ans}));
+    shuffle(indexed);
+    return{q:raw.q, diagram:raw.diagram||null, opts:indexed.map(o=>o.text), ans:indexed.findIndex(o=>o.isCorrect), sol:raw.sol, tag:raw.tag||'', note:raw.note||'', yt:raw.yt||'', starLbl:raw.starLbl||''};
+  })
+}));
+
+let answers = loadAnswers();
+let curTopic = null, curQ = 0;
+
+const homeScreen=document.getElementById('home-screen');
+const qScreen=document.getElementById('q-screen');
+const backBtn=document.getElementById('back-btn');
+const topicGrid=document.getElementById('topic-grid');
+const qsTopicLbl=document.getElementById('qs-topic-label');
+const qsTitle=document.getElementById('qs-title');
+const qSelector=document.getElementById('q-selector');
+const qLabel=document.getElementById('q-label');
+const qText=document.getElementById('q-text');
+const qDiagram=document.getElementById('q-diagram');
+const optionsDiv=document.getElementById('options');
+const solWrap=document.getElementById('sol-wrap');
+const solBox=document.getElementById('sol-box');
+const feedbackEl=document.getElementById('feedback');
+const showAnsBtn=document.getElementById('show-ans-btn');
+const prevBtn=document.getElementById('prev-btn');
+const nextBtn=document.getElementById('next-btn');
+const scScore=document.getElementById('sc-score');
+const scTotal=document.getElementById('sc-total');
+const scAtt=document.getElementById('sc-att');
+const ytTrigger=document.getElementById('yt-trigger');
+const ytCorner=document.getElementById('yt-corner');
+const ytInput=document.getElementById('yt-input');
+const ytEmbed=document.getElementById('yt-embed');
+const clearModal=document.getElementById('clear-modal');
+const homeProgress=document.getElementById('home-progress');
+const toastEl=document.getElementById('toast');
+
+function totalQuestions(){ return TOPICS.reduce((s,t)=>s+t.questions.length,0); }
+
+function buildHome(){
+  topicGrid.innerHTML='';
+  let totalCorrect=0;
+  let lastLec=0;
+  TOPICS_SHUFFLED.forEach((topic,ti)=>{
+    if(topic.lec!==lastLec){
+      lastLec=topic.lec;
+      const nl=TOPICS.filter(t=>t.lec===topic.lec).length;
+      const cs=Object.keys(KEYS).filter(k=>KEYS[k].lec===topic.lec);
+      const h=document.createElement('div'); h.className='lec-head';
+      h.innerHTML=`<div><h2>Lecture 4 &#183; Atoms</h2><p>${cs.length} concepts &#183; ${nl} ladders</p></div>`;
+      topicGrid.appendChild(h);
+      const kb=document.createElement('button'); kb.className='key-card-btn';
+      kb.innerHTML=`<div class="kb-t">&#9733; Start here &#183; Key ideas</div><div class="kb-n">Lecture 4 key ideas &#8212; ${cs.length} concept cards</div><div class="kb-s">${cs.map(k=>KEYS[k].title).join(' &#183; ')}</div>`;
+      kb.onclick=()=>openKeys(topic.lec);
+      topicGrid.appendChild(kb);
+    }
+    const ans=answers[ti]; const n=topic.questions.length;
+    const done=ans.filter(a=>a!==null&&a.correct).length;
+    const att=ans.filter(a=>a!==null).length;
+    totalCorrect+=done;
+    const card=document.createElement('button');
+    card.className='topic-card'+(att===n&&done===n?' all-done':'');
+    const dots=Array(n).fill(0).map((_,i)=>{
+      const d=answers[ti][i];
+      return `<span class="tc-dot${d===null?'':d.correct?' done':' wrong'}"></span>`;
+    }).join('');
+    card.innerHTML=`<div class="tc-num">Ladder ${String(ti+1).padStart(2,'0')}${topic.part?' &#183; '+topic.part:''} <span class="modepill ${topic.mode==='class'?'mp-class':'mp-hw'}">${topic.mode==='class'?'Discuss in class':'Homework'}</span></div>
+      <div class="tc-name">${topic.name}</div>
+      <div class="tc-bar"><div class="tc-dots">${dots}</div><span class="tc-count">${att}/${n} climbed</span></div>
+      <svg class="tc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+    card.onclick=()=>openTopic(ti);
+    topicGrid.appendChild(card);
+  });
+  homeProgress.innerHTML=`<span>${totalCorrect}</span> / ${totalQuestions()} correct`;
+}
+
+
+const keyScreen=document.getElementById('key-screen');
+function openKeys(lec,focus){
+  homeScreen.classList.remove('active'); qScreen.classList.remove('active'); keyScreen.classList.add('active');
+  backBtn.style.display='flex'; hideYT();
+  const cs=Object.keys(KEYS).filter(k=>KEYS[k].lec===lec);
+  document.getElementById('key-topic').innerHTML=`Lecture 4 &#183; key ideas`;
+  document.getElementById('key-title').innerHTML=`Atoms &#8212; read these before the ladders`;
+  document.getElementById('key-list').innerHTML=cs.map((k,i)=>{const c=KEYS[k];
+    const lad=TOPICS.map((t,ti)=>({t,ti})).filter(x=>x.t.c===k).map(x=>'L'+String(x.ti+1).padStart(2,'0')).join(', ');
+    return `<div class="kcard" id="kc-${k}"><div class="kc-n">Concept ${i+1} of ${cs.length}</div><h3>${c.title}</h3>
+    <div class="kc-idea">${c.idea}</div>
+    <div class="kc-lbl">Formulas</div><ul class="kc-f">${c.f.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <div class="kc-lbl">What is what</div><ul>${c.what.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <div class="kc-trap"><b>Watch out:</b> ${c.trap}</div>
+    <div class="kc-go">Ladders for this concept: ${lad}</div></div>`;}).join('');
+  if(focus){const el=document.getElementById('kc-'+focus); if(el) setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);} else window.scrollTo(0,0);
+}
+
+function openTopic(ti){
+  curTopic=TOPICS_SHUFFLED[ti]; curQ=0;
+  homeScreen.classList.remove('active'); keyScreen.classList.remove('active');
+  qScreen.classList.add('active');
+  backBtn.style.display='flex';
+  const first=answers[ti].findIndex(a=>a===null);
+  if(first!==-1) curQ=first;
+  renderQScreen();
+}
+
+function goHome(){
+  qScreen.classList.remove('active'); keyScreen.classList.remove('active');
+  homeScreen.classList.add('active');
+  backBtn.style.display='none';
+  hideYT(); buildHome();
+}
+
+function renderQScreen(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  qsTopicLbl.innerHTML=`Ladder ${String(ti+1).padStart(2,'0')}${curTopic.part?' &#183; '+curTopic.part:''} <span class="modepill ${curTopic.mode==='class'?'mp-class':'mp-hw'}">${curTopic.mode==='class'?'Discuss in class':'Homework'}</span>`;
+  qsTitle.innerHTML=curTopic.name;
+  document.getElementById('qs-key').innerHTML=`<b>Key idea.</b> ${curTopic.keyIdea} <a onclick="openKeys(${curTopic.lec},'${curTopic.c}')">Open key ideas</a>`;
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scTotal.textContent=n;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+  qSelector.innerHTML='';
+  curTopic.questions.forEach((_,i)=>{
+    const a=answers[ti][i];
+    const pill=document.createElement('button');
+    pill.className='q-pill'+(i===curQ?' active':'')+(a?a.correct?' answered-c':' answered-w':'');
+    pill.innerHTML=(i===n-1)?'&#9733;':(i+1);
+    pill.onclick=()=>{curQ=i;renderQScreen();};
+    qSelector.appendChild(pill);
+  });
+  renderQuestion();
+  updateYTVisibility();
+}
+
+function renderQuestion(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const n=curTopic.questions.length;
+  const q=curTopic.questions[curQ];
+  const a=answers[ti][curQ];
+  qLabel.innerHTML=(curQ===n-1)
+    ? `Rung ${n} of ${n} &#183; <span class="orig">&#9733; ${q.starLbl||'Original question'}</span>`+(q.tag?`<span class="srctag">${q.tag}</span>`:'')
+    : `Rung ${curQ+1} of ${n} &#183; Build-up`+(q.tag?`<span class="srctag">${q.tag}</span>`:'');
+  qText.innerHTML=q.q+(q.note?`<div class="notebox">${q.note}</div>`:'');
+  if(q.diagram){
+    qDiagram.style.display='flex';
+    qDiagram.innerHTML=q.diagram;
+  } else { qDiagram.style.display='none'; qDiagram.innerHTML=''; }
+  solWrap.classList.remove('open');
+  solBox.innerHTML='';
+  feedbackEl.className=''; feedbackEl.textContent='';
+  const card=document.getElementById('q-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='';
+  optionsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(a?' locked':'');
+    btn.innerHTML=`<span class="opt-letter">${['A','B','C','D','E'][i]}</span><span>${opt}</span>`;
+    if(a!==null){
+      if(i===q.ans) btn.classList.add('is-correct');
+      else if(i===a.chosen&&!a.correct) btn.classList.add('is-wrong');
+      else btn.classList.add('reveal-correct');
+    } else { btn.onclick=()=>choose(i); }
+    optionsDiv.appendChild(btn);
+  });
+  if(a!==null){
+    solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+    solWrap.classList.add('open');
+    showFeedback(a.correct);
+    showAnsBtn.style.display='none';
+  } else { showAnsBtn.style.display='inline-block'; }
+  prevBtn.disabled=curQ===0;
+  nextBtn.disabled=false;
+  if(curQ===n-1){
+    nextBtn.innerHTML=`Done <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  } else {
+    nextBtn.innerHTML=`Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  }
+  updateYTVisibility();
+}
+
+function choose(chosen){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  const correct=chosen===q.ans;
+  answers[ti][curQ]={chosen,correct};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else if(i===chosen&&!correct) btn.classList.add('is-wrong');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  showFeedback(correct);
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.remove('active');
+  pills[curQ].classList.add(correct?'answered-c':'answered-w');
+  pills[curQ].classList.add('active');
+  const topicAns=answers[ti];
+  scScore.textContent=topicAns.filter(a=>a&&a.correct).length;
+  scAtt.textContent=topicAns.filter(a=>a!==null).length;
+}
+
+function showFeedback(correct){
+  feedbackEl.className=''; feedbackEl.offsetHeight;
+  feedbackEl.textContent=correct?'Correct \u2713':'Incorrect \u2717';
+  feedbackEl.className=(correct?'fb-c':'fb-w')+' show';
+}
+
+function showAnswer(){
+  const ti=TOPICS_SHUFFLED.indexOf(curTopic);
+  const q=curTopic.questions[curQ];
+  answers[ti][curQ]={chosen:-1,correct:false};
+  saveAnswers();
+  const opts=optionsDiv.querySelectorAll('.opt');
+  opts.forEach((btn,i)=>{
+    btn.classList.add('locked'); btn.onclick=null;
+    if(i===q.ans) btn.classList.add('is-correct');
+    else btn.classList.add('reveal-correct');
+  });
+  solBox.innerHTML=`<strong>Solution &#8212;</strong> ${q.sol}`;
+  solWrap.classList.add('open');
+  feedbackEl.className='fb-w show';
+  feedbackEl.textContent='Answer shown';
+  showAnsBtn.style.display='none';
+  const pills=qSelector.querySelectorAll('.q-pill');
+  pills[curQ].classList.add('answered-w');
+  scAtt.textContent=answers[ti].filter(a=>a!==null).length;
+}
+
+function moveQ(dir){
+  const n=curTopic.questions.length;
+  const newQ=curQ+dir;
+  if(newQ<0) return;
+  if(newQ>n-1){ goHome(); return; }
+  curQ=newQ; renderQScreen();
+}
+
+function confirmClear(){ clearModal.classList.add('show'); }
+function cancelClear(){ clearModal.classList.remove('show'); }
+function executeClear(){
+  answers=TOPICS.map(t=>Array(t.questions.length).fill(null));
+  saveAnswers();
+  clearModal.classList.remove('show');
+  buildHome();
+  showToast('All progress cleared');
+}
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2400);
+}
+
+function updateYTVisibility(){
+  if(qScreen.classList.contains('active')){ ytTrigger.classList.add('visible'); }
+  else { ytTrigger.classList.remove('visible'); hideYT(); }
+}
+ytTrigger.onclick=()=>{ ytCorner.classList.add('visible'); ytTrigger.classList.remove('visible'); };
+function closeYT(){
+  ytCorner.classList.remove('visible');
+  if(qScreen.classList.contains('active')) ytTrigger.classList.add('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function hideYT(){
+  ytCorner.classList.remove('visible'); ytTrigger.classList.remove('visible');
+  ytEmbed.style.display='none'; ytEmbed.innerHTML=''; ytInput.value='';
+}
+function parseYTTime(s){
+  if(!s)return 0; if(/^\d+$/.test(s))return parseInt(s);
+  let t=0;
+  const h=s.match(/(\d+)h/);if(h)t+=parseInt(h[1])*3600;
+  const m=s.match(/(\d+)m/);if(m)t+=parseInt(m[1])*60;
+  const sc=s.match(/(\d+)s/);if(sc)t+=parseInt(sc[1]);
+  return t;
+}
+function extractYTData(url){
+  if(!url)return null;
+  let id='',start=0;
+  const idM=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if(idM)id=idM[1];else{const bM=url.match(/^([a-zA-Z0-9_-]{11})$/);if(bM)id=bM[1];}
+  if(!id)return null;
+  const tM=url.match(/[?&]t=([^&\s]+)/);if(tM)start=parseYTTime(tM[1]);
+  return{id,start};
+}
+function loadYT(){
+  const val=ytInput.value.trim();if(!val)return;
+  const ytd=extractYTData(val);
+  if(!ytd){ytEmbed.style.display='block';ytEmbed.innerHTML=`<p style="font-size:12px;color:var(--wrong);padding:6px 0;">Couldn't find a valid YouTube URL.</p>`;return;}
+  const embedUrl='https://www.youtube.com/embed/'+ytd.id+'?autoplay=0&rel=0'+(ytd.start?'&start='+ytd.start:'');
+  ytEmbed.style.display='block';
+  ytEmbed.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+}
+ytInput.addEventListener('keydown',e=>{if(e.key==='Enter')loadYT();});
+clearModal.addEventListener('click',e=>{if(e.target===clearModal)cancelClear();});
+
+buildHome();
+</script>
+</body>
+</html>
